@@ -16,3 +16,4 @@ jobs:
       run-commit-lint: true
       run-build: true
       run-semantic-release: true
+      test-script: ''
