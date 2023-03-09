@@ -16,3 +16,8 @@ jobs:
       working-directory: ./
       run-commit-lint: true
       run-build: true
+      python-version: 3.11
+      run-pre-test: true
+      pre-test-script: |
+        pipx install algokit
+        algokit localnet start
