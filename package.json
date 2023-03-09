@@ -1,0 +1,40 @@
+{
+  "name": "@algorandfoundation/algokit-utils",
+  "version": "0.1.0",
+  "private": false,
+  "description": "A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand.",
+  "author": "Algorand Foundation",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0"
+  },
+  "scripts": {
+    "build": "run-s build:*",
+    "build:0-clean": "rimraf dist coverage",
+    "build:1-compile": "tsc -p tsconfig.build.json",
+    "build:2-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json",
+    "test": "jest --coverage --passWithNoTests",
+    "lint": "eslint ./src/ --ext .ts",
+    "lint:fix": "eslint ./src/ --ext .ts --fix",
+    "check-types": "tsc --noEmit",
+    "audit": "npm audit",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "algosdk": "^2.1.0"
+  },
+  "devDependencies": {
+    "@makerx/eslint-config": "3.0.0",
+    "@makerx/prettier-config": "2.0.0",
+    "@makerx/ts-config": "1.0.1",
+    "@tsconfig/node16": "^1.0.3",
+    "@types/jest": "^29.2.3",
+    "eslint": "8.35.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "2.8.4",
+    "rimraf": "^4.4.0",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.3"
+  }
+}
