@@ -18,3 +18,5 @@ jobs:
       run-build: true
       run-semantic-release: true
       test-script: ''
+    secrets:
+      npm-auth-token: ${{ secrets.NPM_TOKEN }}
