@@ -2,16 +2,16 @@ import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
 import { localnetFixture as localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { AlgoAmount } from './algo-amount'
-import { sendTransaction } from './transaction'
+import { Arc2TransactionNote, encodeTransactionNote, sendGroupOfTransactions, sendTransaction } from './transaction'
 
 describe('transaction', () => {
   const localnet = localNetFixture()
 
-  const getTestTransaction = async () => {
+  const getTestTransaction = async (amount?: number) => {
     return algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: localnet.context.testAccount.addr,
       to: localnet.context.testAccount.addr,
-      amount: 1,
+      amount: amount ?? 1,
       suggestedParams: await localnet.context.client.getTransactionParams().do(),
     })
   }
@@ -56,5 +56,77 @@ describe('transaction', () => {
     })
 
     expect(confirmation?.txn.txn.fee).toBe(1000)
+  })
+
+  test('Transaction group is sent', async () => {
+    const { client, testAccount } = localnet.context
+    const txn1 = await getTestTransaction(1)
+    const txn2 = await getTestTransaction(2)
+
+    const { confirmation } = await sendGroupOfTransactions(client, [
+      {
+        transaction: txn1,
+        signer: testAccount,
+      },
+      {
+        transaction: txn2,
+        signer: testAccount,
+      },
+    ])
+
+    expect(confirmation?.['confirmed-round']).toBeGreaterThanOrEqual(txn1.firstRound)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    expect(Buffer.from(confirmation!.txn.txn.grp!).toString('hex')).toBe(Buffer.from(txn1.group!).toString('hex'))
+  })
+})
+
+describe('transaction node encoder', () => {
+  test('null', () => {
+    expect(encodeTransactionNote(null)).toBeUndefined()
+  })
+  test('undefined', () => {
+    expect(encodeTransactionNote(undefined)).toBeUndefined()
+  })
+  test('string', () => {
+    expect(encodeTransactionNote('abc')).toMatchInlineSnapshot(`
+      Uint8Array [
+        97,
+        98,
+        99,
+      ]
+    `)
+  })
+  test('object', () => {
+    expect(encodeTransactionNote({ a: 'b' })).toMatchInlineSnapshot(`
+      Uint8Array [
+        123,
+        34,
+        97,
+        34,
+        58,
+        34,
+        98,
+        34,
+        125,
+      ]
+    `)
+  })
+  test('arc-0002', () => {
+    expect(
+      encodeTransactionNote({
+        dAppName: 'a',
+        format: 'u',
+        data: 'abc',
+      } as Arc2TransactionNote),
+    ).toMatchInlineSnapshot(`
+      Uint8Array [
+        97,
+        58,
+        117,
+        97,
+        98,
+        99,
+      ]
+    `)
   })
 })
