@@ -49,7 +49,10 @@
   },
   "release": {
     "branches": [
-      "main"
+      {
+        "name": "main",
+        "prerelease": true
+      }
     ],
     "plugins": [
       [
