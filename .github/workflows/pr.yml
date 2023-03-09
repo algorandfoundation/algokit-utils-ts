@@ -16,3 +16,4 @@ jobs:
     with:
       run-commit-lint: true
       run-build: true
+      test-script: ''
