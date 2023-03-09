@@ -4,12 +4,8 @@ on:
   push:
     branches:
       - main
+      - release
   workflow_dispatch:
-    inputs:
-      production_release:
-        description: 'Production release?'
-        required: true
-        default: 'true'
 
 concurrency: release
 
@@ -63,18 +59,9 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: 'Semantic beta release'
-        if: ${{ inputs.production_release != 'true' }}
+      - name: 'Semantic release'
         working-directory: dist
         run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: 'Semantic production release'
-        if: ${{ inputs.production_release == 'true' }}
-        working-directory: dist
-        run: npx semantic-release --branches main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
