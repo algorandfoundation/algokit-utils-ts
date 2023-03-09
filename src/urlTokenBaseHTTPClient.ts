@@ -1,8 +1,10 @@
 // Copied from https://github.com/algorand/js-algorand-sdk/blob/e9635e9ffc9019994f0790ee4b8d9733c6590250/src/client/urlTokenBaseHTTPClient.ts
 // There was an error trying to reference the file from algosdk
+// This is referenced from algo-http-client-with-retry.ts and extended to add retry logic to improve resilience
+// todo: Find out why this can't be referenced from algosdk directly so we don't have to duplicate here
+import { BaseHTTPClient, BaseHTTPClientError, BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
 import { Buffer } from 'buffer'
 import { fetch } from 'cross-fetch'
-import { BaseHTTPClient, BaseHTTPClientResponse, BaseHTTPClientError, Query } from 'algosdk/dist/types/client/baseHTTPClient'
 
 export interface AlgodTokenHeader {
   'X-Algo-API-Token': string
@@ -39,6 +41,7 @@ export class URLTokenBaseHTTPClient implements BaseHTTPClient {
   private readonly baseURL: URL
   private readonly tokenHeader: TokenHeader
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(tokenHeader: TokenHeader, baseServer: string, port?: string | number, private defaultHeaders: Record<string, any> = {}) {
     // Append a trailing slash so we can use relative paths. Without the trailing
     // slash, the last path segment will be replaced by the relative path. See
@@ -101,6 +104,7 @@ export class URLTokenBaseHTTPClient implements BaseHTTPClient {
 
     try {
       body = new Uint8Array(await res.arrayBuffer())
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const decoded: Record<string, any> = JSON.parse(Buffer.from(body).toString())
       if (decoded.message) {
         bodyErrorMessage = decoded.message

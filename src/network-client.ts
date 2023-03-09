@@ -168,9 +168,4 @@ export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
   return new Kmd(token as string, server, process?.env?.KMD_PORT ?? '4002')
 }
 
-/** Returns true if the algod client is pointing to a sandbox Algorand network */
-export async function isLocalNet(client: Algodv2): Promise<boolean> {
-  const params = await client.getTransactionParams().do()
-
-  return params.genesisID === 'devnet-v1' || params.genesisID === 'sandnet-v1'
-}
+export { isLocalNet } from './localnet'

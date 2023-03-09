@@ -1,4 +1,5 @@
 import { BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
+import { AlgoKitConfig } from './config'
 import { URLTokenBaseHTTPClient } from './urlTokenBaseHTTPClient'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */
@@ -27,6 +28,7 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     do {
       try {
         response = await func()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         if (numTries >= AlgoHttpClientWithRetry.MAX_TRIES) {
           throw err
@@ -42,9 +44,10 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         if (delayTimeMs > 0) {
           await new Promise((r) => setTimeout(r, delayTimeMs))
         }
-        console.warn(`algosdk request failed ${numTries} times. Retrying in ${delayTimeMs}ms: ${err}`)
+        AlgoKitConfig.logger.warn(`algosdk request failed ${numTries} times. Retrying in ${delayTimeMs}ms: ${err}`)
       }
     } while (!response && ++numTries <= AlgoHttpClientWithRetry.MAX_TRIES)
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return response!
   }
 

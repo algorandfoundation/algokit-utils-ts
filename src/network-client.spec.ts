@@ -1,4 +1,4 @@
-import { describe, expect, test, afterAll, beforeEach, jest } from '@jest/globals'
+import { afterAll, beforeEach, describe, expect, jest, test } from '@jest/globals'
 import {
   getAlgoClient,
   getAlgodConfigFromEnvironment,
@@ -8,7 +8,7 @@ import {
   getDefaultLocalNetConfig,
   getIndexerConfigFromEnvironment,
   isLocalNet,
-} from './network-clients'
+} from './network-client'
 
 describe('network-clients', () => {
   describe('Config', () => {
