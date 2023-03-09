@@ -22,7 +22,6 @@ jobs:
     uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@feature/semantic-release
     with:
       run-commit-lint: true
-      python-version: 3.11
       run-pre-test: true
       pre-test-script: |
         pipx install algokit
