@@ -60,7 +60,6 @@ jobs:
           node-version: 18.x
 
       - name: 'Semantic release'
-        working-directory: dist
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
