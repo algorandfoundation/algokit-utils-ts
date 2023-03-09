@@ -51,7 +51,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          unzip -q "artifacts/package/package.zip" -d dist
+          unzip -q "artifacts/package.zip" -d dist
 
       # semantic-release needs node 18
       - name: Use Node.js 18.x
