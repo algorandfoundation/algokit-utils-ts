@@ -8,6 +8,10 @@
   "engines": {
     "node": ">=16.0"
   },
+  "main": "./dist/index.js",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
@@ -18,12 +22,16 @@
     "lint:fix": "eslint ./src/ --ext .ts --fix",
     "check-types": "tsc --noEmit",
     "audit": "npm audit",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "commit-lint": "commitlint --edit -o",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "algosdk": "^2.1.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.4.3",
+    "@commitlint/config-conventional": "^17.4.3",
     "@makerx/eslint-config": "3.0.0",
     "@makerx/prettier-config": "2.0.0",
     "@makerx/ts-config": "1.0.1",
@@ -35,6 +43,56 @@
     "rimraf": "^4.4.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "semantic-release": "^20.1.0"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "conventionalcommits",
+          "releaseRules": [
+            {
+              "type": "build",
+              "release": "patch"
+            },
+            {
+              "type": "chore",
+              "release": "patch"
+            }
+          ]
+        }
+      ],
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "conventionalcommits",
+          "presetConfig": {
+            "types": [
+              {
+                "type": "feat",
+                "section": "Features"
+              },
+              {
+                "type": "fix",
+                "section": "Bug Fixes"
+              },
+              {
+                "type": "build",
+                "section": "Dependencies and Other Build Updates",
+                "hidden": false
+              }
+            ]
+          }
+        }
+      ],
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
   }
 }

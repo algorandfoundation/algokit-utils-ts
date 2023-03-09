@@ -12,14 +12,7 @@ permissions:
 jobs:
   ci:
     uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
-  publish:
-    runs-on: ubuntu-latest
-    needs: ci
-    steps:
-      - name: Release package to NPM
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          access: 'public'
-          package: './dist/package.json'
-          check-version: true
+    with:
+      run-commit-lint: true
+      run-build: true
+      run-semantic-release: true
