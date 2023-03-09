@@ -12,4 +12,7 @@ permissions:
 
 jobs:
   pull_request:
-    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
+    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@feature/semantic-release
+    with:
+      run-commit-lint: true
+      run-build: true
