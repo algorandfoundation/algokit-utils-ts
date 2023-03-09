@@ -5,7 +5,7 @@ import { AlgoAmount, getAlgoClient, getAlgoIndexerClient, getDefaultLocalNetConf
 import { lookupTransactionById } from '../../src/indexer-lookup'
 import { TransactionLookupResult } from '../../src/indexer-type'
 
-export const localnetFixture = (testAccountFunding?: AlgoAmount) => {
+export const localNetFixture = (testAccountFunding?: AlgoAmount) => {
   const clientConfig = getDefaultLocalNetConfig('algod')
   const client = getAlgoClient(clientConfig)
   // todo: Sort out .env instead, cleaner and more flexible

@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
-import { localnetFixture as localNetFixture } from '../tests/fixtures/localnet-fixture'
+import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { AlgoAmount } from './algo-amount'
 import { transferAlgos } from './transfer'
 
