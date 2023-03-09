@@ -23,3 +23,9 @@ This library follows the [Guiding Principles of AlgoKit](https://github.com/algo
 ## Contributing
 
 This is an open source project managed by the Algorand Foundation. See the [AlgoKit contributing page](https://github.com/algorandfoundation/algokit-cli/blob/main/CONTRIBUTING.MD) to learn about making improvements.
+
+To successfully run the tests in this repository you need to be running LocalNet via [AlgoKit](https://github.com/algorandfoundation/algokit-cli):
+
+```
+algokit localnet start
+```
