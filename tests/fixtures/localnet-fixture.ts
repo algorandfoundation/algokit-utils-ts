@@ -26,7 +26,7 @@ export const localnetFixture = (testAccountFunding?: AlgoAmount) => {
       transactionLogger: transactionLogger,
       waitForIndexerTransaction,
     }
-  })
+  }, 10_000)
 
   return {
     get context() {
