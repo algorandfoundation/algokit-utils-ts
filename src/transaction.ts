@@ -1,6 +1,44 @@
-import algosdk, { Account, Algodv2, EncodedSignedTransaction, LogicSigAccount, Transaction } from 'algosdk'
+import algosdk, { Account, Algodv2, EncodedSignedTransaction, LogicSigAccount, MultisigMetadata, Transaction } from 'algosdk'
 import { AlgoAmount } from './algo-amount'
 import { AlgoKitConfig } from './config'
+
+/** Account wrapper that supports partial or full multisig signing */
+export class MultisigAccount {
+  _params: algosdk.MultisigMetadata
+  _signingAccounts: (algosdk.Account | SigningAccount)[]
+  _addr: string
+
+  get params(): Readonly<algosdk.MultisigMetadata> {
+    return this._params
+  }
+
+  get signingAccounts(): Readonly<(algosdk.Account | SigningAccount)[]> {
+    return this._signingAccounts
+  }
+
+  get addr(): Readonly<string> {
+    return this._addr
+  }
+
+  constructor(multisigParams: MultisigMetadata, signingAccounts: (Account | SigningAccount)[]) {
+    this._params = multisigParams
+    this._signingAccounts = signingAccounts
+    this._addr = algosdk.multisigAddress(multisigParams)
+  }
+
+  public sign(transaction: Transaction | Uint8Array): Uint8Array {
+    let signedTxn = 'from' in transaction ? undefined : transaction
+    for (const signer of this._signingAccounts) {
+      if (signedTxn) {
+        signedTxn = algosdk.appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
+      } else {
+        signedTxn = algosdk.signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return signedTxn!
+  }
+}
 
 /** Account wrapper that supports a rekeyed account */
 export class SigningAccount implements Account {
@@ -105,6 +143,8 @@ export interface SendTransactionResult {
   confirmation?: PendingTransactionResponse
 }
 
+export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount
+
 /** Signs and sends the given transaction to the chain
  *
  * @param client An algod client
@@ -117,7 +157,7 @@ export interface SendTransactionResult {
 export const sendTransaction = async function (
   client: Algodv2,
   transaction: Transaction,
-  from: Account | SigningAccount | LogicSigAccount,
+  from: SendTransactionFrom,
   sendParams?: SendTransactionParams,
 ): Promise<SendTransactionResult> {
   const { skipSending, skipWaiting, maxFee, suppressLog, maxRoundsToWaitForConfirmation } = sendParams ?? {}
@@ -129,12 +169,17 @@ export const sendTransaction = async function (
     return { transaction }
   }
 
-  const signedTransaction = 'sk' in from ? transaction.signTxn(from.sk) : algosdk.signLogicSigTransactionObject(transaction, from).blob
+  const signedTransaction =
+    'sk' in from
+      ? transaction.signTxn(from.sk)
+      : 'lsig' in from
+      ? algosdk.signLogicSigTransactionObject(transaction, from).blob
+      : from.sign(transaction)
   await client.sendRawTransaction(signedTransaction).do()
 
   if (!suppressLog) {
     AlgoKitConfig.logger.info(
-      `Sent transaction ID ${transaction.txID()} ${transaction.type} from ${'sk' in from ? from.addr : from.address()}`,
+      `Sent transaction ID ${transaction.txID()} ${transaction.type} from ${'addr' in from ? from.addr : from.address()}`,
     )
   }
 

@@ -1,8 +1,10 @@
 import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
+import { getTestAccount } from './account'
 import { AlgoAmount } from './algo-amount'
-import { Arc2TransactionNote, encodeTransactionNote, sendGroupOfTransactions, sendTransaction } from './transaction'
+import { Arc2TransactionNote, encodeTransactionNote, MultisigAccount, sendGroupOfTransactions, sendTransaction } from './transaction'
+import { transferAlgos } from './transfer'
 
 describe('transaction', () => {
   const localnet = localNetFixture()
@@ -77,6 +79,79 @@ describe('transaction', () => {
     expect(confirmation?.['confirmed-round']).toBeGreaterThanOrEqual(txn1.firstRound)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(Buffer.from(confirmation!.txn.txn.grp!).toString('hex')).toBe(Buffer.from(txn1.group!).toString('hex'))
+  })
+
+  test('Multisig single account', async () => {
+    const { client, testAccount } = localnet.context
+
+    // Setup multisig
+    const multisig = new MultisigAccount(
+      {
+        addrs: [testAccount.addr],
+        threshold: 1,
+        version: 1,
+      },
+      [testAccount],
+    )
+
+    // Fund multisig
+    await transferAlgos(
+      {
+        from: testAccount,
+        to: multisig.addr,
+        amount: AlgoAmount.Algos(1),
+      },
+      client,
+    )
+
+    // Use multisig
+    await transferAlgos(
+      {
+        from: multisig,
+        to: testAccount.addr,
+        amount: AlgoAmount.MicroAlgos(500),
+      },
+      client,
+    )
+  })
+
+  test('Multisig double account', async () => {
+    const { client, testAccount } = localnet.context
+    const account2 = await getTestAccount({
+      client,
+      initialFunds: AlgoAmount.Algos(10),
+      suppressLog: true,
+    })
+
+    // Setup multisig
+    const multisig = new MultisigAccount(
+      {
+        addrs: [testAccount.addr, account2.addr],
+        threshold: 2,
+        version: 1,
+      },
+      [testAccount, account2],
+    )
+
+    // Fund multisig
+    await transferAlgos(
+      {
+        from: testAccount,
+        to: multisig.addr,
+        amount: AlgoAmount.Algos(1),
+      },
+      client,
+    )
+
+    // Use multisig
+    await transferAlgos(
+      {
+        from: multisig,
+        to: testAccount.addr,
+        amount: AlgoAmount.MicroAlgos(500),
+      },
+      client,
+    )
   })
 })
 

@@ -1,21 +1,23 @@
-import algosdk, { Account, Algodv2, LogicSigAccount } from 'algosdk'
+import algosdk, { Algodv2, SuggestedParams } from 'algosdk'
 import { AlgoAmount } from './algo-amount'
 import {
   encodeTransactionNote,
   sendTransaction,
+  SendTransactionFrom,
   SendTransactionParams,
   SendTransactionResult,
-  SigningAccount,
   TransactionNote,
 } from './transaction'
 
 interface AlgoTransferParams extends SendTransactionParams {
   /** The account (with private key loaded) that will send the µALGOs */
-  from: Account | SigningAccount | LogicSigAccount
+  from: SendTransactionFrom
   /** The account address that will receive the ALGOs */
   to: string
   /** The amount to send */
   amount: AlgoAmount
+  /** Optional transaction parameters */
+  parameters?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
 }
@@ -27,8 +29,8 @@ interface AlgoTransferParams extends SendTransactionParams {
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
  */
 export async function transferAlgos(transfer: AlgoTransferParams, client: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, amount, note, ...sendConfig } = transfer
-  const params = await client.getTransactionParams().do()
+  const { from, to, amount, note, parameters, ...sendConfig } = transfer
+  const params = parameters ?? (await client.getTransactionParams().do())
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: 'addr' in from ? from.addr : from.address(),
