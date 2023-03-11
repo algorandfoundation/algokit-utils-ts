@@ -292,7 +292,7 @@ export interface PendingTransactionResponse {
    * (gd) Global state key/value changes for the application being executed by this
    * transaction.
    */
-  'global-state-delta'?: Record<string, EvalDelta>[]
+  'global-state-delta'?: Record<string, AlgodEvalDelta>[]
   /**
    * Inner transactions produced by application execution.
    */
@@ -301,7 +301,7 @@ export interface PendingTransactionResponse {
    * (ld) Local state key/value changes for the application being executed by this
    * transaction.
    */
-  'local-state-delta'?: Record<string, EvalDelta>[]
+  'local-state-delta'?: Record<string, AlgodEvalDelta>[]
   /**
    * (lg) Logs for the application being executed by this transaction.
    */
@@ -323,7 +323,7 @@ export interface PendingTransactionResponse {
   txn: EncodedSignedTransaction
 }
 
-export interface EvalDelta {
+export interface AlgodEvalDelta {
   action: number
   bytes: string
   uint: number
