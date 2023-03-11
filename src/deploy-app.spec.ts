@@ -8,7 +8,7 @@ import {
   APP_DEPLOY_NOTE_PREFIX,
   getCreatorAppsByName,
   getStorageSchemaFromAppSpec,
-  replaceDeployTimeControlParameters,
+  replaceDeployTimeControlParams,
 } from './deploy-app'
 import { SendTransactionFrom } from './transaction'
 
@@ -22,7 +22,7 @@ describe('deploy-app', () => {
     const appSpec = JSON.parse(await appSpecFile.toString('utf-8'))
     return {
       from: from,
-      approvalProgram: replaceDeployTimeControlParameters(Buffer.from(appSpec.source.approval, 'base64').toString('utf-8'), metadata),
+      approvalProgram: replaceDeployTimeControlParams(Buffer.from(appSpec.source.approval, 'base64').toString('utf-8'), metadata),
       clearProgram: Buffer.from(appSpec.source.clear, 'base64').toString('utf-8'),
       schema: getStorageSchemaFromAppSpec(appSpec),
       note: `${APP_DEPLOY_NOTE_PREFIX}${JSON.stringify(metadata)}`,

@@ -131,10 +131,10 @@ export async function getCreatorAppsByName(indexer: Indexer, creatorAccount: Sen
   return appLookup
 }
 
-export function replaceDeployTimeControlParameters(tealCode: string, parameters: { updatable: boolean; deletable: boolean }) {
+export function replaceDeployTimeControlParams(tealCode: string, params: { updatable: boolean; deletable: boolean }) {
   return tealCode
-    .replace(UPDATABLE_TEMPLATE_NAME, (parameters.updatable ? 1 : 0).toString())
-    .replace(DELETABLE_TEMPLATE_NAME, (parameters.deletable ? 1 : 0).toString())
+    .replace(UPDATABLE_TEMPLATE_NAME, (params.updatable ? 1 : 0).toString())
+    .replace(DELETABLE_TEMPLATE_NAME, (params.deletable ? 1 : 0).toString())
 }
 
 export function getStorageSchemaFromAppSpec(appSpec: any): AppStorageSchema {

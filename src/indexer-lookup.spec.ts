@@ -6,7 +6,7 @@ import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { getTestAccount } from './account'
 import { AlgoAmount } from './algo-amount'
 import { createApp } from './app'
-import { getStorageSchemaFromAppSpec, replaceDeployTimeControlParameters } from './deploy-app'
+import { getStorageSchemaFromAppSpec, replaceDeployTimeControlParams } from './deploy-app'
 import { lookupAccountCreatedApplicationByAddress, lookupTransactionById, searchTransactions } from './indexer-lookup'
 import { sendTransaction } from './transaction'
 
@@ -62,7 +62,7 @@ describe('indexer-lookup', () => {
     const appSpec = JSON.parse(await appSpecFile.toString('utf-8'))
     const createParams = {
       from: testAccount,
-      approvalProgram: replaceDeployTimeControlParameters(Buffer.from(appSpec.source.approval, 'base64').toString('utf-8'), {
+      approvalProgram: replaceDeployTimeControlParams(Buffer.from(appSpec.source.approval, 'base64').toString('utf-8'), {
         updatable: false,
         deletable: false,
       }),
