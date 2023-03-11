@@ -24,6 +24,7 @@ export const localNetFixture = (testAccountFunding?: AlgoAmount) => {
       indexer: indexer,
       testAccount: await getTestAccount({ client, initialFunds: testAccountFunding ?? AlgoAmount.Algos(10), suppressLog: true }),
       transactionLogger: transactionLogger,
+      waitForIndexer: async () => transactionLogger.waitForIndexer(indexer),
       waitForIndexerTransaction,
     }
   }, 10_000)
@@ -58,6 +59,7 @@ export interface AlgorandTestAutomationContext {
   indexer: Indexer
   transactionLogger: TransactionLogger
   testAccount: Account
+  waitForIndexer: () => Promise<void>
   waitForIndexerTransaction: (txId: string) => Promise<TransactionLookupResult>
 }
 
