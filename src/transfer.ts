@@ -1,7 +1,10 @@
 import algosdk, { Algodv2, SuggestedParams } from 'algosdk'
 import { AlgoAmount } from './algo-amount'
+import { AlgoKitConfig } from './config'
 import {
   encodeTransactionNote,
+  getSenderAddress,
+  getTransactionParams,
   sendTransaction,
   SendTransactionFrom,
   SendTransactionParams,
@@ -17,7 +20,7 @@ interface AlgoTransferParams extends SendTransactionParams {
   /** The amount to send */
   amount: AlgoAmount
   /** Optional transaction parameters */
-  parameters?: SuggestedParams
+  transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
 }
@@ -29,18 +32,21 @@ interface AlgoTransferParams extends SendTransactionParams {
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
  */
 export async function transferAlgos(transfer: AlgoTransferParams, client: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, amount, note, parameters, ...sendConfig } = transfer
-  const params = parameters ?? (await client.getTransactionParams().do())
+  const { from, to, amount, note, transactionParams, ...sendConfig } = transfer
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-    from: 'addr' in from ? from.addr : from.address(),
+    from: getSenderAddress(from),
     to: to,
     amount: amount.microAlgos,
-    note: note ? encodeTransactionNote(note) : undefined,
-    suggestedParams: params,
+    note: encodeTransactionNote(note),
+    suggestedParams: await getTransactionParams(transactionParams, client),
     closeRemainderTo: undefined,
     rekeyTo: undefined,
   })
+
+  if (!sendConfig.suppressLog && !sendConfig.skipSending) {
+    AlgoKitConfig.logger.debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
+  }
 
   return sendTransaction(client, transaction, from, sendConfig)
 }

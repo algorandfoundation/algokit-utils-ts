@@ -27,7 +27,8 @@
     "semantic-release": "semantic-release"
   },
   "dependencies": {
-    "algosdk": "^2.1.0"
+    "algosdk": "^2.1.0",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.3",

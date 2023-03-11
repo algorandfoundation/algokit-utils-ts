@@ -1,0 +1,32 @@
+{
+    "name": "SampleApp",
+    "methods": [
+        {
+            "name": "update",
+            "args": [],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "delete",
+            "args": [],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "hello",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "name"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        }
+    ],
+    "networks": {}
+}

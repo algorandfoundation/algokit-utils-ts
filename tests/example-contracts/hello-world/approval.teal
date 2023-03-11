@@ -1,0 +1,118 @@
+#pragma version 8
+intcblock 0 1
+txn NumAppArgs
+intc_0 // 0
+==
+bnz main_l8
+txna ApplicationArgs 0
+pushbytes 0xa0e81872 // "update()void"
+==
+bnz main_l7
+txna ApplicationArgs 0
+pushbytes 0x24378d3c // "delete()void"
+==
+bnz main_l6
+txna ApplicationArgs 0
+pushbytes 0x02bece11 // "hello(string)string"
+==
+bnz main_l5
+err
+main_l5:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+callsub hello_2
+store 0
+pushbytes 0x151f7c75 // 0x151f7c75
+load 0
+concat
+log
+intc_1 // 1
+return
+main_l6:
+txn OnCompletion
+pushint 5 // DeleteApplication
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub delete_1
+intc_1 // 1
+return
+main_l7:
+txn OnCompletion
+pushint 4 // UpdateApplication
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub update_0
+intc_1 // 1
+return
+main_l8:
+txn OnCompletion
+intc_0 // NoOp
+==
+bnz main_l10
+err
+main_l10:
+txn ApplicationID
+intc_0 // 0
+==
+assert
+intc_1 // 1
+return
+
+// update
+update_0:
+proto 0 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+pushint TMPL_UPDATABLE // TMPL_UPDATABLE
+// Check app is updatable
+assert
+retsub
+
+// delete
+delete_1:
+proto 0 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+pushint TMPL_DELETABLE // TMPL_DELETABLE
+// Check app is deletable
+assert
+retsub
+
+// hello
+hello_2:
+proto 1 1
+pushbytes 0x // ""
+pushbytes 0x48656c6c6f2c20 // "Hello, "
+frame_dig -1
+extract 2 0
+concat
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub

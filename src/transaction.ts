@@ -1,4 +1,12 @@
-import algosdk, { Account, Algodv2, EncodedSignedTransaction, LogicSigAccount, MultisigMetadata, Transaction } from 'algosdk'
+import algosdk, {
+  Account,
+  Algodv2,
+  EncodedSignedTransaction,
+  LogicSigAccount,
+  MultisigMetadata,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk'
 import { AlgoAmount } from './algo-amount'
 import { AlgoKitConfig } from './config'
 
@@ -145,6 +153,15 @@ export interface SendTransactionResult {
 
 export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount
 
+/**
+ * Returns the public address of the given transaction sender.
+ * @param sender A transaction sender
+ * @returns The public address
+ */
+export const getSenderAddress = function (sender: SendTransactionFrom) {
+  return 'addr' in sender ? sender.addr : sender.address()
+}
+
 /** Signs and sends the given transaction to the chain
  *
  * @param client An algod client
@@ -178,9 +195,7 @@ export const sendTransaction = async function (
   await client.sendRawTransaction(signedTransaction).do()
 
   if (!suppressLog) {
-    AlgoKitConfig.logger.info(
-      `Sent transaction ID ${transaction.txID()} ${transaction.type} from ${'addr' in from ? from.addr : from.address()}`,
-    )
+    AlgoKitConfig.logger.info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
   }
 
   let confirmation: PendingTransactionResponse | undefined = undefined
@@ -225,7 +240,7 @@ export const sendGroupOfTransactions = async function (client: Algodv2, transact
 
   AlgoKitConfig.logger.debug(
     `Signer IDs (${groupId})`,
-    transactions.map((t) => ('addr' in t.signer ? t.signer.addr : t.signer.address())),
+    transactions.map((t) => getSenderAddress(t.signer)),
   )
 
   AlgoKitConfig.logger.debug(
@@ -390,4 +405,14 @@ export function capTransactionFee(transaction: algosdk.Transaction, maxAcceptabl
     // Now set the flat on the transaction. Otherwise the network may increase the fee above our cap and perform the transaction.
     transaction.flatFee = true
   }
+}
+
+/**
+ * Returns suggested transaction parameters from algod unless some are already provided.
+ * @param params Optionally provide parameters to use
+ * @param client Algod client
+ * @returns The suggested transaction parameters
+ */
+export async function getTransactionParams(params: SuggestedParams | undefined, client: Algodv2) {
+  return params ?? (await client.getTransactionParams().do())
 }

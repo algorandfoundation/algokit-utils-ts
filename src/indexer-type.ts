@@ -154,6 +154,9 @@ export interface AssetResult {
   params: AssetParams
 }
 
+/**
+ * The result of looking up an application
+ */
 export interface ApplicationResult {
   id: number
   params: ApplicationParams
