@@ -287,7 +287,7 @@ export async function deployApp(
       })
     }
 
-    if (onSchemaBreak === 'fail' || onSchemaBreak === OnSchemaBreak.Fail) {
+    if (onSchemaBreak === undefined || onSchemaBreak === 'fail' || onSchemaBreak === OnSchemaBreak.Fail) {
       throw new Error(
         'Schema break detected and on_schema_break=OnSchemaBreak.Fail, stopping deployment. ' +
           'If you want to try deleting and recreating the app then ' +
@@ -311,7 +311,7 @@ export async function deployApp(
       AlgoKitConfig.logger.info(`Detected a TEAL update in app ${existingApp.appIndex} for creator ${getSenderAddress(appParams.from)}`)
     }
 
-    if (onUpdate === 'fail' || onUpdate === OnUpdate.Fail) {
+    if (onUpdate === undefined || onUpdate === 'fail' || onUpdate === OnUpdate.Fail) {
       throw new Error(
         'Update detected and onUpdate=Fail, stopping deployment. ' +
           'If you want to try deleting and recreating the app then ' +

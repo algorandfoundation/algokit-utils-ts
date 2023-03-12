@@ -36,6 +36,10 @@ export class TestLogger implements Logger {
     return this.logs
   }
 
+  clear() {
+    this.logs = []
+  }
+
   snapshot(config?: {
     name?: string
     transactions?: (string | Transaction)[]

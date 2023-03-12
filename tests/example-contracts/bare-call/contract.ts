@@ -1,6 +1,13 @@
 import { readFile } from 'fs/promises'
 import path from 'path'
-import { AppDeployMetadata, APP_DEPLOY_NOTE_PREFIX, replaceDeployTimeControlParams, SendTransactionFrom } from '../../../src'
+import {
+  AppDeployMetadata,
+  APP_DEPLOY_NOTE_PREFIX,
+  OnSchemaBreak,
+  OnUpdate,
+  replaceDeployTimeControlParams,
+  SendTransactionFrom,
+} from '../../../src'
 
 export const getBareCallContractData = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'))
@@ -34,6 +41,8 @@ export const getBareCallContractDeployParams = async (deployment: {
   from: SendTransactionFrom
   metadata: AppDeployMetadata
   value?: number
+  onSchemaBreak?: 'delete' | 'fail' | OnSchemaBreak
+  onUpdate?: 'update' | 'delete' | 'fail' | OnUpdate
 }) => {
   const contract = await getBareCallContractData()
   return {
@@ -45,5 +54,7 @@ export const getBareCallContractDeployParams = async (deployment: {
     deployTimeParameters: {
       VALUE: deployment.value ?? 1,
     },
+    onSchemaBreak: deployment.onSchemaBreak,
+    onUpdate: deployment.onUpdate,
   }
 }

@@ -1,10 +1,11 @@
 import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
+import invariant from 'tiny-invariant'
 import { getBareCallContractCreateParams, getBareCallContractDeployParams } from '../tests/example-contracts/bare-call/contract'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { logCaptureFixture } from '../tests/fixtures/log-capture-fixture'
 import { callApp, createApp, updateApp } from './app'
-import { deployApp, getCreatorAppsByName } from './deploy-app'
+import { AppDeployMetadata, deployApp, getCreatorAppsByName } from './deploy-app'
 
 describe('deploy-app', () => {
   const localnet = localNetFixture()
@@ -80,17 +81,12 @@ describe('deploy-app', () => {
     const { algod, indexer, testAccount } = localnet.context
     const deployment = await getBareCallContractDeployParams({
       from: testAccount,
-      metadata: {
-        name: 'test',
-        version: '1.0',
-        updatable: false,
-        deletable: false,
-      },
+      metadata: getMetadata(),
     })
     const result = await deployApp(deployment, algod, indexer)
 
-    if (!('transaction' in result)) throw new Error('Expected transaction')
-    if (!result.confirmation) throw new Error('Expected transaction confirmation')
+    invariant('transaction' in result)
+    invariant(result.confirmation)
     expect(result.appIndex).toBe(result.confirmation['application-index'])
     expect(result.appAddress).toBe(getApplicationAddress(result.appIndex))
     expect(result.createdMetadata).toEqual(deployment.metadata)
@@ -100,10 +96,59 @@ describe('deploy-app', () => {
     expect(result.version).toBe(deployment.metadata.version)
     expect(result.updatable).toBe(deployment.metadata.updatable)
     expect(result.deletable).toBe(deployment.metadata.deletable)
+    expect(result.deleted).toBe(false)
     logging.testLogger.snapshot({
       accounts: [testAccount],
-      transactions: 'transaction' in result ? [result.transaction] : undefined,
+      transactions: [result.transaction],
       apps: [result.appIndex],
     })
   })
+
+  test('Deploy update to updatable app', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: true })
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      value: 2,
+      onUpdate: 'update',
+    })
+    const result2 = await deployApp(deployment2, algod, indexer)
+
+    invariant('transaction' in result1)
+    invariant('transaction' in result2)
+    invariant(result2.confirmation)
+    expect(result2.appIndex).toBe(result1.appIndex)
+    expect(result2.createdMetadata).toEqual(deployment1.metadata)
+    expect(result2.createdRound).toBe(result1.createdRound)
+    expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
+    expect(result2.name).toBe(deployment2.metadata.name)
+    expect(result2.version).toBe(deployment2.metadata.version)
+    expect(result2.updatable).toBe(deployment2.metadata.updatable)
+    expect(result2.deletable).toBe(deployment2.metadata.deletable)
+    expect(result2.deleted).toBe(false)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction, result2.transaction],
+      apps: [result1.appIndex],
+    })
+  })
 })
+
+function getMetadata(overrides?: Partial<AppDeployMetadata>): AppDeployMetadata {
+  return {
+    name: 'test',
+    version: '1.0',
+    updatable: false,
+    deletable: false,
+    ...(overrides ?? {}),
+  }
+}
