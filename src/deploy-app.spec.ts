@@ -31,8 +31,9 @@ describe('deploy-app', () => {
 
     const apps = await getCreatorAppsByName(indexer, testAccount)
 
-    expect(Object.keys(apps)).toEqual([name])
-    const app = apps[name]
+    expect(apps.creator).toBe(testAccount.addr)
+    expect(Object.keys(apps.apps)).toEqual([name])
+    const app = apps.apps[name]
     expect(app.appIndex).toBe(app1.appIndex)
     expect(app.appAddress).toBe(app1.appAddress)
     expect(app.createdRound).toBe(app1.confirmation?.['confirmed-round'])
@@ -60,8 +61,9 @@ describe('deploy-app', () => {
 
     const apps = await getCreatorAppsByName(indexer, testAccount)
 
-    expect(Object.keys(apps).sort()).toEqual([name, name2, name3].sort())
-    const app1Data = apps[name]
+    expect(apps.creator).toBe(testAccount.addr)
+    expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
+    const app1Data = apps.apps[name]
     expect(app1Data.appIndex).toBe(app1.appIndex)
     expect(app1Data.appAddress).toBe(app1.appAddress)
     expect(app1Data.createdRound).toBe(app1.confirmation?.['confirmed-round'])
@@ -73,11 +75,11 @@ describe('deploy-app', () => {
     expect(app1Data.version).toBe(updateMetadata.version)
     expect(app1Data.deleted).toBe(false)
 
-    const app2Data = apps[name2]
+    const app2Data = apps.apps[name2]
     expect(app2Data.appIndex).toBe(app2.appIndex)
     expect(app2Data.deleted).toBe(false)
 
-    const app3Data = apps[name3]
+    const app3Data = apps.apps[name3]
     expect(app3Data.appIndex).toBe(app3.appIndex)
     expect(app3Data.deleted).toBe(true)
   })

@@ -131,8 +131,8 @@ export interface CompiledTeal {
 export async function createApp(create: CreateAppParams, client: Algodv2): Promise<SendTransactionResult & AppReference> {
   const { from, approvalProgram: approval, clearProgram: clear, schema, note, transactionParams, args, ...sendParams } = create
 
-  const approvalProgram = typeof approval === 'string' ? (await compileTeal(client, approval)).compiledBase64ToBytes : approval
-  const clearProgram = typeof clear === 'string' ? (await compileTeal(client, clear)).compiledBase64ToBytes : clear
+  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, client)).compiledBase64ToBytes : approval
+  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, client)).compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationCreateTxnFromObject({
     approvalProgram: approvalProgram,
@@ -174,8 +174,8 @@ export async function createApp(create: CreateAppParams, client: Algodv2): Promi
 export async function updateApp(update: UpdateAppParams, client: Algodv2): Promise<SendTransactionResult> {
   const { appIndex, from, approvalProgram: approval, clearProgram: clear, note, transactionParams, args, ...sendParams } = update
 
-  const approvalProgram = typeof approval === 'string' ? (await compileTeal(client, approval)).compiledBase64ToBytes : approval
-  const clearProgram = typeof clear === 'string' ? (await compileTeal(client, clear)).compiledBase64ToBytes : clear
+  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, client)).compiledBase64ToBytes : approval
+  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, client)).compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationUpdateTxnFromObject({
     appIndex,
@@ -273,7 +273,7 @@ export async function getAppByIndex(appIndex: number, client: Algodv2) {
  * @param tealCode The TEAL code
  * @returns The information about the compiled file
  */
-export async function compileTeal(client: Algodv2, tealCode: string): Promise<CompiledTeal> {
+export async function compileTeal(tealCode: string, client: Algodv2): Promise<CompiledTeal> {
   const compiled = await client.compile(tealCode).do()
   return {
     teal: tealCode,

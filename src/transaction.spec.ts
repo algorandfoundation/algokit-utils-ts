@@ -65,16 +65,21 @@ describe('transaction', () => {
     const txn1 = await getTestTransaction(1)
     const txn2 = await getTestTransaction(2)
 
-    const { confirmation } = await sendGroupOfTransactions(client, [
+    const { confirmation } = await sendGroupOfTransactions(
       {
-        transaction: txn1,
-        signer: testAccount,
+        transactions: [
+          {
+            transaction: txn1,
+            signer: testAccount,
+          },
+          {
+            transaction: txn2,
+            signer: testAccount,
+          },
+        ],
       },
-      {
-        transaction: txn2,
-        signer: testAccount,
-      },
-    ])
+      client,
+    )
 
     expect(confirmation?.['confirmed-round']).toBeGreaterThanOrEqual(txn1.firstRound)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -117,11 +122,13 @@ describe('transaction', () => {
 
   test('Multisig double account', async () => {
     const { client, testAccount } = localnet.context
-    const account2 = await getTestAccount({
+    const account2 = await getTestAccount(
+      {
+        initialFunds: AlgoAmount.Algos(10),
+        suppressLog: true,
+      },
       client,
-      initialFunds: AlgoAmount.Algos(10),
-      suppressLog: true,
-    })
+    )
 
     // Setup multisig
     const multisig = new MultisigAccount(

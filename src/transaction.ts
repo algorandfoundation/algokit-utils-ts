@@ -210,12 +210,17 @@ export interface TransactionToSign {
 /**
  * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
  *
+ * @param groupSend The group details to send, with:
+ *   * `transactions`: The array of transactions to send along with their signing account
+ *   * `sendParams`: The parameters to dictate how the group is sent
  * @param client An algod client
- * @param transactions The array of transactions to send along with their signing account
- * @param skipWaiting Whether or not the transaction should be waited until it's confirmed (default: wait for the transaction confirmation)
  * @returns An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
-export const sendGroupOfTransactions = async function (client: Algodv2, transactions: TransactionToSign[], skipWaiting = false) {
+export const sendGroupOfTransactions = async function (
+  groupSend: { transactions: TransactionToSign[]; sendParams?: Omit<Omit<SendTransactionParams, 'maxFee'>, 'skipSending'> },
+  client: Algodv2,
+) {
+  const { transactions, sendParams } = groupSend
   const transactionsToSend = transactions.map((t) => {
     return t.transaction
   })
@@ -231,24 +236,28 @@ export const sendGroupOfTransactions = async function (client: Algodv2, transact
     return 'sk' in signer ? groupedTransaction.signTxn(signer.sk) : algosdk.signLogicSigTransactionObject(groupedTransaction, signer).blob
   })
 
-  AlgoKitConfig.logger.debug(
-    `Signer IDs (${groupId})`,
-    transactions.map((t) => getSenderAddress(t.signer)),
-  )
+  if (!sendParams?.suppressLog) {
+    AlgoKitConfig.logger.debug(
+      `Signer IDs (${groupId})`,
+      transactions.map((t) => getSenderAddress(t.signer)),
+    )
 
-  AlgoKitConfig.logger.debug(
-    `Transaction IDs (${groupId})`,
-    transactionsToSend.map((t) => t.txID()),
-  )
+    AlgoKitConfig.logger.debug(
+      `Transaction IDs (${groupId})`,
+      transactionsToSend.map((t) => t.txID()),
+    )
+  }
 
   // https://developer.algorand.org/docs/rest-apis/algod/v2/#post-v2transactions
   const { txId } = (await client.sendRawTransaction(signedTransactions).do()) as { txId: string }
 
-  AlgoKitConfig.logger.info(`Group transaction (${groupId}) sent with transaction ID ${txId}`)
+  if (!sendParams?.suppressLog) {
+    AlgoKitConfig.logger.info(`Group transaction (${groupId}) sent with transaction ID ${txId}`)
+  }
 
   let confirmation: PendingTransactionResponse | undefined = undefined
-  if (!skipWaiting) {
-    confirmation = await waitForConfirmation(client, txId, 5)
+  if (!sendParams?.skipWaiting) {
+    confirmation = await waitForConfirmation(client, txId, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
   }
 
   return { groupTransactionId: txId, confirmation }

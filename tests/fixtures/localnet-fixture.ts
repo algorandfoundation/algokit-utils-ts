@@ -18,11 +18,11 @@ export const localNetFixture = (testAccountFunding?: AlgoAmount) => {
   beforeEach(async () => {
     const transactionLogger = new TransactionLogger()
     const txnLoggingAlgod = new Proxy<Algodv2>(client, new TxnLoggingAlgodv2ProxyHandler(transactionLogger))
-    const waitForIndexerTransaction = (txId: string) => runWhenIndexerCaughtUp(() => lookupTransactionById(indexer, txId))
+    const waitForIndexerTransaction = (txId: string) => runWhenIndexerCaughtUp(() => lookupTransactionById(txId, indexer))
     context = {
       client: txnLoggingAlgod,
       indexer: indexer,
-      testAccount: await getTestAccount({ client, initialFunds: testAccountFunding ?? AlgoAmount.Algos(10), suppressLog: true }),
+      testAccount: await getTestAccount({ initialFunds: testAccountFunding ?? AlgoAmount.Algos(10), suppressLog: true }, client),
       transactionLogger: transactionLogger,
       waitForIndexer: async () => transactionLogger.waitForIndexer(indexer),
       waitForIndexerTransaction,

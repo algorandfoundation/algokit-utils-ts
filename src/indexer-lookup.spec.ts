@@ -5,8 +5,8 @@ import path from 'path'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { getTestAccount } from './account'
 import { AlgoAmount } from './algo-amount'
-import { createApp } from './app'
-import { getStorageSchemaFromAppSpec, replaceDeployTimeControlParams } from './deploy-app'
+import { AppStorageSchema, createApp } from './app'
+import { replaceDeployTimeControlParams } from './deploy-app'
 import { lookupAccountCreatedApplicationByAddress, lookupTransactionById, searchTransactions } from './indexer-lookup'
 import { sendTransaction } from './transaction'
 
@@ -27,7 +27,7 @@ describe('indexer-lookup', () => {
     const { transaction } = await sendTransaction(client, await getTestTransaction(), testAccount)
     await transactionLogger.waitForIndexer(indexer)
 
-    const txn = await lookupTransactionById(indexer, transaction.txID())
+    const txn = await lookupTransactionById(transaction.txID(), indexer)
 
     expect(txn.transaction.id).toBe(transaction.txID())
     expect(txn['current-round']).toBeGreaterThanOrEqual(transaction.firstRound)
@@ -35,11 +35,13 @@ describe('indexer-lookup', () => {
 
   test('Transactions are searched with pagination', async () => {
     const { client, indexer, testAccount, transactionLogger } = localnet.context
-    const secondAccount = await getTestAccount({
+    const secondAccount = await getTestAccount(
+      {
+        initialFunds: AlgoAmount.Algos(1),
+        suppressLog: true,
+      },
       client,
-      initialFunds: AlgoAmount.Algos(1),
-      suppressLog: true,
-    })
+    )
     const { transaction: transaction1 } = await sendTransaction(client, await getTestTransaction(1), testAccount)
     const { transaction: transaction2 } = await sendTransaction(client, await getTestTransaction(1), testAccount)
     await sendTransaction(client, await getTestTransaction(1, secondAccount.addr), secondAccount)
@@ -53,11 +55,13 @@ describe('indexer-lookup', () => {
 
   test('Application create transactions are found by creator with pagination', async () => {
     const { client, indexer, testAccount } = localnet.context
-    const secondAccount = await getTestAccount({
+    const secondAccount = await getTestAccount(
+      {
+        initialFunds: AlgoAmount.Algos(1),
+        suppressLog: true,
+      },
       client,
-      initialFunds: AlgoAmount.Algos(1),
-      suppressLog: true,
-    })
+    )
     const appSpecFile = await readFile(path.join(__dirname, '..', 'tests', 'example-contracts', 'hello-world', 'application.json'))
     const appSpec = JSON.parse(await appSpecFile.toString('utf-8'))
     const createParams = {
@@ -78,3 +82,13 @@ describe('indexer-lookup', () => {
     expect(apps.map((a) => a.id).sort()).toEqual([app1.appIndex, app2.appIndex].sort())
   })
 })
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getStorageSchemaFromAppSpec(appSpec: any): AppStorageSchema {
+  return {
+    globalByteSlices: appSpec.state.global.num_byte_slices,
+    globalInts: appSpec.state.global.num_uints,
+    localByteSlices: appSpec.state.local.num_byte_slices,
+    localInts: appSpec.state.local.num_byte_slices,
+  }
+}

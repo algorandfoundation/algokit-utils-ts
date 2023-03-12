@@ -9,7 +9,7 @@ describe('account', () => {
   test('New account is retrieved and funded', async () => {
     const { client } = localnet.context
 
-    const account = await getAccount(client, uuid())
+    const account = await getAccount(uuid(), client)
     const accountInfo = await client.accountInformation(account.addr).do()
 
     expect(accountInfo['amount']).toBeGreaterThan(0)
@@ -19,8 +19,8 @@ describe('account', () => {
     const { client } = localnet.context
     const name = uuid()
 
-    const account = await getAccount(client, name)
-    const account2 = await getAccount(client, name)
+    const account = await getAccount(name, client)
+    const account2 = await getAccount(name, client)
 
     expect(account).not.toBe(account2)
     expect(account.addr).toBe(account2.addr)

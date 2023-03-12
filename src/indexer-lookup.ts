@@ -10,7 +10,7 @@ const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerA
  * @param transactionId The ID of the transaction to look up
  * @returns The result of the look-up
  */
-export async function lookupTransactionById(indexer: Indexer, transactionId: string): Promise<TransactionLookupResult> {
+export async function lookupTransactionById(transactionId: string, indexer: Indexer): Promise<TransactionLookupResult> {
   return (await indexer.lookupTransactionByID(transactionId).do()) as TransactionLookupResult
 }
 
