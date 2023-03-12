@@ -13,7 +13,7 @@ interface File {
 }
 
 export class ApplicationClient {
-  private client: Algodv2
+  private algod: Algodv2
   private appSpec: ApplicationSpecification
   private sender: SendTransactionFrom | undefined
 
@@ -29,7 +29,7 @@ export class ApplicationClient {
   }
 
   constructor(
-    client: Algodv2,
+    algod: Algodv2,
     app: ApplicationSpecification | File | string,
     options?: {
       appId?: number
@@ -37,7 +37,7 @@ export class ApplicationClient {
       params?: SuggestedParams
     },
   ) {
-    this.client = client
+    this.algod = algod
     this.appSpec =
       typeof app == 'string'
         ? (JSON.parse(app) as ApplicationSpecification)
@@ -60,7 +60,7 @@ export class ApplicationClient {
         from: create?.sender ?? this.sender,
         approvalProgram: approval,
       },
-      this.client,
+      this.algod,
     )
   }
 }

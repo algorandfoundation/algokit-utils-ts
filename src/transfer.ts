@@ -28,10 +28,10 @@ interface AlgoTransferParams extends SendTransactionParams {
 /**
  * Transfer ALGOs between two accounts.
  * @param transfer The transfer definition
- * @param client An algod client
+ * @param algod An algod client
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
  */
-export async function transferAlgos(transfer: AlgoTransferParams, client: Algodv2): Promise<SendTransactionResult> {
+export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
   const { from, to, amount, note, transactionParams, ...sendConfig } = transfer
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
@@ -39,7 +39,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, client: Algodv
     to: to,
     amount: amount.microAlgos,
     note: encodeTransactionNote(note),
-    suggestedParams: await getTransactionParams(transactionParams, client),
+    suggestedParams: await getTransactionParams(transactionParams, algod),
     closeRemainderTo: undefined,
     rekeyTo: undefined,
   })
@@ -48,5 +48,5 @@ export async function transferAlgos(transfer: AlgoTransferParams, client: Algodv
     AlgoKitConfig.logger.debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
   }
 
-  return sendTransaction(client, transaction, from, sendConfig)
+  return sendTransaction(algod, transaction, from, sendConfig)
 }

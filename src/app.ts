@@ -125,14 +125,14 @@ export interface CompiledTeal {
 /**
  * Creates a smart contract app, returns the details of the created app.
  * @param create The parameters to create the app with
- * @param client An algod client
+ * @param algod An algod client
  * @returns The details of the created app, or the transaction to create it if `skipSending`
  */
-export async function createApp(create: CreateAppParams, client: Algodv2): Promise<SendTransactionResult & AppReference> {
+export async function createApp(create: CreateAppParams, algod: Algodv2): Promise<SendTransactionResult & AppReference> {
   const { from, approvalProgram: approval, clearStateProgram: clear, schema, note, transactionParams, args, ...sendParams } = create
 
-  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, client)).compiledBase64ToBytes : approval
-  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, client)).compiledBase64ToBytes : clear
+  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
+  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, algod)).compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationCreateTxnFromObject({
     approvalProgram: approvalProgram,
@@ -143,14 +143,14 @@ export async function createApp(create: CreateAppParams, client: Algodv2): Promi
     numGlobalByteSlices: schema.globalByteSlices,
     extraPages: schema.extraPages ?? Math.floor((approvalProgram.length + clearProgram.length) / APP_PAGE_MAX_SIZE),
     onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    suggestedParams: await getTransactionParams(transactionParams, client),
+    suggestedParams: await getTransactionParams(transactionParams, algod),
     from: getSenderAddress(from),
     note: encodeTransactionNote(note),
     ...getAppArgsForTransaction(args),
     rekeyTo: undefined,
   })
 
-  const { confirmation } = await sendTransaction(client, transaction, from, sendParams)
+  const { confirmation } = await sendTransaction(algod, transaction, from, sendParams)
   if (confirmation) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const appIndex = confirmation['application-index']!
@@ -168,20 +168,20 @@ export async function createApp(create: CreateAppParams, client: Algodv2): Promi
 /**
  * Updates a smart contract app.
  * @param update The parameters to update the app with
- * @param client An algod client
+ * @param algod An algod client
  * @returns The transaction
  */
-export async function updateApp(update: UpdateAppParams, client: Algodv2): Promise<SendTransactionResult> {
+export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promise<SendTransactionResult> {
   const { appIndex, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
 
-  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, client)).compiledBase64ToBytes : approval
-  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, client)).compiledBase64ToBytes : clear
+  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
+  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, algod)).compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationUpdateTxnFromObject({
     appIndex,
     approvalProgram: approvalProgram,
     clearProgram: clearProgram,
-    suggestedParams: await getTransactionParams(transactionParams, client),
+    suggestedParams: await getTransactionParams(transactionParams, algod),
     from: getSenderAddress(from),
     note: encodeTransactionNote(note),
     ...getAppArgsForTransaction(args),
@@ -192,22 +192,22 @@ export async function updateApp(update: UpdateAppParams, client: Algodv2): Promi
     AlgoKitConfig.logger.debug(`Updating app ${appIndex}`)
   }
 
-  return await sendTransaction(client, transaction, from, sendParams)
+  return await sendTransaction(algod, transaction, from, sendParams)
 }
 
 /**
  * Issues a call to a given app.
  * @param call The call details.
- * @param client An algod client
+ * @param algod An algod client
  * @returns The result of the call
  */
-export async function callApp(call: AppCallParams, client: Algodv2): Promise<SendTransactionResult> {
+export async function callApp(call: AppCallParams, algod: Algodv2): Promise<SendTransactionResult> {
   const { appIndex, callType, from, args, note, transactionParams, ...sendParams } = call
 
   const appCallParameters = {
     appIndex: appIndex,
     from: getSenderAddress(from),
-    suggestedParams: await getTransactionParams(transactionParams, client),
+    suggestedParams: await getTransactionParams(transactionParams, algod),
     ...getAppArgsForTransaction(args),
     note: encodeTransactionNote(note),
     rekeyTo: undefined,
@@ -232,7 +232,7 @@ export async function callApp(call: AppCallParams, client: Algodv2): Promise<Sen
       break
   }
 
-  return await sendTransaction(client, transaction, from, sendParams)
+  return await sendTransaction(algod, transaction, from, sendParams)
 }
 
 /** Returns the app args ready to load onto an app @see {Transaction} object */
@@ -259,22 +259,22 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
  * Gets the current data for the given app from algod.
  *
  * @param appIndex The index of the app
- * @param client An algod client
+ * @param algod An algod client
  * @returns The data about the app
  */
-export async function getAppByIndex(appIndex: number, client: Algodv2) {
-  return (await client.getApplicationByID(appIndex).do()) as ApplicationResponse
+export async function getAppByIndex(appIndex: number, algod: Algodv2) {
+  return (await algod.getApplicationByID(appIndex).do()) as ApplicationResponse
 }
 
 /**
  * Compiles the given TEAL using algod and returns the result.
  *
- * @param client An algod client
+ * @param algod An algod client
  * @param tealCode The TEAL code
  * @returns The information about the compiled file
  */
-export async function compileTeal(tealCode: string, client: Algodv2): Promise<CompiledTeal> {
-  const compiled = await client.compile(tealCode).do()
+export async function compileTeal(tealCode: string, algod: Algodv2): Promise<CompiledTeal> {
+  const compiled = await algod.compile(tealCode).do()
   return {
     teal: tealCode,
     compiled: compiled.result,

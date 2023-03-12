@@ -99,13 +99,13 @@ export interface AppDeploymentParams extends Omit<Omit<Omit<Omit<CreateAppParams
  *
  * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'delete'`) the existing app will be deleted and re-created.
  * @param deployment The arguments to control the app deployment, including:
- * @param client An algod client
+ * @param algod An algod client
  * @param indexer An indexer client
  * @returns The app reference of the new/existing app
  */
 export async function deployApp(
   deployment: AppDeploymentParams,
-  client: Algodv2,
+  algod: Algodv2,
   indexer: Indexer,
 ): Promise<(SendTransactionResult & AppMetadata) | AppMetadata> {
   const { metadata, deployTimeParameters, onSchemaBreak, onUpdate, existingDeployments, createArgs, updateArgs, deleteArgs, ...appParams } =
@@ -127,12 +127,12 @@ export async function deployApp(
 
   appParams.approvalProgram =
     typeof appParams.approvalProgram === 'string'
-      ? (await performTemplateSubstitutionAndCompile(appParams.approvalProgram, client, deployTimeParameters, metadata))
+      ? (await performTemplateSubstitutionAndCompile(appParams.approvalProgram, algod, deployTimeParameters, metadata))
           .compiledBase64ToBytes
       : appParams.approvalProgram
   appParams.clearStateProgram =
     typeof appParams.clearStateProgram === 'string'
-      ? (await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, client, deployTimeParameters)).compiledBase64ToBytes
+      ? (await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, algod, deployTimeParameters)).compiledBase64ToBytes
       : appParams.clearStateProgram
 
   // Todo: either cache this within the current execution run or pass it into this function given it's an expensive operation (N+1) and won't change?
@@ -147,7 +147,7 @@ export async function deployApp(
         skipSending: false,
         skipWaiting: false,
       },
-      client,
+      algod,
     )
 
     return {
@@ -184,7 +184,7 @@ export async function deployApp(
     )
   }
 
-  const existingAppRecord = await getAppByIndex(existingApp.appIndex, client)
+  const existingAppRecord = await getAppByIndex(existingApp.appIndex, algod)
   const existingApproval = existingAppRecord.params['approval-program']
   const existingClear = existingAppRecord.params['clear-state-program']
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -231,7 +231,7 @@ export async function deployApp(
         skipSending: false,
         skipWaiting: false,
       },
-      client,
+      algod,
     )
 
     return newApp
@@ -257,7 +257,7 @@ export async function deployApp(
         skipSending: false,
         skipWaiting: false,
       },
-      client,
+      algod,
     )
 
     return {
@@ -495,15 +495,15 @@ export function replaceDeployTimeControlParams(tealCode: string, params: { updat
  *
  * Looks for `TMPL_{parameter}` for template replacements.
  *
- * @param client An algod client
- * @param templatePathOrCode The full file path to the template .teal file
+ * @param tealCode The TEAL logic to compile
+ * @param algod An algod client
  * @param templateParameters Any parameters to replace in the .teal file before compiling
- * @param skipFileSystemWrite Whether to skip file system writing of the compiled output (default: don't skip), useful for deployed environments with no writeable file system that are compiling on the fly
- * @returns The information about the compiled file
+ * @param deploymentMetadata The deployment metadata the app will be deployed with
+ * @returns The information about the compiled code
  */
 export async function performTemplateSubstitutionAndCompile(
   tealCode: string,
-  client: Algodv2,
+  algod: Algodv2,
   templateParameters?: TealTemplateParameters,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {
@@ -522,7 +522,7 @@ export async function performTemplateSubstitutionAndCompile(
     tealCode = replaceDeployTimeControlParams(tealCode, deploymentMetadata)
   }
 
-  const compiled = await client.compile(tealCode).do()
+  const compiled = await algod.compile(tealCode).do()
   return {
     teal: tealCode,
     compiled: compiled.result,

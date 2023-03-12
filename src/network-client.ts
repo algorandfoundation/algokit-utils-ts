@@ -12,7 +12,7 @@ export interface AlgoClientConfig {
   token?: string | TokenHeader
 }
 
-/** Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment not client-side) */
+/** Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment not algod-side) */
 export function getAlgodConfigFromEnvironment(): AlgoClientConfig {
   if (!process || !process.env) {
     throw new Error('Attempt to get default algod configuration from a non Node.js context; supply the config instead')
@@ -29,7 +29,7 @@ export function getAlgodConfigFromEnvironment(): AlgoClientConfig {
   }
 }
 
-/** Retrieve the indexer configuration from environment variables (expects to be called from a Node.js environment not client-side) */
+/** Retrieve the indexer configuration from environment variables (expects to be called from a Node.js environment not algod-side) */
 export function getIndexerConfigFromEnvironment(): AlgoClientConfig {
   if (!process || !process.env) {
     throw new Error('Attempt to get default indexer configuration from a non Node.js context; supply the config instead')
@@ -49,7 +49,7 @@ export function getIndexerConfigFromEnvironment(): AlgoClientConfig {
 /** Returns the Algorand configuration to point to the AlgoNode service
  *
  * @param network Which network to connect to - TestNet or MainNet
- * @param config Which client config to return - Algod or Indexer
+ * @param config Which algod config to return - Algod or Indexer
  */
 export function getAlgoNodeConfig(network: 'testnet' | 'mainnet', config: 'algod' | 'indexer'): AlgoClientConfig {
   return {
@@ -60,7 +60,7 @@ export function getAlgoNodeConfig(network: 'testnet' | 'mainnet', config: 'algod
 
 /** Returns the Algorand configuration to point to the default LocalNet
  *
- * @param configOrPort Which client config to return - algod, kmd, or indexer OR a port number
+ * @param configOrPort Which algod config to return - algod, kmd, or indexer OR a port number
  */
 export function getDefaultLocalNetConfig(configOrPort: 'algod' | 'indexer' | 'kmd' | number): AlgoClientConfig {
   return {

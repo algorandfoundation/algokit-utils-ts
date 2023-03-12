@@ -82,8 +82,8 @@ describe('network-clients', () => {
     })
 
     test('Get working LocalNet algod client', async () => {
-      const client = getAlgoClient(getDefaultLocalNetConfig('algod'))
-      await client.status().do()
+      const algod = getAlgoClient(getDefaultLocalNetConfig('algod'))
+      await algod.status().do()
     })
 
     test('Get working LocalNet indexer client', async () => {
@@ -97,8 +97,8 @@ describe('network-clients', () => {
     })
 
     test('Get working MainNet algod client', async () => {
-      const client = getAlgoClient(getAlgoNodeConfig('mainnet', 'algod'))
-      await client.status().do()
+      const algod = getAlgoClient(getAlgoNodeConfig('mainnet', 'algod'))
+      await algod.status().do()
     })
 
     test('Get working MainNet indexer client', async () => {
@@ -107,20 +107,20 @@ describe('network-clients', () => {
     })
 
     test('Determine LocalNet algod client is LocalNet', async () => {
-      const client = getAlgoClient(getDefaultLocalNetConfig('algod'))
-      const localNet = await isLocalNet(client)
+      const algod = getAlgoClient(getDefaultLocalNetConfig('algod'))
+      const localNet = await isLocalNet(algod)
       expect(localNet).toBe(true)
     })
 
     test('Determine TestNet algod client is not LocalNet', async () => {
-      const client = getAlgoClient(getAlgoNodeConfig('testnet', 'algod'))
-      const localNet = await isLocalNet(client)
+      const algod = getAlgoClient(getAlgoNodeConfig('testnet', 'algod'))
+      const localNet = await isLocalNet(algod)
       expect(localNet).toBe(false)
     })
 
     test('Determine MainNet algod client is not LocalNet', async () => {
-      const client = getAlgoClient(getAlgoNodeConfig('mainnet', 'algod'))
-      const localNet = await isLocalNet(client)
+      const algod = getAlgoClient(getAlgoNodeConfig('mainnet', 'algod'))
+      const localNet = await isLocalNet(algod)
       expect(localNet).toBe(false)
     })
   })

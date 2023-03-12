@@ -14,24 +14,24 @@ describe('transaction', () => {
       from: localnet.context.testAccount.addr,
       to: localnet.context.testAccount.addr,
       amount: amount ?? 1,
-      suggestedParams: await localnet.context.client.getTransactionParams().do(),
+      suggestedParams: await localnet.context.algod.getTransactionParams().do(),
     })
   }
 
   test('Transaction is sent and waited for', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
-    const { transaction, confirmation } = await sendTransaction(client, txn, testAccount)
+    const { transaction, confirmation } = await sendTransaction(algod, txn, testAccount)
 
     expect(transaction.txID()).toBe(txn.txID())
     expect(confirmation?.['confirmed-round']).toBeGreaterThanOrEqual(txn.firstRound)
   })
 
   test('Transaction is capped by low min txn fee', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
     await expect(async () => {
-      await sendTransaction(client, txn, testAccount, {
+      await sendTransaction(algod, txn, testAccount, {
         maxFee: AlgoAmount.MicroAlgos(1),
       })
     }).rejects.toThrowError(
@@ -42,18 +42,18 @@ describe('transaction', () => {
   })
 
   test('Transaction cap is ignored if flat fee set', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
     txn.flatFee = true
-    await sendTransaction(client, txn, testAccount, {
+    await sendTransaction(algod, txn, testAccount, {
       maxFee: AlgoAmount.MicroAlgos(1),
     })
   })
 
   test('Transaction cap is ignored if higher than fee', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
-    const { confirmation } = await sendTransaction(client, txn, testAccount, {
+    const { confirmation } = await sendTransaction(algod, txn, testAccount, {
       maxFee: AlgoAmount.MicroAlgos(1000_000),
     })
 
@@ -61,7 +61,7 @@ describe('transaction', () => {
   })
 
   test('Transaction group is sent', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const txn1 = await getTestTransaction(1)
     const txn2 = await getTestTransaction(2)
 
@@ -78,7 +78,7 @@ describe('transaction', () => {
           },
         ],
       },
-      client,
+      algod,
     )
 
     expect(confirmation?.['confirmed-round']).toBeGreaterThanOrEqual(txn1.firstRound)
@@ -87,7 +87,7 @@ describe('transaction', () => {
   })
 
   test('Multisig single account', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
 
     // Setup multisig
     const multisig = new MultisigAccount(
@@ -106,7 +106,7 @@ describe('transaction', () => {
         to: multisig.addr,
         amount: AlgoAmount.Algos(1),
       },
-      client,
+      algod,
     )
 
     // Use multisig
@@ -116,18 +116,18 @@ describe('transaction', () => {
         to: testAccount.addr,
         amount: AlgoAmount.MicroAlgos(500),
       },
-      client,
+      algod,
     )
   })
 
   test('Multisig double account', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const account2 = await getTestAccount(
       {
         initialFunds: AlgoAmount.Algos(10),
         suppressLog: true,
       },
-      client,
+      algod,
     )
 
     // Setup multisig
@@ -147,7 +147,7 @@ describe('transaction', () => {
         to: multisig.addr,
         amount: AlgoAmount.Algos(1),
       },
-      client,
+      algod,
     )
 
     // Use multisig
@@ -157,7 +157,7 @@ describe('transaction', () => {
         to: testAccount.addr,
         amount: AlgoAmount.MicroAlgos(500),
       },
-      client,
+      algod,
     )
   })
 })

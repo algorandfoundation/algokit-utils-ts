@@ -7,7 +7,7 @@ import { TransactionLookupResult } from '../../src/indexer-type'
 
 export const localNetFixture = (testAccountFunding?: AlgoAmount) => {
   const clientConfig = getDefaultLocalNetConfig('algod')
-  const client = getAlgoClient(clientConfig)
+  const algod = getAlgoClient(clientConfig)
   // todo: Sort out .env instead, cleaner and more flexible
   process.env.ALGOD_SERVER = clientConfig.server
   process.env.ALGOD_PORT = clientConfig.port?.toString() ?? ''
@@ -17,12 +17,12 @@ export const localNetFixture = (testAccountFunding?: AlgoAmount) => {
 
   beforeEach(async () => {
     const transactionLogger = new TransactionLogger()
-    const txnLoggingAlgod = new Proxy<Algodv2>(client, new TxnLoggingAlgodv2ProxyHandler(transactionLogger))
+    const txnLoggingAlgod = new Proxy<Algodv2>(algod, new TxnLoggingAlgodv2ProxyHandler(transactionLogger))
     const waitForIndexerTransaction = (txId: string) => runWhenIndexerCaughtUp(() => lookupTransactionById(txId, indexer))
     context = {
-      client: txnLoggingAlgod,
+      algod: txnLoggingAlgod,
       indexer: indexer,
-      testAccount: await getTestAccount({ initialFunds: testAccountFunding ?? AlgoAmount.Algos(10), suppressLog: true }, client),
+      testAccount: await getTestAccount({ initialFunds: testAccountFunding ?? AlgoAmount.Algos(10), suppressLog: true }, algod),
       transactionLogger: transactionLogger,
       waitForIndexer: async () => transactionLogger.waitForIndexer(indexer),
       waitForIndexerTransaction,
@@ -55,7 +55,7 @@ class TxnLoggingAlgodv2ProxyHandler implements ProxyHandler<Algodv2> {
 }
 
 export interface AlgorandTestAutomationContext {
-  client: Algodv2
+  algod: Algodv2
   indexer: Indexer
   transactionLogger: TransactionLogger
   testAccount: Account

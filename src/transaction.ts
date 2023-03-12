@@ -157,7 +157,7 @@ export const getSenderAddress = function (sender: SendTransactionFrom) {
 
 /** Signs and sends the given transaction to the chain
  *
- * @param client An algod client
+ * @param algod An algod client
  * @param transaction The unsigned transaction
  * @param from The account to sign the transaction with: either an account with private key loaded or a logic signature account
  * @param config The sending configuration for this transaction
@@ -165,7 +165,7 @@ export const getSenderAddress = function (sender: SendTransactionFrom) {
  * @returns An object with transaction (`transaction`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendTransaction = async function (
-  client: Algodv2,
+  algod: Algodv2,
   transaction: Transaction,
   from: SendTransactionFrom,
   sendParams?: SendTransactionParams,
@@ -185,7 +185,7 @@ export const sendTransaction = async function (
       : 'lsig' in from
       ? algosdk.signLogicSigTransactionObject(transaction, from).blob
       : from.sign(transaction)
-  await client.sendRawTransaction(signedTransaction).do()
+  await algod.sendRawTransaction(signedTransaction).do()
 
   if (!suppressLog) {
     AlgoKitConfig.logger.info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
@@ -193,7 +193,7 @@ export const sendTransaction = async function (
 
   let confirmation: PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
-    confirmation = await waitForConfirmation(client, transaction.txID(), maxRoundsToWaitForConfirmation ?? 5)
+    confirmation = await waitForConfirmation(algod, transaction.txID(), maxRoundsToWaitForConfirmation ?? 5)
   }
 
   return { transaction, confirmation }
@@ -213,12 +213,12 @@ export interface TransactionToSign {
  * @param groupSend The group details to send, with:
  *   * `transactions`: The array of transactions to send along with their signing account
  *   * `sendParams`: The parameters to dictate how the group is sent
- * @param client An algod client
+ * @param algod An algod client
  * @returns An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendGroupOfTransactions = async function (
   groupSend: { transactions: TransactionToSign[]; sendParams?: Omit<Omit<SendTransactionParams, 'maxFee'>, 'skipSending'> },
-  client: Algodv2,
+  algod: Algodv2,
 ) {
   const { transactions, sendParams } = groupSend
   const transactionsToSend = transactions.map((t) => {
@@ -249,7 +249,7 @@ export const sendGroupOfTransactions = async function (
   }
 
   // https://developer.algorand.org/docs/rest-apis/algod/v2/#post-v2transactions
-  const { txId } = (await client.sendRawTransaction(signedTransactions).do()) as { txId: string }
+  const { txId } = (await algod.sendRawTransaction(signedTransactions).do()) as { txId: string }
 
   if (!sendParams?.suppressLog) {
     AlgoKitConfig.logger.info(`Group transaction (${groupId}) sent with transaction ID ${txId}`)
@@ -257,7 +257,7 @@ export const sendGroupOfTransactions = async function (
 
   let confirmation: PendingTransactionResponse | undefined = undefined
   if (!sendParams?.skipWaiting) {
-    confirmation = await waitForConfirmation(client, txId, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
+    confirmation = await waitForConfirmation(algod, txId, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
   }
 
   return { groupTransactionId: txId, confirmation }
@@ -267,7 +267,7 @@ export const sendGroupOfTransactions = async function (
  * Wait until the transaction is confirmed or rejected, or until `timeout`
  * number of rounds have passed.
  *
- * @param client An algod client
+ * @param algod An algod client
  * @param transactionId The transaction ID to wait for
  * @param timeout Maximum number of rounds to wait
  *
@@ -275,7 +275,7 @@ export const sendGroupOfTransactions = async function (
  * @throws Throws an error if the transaction is not confirmed or rejected in the next `timeout` rounds
  */
 export const waitForConfirmation = async function (
-  client: Algodv2,
+  algod: Algodv2,
   transactionId: string,
   timeout: number,
 ): Promise<PendingTransactionResponse> {
@@ -284,7 +284,7 @@ export const waitForConfirmation = async function (
   }
 
   // Get current round
-  const status = await client.status().do()
+  const status = await algod.status().do()
   if (status === undefined) {
     throw new Error('Unable to get node status')
   }
@@ -293,7 +293,7 @@ export const waitForConfirmation = async function (
   const startRound = status['last-round'] + 1
   let currentRound = startRound
   while (currentRound < startRound + timeout) {
-    const pendingInfo = (await client.pendingTransactionInformation(transactionId).do()) as PendingTransactionResponse
+    const pendingInfo = (await algod.pendingTransactionInformation(transactionId).do()) as PendingTransactionResponse
     if (pendingInfo !== undefined) {
       const confirmedRound = pendingInfo['confirmed-round']
       if (confirmedRound && confirmedRound > 0) {
@@ -307,7 +307,7 @@ export const waitForConfirmation = async function (
       }
     }
 
-    await client.statusAfterBlock(currentRound).do()
+    await algod.statusAfterBlock(currentRound).do()
     currentRound++
   }
 
@@ -344,9 +344,9 @@ export function capTransactionFee(transaction: algosdk.Transaction, maxAcceptabl
 /**
  * Returns suggested transaction parameters from algod unless some are already provided.
  * @param params Optionally provide parameters to use
- * @param client Algod client
+ * @param algod Algod algod
  * @returns The suggested transaction parameters
  */
-export async function getTransactionParams(params: SuggestedParams | undefined, client: Algodv2) {
-  return params ?? (await client.getTransactionParams().do())
+export async function getTransactionParams(params: SuggestedParams | undefined, algod: Algodv2) {
+  return params ?? (await algod.getTransactionParams().do())
 }

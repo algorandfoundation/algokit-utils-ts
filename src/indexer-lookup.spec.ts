@@ -18,13 +18,13 @@ describe('indexer-lookup', () => {
       from: from ?? localnet.context.testAccount.addr,
       to: localnet.context.testAccount.addr,
       amount: amount ?? 1,
-      suggestedParams: await localnet.context.client.getTransactionParams().do(),
+      suggestedParams: await localnet.context.algod.getTransactionParams().do(),
     })
   }
 
   test('Transaction is found by id', async () => {
-    const { client, indexer, testAccount, transactionLogger } = localnet.context
-    const { transaction } = await sendTransaction(client, await getTestTransaction(), testAccount)
+    const { algod, indexer, testAccount, transactionLogger } = localnet.context
+    const { transaction } = await sendTransaction(algod, await getTestTransaction(), testAccount)
     await transactionLogger.waitForIndexer(indexer)
 
     const txn = await lookupTransactionById(transaction.txID(), indexer)
@@ -34,17 +34,17 @@ describe('indexer-lookup', () => {
   })
 
   test('Transactions are searched with pagination', async () => {
-    const { client, indexer, testAccount, transactionLogger } = localnet.context
+    const { algod, indexer, testAccount, transactionLogger } = localnet.context
     const secondAccount = await getTestAccount(
       {
         initialFunds: AlgoAmount.Algos(1),
         suppressLog: true,
       },
-      client,
+      algod,
     )
-    const { transaction: transaction1 } = await sendTransaction(client, await getTestTransaction(1), testAccount)
-    const { transaction: transaction2 } = await sendTransaction(client, await getTestTransaction(1), testAccount)
-    await sendTransaction(client, await getTestTransaction(1, secondAccount.addr), secondAccount)
+    const { transaction: transaction1 } = await sendTransaction(algod, await getTestTransaction(1), testAccount)
+    const { transaction: transaction2 } = await sendTransaction(algod, await getTestTransaction(1), testAccount)
+    await sendTransaction(algod, await getTestTransaction(1, secondAccount.addr), secondAccount)
     await transactionLogger.waitForIndexer(indexer)
 
     const transactions = await searchTransactions(indexer, (s) => s.txType('pay').addressRole('sender').address(testAccount.addr), 1)
@@ -54,13 +54,13 @@ describe('indexer-lookup', () => {
   })
 
   test('Application create transactions are found by creator with pagination', async () => {
-    const { client, indexer, testAccount } = localnet.context
+    const { algod, indexer, testAccount } = localnet.context
     const secondAccount = await getTestAccount(
       {
         initialFunds: AlgoAmount.Algos(1),
         suppressLog: true,
       },
-      client,
+      algod,
     )
     const appSpecFile = await readFile(path.join(__dirname, '..', 'tests', 'example-contracts', 'hello-world', 'application.json'))
     const appSpec = JSON.parse(await appSpecFile.toString('utf-8'))
@@ -70,9 +70,9 @@ describe('indexer-lookup', () => {
       updatable: false,
       deletable: false,
     })
-    const app1 = await createApp(createParams, client)
-    const app2 = await createApp(createParams, client)
-    const app3 = await createApp({ ...createParams, from: secondAccount }, client)
+    const app1 = await createApp(createParams, algod)
+    const app2 = await createApp(createParams, algod)
+    const app3 = await createApp({ ...createParams, from: secondAccount }, algod)
 
     const apps = await lookupAccountCreatedApplicationByAddress(indexer, testAccount.addr, true, 1)
 

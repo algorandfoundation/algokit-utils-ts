@@ -10,9 +10,9 @@ describe('deploy-app', () => {
   const name = 'MY_APP'
 
   test('Created app is retrieved by name with deployment metadata', async () => {
-    const { client, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
-    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), client)
+    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
     await waitForIndexer()
 
     const apps = await getCreatorAppsByName(indexer, testAccount)
@@ -32,20 +32,20 @@ describe('deploy-app', () => {
   })
 
   test('Created, updated and deleted apps are retrieved by name with deployment metadata', async () => {
-    const { client, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
     const name3 = 'APP_3'
-    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), client)
-    const app2 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name2 }), client)
-    const app3 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name3 }), client)
+    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
+    const app2 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name2 }), algod)
+    const app3 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name3 }), algod)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
     const update1 = await updateApp(
       { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appIndex: app1.appIndex },
-      client,
+      algod,
     )
-    const delete3 = await callApp({ appIndex: app3.appIndex, callType: 'delete', from: testAccount }, client)
+    const delete3 = await callApp({ appIndex: app3.appIndex, callType: 'delete', from: testAccount }, algod)
     await waitForIndexer()
 
     const apps = await getCreatorAppsByName(indexer, testAccount)
@@ -74,7 +74,7 @@ describe('deploy-app', () => {
   })
 
   test('Deploy new app', async () => {
-    const { client, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const contract = await getBareCallContractData()
 
     const result = await deployApp(
@@ -93,7 +93,7 @@ describe('deploy-app', () => {
           VALUE: 1,
         },
       },
-      client,
+      algod,
       indexer,
     )
   })

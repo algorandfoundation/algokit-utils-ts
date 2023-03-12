@@ -8,7 +8,7 @@ describe('transfer', () => {
   const localnet = localNetFixture()
 
   test('Transfer is sent and waited for', async () => {
-    const { client, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const secondAccount = algosdk.generateAccount()
 
     const { transaction, confirmation } = await transferAlgos(
@@ -18,9 +18,9 @@ describe('transfer', () => {
         amount: AlgoAmount.Algos(5),
         note: 'Transfer 5 ALGOs',
       },
-      client,
+      algod,
     )
-    const accountInfo = await client.accountInformation(secondAccount.addr).do()
+    const accountInfo = await algod.accountInformation(secondAccount.addr).do()
 
     expect(transaction.type).toBe(TransactionType.pay)
     expect(confirmation?.txn.txn.type).toBe('pay')

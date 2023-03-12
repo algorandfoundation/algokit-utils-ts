@@ -40,7 +40,7 @@ export function getAccountFromMnemonic(mnemonicSecret: string): Account {
  *
  * If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
  * ```
- * const account = await getAccount(client, 'ACCOUNT')
+ * const account = await getAccount('ACCOUNT', algod)
  * ```
  *
  * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
@@ -48,13 +48,13 @@ export function getAccountFromMnemonic(mnemonicSecret: string): Account {
  * @param account The details of the account to get, wither the name identifier (string) or an object with:
  *   * `name`: The name identifier of the account
  *   * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account @see {getDispenserAccount}
- * @param client An algod client
+ * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
  */
 export async function getAccount(
   account: { name: string; fundWith?: AlgoAmount } | string,
-  client: Algodv2,
+  algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
   let name: string
@@ -84,8 +84,8 @@ export async function getAccount(
     }
   }
 
-  if (await isLocalNet(client)) {
-    const account = await getOrCreateKmdWalletAccount({ name, fundWith }, client, kmdClient)
+  if (await isLocalNet(algod)) {
+    const account = await getOrCreateKmdWalletAccount({ name, fundWith }, algod, kmdClient)
     process.env[envKey] = algosdk.secretKeyToMnemonic(account.sk)
     return account
   }
@@ -109,10 +109,10 @@ interface GetTestAccountParams {
  * DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
  * Note: By default this will log the mnemonic of the account.
  * @param param0 The config for the test account to generate
- * @param client An algod client
+ * @param algod An algod client
  * @returns The account, with private key loaded
  */
-export async function getTestAccount({ suppressLog, initialFunds }: GetTestAccountParams, client: Algodv2): Promise<Account> {
+export async function getTestAccount({ suppressLog, initialFunds }: GetTestAccountParams, algod: Algodv2): Promise<Account> {
   const account = algosdk.generateAccount()
   if (!suppressLog) {
     AlgoKitConfig.logger.info(
@@ -122,12 +122,12 @@ export async function getTestAccount({ suppressLog, initialFunds }: GetTestAccou
 
   // If we are running against LocalNet we can use the default account within it
   //   otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
-  const canFundFromDefaultAccount = await isLocalNet(client)
-  const dispenser = canFundFromDefaultAccount ? await getLocalNetDispenserAccount(client) : await getAccount(DISPENSER_ACCOUNT, client)
+  const canFundFromDefaultAccount = await isLocalNet(algod)
+  const dispenser = canFundFromDefaultAccount ? await getLocalNetDispenserAccount(algod) : await getAccount(DISPENSER_ACCOUNT, algod)
 
-  await transferAlgos({ from: dispenser, to: account.addr, amount: initialFunds, note: 'Funding test account', suppressLog }, client)
+  await transferAlgos({ from: dispenser, to: account.addr, amount: initialFunds, note: 'Funding test account', suppressLog }, algod)
 
-  const accountInfo = await client.accountInformation(account.addr).do()
+  const accountInfo = await algod.accountInformation(account.addr).do()
   if (!suppressLog) {
     AlgoKitConfig.logger.info('Test account funded; account balance: %d µAlgos', accountInfo.amount)
   }
@@ -156,10 +156,10 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
  * If running on Sandbox then it will return the default dispenser account automatically,
  *  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC @see {getAccount}
  *
- * @param client An algod client
+ * @param algod An algod client
  */
-export async function getDispenserAccount(client: Algodv2) {
+export async function getDispenserAccount(algod: Algodv2) {
   // If we are running against a sandbox we can use the default account within it, otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
-  const canFundFromDefaultAccount = await isLocalNet(client)
-  return canFundFromDefaultAccount ? await getLocalNetDispenserAccount(client) : await getAccount(DISPENSER_ACCOUNT, client)
+  const canFundFromDefaultAccount = await isLocalNet(algod)
+  return canFundFromDefaultAccount ? await getLocalNetDispenserAccount(algod) : await getAccount(DISPENSER_ACCOUNT, algod)
 }

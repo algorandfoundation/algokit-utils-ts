@@ -7,20 +7,20 @@ describe('account', () => {
   const localnet = localNetFixture()
 
   test('New account is retrieved and funded', async () => {
-    const { client } = localnet.context
+    const { algod } = localnet.context
 
-    const account = await getAccount(uuid(), client)
-    const accountInfo = await client.accountInformation(account.addr).do()
+    const account = await getAccount(uuid(), algod)
+    const accountInfo = await algod.accountInformation(account.addr).do()
 
     expect(accountInfo['amount']).toBeGreaterThan(0)
   })
 
   test('Same account is subsequently retrieved', async () => {
-    const { client } = localnet.context
+    const { algod } = localnet.context
     const name = uuid()
 
-    const account = await getAccount(name, client)
-    const account2 = await getAccount(name, client)
+    const account = await getAccount(name, algod)
+    const account2 = await getAccount(name, algod)
 
     expect(account).not.toBe(account2)
     expect(account.addr).toBe(account2.addr)

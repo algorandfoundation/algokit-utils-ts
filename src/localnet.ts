@@ -6,8 +6,8 @@ import { getAlgoKmdClient } from './network-client'
 import { transferAlgos } from './transfer'
 
 /** Returns true if the algod client is pointing to a LocalNet Algorand network */
-export async function isLocalNet(client: Algodv2): Promise<boolean> {
-  const params = await client.getTransactionParams().do()
+export async function isLocalNet(algod: Algodv2): Promise<boolean> {
+  const params = await algod.getTransactionParams().do()
 
   return params.genesisID === 'devnet-v1' || params.genesisID === 'sandnet-v1'
 }
@@ -24,20 +24,20 @@ export async function isLocalNet(client: Algodv2): Promise<boolean> {
  * @param walletAccount The wallet details with:
  *   * `name`: The name of the wallet to retrieve / create
  *   * `fundWith`: The number of Algos to fund the account with it it gets created, if not specified then 1000 Algos will be funded from the dispenser account @see {getDispenserAccount}
- * @param client An algod client
+ * @param algod An algod client
  * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
  *
  * @returns An Algorand account with private key loaded - either one that already existed in the given KMD wallet, or a new one that is funded for you
  */
 export async function getOrCreateKmdWalletAccount(
   walletAccount: { name: string; fundWith?: AlgoAmount },
-  client: Algodv2,
+  algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account> {
   const kmd = kmdClient ?? getAlgoKmdClient()
 
   // Get an existing account from the KMD wallet
-  const existing = await getKmdWalletAccount(walletAccount, client, kmd)
+  const existing = await getKmdWalletAccount(walletAccount, algod, kmd)
   if (existing) {
     return existing
   }
@@ -49,7 +49,7 @@ export async function getOrCreateKmdWalletAccount(
 
   // Get the account from the new KMD wallet
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const account = (await getKmdWalletAccount(walletAccount, client, kmd))!
+  const account = (await getKmdWalletAccount(walletAccount, algod, kmd))!
 
   AlgoKitConfig.logger.info(
     `Couldn't find existing account in Sandbox under name '${walletAccount.name}'; created account ${
@@ -61,10 +61,10 @@ export async function getOrCreateKmdWalletAccount(
   await transferAlgos(
     {
       amount: walletAccount.fundWith ?? AlgoAmount.Algos(1000),
-      from: await getDispenserAccount(client),
+      from: await getDispenserAccount(algod),
       to: account.addr,
     },
-    client,
+    algod,
   )
 
   return account
@@ -76,12 +76,12 @@ export async function getOrCreateKmdWalletAccount(
  * @param walletAccount The details of the wallet, with:
  *   * `name`: The name of the wallet to retrieve an account from
  *   * `predicate`: An optional filter to use to find the account (otherwise it will return a random account from the wallet)
- * @param client An algod client
+ * @param algod An algod client
  * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
  * @example Get default funded account in a LocalNet
  *
  * ```
- * const defaultDispenserAccount = await getKmdWalletAccount(client,
+ * const defaultDispenserAccount = await getKmdWalletAccount(algod,
  *   'unencrypted-default-wallet',
  *   a => a.status !== 'Offline' && a.amount > 1_000_000_000
  * )
@@ -93,7 +93,7 @@ export async function getKmdWalletAccount(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean
   },
-  client: Algodv2,
+  algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account | undefined> {
   const { name, predicate } = walletAccount
@@ -115,7 +115,7 @@ export async function getKmdWalletAccount(
   if (predicate) {
     for (i = 0; i < keyIds.length; i++) {
       const key = keyIds[i]
-      const account = await client.accountInformation(key).do()
+      const account = await algod.accountInformation(key).do()
       if (predicate(account)) {
         break
       }
@@ -135,18 +135,18 @@ export async function getKmdWalletAccount(
 /**
  * Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts)
  *
- * @param client An algod client
+ * @param algod An algod client
  * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
  */
-export async function getLocalNetDispenserAccount(client: Algodv2, kmdClient?: Kmd): Promise<Account> {
-  if (!(await isLocalNet(client))) {
+export async function getLocalNetDispenserAccount(algod: Algodv2, kmdClient?: Kmd): Promise<Account> {
+  if (!(await isLocalNet(algod))) {
     throw "Can't get default account from non LocalNet network"
   }
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return (await getKmdWalletAccount(
     { name: 'unencrypted-default-wallet', predicate: (a) => a.status !== 'Offline' && a.amount > 1_000_000_000 },
-    client,
+    algod,
     kmdClient,
   ))!
 }
