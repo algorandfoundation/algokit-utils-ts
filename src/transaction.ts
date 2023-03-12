@@ -1,13 +1,6 @@
-import algosdk, {
-  Account,
-  Algodv2,
-  EncodedSignedTransaction,
-  LogicSigAccount,
-  MultisigMetadata,
-  SuggestedParams,
-  Transaction,
-} from 'algosdk'
+import algosdk, { Account, Algodv2, LogicSigAccount, MultisigMetadata, SuggestedParams, Transaction } from 'algosdk'
 import { AlgoAmount } from './algo-amount'
+import { PendingTransactionResponse } from './algod-type'
 import { AlgoKitConfig } from './config'
 
 /** Account wrapper that supports partial or full multisig signing */
@@ -259,74 +252,6 @@ export const sendGroupOfTransactions = async function (client: Algodv2, transact
   }
 
   return { groupTransactionId: txId, confirmation }
-}
-
-/** The response from the pending transaction API @see https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid */
-export interface PendingTransactionResponse {
-  /**
-   * The application index if the transaction was found and it created an
-   * application.
-   */
-  'application-index'?: number
-  /**
-   * The number of the asset's unit that were transferred to the close-to address.
-   */
-  'asset-closing-amount'?: number
-  /**
-   * The asset index if the transaction was found and it created an asset.
-   */
-  'asset-index'?: number
-  /**
-   * Rewards in microalgos applied to the close remainder to account.
-   */
-  'close-rewards'?: number
-  /**
-   * Closing amount for the transaction.
-   */
-  'closing-amount'?: number
-  /**
-   * The round where this transaction was confirmed, if present.
-   */
-  'confirmed-round'?: number
-  /**
-   * (gd) Global state key/value changes for the application being executed by this
-   * transaction.
-   */
-  'global-state-delta'?: Record<string, AlgodEvalDelta>[]
-  /**
-   * Inner transactions produced by application execution.
-   */
-  'inner-txns'?: PendingTransactionResponse[]
-  /**
-   * (ld) Local state key/value changes for the application being executed by this
-   * transaction.
-   */
-  'local-state-delta'?: Record<string, AlgodEvalDelta>[]
-  /**
-   * (lg) Logs for the application being executed by this transaction.
-   */
-  logs?: Uint8Array[]
-  /** Indicates that the transaction was kicked out of this node's transaction pool (and specifies why that happened).
-   * An empty string indicates the transaction wasn't kicked out of this node's txpool due to an error. */
-  'pool-error': string
-  /**
-   * Rewards in µALGOs applied to the receiver account.
-   */
-  'receiver-rewards'?: number
-  /**
-   * Rewards in µALGOs applied to the sender account.
-   */
-  'sender-rewards'?: number
-  /**
-   * The raw signed transaction.
-   */
-  txn: EncodedSignedTransaction
-}
-
-export interface AlgodEvalDelta {
-  action: number
-  bytes: string
-  uint: number
 }
 
 /**

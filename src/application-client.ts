@@ -1,4 +1,4 @@
-import algosdk, { Algodv2, SuggestedParams } from 'algosdk'
+/*import algosdk, { Algodv2, SuggestedParams } from 'algosdk'
 import { createApp } from './app'
 import { SendTransactionFrom } from './transaction'
 
@@ -64,3 +64,4 @@ export class ApplicationClient {
     )
   }
 }
+*/

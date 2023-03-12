@@ -1,5 +1,6 @@
 export * from './account'
 export * from './algo-amount'
+export * from './algod-type'
 export * from './app'
 export * from './config'
 export * from './deploy-app'

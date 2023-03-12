@@ -1,5 +1,6 @@
 import algosdk, { Algodv2, SuggestedParams, Transaction } from 'algosdk'
 import { Buffer } from 'buffer'
+import { ApplicationResponse } from './algod-type'
 import { AlgoKitConfig } from './config'
 import {
   encodeTransactionNote,
@@ -252,6 +253,17 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
     foreignAssets: args?.assets,
     lease: typeof args?.lease === 'string' ? encoder.encode(args?.lease) : args?.lease,
   }
+}
+
+/**
+ * Gets the current data for the given app from algod.
+ *
+ * @param appIndex The index of the app
+ * @param client An algod client
+ * @returns The data about the app
+ */
+export async function getAppByIndex(appIndex: number, client: Algodv2) {
+  return (await client.getApplicationByID(appIndex).do()) as ApplicationResponse
 }
 
 /**

@@ -2,14 +2,8 @@ import { describe, test } from '@jest/globals'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
-import { callApp, createApp, updateApp } from './app'
-import {
-  AppDeployMetadata,
-  APP_DEPLOY_NOTE_PREFIX,
-  getCreatorAppsByName,
-  getStorageSchemaFromAppSpec,
-  replaceDeployTimeControlParams,
-} from './deploy-app'
+import { AppStorageSchema, callApp, createApp, updateApp } from './app'
+import { AppDeployMetadata, APP_DEPLOY_NOTE_PREFIX, getCreatorAppsByName, replaceDeployTimeControlParams } from './deploy-app'
 import { SendTransactionFrom } from './transaction'
 
 describe('deploy-app', () => {
@@ -88,3 +82,13 @@ describe('deploy-app', () => {
     expect(app3Data.deleted).toBe(true)
   })
 })
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getStorageSchemaFromAppSpec(appSpec: any): AppStorageSchema {
+  return {
+    globalByteSlices: appSpec.state.global.num_byte_slices,
+    globalInts: appSpec.state.global.num_uints,
+    localByteSlices: appSpec.state.local.num_byte_slices,
+    localInts: appSpec.state.local.num_byte_slices,
+  }
+}
