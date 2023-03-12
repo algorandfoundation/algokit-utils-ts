@@ -1,18 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`deploy-app Deploy new app 1`] = `
-"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code | []
-INFO: App test not found in apps created by ACCOUNT_1; deploying app with version 1.0. | []
-INFO: Sent transaction ID TXID_1 appl from ACCOUNT_1 | []
-DEBUG: Created app APP_1 from creator ACCOUNT_1 | []"
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: App test not found in apps created by ACCOUNT_1; deploying app with version 1.0.
+INFO: Sent transaction ID TXID_1 appl from ACCOUNT_1
+DEBUG: Created app APP_1 from creator ACCOUNT_1"
+`;
+
+exports[`deploy-app Deploy update to immutable app 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
+INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
+WARN: App is not updatable but on_update=UpdateApp, will attempt to update app, update will most likely fail
+INFO: Updating existing test app for ACCOUNT_1 to version 2.0.
+DEBUG: Updating app APP_1"
 `;
 
 exports[`deploy-app Deploy update to updatable app 1`] = `
-"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code | []
-INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0. | []
-INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1 | []
-INFO: App is updatable and on_update=UpdateApp, updating app... | []
-INFO: Updating existing test app for ACCOUNT_1 to version 2.0. | []
-DEBUG: Updating app APP_1 | []
-INFO: Sent transaction ID TXID_2 appl from ACCOUNT_1 | []"
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
+INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
+INFO: App is updatable and on_update=UpdateApp, updating app...
+INFO: Updating existing test app for ACCOUNT_1 to version 2.0.
+DEBUG: Updating app APP_1
+INFO: Sent transaction ID TXID_2 appl from ACCOUNT_1"
 `;

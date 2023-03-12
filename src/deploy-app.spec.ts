@@ -141,6 +141,33 @@ describe('deploy-app', () => {
       apps: [result1.appIndex],
     })
   })
+
+  test('Deploy update to immutable app', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: false })
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      value: 2,
+      onUpdate: 'update',
+    })
+    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
+
+    invariant('transaction' in result1)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction],
+      apps: [result1.appIndex],
+    })
+  })
 })
 
 function getMetadata(overrides?: Partial<AppDeployMetadata>): AppDeployMetadata {

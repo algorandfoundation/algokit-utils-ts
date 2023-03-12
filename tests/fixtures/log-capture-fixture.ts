@@ -66,22 +66,22 @@ export class TestLogger implements Logger {
   }
   error(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger.error(message, ...optionalParams)
-    this.logs.push(`ERROR: ${message} | ${JSON.stringify(optionalParams)}`)
+    this.logs.push(`ERROR: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
   }
   warn(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger.warn(message, ...optionalParams)
-    this.logs.push(`WARN: ${message} | ${JSON.stringify(optionalParams)}`)
+    this.logs.push(`WARN: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
   }
   info(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger.info(message, ...optionalParams)
-    this.logs.push(`INFO: ${message} | ${JSON.stringify(optionalParams)}`)
+    this.logs.push(`INFO: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
   }
   verbose(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger.verbose(message, ...optionalParams)
-    this.logs.push(`VERBOSE: ${message} | ${JSON.stringify(optionalParams)}`)
+    this.logs.push(`VERBOSE: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
   }
   debug(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger.debug(message, ...optionalParams)
-    this.logs.push(`DEBUG: ${message} | ${JSON.stringify(optionalParams)}`)
+    this.logs.push(`DEBUG: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
   }
 }
