@@ -54,7 +54,8 @@
     "branches": [
       {
         "name": "main",
-        "prerelease": true
+        "prerelease": true,
+        "channel": "beta"
       },
       {
         "name": "release"
