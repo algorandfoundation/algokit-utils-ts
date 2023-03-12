@@ -1,4 +1,5 @@
-import { afterAll, beforeEach, describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, test } from '@jest/globals'
+import { envResetFixture } from '../tests/fixtures/env-fixture'
 import {
   getAlgoClient,
   getAlgodConfigFromEnvironment,
@@ -11,18 +12,9 @@ import {
 } from './network-client'
 
 describe('network-clients', () => {
+  envResetFixture()
+
   describe('Config', () => {
-    const OLD_ENV = process.env
-
-    beforeEach(() => {
-      jest.resetModules()
-      process.env = { ...OLD_ENV }
-    })
-
-    afterAll(() => {
-      process.env = OLD_ENV
-    })
-
     test('Gets algod config from environment', () => {
       process.env.ALGOD_SERVER = 'http://localhost'
       process.env.ALGOD_PORT = '4001'

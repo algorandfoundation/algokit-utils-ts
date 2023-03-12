@@ -29,3 +29,21 @@ export const getBareCallContractCreateParams = async (from: SendTransactionFrom,
     note: `${APP_DEPLOY_NOTE_PREFIX}${JSON.stringify(metadata)}`,
   }
 }
+
+export const getBareCallContractDeployParams = async (deployment: {
+  from: SendTransactionFrom
+  metadata: AppDeployMetadata
+  value?: number
+}) => {
+  const contract = await getBareCallContractData()
+  return {
+    approvalProgram: contract.approvalProgram,
+    clearStateProgram: contract.clearStateProgram,
+    from: deployment.from,
+    metadata: deployment.metadata,
+    schema: contract.stateSchema,
+    deployTimeParameters: {
+      VALUE: deployment.value ?? 1,
+    },
+  }
+}

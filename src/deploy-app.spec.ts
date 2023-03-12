@@ -1,11 +1,14 @@
 import { describe, test } from '@jest/globals'
-import { getBareCallContractCreateParams, getBareCallContractData } from '../tests/example-contracts/bare-call/contract'
+import { getApplicationAddress } from 'algosdk'
+import { getBareCallContractCreateParams, getBareCallContractDeployParams } from '../tests/example-contracts/bare-call/contract'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
+import { logCaptureFixture } from '../tests/fixtures/log-capture-fixture'
 import { callApp, createApp, updateApp } from './app'
 import { deployApp, getCreatorAppsByName } from './deploy-app'
 
 describe('deploy-app', () => {
   const localnet = localNetFixture()
+  const logging = logCaptureFixture()
 
   const name = 'MY_APP'
 
@@ -74,27 +77,33 @@ describe('deploy-app', () => {
   })
 
   test('Deploy new app', async () => {
-    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
-    const contract = await getBareCallContractData()
-
-    const result = await deployApp(
-      {
-        approvalProgram: contract.approvalProgram,
-        clearStateProgram: contract.clearStateProgram,
-        from: testAccount,
-        metadata: {
-          name: 'test',
-          version: '1.0',
-          deletable: false,
-          updatable: false,
-        },
-        schema: contract.stateSchema,
-        deployTimeParameters: {
-          VALUE: 1,
-        },
+    const { algod, indexer, testAccount } = localnet.context
+    const deployment = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: {
+        name: 'test',
+        version: '1.0',
+        updatable: false,
+        deletable: false,
       },
-      algod,
-      indexer,
-    )
+    })
+    const result = await deployApp(deployment, algod, indexer)
+
+    if (!('transaction' in result)) throw new Error('Expected transaction')
+    if (!result.confirmation) throw new Error('Expected transaction confirmation')
+    expect(result.appIndex).toBe(result.confirmation['application-index'])
+    expect(result.appAddress).toBe(getApplicationAddress(result.appIndex))
+    expect(result.createdMetadata).toEqual(deployment.metadata)
+    expect(result.createdRound).toBe(result.confirmation['confirmed-round'])
+    expect(result.updatedRound).toBe(result.createdRound)
+    expect(result.name).toBe(deployment.metadata.name)
+    expect(result.version).toBe(deployment.metadata.version)
+    expect(result.updatable).toBe(deployment.metadata.updatable)
+    expect(result.deletable).toBe(deployment.metadata.deletable)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: 'transaction' in result ? [result.transaction] : undefined,
+      apps: [result.appIndex],
+    })
   })
 })
