@@ -24,7 +24,7 @@ txn ApplicationID
 intc_0 // 0
 !=
 assert
-callsub delete_1
+callsub delete_2
 intc_1 // 1
 return
 main_l7:
@@ -32,7 +32,7 @@ txn ApplicationID
 intc_0 // 0
 !=
 assert
-callsub update_0
+callsub update_1
 intc_1 // 1
 return
 main_l8:
@@ -40,11 +40,25 @@ txn ApplicationID
 intc_0 // 0
 ==
 assert
+callsub create_0
 intc_1 // 1
 return
 
+// create
+create_0:
+proto 0 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+pushbytes 0x76616c7565 // "value"
+pushint TMPL_VALUE // TMPL_VALUE
+app_global_put
+retsub
+
 // update
-update_0:
+update_1:
 proto 0 0
 txn Sender
 global CreatorAddress
@@ -57,7 +71,7 @@ assert
 retsub
 
 // delete
-delete_1:
+delete_2:
 proto 0 0
 txn Sender
 global CreatorAddress

@@ -2,11 +2,11 @@ import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
 import { readFile } from 'fs/promises'
 import path from 'path'
+import { getBareCallContractCreateParams } from '../tests/example-contracts/bare-call/contract'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { getTestAccount } from './account'
 import { AlgoAmount } from './algo-amount'
-import { AppStorageSchema, createApp } from './app'
-import { replaceDeployTimeControlParams } from './deploy-app'
+import { createApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, lookupTransactionById, searchTransactions } from './indexer-lookup'
 import { sendTransaction } from './transaction'
 
@@ -64,15 +64,12 @@ describe('indexer-lookup', () => {
     )
     const appSpecFile = await readFile(path.join(__dirname, '..', 'tests', 'example-contracts', 'hello-world', 'application.json'))
     const appSpec = JSON.parse(await appSpecFile.toString('utf-8'))
-    const createParams = {
-      from: testAccount,
-      approvalProgram: replaceDeployTimeControlParams(Buffer.from(appSpec.source.approval, 'base64').toString('utf-8'), {
-        updatable: false,
-        deletable: false,
-      }),
-      clearProgram: Buffer.from(appSpec.source.clear, 'base64').toString('utf-8'),
-      schema: getStorageSchemaFromAppSpec(appSpec),
-    }
+    const createParams = await getBareCallContractCreateParams(testAccount, {
+      name: 'test',
+      version: '1.0',
+      updatable: false,
+      deletable: false,
+    })
     const app1 = await createApp(createParams, client)
     const app2 = await createApp(createParams, client)
     const app3 = await createApp({ ...createParams, from: secondAccount }, client)
@@ -82,13 +79,3 @@ describe('indexer-lookup', () => {
     expect(apps.map((a) => a.id).sort()).toEqual([app1.appIndex, app2.appIndex].sort())
   })
 })
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getStorageSchemaFromAppSpec(appSpec: any): AppStorageSchema {
-  return {
-    globalByteSlices: appSpec.state.global.num_byte_slices,
-    globalInts: appSpec.state.global.num_uints,
-    localByteSlices: appSpec.state.local.num_byte_slices,
-    localInts: appSpec.state.local.num_byte_slices,
-  }
-}

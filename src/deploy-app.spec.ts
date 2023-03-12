@@ -1,32 +1,18 @@
 import { describe, test } from '@jest/globals'
-import { readFile } from 'fs/promises'
-import path from 'path'
+import { getBareCallContractCreateParams, getBareCallContractData } from '../tests/example-contracts/bare-call/contract'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
-import { AppStorageSchema, callApp, createApp, updateApp } from './app'
-import { AppDeployMetadata, APP_DEPLOY_NOTE_PREFIX, getCreatorAppsByName, replaceDeployTimeControlParams } from './deploy-app'
-import { SendTransactionFrom } from './transaction'
+import { callApp, createApp, updateApp } from './app'
+import { deployApp, getCreatorAppsByName } from './deploy-app'
 
 describe('deploy-app', () => {
   const localnet = localNetFixture()
 
   const name = 'MY_APP'
 
-  const getAppParams = async (from: SendTransactionFrom, metadata: AppDeployMetadata) => {
-    const appSpecFile = await readFile(path.join(__dirname, '..', 'tests', 'example-contracts', 'bare-call', 'application.json'))
-    const appSpec = JSON.parse(await appSpecFile.toString('utf-8'))
-    return {
-      from: from,
-      approvalProgram: replaceDeployTimeControlParams(Buffer.from(appSpec.source.approval, 'base64').toString('utf-8'), metadata),
-      clearProgram: Buffer.from(appSpec.source.clear, 'base64').toString('utf-8'),
-      schema: getStorageSchemaFromAppSpec(appSpec),
-      note: `${APP_DEPLOY_NOTE_PREFIX}${JSON.stringify(metadata)}`,
-    }
-  }
-
   test('Created app is retrieved by name with deployment metadata', async () => {
     const { client, indexer, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
-    const app1 = await createApp(await getAppParams(testAccount, creationMetadata), client)
+    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), client)
     await waitForIndexer()
 
     const apps = await getCreatorAppsByName(indexer, testAccount)
@@ -50,12 +36,15 @@ describe('deploy-app', () => {
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
     const name3 = 'APP_3'
-    const app1 = await createApp(await getAppParams(testAccount, creationMetadata), client)
-    const app2 = await createApp(await getAppParams(testAccount, { ...creationMetadata, name: name2 }), client)
-    const app3 = await createApp(await getAppParams(testAccount, { ...creationMetadata, name: name3 }), client)
+    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), client)
+    const app2 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name2 }), client)
+    const app3 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name3 }), client)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
-    const update1 = await updateApp({ ...(await getAppParams(testAccount, updateMetadata)), appIndex: app1.appIndex }, client)
+    const update1 = await updateApp(
+      { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appIndex: app1.appIndex },
+      client,
+    )
     const delete3 = await callApp({ appIndex: app3.appIndex, callType: 'delete', from: testAccount }, client)
     await waitForIndexer()
 
@@ -83,14 +72,29 @@ describe('deploy-app', () => {
     expect(app3Data.appIndex).toBe(app3.appIndex)
     expect(app3Data.deleted).toBe(true)
   })
-})
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getStorageSchemaFromAppSpec(appSpec: any): AppStorageSchema {
-  return {
-    globalByteSlices: appSpec.state.global.num_byte_slices,
-    globalInts: appSpec.state.global.num_uints,
-    localByteSlices: appSpec.state.local.num_byte_slices,
-    localInts: appSpec.state.local.num_byte_slices,
-  }
-}
+  test('Deploy new app', async () => {
+    const { client, indexer, testAccount, waitForIndexer } = localnet.context
+    const contract = await getBareCallContractData()
+
+    const result = await deployApp(
+      {
+        approvalProgram: contract.approvalProgram,
+        clearStateProgram: contract.clearStateProgram,
+        from: testAccount,
+        metadata: {
+          name: 'test',
+          version: '1.0',
+          deletable: false,
+          updatable: false,
+        },
+        schema: contract.stateSchema,
+        deployTimeParameters: {
+          VALUE: 1,
+        },
+      },
+      client,
+      indexer,
+    )
+  })
+})

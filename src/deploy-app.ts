@@ -75,7 +75,7 @@ export interface AppDeploymentParams extends Omit<Omit<Omit<Omit<CreateAppParams
   /** The deployment metadata */
   metadata: AppDeployMetadata
   /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParameters: TealTemplateParameters
+  deployTimeParameters?: TealTemplateParameters
   /** What action to perform if a schema break is detected */
   onSchemaBreak?: 'delete' | 'fail' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
@@ -121,7 +121,7 @@ export async function deployApp(
     AlgoKitConfig.logger.info(
       `Idempotently deploying app "${metadata.name}" from creator ${getSenderAddress(appParams.from)} using ${
         appParams.approvalProgram.length
-      } bytes of teal code and ${appParams.clearProgram.length} bytes of teal code`,
+      } bytes of teal code and ${appParams.clearStateProgram.length} bytes of teal code`,
     )
   }
 
@@ -130,10 +130,10 @@ export async function deployApp(
       ? (await performTemplateSubstitutionAndCompile(appParams.approvalProgram, client, deployTimeParameters, metadata))
           .compiledBase64ToBytes
       : appParams.approvalProgram
-  appParams.clearProgram =
-    typeof appParams.clearProgram === 'string'
-      ? (await performTemplateSubstitutionAndCompile(appParams.clearProgram, client, deployTimeParameters)).compiledBase64ToBytes
-      : appParams.clearProgram
+  appParams.clearStateProgram =
+    typeof appParams.clearStateProgram === 'string'
+      ? (await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, client, deployTimeParameters)).compiledBase64ToBytes
+      : appParams.clearStateProgram
 
   // Todo: either cache this within the current execution run or pass it into this function given it's an expensive operation (N+1) and won't change?
   const apps = existingDeployments ?? (await getCreatorAppsByName(indexer, appParams.from))
@@ -201,7 +201,7 @@ export async function deployApp(
     'num-uint': appParams.schema.localInts,
   }
   const newApproval = Buffer.from(appParams.approvalProgram).toString('base64')
-  const newClear = Buffer.from(appParams.clearProgram).toString('base64')
+  const newClear = Buffer.from(appParams.clearStateProgram).toString('base64')
 
   const isUpdate = newApproval !== existingApproval || newClear !== existingClear
   const isSchemaBreak = schemaIsBroken(existingGlobalSchema, newGlobalSchema) || schemaIsBroken(existingLocalSchema, newLocalSchema)
@@ -251,7 +251,7 @@ export async function deployApp(
         args: updateArgs,
         note: getAppDeploymentTransactionNote(metadata),
         approvalProgram: appParams.approvalProgram,
-        clearProgram: appParams.clearProgram,
+        clearStateProgram: appParams.clearStateProgram,
         transactionParams: appParams.transactionParams,
         suppressLog: appParams.suppressLog,
         skipSending: false,

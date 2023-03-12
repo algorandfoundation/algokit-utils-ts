@@ -59,8 +59,8 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
   from: SendTransactionFrom
   /** The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
   approvalProgram: Uint8Array | string
-  /** The clear program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
-  clearProgram: Uint8Array | string
+  /** The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
+  clearStateProgram: Uint8Array | string
   /** Optional transaction parameters */
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
@@ -129,7 +129,7 @@ export interface CompiledTeal {
  * @returns The details of the created app, or the transaction to create it if `skipSending`
  */
 export async function createApp(create: CreateAppParams, client: Algodv2): Promise<SendTransactionResult & AppReference> {
-  const { from, approvalProgram: approval, clearProgram: clear, schema, note, transactionParams, args, ...sendParams } = create
+  const { from, approvalProgram: approval, clearStateProgram: clear, schema, note, transactionParams, args, ...sendParams } = create
 
   const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, client)).compiledBase64ToBytes : approval
   const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, client)).compiledBase64ToBytes : clear
@@ -172,7 +172,7 @@ export async function createApp(create: CreateAppParams, client: Algodv2): Promi
  * @returns The transaction
  */
 export async function updateApp(update: UpdateAppParams, client: Algodv2): Promise<SendTransactionResult> {
-  const { appIndex, from, approvalProgram: approval, clearProgram: clear, note, transactionParams, args, ...sendParams } = update
+  const { appIndex, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
 
   const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, client)).compiledBase64ToBytes : approval
   const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, client)).compiledBase64ToBytes : clear
