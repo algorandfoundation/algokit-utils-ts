@@ -41,6 +41,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      # semantic-release needs node 18
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - run: npm ci --ignore-scripts
+
       - name: Download built package
         uses: actions/download-artifact@v3
         with:
@@ -52,12 +60,6 @@ jobs:
         run: |
           mkdir -p dist
           unzip -q "artifacts/package.zip" -d dist
-
-      # semantic-release needs node 18
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
 
       - name: 'Semantic release'
         run: npx semantic-release
