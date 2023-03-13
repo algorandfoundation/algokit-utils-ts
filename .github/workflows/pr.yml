@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   pull_request:
-    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml
+    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
     with:
       working-directory: ./
       run-commit-lint: true
