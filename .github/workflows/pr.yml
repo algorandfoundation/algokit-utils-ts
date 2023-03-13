@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   pull_request:
-    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@feature/semantic-release
+    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml
     with:
       working-directory: ./
       run-commit-lint: true
