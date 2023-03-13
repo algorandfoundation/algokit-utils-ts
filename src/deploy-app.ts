@@ -134,7 +134,7 @@ export async function deployApp(
       ? (await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, algod, deployTimeParameters)).compiledBase64ToBytes
       : appParams.clearStateProgram
 
-  const apps = existingDeployments ?? (await getCreatorAppsByName(indexer, appParams.from))
+  const apps = existingDeployments ?? (await getCreatorAppsByName(appParams.from, indexer))
 
   const create = async (skipSending?: boolean): Promise<SendTransactionResult & AppMetadata> => {
     const result = await createApp(
@@ -407,11 +407,11 @@ export function schemaIsBroken(before: ApplicationStateSchema, after: Applicatio
  *
  * **Note:** It's recommended this is only called once and then stored since it's a somewhat expensive operation (multiple indexer calls).
  *
- * @param indexer An indexer client
  * @param creatorAccount The account (with private key loaded) or string address of an account that is the creator of the apps you want to search for
+ * @param indexer An indexer client
  * @returns A name-based lookup of the app information (id, address)
  */
-export async function getCreatorAppsByName(indexer: Indexer, creatorAccount: SendTransactionFrom | string): Promise<AppLookup> {
+export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom | string, indexer: Indexer): Promise<AppLookup> {
   const appLookup: Record<string, AppMetadata> = {}
 
   const creatorAddress = typeof creatorAccount !== 'string' ? getSenderAddress(creatorAccount) : creatorAccount

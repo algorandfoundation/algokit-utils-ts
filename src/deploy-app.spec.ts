@@ -19,7 +19,7 @@ describe('deploy-app', () => {
     const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
     await waitForIndexer()
 
-    const apps = await getCreatorAppsByName(indexer, testAccount)
+    const apps = await getCreatorAppsByName(testAccount, indexer)
 
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps)).toEqual([name])
@@ -52,7 +52,7 @@ describe('deploy-app', () => {
     const delete3 = await callApp({ appIndex: app3.appIndex, callType: 'delete', from: testAccount }, algod)
     await waitForIndexer()
 
-    const apps = await getCreatorAppsByName(indexer, testAccount)
+    const apps = await getCreatorAppsByName(testAccount, indexer)
 
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
