@@ -14,5 +14,6 @@ const config: Config.InitialOptions = {
       },
     ],
   },
+  coveragePathIgnorePatterns: ['tests'],
 }
 export default config

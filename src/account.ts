@@ -114,11 +114,10 @@ interface GetTestAccountParams {
  */
 export async function getTestAccount({ suppressLog, initialFunds }: GetTestAccountParams, algod: Algodv2): Promise<Account> {
   const account = algosdk.generateAccount()
-  if (!suppressLog) {
-    AlgoKitConfig.logger.info(
-      `New test account created with address '${account.addr}' and mnemonic '${algosdk.secretKeyToMnemonic(account.sk)}'.`,
-    )
-  }
+
+  AlgoKitConfig.getLogger(suppressLog).info(
+    `New test account created with address '${account.addr}' and mnemonic '${algosdk.secretKeyToMnemonic(account.sk)}'.`,
+  )
 
   // If we are running against LocalNet we can use the default account within it
   //   otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
@@ -128,9 +127,8 @@ export async function getTestAccount({ suppressLog, initialFunds }: GetTestAccou
   await transferAlgos({ from: dispenser, to: account.addr, amount: initialFunds, note: 'Funding test account', suppressLog }, algod)
 
   const accountInfo = await algod.accountInformation(account.addr).do()
-  if (!suppressLog) {
-    AlgoKitConfig.logger.info('Test account funded; account balance: %d µAlgos', accountInfo.amount)
-  }
+
+  AlgoKitConfig.getLogger(suppressLog).info('Test account funded; account balance: %d µAlgos', accountInfo.amount)
 
   return account
 }

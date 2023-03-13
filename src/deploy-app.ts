@@ -118,13 +118,11 @@ export async function deployApp(
     )
   }
 
-  if (!appParams.suppressLog) {
-    AlgoKitConfig.logger.info(
-      `Idempotently deploying app "${metadata.name}" from creator ${getSenderAddress(appParams.from)} using ${
-        appParams.approvalProgram.length
-      } bytes of teal code and ${appParams.clearStateProgram.length} bytes of teal code`,
-    )
-  }
+  AlgoKitConfig.getLogger(appParams.suppressLog).info(
+    `Idempotently deploying app "${metadata.name}" from creator ${getSenderAddress(appParams.from)} using ${
+      appParams.approvalProgram.length
+    } bytes of teal code and ${appParams.clearStateProgram.length} bytes of teal code`,
+  )
 
   appParams.approvalProgram =
     typeof appParams.approvalProgram === 'string'
@@ -166,23 +164,20 @@ export async function deployApp(
   const existingApp = apps.apps[metadata.name]
 
   if (!existingApp) {
-    if (!appParams.suppressLog) {
-      AlgoKitConfig.logger.info(
-        `App ${metadata.name} not found in apps created by ${getSenderAddress(appParams.from)}; deploying app with version ${
-          metadata.version
-        }.`,
-      )
-    }
+    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+      `App ${metadata.name} not found in apps created by ${getSenderAddress(appParams.from)}; deploying app with version ${
+        metadata.version
+      }.`,
+    )
+
     return await create()
   }
 
-  if (!appParams.suppressLog) {
-    AlgoKitConfig.logger.info(
-      `Existing app ${metadata.name} found by creator ${getSenderAddress(appParams.from)}, with app index ${
-        existingApp.appIndex
-      } and version ${existingApp.version}.`,
-    )
-  }
+  AlgoKitConfig.getLogger(appParams.suppressLog).info(
+    `Existing app ${metadata.name} found by creator ${getSenderAddress(appParams.from)}, with app index ${
+      existingApp.appIndex
+    } and version ${existingApp.version}.`,
+  )
 
   const existingAppRecord = await getAppByIndex(existingApp.appIndex, algod)
   const existingApproval = existingAppRecord.params['approval-program']
@@ -208,19 +203,19 @@ export async function deployApp(
 
   const replace = async (): Promise<SendTransactionResult & AppMetadata> => {
     // Create
-    if (!appParams.suppressLog) {
-      AlgoKitConfig.logger.info(
-        `Deploying a new ${metadata.name} app for ${getSenderAddress(appParams.from)}; deploying app with version ${metadata.version}.`,
-      )
-    }
+
+    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+      `Deploying a new ${metadata.name} app for ${getSenderAddress(appParams.from)}; deploying app with version ${metadata.version}.`,
+    )
+
     const { transaction: createTransaction, ...newApp } = await create(true)
 
     // Delete
-    if (!appParams.suppressLog) {
-      AlgoKitConfig.logger.warn(
-        `Deleting existing ${metadata.name} app with index ${existingApp.appIndex} from ${getSenderAddress(appParams.from)} account.`,
-      )
-    }
+
+    AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+      `Deleting existing ${metadata.name} app with index ${existingApp.appIndex} from ${getSenderAddress(appParams.from)} account.`,
+    )
+
     const { transaction: deleteTransaction } = await callApp(
       {
         appIndex: existingApp.appIndex,
@@ -263,13 +258,11 @@ export async function deployApp(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const newAppIndex = createConfirmation['application-index']!
 
-    if (!appParams.suppressLog) {
-      AlgoKitConfig.logger.warn(
-        `Sent transactions ${createTransaction.txID()} to create app with index ${newAppIndex} and ${deleteTransaction.txID()} to delete app with index ${
-          existingApp.appIndex
-        } from ${getSenderAddress(appParams.from)} account.`,
-      )
-    }
+    AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+      `Sent transactions ${createTransaction.txID()} to create app with index ${newAppIndex} and ${deleteTransaction.txID()} to delete app with index ${
+        existingApp.appIndex
+      } from ${getSenderAddress(appParams.from)} account.`,
+    )
 
     return {
       transaction: createTransaction,
@@ -286,11 +279,9 @@ export async function deployApp(
   }
 
   const update = async (): Promise<SendTransactionResult & AppMetadata> => {
-    if (!appParams.suppressLog) {
-      AlgoKitConfig.logger.info(
-        `Updating existing ${metadata.name} app for ${getSenderAddress(appParams.from)} to version ${metadata.version}.`,
-      )
-    }
+    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+      `Updating existing ${metadata.name} app for ${getSenderAddress(appParams.from)} to version ${metadata.version}.`,
+    )
 
     const result = await updateApp(
       {
@@ -322,18 +313,16 @@ export async function deployApp(
   }
 
   if (isSchemaBreak) {
-    if (!appParams.suppressLog) {
-      AlgoKitConfig.logger.warn(`Detected a breaking app schema change in app ${existingApp.appIndex}:`, {
-        from: {
-          global: existingGlobalSchema,
-          local: existingLocalSchema,
-        },
-        to: {
-          global: newGlobalSchema,
-          local: newLocalSchema,
-        },
-      })
-    }
+    AlgoKitConfig.getLogger(appParams.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appIndex}:`, {
+      from: {
+        global: existingGlobalSchema,
+        local: existingLocalSchema,
+      },
+      to: {
+        global: newGlobalSchema,
+        local: newLocalSchema,
+      },
+    })
 
     if (onSchemaBreak === undefined || onSchemaBreak === 'fail' || onSchemaBreak === OnSchemaBreak.Fail) {
       throw new Error(
@@ -342,22 +331,24 @@ export async function deployApp(
           're-run with onSchemaBreak=OnSchemaBreak.ReplaceApp',
       )
     }
-    if (!appParams.suppressLog) {
-      if (existingApp.deletable) {
-        AlgoKitConfig.logger.info('App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app')
-      } else {
-        AlgoKitConfig.logger.info(
-          'App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail',
-        )
-      }
+
+    if (existingApp.deletable) {
+      AlgoKitConfig.getLogger(appParams.suppressLog).info(
+        'App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app',
+      )
+    } else {
+      AlgoKitConfig.getLogger(appParams.suppressLog).info(
+        'App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail',
+      )
     }
+
     return await replace()
   }
 
   if (isUpdate) {
-    if (!appParams.suppressLog) {
-      AlgoKitConfig.logger.info(`Detected a TEAL update in app ${existingApp.appIndex} for creator ${getSenderAddress(appParams.from)}`)
-    }
+    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+      `Detected a TEAL update in app ${existingApp.appIndex} for creator ${getSenderAddress(appParams.from)}`,
+    )
 
     if (onUpdate === undefined || onUpdate === 'fail' || onUpdate === OnUpdate.Fail) {
       throw new Error(
@@ -368,33 +359,34 @@ export async function deployApp(
     }
 
     if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {
-      if (!appParams.suppressLog) {
-        if (existingApp.updatable) {
-          AlgoKitConfig.logger.info(`App is updatable and onUpdate=UpdateApp, updating app...`)
-        } else {
-          AlgoKitConfig.logger.warn(`App is not updatable but onUpdate=UpdateApp, will attempt to update app, update will most likely fail`)
-        }
+      if (existingApp.updatable) {
+        AlgoKitConfig.getLogger(appParams.suppressLog).info(`App is updatable and onUpdate=UpdateApp, updating app...`)
+      } else {
+        AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+          `App is not updatable but onUpdate=UpdateApp, will attempt to update app, update will most likely fail`,
+        )
       }
+
       return await update()
     }
 
     if (onUpdate === 'replace' || onUpdate === OnUpdate.ReplaceApp) {
-      if (!appParams.suppressLog) {
-        if (existingApp.deletable) {
-          AlgoKitConfig.logger.warn('App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...')
-        } else {
-          AlgoKitConfig.logger.warn(
-            'App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail',
-          )
-        }
+      if (existingApp.deletable) {
+        AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+          'App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...',
+        )
+      } else {
+        AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+          'App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail',
+        )
       }
+
       return await replace()
     }
   }
 
-  if (!appParams.suppressLog) {
-    AlgoKitConfig.logger.debug('No detected changes in app, nothing to do.')
-  }
+  AlgoKitConfig.getLogger(appParams.suppressLog).debug('No detected changes in app, nothing to do.')
+
   return existingApp
 }
 

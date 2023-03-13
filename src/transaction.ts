@@ -192,9 +192,7 @@ export const sendTransaction = async function (
       : from.sign(transaction)
   await algod.sendRawTransaction(signedTransaction).do()
 
-  if (!suppressLog) {
-    AlgoKitConfig.logger.info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
-  }
+  AlgoKitConfig.getLogger(suppressLog).info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
 
   let confirmation: PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
@@ -234,9 +232,7 @@ export const sendGroupOfTransactions = async function (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const groupId = Buffer.from(group[0].group!).toString('base64')
 
-  if (!sendParams?.suppressLog) {
-    AlgoKitConfig.logger.info(`Sending group of transactions (${groupId})`, { transactionsToSend })
-  }
+  AlgoKitConfig.getLogger(sendParams?.suppressLog).info(`Sending group of transactions (${groupId})`, { transactionsToSend })
 
   const signedTransactions = group.map((groupedTransaction, index) => {
     const signer = transactions[index].signer
@@ -247,24 +243,22 @@ export const sendGroupOfTransactions = async function (
       : signer.sign(groupedTransaction)
   })
 
-  if (!sendParams?.suppressLog) {
-    AlgoKitConfig.logger.debug(
-      `Signer IDs (${groupId})`,
-      transactions.map((t) => getSenderAddress(t.signer)),
-    )
+  AlgoKitConfig.getLogger(sendParams?.suppressLog).debug(
+    `Signer IDs (${groupId})`,
+    transactions.map((t) => getSenderAddress(t.signer)),
+  )
 
-    AlgoKitConfig.logger.debug(
-      `Transaction IDs (${groupId})`,
-      transactionsToSend.map((t) => t.txID()),
-    )
-  }
+  AlgoKitConfig.getLogger(sendParams?.suppressLog).debug(
+    `Transaction IDs (${groupId})`,
+    transactionsToSend.map((t) => t.txID()),
+  )
 
   // https://developer.algorand.org/docs/rest-apis/algod/v2/#post-v2transactions
   const result = await algod.sendRawTransaction(signedTransactions).do()
 
-  if (!sendParams?.suppressLog) {
-    AlgoKitConfig.logger.info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
-  }
+  AlgoKitConfig.getLogger(sendParams?.suppressLog).info(
+    `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,
+  )
 
   let confirmations: PendingTransactionResponse[] | undefined = undefined
   if (!sendParams?.skipWaiting) {

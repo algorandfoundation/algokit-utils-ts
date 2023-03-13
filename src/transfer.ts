@@ -44,8 +44,8 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
     rekeyTo: undefined,
   })
 
-  if (!sendParams.suppressLog && !sendParams.skipSending) {
-    AlgoKitConfig.logger.debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
+  if (!sendParams.skipSending) {
+    AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
   }
 
   return sendTransaction({ transaction, from, sendParams }, algod)

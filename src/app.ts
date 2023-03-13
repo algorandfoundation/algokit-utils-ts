@@ -155,9 +155,7 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const appIndex = confirmation['application-index']!
 
-    if (!sendParams.suppressLog) {
-      AlgoKitConfig.logger.debug(`Created app ${appIndex} from creator ${getSenderAddress(from)}`)
-    }
+    AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Created app ${appIndex} from creator ${getSenderAddress(from)}`)
 
     return { transaction, confirmation, appIndex, appAddress: algosdk.getApplicationAddress(appIndex) }
   } else {
@@ -188,9 +186,7 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
     rekeyTo: undefined,
   })
 
-  if (!sendParams.suppressLog) {
-    AlgoKitConfig.logger.debug(`Updating app ${appIndex}`)
-  }
+  AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Updating app ${appIndex}`)
 
   return await sendTransaction({ transaction, from, sendParams }, algod)
 }
