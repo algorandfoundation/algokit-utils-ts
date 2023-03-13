@@ -1,26 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`deploy-app Deploy delete to deletable updated app 1`] = `
+exports[`deploy-app Deploy replacement to deletable, updated app 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
-WARN: App is deletable and onUpdate=DeleteApp, creating new app and deleting old app...
+WARN: App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...
 INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
 WARN: Deleting existing test app with index APP_1 from ACCOUNT_1 account.
 WARN: Sent transactions TXID_2 to create app with index APP_2 and TXID_3 to delete app with index APP_1 from ACCOUNT_1 account."
 `;
 
-exports[`deploy-app Deploy failure for app delete fails if onSchemaBreak = Fail 1`] = `
+exports[`deploy-app Deploy failure for replacement of app fails if onSchemaBreak = Fail 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
 WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"num-byte-slice":0,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}},"to":{"global":{"num-byte-slice":1,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}}}]"
 `;
 
-exports[`deploy-app Deploy failure for delete to permanent app 1`] = `
+exports[`deploy-app Deploy failure for replacement of permanent app 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
-WARN: App is not deletable and onUpdate=DeleteApp, will attempt to create new app and delete old app, delete will most likely fail
+WARN: App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail
 INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
 WARN: Deleting existing test app with index APP_1 from ACCOUNT_1 account."
 `;

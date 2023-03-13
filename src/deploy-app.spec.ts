@@ -200,7 +200,7 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy delete to deletable updated app', async () => {
+  test('Deploy replacement to deletable, updated app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: true })
     const deployment1 = await getBareCallContractDeployParams({
@@ -215,7 +215,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
-      onUpdate: 'delete',
+      onUpdate: 'replace',
     })
     const result2 = await deployApp(deployment2, algod, indexer)
 
@@ -239,7 +239,7 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy failure for delete to permanent app', async () => {
+  test('Deploy failure for replacement of permanent app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = await getBareCallContractDeployParams({
@@ -254,7 +254,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
-      onUpdate: 'delete',
+      onUpdate: 'replace',
     })
 
     await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
@@ -267,7 +267,7 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy failure for app delete fails if onSchemaBreak = Fail', async () => {
+  test('Deploy failure for replacement of app fails if onSchemaBreak = Fail', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getBareCallContractDeployParams({
@@ -287,7 +287,7 @@ describe('deploy-app', () => {
     await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(
       'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. ' +
         'If you want to try deleting and recreating the app then ' +
-        're-run with onSchemaBreak=OnSchemaBreak.DeleteApp',
+        're-run with onSchemaBreak=OnSchemaBreak.ReplaceApp',
     )
 
     invariant('transaction' in result1)

@@ -59,7 +59,7 @@ export enum OnUpdate {
   /** Update the app */
   UpdateApp,
   /** Delete the app and create a new one in its place */
-  DeleteApp,
+  ReplaceApp,
 }
 
 /** What action to perform when deploying an app and a breaking schema change is detected */
@@ -67,7 +67,7 @@ export enum OnSchemaBreak {
   /** Fail the deployment */
   Fail,
   /** Delete the app and create a new one in its place */
-  DeleteApp,
+  ReplaceApp,
 }
 
 /** The parameters to deploy an app */
@@ -77,9 +77,9 @@ export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'not
   /** Any deploy-time parameters to replace in the TEAL code */
   deployTimeParameters?: TealTemplateParameters
   /** What action to perform if a schema break is detected */
-  onSchemaBreak?: 'delete' | 'fail' | OnSchemaBreak
+  onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
-  onUpdate?: 'update' | 'delete' | 'fail' | OnUpdate
+  onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
   /** Optional cached value of the existing apps for the given creator */
   existingDeployments?: AppLookup
   /** Any args to pass to any create transaction that is issued as part of deployment */
@@ -206,7 +206,7 @@ export async function deployApp(
   const isUpdate = newApproval !== existingApproval || newClear !== existingClear
   const isSchemaBreak = schemaIsBroken(existingGlobalSchema, newGlobalSchema) || schemaIsBroken(existingLocalSchema, newLocalSchema)
 
-  const createAndDelete = async (): Promise<SendTransactionResult & AppMetadata> => {
+  const replace = async (): Promise<SendTransactionResult & AppMetadata> => {
     // Create
     if (!appParams.suppressLog) {
       AlgoKitConfig.logger.info(
@@ -339,19 +339,19 @@ export async function deployApp(
       throw new Error(
         'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. ' +
           'If you want to try deleting and recreating the app then ' +
-          're-run with onSchemaBreak=OnSchemaBreak.DeleteApp',
+          're-run with onSchemaBreak=OnSchemaBreak.ReplaceApp',
       )
     }
     if (!appParams.suppressLog) {
       if (existingApp.deletable) {
-        AlgoKitConfig.logger.info('App is deletable and onSchemaBreak=DeleteApp, will attempt to create new app and delete old app')
+        AlgoKitConfig.logger.info('App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app')
       } else {
         AlgoKitConfig.logger.info(
-          'App is not deletable but onSchemaBreak=DeleteApp, will attempt to delete app, delete will most likely fail',
+          'App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail',
         )
       }
     }
-    return await createAndDelete()
+    return await replace()
   }
 
   if (isUpdate) {
@@ -378,17 +378,17 @@ export async function deployApp(
       return await update()
     }
 
-    if (onUpdate === 'delete' || onUpdate === OnUpdate.DeleteApp) {
+    if (onUpdate === 'replace' || onUpdate === OnUpdate.ReplaceApp) {
       if (!appParams.suppressLog) {
         if (existingApp.deletable) {
-          AlgoKitConfig.logger.warn('App is deletable and onUpdate=DeleteApp, creating new app and deleting old app...')
+          AlgoKitConfig.logger.warn('App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...')
         } else {
           AlgoKitConfig.logger.warn(
-            'App is not deletable and onUpdate=DeleteApp, will attempt to create new app and delete old app, delete will most likely fail',
+            'App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail',
           )
         }
       }
-      return await createAndDelete()
+      return await replace()
     }
   }
 

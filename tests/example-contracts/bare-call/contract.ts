@@ -41,8 +41,8 @@ export const getBareCallContractDeployParams = async (deployment: {
   from: SendTransactionFrom
   metadata: AppDeployMetadata
   codeInjectionValue?: number
-  onSchemaBreak?: 'delete' | 'fail' | OnSchemaBreak
-  onUpdate?: 'update' | 'delete' | 'fail' | OnUpdate
+  onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
+  onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
   breakSchema?: boolean
 }) => {
   const contract = await getBareCallContractData()
