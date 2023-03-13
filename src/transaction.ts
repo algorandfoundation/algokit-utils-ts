@@ -1,8 +1,8 @@
 import algosdk, { Account, Algodv2, LogicSigAccount, MultisigMetadata, SuggestedParams, Transaction } from 'algosdk'
 import { Buffer } from 'buffer'
 import { AlgoAmount } from './algo-amount'
-import { PendingTransactionResponse } from './algod-type'
 import { AlgoKitConfig } from './config'
+import { PendingTransactionResponse } from './types/algod'
 
 /** Account wrapper that supports partial or full multisig signing */
 export class MultisigAccount {

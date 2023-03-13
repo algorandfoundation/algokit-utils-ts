@@ -3,7 +3,7 @@ import { beforeEach } from '@jest/globals'
 import { Account, Algodv2, decodeSignedTransaction, Indexer } from 'algosdk'
 import { AlgoAmount, getAlgoClient, getAlgoIndexerClient, getDefaultLocalNetConfig, getTestAccount } from '../../src'
 import { lookupTransactionById } from '../../src/indexer-lookup'
-import { TransactionLookupResult } from '../../src/indexer-type'
+import { TransactionLookupResult } from '../../src/types/indexer'
 
 export const localNetFixture = (testAccountFunding?: AlgoAmount) => {
   const clientConfig = getDefaultLocalNetConfig('algod')

@@ -1,6 +1,5 @@
 import algosdk, { Algodv2, SuggestedParams, Transaction } from 'algosdk'
 import { Buffer } from 'buffer'
-import { ApplicationResponse } from './algod-type'
 import { AlgoKitConfig } from './config'
 import {
   encodeTransactionNote,
@@ -12,6 +11,7 @@ import {
   SendTransactionResult,
   TransactionNote,
 } from './transaction'
+import { ApplicationResponse } from './types/algod'
 
 export const APP_PAGE_MAX_SIZE = 2048
 

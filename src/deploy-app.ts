@@ -1,9 +1,9 @@
 import { Algodv2, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
-import { ApplicationStateSchema } from './algod-type'
 import { AppCallArgs, AppReference, callApp, CompiledTeal, createApp, CreateAppParams, getAppByIndex, updateApp } from './app'
 import { AlgoKitConfig } from './config'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
 import { getSenderAddress, sendGroupOfTransactions, SendTransactionFrom, SendTransactionResult } from './transaction'
+import { ApplicationStateSchema } from './types/algod'
 
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
 export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'

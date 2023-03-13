@@ -1,6 +1,6 @@
 import { Indexer } from 'algosdk'
 import SearchForTransactions from 'algosdk/dist/types/client/v2/indexer/searchForTransactions'
-import { ApplicationCreatedLookupResult, ApplicationResult, TransactionLookupResult, TransactionSearchResults } from './indexer-type'
+import { ApplicationCreatedLookupResult, ApplicationResult, TransactionLookupResult, TransactionSearchResults } from './types/indexer'
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
 
