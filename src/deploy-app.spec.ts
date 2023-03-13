@@ -142,7 +142,7 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy update to immutable app', async () => {
+  test('Deploy update to immutable app fails', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: false })
     const deployment1 = await getBareCallContractDeployParams({
@@ -166,6 +166,44 @@ describe('deploy-app', () => {
       accounts: [testAccount],
       transactions: [result1.transaction],
       apps: [result1.appIndex],
+    })
+  })
+
+  test('Deploy delete to immutable, but deletable app', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ updatable: false, deletable: true })
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      value: 2,
+      onUpdate: 'delete',
+    })
+    const result2 = await deployApp(deployment2, algod, indexer)
+
+    invariant('transaction' in result1)
+    invariant('transaction' in result2)
+    invariant(result2.confirmation)
+    expect(result2.appIndex).not.toBe(result1.appIndex)
+    expect(result2.createdMetadata).toEqual(deployment2.metadata)
+    expect(result2.createdRound).toBe(result2.confirmation['confirmed-round'])
+    expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
+    expect(result2.name).toBe(deployment2.metadata.name)
+    expect(result2.version).toBe(deployment2.metadata.version)
+    expect(result2.updatable).toBe(deployment2.metadata.updatable)
+    expect(result2.deletable).toBe(deployment2.metadata.deletable)
+    expect(result2.deleted).toBe(false)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction, result2.transaction],
+      apps: [result1.appIndex, result2.appIndex],
     })
   })
 })
