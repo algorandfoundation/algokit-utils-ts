@@ -18,7 +18,6 @@ jobs:
     uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@feature/semantic-release
     with:
       run-commit-lint: true
-      run-pre-test: true
       pre-test-script: |
         pipx install algokit
         algokit localnet start
