@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[deploy-app.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L10)
+[deploy-app.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L10)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[deploy-app.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L9)
+[deploy-app.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L9)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[deploy-app.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L8)
+[deploy-app.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L8)
 
 ## Functions
 
@@ -96,7 +96,7 @@ The app reference of the new/existing app
 
 #### Defined in
 
-[deploy-app.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L106)
+[deploy-app.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L106)
 
 ___
 
@@ -120,7 +120,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[deploy-app.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L473)
+[deploy-app.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L473)
 
 ___
 
@@ -151,7 +151,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[deploy-app.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L374)
+[deploy-app.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L374)
 
 ___
 
@@ -180,7 +180,7 @@ The information about the compiled code
 
 #### Defined in
 
-[deploy-app.ts:504](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L504)
+[deploy-app.ts:504](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L504)
 
 ___
 
@@ -212,7 +212,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[deploy-app.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L487)
+[deploy-app.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L487)
 
 ___
 
@@ -239,4 +239,4 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[deploy-app.ts:361](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L361)
+[deploy-app.ts:361](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L361)

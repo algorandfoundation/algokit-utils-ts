@@ -22,7 +22,7 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idc
 
 #### Defined in
 
-[indexer-type.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L35)
+[indexer-type.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L35)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L33)
+[indexer-type.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L33)
 
 ___
 
@@ -42,4 +42,4 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L34)
+[indexer-type.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L34)

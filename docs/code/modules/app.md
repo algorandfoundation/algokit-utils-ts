@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[app.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L16)
+[app.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L16)
 
 ## Functions
 
@@ -61,7 +61,7 @@ The result of the call
 
 #### Defined in
 
-[app.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L204)
+[app.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L204)
 
 ___
 
@@ -86,7 +86,7 @@ The information about the compiled file
 
 #### Defined in
 
-[app.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L276)
+[app.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L276)
 
 ___
 
@@ -111,7 +111,7 @@ The details of the created app, or the transaction to create it if `skipSending`
 
 #### Defined in
 
-[app.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L131)
+[app.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L131)
 
 ___
 
@@ -137,7 +137,7 @@ object
 
 #### Defined in
 
-[app.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L239)
+[app.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L239)
 
 ___
 
@@ -162,7 +162,7 @@ The data about the app
 
 #### Defined in
 
-[app.ts:265](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L265)
+[app.ts:265](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L265)
 
 ___
 
@@ -187,4 +187,4 @@ The transaction
 
 #### Defined in
 
-[app.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L174)
+[app.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L174)

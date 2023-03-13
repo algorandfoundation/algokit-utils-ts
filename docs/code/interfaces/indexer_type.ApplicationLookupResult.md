@@ -21,7 +21,7 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplica
 
 #### Defined in
 
-[indexer-type.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L53)
+[indexer-type.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L53)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L52)
+[indexer-type.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L52)

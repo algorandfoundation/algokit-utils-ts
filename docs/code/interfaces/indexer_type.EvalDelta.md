@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[indexer-type.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L193)
+[indexer-type.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L193)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L194)
+[indexer-type.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L194)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L195)
+[indexer-type.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L195)

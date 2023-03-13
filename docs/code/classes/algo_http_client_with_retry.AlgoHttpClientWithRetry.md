@@ -53,7 +53,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 #### Defined in
 
-[urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/urlTokenBaseHTTPClient.ts#L45)
+[urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/urlTokenBaseHTTPClient.ts#L45)
 
 ## Properties
 
@@ -63,7 +63,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L8)
+[algo-http-client-with-retry.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L8)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L7)
+[algo-http-client-with-retry.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L7)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L13)
+[algo-http-client-with-retry.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L13)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L12)
+[algo-http-client-with-retry.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L12)
 
 ## Methods
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L25)
+[algo-http-client-with-retry.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L25)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L67)
+[algo-http-client-with-retry.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L67)
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L54)
+[algo-http-client-with-retry.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L54)
 
 ___
 
@@ -193,4 +193,4 @@ ___
 
 #### Defined in
 
-[algo-http-client-with-retry.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algo-http-client-with-retry.ts#L58)
+[algo-http-client-with-retry.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algo-http-client-with-retry.ts#L58)

@@ -21,7 +21,7 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id
 
 #### Defined in
 
-[indexer-type.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L41)
+[indexer-type.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L41)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L40)
+[indexer-type.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L40)

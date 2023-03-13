@@ -37,7 +37,7 @@ General purpose logger type, compatible with Winston and others.
 
 #### Defined in
 
-[config.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/config.ts#L3)
+[config.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/config.ts#L3)
 
 ## Variables
 
@@ -49,7 +49,7 @@ The AlgoKit config. To update it use the configure method.
 
 #### Defined in
 
-[config.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/config.ts#L45)
+[config.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/config.ts#L45)
 
 ___
 
@@ -61,4 +61,4 @@ A logger implementation that writes to console
 
 #### Defined in
 
-[config.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/config.ts#L12)
+[config.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/config.ts#L12)

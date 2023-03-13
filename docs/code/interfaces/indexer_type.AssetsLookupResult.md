@@ -22,7 +22,7 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-ida
 
 #### Defined in
 
-[indexer-type.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L21)
+[indexer-type.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L21)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L19)
+[indexer-type.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L19)
 
 ___
 
@@ -42,4 +42,4 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L20)
+[indexer-type.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L20)

@@ -40,7 +40,7 @@ application.
 
 #### Defined in
 
-[algod-type.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L9)
+[algod-type.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L9)
 
 ___
 
@@ -52,7 +52,7 @@ The number of the asset's unit that were transferred to the close-to address.
 
 #### Defined in
 
-[algod-type.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L13)
+[algod-type.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L13)
 
 ___
 
@@ -64,7 +64,7 @@ The asset index if the transaction was found and it created an asset.
 
 #### Defined in
 
-[algod-type.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L17)
+[algod-type.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L17)
 
 ___
 
@@ -76,7 +76,7 @@ Rewards in microalgos applied to the close remainder to account.
 
 #### Defined in
 
-[algod-type.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L21)
+[algod-type.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L21)
 
 ___
 
@@ -88,7 +88,7 @@ Closing amount for the transaction.
 
 #### Defined in
 
-[algod-type.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L25)
+[algod-type.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L25)
 
 ___
 
@@ -100,7 +100,7 @@ The round where this transaction was confirmed, if present.
 
 #### Defined in
 
-[algod-type.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L29)
+[algod-type.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L29)
 
 ___
 
@@ -113,7 +113,7 @@ transaction.
 
 #### Defined in
 
-[algod-type.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L34)
+[algod-type.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L34)
 
 ___
 
@@ -125,7 +125,7 @@ Inner transactions produced by application execution.
 
 #### Defined in
 
-[algod-type.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L38)
+[algod-type.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L38)
 
 ___
 
@@ -138,7 +138,7 @@ transaction.
 
 #### Defined in
 
-[algod-type.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L43)
+[algod-type.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L43)
 
 ___
 
@@ -150,7 +150,7 @@ ___
 
 #### Defined in
 
-[algod-type.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L47)
+[algod-type.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L47)
 
 ___
 
@@ -163,7 +163,7 @@ An empty string indicates the transaction wasn't kicked out of this node's txpoo
 
 #### Defined in
 
-[algod-type.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L50)
+[algod-type.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L50)
 
 ___
 
@@ -175,7 +175,7 @@ Rewards in µALGOs applied to the receiver account.
 
 #### Defined in
 
-[algod-type.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L54)
+[algod-type.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L54)
 
 ___
 
@@ -187,7 +187,7 @@ Rewards in µALGOs applied to the sender account.
 
 #### Defined in
 
-[algod-type.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L58)
+[algod-type.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L58)
 
 ___
 
@@ -199,4 +199,4 @@ The raw signed transaction.
 
 #### Defined in
 
-[algod-type.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/algod-type.ts#L62)
+[algod-type.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/algod-type.ts#L62)

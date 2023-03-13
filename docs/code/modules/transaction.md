@@ -54,7 +54,7 @@ https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md
 
 #### Defined in
 
-[transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L90)
+[transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L90)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L147)
+[transaction.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L147)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L86)
+[transaction.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L86)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L88)
+[transaction.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L88)
 
 ## Functions
 
@@ -109,7 +109,7 @@ the estimated rate.
 
 #### Defined in
 
-[transaction.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L324)
+[transaction.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L324)
 
 ___
 
@@ -140,7 +140,7 @@ the transaction note ready for inclusion in a transaction
 
 #### Defined in
 
-[transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L108)
+[transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L108)
 
 ___
 
@@ -164,7 +164,7 @@ The public address
 
 #### Defined in
 
-[transaction.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L154)
+[transaction.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L154)
 
 ___
 
@@ -189,7 +189,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[transaction.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L350)
+[transaction.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L350)
 
 ___
 
@@ -216,7 +216,7 @@ An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting`
 
 #### Defined in
 
-[transaction.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L219)
+[transaction.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L219)
 
 ___
 
@@ -243,7 +243,7 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or u
 
 #### Defined in
 
-[transaction.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L167)
+[transaction.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L167)
 
 ___
 
@@ -274,4 +274,4 @@ Pending transaction information
 
 #### Defined in
 
-[transaction.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L277)
+[transaction.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L277)

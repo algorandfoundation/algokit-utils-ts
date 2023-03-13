@@ -26,7 +26,7 @@ Any extra pages that are needed for the smart contract; if left blank then the r
 
 #### Defined in
 
-[app.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L110)
+[app.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L110)
 
 ___
 
@@ -38,7 +38,7 @@ Restricts number of byte slices in global state
 
 #### Defined in
 
-[app.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L108)
+[app.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L108)
 
 ___
 
@@ -50,7 +50,7 @@ Restricts number of ints in global state
 
 #### Defined in
 
-[app.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L106)
+[app.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L106)
 
 ___
 
@@ -62,7 +62,7 @@ Restricts number of byte slices in per-user local state
 
 #### Defined in
 
-[app.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L104)
+[app.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L104)
 
 ___
 
@@ -74,4 +74,4 @@ Restricts number of ints in per-user local state
 
 #### Defined in
 
-[app.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L102)
+[app.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L102)

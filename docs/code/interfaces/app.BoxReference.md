@@ -23,7 +23,7 @@ A unique application index
 
 #### Defined in
 
-[app.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L33)
+[app.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L33)
 
 ___
 
@@ -35,4 +35,4 @@ Name of box to reference
 
 #### Defined in
 
-[app.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L37)
+[app.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L37)

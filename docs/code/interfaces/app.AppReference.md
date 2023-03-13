@@ -29,7 +29,7 @@ The Algorand address of the account associated with the app
 
 #### Defined in
 
-[app.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L23)
+[app.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L23)
 
 ___
 
@@ -41,4 +41,4 @@ The index of the app
 
 #### Defined in
 
-[app.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L21)
+[app.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L21)

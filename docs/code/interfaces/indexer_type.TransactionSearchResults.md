@@ -22,7 +22,7 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions
 
 #### Defined in
 
-[indexer-type.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L6)
+[indexer-type.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L6)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L7)
+[indexer-type.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L7)
 
 ___
 
@@ -42,4 +42,4 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L8)
+[indexer-type.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L8)

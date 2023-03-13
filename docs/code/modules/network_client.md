@@ -83,7 +83,7 @@ Custom (e.g. default local sandbox, although we recommend loading this into a .e
 
 #### Defined in
 
-[network-client.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/network-client.ts#L108)
+[network-client.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/network-client.ts#L108)
 
 ___
 
@@ -140,7 +140,7 @@ Custom (e.g. default local sandbox, although we recommend loading this into a .e
 
 #### Defined in
 
-[network-client.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/network-client.ts#L141)
+[network-client.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/network-client.ts#L141)
 
 ___
 
@@ -180,7 +180,7 @@ Custom (e.g. default local sandbox, although we recommend loading this into a .e
 
 #### Defined in
 
-[network-client.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/network-client.ts#L164)
+[network-client.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/network-client.ts#L164)
 
 ___
 
@@ -203,7 +203,7 @@ Returns the Algorand configuration to point to the AlgoNode service
 
 #### Defined in
 
-[network-client.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/network-client.ts#L54)
+[network-client.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/network-client.ts#L54)
 
 ___
 
@@ -219,7 +219,7 @@ Retrieve the algod configuration from environment variables (expects to be calle
 
 #### Defined in
 
-[network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/network-client.ts#L16)
+[network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/network-client.ts#L16)
 
 ___
 
@@ -241,7 +241,7 @@ Returns the Algorand configuration to point to the default LocalNet
 
 #### Defined in
 
-[network-client.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/network-client.ts#L65)
+[network-client.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/network-client.ts#L65)
 
 ___
 
@@ -257,4 +257,4 @@ Retrieve the indexer configuration from environment variables (expects to be cal
 
 #### Defined in
 
-[network-client.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/network-client.ts#L33)
+[network-client.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/network-client.ts#L33)

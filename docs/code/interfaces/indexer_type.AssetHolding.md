@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[indexer-type.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L321)
+[indexer-type.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L321)
 
 ___
 
@@ -38,7 +38,7 @@ Asset ID of the holding.
 
 #### Defined in
 
-[indexer-type.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L325)
+[indexer-type.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L325)
 
 ___
 
@@ -52,7 +52,7 @@ sent in the worst case.
 
 #### Defined in
 
-[indexer-type.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L331)
+[indexer-type.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L331)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L336)
+[indexer-type.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L336)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L335)
+[indexer-type.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L335)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L337)
+[indexer-type.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L337)
 
 ___
 
@@ -94,4 +94,4 @@ ___
 
 #### Defined in
 
-[indexer-type.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/indexer-type.ts#L338)
+[indexer-type.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/indexer-type.ts#L338)

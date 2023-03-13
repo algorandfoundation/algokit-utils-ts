@@ -43,7 +43,7 @@ Account wrapper that supports partial or full multisig signing
 
 #### Defined in
 
-[transaction.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L24)
+[transaction.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L24)
 
 ## Properties
 
@@ -53,7 +53,7 @@ Account wrapper that supports partial or full multisig signing
 
 #### Defined in
 
-[transaction.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L10)
+[transaction.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L10)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L8)
+[transaction.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L8)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L9)
+[transaction.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L9)
 
 ## Accessors
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L20)
+[transaction.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L20)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L12)
+[transaction.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L12)
 
 ___
 
@@ -115,7 +115,7 @@ readonly (`default` \| [`SigningAccount`](transaction.SigningAccount.md))[]
 
 #### Defined in
 
-[transaction.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L16)
+[transaction.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L16)
 
 ## Methods
 
@@ -135,4 +135,4 @@ readonly (`default` \| [`SigningAccount`](transaction.SigningAccount.md))[]
 
 #### Defined in
 
-[transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L30)
+[transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L30)

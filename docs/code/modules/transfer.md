@@ -31,4 +31,4 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 #### Defined in
 
-[transfer.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transfer.ts#L34)
+[transfer.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transfer.ts#L34)

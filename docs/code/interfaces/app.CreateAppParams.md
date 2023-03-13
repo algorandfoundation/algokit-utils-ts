@@ -43,7 +43,7 @@ CreateOrUpdateAppParams.approvalProgram
 
 #### Defined in
 
-[app.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L61)
+[app.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L61)
 
 ___
 
@@ -59,7 +59,7 @@ CreateOrUpdateAppParams.args
 
 #### Defined in
 
-[app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L69)
+[app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L69)
 
 ___
 
@@ -75,7 +75,7 @@ CreateOrUpdateAppParams.clearStateProgram
 
 #### Defined in
 
-[app.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L63)
+[app.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L63)
 
 ___
 
@@ -91,7 +91,7 @@ CreateOrUpdateAppParams.from
 
 #### Defined in
 
-[app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L59)
+[app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L59)
 
 ___
 
@@ -107,7 +107,7 @@ CreateOrUpdateAppParams.maxFee
 
 #### Defined in
 
-[transaction.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L134)
+[transaction.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L134)
 
 ___
 
@@ -123,7 +123,7 @@ CreateOrUpdateAppParams.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[transaction.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L136)
+[transaction.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L136)
 
 ___
 
@@ -139,7 +139,7 @@ CreateOrUpdateAppParams.note
 
 #### Defined in
 
-[app.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L67)
+[app.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L67)
 
 ___
 
@@ -151,7 +151,7 @@ The storage schema to request for the created app
 
 #### Defined in
 
-[app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L75)
+[app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L75)
 
 ___
 
@@ -168,7 +168,7 @@ CreateOrUpdateAppParams.skipSending
 
 #### Defined in
 
-[transaction.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L128)
+[transaction.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L128)
 
 ___
 
@@ -184,7 +184,7 @@ CreateOrUpdateAppParams.skipWaiting
 
 #### Defined in
 
-[transaction.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L130)
+[transaction.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L130)
 
 ___
 
@@ -200,7 +200,7 @@ CreateOrUpdateAppParams.suppressLog
 
 #### Defined in
 
-[transaction.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L132)
+[transaction.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L132)
 
 ___
 
@@ -216,4 +216,4 @@ CreateOrUpdateAppParams.transactionParams
 
 #### Defined in
 
-[app.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/app.ts#L65)
+[app.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/app.ts#L65)

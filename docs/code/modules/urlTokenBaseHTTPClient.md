@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[urlTokenBaseHTTPClient.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/urlTokenBaseHTTPClient.ts#L33)
+[urlTokenBaseHTTPClient.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/urlTokenBaseHTTPClient.ts#L33)

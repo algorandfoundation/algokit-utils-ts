@@ -27,7 +27,7 @@ The account name identifier used for fund dispensing in test environments
 
 #### Defined in
 
-[account.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/account.ts#L12)
+[account.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/account.ts#L12)
 
 ## Functions
 
@@ -79,7 +79,7 @@ The requested account with private key loaded from the environment variables or 
 
 #### Defined in
 
-[account.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/account.ts#L55)
+[account.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/account.ts#L55)
 
 ___
 
@@ -101,7 +101,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[account.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/account.ts#L150)
+[account.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/account.ts#L150)
 
 ___
 
@@ -123,7 +123,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[account.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/account.ts#L142)
+[account.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/account.ts#L142)
 
 ___
 
@@ -147,7 +147,7 @@ This is a wrapper around algosdk.mnemonicToSecretKey to provide a more friendly/
 
 #### Defined in
 
-[account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/account.ts#L21)
+[account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/account.ts#L21)
 
 ___
 
@@ -174,7 +174,7 @@ If running on Sandbox then it will return the default dispenser account automati
 
 #### Defined in
 
-[account.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/account.ts#L161)
+[account.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/account.ts#L161)
 
 ___
 
@@ -205,4 +205,4 @@ The account, with private key loaded
 
 #### Defined in
 
-[account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/account.ts#L115)
+[account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/account.ts#L115)

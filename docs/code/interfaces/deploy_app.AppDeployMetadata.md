@@ -35,7 +35,7 @@ Whether or not the app is deletable / permanent
 
 #### Defined in
 
-[deploy-app.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L21)
+[deploy-app.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L21)
 
 ___
 
@@ -47,7 +47,7 @@ The unique name identifier of the app within the creator account
 
 #### Defined in
 
-[deploy-app.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L17)
+[deploy-app.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L17)
 
 ___
 
@@ -59,7 +59,7 @@ Whether or not the app is updatable / immutable
 
 #### Defined in
 
-[deploy-app.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L23)
+[deploy-app.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L23)
 
 ___
 
@@ -71,4 +71,4 @@ The version of app that is / will be deployed
 
 #### Defined in
 
-[deploy-app.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/deploy-app.ts#L19)
+[deploy-app.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/deploy-app.ts#L19)

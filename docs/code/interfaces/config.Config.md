@@ -20,4 +20,4 @@ The AlgoKit configuration type
 
 #### Defined in
 
-[config.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/config.ts#L22)
+[config.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/config.ts#L22)

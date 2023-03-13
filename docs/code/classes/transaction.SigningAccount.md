@@ -43,7 +43,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L80)
+[transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L80)
 
 ## Properties
 
@@ -53,7 +53,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L46)
+[transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L46)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L47)
+[transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L47)
 
 ## Accessors
 
@@ -83,7 +83,7 @@ Account.addr
 
 #### Defined in
 
-[transaction.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L52)
+[transaction.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L52)
 
 ___
 
@@ -99,7 +99,7 @@ Algorand account of the sender address and signer private key
 
 #### Defined in
 
-[transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L73)
+[transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L73)
 
 ___
 
@@ -115,7 +115,7 @@ Algorand account of the underlying signing account
 
 #### Defined in
 
-[transaction.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L66)
+[transaction.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L66)
 
 ___
 
@@ -135,4 +135,4 @@ Account.sk
 
 #### Defined in
 
-[transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/transaction.ts#L59)
+[transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/transaction.ts#L59)

@@ -48,7 +48,7 @@ const defaultDispenserAccount = await getKmdWalletAccount(algod,
 
 #### Defined in
 
-[localnet.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/localnet.ts#L90)
+[localnet.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/localnet.ts#L90)
 
 ___
 
@@ -73,7 +73,7 @@ Returns an Algorand account with private key loaded for the default LocalNet dis
 
 #### Defined in
 
-[localnet.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/localnet.ts#L141)
+[localnet.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/localnet.ts#L141)
 
 ___
 
@@ -113,7 +113,7 @@ An Algorand account with private key loaded - either one that already existed in
 
 #### Defined in
 
-[localnet.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/localnet.ts#L32)
+[localnet.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/localnet.ts#L32)
 
 ___
 
@@ -135,4 +135,4 @@ Returns true if the algod client is pointing to a LocalNet Algorand network
 
 #### Defined in
 
-[localnet.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/4edaa90/src/localnet.ts#L9)
+[localnet.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/b75e3eb/src/localnet.ts#L9)
