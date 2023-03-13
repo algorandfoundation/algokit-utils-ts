@@ -365,12 +365,13 @@ describe('deploy-app', () => {
   })
 
   test('Do nothing if deploying app with no changes', async () => {
-    const { algod, indexer, testAccount } = localnet.context
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const deployment = await getBareCallContractDeployParams({
       from: testAccount,
       metadata: getMetadata(),
     })
     const initialDeployment = await deployApp(deployment, algod, indexer)
+    await waitForIndexer()
     logging.testLogger.clear()
 
     const result = await deployApp(deployment, algod, indexer)
