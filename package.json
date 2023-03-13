@@ -24,7 +24,8 @@
     "audit": "npm audit",
     "format": "prettier --write .",
     "commit-lint": "commitlint --edit -o",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "generate:code-docs": "typedoc"
   },
   "dependencies": {
     "algosdk": "^2.1.0",
@@ -48,6 +49,8 @@
     "tiny-invariant": "^1.3.1",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
+    "typedoc": "^0.23.25",
+    "typedoc-plugin-markdown": "^3.14.0",
     "typescript": "^4.9.3",
     "uuid": "^9.0.0"
   },
