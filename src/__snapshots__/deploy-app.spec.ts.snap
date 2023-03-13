@@ -1,28 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`deploy-app Deploy replacement to deletable, updated app 1`] = `
-"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
-INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
-INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
-WARN: App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...
-INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
-WARN: Deleting existing test app with index APP_1 from ACCOUNT_1 account.
-WARN: Sent transactions TXID_2 to create app with index APP_2 and TXID_3 to delete app with index APP_1 from ACCOUNT_1 account."
-`;
-
-exports[`deploy-app Deploy failure for replacement of app fails if onSchemaBreak = Fail 1`] = `
-"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
-INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
-WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"num-byte-slice":0,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}},"to":{"global":{"num-byte-slice":1,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}}}]"
-`;
-
-exports[`deploy-app Deploy failure for replacement of permanent app 1`] = `
+exports[`deploy-app Deploy failure for replacement of permanent, updated app 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
 WARN: App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail
 INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
 WARN: Deleting existing test app with index APP_1 from ACCOUNT_1 account."
+`;
+
+exports[`deploy-app Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"num-byte-slice":0,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}},"to":{"global":{"num-byte-slice":1,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}}}]"
 `;
 
 exports[`deploy-app Deploy failure for updated app fails if onupdate = Fail 1`] = `
@@ -36,6 +26,35 @@ exports[`deploy-app Deploy new app 1`] = `
 INFO: App test not found in apps created by ACCOUNT_1; deploying app with version 1.0.
 INFO: Sent transaction ID TXID_1 appl from ACCOUNT_1
 DEBUG: Created app APP_1 from creator ACCOUNT_1"
+`;
+
+exports[`deploy-app Deploy replacement of deletable schema broken app 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"num-byte-slice":0,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}},"to":{"global":{"num-byte-slice":1,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}}}]
+INFO: App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app
+INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
+WARN: Deleting existing test app with index APP_1 from ACCOUNT_1 account.
+WARN: Sent transactions TXID_2 to create app with index APP_2 and TXID_3 to delete app with index APP_1 from ACCOUNT_1 account."
+`;
+
+exports[`deploy-app Deploy replacement to deletable, updated app 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
+INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
+WARN: App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...
+INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
+WARN: Deleting existing test app with index APP_1 from ACCOUNT_1 account.
+WARN: Sent transactions TXID_2 to create app with index APP_2 and TXID_3 to delete app with index APP_1 from ACCOUNT_1 account."
+`;
+
+exports[`deploy-app Deploy replacement to schema broken, permanent app fails 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"num-byte-slice":0,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}},"to":{"global":{"num-byte-slice":1,"num-uint":1},"local":{"num-byte-slice":0,"num-uint":0}}}]
+INFO: App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail
+INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
+WARN: Deleting existing test app with index APP_1 from ACCOUNT_1 account."
 `;
 
 exports[`deploy-app Deploy update to immutable updated app fails 1`] = `
@@ -55,4 +74,10 @@ INFO: App is updatable and onUpdate=UpdateApp, updating app...
 INFO: Updating existing test app for ACCOUNT_1 to version 2.0.
 DEBUG: Updating app APP_1
 INFO: Sent transaction ID TXID_2 appl from ACCOUNT_1"
+`;
+
+exports[`deploy-app Do nothing if deploying app with no changes 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 1039 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app index APP_1 and version 1.0.
+DEBUG: No detected changes in app, nothing to do."
 `;

@@ -239,7 +239,7 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy failure for replacement of permanent app', async () => {
+  test('Deploy failure for replacement of permanent, updated app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = await getBareCallContractDeployParams({
@@ -267,7 +267,73 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy failure for replacement of app fails if onSchemaBreak = Fail', async () => {
+  test('Deploy replacement of deletable schema broken app', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ deletable: true })
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      breakSchema: true,
+      onSchemaBreak: 'replace',
+    })
+    const result2 = await deployApp(deployment2, algod, indexer)
+
+    invariant('transaction' in result1)
+    invariant('transaction' in result2)
+    invariant(result2.confirmation)
+    invariant(result2.deleteResult)
+    expect(result2.appIndex).not.toBe(result1.appIndex)
+    expect(result2.createdMetadata).toEqual(deployment2.metadata)
+    expect(result2.createdRound).toBe(result2.createdRound)
+    expect(result2.updatedRound).toBe(result2.createdRound)
+    expect(result2.name).toBe(deployment2.metadata.name)
+    expect(result2.version).toBe(deployment2.metadata.version)
+    expect(result2.updatable).toBe(deployment2.metadata.updatable)
+    expect(result2.deletable).toBe(deployment2.metadata.deletable)
+    expect(result2.deleted).toBe(false)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
+      apps: [result1.appIndex, result2.appIndex],
+    })
+  })
+
+  test('Deploy replacement to schema broken, permanent app fails', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ deletable: false })
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      breakSchema: true,
+      onSchemaBreak: 'replace',
+    })
+    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
+
+    invariant('transaction' in result1)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction],
+      apps: [result1.appIndex],
+    })
+  })
+
+  test('Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getBareCallContractDeployParams({
@@ -295,6 +361,36 @@ describe('deploy-app', () => {
       accounts: [testAccount],
       transactions: [result1.transaction],
       apps: [result1.appIndex],
+    })
+  })
+
+  test('Do nothing if deploying app with no changes', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const deployment = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: getMetadata(),
+    })
+    const initialDeployment = await deployApp(deployment, algod, indexer)
+    logging.testLogger.clear()
+
+    const result = await deployApp(deployment, algod, indexer)
+
+    invariant('transaction' in initialDeployment)
+    invariant(!('transaction' in result))
+    expect(result.appIndex).toBe(initialDeployment.appIndex)
+    expect(result.appAddress).toBe(getApplicationAddress(initialDeployment.appIndex))
+    expect(result.createdMetadata).toEqual(deployment.metadata)
+    expect(result.createdRound).toBe(initialDeployment.createdRound)
+    expect(result.updatedRound).toBe(initialDeployment.createdRound)
+    expect(result.name).toBe(deployment.metadata.name)
+    expect(result.version).toBe(deployment.metadata.version)
+    expect(result.updatable).toBe(deployment.metadata.updatable)
+    expect(result.deletable).toBe(deployment.metadata.deletable)
+    expect(result.deleted).toBe(false)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [initialDeployment.transaction],
+      apps: [result.appIndex],
     })
   })
 })
