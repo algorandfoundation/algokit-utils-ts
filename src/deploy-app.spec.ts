@@ -104,7 +104,7 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy update to updatable app', async () => {
+  test('Deploy update to updatable updated app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: true })
     const deployment1 = await getBareCallContractDeployParams({
@@ -118,7 +118,7 @@ describe('deploy-app', () => {
     const deployment2 = await getBareCallContractDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
-      value: 2,
+      codeInjectionValue: 2,
       onUpdate: 'update',
     })
     const result2 = await deployApp(deployment2, algod, indexer)
@@ -142,7 +142,7 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy update to immutable app fails', async () => {
+  test('Deploy update to immutable updated app fails', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: false })
     const deployment1 = await getBareCallContractDeployParams({
@@ -156,7 +156,7 @@ describe('deploy-app', () => {
     const deployment2 = await getBareCallContractDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
-      value: 2,
+      codeInjectionValue: 2,
       onUpdate: 'update',
     })
     await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
@@ -169,9 +169,40 @@ describe('deploy-app', () => {
     })
   })
 
-  test('Deploy delete to immutable, but deletable app', async () => {
+  test('Deploy failure for updated app fails if onupdate = Fail', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
-    const metadata = getMetadata({ updatable: false, deletable: true })
+    const metadata = getMetadata()
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+      codeInjectionValue: 2,
+      onUpdate: 'fail',
+    })
+    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(
+      'Update detected and onUpdate=Fail, stopping deployment. ' +
+        'If you want to try deleting and recreating the app then ' +
+        're-run with onUpdate=UpdateApp',
+    )
+
+    invariant('transaction' in result1)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction],
+      apps: [result1.appIndex],
+    })
+  })
+
+  test('Deploy delete to deletable updated app', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ deletable: true })
     const deployment1 = await getBareCallContractDeployParams({
       from: testAccount,
       metadata: metadata,
@@ -183,7 +214,7 @@ describe('deploy-app', () => {
     const deployment2 = await getBareCallContractDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
-      value: 2,
+      codeInjectionValue: 2,
       onUpdate: 'delete',
     })
     const result2 = await deployApp(deployment2, algod, indexer)
@@ -191,6 +222,7 @@ describe('deploy-app', () => {
     invariant('transaction' in result1)
     invariant('transaction' in result2)
     invariant(result2.confirmation)
+    invariant(result2.deleteResult)
     expect(result2.appIndex).not.toBe(result1.appIndex)
     expect(result2.createdMetadata).toEqual(deployment2.metadata)
     expect(result2.createdRound).toBe(result2.confirmation['confirmed-round'])
@@ -202,8 +234,67 @@ describe('deploy-app', () => {
     expect(result2.deleted).toBe(false)
     logging.testLogger.snapshot({
       accounts: [testAccount],
-      transactions: [result1.transaction, result2.transaction],
+      transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
       apps: [result1.appIndex, result2.appIndex],
+    })
+  })
+
+  test('Deploy failure for delete to permanent app', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata({ deletable: false })
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      codeInjectionValue: 2,
+      onUpdate: 'delete',
+    })
+
+    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
+
+    invariant('transaction' in result1)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction],
+      apps: [result1.appIndex],
+    })
+  })
+
+  test('Deploy failure for app delete fails if onSchemaBreak = Fail', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata()
+    const deployment1 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: metadata,
+      onSchemaBreak: 'fail',
+      breakSchema: true,
+    })
+    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(
+      'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. ' +
+        'If you want to try deleting and recreating the app then ' +
+        're-run with onSchemaBreak=OnSchemaBreak.DeleteApp',
+    )
+
+    invariant('transaction' in result1)
+    logging.testLogger.snapshot({
+      accounts: [testAccount],
+      transactions: [result1.transaction],
+      apps: [result1.appIndex],
     })
   })
 })

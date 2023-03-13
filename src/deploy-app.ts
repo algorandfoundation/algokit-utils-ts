@@ -3,11 +3,11 @@ import { ApplicationStateSchema } from './algod-type'
 import { AppCallArgs, AppReference, callApp, CompiledTeal, createApp, CreateAppParams, getAppByIndex, updateApp } from './app'
 import { AlgoKitConfig } from './config'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
-import { getSenderAddress, SendTransactionFrom, SendTransactionResult } from './transaction'
+import { getSenderAddress, sendGroupOfTransactions, SendTransactionFrom, SendTransactionResult } from './transaction'
 
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
 export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
-export const APP_DEPLOY_NOTE_PREFIX = 'APP_DEPLOY:'
+export const APP_DEPLOY_NOTE_PREFIX = 'APP_DEPLOY::'
 
 /**
  * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with @see {APP_DEPLOY_NOTE_PREFIX}.
@@ -71,7 +71,7 @@ export enum OnSchemaBreak {
 }
 
 /** The parameters to deploy an app */
-export interface AppDeploymentParams extends Omit<Omit<Omit<Omit<CreateAppParams, 'args'>, 'note'>, 'skipSending'>, 'skipWaiting'> {
+export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'note' | 'skipSending' | 'skipWaiting'> {
   /** The deployment metadata */
   metadata: AppDeployMetadata
   /** Any deploy-time parameters to replace in the TEAL code */
@@ -107,7 +107,8 @@ export async function deployApp(
   deployment: AppDeploymentParams,
   algod: Algodv2,
   indexer: Indexer,
-): Promise<(SendTransactionResult & AppMetadata) | AppMetadata> {
+  // todo: confirmation is required return not optional
+): Promise<(SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult }) | AppMetadata> {
   const { metadata, deployTimeParameters, onSchemaBreak, onUpdate, existingDeployments, createArgs, updateArgs, deleteArgs, ...appParams } =
     deployment
 
@@ -135,16 +136,15 @@ export async function deployApp(
       ? (await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, algod, deployTimeParameters)).compiledBase64ToBytes
       : appParams.clearStateProgram
 
-  // Todo: either cache this within the current execution run or pass it into this function given it's an expensive operation (N+1) and won't change?
   const apps = existingDeployments ?? (await getCreatorAppsByName(indexer, appParams.from))
 
-  const create = async (): Promise<SendTransactionResult & AppMetadata> => {
+  const create = async (skipSending?: boolean): Promise<SendTransactionResult & AppMetadata> => {
     const result = await createApp(
       {
         ...appParams,
         args: createArgs,
         note: getAppDeploymentTransactionNote(metadata),
-        skipSending: false,
+        skipSending: skipSending ?? false,
         skipWaiting: false,
       },
       algod,
@@ -207,20 +207,21 @@ export async function deployApp(
   const isSchemaBreak = schemaIsBroken(existingGlobalSchema, newGlobalSchema) || schemaIsBroken(existingLocalSchema, newLocalSchema)
 
   const createAndDelete = async (): Promise<SendTransactionResult & AppMetadata> => {
+    // Create
     if (!appParams.suppressLog) {
       AlgoKitConfig.logger.info(
         `Deploying a new ${metadata.name} app for ${getSenderAddress(appParams.from)}; deploying app with version ${metadata.version}.`,
       )
     }
+    const { transaction: createTransaction, ...newApp } = await create(true)
 
-    const newApp = await create()
+    // Delete
     if (!appParams.suppressLog) {
       AlgoKitConfig.logger.warn(
         `Deleting existing ${metadata.name} app with index ${existingApp.appIndex} from ${getSenderAddress(appParams.from)} account.`,
       )
     }
-
-    await callApp(
+    const { transaction: deleteTransaction } = await callApp(
       {
         appIndex: existingApp.appIndex,
         callType: 'delete',
@@ -228,13 +229,60 @@ export async function deployApp(
         args: deleteArgs,
         transactionParams: appParams.transactionParams,
         suppressLog: appParams.suppressLog,
-        skipSending: false,
-        skipWaiting: false,
+        skipSending: true,
       },
       algod,
     )
 
-    return newApp
+    // Ensure create and delete happen atomically
+    const { confirmations } = await sendGroupOfTransactions(
+      {
+        transactions: [
+          {
+            transaction: createTransaction,
+            signer: appParams.from,
+          },
+          {
+            transaction: deleteTransaction,
+            signer: appParams.from,
+          },
+        ],
+        sendParams: {
+          maxRoundsToWaitForConfirmation: appParams.maxRoundsToWaitForConfirmation,
+          skipWaiting: false,
+          suppressLog: true,
+        },
+      },
+      algod,
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const createConfirmation = confirmations![0]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const deleteConfirmation = confirmations![1]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const newAppIndex = createConfirmation['application-index']!
+
+    if (!appParams.suppressLog) {
+      AlgoKitConfig.logger.warn(
+        `Sent transactions ${createTransaction.txID()} to create app with index ${newAppIndex} and ${deleteTransaction.txID()} to delete app with index ${
+          existingApp.appIndex
+        } from ${getSenderAddress(appParams.from)} account.`,
+      )
+    }
+
+    return {
+      transaction: createTransaction,
+      confirmation: createConfirmation,
+      appIndex: newAppIndex,
+      appAddress: getApplicationAddress(newAppIndex),
+      createdMetadata: metadata,
+      createdRound: Number(createConfirmation['confirmed-round']),
+      updatedRound: Number(createConfirmation['confirmed-round']),
+      ...metadata,
+      deleted: false,
+      deleteResult: { transaction: deleteTransaction, confirmation: deleteConfirmation },
+    } as SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult }
   }
 
   const update = async (): Promise<SendTransactionResult & AppMetadata> => {
@@ -289,13 +337,13 @@ export async function deployApp(
 
     if (onSchemaBreak === undefined || onSchemaBreak === 'fail' || onSchemaBreak === OnSchemaBreak.Fail) {
       throw new Error(
-        'Schema break detected and on_schema_break=OnSchemaBreak.Fail, stopping deployment. ' +
+        'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. ' +
           'If you want to try deleting and recreating the app then ' +
-          're-run with on_schema_break=OnSchemaBreak.DeleteApp',
+          're-run with onSchemaBreak=OnSchemaBreak.DeleteApp',
       )
     }
     if (!appParams.suppressLog) {
-      if (metadata.deletable) {
+      if (existingApp.deletable) {
         AlgoKitConfig.logger.info('App is deletable and onSchemaBreak=DeleteApp, will attempt to create new app and delete old app')
       } else {
         AlgoKitConfig.logger.info(
@@ -321,12 +369,10 @@ export async function deployApp(
 
     if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {
       if (!appParams.suppressLog) {
-        if (metadata.updatable) {
-          AlgoKitConfig.logger.info(`App is updatable and on_update=UpdateApp, updating app...`)
+        if (existingApp.updatable) {
+          AlgoKitConfig.logger.info(`App is updatable and onUpdate=UpdateApp, updating app...`)
         } else {
-          AlgoKitConfig.logger.warn(
-            `App is not updatable but on_update=UpdateApp, will attempt to update app, update will most likely fail`,
-          )
+          AlgoKitConfig.logger.warn(`App is not updatable but onUpdate=UpdateApp, will attempt to update app, update will most likely fail`)
         }
       }
       return await update()
@@ -334,10 +380,12 @@ export async function deployApp(
 
     if (onUpdate === 'delete' || onUpdate === OnUpdate.DeleteApp) {
       if (!appParams.suppressLog) {
-        if (metadata.updatable) {
-          AlgoKitConfig.logger.warn('App is updatable but on_update=DeleteApp, will attempt to create new app and delete old app')
+        if (existingApp.deletable) {
+          AlgoKitConfig.logger.warn('App is deletable and onUpdate=DeleteApp, creating new app and deleting old app...')
         } else {
-          AlgoKitConfig.logger.warn('App is not updatable and on_update=DeleteApp, will attempt to create new app and delete old app')
+          AlgoKitConfig.logger.warn(
+            'App is not deletable and onUpdate=DeleteApp, will attempt to create new app and delete old app, delete will most likely fail',
+          )
         }
       }
       return await createAndDelete()
@@ -345,7 +393,7 @@ export async function deployApp(
   }
 
   if (!appParams.suppressLog) {
-    AlgoKitConfig.logger.info('No detected changes in app, nothing to do.')
+    AlgoKitConfig.logger.debug('No detected changes in app, nothing to do.')
   }
   return existingApp
 }
@@ -511,9 +559,14 @@ export async function performTemplateSubstitutionAndCompile(
     for (const key in templateParameters) {
       const value = templateParameters[key]
       const token = `TMPL_${key}`
+      // todo: handle uint8array
       tealCode = tealCode.replace(
         new RegExp(token, 'g'),
-        typeof value === 'string' ? `0x${Buffer.from(value, 'utf-8').toString('hex')}` : value.toString(),
+        typeof value === 'string'
+          ? `0x${Buffer.from(value, 'utf-8').toString('hex')}`
+          : ArrayBuffer.isView(value)
+          ? `0x${Buffer.from(value).toString('hex')}`
+          : value.toString(),
       )
     }
   }

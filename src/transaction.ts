@@ -1,4 +1,5 @@
 import algosdk, { Account, Algodv2, LogicSigAccount, MultisigMetadata, SuggestedParams, Transaction } from 'algosdk'
+import { Buffer } from 'buffer'
 import { AlgoAmount } from './algo-amount'
 import { PendingTransactionResponse } from './algod-type'
 import { AlgoKitConfig } from './config'
@@ -204,7 +205,7 @@ export interface TransactionToSign {
   /** The unsigned transaction to sign and send */
   transaction: Transaction
   /** The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account */
-  signer: Account | SigningAccount | LogicSigAccount
+  signer: SendTransactionFrom
 }
 
 /**
@@ -229,11 +230,17 @@ export const sendGroupOfTransactions = async function (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const groupId = Buffer.from(group[0].group!).toString('base64')
 
-  AlgoKitConfig.logger.info(`Sending group of transactions (${groupId})`, { transactionsToSend })
+  if (!sendParams?.suppressLog) {
+    AlgoKitConfig.logger.info(`Sending group of transactions (${groupId})`, { transactionsToSend })
+  }
 
   const signedTransactions = group.map((groupedTransaction, index) => {
     const signer = transactions[index].signer
-    return 'sk' in signer ? groupedTransaction.signTxn(signer.sk) : algosdk.signLogicSigTransactionObject(groupedTransaction, signer).blob
+    return 'sk' in signer
+      ? groupedTransaction.signTxn(signer.sk)
+      : 'lsig' in signer
+      ? algosdk.signLogicSigTransactionObject(groupedTransaction, signer).blob
+      : signer.sign(groupedTransaction)
   })
 
   if (!sendParams?.suppressLog) {
@@ -249,18 +256,24 @@ export const sendGroupOfTransactions = async function (
   }
 
   // https://developer.algorand.org/docs/rest-apis/algod/v2/#post-v2transactions
-  const { txId } = (await algod.sendRawTransaction(signedTransactions).do()) as { txId: string }
+  const result = await algod.sendRawTransaction(signedTransactions).do()
 
   if (!sendParams?.suppressLog) {
-    AlgoKitConfig.logger.info(`Group transaction (${groupId}) sent with transaction ID ${txId}`)
+    AlgoKitConfig.logger.info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
   }
 
-  let confirmation: PendingTransactionResponse | undefined = undefined
+  let confirmations: PendingTransactionResponse[] | undefined = undefined
   if (!sendParams?.skipWaiting) {
-    confirmation = await waitForConfirmation(algod, txId, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
+    confirmations = await Promise.all(
+      transactionsToSend.map(async (t) => await waitForConfirmation(algod, t.txID(), sendParams?.maxRoundsToWaitForConfirmation ?? 5)),
+    )
   }
 
-  return { groupTransactionId: txId, confirmation }
+  return {
+    groupId,
+    confirmations,
+    txIds: transactionsToSend.map((t) => t.txID()),
+  }
 }
 
 /**

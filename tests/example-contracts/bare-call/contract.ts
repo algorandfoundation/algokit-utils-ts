@@ -40,9 +40,10 @@ export const getBareCallContractCreateParams = async (from: SendTransactionFrom,
 export const getBareCallContractDeployParams = async (deployment: {
   from: SendTransactionFrom
   metadata: AppDeployMetadata
-  value?: number
+  codeInjectionValue?: number
   onSchemaBreak?: 'delete' | 'fail' | OnSchemaBreak
   onUpdate?: 'update' | 'delete' | 'fail' | OnUpdate
+  breakSchema?: boolean
 }) => {
   const contract = await getBareCallContractData()
   return {
@@ -50,9 +51,14 @@ export const getBareCallContractDeployParams = async (deployment: {
     clearStateProgram: contract.clearStateProgram,
     from: deployment.from,
     metadata: deployment.metadata,
-    schema: contract.stateSchema,
+    schema: deployment.breakSchema
+      ? {
+          ...contract.stateSchema,
+          globalByteSlices: contract.stateSchema.globalByteSlices + 1,
+        }
+      : contract.stateSchema,
     deployTimeParameters: {
-      VALUE: deployment.value ?? 1,
+      VALUE: deployment.codeInjectionValue ?? 1,
     },
     onSchemaBreak: deployment.onSchemaBreak,
     onUpdate: deployment.onUpdate,
