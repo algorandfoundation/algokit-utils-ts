@@ -1,5 +1,5 @@
 {
-  "name": "algotstest",
+  "name": "@algorandfoundation/algokit-utils",
   "version": "0.1.0",
   "private": false,
   "description": "A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand.",
