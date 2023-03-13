@@ -24,7 +24,7 @@ describe('indexer-lookup', () => {
 
   test('Transaction is found by id', async () => {
     const { algod, indexer, testAccount, transactionLogger } = localnet.context
-    const { transaction } = await sendTransaction(algod, await getTestTransaction(), testAccount)
+    const { transaction } = await sendTransaction({ transaction: await getTestTransaction(), from: testAccount }, algod)
     await transactionLogger.waitForIndexer(indexer)
 
     const txn = await lookupTransactionById(transaction.txID(), indexer)
@@ -42,9 +42,9 @@ describe('indexer-lookup', () => {
       },
       algod,
     )
-    const { transaction: transaction1 } = await sendTransaction(algod, await getTestTransaction(1), testAccount)
-    const { transaction: transaction2 } = await sendTransaction(algod, await getTestTransaction(1), testAccount)
-    await sendTransaction(algod, await getTestTransaction(1, secondAccount.addr), secondAccount)
+    const { transaction: transaction1 } = await sendTransaction({ transaction: await getTestTransaction(1), from: testAccount }, algod)
+    const { transaction: transaction2 } = await sendTransaction({ transaction: await getTestTransaction(1), from: testAccount }, algod)
+    await sendTransaction({ transaction: await getTestTransaction(1, secondAccount.addr), from: secondAccount }, algod)
     await transactionLogger.waitForIndexer(indexer)
 
     const transactions = await searchTransactions(indexer, (s) => s.txType('pay').addressRole('sender').address(testAccount.addr), 1)

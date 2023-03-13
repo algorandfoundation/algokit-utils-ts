@@ -22,7 +22,7 @@ describe('transaction', () => {
   test('Transaction is sent and waited for', async () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
-    const { transaction, confirmation } = await sendTransaction(algod, txn, testAccount)
+    const { transaction, confirmation } = await sendTransaction({ transaction: txn, from: testAccount }, algod)
 
     expect(transaction.txID()).toBe(txn.txID())
     expect(confirmation?.['confirmed-round']).toBeGreaterThanOrEqual(txn.firstRound)
@@ -32,9 +32,16 @@ describe('transaction', () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
     await expect(async () => {
-      await sendTransaction(algod, txn, testAccount, {
-        maxFee: AlgoAmount.MicroAlgos(1),
-      })
+      await sendTransaction(
+        {
+          transaction: txn,
+          from: testAccount,
+          sendParams: {
+            maxFee: AlgoAmount.MicroAlgos(1),
+          },
+        },
+        algod,
+      )
     }).rejects.toThrowError(
       'Cancelled transaction due to high network congestion fees. ' +
         'Algorand suggested fees would cause this transaction to cost 1000 µALGOs. ' +
@@ -46,17 +53,31 @@ describe('transaction', () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
     txn.flatFee = true
-    await sendTransaction(algod, txn, testAccount, {
-      maxFee: AlgoAmount.MicroAlgos(1),
-    })
+    await sendTransaction(
+      {
+        transaction: txn,
+        from: testAccount,
+        sendParams: {
+          maxFee: AlgoAmount.MicroAlgos(1),
+        },
+      },
+      algod,
+    )
   })
 
   test('Transaction cap is ignored if higher than fee', async () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
-    const { confirmation } = await sendTransaction(algod, txn, testAccount, {
-      maxFee: AlgoAmount.MicroAlgos(1000_000),
-    })
+    const { confirmation } = await sendTransaction(
+      {
+        transaction: txn,
+        from: testAccount,
+        sendParams: {
+          maxFee: AlgoAmount.MicroAlgos(1000_000),
+        },
+      },
+      algod,
+    )
 
     expect(confirmation?.txn.txn.fee).toBe(1000)
   })

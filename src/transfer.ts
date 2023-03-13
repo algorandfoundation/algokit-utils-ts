@@ -32,7 +32,7 @@ interface AlgoTransferParams extends SendTransactionParams {
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
  */
 export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, amount, note, transactionParams, ...sendConfig } = transfer
+  const { from, to, amount, note, transactionParams, ...sendParams } = transfer
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
@@ -44,9 +44,9 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
     rekeyTo: undefined,
   })
 
-  if (!sendConfig.suppressLog && !sendConfig.skipSending) {
+  if (!sendParams.suppressLog && !sendParams.skipSending) {
     AlgoKitConfig.logger.debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
   }
 
-  return sendTransaction(algod, transaction, from, sendConfig)
+  return sendTransaction({ transaction, from, sendParams }, algod)
 }

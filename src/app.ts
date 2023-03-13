@@ -150,7 +150,7 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
     rekeyTo: undefined,
   })
 
-  const { confirmation } = await sendTransaction(algod, transaction, from, sendParams)
+  const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
   if (confirmation) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const appIndex = confirmation['application-index']!
@@ -192,7 +192,7 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
     AlgoKitConfig.logger.debug(`Updating app ${appIndex}`)
   }
 
-  return await sendTransaction(algod, transaction, from, sendParams)
+  return await sendTransaction({ transaction, from, sendParams }, algod)
 }
 
 /**
@@ -232,7 +232,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<Send
       break
   }
 
-  return await sendTransaction(algod, transaction, from, sendParams)
+  return await sendTransaction({ transaction, from, sendParams }, algod)
 }
 
 /** Returns the app args ready to load onto an app @see {Transaction} object */

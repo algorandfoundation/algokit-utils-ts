@@ -158,19 +158,23 @@ export const getSenderAddress = function (sender: SendTransactionFrom) {
 
 /** Signs and sends the given transaction to the chain
  *
+ * @param send The details for the transaction to send, including:
+ *   * `transaction`: The unsigned transaction
+ *   * `from`: The account to sign the transaction with: either an account with private key loaded or a logic signature account
+ *   * `config`: The sending configuration for this transaction
  * @param algod An algod client
- * @param transaction The unsigned transaction
- * @param from The account to sign the transaction with: either an account with private key loaded or a logic signature account
- * @param config The sending configuration for this transaction
  *
  * @returns An object with transaction (`transaction`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendTransaction = async function (
+  send: {
+    transaction: Transaction
+    from: SendTransactionFrom
+    sendParams?: SendTransactionParams
+  },
   algod: Algodv2,
-  transaction: Transaction,
-  from: SendTransactionFrom,
-  sendParams?: SendTransactionParams,
 ): Promise<SendTransactionResult> {
+  const { transaction, from, sendParams } = send
   const { skipSending, skipWaiting, maxFee, suppressLog, maxRoundsToWaitForConfirmation } = sendParams ?? {}
   if (maxFee !== undefined) {
     capTransactionFee(transaction, maxFee)
@@ -194,7 +198,7 @@ export const sendTransaction = async function (
 
   let confirmation: PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
-    confirmation = await waitForConfirmation(algod, transaction.txID(), maxRoundsToWaitForConfirmation ?? 5)
+    confirmation = await waitForConfirmation(transaction.txID(), maxRoundsToWaitForConfirmation ?? 5, algod)
   }
 
   return { transaction, confirmation }
@@ -265,7 +269,7 @@ export const sendGroupOfTransactions = async function (
   let confirmations: PendingTransactionResponse[] | undefined = undefined
   if (!sendParams?.skipWaiting) {
     confirmations = await Promise.all(
-      transactionsToSend.map(async (t) => await waitForConfirmation(algod, t.txID(), sendParams?.maxRoundsToWaitForConfirmation ?? 5)),
+      transactionsToSend.map(async (t) => await waitForConfirmation(t.txID(), sendParams?.maxRoundsToWaitForConfirmation ?? 5, algod)),
     )
   }
 
@@ -282,18 +286,18 @@ export const sendGroupOfTransactions = async function (
  *
  * @param algod An algod client
  * @param transactionId The transaction ID to wait for
- * @param timeout Maximum number of rounds to wait
+ * @param maxRoundsToWait Maximum number of rounds to wait
  *
  * @return Pending transaction information
  * @throws Throws an error if the transaction is not confirmed or rejected in the next `timeout` rounds
  */
 export const waitForConfirmation = async function (
-  algod: Algodv2,
   transactionId: string,
-  timeout: number,
+  maxRoundsToWait: number,
+  algod: Algodv2,
 ): Promise<PendingTransactionResponse> {
-  if (timeout < 0) {
-    throw new Error(`Invalid timeout, received ${timeout}, expected > 0`)
+  if (maxRoundsToWait < 0) {
+    throw new Error(`Invalid timeout, received ${maxRoundsToWait}, expected > 0`)
   }
 
   // Get current round
@@ -305,7 +309,7 @@ export const waitForConfirmation = async function (
   // Loop for up to `timeout` rounds looking for a confirmed transaction
   const startRound = status['last-round'] + 1
   let currentRound = startRound
-  while (currentRound < startRound + timeout) {
+  while (currentRound < startRound + maxRoundsToWait) {
     const pendingInfo = (await algod.pendingTransactionInformation(transactionId).do()) as PendingTransactionResponse
     if (pendingInfo !== undefined) {
       const confirmedRound = pendingInfo['confirmed-round']
@@ -324,7 +328,7 @@ export const waitForConfirmation = async function (
     currentRound++
   }
 
-  throw new Error(`Transaction ${transactionId} not confirmed after ${timeout} rounds`)
+  throw new Error(`Transaction ${transactionId} not confirmed after ${maxRoundsToWait} rounds`)
 }
 
 /**
