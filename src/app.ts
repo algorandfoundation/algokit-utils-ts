@@ -2,6 +2,7 @@ import algosdk, {
   ABIArgument,
   ABIMethod,
   ABIMethodParams,
+  ABIValue,
   Address,
   Algodv2,
   AtomicTransactionComposer,
@@ -22,9 +23,12 @@ import {
   SendTransactionResult,
   TransactionNote,
 } from './transaction'
-import { ApplicationResponse } from './types/algod'
+import { ApplicationResponse, PendingTransactionResponse } from './types/algod'
 
+/** The maximum number of bytes in an app code page */
 export const APP_PAGE_MAX_SIZE = 2048
+/** First 4 bytes of SHA-512/256 hash of "return" */
+export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
 
 /** Information about an Algorand app */
 export interface AppReference {
@@ -155,13 +159,28 @@ export interface CompiledTeal {
   compiledBase64ToBytes: Uint8Array
 }
 
+/** Result from calling an app */
+export interface AppCallTransactionResult extends SendTransactionResult {
+  /** If an ABI method was called the processed return value */
+  return?: ABIReturn
+}
+
+/** The return value of an ABI method call */
+export type ABIReturn =
+  | {
+      rawReturnValue: Uint8Array
+      returnValue: ABIValue
+      decodeError: undefined
+    }
+  | { rawReturnValue: undefined; returnValue: undefined; decodeError: Error }
+
 /**
  * Creates a smart contract app, returns the details of the created app.
  * @param create The parameters to create the app with
  * @param algod An algod client
  * @returns The details of the created app, or the transaction to create it if `skipSending`
  */
-export async function createApp(create: CreateAppParams, algod: Algodv2): Promise<SendTransactionResult & AppReference> {
+export async function createApp(create: CreateAppParams, algod: Algodv2): Promise<AppCallTransactionResult & AppReference> {
   const { from, approvalProgram: approval, clearStateProgram: clear, schema, note, transactionParams, args, ...sendParams } = create
 
   const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
@@ -190,7 +209,13 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
 
     AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Created app ${appIndex} from creator ${getSenderAddress(from)}`)
 
-    return { transaction, confirmation, appIndex, appAddress: algosdk.getApplicationAddress(appIndex) }
+    return {
+      transaction,
+      confirmation,
+      appIndex,
+      appAddress: algosdk.getApplicationAddress(appIndex),
+      return: getABIReturn(args, confirmation),
+    }
   } else {
     return { transaction, appIndex: 0, appAddress: '' }
   }
@@ -202,7 +227,7 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
  * @param algod An algod client
  * @returns The transaction
  */
-export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promise<SendTransactionResult> {
+export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promise<AppCallTransactionResult> {
   const { appIndex, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
 
   const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
@@ -221,7 +246,12 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
 
   AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Updating app ${appIndex}`)
 
-  return await sendTransaction({ transaction, from, sendParams }, algod)
+  const result = await sendTransaction({ transaction, from, sendParams }, algod)
+
+  return {
+    ...result,
+    return: getABIReturn(args, result.confirmation),
+  }
 }
 
 /**
@@ -230,7 +260,7 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
  * @param algod An algod client
  * @returns The result of the call
  */
-export async function callApp(call: AppCallParams, algod: Algodv2): Promise<SendTransactionResult> {
+export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
   const { appIndex, callType, from, args, note, transactionParams, ...sendParams } = call
 
   const appCallParameters = {
@@ -261,7 +291,43 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<Send
       break
   }
 
-  return await sendTransaction({ transaction, from, sendParams }, algod)
+  const result = await sendTransaction({ transaction, from, sendParams }, algod)
+
+  return {
+    ...result,
+    return: getABIReturn(args, result.confirmation),
+  }
+}
+
+export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransactionResponse): ABIReturn | undefined {
+  try {
+    if (!args || !('method' in args)) {
+      return undefined
+    }
+    const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
+    if (method.returns.type !== 'void' && confirmation) {
+      const logs = confirmation.logs || []
+      if (logs.length === 0) {
+        throw new Error('App call transaction did not log a return value')
+      }
+      const lastLog = logs[logs.length - 1]
+      if (lastLog.byteLength < 4 || lastLog.slice(0, 4).toString() !== ABI_RETURN_PREFIX.toString()) {
+        throw new Error('App call transaction did not log a return value (ABI_RETURN_PREFIX not found)')
+      }
+      return {
+        rawReturnValue: new Uint8Array(lastLog.slice(4)),
+        returnValue: method.returns.type.decode(new Uint8Array(lastLog.slice(4))),
+        decodeError: undefined,
+      }
+    }
+  } catch (e) {
+    return {
+      rawReturnValue: undefined,
+      returnValue: undefined,
+      decodeError: e as Error,
+    }
+  }
+  return undefined
 }
 
 /** Returns the app args ready to load onto an app @see {Transaction} object */

@@ -14,7 +14,7 @@ app = beaker.Application("BareCallApp", state=BareCallAppState)
 
 @app.external(read_only=True)
 def call(value: pt.abi.String, *, output: pt.abi.String) -> pt.Expr:
-    return output.set(pt.Concat(pt.Bytes("Hello, "), value.get(), pt.Itob(app.state.value.get())))
+    return output.set(pt.Concat(pt.Bytes("Hello, "), value.get()))
 
 
 @app.create(authorize=beaker.Authorize.only_creator(), bare=True)

@@ -1,6 +1,5 @@
 #pragma version 8
 intcblock 0 1
-bytecblock 0x76616c7565
 txn NumAppArgs
 intc_0 // 0
 ==
@@ -75,10 +74,6 @@ pushbytes 0x48656c6c6f2c20 // "Hello, "
 frame_dig -1
 extract 2 0
 concat
-bytec_0 // "value"
-app_global_get
-itob
-concat
 frame_bury 0
 frame_dig 0
 len
@@ -97,7 +92,7 @@ global CreatorAddress
 ==
 // unauthorized
 assert
-bytec_0 // "value"
+pushbytes 0x76616c7565 // "value"
 pushint TMPL_VALUE // TMPL_VALUE
 app_global_put
 retsub

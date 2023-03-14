@@ -1,5 +1,6 @@
 import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
+import invariant from 'tiny-invariant'
 import { getBareCallContractData } from '../tests/example-contracts/bare-call/contract'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { ApplicationClient } from './application-client'
@@ -70,7 +71,7 @@ describe('application-client', () => {
       algod,
       indexer,
     )
-    const app = await client.create({
+    await client.create({
       deployTimeParameters: {
         UPDATABLE: 0,
         DELETABLE: 0,
@@ -84,6 +85,8 @@ describe('application-client', () => {
       callType: 'normal',
     })
 
-    console.log(call)
+    invariant(call.return)
+    expect(call.return.decodeError).toBeUndefined()
+    expect(call.return.returnValue).toBe('Hello, test')
   })
 })
