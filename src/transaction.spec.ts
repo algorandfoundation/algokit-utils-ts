@@ -1,18 +1,25 @@
 import { describe, test } from '@jest/globals'
-import algosdk from 'algosdk'
+import algosdk, { makeBasicAccountTransactionSigner } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { getTestAccount } from './account'
 import { AlgoAmount } from './algo-amount'
-import { Arc2TransactionNote, encodeTransactionNote, MultisigAccount, sendGroupOfTransactions, sendTransaction } from './transaction'
+import {
+  Arc2TransactionNote,
+  encodeTransactionNote,
+  MultisigAccount,
+  sendGroupOfTransactions,
+  sendTransaction,
+  TransactionSignerAccount,
+} from './transaction'
 import { transferAlgos } from './transfer'
 
 describe('transaction', () => {
   const localnet = localNetFixture()
 
-  const getTestTransaction = async (amount?: number) => {
+  const getTestTransaction = async (amount?: number, sender?: string) => {
     return algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      from: localnet.context.testAccount.addr,
+      from: sender ?? localnet.context.testAccount.addr,
       to: localnet.context.testAccount.addr,
       amount: amount ?? 1,
       suggestedParams: await localnet.context.algod.getTransactionParams().do(),
@@ -113,6 +120,61 @@ describe('transaction', () => {
     expect(confirmations[1]['confirmed-round']).toBeGreaterThanOrEqual(txn2.firstRound)
     expect(Buffer.from(confirmations[0].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
     expect(Buffer.from(confirmations[1].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
+  })
+
+  test('Transaction group is sent using transaction signers', async () => {
+    const { algod, testAccount } = localnet.context
+    const account2 = await getTestAccount({ suppressLog: true, initialFunds: AlgoAmount.Algos(10) }, algod)
+    const txn1 = await getTestTransaction(1)
+    const txn2 = await getTestTransaction(2, account2.addr)
+    const txn3 = await getTestTransaction(3)
+    const txn4 = await getTestTransaction(4, account2.addr)
+    const signer1 = {
+      addr: testAccount.addr,
+      signer: makeBasicAccountTransactionSigner(testAccount),
+    } as TransactionSignerAccount
+    const signer2 = {
+      addr: account2.addr,
+      signer: makeBasicAccountTransactionSigner(account2),
+    } as TransactionSignerAccount
+
+    const { confirmations } = await sendGroupOfTransactions(
+      {
+        transactions: [
+          {
+            transaction: txn1,
+            signer: signer1,
+          },
+          {
+            transaction: txn2,
+            signer: signer2,
+          },
+          {
+            transaction: txn3,
+            signer: signer1,
+          },
+          {
+            transaction: txn4,
+            signer: signer2,
+          },
+        ],
+      },
+      algod,
+    )
+
+    invariant(confirmations)
+    invariant(confirmations[0]['confirmed-round'])
+    invariant(confirmations[1]['confirmed-round'])
+    invariant(confirmations[2]['confirmed-round'])
+    invariant(confirmations[3]['confirmed-round'])
+    expect(confirmations[0].txn.txn.amt).toBe(1)
+    expect(algosdk.encodeAddress(confirmations[0].txn.txn.snd)).toBe(testAccount.addr)
+    expect(confirmations[1].txn.txn.amt).toBe(2)
+    expect(algosdk.encodeAddress(confirmations[1].txn.txn.snd)).toBe(account2.addr)
+    expect(confirmations[2].txn.txn.amt).toBe(3)
+    expect(algosdk.encodeAddress(confirmations[2].txn.txn.snd)).toBe(testAccount.addr)
+    expect(confirmations[3].txn.txn.amt).toBe(4)
+    expect(algosdk.encodeAddress(confirmations[3].txn.txn.snd)).toBe(account2.addr)
   })
 
   test('Multisig single account', async () => {
