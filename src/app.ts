@@ -1,4 +1,14 @@
-import algosdk, { Algodv2, SuggestedParams, Transaction } from 'algosdk'
+import algosdk, {
+  ABIArgument,
+  ABIMethod,
+  Address,
+  Algodv2,
+  AtomicTransactionComposer,
+  makeBasicAccountTransactionSigner,
+  OnApplicationComplete,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk'
 import { Buffer } from 'buffer'
 import { AlgoKitConfig } from './config'
 import {
@@ -37,21 +47,35 @@ export interface BoxReference {
   name: Uint8Array | string
 }
 
-/** Arguments to pass to an app call */
-export interface AppCallArgs {
-  /** The address of any accounts to load in */
-  accounts?: string[]
-  /** Any application arguments to pass through */
-  appArgs?: (Uint8Array | string)[]
-  /** Any box references to load */
-  boxes?: BoxReference[]
-  /** IDs of any apps to load into the foreignApps array */
-  apps?: number[]
-  /** IDs of any assets to load into the foreignAssets array */
-  assets?: number[]
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
-}
+/** Arguments to pass to an app call either:
+ *   * The app call values to pass through into transaction (after processing); or
+ *   * An ABI method definition (method and args)
+ **/
+export type AppCallArgs =
+  | {
+      /** The address of any accounts to load in */
+      accounts?: (string | Address)[]
+      /** Any application arguments to pass through */
+      appArgs?: (Uint8Array | string)[]
+      /** Any box references to load */
+      boxes?: BoxReference[]
+      /** IDs of any apps to load into the foreignApps array */
+      apps?: number[]
+      /** IDs of any assets to load into the foreignAssets array */
+      assets?: number[]
+      /** The optional lease for the transaction */
+      lease?: string | Uint8Array
+    }
+  | {
+      /** The ABI method to call, either:
+       *  * {method_name e.g. `hello`}; or
+       *  * {method_signature e.g. `hello(string)string`} */
+      method: ABIMethod
+      /** The ABI args to pass in */
+      args: ABIArgument[]
+      /** The optional lease for the transaction */
+      lease?: string | Uint8Array
+    }
 
 /** Base interface for common data passed to an app create or update. */
 interface CreateOrUpdateAppParams extends SendTransactionParams {
@@ -234,20 +258,61 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<Send
 /** Returns the app args ready to load onto an app @see {Transaction} object */
 export function getAppArgsForTransaction(args?: AppCallArgs) {
   if (!args) return undefined
+
+  let actualArgs: AppCallArgs
+  if ('method' in args) {
+    // todo: Land a change to algosdk that extract the logic from ATC, because (fair warning) this is a HACK
+    // I don't want to have to rewrite all of the ABI resolution logic so using an ATC temporarily here
+    // and passing stuff in to keep it happy like a randomly generated account :O
+    // Most of these values aren't being used since the transaction is discarded
+    const dummyAtc = new AtomicTransactionComposer()
+    const dummyAccount = algosdk.generateAccount()
+    const dummyAppId = 1
+    const dummyParams = {
+      fee: 1,
+      firstRound: 1,
+      genesisHash: '',
+      genesisID: '',
+      lastRound: 1,
+    }
+    const dummyOnComplete = OnApplicationComplete.NoOpOC
+    dummyAtc.addMethodCall({
+      method: args.method,
+      methodArgs: args.args,
+      // Rest are dummy values
+      appID: dummyAppId,
+      sender: dummyAccount.addr,
+      signer: makeBasicAccountTransactionSigner(dummyAccount),
+      suggestedParams: dummyParams,
+      onComplete: dummyOnComplete,
+    })
+    const txn = dummyAtc.buildGroup()[0]
+    actualArgs = {
+      accounts: txn.txn.appAccounts,
+      appArgs: txn.txn.appArgs,
+      apps: txn.txn.appForeignApps,
+      assets: txn.txn.appForeignAssets,
+      boxes: txn.txn.boxes,
+      lease: args.lease,
+    }
+  } else {
+    actualArgs = args
+  }
+
   const encoder = new TextEncoder()
   return {
-    accounts: args?.accounts,
-    appArgs: args?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a)),
-    boxes: args?.boxes?.map(
+    accounts: actualArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
+    appArgs: actualArgs?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a)),
+    boxes: actualArgs?.boxes?.map(
       (ref) =>
         ({
           appIndex: ref.appIndex,
           name: typeof ref.name === 'string' ? encoder.encode(ref.name) : ref.name,
         } as algosdk.BoxReference),
     ),
-    foreignApps: args?.apps,
-    foreignAssets: args?.assets,
-    lease: typeof args?.lease === 'string' ? encoder.encode(args?.lease) : args?.lease,
+    foreignApps: actualArgs?.apps,
+    foreignAssets: actualArgs?.assets,
+    lease: typeof actualArgs?.lease === 'string' ? encoder.encode(actualArgs?.lease) : actualArgs?.lease,
   }
 }
 
