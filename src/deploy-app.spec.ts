@@ -49,6 +49,7 @@ describe('deploy-app', () => {
       { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appIndex: app1.appIndex },
       algod,
     )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const delete3 = await callApp({ appIndex: app3.appIndex, callType: 'delete', from: testAccount }, algod)
     await waitForIndexer()
 
@@ -102,6 +103,30 @@ describe('deploy-app', () => {
       transactions: [result.transaction],
       apps: [result.appIndex],
     })
+  })
+
+  test('Fail to deploy immutable app without TMPL_UPDATABLE', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const deployment = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: getMetadata({ updatable: true }),
+    })
+    deployment.approvalProgram = deployment.approvalProgram.replace(/TMPL_UPDATABLE/g, '0')
+    await expect(async () => await deployApp(deployment, algod, indexer)).rejects.toThrowError(
+      'Deploy-time updatability control requested for app deployment, but TMPL_UPDATABLE not present in TEAL code',
+    )
+  })
+
+  test('Fail to deploy permanent app without TMPL_DELETABLE', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const deployment = await getBareCallContractDeployParams({
+      from: testAccount,
+      metadata: getMetadata({ deletable: true }),
+    })
+    deployment.approvalProgram = deployment.approvalProgram.replace(/TMPL_DELETABLE/g, '0')
+    await expect(async () => await deployApp(deployment, algod, indexer)).rejects.toThrowError(
+      'Deploy-time deletability control requested for app deployment, but TMPL_DELETABLE not present in TEAL code',
+    )
   })
 
   test('Deploy update to updatable updated app', async () => {

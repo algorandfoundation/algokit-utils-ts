@@ -17,10 +17,10 @@ export interface AppDeployMetadata {
   name: string
   /** The version of app that is / will be deployed */
   version: string
-  /** Whether or not the app is deletable / permanent */
-  deletable: boolean
-  /** Whether or not the app is updatable / immutable */
-  updatable: boolean
+  /** Whether or not the app is deletable / permanent / unspecified */
+  deletable?: boolean
+  /** Whether or not the app is updatable / immutable / unspecified */
+  updatable?: boolean
 }
 
 /** The metadata that can be collected about a deployed app */
@@ -524,10 +524,26 @@ export function getAppDeploymentTransactionNote(metadata: AppDeployMetadata) {
  * @param params The deploy-time deployment control parameter value to replace
  * @returns The replaced TEAL code
  */
-export function replaceDeployTimeControlParams(tealCode: string, params: { updatable: boolean; deletable: boolean }) {
+export function replaceDeployTimeControlParams(tealCode: string, params: { updatable?: boolean; deletable?: boolean }) {
+  if (params.updatable !== undefined) {
+    if (!tealCode.includes(UPDATABLE_TEMPLATE_NAME)) {
+      throw new Error(
+        `Deploy-time updatability control requested for app deployment, but ${UPDATABLE_TEMPLATE_NAME} not present in TEAL code`,
+      )
+    }
+    tealCode = tealCode.replace(new RegExp(UPDATABLE_TEMPLATE_NAME, 'g'), (params.updatable ? 1 : 0).toString())
+  }
+
+  if (params.deletable !== undefined) {
+    if (!tealCode.includes(DELETABLE_TEMPLATE_NAME)) {
+      throw new Error(
+        `Deploy-time deletability control requested for app deployment, but ${DELETABLE_TEMPLATE_NAME} not present in TEAL code`,
+      )
+    }
+    tealCode = tealCode.replace(new RegExp(DELETABLE_TEMPLATE_NAME, 'g'), (params.deletable ? 1 : 0).toString())
+  }
+
   return tealCode
-    .replace(UPDATABLE_TEMPLATE_NAME, (params.updatable ? 1 : 0).toString())
-    .replace(DELETABLE_TEMPLATE_NAME, (params.deletable ? 1 : 0).toString())
 }
 
 /**
