@@ -1,4 +1,4 @@
-import algosdk, { Account, Algodv2, LogicSigAccount, MultisigMetadata, SuggestedParams, Transaction } from 'algosdk'
+import algosdk, { Account, Algodv2, LogicSigAccount, MultisigMetadata, SuggestedParams, Transaction, TransactionSigner } from 'algosdk'
 import { Buffer } from 'buffer'
 import { AlgoAmount } from './algo-amount'
 import { AlgoKitConfig } from './config'
@@ -84,6 +84,12 @@ export class SigningAccount implements Account {
   }
 }
 
+/** A wrapper around @see {TransactionSigner} that also has the sender address. */
+export interface TransactionSignerAccount {
+  addr: Readonly<string>
+  signer: TransactionSigner
+}
+
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TransactionNoteData = string | null | undefined | number | any[] | Record<string, any>
@@ -145,7 +151,7 @@ export interface SendTransactionResult {
   confirmation?: PendingTransactionResponse
 }
 
-export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount
+export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount
 
 /**
  * Returns the public address of the given transaction sender.
@@ -189,6 +195,8 @@ export const sendTransaction = async function (
       ? transaction.signTxn(from.sk)
       : 'lsig' in from
       ? algosdk.signLogicSigTransactionObject(transaction, from).blob
+      : 'signer' in from
+      ? (await from.signer([transaction], [0]))[0]
       : from.sign(transaction)
   await algod.sendRawTransaction(signedTransaction).do()
 
@@ -209,6 +217,12 @@ export interface TransactionToSign {
   /** The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account */
   signer: SendTransactionFrom
 }
+
+const groupBy = <T>(array: T[], predicate: (value: T, index: number, array: T[]) => string) =>
+  array.reduce((acc, value, index, array) => {
+    ;(acc[predicate(value, index, array)] ||= []).push(value)
+    return acc
+  }, {} as { [key: string]: T[] })
 
 /**
  * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
@@ -234,14 +248,55 @@ export const sendGroupOfTransactions = async function (
 
   AlgoKitConfig.getLogger(sendParams?.suppressLog).info(`Sending group of transactions (${groupId})`, { transactionsToSend })
 
-  const signedTransactions = group.map((groupedTransaction, index) => {
-    const signer = transactions[index].signer
-    return 'sk' in signer
-      ? groupedTransaction.signTxn(signer.sk)
-      : 'lsig' in signer
-      ? algosdk.signLogicSigTransactionObject(groupedTransaction, signer).blob
-      : signer.sign(groupedTransaction)
-  })
+  // Sign transactions either using TransactionSigners, or not
+  let signedTransactions: Uint8Array[]
+  if (transactions.find((t) => 'signer' in t.signer)) {
+    // Validate all or nothing for transaction signers
+    if (transactions.find((t) => !('signer' in t.signer))) {
+      throw new Error(
+        "When issuing a group transaction the signers should either all be TransactionSignerAccount's or all not. " +
+          'Received at least one TransactionSignerAccount, but not all of them so failing the send.',
+      )
+    }
+
+    // Group transaction signers by signer
+    const groupedBySigner = groupBy(
+      transactions.map((t, i) => ({
+        signer: t.signer as TransactionSignerAccount,
+        index: i,
+      })),
+      (t) => t.signer.addr,
+    )
+
+    // Perform the signature, grouped by signer
+    const signed = (
+      await Promise.all(
+        Object.values(groupedBySigner).map(async (signature) => {
+          const indexes = signature.map((s) => s.index)
+          const signed = await signature[0].signer.signer(group, indexes)
+          return signed.map((txn, i) => ({
+            txn,
+            index: indexes[i],
+          }))
+        }),
+      )
+    ).flatMap((a) => a)
+
+    // Extract the signed transactions in order
+    signedTransactions = signed.sort((s1, s2) => s1.index - s2.index).map((s) => s.txn)
+  } else {
+    signedTransactions = group.map((groupedTransaction, index) => {
+      const signer = transactions[index].signer
+      return 'sk' in signer
+        ? groupedTransaction.signTxn(signer.sk)
+        : 'lsig' in signer
+        ? algosdk.signLogicSigTransactionObject(groupedTransaction, signer).blob
+        : 'sign' in signer
+        ? signer.sign(groupedTransaction)
+        : // This bit will never happen because above if statement
+          new Uint8Array()
+    })
+  }
 
   AlgoKitConfig.getLogger(sendParams?.suppressLog).debug(
     `Signer IDs (${groupId})`,
@@ -254,7 +309,7 @@ export const sendGroupOfTransactions = async function (
   )
 
   // https://developer.algorand.org/docs/rest-apis/algod/v2/#post-v2transactions
-  const result = await algod.sendRawTransaction(signedTransactions).do()
+  await algod.sendRawTransaction(signedTransactions).do()
 
   AlgoKitConfig.getLogger(sendParams?.suppressLog).info(
     `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,
