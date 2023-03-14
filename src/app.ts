@@ -1,6 +1,7 @@
 import algosdk, {
   ABIArgument,
   ABIMethod,
+  ABIMethodParams,
   Address,
   Algodv2,
   AtomicTransactionComposer,
@@ -47,35 +48,43 @@ export interface BoxReference {
   name: Uint8Array | string
 }
 
+/**
+ * App call args with raw values (minus some processing like encoding strings as binary)
+ */
+export interface RawAppCallArgs {
+  /** The address of any accounts to load in */
+  accounts?: (string | Address)[]
+  /** Any application arguments to pass through */
+  appArgs?: (Uint8Array | string)[]
+  /** Any box references to load */
+  boxes?: BoxReference[]
+  /** IDs of any apps to load into the foreignApps array */
+  apps?: number[]
+  /** IDs of any assets to load into the foreignAssets array */
+  assets?: number[]
+  /** The optional lease for the transaction */
+  lease?: string | Uint8Array
+}
+
+/**
+ * App call args for an ABI call
+ */
+export interface ABIAppCallArgs {
+  /** The ABI method to call, either:
+   *  * {method_name e.g. `hello`}; or
+   *  * {method_signature e.g. `hello(string)string`} */
+  method: ABIMethodParams | ABIMethod
+  /** The ABI args to pass in */
+  args: ABIArgument[]
+  /** The optional lease for the transaction */
+  lease?: string | Uint8Array
+}
+
 /** Arguments to pass to an app call either:
- *   * The app call values to pass through into transaction (after processing); or
+ *   * The raw app call values to pass through into the transaction (after processing); or
  *   * An ABI method definition (method and args)
  **/
-export type AppCallArgs =
-  | {
-      /** The address of any accounts to load in */
-      accounts?: (string | Address)[]
-      /** Any application arguments to pass through */
-      appArgs?: (Uint8Array | string)[]
-      /** Any box references to load */
-      boxes?: BoxReference[]
-      /** IDs of any apps to load into the foreignApps array */
-      apps?: number[]
-      /** IDs of any assets to load into the foreignAssets array */
-      assets?: number[]
-      /** The optional lease for the transaction */
-      lease?: string | Uint8Array
-    }
-  | {
-      /** The ABI method to call, either:
-       *  * {method_name e.g. `hello`}; or
-       *  * {method_signature e.g. `hello(string)string`} */
-      method: ABIMethod
-      /** The ABI args to pass in */
-      args: ABIArgument[]
-      /** The optional lease for the transaction */
-      lease?: string | Uint8Array
-    }
+export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
 /** Base interface for common data passed to an app create or update. */
 interface CreateOrUpdateAppParams extends SendTransactionParams {
@@ -271,13 +280,13 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
     const dummyParams = {
       fee: 1,
       firstRound: 1,
-      genesisHash: '',
-      genesisID: '',
+      genesisHash: Buffer.from('abcd', 'utf-8').toString('base64'),
+      genesisID: 'a',
       lastRound: 1,
     }
     const dummyOnComplete = OnApplicationComplete.NoOpOC
     dummyAtc.addMethodCall({
-      method: args.method,
+      method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
       methodArgs: args.args,
       // Rest are dummy values
       appID: dummyAppId,

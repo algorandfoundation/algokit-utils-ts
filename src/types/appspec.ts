@@ -1,5 +1,5 @@
 import type algosdk from 'algosdk'
-import { ABIMethod } from 'algosdk'
+import { ABIMethod, ABIMethodParams } from 'algosdk'
 
 export interface AppSpec {
   hints: HintSpec
@@ -88,7 +88,7 @@ export type StateSchema = {
   num_byte_slices: number
 }
 
-export const getABISignature = (method: ABIMethod) => {
+export const getABISignature = (method: ABIMethodParams | ABIMethod) => {
   const argSignature = method.args.map((a) => a.type).join(',')
   const returnSignature = method.returns.type
   return `{${method.name}}(${argSignature})${returnSignature}`

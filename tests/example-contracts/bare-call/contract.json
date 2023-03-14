@@ -1,5 +1,18 @@
 {
     "name": "BareCallApp",
-    "methods": [],
+    "methods": [
+        {
+            "name": "call",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "value"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        }
+    ],
     "networks": {}
 }

@@ -95,10 +95,10 @@ export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'not
  *
  * To understand the architecture decisions behind this functionality please @see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
  *
- * **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'delete'`) the existing app will be deleted and re-created.
+ * **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
  *
- * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'delete'`) the existing app will be deleted and re-created.
- * @param deployment The arguments to control the app deployment, including:
+ * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
+ * @param deployment The arguments to control the app deployment
  * @param algod An algod client
  * @param indexer An indexer client
  * @returns The app reference of the new/existing app
@@ -547,7 +547,36 @@ export function replaceDeployTimeControlParams(tealCode: string, params: { updat
 }
 
 /**
- * Performs template substitution of a teal file and compiles it, returning the compiled result and optionally caching on the file system.
+ * Performs template substitution of a teal file.
+ *
+ * Looks for `TMPL_{parameter}` for template replacements.
+ *
+ * @param tealCode The TEAL logic to compile
+ * @param templateParameters Any parameters to replace in the .teal file before compiling
+ * @returns The TEAL code with replacements
+ */
+export function performTemplateSubstitution(tealCode: string, templateParameters?: TealTemplateParameters) {
+  if (templateParameters !== undefined) {
+    for (const key in templateParameters) {
+      const value = templateParameters[key]
+      const token = `TMPL_${key.replace(/^TMPL_/, '')}`
+      // todo: handle uint8array
+      tealCode = tealCode.replace(
+        new RegExp(token, 'g'),
+        typeof value === 'string'
+          ? `0x${Buffer.from(value, 'utf-8').toString('hex')}`
+          : ArrayBuffer.isView(value)
+          ? `0x${Buffer.from(value).toString('hex')}`
+          : value.toString(),
+      )
+    }
+  }
+
+  return tealCode
+}
+
+/**
+ * Performs template substitution of a teal file and compiles it, returning the compiled result.
  *
  * Looks for `TMPL_{parameter}` for template replacements.
  *
@@ -563,21 +592,7 @@ export async function performTemplateSubstitutionAndCompile(
   templateParameters?: TealTemplateParameters,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {
-  if (templateParameters !== undefined) {
-    for (const key in templateParameters) {
-      const value = templateParameters[key]
-      const token = `TMPL_${key}`
-      // todo: handle uint8array
-      tealCode = tealCode.replace(
-        new RegExp(token, 'g'),
-        typeof value === 'string'
-          ? `0x${Buffer.from(value, 'utf-8').toString('hex')}`
-          : ArrayBuffer.isView(value)
-          ? `0x${Buffer.from(value).toString('hex')}`
-          : value.toString(),
-      )
-    }
-  }
+  tealCode = performTemplateSubstitution(tealCode, templateParameters)
 
   if (deploymentMetadata) {
     tealCode = replaceDeployTimeControlParams(tealCode, deploymentMetadata)
