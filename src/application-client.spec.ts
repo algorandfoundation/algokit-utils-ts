@@ -63,6 +63,7 @@ describe('application-client', () => {
       },
     })
 
+    invariant(app.operationPerformed === 'create')
     expect(app.appIndex).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appIndex))
     expect(app.confirmation?.['application-index']).toBe(app.appIndex)

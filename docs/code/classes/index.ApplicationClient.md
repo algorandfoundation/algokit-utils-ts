@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[application-client.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L291)
+[application-client.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L293)
 
 ___
 
@@ -182,13 +182,13 @@ ___
 
 #### Defined in
 
-[application-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L202)
+[application-client.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L204)
 
 ___
 
 ### deploy
 
-▸ **deploy**(`deploy`): `Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md)  }\>
+▸ **deploy**(`deploy`): `Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) ; `operationPerformed`: ``"replace"`` \| ``"update"`` \| ``"create"``  } \| [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
@@ -221,7 +221,7 @@ https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-de
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md)  }\>
+`Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) ; `operationPerformed`: ``"replace"`` \| ``"update"`` \| ``"create"``  } \| [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
 
 The metadata and transaction result(s) of the deployment, or just the metadata if it didn't need to issue transactions
 
@@ -247,7 +247,7 @@ ___
 
 #### Defined in
 
-[application-client.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L357)
+[application-client.ts:359](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L359)
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 #### Defined in
 
-[application-client.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L372)
+[application-client.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L374)
 
 ___
 
@@ -286,4 +286,4 @@ ___
 
 #### Defined in
 
-[application-client.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L253)
+[application-client.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L255)
