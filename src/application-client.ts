@@ -184,9 +184,11 @@ export class ApplicationClient {
       this.indexer,
     )
 
+    // Nothing needed to happen
     if (!('transaction' in result)) {
-      throw new Error('Expected transaction to be present in result')
+      return result
     }
+
     if (!this.existingDeployments) {
       throw new Error('Expected existingDeployments to be present')
     }

@@ -108,7 +108,10 @@ export async function deployApp(
   algod: Algodv2,
   indexer: Indexer,
   // todo: confirmation is required return not optional
-): Promise<(SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult }) | AppMetadata> {
+): Promise<
+  | (SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult; operationPerformed: 'create' | 'update' | 'replace' })
+  | (AppMetadata & { operationPerformed: 'nothing' })
+> {
   const { metadata, deployTimeParameters, onSchemaBreak, onUpdate, existingDeployments, createArgs, updateArgs, deleteArgs, ...appParams } =
     deployment
 
@@ -136,7 +139,7 @@ export async function deployApp(
 
   const apps = existingDeployments ?? (await getCreatorAppsByName(appParams.from, indexer))
 
-  const create = async (skipSending?: boolean): Promise<SendTransactionResult & AppMetadata> => {
+  const create = async (skipSending?: boolean): Promise<SendTransactionResult & AppMetadata & { operationPerformed: 'create' }> => {
     const result = await createApp(
       {
         ...appParams,
@@ -158,6 +161,7 @@ export async function deployApp(
       updatedRound: Number(result.confirmation?.['confirmed-round']),
       ...metadata,
       deleted: false,
+      operationPerformed: 'create',
     }
   }
 
@@ -201,7 +205,7 @@ export async function deployApp(
   const isUpdate = newApproval !== existingApproval || newClear !== existingClear
   const isSchemaBreak = schemaIsBroken(existingGlobalSchema, newGlobalSchema) || schemaIsBroken(existingLocalSchema, newLocalSchema)
 
-  const replace = async (): Promise<SendTransactionResult & AppMetadata> => {
+  const replace = async (): Promise<SendTransactionResult & AppMetadata & { operationPerformed: 'replace' }> => {
     // Create
 
     AlgoKitConfig.getLogger(appParams.suppressLog).info(
@@ -275,10 +279,11 @@ export async function deployApp(
       ...metadata,
       deleted: false,
       deleteResult: { transaction: deleteTransaction, confirmation: deleteConfirmation },
-    } as SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult }
+      operationPerformed: 'replace',
+    } as SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult; operationPerformed: 'replace' }
   }
 
-  const update = async (): Promise<SendTransactionResult & AppMetadata> => {
+  const update = async (): Promise<SendTransactionResult & AppMetadata & { operationPerformed: 'update' }> => {
     AlgoKitConfig.getLogger(appParams.suppressLog).info(
       `Updating existing ${metadata.name} app for ${getSenderAddress(appParams.from)} to version ${metadata.version}.`,
     )
@@ -309,6 +314,7 @@ export async function deployApp(
       updatedRound: Number(result.confirmation?.['confirmed-round']),
       ...metadata,
       deleted: false,
+      operationPerformed: 'update',
     }
   }
 
@@ -387,7 +393,7 @@ export async function deployApp(
 
   AlgoKitConfig.getLogger(appParams.suppressLog).debug('No detected changes in app, nothing to do.')
 
-  return existingApp
+  return { ...existingApp, operationPerformed: 'nothing' }
 }
 
 /** Returns true is there is a breaking change in the application state schema from before to after.
