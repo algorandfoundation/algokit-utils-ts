@@ -19,3 +19,13 @@ jobs:
       pre-test-script: |
         pipx install algokit
         algokit localnet start
+  check_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check docs are up to date
+        shell: bash
+        run: |
+          npm ci --ignore-scripts
+          npm run generate:code-docs
+          git add -N .
+          git diff --exit-code
