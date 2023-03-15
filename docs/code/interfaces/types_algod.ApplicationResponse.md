@@ -25,7 +25,7 @@ https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2applicationsapplic
 
 #### Defined in
 
-[types/algod.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/algod.ts#L74)
+[types/algod.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L74)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[types/algod.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/algod.ts#L75)
+[types/algod.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L75)

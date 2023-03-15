@@ -40,7 +40,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and num
 
 #### Defined in
 
-[algo-amount.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/algo-amount.ts#L17)
+[algo-amount.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algo-amount.ts#L17)
 
 ## Properties
 
@@ -50,7 +50,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and num
 
 #### Defined in
 
-[algo-amount.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/algo-amount.ts#L5)
+[algo-amount.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algo-amount.ts#L5)
 
 ## Accessors
 
@@ -66,7 +66,7 @@ Return the amount as a number in Algos
 
 #### Defined in
 
-[algo-amount.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/algo-amount.ts#L13)
+[algo-amount.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algo-amount.ts#L13)
 
 ___
 
@@ -82,7 +82,7 @@ Return the amount as a number in µAlgos
 
 #### Defined in
 
-[algo-amount.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/algo-amount.ts#L8)
+[algo-amount.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algo-amount.ts#L8)
 
 ## Methods
 
@@ -108,7 +108,7 @@ object representing the given number of Algos
 
 #### Defined in
 
-[algo-amount.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/algo-amount.ts#L22)
+[algo-amount.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algo-amount.ts#L22)
 
 ___
 
@@ -134,4 +134,4 @@ object representing the given number of µAlgos
 
 #### Defined in
 
-[algo-amount.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/algo-amount.ts#L27)
+[algo-amount.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/algo-amount.ts#L27)

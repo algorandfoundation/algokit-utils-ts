@@ -25,7 +25,7 @@ that also has the sender address.
 
 #### Defined in
 
-[transaction.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L89)
+[transaction.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L89)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L90)
+[transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L90)

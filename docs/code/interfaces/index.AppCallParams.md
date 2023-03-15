@@ -38,7 +38,7 @@ The index of the app to call
 
 #### Defined in
 
-[app.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L123)
+[app.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L123)
 
 ___
 
@@ -50,7 +50,7 @@ The arguments passed in to the app call
 
 #### Defined in
 
-[app.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L133)
+[app.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L133)
 
 ___
 
@@ -62,7 +62,7 @@ The type of call, everything except create (@see {createApp} ) and update (@see 
 
 #### Defined in
 
-[app.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L125)
+[app.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L125)
 
 ___
 
@@ -74,7 +74,7 @@ The account to make the call from
 
 #### Defined in
 
-[app.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L127)
+[app.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L127)
 
 ___
 
@@ -90,7 +90,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[transaction.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L141)
+[transaction.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L141)
 
 ___
 
@@ -106,7 +106,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[transaction.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L143)
+[transaction.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L143)
 
 ___
 
@@ -118,7 +118,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[app.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L131)
+[app.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L131)
 
 ___
 
@@ -135,7 +135,7 @@ Whether to skip signing and sending the transaction to the chain (default: trans
 
 #### Defined in
 
-[transaction.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L135)
+[transaction.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L135)
 
 ___
 
@@ -151,7 +151,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[transaction.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L137)
+[transaction.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L137)
 
 ___
 
@@ -167,7 +167,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[transaction.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L139)
+[transaction.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L139)
 
 ___
 
@@ -179,4 +179,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[app.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L129)
+[app.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L129)

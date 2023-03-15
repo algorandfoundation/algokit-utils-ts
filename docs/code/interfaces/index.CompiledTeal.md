@@ -25,7 +25,7 @@ The compiled code
 
 #### Defined in
 
-[app.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L155)
+[app.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L155)
 
 ___
 
@@ -37,7 +37,7 @@ The base64 encoded code as a byte array
 
 #### Defined in
 
-[app.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L159)
+[app.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L159)
 
 ___
 
@@ -49,7 +49,7 @@ The has returned by the compiler
 
 #### Defined in
 
-[app.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L157)
+[app.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L157)
 
 ___
 
@@ -61,4 +61,4 @@ Original TEAL code
 
 #### Defined in
 
-[app.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/app.ts#L153)
+[app.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L153)

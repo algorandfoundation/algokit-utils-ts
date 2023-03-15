@@ -43,7 +43,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[transaction.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L81)
+[transaction.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L81)
 
 ## Properties
 
@@ -53,7 +53,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L47)
+[transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L47)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L48)
+[transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L48)
 
 ## Accessors
 
@@ -83,7 +83,7 @@ Account.addr
 
 #### Defined in
 
-[transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L53)
+[transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L53)
 
 ___
 
@@ -99,7 +99,7 @@ Algorand account of the sender address and signer private key
 
 #### Defined in
 
-[transaction.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L74)
+[transaction.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L74)
 
 ___
 
@@ -115,7 +115,7 @@ Algorand account of the underlying signing account
 
 #### Defined in
 
-[transaction.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L67)
+[transaction.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L67)
 
 ___
 
@@ -135,4 +135,4 @@ Account.sk
 
 #### Defined in
 
-[transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/transaction.ts#L60)
+[transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L60)
