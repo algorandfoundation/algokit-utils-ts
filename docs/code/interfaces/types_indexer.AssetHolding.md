@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[types/indexer.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L321)
+[types/indexer.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L321)
 
 ___
 
@@ -38,7 +38,7 @@ Asset ID of the holding.
 
 #### Defined in
 
-[types/indexer.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L325)
+[types/indexer.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L325)
 
 ___
 
@@ -52,7 +52,7 @@ sent in the worst case.
 
 #### Defined in
 
-[types/indexer.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L331)
+[types/indexer.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L331)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[types/indexer.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L336)
+[types/indexer.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L336)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[types/indexer.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L335)
+[types/indexer.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L335)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[types/indexer.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L337)
+[types/indexer.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L337)
 
 ___
 
@@ -94,4 +94,4 @@ ___
 
 #### Defined in
 
-[types/indexer.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L338)
+[types/indexer.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L338)

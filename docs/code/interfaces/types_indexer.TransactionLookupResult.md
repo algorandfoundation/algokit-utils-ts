@@ -21,7 +21,7 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid
 
 #### Defined in
 
-[types/indexer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L46)
+[types/indexer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L46)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[types/indexer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/types/indexer.ts#L47)
+[types/indexer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/88a7c0f/src/types/indexer.ts#L47)
