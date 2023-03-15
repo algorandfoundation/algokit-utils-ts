@@ -109,8 +109,9 @@ export async function deployApp(
   indexer: Indexer,
   // todo: confirmation is required return not optional
 ): Promise<
-  | (SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult; operationPerformed: 'create' | 'update' | 'replace' })
-  | (AppMetadata & { operationPerformed: 'nothing' })
+  | (SendTransactionResult & AppMetadata & { operationPerformed: 'create' | 'update' })
+  | (SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult; operationPerformed: 'replace' })
+  | (AppMetadata & { operationPerformed: 'none' })
 > {
   const { metadata, deployTimeParameters, onSchemaBreak, onUpdate, existingDeployments, createArgs, updateArgs, deleteArgs, ...appParams } =
     deployment
@@ -212,7 +213,7 @@ export async function deployApp(
       `Deploying a new ${metadata.name} app for ${getSenderAddress(appParams.from)}; deploying app with version ${metadata.version}.`,
     )
 
-    const { transaction: createTransaction, ...newApp } = await create(true)
+    const { transaction: createTransaction } = await create(true)
 
     // Delete
 
@@ -280,7 +281,7 @@ export async function deployApp(
       deleted: false,
       deleteResult: { transaction: deleteTransaction, confirmation: deleteConfirmation },
       operationPerformed: 'replace',
-    } as SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult; operationPerformed: 'replace' }
+    } as SendTransactionResult & AppMetadata & { deleteResult: SendTransactionResult; operationPerformed: 'replace' }
   }
 
   const update = async (): Promise<SendTransactionResult & AppMetadata & { operationPerformed: 'update' }> => {
@@ -393,7 +394,7 @@ export async function deployApp(
 
   AlgoKitConfig.getLogger(appParams.suppressLog).debug('No detected changes in app, nothing to do.')
 
-  return { ...existingApp, operationPerformed: 'nothing' }
+  return { ...existingApp, operationPerformed: 'none' }
 }
 
 /** Returns true is there is a breaking change in the application state schema from before to after.

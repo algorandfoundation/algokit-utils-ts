@@ -192,7 +192,10 @@ export class ApplicationClient {
     if (!this.existingDeployments) {
       throw new Error('Expected existingDeployments to be present')
     }
-    const { transaction, confirmation, deleteResult, ...appMetadata } = result
+    const { transaction, confirmation, operationPerformed, ...appMetadata } = result
+    if ('deleteResult' in appMetadata) {
+      delete appMetadata.deleteResult
+    }
     this.existingDeployments = {
       creator: this.existingDeployments.creator,
       apps: { ...this.existingDeployments.apps, [this.appSpec.contract.name]: appMetadata },

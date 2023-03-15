@@ -414,7 +414,7 @@ ___
 
 ### deployApp
 
-▸ **deployApp**(`deployment`, `algod`, `indexer`): `Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) ; `operationPerformed`: ``"create"`` \| ``"update"`` \| ``"replace"``  } \| [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+▸ **deployApp**(`deployment`, `algod`, `indexer`): `Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"``  } \| [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"none"``  }\>
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
@@ -438,7 +438,7 @@ https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-de
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) ; `operationPerformed`: ``"create"`` \| ``"update"`` \| ``"replace"``  } \| [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+`Promise`<[`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"``  } \| [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) & [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `deleteResult?`: [`SendTransactionResult`](../interfaces/index.SendTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/index.AppMetadata.md) & { `operationPerformed`: ``"none"``  }\>
 
 The app reference of the new/existing app
 
@@ -912,7 +912,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[deploy-app.ts:519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L519)
+[deploy-app.ts:520](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L520)
 
 ___
 
@@ -943,7 +943,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[deploy-app.ts:420](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L420)
+[deploy-app.ts:421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L421)
 
 ___
 
@@ -1295,7 +1295,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[deploy-app.ts:564](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L564)
+[deploy-app.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L565)
 
 ___
 
@@ -1324,7 +1324,7 @@ The information about the compiled code
 
 #### Defined in
 
-[deploy-app.ts:595](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L595)
+[deploy-app.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L596)
 
 ___
 
@@ -1356,7 +1356,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[deploy-app.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L533)
+[deploy-app.ts:534](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L534)
 
 ___
 
@@ -1383,7 +1383,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[deploy-app.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L407)
+[deploy-app.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L408)
 
 ___
 
