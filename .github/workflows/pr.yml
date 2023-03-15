@@ -31,5 +31,7 @@ jobs:
         run: |
           npm ci --ignore-scripts
           npm run generate:code-docs
+          # Add untracked files as empty so they come up in diff
           git add -N .
-          git diff --exit-code
+          # Print changed files and error out if there are changes after generating docs
+          git diff --exit-code --name-only
