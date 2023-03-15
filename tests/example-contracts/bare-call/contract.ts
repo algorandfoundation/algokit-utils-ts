@@ -8,10 +8,11 @@ import {
   replaceDeployTimeControlParams,
   SendTransactionFrom,
 } from '../../../src'
+import { AppSpec } from '../../../src/types/appspec'
 
 export const getBareCallContractData = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'))
-  const appSpec = JSON.parse(await appSpecFile.toString('utf-8'))
+  const appSpec = JSON.parse(await appSpecFile.toString('utf-8')) as AppSpec
 
   return {
     appSpec,
