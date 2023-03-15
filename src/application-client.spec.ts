@@ -4,16 +4,22 @@ import invariant from 'tiny-invariant'
 import { getBareCallContractData } from '../tests/example-contracts/bare-call/contract'
 import { localNetFixture } from '../tests/fixtures/localnet-fixture'
 import { ApplicationClient } from './application-client'
+import { AppSpec } from './types/appspec'
 
 describe('application-client', () => {
   const localnet = localNetFixture()
+
+  let appSpec: AppSpec
+  beforeAll(async () => {
+    appSpec = (await getBareCallContractData()).appSpec
+  })
 
   test('Create app', async () => {
     const { algod, indexer, testAccount } = localnet.context
 
     const client = new ApplicationClient(
       {
-        app: (await getBareCallContractData()).appSpec,
+        app: appSpec,
         creatorAddress: testAccount.addr,
         sender: testAccount,
       },
@@ -22,6 +28,8 @@ describe('application-client', () => {
     )
 
     const app = await client.create({
+      //allowUpdate: true,
+      //allowDelete: true,
       deployTimeParameters: {
         // It should strip off the TMPL_
         TMPL_UPDATABLE: 0,
@@ -40,7 +48,7 @@ describe('application-client', () => {
 
     const client = new ApplicationClient(
       {
-        app: (await getBareCallContractData()).appSpec,
+        app: appSpec,
         creatorAddress: testAccount.addr,
         sender: testAccount,
       },
@@ -64,7 +72,7 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = new ApplicationClient(
       {
-        app: (await getBareCallContractData()).appSpec,
+        app: appSpec,
         sender: testAccount,
         index: 0,
       },

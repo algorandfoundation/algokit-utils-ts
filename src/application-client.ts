@@ -208,6 +208,8 @@ export class ApplicationClient {
   }) {
     const { sender, args, note, sendParams, deployTimeParameters } = create ?? {}
 
+    // todo: Add deploy-time updatable/etc.
+
     if (this._appIndex !== 0) {
       throw new Error(`Attempt to create app which already has an app index of ${this._appIndex}`)
     }
@@ -317,6 +319,7 @@ export class ApplicationClient {
       throw new Error(`Attempt to call an app that can't be found '${this.appSpec.contract.name}' for creator '${this._creator}'.`)
     }
 
+    // todo: use this in create et. al. as well
     let callArgs: AppCallArgs
     // ABI call
     if ('method' in args) {

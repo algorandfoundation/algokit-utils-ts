@@ -19,3 +19,19 @@ jobs:
       pre-test-script: |
         pipx install algokit
         algokit localnet start
+  check_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Check docs are up to date
+        shell: bash
+        run: |
+          npm ci --ignore-scripts
+          npm run generate:code-docs
+          # Add untracked files as empty so they come up in diff
+          git add -N .
+          # Print changed files and error out if there are changes after generating docs
+          git diff --exit-code --name-only
