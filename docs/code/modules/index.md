@@ -12,6 +12,7 @@
 ### Classes
 
 - [AlgoAmount](../classes/index.AlgoAmount.md)
+- [ApplicationClient](../classes/index.ApplicationClient.md)
 - [MultisigAccount](../classes/index.MultisigAccount.md)
 - [SigningAccount](../classes/index.SigningAccount.md)
 
