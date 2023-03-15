@@ -1,4 +1,4 @@
-import algosdk, { ABIArgument, Algodv2, getApplicationAddress, Indexer, SuggestedParams } from 'algosdk'
+import algosdk, { ABIArgument, ABIMethodParams, Algodv2, getApplicationAddress, Indexer, SuggestedParams } from 'algosdk'
 import { Buffer } from 'buffer'
 import { AppCallArgs, AppReference, callApp, createApp, RawAppCallArgs, updateApp } from './app'
 import {
@@ -359,7 +359,7 @@ export class ApplicationClient {
     )
   }
 
-  getABIMethod(method: string) {
+  getABIMethod(method: string): ABIMethodParams | undefined {
     if (!method.includes('(')) {
       const methods = this.appSpec.contract.methods.filter((m) => m.name === method)
       if (methods.length > 1) {
