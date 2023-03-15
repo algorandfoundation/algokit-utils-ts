@@ -34,17 +34,17 @@
 
 #### Defined in
 
-[types/appspec.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L10)
+[types/appspec.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L9)
 
 ___
 
 ### contract
 
-• **contract**: `ABIContract`
+• **contract**: `ABIContractParams`
 
 #### Defined in
 
-[types/appspec.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L8)
+[types/appspec.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L7)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L5)
+[types/appspec.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L4)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L6)
+[types/appspec.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L5)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L7)
+[types/appspec.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L6)
 
 ___
 
@@ -84,4 +84,4 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L9)
+[types/appspec.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L8)

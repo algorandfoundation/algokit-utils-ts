@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[types/appspec.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L23)
+[types/appspec.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L22)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L24)
+[types/appspec.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L23)

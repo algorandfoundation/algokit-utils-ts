@@ -1,11 +1,10 @@
-import type algosdk from 'algosdk'
-import { ABIMethod, ABIMethodParams } from 'algosdk'
+import { ABIContractParams, ABIMethod, ABIMethodParams } from 'algosdk'
 
 export interface AppSpec {
   hints: HintSpec
   schema: SchemaSpec
   source: AppSources
-  contract: algosdk.ABIContract
+  contract: ABIContractParams
   state: StateSchemaSpec
   bare_call_config: {
     no_op?: CallConfigValue

@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[types/appspec.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L27)
+[types/appspec.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L26)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L20)
+[types/appspec.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L19)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L86)
+[types/appspec.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L85)
 
 ## Functions
 
@@ -86,4 +86,4 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L91)
+[types/appspec.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L90)
