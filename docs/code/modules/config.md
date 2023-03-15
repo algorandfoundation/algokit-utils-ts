@@ -1,0 +1,75 @@
+[@algorandfoundation/algokit-utils](../README.md) / config
+
+# Module: config
+
+## Table of contents
+
+### Interfaces
+
+- [Config](../interfaces/config.Config.md)
+
+### Type Aliases
+
+- [Logger](config.md#logger)
+
+### Variables
+
+- [AlgoKitConfig](config.md#algokitconfig)
+- [consoleLogger](config.md#consolelogger)
+- [nullLogger](config.md#nulllogger)
+
+## Type Aliases
+
+### Logger
+
+Ƭ **Logger**: `Object`
+
+General purpose logger type, compatible with Winston and others.
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `debug` | (`message`: `string`, ...`optionalParams`: `unknown`[]) => `void` |
+| `error` | (`message`: `string`, ...`optionalParams`: `unknown`[]) => `void` |
+| `info` | (`message`: `string`, ...`optionalParams`: `unknown`[]) => `void` |
+| `verbose` | (`message`: `string`, ...`optionalParams`: `unknown`[]) => `void` |
+| `warn` | (`message`: `string`, ...`optionalParams`: `unknown`[]) => `void` |
+
+#### Defined in
+
+[config.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/config.ts#L3)
+
+## Variables
+
+### AlgoKitConfig
+
+• `Const` **AlgoKitConfig**: `UpdatableConfig`
+
+The AlgoKit config. To update it use the configure method.
+
+#### Defined in
+
+[config.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/config.ts#L66)
+
+___
+
+### consoleLogger
+
+• `Const` **consoleLogger**: [`Logger`](config.md#logger)
+
+A logger implementation that writes to console
+
+#### Defined in
+
+[config.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/config.ts#L12)
+
+___
+
+### nullLogger
+
+• `Const` **nullLogger**: [`Logger`](config.md#logger)
+
+#### Defined in
+
+[config.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/600c806/src/config.ts#L20)
