@@ -77,9 +77,11 @@ jobs:
           mkdir -p dist
           unzip -q "artifacts/package.zip" -d dist
 
+      - name: Install dependencies to get semantic release components and plugins
+        run: npm ci --ignore-scripts
+
       - name: 'Semantic release'
         run: npx semantic-release
-        working-directory: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
