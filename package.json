@@ -8,9 +8,9 @@
   "engines": {
     "node": ">=16.0"
   },
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "files": [
-    "dist/**/*"
+    "**/*"
   ],
   "scripts": {
     "build": "run-s build:*",
