@@ -31,7 +31,7 @@ ___
 
 ### params
 
-• **params**: `ApplicationParams`
+• **params**: [`ApplicationParams`](types_algod.ApplicationParams.md)
 
 #### Defined in
 

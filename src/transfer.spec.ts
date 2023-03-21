@@ -1,21 +1,21 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
-import { localNetFixture } from '../tests/fixtures/localnet-fixture'
-import { AlgoAmount } from './algo-amount'
-import { transferAlgos } from './transfer'
+import * as algokit from './'
+import { algorandFixture } from './testing'
 
 describe('transfer', () => {
-  const localnet = localNetFixture()
+  const localnet = algorandFixture()
+  beforeEach(localnet.beforeEach)
 
   test('Transfer is sent and waited for', async () => {
     const { algod, testAccount } = localnet.context
     const secondAccount = algosdk.generateAccount()
 
-    const { transaction, confirmation } = await transferAlgos(
+    const { transaction, confirmation } = await algokit.transferAlgos(
       {
         from: testAccount,
         to: secondAccount.addr,
-        amount: AlgoAmount.Algos(5),
+        amount: algokit.algos(5),
         note: 'Transfer 5 ALGOs',
       },
       algod,

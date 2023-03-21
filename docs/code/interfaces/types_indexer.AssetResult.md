@@ -58,7 +58,7 @@ ___
 
 ### params
 
-• **params**: `AssetParams`
+• **params**: [`AssetParams`](types_indexer.AssetParams.md)
 
 #### Defined in
 

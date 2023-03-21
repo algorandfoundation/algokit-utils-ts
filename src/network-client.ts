@@ -1,16 +1,7 @@
 import algosdk, { Algodv2, Indexer, Kmd } from 'algosdk'
 import { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
-import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
-
-/** Config for an Algorand SDK client */
-export interface AlgoClientConfig {
-  /** Base URL of the server e.g. http://localhost, https://testnet-api.algonode.cloud/, etc. */
-  server: string
-  /** The port to use e.g. 4001, 443, etc. */
-  port?: string | number
-  /** The token to use for API authentication (or undefined if none needed) - can be a string, or an object with the header key => value */
-  token?: string | TokenHeader
-}
+import { AlgoHttpClientWithRetry } from './types/algo-http-client-with-retry'
+import { AlgoClientConfig } from './types/network-client'
 
 /** Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment not algod-side) */
 export function getAlgodConfigFromEnvironment(): AlgoClientConfig {
@@ -83,24 +74,24 @@ function getAlgoTokenHeader(server: string, token?: string | TokenHeader, defaul
  * @param config The config if you want to override the default (getting config from process.env)
  * @example Default (load from environment variables)
  *
- *  ```
+ *  ```typescript
  *  // Uses process.env.ALGOD_SERVER, process.env.ALGOD_PORT and process.env.ALGOD_TOKEN
  *  // Automatically detects if you are using PureStake to switch in the right header name for ALGOD_TOKEN
  *  const algod = getAlgoClient()
  *  await algod.healthCheck().do()
  *  ```
  * @example AlgoNode (testnet)
- * ```
+ * ```typescript
  *  const algod = getAlgoClient(getAlgoNodeConfig('testnet', 'algod'))
  *  await algod.healthCheck().do()
  * ```
  * @example AlgoNode (mainnet)
- * ```
+ * ```typescript
  *  const algod = getAlgoClient(getAlgoNodeConfig('mainnet', 'algod'))
  *  await algod.healthCheck().do()
  * ```
  * @example Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
- * ```
+ * ```typescript
  *  const algod = getAlgoClient({server: 'http://localhost', port: '4001', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  *  await algod.healthCheck().do()
  * ```
@@ -116,24 +107,24 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  * @param config The config if you want to override the default (getting config from process.env)
  * @example Default (load from environment variables)
  *
- *  ```
+ *  ```typescript
  *  // Uses process.env.INDEXER_SERVER, process.env.INDEXER_PORT and process.env.INDEXER_TOKEN
  *  // Automatically detects if you are using PureStake to switch in the right header name for INDEXER_TOKEN
  *  const indexer = getAlgoIndexerClient()
  *  await indexer.makeHealthCheck().do()
  *  ```
  * @example AlgoNode (testnet)
- * ```
+ * ```typescript
  *  const indexer = getAlgoIndexerClient(getAlgoNodeConfig('testnet', 'indexer'))
  *  await indexer.makeHealthCheck().do()
  * ```
  * @example AlgoNode (mainnet)
- * ```
+ * ```typescript
  *  const indexer = getAlgoIndexerClient(getAlgoNodeConfig('mainnet', 'indexer'))
  *  await indexer.makeHealthCheck().do()
  * ```
  * @example Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
- * ```
+ * ```typescript
  *  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  *  await indexer.makeHealthCheck().do()
  * ```
@@ -152,12 +143,12 @@ export function getAlgoIndexerClient(config?: AlgoClientConfig): Indexer {
  * @param config The config if you want to override the default (getting config from process.env)
  * @example Default (load from environment variables)
  *
- *  ```
+ *  ```typescript
  *  // Uses process.env.ALGOD_SERVER, process.env.KMD_PORT (or if not specified: port 4002) and process.env.ALGOD_TOKEN
  *  const kmd = getAlgoKmdClient()
  *  ```
  * @example Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
- * ```
+ * ```typescript
  *  const kmd = getAlgoKmdClient({server: 'http://localhost', port: '4002', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  * ```
  */

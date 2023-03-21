@@ -165,26 +165,26 @@ export interface ApplicationResult {
   'deleted-at-round'?: number
 }
 
-interface TransactionSignature {
+export interface TransactionSignature {
   logicsig: LogicTransactionSignature
   multisig: MultisigTransactionSignature
   sig: string
 }
 
-interface LogicTransactionSignature {
+export interface LogicTransactionSignature {
   args: string[]
   logic: string
   'multisig-signature': MultisigTransactionSignature
   signature: string
 }
 
-interface MultisigTransactionSignature {
+export interface MultisigTransactionSignature {
   subsignature: MultisigTransactionSubSignature
   threshold: number
   version: number
 }
 
-interface MultisigTransactionSubSignature {
+export interface MultisigTransactionSubSignature {
   'public-key': string
   signature: string
 }
@@ -195,7 +195,7 @@ export interface EvalDelta {
   uint: number
 }
 
-interface ApplicationParams {
+export interface ApplicationParams {
   creator: string
   'approval-program': string
   'clear-state-program': string
@@ -205,7 +205,7 @@ interface ApplicationParams {
   'local-state-schema'?: StateSchema
 }
 
-interface StateSchema {
+export interface StateSchema {
   'num-byte-slice': number
   'num-uint': number
 }
@@ -219,7 +219,7 @@ export enum ApplicationOnComplete {
   delete = 'delete',
 }
 
-interface AssetParams {
+export interface AssetParams {
   /**
    * The address that created this asset. This is the address where the parameters
    * for this asset can be found, and also the address where unwanted asset units can
@@ -305,7 +305,7 @@ export enum AccountStatus {
   NotParticipating = 'NotParticipating',
 }
 
-interface AppLocalState {
+export interface AppLocalState {
   'closed-out-at-round': number
   deleted: boolean
   id: number

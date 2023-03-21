@@ -60,7 +60,7 @@ ___
 
 ### apps-local-state
 
-• `Optional` **apps-local-state**: `AppLocalState`[]
+• `Optional` **apps-local-state**: [`AppLocalState`](types_indexer.AppLocalState.md)[]
 
 #### Defined in
 
@@ -80,7 +80,7 @@ ___
 
 ### apps-total-schema
 
-• `Optional` **apps-total-schema**: `StateSchema`
+• `Optional` **apps-total-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
 #### Defined in
 

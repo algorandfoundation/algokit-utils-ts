@@ -106,7 +106,7 @@ ___
 
 ### global-state-delta
 
-• `Optional` **global-state-delta**: `Record`<`string`, `EvalDelta`\>[]
+• `Optional` **global-state-delta**: `Record`<`string`, [`EvalDelta`](types_algod.EvalDelta.md)\>[]
 
 (gd) Global state key/value changes for the application being executed by this
 transaction.
@@ -131,7 +131,7 @@ ___
 
 ### local-state-delta
 
-• `Optional` **local-state-delta**: `Record`<`string`, `EvalDelta`\>[]
+• `Optional` **local-state-delta**: `Record`<`string`, [`EvalDelta`](types_algod.EvalDelta.md)\>[]
 
 (ld) Local state key/value changes for the application being executed by this
 transaction.

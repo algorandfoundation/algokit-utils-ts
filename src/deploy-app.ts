@@ -1,99 +1,30 @@
 import { Algodv2, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
-import { AppCallArgs, AppReference, callApp, CompiledTeal, createApp, CreateAppParams, getAppByIndex, updateApp } from './app'
-import { AlgoKitConfig } from './config'
+import { Config } from './'
+import { callApp, createApp, getAppByIndex, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
-import { getSenderAddress, sendGroupOfTransactions, SendTransactionFrom, SendTransactionResult } from './transaction'
+import { getSenderAddress, sendGroupOfTransactions } from './transaction'
 import { ApplicationStateSchema } from './types/algod'
-
-export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
-export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
-export const APP_DEPLOY_NOTE_PREFIX = 'APP_DEPLOY::'
-
-/**
- * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with @see {APP_DEPLOY_NOTE_PREFIX}.
- */
-export interface AppDeployMetadata {
-  /** The unique name identifier of the app within the creator account */
-  name: string
-  /** The version of app that is / will be deployed */
-  version: string
-  /** Whether or not the app is deletable / permanent / unspecified */
-  deletable?: boolean
-  /** Whether or not the app is updatable / immutable / unspecified */
-  updatable?: boolean
-}
-
-/** The metadata that can be collected about a deployed app */
-export interface AppMetadata extends AppReference, AppDeployMetadata {
-  /** The round the app was created */
-  createdRound: number
-  /** The last round that the app was updated */
-  updatedRound: number
-  /** The metadata when the app was created */
-  createdMetadata: AppDeployMetadata
-  /** Whether or not the app is deleted */
-  deleted: boolean
-}
-
-/** A lookup of name -> Algorand app for a creator */
-export interface AppLookup {
-  creator: Readonly<string>
-  apps: Readonly<{
-    [name: string]: AppMetadata
-  }>
-}
-
-/** Dictionary of deploy-time parameters to replace in a teal template.
- *
- * Note: Looks for `TMPL_{parameter}` for template replacements i.e. you can leave out the `TMPL_`.
- *
- */
-export interface TealTemplateParameters {
-  [key: string]: string | bigint | number | Uint8Array
-}
-
-/** What action to perform when deploying an app and an update is detected in the TEAL code */
-export enum OnUpdate {
-  /** Fail the deployment */
-  Fail,
-  /** Update the app */
-  UpdateApp,
-  /** Delete the app and create a new one in its place */
-  ReplaceApp,
-}
-
-/** What action to perform when deploying an app and a breaking schema change is detected */
-export enum OnSchemaBreak {
-  /** Fail the deployment */
-  Fail,
-  /** Delete the app and create a new one in its place */
-  ReplaceApp,
-}
-
-/** The parameters to deploy an app */
-export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'note' | 'skipSending' | 'skipWaiting'> {
-  /** The deployment metadata */
-  metadata: AppDeployMetadata
-  /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParameters?: TealTemplateParameters
-  /** What action to perform if a schema break is detected */
-  onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
-  /** What action to perform if a TEAL update is detected */
-  onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
-  /** Optional cached value of the existing apps for the given creator */
-  existingDeployments?: AppLookup
-  /** Any args to pass to any create transaction that is issued as part of deployment */
-  createArgs?: AppCallArgs
-  /** Any args to pass to any update transaction that is issued as part of deployment */
-  updateArgs?: AppCallArgs
-  /** Any args to pass to any delete transaction that is issued as part of deployment */
-  deleteArgs?: AppCallArgs
-}
+import {
+  AppDeploymentParams,
+  AppDeployMetadata,
+  AppLookup,
+  AppMetadata,
+  APP_DEPLOY_NOTE_DAPP,
+  CompiledTeal,
+  DELETABLE_TEMPLATE_NAME,
+  OnSchemaBreak,
+  OnUpdate,
+  TealTemplateParameters,
+  UPDATABLE_TEMPLATE_NAME,
+} from './types/app'
+import { ConfirmedTransactionResult, SendTransactionFrom } from './types/transaction'
 
 /**
  * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
  *
  * To understand the architecture decisions behind this functionality please @see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
+ *
+ * **Note:** When using the return from this function be sure to check `operationPerformed` to get access to various return properties like `transaction`, `confirmation` and `deleteResult`.
  *
  * **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
  *
@@ -107,11 +38,10 @@ export async function deployApp(
   deployment: AppDeploymentParams,
   algod: Algodv2,
   indexer: Indexer,
-  // todo: confirmation is required return not optional
 ): Promise<
-  | (SendTransactionResult & AppMetadata & { operationPerformed: 'create' | 'update' })
-  | (SendTransactionResult & AppMetadata & { deleteResult?: SendTransactionResult; operationPerformed: 'replace' })
-  | (AppMetadata & { operationPerformed: 'none' })
+  | (ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' | 'update' })
+  | (ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' })
+  | (AppMetadata & { operationPerformed: 'nothing' })
 > {
   const { metadata, deployTimeParameters, onSchemaBreak, onUpdate, existingDeployments, createArgs, updateArgs, deleteArgs, ...appParams } =
     deployment
@@ -122,7 +52,7 @@ export async function deployApp(
     )
   }
 
-  AlgoKitConfig.getLogger(appParams.suppressLog).info(
+  Config.getLogger(appParams.suppressLog).info(
     `Idempotently deploying app "${metadata.name}" from creator ${getSenderAddress(appParams.from)} using ${
       appParams.approvalProgram.length
     } bytes of teal code and ${appParams.clearStateProgram.length} bytes of teal code`,
@@ -140,7 +70,7 @@ export async function deployApp(
 
   const apps = existingDeployments ?? (await getCreatorAppsByName(appParams.from, indexer))
 
-  const create = async (skipSending?: boolean): Promise<SendTransactionResult & AppMetadata & { operationPerformed: 'create' }> => {
+  const create = async (skipSending?: boolean): Promise<ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' }> => {
     const result = await createApp(
       {
         ...appParams,
@@ -152,9 +82,11 @@ export async function deployApp(
       algod,
     )
 
+    // todo: replace index with id per https://github.com/algorand/go-algorand/issues/3671
     return {
       transaction: result.transaction,
-      confirmation: result.confirmation,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      confirmation: result.confirmation!,
       appIndex: result.appIndex,
       appAddress: result.appAddress,
       createdMetadata: metadata,
@@ -168,8 +100,8 @@ export async function deployApp(
 
   const existingApp = apps.apps[metadata.name]
 
-  if (!existingApp) {
-    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+  if (!existingApp || existingApp.deleted) {
+    Config.getLogger(appParams.suppressLog).info(
       `App ${metadata.name} not found in apps created by ${getSenderAddress(appParams.from)}; deploying app with version ${
         metadata.version
       }.`,
@@ -178,7 +110,7 @@ export async function deployApp(
     return await create()
   }
 
-  AlgoKitConfig.getLogger(appParams.suppressLog).info(
+  Config.getLogger(appParams.suppressLog).info(
     `Existing app ${metadata.name} found by creator ${getSenderAddress(appParams.from)}, with app index ${
       existingApp.appIndex
     } and version ${existingApp.version}.`,
@@ -204,12 +136,14 @@ export async function deployApp(
   const newClear = Buffer.from(appParams.clearStateProgram).toString('base64')
 
   const isUpdate = newApproval !== existingApproval || newClear !== existingClear
-  const isSchemaBreak = schemaIsBroken(existingGlobalSchema, newGlobalSchema) || schemaIsBroken(existingLocalSchema, newLocalSchema)
+  const isSchemaBreak = isSchemaIsBroken(existingGlobalSchema, newGlobalSchema) || isSchemaIsBroken(existingLocalSchema, newLocalSchema)
 
-  const replace = async (): Promise<SendTransactionResult & AppMetadata & { operationPerformed: 'replace' }> => {
+  const replace = async (): Promise<
+    ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
+  > => {
     // Create
 
-    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+    Config.getLogger(appParams.suppressLog).info(
       `Deploying a new ${metadata.name} app for ${getSenderAddress(appParams.from)}; deploying app with version ${metadata.version}.`,
     )
 
@@ -217,7 +151,7 @@ export async function deployApp(
 
     // Delete
 
-    AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+    Config.getLogger(appParams.suppressLog).warn(
       `Deleting existing ${metadata.name} app with index ${existingApp.appIndex} from ${getSenderAddress(appParams.from)} account.`,
     )
 
@@ -263,7 +197,7 @@ export async function deployApp(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const newAppIndex = createConfirmation['application-index']!
 
-    AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+    Config.getLogger(appParams.suppressLog).warn(
       `Sent transactions ${createTransaction.txID()} to create app with index ${newAppIndex} and ${deleteTransaction.txID()} to delete app with index ${
         existingApp.appIndex
       } from ${getSenderAddress(appParams.from)} account.`,
@@ -271,7 +205,8 @@ export async function deployApp(
 
     return {
       transaction: createTransaction,
-      confirmation: createConfirmation,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      confirmation: createConfirmation!,
       appIndex: newAppIndex,
       appAddress: getApplicationAddress(newAppIndex),
       createdMetadata: metadata,
@@ -281,11 +216,11 @@ export async function deployApp(
       deleted: false,
       deleteResult: { transaction: deleteTransaction, confirmation: deleteConfirmation },
       operationPerformed: 'replace',
-    } as SendTransactionResult & AppMetadata & { deleteResult: SendTransactionResult; operationPerformed: 'replace' }
+    } as ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
   }
 
-  const update = async (): Promise<SendTransactionResult & AppMetadata & { operationPerformed: 'update' }> => {
-    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+  const update = async (): Promise<ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'update' }> => {
+    Config.getLogger(appParams.suppressLog).info(
       `Updating existing ${metadata.name} app for ${getSenderAddress(appParams.from)} to version ${metadata.version}.`,
     )
 
@@ -307,7 +242,8 @@ export async function deployApp(
 
     return {
       transaction: result.transaction,
-      confirmation: result.confirmation,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      confirmation: result.confirmation!,
       appIndex: existingApp.appIndex,
       appAddress: existingApp.appAddress,
       createdMetadata: existingApp.createdMetadata,
@@ -320,7 +256,7 @@ export async function deployApp(
   }
 
   if (isSchemaBreak) {
-    AlgoKitConfig.getLogger(appParams.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appIndex}:`, {
+    Config.getLogger(appParams.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appIndex}:`, {
       from: {
         global: existingGlobalSchema,
         local: existingLocalSchema,
@@ -340,11 +276,11 @@ export async function deployApp(
     }
 
     if (existingApp.deletable) {
-      AlgoKitConfig.getLogger(appParams.suppressLog).info(
+      Config.getLogger(appParams.suppressLog).info(
         'App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app',
       )
     } else {
-      AlgoKitConfig.getLogger(appParams.suppressLog).info(
+      Config.getLogger(appParams.suppressLog).info(
         'App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail',
       )
     }
@@ -353,7 +289,7 @@ export async function deployApp(
   }
 
   if (isUpdate) {
-    AlgoKitConfig.getLogger(appParams.suppressLog).info(
+    Config.getLogger(appParams.suppressLog).info(
       `Detected a TEAL update in app ${existingApp.appIndex} for creator ${getSenderAddress(appParams.from)}`,
     )
 
@@ -367,9 +303,9 @@ export async function deployApp(
 
     if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {
       if (existingApp.updatable) {
-        AlgoKitConfig.getLogger(appParams.suppressLog).info(`App is updatable and onUpdate=UpdateApp, updating app...`)
+        Config.getLogger(appParams.suppressLog).info(`App is updatable and onUpdate=UpdateApp, updating app...`)
       } else {
-        AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+        Config.getLogger(appParams.suppressLog).warn(
           `App is not updatable but onUpdate=UpdateApp, will attempt to update app, update will most likely fail`,
         )
       }
@@ -379,11 +315,9 @@ export async function deployApp(
 
     if (onUpdate === 'replace' || onUpdate === OnUpdate.ReplaceApp) {
       if (existingApp.deletable) {
-        AlgoKitConfig.getLogger(appParams.suppressLog).warn(
-          'App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...',
-        )
+        Config.getLogger(appParams.suppressLog).warn('App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...')
       } else {
-        AlgoKitConfig.getLogger(appParams.suppressLog).warn(
+        Config.getLogger(appParams.suppressLog).warn(
           'App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail',
         )
       }
@@ -392,9 +326,9 @@ export async function deployApp(
     }
   }
 
-  AlgoKitConfig.getLogger(appParams.suppressLog).debug('No detected changes in app, nothing to do.')
+  Config.getLogger(appParams.suppressLog).debug('No detected changes in app, nothing to do.')
 
-  return { ...existingApp, operationPerformed: 'none' }
+  return { ...existingApp, operationPerformed: 'nothing' }
 }
 
 /** Returns true is there is a breaking change in the application state schema from before to after.
@@ -405,7 +339,7 @@ export async function deployApp(
  * @param after The new schema
  * @returns Whether or not there is a breaking change
  */
-export function schemaIsBroken(before: ApplicationStateSchema, after: ApplicationStateSchema) {
+export function isSchemaIsBroken(before: ApplicationStateSchema, after: ApplicationStateSchema) {
   return before['num-byte-slice'] < after['num-byte-slice'] || before['num-uint'] < after['num-uint']
 }
 
@@ -440,7 +374,7 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
           .applicationID(createdApp.id)
           .address(creatorAddress)
           .addressRole('sender')
-          .notePrefix(Buffer.from(APP_DEPLOY_NOTE_PREFIX).toString('base64')),
+          .notePrefix(Buffer.from(APP_DEPLOY_NOTE_DAPP).toString('base64')),
       )
 
       // Triple check the transaction is intact by filtering for the one we want:
@@ -475,11 +409,11 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
         const noteAsBase64 = decoder.decode(Buffer.from(note))
         const noteAsString = Buffer.from(noteAsBase64, 'base64').toString('utf-8')
 
-        if (!noteAsString.startsWith(`${APP_DEPLOY_NOTE_PREFIX}{`))
+        if (!noteAsString.startsWith(`${APP_DEPLOY_NOTE_DAPP}:j{`))
           // Clearly not APP_DEPLOY JSON; ignoring...
           return
 
-        return JSON.parse(noteAsString.substring(APP_DEPLOY_NOTE_PREFIX.length)) as AppDeployMetadata
+        return JSON.parse(noteAsString.substring(APP_DEPLOY_NOTE_DAPP.length + 2)) as AppDeployMetadata
       }
 
       try {
@@ -497,10 +431,7 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
           }
         }
       } catch (e) {
-        AlgoKitConfig.logger.warn(
-          `Received error trying to retrieve app with ${createdApp.id} for creator ${creatorAddress}; failing silently`,
-          e,
-        )
+        Config.logger.warn(`Received error trying to retrieve app with ${createdApp.id} for creator ${creatorAddress}; failing silently`, e)
         return
       }
     }),
@@ -518,7 +449,11 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
  * @returns The transaction note as a utf-8 string
  */
 export function getAppDeploymentTransactionNote(metadata: AppDeployMetadata) {
-  return `${APP_DEPLOY_NOTE_PREFIX}${JSON.stringify(metadata)}`
+  return {
+    dAppName: APP_DEPLOY_NOTE_DAPP,
+    data: metadata,
+    format: 'j',
+  }
 }
 
 /**
@@ -567,7 +502,6 @@ export function performTemplateSubstitution(tealCode: string, templateParameters
     for (const key in templateParameters) {
       const value = templateParameters[key]
       const token = `TMPL_${key.replace(/^TMPL_/, '')}`
-      // todo: handle uint8array
       tealCode = tealCode.replace(
         new RegExp(token, 'g'),
         typeof value === 'string'

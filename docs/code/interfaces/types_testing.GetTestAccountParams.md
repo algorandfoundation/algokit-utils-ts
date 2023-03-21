@@ -1,0 +1,42 @@
+[@algorandfoundation/algokit-utils](../README.md) / [types/testing](../modules/types_testing.md) / GetTestAccountParams
+
+# Interface: GetTestAccountParams
+
+[types/testing](../modules/types_testing.md).GetTestAccountParams
+
+Parameters for the
+
+**`See`**
+
+getTestAccount function.
+
+## Table of contents
+
+### Properties
+
+- [initialFunds](types_testing.GetTestAccountParams.md#initialfunds)
+- [suppressLog](types_testing.GetTestAccountParams.md#suppresslog)
+
+## Properties
+
+### initialFunds
+
+• **initialFunds**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+Initial funds to ensure the account has
+
+#### Defined in
+
+types/testing.ts:35
+
+___
+
+### suppressLog
+
+• `Optional` **suppressLog**: `boolean`
+
+Whether to suppress the log (which includes a mnemonic) or not (default: do not suppress the log)
+
+#### Defined in
+
+types/testing.ts:37

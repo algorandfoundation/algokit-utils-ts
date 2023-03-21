@@ -1,5 +1,6 @@
-import { AlgoKitConfig, consoleLogger } from '../src/config'
+import { Config } from '../src/'
+import { consoleLogger } from '../src/types/logging'
 
-AlgoKitConfig.configure({
+Config.configure({
   logger: consoleLogger,
 })

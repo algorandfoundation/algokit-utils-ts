@@ -26,6 +26,7 @@
 - [CallConfigValue](types_appspec.md#callconfigvalue)
 - [HintSpec](types_appspec.md#hintspec)
 - [StateSchema](types_appspec.md#stateschema)
+- [StructElement](types_appspec.md#structelement)
 
 ### Functions
 
@@ -66,7 +67,17 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L85)
+[types/appspec.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L86)
+
+___
+
+### StructElement
+
+Ƭ **StructElement**: [`string`, `string`]
+
+#### Defined in
+
+[types/appspec.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L42)
 
 ## Functions
 
@@ -86,4 +97,4 @@ ___
 
 #### Defined in
 
-[types/appspec.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L90)
+[types/appspec.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L91)

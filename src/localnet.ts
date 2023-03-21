@@ -1,9 +1,9 @@
 import algosdk, { Account, Algodv2, Kmd } from 'algosdk'
-import { getAccountFromMnemonic, getDispenserAccount } from './account'
-import { AlgoAmount } from './algo-amount'
-import { AlgoKitConfig } from './config'
+import { Config } from './'
+import { getDispenserAccount, mnemonicAccount } from './account'
 import { getAlgoKmdClient } from './network-client'
 import { transferAlgos } from './transfer'
+import { AlgoAmount } from './types/amount'
 
 /** Returns true if the algod client is pointing to a LocalNet Algorand network */
 export async function isLocalNet(algod: Algodv2): Promise<boolean> {
@@ -51,7 +51,7 @@ export async function getOrCreateKmdWalletAccount(
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const account = (await getKmdWalletAccount(walletAccount, algod, kmd))!
 
-  AlgoKitConfig.logger.info(
+  Config.logger.info(
     `Couldn't find existing account in Sandbox under name '${walletAccount.name}'; created account ${
       account.addr
     } with keys stored in KMD and funding with ${walletAccount.fundWith?.algos ?? 1000} ALGOs`,
@@ -61,7 +61,7 @@ export async function getOrCreateKmdWalletAccount(
   await transferAlgos(
     {
       amount: walletAccount.fundWith ?? AlgoAmount.Algos(1000),
-      from: await getDispenserAccount(algod),
+      from: await getDispenserAccount(algod, kmd),
       to: account.addr,
     },
     algod,
@@ -80,7 +80,7 @@ export async function getOrCreateKmdWalletAccount(
  * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
  * @example Get default funded account in a LocalNet
  *
- * ```
+ * ```typescript
  * const defaultDispenserAccount = await getKmdWalletAccount(algod,
  *   'unencrypted-default-wallet',
  *   a => a.status !== 'Offline' && a.amount > 1_000_000_000
@@ -129,16 +129,16 @@ export async function getKmdWalletAccount(
   const accountKey = (await kmd.exportKey(walletHandle, '', keyIds[i])).private_key
 
   const accountMnemonic = algosdk.secretKeyToMnemonic(accountKey)
-  return getAccountFromMnemonic(accountMnemonic)
+  return mnemonicAccount(accountMnemonic)
 }
 
 /**
  * Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts)
  *
  * @param algod An algod client
- * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
+ * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
  */
-export async function getLocalNetDispenserAccount(algod: Algodv2, kmdClient?: Kmd): Promise<Account> {
+export async function getLocalNetDispenserAccount(algod: Algodv2, kmd?: Kmd): Promise<Account> {
   if (!(await isLocalNet(algod))) {
     throw "Can't get default account from non LocalNet network"
   }
@@ -147,6 +147,6 @@ export async function getLocalNetDispenserAccount(algod: Algodv2, kmdClient?: Km
   return (await getKmdWalletAccount(
     { name: 'unencrypted-default-wallet', predicate: (a) => a.status !== 'Offline' && a.amount > 1_000_000_000 },
     algod,
-    kmdClient,
+    kmd,
   ))!
 }

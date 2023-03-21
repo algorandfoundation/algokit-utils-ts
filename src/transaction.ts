@@ -1,104 +1,10 @@
-import algosdk, { Account, Algodv2, LogicSigAccount, MultisigMetadata, SuggestedParams, Transaction, TransactionSigner } from 'algosdk'
+import algosdk, { Algodv2, SuggestedParams, Transaction } from 'algosdk'
 import { Buffer } from 'buffer'
-import { AlgoAmount } from './algo-amount'
-import { AlgoKitConfig } from './config'
+import { Config } from './'
+import { TransactionSignerAccount } from './types/account'
 import { PendingTransactionResponse } from './types/algod'
-
-/** Account wrapper that supports partial or full multisig signing */
-export class MultisigAccount {
-  _params: algosdk.MultisigMetadata
-  _signingAccounts: (algosdk.Account | SigningAccount)[]
-  _addr: string
-
-  get params(): Readonly<algosdk.MultisigMetadata> {
-    return this._params
-  }
-
-  get signingAccounts(): Readonly<(algosdk.Account | SigningAccount)[]> {
-    return this._signingAccounts
-  }
-
-  get addr(): Readonly<string> {
-    return this._addr
-  }
-
-  constructor(multisigParams: MultisigMetadata, signingAccounts: (Account | SigningAccount)[]) {
-    this._params = multisigParams
-    this._signingAccounts = signingAccounts
-    this._addr = algosdk.multisigAddress(multisigParams)
-  }
-
-  public sign(transaction: Transaction | Uint8Array): Uint8Array {
-    let signedTxn = 'from' in transaction ? undefined : transaction
-    for (const signer of this._signingAccounts) {
-      if (signedTxn) {
-        signedTxn = algosdk.appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
-      } else {
-        signedTxn = algosdk.signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
-      }
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return signedTxn!
-  }
-}
-
-/** Account wrapper that supports a rekeyed account */
-export class SigningAccount implements Account {
-  private _account: Account
-  private _sender: string
-
-  /**
-   * Algorand address of the sender
-   */
-  get addr(): Readonly<string> {
-    return this._sender
-  }
-
-  /**
-   * Secret key belonging to the signer
-   */
-  get sk(): Readonly<Uint8Array> {
-    return this._account.sk
-  }
-
-  /**
-   * Algorand account of the underlying signing account
-   */
-  get signer(): Account {
-    return this._account
-  }
-
-  /**
-   * Algorand account of the sender address and signer private key
-   */
-  get sender(): Account {
-    return {
-      addr: this._sender,
-      sk: this._account.sk,
-    }
-  }
-
-  constructor(account: Account, sender: string | undefined) {
-    this._account = account
-    this._sender = sender ?? account.addr
-  }
-}
-
-/** A wrapper around @see {TransactionSigner} that also has the sender address. */
-export interface TransactionSignerAccount {
-  addr: Readonly<string>
-  signer: TransactionSigner
-}
-
-export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type TransactionNoteData = string | null | undefined | number | any[] | Record<string, any>
-/** ARC-0002 compatible transaction note components, @see https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md */
-export type Arc2TransactionNote = {
-  dAppName: string
-  format: 'm' | 'j' | 'b' | 'u'
-  data: string
-}
+import { AlgoAmount } from './types/amount'
+import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './types/transaction'
 
 /** Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
@@ -118,7 +24,7 @@ export function encodeTransactionNote(note?: TransactionNote): Uint8Array | unde
   } else if (typeof note === 'object' && note.constructor === Uint8Array) {
     return note
   } else if (typeof note === 'object' && 'dAppName' in note) {
-    const arc2Payload = `${note.dAppName}:${note.format}${note.data}`
+    const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : JSON.stringify(note.data)}`
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
   } else {
@@ -127,31 +33,6 @@ export function encodeTransactionNote(note?: TransactionNote): Uint8Array | unde
     return encoder.encode(n)
   }
 }
-
-/** The sending configuration for a transaction */
-export interface SendTransactionParams {
-  /** Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain)
-   *   (and instead just return the raw transaction, e.g. so you can add it to a group of transactions) */
-  skipSending?: boolean
-  /** Whether to skip waiting for the submitted transaction (only relevant if `skipSending` is `false` or unset) */
-  skipWaiting?: boolean
-  /** Whether to suppress log messages from transaction send, default: do not suppress */
-  suppressLog?: boolean
-  /** The maximum fee that you are happy to pay (default: unbounded) - if this is set it's possible the transaction could get rejected during network congestion */
-  maxFee?: AlgoAmount
-  /** The maximum number of rounds to wait for confirmation, only applies if `skipWaiting` is `undefined` or `false`, default: wait up to 5 rounds */
-  maxRoundsToWaitForConfirmation?: number
-}
-
-/** The result of sending a transaction */
-export interface SendTransactionResult {
-  /** The transaction */
-  transaction: Transaction
-  /** The response if the transaction was sent and waited for */
-  confirmation?: PendingTransactionResponse
-}
-
-export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount
 
 /**
  * Returns the public address of the given transaction sender.
@@ -200,7 +81,7 @@ export const sendTransaction = async function (
       : from.sign(transaction)
   await algod.sendRawTransaction(signedTransaction).do()
 
-  AlgoKitConfig.getLogger(suppressLog).info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
+  Config.getLogger(suppressLog).info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
 
   let confirmation: PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
@@ -208,14 +89,6 @@ export const sendTransaction = async function (
   }
 
   return { transaction, confirmation }
-}
-
-/** Defines an unsigned transaction that will appear in a group of transactions along with its signing information */
-export interface TransactionToSign {
-  /** The unsigned transaction to sign and send */
-  transaction: Transaction
-  /** The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account */
-  signer: SendTransactionFrom
 }
 
 const groupBy = <T>(array: T[], predicate: (value: T, index: number, array: T[]) => string) =>
@@ -246,7 +119,7 @@ export const sendGroupOfTransactions = async function (
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const groupId = Buffer.from(group[0].group!).toString('base64')
 
-  AlgoKitConfig.getLogger(sendParams?.suppressLog).info(`Sending group of transactions (${groupId})`, { transactionsToSend })
+  Config.getLogger(sendParams?.suppressLog).info(`Sending group of transactions (${groupId})`, { transactionsToSend })
 
   // Sign transactions either using TransactionSigners, or not
   let signedTransactions: Uint8Array[]
@@ -298,12 +171,12 @@ export const sendGroupOfTransactions = async function (
     })
   }
 
-  AlgoKitConfig.getLogger(sendParams?.suppressLog).debug(
+  Config.getLogger(sendParams?.suppressLog).debug(
     `Signer IDs (${groupId})`,
     transactions.map((t) => getSenderAddress(t.signer)),
   )
 
-  AlgoKitConfig.getLogger(sendParams?.suppressLog).debug(
+  Config.getLogger(sendParams?.suppressLog).debug(
     `Transaction IDs (${groupId})`,
     transactionsToSend.map((t) => t.txID()),
   )
@@ -311,9 +184,7 @@ export const sendGroupOfTransactions = async function (
   // https://developer.algorand.org/docs/rest-apis/algod/v2/#post-v2transactions
   await algod.sendRawTransaction(signedTransactions).do()
 
-  AlgoKitConfig.getLogger(sendParams?.suppressLog).info(
-    `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,
-  )
+  Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
 
   let confirmations: PendingTransactionResponse[] | undefined = undefined
   if (!sendParams?.skipWaiting) {
@@ -397,9 +268,7 @@ export function capTransactionFee(transaction: algosdk.Transaction, maxAcceptabl
         `Cancelled transaction due to high network congestion fees. Algorand suggested fees would cause this transaction to cost ${transaction.fee} µALGOs. Cap for this transaction is ${maxAcceptableFee.microAlgos} µALGOs.`,
       )
     } else if (transaction.fee > algosdk.ALGORAND_MIN_TX_FEE) {
-      AlgoKitConfig.logger.warn(
-        `Algorand network congestion fees are in effect. This transaction will incur a fee of ${transaction.fee} µALGOs.`,
-      )
+      Config.logger.warn(`Algorand network congestion fees are in effect. This transaction will incur a fee of ${transaction.fee} µALGOs.`)
     }
 
     // Now set the flat on the transaction. Otherwise the network may increase the fee above our cap and perform the transaction.

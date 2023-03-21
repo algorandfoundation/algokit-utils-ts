@@ -60,7 +60,7 @@ ___
 
 ### params
 
-• **params**: `ApplicationParams`
+• **params**: [`ApplicationParams`](types_indexer.ApplicationParams.md)
 
 #### Defined in
 
