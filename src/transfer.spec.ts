@@ -5,7 +5,7 @@ import { algorandFixture } from './testing'
 
 describe('transfer', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach)
+  beforeEach(localnet.beforeEach, 10_000)
 
   test('Transfer is sent and waited for', async () => {
     const { algod, testAccount } = localnet.context

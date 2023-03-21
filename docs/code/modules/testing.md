@@ -61,7 +61,7 @@ By default it tests against a default LocalNet instance, but you can pass in an 
 ```typescript
 const algorand = algorandFixture()
 
-beforeEach(algorand.beforeEach)
+beforeEach(algorand.beforeEach, 10_000)
 
 test('My test', () => {
     const {algod, indexer, testAccount, ...} = algorand.context

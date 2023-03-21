@@ -6,7 +6,7 @@ import { algorandFixture } from './testing'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach)
+  beforeEach(localnet.beforeEach, 10_000)
 
   const getTestTransaction = async (amount?: number, from?: string) => {
     return algosdk.makePaymentTxnWithSuggestedParamsFromObject({

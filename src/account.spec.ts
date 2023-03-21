@@ -6,7 +6,7 @@ import { algorandFixture } from './testing'
 describe('account', () => {
   const localnet = algorandFixture()
 
-  beforeEach(localnet.beforeEach)
+  beforeEach(localnet.beforeEach, 10_000)
 
   test('New account is retrieved and funded', async () => {
     const { algod, kmd } = localnet.context

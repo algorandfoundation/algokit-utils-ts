@@ -7,7 +7,7 @@ import { Arc2TransactionNote } from './types/transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach)
+  beforeEach(localnet.beforeEach, 10_000)
 
   const getTestTransaction = async (amount?: number, sender?: string) => {
     return algosdk.makePaymentTxnWithSuggestedParamsFromObject({

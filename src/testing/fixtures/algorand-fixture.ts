@@ -9,7 +9,7 @@ import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, 
  * @example ```typescript
  * const algorand = algorandFixture()
  *
- * beforeEach(algorand.beforeEach)
+ * beforeEach(algorand.beforeEach, 10_000)
  *
  * test('My test', () => {
  *     const {algod, indexer, testAccount, ...} = algorand.context

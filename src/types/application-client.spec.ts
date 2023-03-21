@@ -8,7 +8,7 @@ import { AppSpec } from './appspec'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach)
+  beforeEach(localnet.beforeEach, 10_000)
 
   let appSpec: AppSpec
   beforeAll(async () => {
