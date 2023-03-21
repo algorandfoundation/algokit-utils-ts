@@ -35,7 +35,7 @@ https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendin
 
 • `Optional` **application-index**: `number`
 
-The application index if the transaction was found and it created an
+The application id if the transaction was found and it created an
 application.
 
 #### Defined in
@@ -60,7 +60,7 @@ ___
 
 • `Optional` **asset-index**: `number`
 
-The asset index if the transaction was found and it created an asset.
+The asset id if the transaction was found and it created an asset.
 
 #### Defined in
 
@@ -106,7 +106,7 @@ ___
 
 ### global-state-delta
 
-• `Optional` **global-state-delta**: `Record`<`string`, `EvalDelta`\>[]
+• `Optional` **global-state-delta**: `Record`<`string`, [`EvalDelta`](types_algod.EvalDelta.md)\>[]
 
 (gd) Global state key/value changes for the application being executed by this
 transaction.
@@ -131,7 +131,7 @@ ___
 
 ### local-state-delta
 
-• `Optional` **local-state-delta**: `Record`<`string`, `EvalDelta`\>[]
+• `Optional` **local-state-delta**: `Record`<`string`, [`EvalDelta`](types_algod.EvalDelta.md)\>[]
 
 (ld) Local state key/value changes for the application being executed by this
 transaction.

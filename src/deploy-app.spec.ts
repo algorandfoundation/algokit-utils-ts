@@ -2,29 +2,32 @@ import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { getBareCallContractCreateParams, getBareCallContractDeployParams } from '../tests/example-contracts/bare-call/contract'
-import { localNetFixture } from '../tests/fixtures/localnet-fixture'
-import { logCaptureFixture } from '../tests/fixtures/log-capture-fixture'
-import { callApp, createApp, updateApp } from './app'
-import { AppDeployMetadata, deployApp, getCreatorAppsByName } from './deploy-app'
+import * as algokit from './'
+import { algoKitLogCaptureFixture, algorandFixture } from './testing'
+import { AppDeployMetadata } from './types/app'
 
 describe('deploy-app', () => {
-  const localnet = localNetFixture()
-  const logging = logCaptureFixture()
+  const localnet = algorandFixture()
+  beforeEach(localnet.beforeEach)
+
+  const logging = algoKitLogCaptureFixture()
+  beforeEach(logging.beforeEach)
+  afterEach(logging.afterEach)
 
   const name = 'MY_APP'
 
   test('Created app is retrieved by name with deployment metadata', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
-    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
+    const app1 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
     await waitForIndexer()
 
-    const apps = await getCreatorAppsByName(testAccount, indexer)
+    const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
 
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps)).toEqual([name])
     const app = apps.apps[name]
-    expect(app.appIndex).toBe(app1.appIndex)
+    expect(app.appId).toBe(app1.appId)
     expect(app.appAddress).toBe(app1.appAddress)
     expect(app.createdRound).toBe(app1.confirmation?.['confirmed-round'])
     expect(app.createdMetadata).toEqual(creationMetadata)
@@ -40,25 +43,25 @@ describe('deploy-app', () => {
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
     const name3 = 'APP_3'
-    const app1 = await createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
-    const app2 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name2 }), algod)
-    const app3 = await createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name3 }), algod)
+    const app1 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
+    const app2 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name2 }), algod)
+    const app3 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name3 }), algod)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
-    const update1 = await updateApp(
-      { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appIndex: app1.appIndex },
+    const update1 = await algokit.updateApp(
+      { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appId: app1.appId },
       algod,
     )
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delete3 = await callApp({ appIndex: app3.appIndex, callType: 'delete', from: testAccount }, algod)
+    const delete3 = await algokit.callApp({ appId: app3.appId, callType: 'delete', from: testAccount }, algod)
     await waitForIndexer()
 
-    const apps = await getCreatorAppsByName(testAccount, indexer)
+    const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
 
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
     const app1Data = apps.apps[name]
-    expect(app1Data.appIndex).toBe(app1.appIndex)
+    expect(app1Data.appId).toBe(app1.appId)
     expect(app1Data.appAddress).toBe(app1.appAddress)
     expect(app1Data.createdRound).toBe(app1.confirmation?.['confirmed-round'])
     expect(app1Data.createdMetadata).toEqual(creationMetadata)
@@ -70,11 +73,11 @@ describe('deploy-app', () => {
     expect(app1Data.deleted).toBe(false)
 
     const app2Data = apps.apps[name2]
-    expect(app2Data.appIndex).toBe(app2.appIndex)
+    expect(app2Data.appId).toBe(app2.appId)
     expect(app2Data.deleted).toBe(false)
 
     const app3Data = apps.apps[name3]
-    expect(app3Data.appIndex).toBe(app3.appIndex)
+    expect(app3Data.appId).toBe(app3.appId)
     expect(app3Data.deleted).toBe(true)
   })
 
@@ -84,12 +87,12 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: getMetadata(),
     })
-    const result = await deployApp(deployment, algod, indexer)
+    const result = await algokit.deployApp(deployment, algod, indexer)
 
     invariant('transaction' in result)
     invariant(result.confirmation)
-    expect(result.appIndex).toBe(result.confirmation['application-index'])
-    expect(result.appAddress).toBe(getApplicationAddress(result.appIndex))
+    expect(result.appId).toBe(result.confirmation['application-index'])
+    expect(result.appAddress).toBe(getApplicationAddress(result.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(result.confirmation['confirmed-round'])
     expect(result.updatedRound).toBe(result.createdRound)
@@ -98,11 +101,13 @@ describe('deploy-app', () => {
     expect(result.updatable).toBe(deployment.metadata.updatable)
     expect(result.deletable).toBe(deployment.metadata.deletable)
     expect(result.deleted).toBe(false)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result.transaction],
-      apps: [result.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result.transaction],
+        apps: [result.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Fail to deploy immutable app without TMPL_UPDATABLE', async () => {
@@ -112,7 +117,7 @@ describe('deploy-app', () => {
       metadata: getMetadata({ updatable: true }),
     })
     deployment.approvalProgram = deployment.approvalProgram.replace(/TMPL_UPDATABLE/g, '0')
-    await expect(async () => await deployApp(deployment, algod, indexer)).rejects.toThrowError(
+    await expect(async () => await algokit.deployApp(deployment, algod, indexer)).rejects.toThrowError(
       'Deploy-time updatability control requested for app deployment, but TMPL_UPDATABLE not present in TEAL code',
     )
   })
@@ -124,7 +129,7 @@ describe('deploy-app', () => {
       metadata: getMetadata({ deletable: true }),
     })
     deployment.approvalProgram = deployment.approvalProgram.replace(/TMPL_DELETABLE/g, '0')
-    await expect(async () => await deployApp(deployment, algod, indexer)).rejects.toThrowError(
+    await expect(async () => await algokit.deployApp(deployment, algod, indexer)).rejects.toThrowError(
       'Deploy-time deletability control requested for app deployment, but TMPL_DELETABLE not present in TEAL code',
     )
   })
@@ -136,7 +141,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -146,12 +151,12 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'update',
     })
-    const result2 = await deployApp(deployment2, algod, indexer)
+    const result2 = await algokit.deployApp(deployment2, algod, indexer)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)
     invariant(result2.confirmation)
-    expect(result2.appIndex).toBe(result1.appIndex)
+    expect(result2.appId).toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment1.metadata)
     expect(result2.createdRound).toBe(result1.createdRound)
     expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
@@ -160,11 +165,13 @@ describe('deploy-app', () => {
     expect(result2.updatable).toBe(deployment2.metadata.updatable)
     expect(result2.deletable).toBe(deployment2.metadata.deletable)
     expect(result2.deleted).toBe(false)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction, result2.transaction],
-      apps: [result1.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction, result2.transaction],
+        apps: [result1.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Deploy update to immutable updated app fails', async () => {
@@ -174,7 +181,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -184,14 +191,16 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'update',
     })
-    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
+    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 
     invariant('transaction' in result1)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction],
-      apps: [result1.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction],
+        apps: [result1.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Deploy failure for updated app fails if onupdate = Fail', async () => {
@@ -201,7 +210,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -211,18 +220,20 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'fail',
     })
-    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(
+    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(
       'Update detected and onUpdate=Fail, stopping deployment. ' +
         'If you want to try deleting and recreating the app then ' +
         're-run with onUpdate=UpdateApp',
     )
 
     invariant('transaction' in result1)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction],
-      apps: [result1.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction],
+        apps: [result1.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Deploy replacement to deletable, updated app', async () => {
@@ -232,7 +243,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -242,14 +253,14 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'replace',
     })
-    const result2 = await deployApp(deployment2, algod, indexer)
+    const result2 = await algokit.deployApp(deployment2, algod, indexer)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)
     invariant(result2.confirmation)
     invariant(result2.operationPerformed === 'replace')
     invariant(result2.deleteResult)
-    expect(result2.appIndex).not.toBe(result1.appIndex)
+    expect(result2.appId).not.toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment2.metadata)
     expect(result2.createdRound).toBe(result2.confirmation['confirmed-round'])
     expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
@@ -258,11 +269,13 @@ describe('deploy-app', () => {
     expect(result2.updatable).toBe(deployment2.metadata.updatable)
     expect(result2.deletable).toBe(deployment2.metadata.deletable)
     expect(result2.deleted).toBe(false)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
-      apps: [result1.appIndex, result2.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
+        apps: [result1.appId, result2.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Deploy failure for replacement of permanent, updated app', async () => {
@@ -272,7 +285,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -283,14 +296,16 @@ describe('deploy-app', () => {
       onUpdate: 'replace',
     })
 
-    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
+    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 
     invariant('transaction' in result1)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction],
-      apps: [result1.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction],
+        apps: [result1.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Deploy replacement of deletable schema broken app', async () => {
@@ -300,7 +315,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -310,14 +325,14 @@ describe('deploy-app', () => {
       breakSchema: true,
       onSchemaBreak: 'replace',
     })
-    const result2 = await deployApp(deployment2, algod, indexer)
+    const result2 = await algokit.deployApp(deployment2, algod, indexer)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)
     invariant(result2.confirmation)
     invariant(result2.operationPerformed === 'replace')
     invariant(result2.deleteResult)
-    expect(result2.appIndex).not.toBe(result1.appIndex)
+    expect(result2.appId).not.toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment2.metadata)
     expect(result2.createdRound).toBe(result2.createdRound)
     expect(result2.updatedRound).toBe(result2.createdRound)
@@ -326,11 +341,13 @@ describe('deploy-app', () => {
     expect(result2.updatable).toBe(deployment2.metadata.updatable)
     expect(result2.deletable).toBe(deployment2.metadata.deletable)
     expect(result2.deleted).toBe(false)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
-      apps: [result1.appIndex, result2.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
+        apps: [result1.appId, result2.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Deploy replacement to schema broken, permanent app fails', async () => {
@@ -340,7 +357,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -350,14 +367,16 @@ describe('deploy-app', () => {
       breakSchema: true,
       onSchemaBreak: 'replace',
     })
-    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
+    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 
     invariant('transaction' in result1)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction],
-      apps: [result1.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction],
+        apps: [result1.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail', async () => {
@@ -367,7 +386,7 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: metadata,
     })
-    const result1 = await deployApp(deployment1, algod, indexer)
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
@@ -377,18 +396,20 @@ describe('deploy-app', () => {
       onSchemaBreak: 'fail',
       breakSchema: true,
     })
-    await expect(() => deployApp(deployment2, algod, indexer)).rejects.toThrow(
+    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(
       'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. ' +
         'If you want to try deleting and recreating the app then ' +
         're-run with onSchemaBreak=OnSchemaBreak.ReplaceApp',
     )
 
     invariant('transaction' in result1)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [result1.transaction],
-      apps: [result1.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction],
+        apps: [result1.appId],
+      }),
+    ).toMatchSnapshot()
   })
 
   test('Do nothing if deploying app with no changes', async () => {
@@ -397,16 +418,16 @@ describe('deploy-app', () => {
       from: testAccount,
       metadata: getMetadata(),
     })
-    const initialDeployment = await deployApp(deployment, algod, indexer)
+    const initialDeployment = await algokit.deployApp(deployment, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const result = await deployApp(deployment, algod, indexer)
+    const result = await algokit.deployApp(deployment, algod, indexer)
 
     invariant('transaction' in initialDeployment)
     invariant(!('transaction' in result))
-    expect(result.appIndex).toBe(initialDeployment.appIndex)
-    expect(result.appAddress).toBe(getApplicationAddress(initialDeployment.appIndex))
+    expect(result.appId).toBe(initialDeployment.appId)
+    expect(result.appAddress).toBe(getApplicationAddress(initialDeployment.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(initialDeployment.createdRound)
     expect(result.updatedRound).toBe(initialDeployment.createdRound)
@@ -415,11 +436,13 @@ describe('deploy-app', () => {
     expect(result.updatable).toBe(deployment.metadata.updatable)
     expect(result.deletable).toBe(deployment.metadata.deletable)
     expect(result.deleted).toBe(false)
-    logging.testLogger.snapshot({
-      accounts: [testAccount],
-      transactions: [initialDeployment.transaction],
-      apps: [result.appIndex],
-    })
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [initialDeployment.transaction],
+        apps: [result.appId],
+      }),
+    ).toMatchSnapshot()
   })
 })
 

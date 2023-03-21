@@ -3,7 +3,7 @@ import { EncodedSignedTransaction } from 'algosdk'
 /** The response from the pending transaction API @see https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid */
 export interface PendingTransactionResponse {
   /**
-   * The application index if the transaction was found and it created an
+   * The application id if the transaction was found and it created an
    * application.
    */
   'application-index'?: number
@@ -12,7 +12,7 @@ export interface PendingTransactionResponse {
    */
   'asset-closing-amount'?: number
   /**
-   * The asset index if the transaction was found and it created an asset.
+   * The asset id if the transaction was found and it created an asset.
    */
   'asset-index'?: number
   /**
@@ -63,7 +63,7 @@ export interface PendingTransactionResponse {
 }
 
 /** Represents a TEAL value delta @see https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta */
-interface EvalDelta {
+export interface EvalDelta {
   action: number
   bytes: string
   uint: number
@@ -76,7 +76,7 @@ export interface ApplicationResponse {
 }
 
 /** Stores the global information associated with an application @see https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationparams */
-interface ApplicationParams {
+export interface ApplicationParams {
   /** Address of the account that created the app */
   creator: string
   /** Base64 encoded TEAL approval program */
@@ -96,7 +96,7 @@ interface ApplicationParams {
 /**
  * Represents a TEAL value @see https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
  */
-type TealValue =
+export type TealValue =
   | {
       /**
        * (tt) value type. Value `1` refers to **bytes**, value `2` refers to **uint**

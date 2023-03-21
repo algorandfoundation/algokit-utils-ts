@@ -1,29 +1,8 @@
-import algosdk, { Algodv2, SuggestedParams } from 'algosdk'
-import { AlgoAmount } from './algo-amount'
-import { AlgoKitConfig } from './config'
-import {
-  encodeTransactionNote,
-  getSenderAddress,
-  getTransactionParams,
-  sendTransaction,
-  SendTransactionFrom,
-  SendTransactionParams,
-  SendTransactionResult,
-  TransactionNote,
-} from './transaction'
-
-interface AlgoTransferParams extends SendTransactionParams {
-  /** The account (with private key loaded) that will send the µALGOs */
-  from: SendTransactionFrom
-  /** The account address that will receive the ALGOs */
-  to: string
-  /** The amount to send */
-  amount: AlgoAmount
-  /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
-  /** The (optional) transaction note */
-  note?: TransactionNote
-}
+import algosdk, { Algodv2 } from 'algosdk'
+import { Config } from './'
+import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
+import { SendTransactionResult } from './types/transaction'
+import { AlgoTransferParams } from './types/transfer'
 
 /**
  * Transfer ALGOs between two accounts.
@@ -45,7 +24,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
   })
 
   if (!sendParams.skipSending) {
-    AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
+    Config.getLogger(sendParams.suppressLog).debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
   }
 
   return sendTransaction({ transaction, from, sendParams }, algod)

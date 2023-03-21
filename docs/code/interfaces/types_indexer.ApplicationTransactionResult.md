@@ -6,7 +6,7 @@
 
 ## Hierarchy
 
-- `Exclude`<{ `creator`: `string` ; `global-state`: `TealKeyValue`[]  }, `ApplicationParams`\>
+- `Exclude`<{ `creator`: `string` ; `global-state`: `TealKeyValue`[]  }, [`ApplicationParams`](types_indexer.ApplicationParams.md)\>
 
   ↳ **`ApplicationTransactionResult`**
 

@@ -1,21 +1,13 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { makeBasicAccountTransactionSigner } from 'algosdk'
 import invariant from 'tiny-invariant'
-import { localNetFixture } from '../tests/fixtures/localnet-fixture'
-import { getTestAccount } from './account'
-import { AlgoAmount } from './algo-amount'
-import {
-  Arc2TransactionNote,
-  encodeTransactionNote,
-  MultisigAccount,
-  sendGroupOfTransactions,
-  sendTransaction,
-  TransactionSignerAccount,
-} from './transaction'
-import { transferAlgos } from './transfer'
+import * as algokit from './'
+import { algorandFixture } from './testing'
+import { Arc2TransactionNote } from './types/transaction'
 
 describe('transaction', () => {
-  const localnet = localNetFixture()
+  const localnet = algorandFixture()
+  beforeEach(localnet.beforeEach)
 
   const getTestTransaction = async (amount?: number, sender?: string) => {
     return algosdk.makePaymentTxnWithSuggestedParamsFromObject({
@@ -29,7 +21,7 @@ describe('transaction', () => {
   test('Transaction is sent and waited for', async () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
-    const { transaction, confirmation } = await sendTransaction({ transaction: txn, from: testAccount }, algod)
+    const { transaction, confirmation } = await algokit.sendTransaction({ transaction: txn, from: testAccount }, algod)
 
     expect(transaction.txID()).toBe(txn.txID())
     expect(confirmation?.['confirmed-round']).toBeGreaterThanOrEqual(txn.firstRound)
@@ -39,12 +31,12 @@ describe('transaction', () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
     await expect(async () => {
-      await sendTransaction(
+      await algokit.sendTransaction(
         {
           transaction: txn,
           from: testAccount,
           sendParams: {
-            maxFee: AlgoAmount.MicroAlgos(1),
+            maxFee: algokit.microAlgos(1),
           },
         },
         algod,
@@ -60,12 +52,12 @@ describe('transaction', () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
     txn.flatFee = true
-    await sendTransaction(
+    await algokit.sendTransaction(
       {
         transaction: txn,
         from: testAccount,
         sendParams: {
-          maxFee: AlgoAmount.MicroAlgos(1),
+          maxFee: algokit.microAlgos(1),
         },
       },
       algod,
@@ -75,12 +67,12 @@ describe('transaction', () => {
   test('Transaction cap is ignored if higher than fee', async () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
-    const { confirmation } = await sendTransaction(
+    const { confirmation } = await algokit.sendTransaction(
       {
         transaction: txn,
         from: testAccount,
         sendParams: {
-          maxFee: AlgoAmount.MicroAlgos(1000_000),
+          maxFee: algokit.microAlgos(1000_000),
         },
       },
       algod,
@@ -94,7 +86,7 @@ describe('transaction', () => {
     const txn1 = await getTestTransaction(1)
     const txn2 = await getTestTransaction(2)
 
-    const { confirmations } = await sendGroupOfTransactions(
+    const { confirmations } = await algokit.sendGroupOfTransactions(
       {
         transactions: [
           {
@@ -123,22 +115,16 @@ describe('transaction', () => {
   })
 
   test('Transaction group is sent using transaction signers', async () => {
-    const { algod, testAccount } = localnet.context
-    const account2 = await getTestAccount({ suppressLog: true, initialFunds: AlgoAmount.Algos(10) }, algod)
+    const { algod, testAccount, generateAccount } = localnet.context
+    const account2 = await generateAccount({ suppressLog: true, initialFunds: algokit.algos(10) })
     const txn1 = await getTestTransaction(1)
     const txn2 = await getTestTransaction(2, account2.addr)
     const txn3 = await getTestTransaction(3)
     const txn4 = await getTestTransaction(4, account2.addr)
-    const signer1 = {
-      addr: testAccount.addr,
-      signer: makeBasicAccountTransactionSigner(testAccount),
-    } as TransactionSignerAccount
-    const signer2 = {
-      addr: account2.addr,
-      signer: makeBasicAccountTransactionSigner(account2),
-    } as TransactionSignerAccount
+    const signer1 = algokit.transactionSignerAccount(makeBasicAccountTransactionSigner(testAccount), testAccount.addr)
+    const signer2 = algokit.transactionSignerAccount(makeBasicAccountTransactionSigner(account2), account2.addr)
 
-    const { confirmations } = await sendGroupOfTransactions(
+    const { confirmations } = await algokit.sendGroupOfTransactions(
       {
         transactions: [
           {
@@ -181,7 +167,7 @@ describe('transaction', () => {
     const { algod, testAccount } = localnet.context
 
     // Setup multisig
-    const multisig = new MultisigAccount(
+    const multisig = algokit.multisigAccount(
       {
         addrs: [testAccount.addr],
         threshold: 1,
@@ -191,38 +177,35 @@ describe('transaction', () => {
     )
 
     // Fund multisig
-    await transferAlgos(
+    await algokit.transferAlgos(
       {
         from: testAccount,
         to: multisig.addr,
-        amount: AlgoAmount.Algos(1),
+        amount: algokit.algos(1),
       },
       algod,
     )
 
     // Use multisig
-    await transferAlgos(
+    await algokit.transferAlgos(
       {
         from: multisig,
         to: testAccount.addr,
-        amount: AlgoAmount.MicroAlgos(500),
+        amount: algokit.microAlgos(500),
       },
       algod,
     )
   })
 
   test('Multisig double account', async () => {
-    const { algod, testAccount } = localnet.context
-    const account2 = await getTestAccount(
-      {
-        initialFunds: AlgoAmount.Algos(10),
-        suppressLog: true,
-      },
-      algod,
-    )
+    const { algod, testAccount, generateAccount } = localnet.context
+    const account2 = await generateAccount({
+      initialFunds: algokit.algos(10),
+      suppressLog: true,
+    })
 
     // Setup multisig
-    const multisig = new MultisigAccount(
+    const multisig = algokit.multisigAccount(
       {
         addrs: [testAccount.addr, account2.addr],
         threshold: 2,
@@ -232,21 +215,21 @@ describe('transaction', () => {
     )
 
     // Fund multisig
-    await transferAlgos(
+    await algokit.transferAlgos(
       {
         from: testAccount,
         to: multisig.addr,
-        amount: AlgoAmount.Algos(1),
+        amount: algokit.algos(1),
       },
       algod,
     )
 
     // Use multisig
-    await transferAlgos(
+    await algokit.transferAlgos(
       {
         from: multisig,
         to: testAccount.addr,
-        amount: AlgoAmount.MicroAlgos(500),
+        amount: algokit.microAlgos(500),
       },
       algod,
     )
@@ -255,13 +238,13 @@ describe('transaction', () => {
 
 describe('transaction node encoder', () => {
   test('null', () => {
-    expect(encodeTransactionNote(null)).toBeUndefined()
+    expect(algokit.encodeTransactionNote(null)).toBeUndefined()
   })
   test('undefined', () => {
-    expect(encodeTransactionNote(undefined)).toBeUndefined()
+    expect(algokit.encodeTransactionNote(undefined)).toBeUndefined()
   })
   test('string', () => {
-    expect(encodeTransactionNote('abc')).toMatchInlineSnapshot(`
+    expect(algokit.encodeTransactionNote('abc')).toMatchInlineSnapshot(`
       Uint8Array [
         97,
         98,
@@ -270,7 +253,7 @@ describe('transaction node encoder', () => {
     `)
   })
   test('object', () => {
-    expect(encodeTransactionNote({ a: 'b' })).toMatchInlineSnapshot(`
+    expect(algokit.encodeTransactionNote({ a: 'b' })).toMatchInlineSnapshot(`
       Uint8Array [
         123,
         34,
@@ -286,7 +269,7 @@ describe('transaction node encoder', () => {
   })
   test('arc-0002', () => {
     expect(
-      encodeTransactionNote({
+      algokit.encodeTransactionNote({
         dAppName: 'a',
         format: 'u',
         data: 'abc',

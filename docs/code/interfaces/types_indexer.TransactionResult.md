@@ -362,7 +362,7 @@ ___
 
 ### signature
 
-• `Optional` **signature**: `TransactionSignature`
+• `Optional` **signature**: [`TransactionSignature`](types_indexer.TransactionSignature.md)
 
 #### Defined in
 

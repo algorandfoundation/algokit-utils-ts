@@ -39,7 +39,8 @@ export interface Hint {
   }
 }
 
-type StructElement = [string, string]
+export type StructElement = [string, string]
+
 export interface Struct {
   name: string
   elements: StructElement[]

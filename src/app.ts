@@ -1,178 +1,27 @@
 import algosdk, {
-  ABIArgument,
   ABIMethod,
-  ABIMethodParams,
-  ABIValue,
-  Address,
   Algodv2,
   AtomicTransactionComposer,
   makeBasicAccountTransactionSigner,
   OnApplicationComplete,
-  SuggestedParams,
   Transaction,
 } from 'algosdk'
 import { Buffer } from 'buffer'
-import { AlgoKitConfig } from './config'
-import {
-  encodeTransactionNote,
-  getSenderAddress,
-  getTransactionParams,
-  sendTransaction,
-  SendTransactionFrom,
-  SendTransactionParams,
-  SendTransactionResult,
-  TransactionNote,
-} from './transaction'
+import { Config } from './'
+import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { ApplicationResponse, PendingTransactionResponse } from './types/algod'
-
-/** The maximum number of bytes in an app code page */
-export const APP_PAGE_MAX_SIZE = 2048
-/** First 4 bytes of SHA-512/256 hash of "return" */
-export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
-
-/** Information about an Algorand app */
-export interface AppReference {
-  /** The index of the app */
-  appIndex: number
-  /** The Algorand address of the account associated with the app */
-  appAddress: string
-}
-
-/**
- * A grouping of the app ID and name of the box in an Uint8Array
- */
-export interface BoxReference {
-  /**
-   * A unique application index
-   */
-  appIndex: number
-  /**
-   * Name of box to reference
-   */
-  name: Uint8Array | string
-}
-
-/**
- * App call args with raw values (minus some processing like encoding strings as binary)
- */
-export interface RawAppCallArgs {
-  /** The address of any accounts to load in */
-  accounts?: (string | Address)[]
-  /** Any application arguments to pass through */
-  appArgs?: (Uint8Array | string)[]
-  /** Any box references to load */
-  boxes?: BoxReference[]
-  /** IDs of any apps to load into the foreignApps array */
-  apps?: number[]
-  /** IDs of any assets to load into the foreignAssets array */
-  assets?: number[]
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
-}
-
-/**
- * App call args for an ABI call
- */
-export interface ABIAppCallArgs {
-  /** The ABI method to call, either:
-   *  * {method_name e.g. `hello`}; or
-   *  * {method_signature e.g. `hello(string)string`} */
-  method: ABIMethodParams | ABIMethod
-  /** The ABI args to pass in */
-  args: ABIArgument[]
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
-}
-
-/** Arguments to pass to an app call either:
- *   * The raw app call values to pass through into the transaction (after processing); or
- *   * An ABI method definition (method and args)
- **/
-export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
-
-/** Base interface for common data passed to an app create or update. */
-interface CreateOrUpdateAppParams extends SendTransactionParams {
-  /** The account (with private key loaded) that will send the µALGOs */
-  from: SendTransactionFrom
-  /** The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
-  approvalProgram: Uint8Array | string
-  /** The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
-  clearStateProgram: Uint8Array | string
-  /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
-  /** The (optional) transaction note */
-  note?: TransactionNote
-  /** The arguments passed in to the app call */
-  args?: AppCallArgs
-}
-
-/** Parameters that are passed in when creating an app. */
-export interface CreateAppParams extends CreateOrUpdateAppParams {
-  /** The storage schema to request for the created app */
-  schema: AppStorageSchema
-}
-
-/** Parameters that are passed in when updating an app. */
-export interface UpdateAppParams extends CreateOrUpdateAppParams {
-  /** The index of the app to update */
-  appIndex: number
-}
-
-export interface AppCallParams extends SendTransactionParams {
-  /** The index of the app to call */
-  appIndex: number
-  /** The type of call, everything except create (@see {createApp} ) and update (@see {updateApp} ) */
-  callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'
-  /** The account to make the call from */
-  from: SendTransactionFrom
-  /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
-  /** The (optional) transaction note */
-  note?: TransactionNote
-  /** The arguments passed in to the app call */
-  args?: AppCallArgs
-}
-
-/** Parameters representing the storage schema of an app. */
-export interface AppStorageSchema {
-  /** Restricts number of ints in per-user local state */
-  localInts: number
-  /** Restricts number of byte slices in per-user local state */
-  localByteSlices: number
-  /** Restricts number of ints in global state */
-  globalInts: number
-  /** Restricts number of byte slices in global state */
-  globalByteSlices: number
-  /** Any extra pages that are needed for the smart contract; if left blank then the right number of pages will be calculated based on the teal code size */
-  extraPages?: number
-}
-
-/** Information about a compiled teal program */
-export interface CompiledTeal {
-  /** Original TEAL code */
-  teal: string
-  /** The compiled code */
-  compiled: string
-  /** The has returned by the compiler */
-  compiledHash: string
-  /** The base64 encoded code as a byte array */
-  compiledBase64ToBytes: Uint8Array
-}
-
-/** Result from calling an app */
-export interface AppCallTransactionResult extends SendTransactionResult {
-  /** If an ABI method was called the processed return value */
-  return?: ABIReturn
-}
-
-/** The return value of an ABI method call */
-export type ABIReturn =
-  | {
-      rawReturnValue: Uint8Array
-      returnValue: ABIValue
-      decodeError: undefined
-    }
-  | { rawReturnValue: undefined; returnValue: undefined; decodeError: Error }
+import {
+  ABIReturn,
+  ABI_RETURN_PREFIX,
+  AppCallArgs,
+  AppCallParams,
+  AppCallTransactionResult,
+  AppReference,
+  APP_PAGE_MAX_SIZE,
+  CompiledTeal,
+  CreateAppParams,
+  UpdateAppParams,
+} from './types/app'
 
 /**
  * Creates a smart contract app, returns the details of the created app.
@@ -205,19 +54,19 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
   const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
   if (confirmation) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const appIndex = confirmation['application-index']!
+    const appId = confirmation['application-index']!
 
-    AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Created app ${appIndex} from creator ${getSenderAddress(from)}`)
+    Config.getLogger(sendParams.suppressLog).debug(`Created app ${appId} from creator ${getSenderAddress(from)}`)
 
     return {
       transaction,
       confirmation,
-      appIndex,
-      appAddress: algosdk.getApplicationAddress(appIndex),
+      appId,
+      appAddress: algosdk.getApplicationAddress(appId),
       return: getABIReturn(args, confirmation),
     }
   } else {
-    return { transaction, appIndex: 0, appAddress: '' }
+    return { transaction, appId: 0, appAddress: '' }
   }
 }
 
@@ -228,13 +77,13 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
  * @returns The transaction
  */
 export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promise<AppCallTransactionResult> {
-  const { appIndex, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
+  const { appId, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
 
   const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
   const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, algod)).compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationUpdateTxnFromObject({
-    appIndex,
+    appIndex: appId,
     approvalProgram: approvalProgram,
     clearProgram: clearProgram,
     suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -244,7 +93,7 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
     rekeyTo: undefined,
   })
 
-  AlgoKitConfig.getLogger(sendParams.suppressLog).debug(`Updating app ${appIndex}`)
+  Config.getLogger(sendParams.suppressLog).debug(`Updating app ${appId}`)
 
   const result = await sendTransaction({ transaction, from, sendParams }, algod)
 
@@ -261,10 +110,10 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
  * @returns The result of the call
  */
 export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
-  const { appIndex, callType, from, args, note, transactionParams, ...sendParams } = call
+  const { appId, callType, from, args, note, transactionParams, ...sendParams } = call
 
   const appCallParameters = {
-    appIndex: appIndex,
+    appIndex: appId,
     from: getSenderAddress(from),
     suggestedParams: await getTransactionParams(transactionParams, algod),
     ...getAppArgsForTransaction(args),
@@ -367,7 +216,10 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
       appArgs: txn.txn.appArgs,
       apps: txn.txn.appForeignApps,
       assets: txn.txn.appForeignAssets,
-      boxes: txn.txn.boxes,
+      boxes: txn.txn.boxes?.map((b) => ({
+        appId: b.appIndex,
+        name: b.name,
+      })),
       lease: args.lease,
     }
   } else {
@@ -381,7 +233,7 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
     boxes: actualArgs?.boxes?.map(
       (ref) =>
         ({
-          appIndex: ref.appIndex,
+          appIndex: ref.appId,
           name: typeof ref.name === 'string' ? encoder.encode(ref.name) : ref.name,
         } as algosdk.BoxReference),
     ),
@@ -394,12 +246,12 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
 /**
  * Gets the current data for the given app from algod.
  *
- * @param appIndex The index of the app
+ * @param appId The id of the app
  * @param algod An algod client
  * @returns The data about the app
  */
-export async function getAppByIndex(appIndex: number, algod: Algodv2) {
-  return (await algod.getApplicationByID(appIndex).do()) as ApplicationResponse
+export async function getAppByIndex(appId: number, algod: Algodv2) {
+  return (await algod.getApplicationByID(appId).do()) as ApplicationResponse
 }
 
 /**

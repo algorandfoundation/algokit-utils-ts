@@ -1,14 +1,9 @@
 import { readFile } from 'fs/promises'
 import path from 'path'
-import {
-  AppDeployMetadata,
-  APP_DEPLOY_NOTE_PREFIX,
-  OnSchemaBreak,
-  OnUpdate,
-  replaceDeployTimeControlParams,
-  SendTransactionFrom,
-} from '../../../src'
+import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
+import { AppDeployMetadata, APP_DEPLOY_NOTE_DAPP, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
 import { AppSpec } from '../../../src/types/appspec'
+import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
 
 export const getBareCallContractData = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'))
@@ -34,7 +29,11 @@ export const getBareCallContractCreateParams = async (from: SendTransactionFrom,
     approvalProgram: replaceDeployTimeControlParams(contract.approvalProgram, metadata).replace('TMPL_VALUE', '1'),
     clearStateProgram: contract.clearStateProgram,
     schema: contract.stateSchema,
-    note: `${APP_DEPLOY_NOTE_PREFIX}${JSON.stringify(metadata)}`,
+    note: encodeTransactionNote({
+      dAppName: APP_DEPLOY_NOTE_DAPP,
+      data: metadata,
+      format: 'j',
+    } as Arc2TransactionNote),
   }
 }
 
