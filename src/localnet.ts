@@ -52,9 +52,9 @@ export async function getOrCreateKmdWalletAccount(
   const account = (await getKmdWalletAccount(walletAccount, algod, kmd))!
 
   Config.logger.info(
-    `Couldn't find existing account in Sandbox under name '${walletAccount.name}'; created account ${
-      account.addr
-    } with keys stored in KMD and funding with ${walletAccount.fundWith?.algos ?? 1000} ALGOs`,
+    `LocalNet account '${walletAccount.name}' doesn't yet exist; created account ${account.addr} with keys stored in KMD and funding with ${
+      walletAccount.fundWith?.algos ?? 1000
+    } ALGOs`,
   )
 
   // Fund the account from the dispenser
