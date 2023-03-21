@@ -34,7 +34,7 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-types/transaction.ts:42
+[types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
 
 ___
 
@@ -46,7 +46,7 @@ If an ABI method was called the processed return value
 
 #### Defined in
 
-types/app.ts:152
+[types/app.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L152)
 
 ___
 
@@ -62,4 +62,4 @@ The transaction
 
 #### Defined in
 
-types/transaction.ts:40
+[types/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L40)

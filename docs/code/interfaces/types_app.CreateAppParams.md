@@ -43,7 +43,7 @@ CreateOrUpdateAppParams.approvalProgram
 
 #### Defined in
 
-types/app.ts:85
+[types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
 
 ___
 
@@ -59,7 +59,7 @@ CreateOrUpdateAppParams.args
 
 #### Defined in
 
-types/app.ts:93
+[types/app.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L93)
 
 ___
 
@@ -75,7 +75,7 @@ CreateOrUpdateAppParams.clearStateProgram
 
 #### Defined in
 
-types/app.ts:87
+[types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)
 
 ___
 
@@ -91,7 +91,7 @@ CreateOrUpdateAppParams.from
 
 #### Defined in
 
-types/app.ts:83
+[types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
 
 ___
 
@@ -107,7 +107,7 @@ CreateOrUpdateAppParams.maxFee
 
 #### Defined in
 
-types/transaction.ts:32
+[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -123,7 +123,7 @@ CreateOrUpdateAppParams.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-types/transaction.ts:34
+[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -139,7 +139,7 @@ CreateOrUpdateAppParams.note
 
 #### Defined in
 
-types/app.ts:91
+[types/app.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L91)
 
 ___
 
@@ -151,7 +151,7 @@ The storage schema to request for the created app
 
 #### Defined in
 
-types/app.ts:99
+[types/app.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L99)
 
 ___
 
@@ -168,7 +168,7 @@ CreateOrUpdateAppParams.skipSending
 
 #### Defined in
 
-types/transaction.ts:26
+[types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
 
 ___
 
@@ -184,7 +184,7 @@ CreateOrUpdateAppParams.skipWaiting
 
 #### Defined in
 
-types/transaction.ts:28
+[types/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L28)
 
 ___
 
@@ -200,7 +200,7 @@ CreateOrUpdateAppParams.suppressLog
 
 #### Defined in
 
-types/transaction.ts:30
+[types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
 
 ___
 
@@ -216,4 +216,4 @@ CreateOrUpdateAppParams.transactionParams
 
 #### Defined in
 
-types/app.ts:89
+[types/app.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L89)

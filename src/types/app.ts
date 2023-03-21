@@ -18,8 +18,8 @@ export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
 
 /** Information about an Algorand app */
 export interface AppReference {
-  /** The index of the app */
-  appIndex: number
+  /** The id of the app */
+  appId: number
   /** The Algorand address of the account associated with the app */
   appAddress: string
 }
@@ -29,9 +29,9 @@ export interface AppReference {
  */
 export interface BoxReference {
   /**
-   * A unique application index
+   * A unique application id
    */
-  appIndex: number
+  appId: number
   /**
    * Name of box to reference
    */
@@ -101,13 +101,13 @@ export interface CreateAppParams extends CreateOrUpdateAppParams {
 
 /** Parameters that are passed in when updating an app. */
 export interface UpdateAppParams extends CreateOrUpdateAppParams {
-  /** The index of the app to update */
-  appIndex: number
+  /** The id of the app to update */
+  appId: number
 }
 
 export interface AppCallParams extends SendTransactionParams {
-  /** The index of the app to call */
-  appIndex: number
+  /** The id of the app to call */
+  appId: number
   /** The type of call, everything except create (@see createApp ) and update (@see updateApp ) */
   callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'
   /** The account to make the call from */

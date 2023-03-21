@@ -73,6 +73,6 @@ describe('indexer-lookup', () => {
 
     const apps = await algokit.lookupAccountCreatedApplicationByAddress(indexer, testAccount.addr, true, 1)
 
-    expect(apps.map((a) => a.id).sort()).toEqual([app1.appIndex, app2.appIndex].sort())
+    expect(apps.map((a) => a.id).sort()).toEqual([app1.appId, app2.appId].sort())
   })
 })

@@ -10,20 +10,20 @@ A grouping of the app ID and name of the box in an Uint8Array
 
 ### Properties
 
-- [appIndex](types_app.BoxReference.md#appindex)
+- [appId](types_app.BoxReference.md#appid)
 - [name](types_app.BoxReference.md#name)
 
 ## Properties
 
-### appIndex
+### appId
 
-• **appIndex**: `number`
+• **appId**: `number`
 
-A unique application index
+A unique application id
 
 #### Defined in
 
-types/app.ts:34
+[types/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L34)
 
 ___
 
@@ -35,4 +35,4 @@ Name of box to reference
 
 #### Defined in
 
-types/app.ts:38
+[types/app.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L38)

@@ -34,7 +34,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-types/transaction.ts:32
+[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -46,7 +46,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-types/transaction.ts:34
+[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -59,7 +59,7 @@ Whether to skip signing and sending the transaction to the chain (default: trans
 
 #### Defined in
 
-types/transaction.ts:26
+[types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
 
 ___
 
@@ -71,7 +71,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-types/transaction.ts:28
+[types/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L28)
 
 ___
 
@@ -83,4 +83,4 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-types/transaction.ts:30
+[types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)

@@ -45,7 +45,7 @@ The fixture
 
 #### Defined in
 
-testing/fixtures/algokit-log-capture-fixture.ts:21
+[testing/fixtures/algokit-log-capture-fixture.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algokit-log-capture-fixture.ts#L21)
 
 ___
 
@@ -82,7 +82,7 @@ The fixture
 
 #### Defined in
 
-testing/fixtures/algorand-fixture.ts:22
+[testing/fixtures/algorand-fixture.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L22)
 
 ___
 
@@ -115,7 +115,7 @@ The account, with private key loaded
 
 #### Defined in
 
-testing/account.ts:17
+[testing/account.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L17)
 
 ___
 
@@ -153,4 +153,4 @@ The result (as a promise), or throws if the indexer didn't catch up in time
 
 #### Defined in
 
-testing/indexer.ts:11
+[testing/indexer.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/indexer.ts#L11)

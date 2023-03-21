@@ -32,7 +32,7 @@ https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md
 
 #### Defined in
 
-types/transaction.ts:10
+[types/transaction.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L10)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-types/transaction.ts:51
+[types/transaction.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L51)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-types/transaction.ts:6
+[types/transaction.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L6)
 
 ___
 
@@ -62,4 +62,4 @@ ___
 
 #### Defined in
 
-types/transaction.ts:8
+[types/transaction.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L8)

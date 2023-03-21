@@ -37,7 +37,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-types/config.ts:24
+[types/config.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L24)
 
 ## Properties
 
@@ -47,7 +47,7 @@ types/config.ts:24
 
 #### Defined in
 
-types/config.ts:10
+[types/config.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L10)
 
 ## Accessors
 
@@ -65,7 +65,7 @@ Readonly.logger
 
 #### Defined in
 
-types/config.ts:12
+[types/config.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L12)
 
 ## Methods
 
@@ -87,7 +87,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-types/config.ts:31
+[types/config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L31)
 
 ___
 
@@ -107,4 +107,4 @@ ___
 
 #### Defined in
 
-types/config.ts:16
+[types/config.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L16)

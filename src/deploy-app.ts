@@ -82,12 +82,11 @@ export async function deployApp(
       algod,
     )
 
-    // todo: replace index with id per https://github.com/algorand/go-algorand/issues/3671
     return {
       transaction: result.transaction,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       confirmation: result.confirmation!,
-      appIndex: result.appIndex,
+      appId: result.appId,
       appAddress: result.appAddress,
       createdMetadata: metadata,
       createdRound: Number(result.confirmation?.['confirmed-round']),
@@ -111,12 +110,12 @@ export async function deployApp(
   }
 
   Config.getLogger(appParams.suppressLog).info(
-    `Existing app ${metadata.name} found by creator ${getSenderAddress(appParams.from)}, with app index ${
-      existingApp.appIndex
-    } and version ${existingApp.version}.`,
+    `Existing app ${metadata.name} found by creator ${getSenderAddress(appParams.from)}, with app id ${existingApp.appId} and version ${
+      existingApp.version
+    }.`,
   )
 
-  const existingAppRecord = await getAppByIndex(existingApp.appIndex, algod)
+  const existingAppRecord = await getAppByIndex(existingApp.appId, algod)
   const existingApproval = existingAppRecord.params['approval-program']
   const existingClear = existingAppRecord.params['clear-state-program']
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -152,12 +151,12 @@ export async function deployApp(
     // Delete
 
     Config.getLogger(appParams.suppressLog).warn(
-      `Deleting existing ${metadata.name} app with index ${existingApp.appIndex} from ${getSenderAddress(appParams.from)} account.`,
+      `Deleting existing ${metadata.name} app with id ${existingApp.appId} from ${getSenderAddress(appParams.from)} account.`,
     )
 
     const { transaction: deleteTransaction } = await callApp(
       {
-        appIndex: existingApp.appIndex,
+        appId: existingApp.appId,
         callType: 'delete',
         from: appParams.from,
         args: deleteArgs,
@@ -198,8 +197,8 @@ export async function deployApp(
     const newAppIndex = createConfirmation['application-index']!
 
     Config.getLogger(appParams.suppressLog).warn(
-      `Sent transactions ${createTransaction.txID()} to create app with index ${newAppIndex} and ${deleteTransaction.txID()} to delete app with index ${
-        existingApp.appIndex
+      `Sent transactions ${createTransaction.txID()} to create app with id ${newAppIndex} and ${deleteTransaction.txID()} to delete app with id ${
+        existingApp.appId
       } from ${getSenderAddress(appParams.from)} account.`,
     )
 
@@ -207,7 +206,7 @@ export async function deployApp(
       transaction: createTransaction,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       confirmation: createConfirmation!,
-      appIndex: newAppIndex,
+      appId: newAppIndex,
       appAddress: getApplicationAddress(newAppIndex),
       createdMetadata: metadata,
       createdRound: Number(createConfirmation['confirmed-round']),
@@ -226,7 +225,7 @@ export async function deployApp(
 
     const result = await updateApp(
       {
-        appIndex: existingApp.appIndex,
+        appId: existingApp.appId,
         from: appParams.from,
         args: updateArgs,
         note: getAppDeploymentTransactionNote(metadata),
@@ -244,7 +243,7 @@ export async function deployApp(
       transaction: result.transaction,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       confirmation: result.confirmation!,
-      appIndex: existingApp.appIndex,
+      appId: existingApp.appId,
       appAddress: existingApp.appAddress,
       createdMetadata: existingApp.createdMetadata,
       createdRound: existingApp.createdRound,
@@ -256,7 +255,7 @@ export async function deployApp(
   }
 
   if (isSchemaBreak) {
-    Config.getLogger(appParams.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appIndex}:`, {
+    Config.getLogger(appParams.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
       from: {
         global: existingGlobalSchema,
         local: existingLocalSchema,
@@ -290,7 +289,7 @@ export async function deployApp(
 
   if (isUpdate) {
     Config.getLogger(appParams.suppressLog).info(
-      `Detected a TEAL update in app ${existingApp.appIndex} for creator ${getSenderAddress(appParams.from)}`,
+      `Detected a TEAL update in app ${existingApp.appId} for creator ${getSenderAddress(appParams.from)}`,
     )
 
     if (onUpdate === undefined || onUpdate === 'fail' || onUpdate === OnUpdate.Fail) {
@@ -421,7 +420,7 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
         const updateNote = parseNote(latestAppUpdateTransaction.note)
         if (creationNote?.name) {
           appLookup[creationNote.name] = {
-            appIndex: createdApp.id,
+            appId: createdApp.id,
             appAddress: getApplicationAddress(createdApp.id),
             createdMetadata: creationNote,
             createdRound: Number(appCreationTransaction['confirmed-round']),

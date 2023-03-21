@@ -91,9 +91,9 @@ export const sendTransaction = async function (
   return { transaction, confirmation }
 }
 
-const groupBy = <T>(array: T[], predicate: (value: T, index: number, array: T[]) => string) =>
-  array.reduce((acc, value, index, array) => {
-    ;(acc[predicate(value, index, array)] ||= []).push(value)
+const groupBy = <T>(array: T[], predicate: (value: T, id: number, array: T[]) => string) =>
+  array.reduce((acc, value, id, array) => {
+    ;(acc[predicate(value, id, array)] ||= []).push(value)
     return acc
   }, {} as { [key: string]: T[] })
 
@@ -136,7 +136,7 @@ export const sendGroupOfTransactions = async function (
     const groupedBySigner = groupBy(
       transactions.map((t, i) => ({
         signer: t.signer as TransactionSignerAccount,
-        index: i,
+        id: i,
       })),
       (t) => t.signer.addr,
     )
@@ -145,21 +145,21 @@ export const sendGroupOfTransactions = async function (
     const signed = (
       await Promise.all(
         Object.values(groupedBySigner).map(async (signature) => {
-          const indexes = signature.map((s) => s.index)
+          const indexes = signature.map((s) => s.id)
           const signed = await signature[0].signer.signer(group, indexes)
           return signed.map((txn, i) => ({
             txn,
-            index: indexes[i],
+            id: indexes[i],
           }))
         }),
       )
     ).flatMap((a) => a)
 
     // Extract the signed transactions in order
-    signedTransactions = signed.sort((s1, s2) => s1.index - s2.index).map((s) => s.txn)
+    signedTransactions = signed.sort((s1, s2) => s1.id - s2.id).map((s) => s.txn)
   } else {
-    signedTransactions = group.map((groupedTransaction, index) => {
-      const signer = transactions[index].signer
+    signedTransactions = group.map((groupedTransaction, id) => {
+      const signer = transactions[id].signer
       return 'sk' in signer
         ? groupedTransaction.signTxn(signer.sk)
         : 'lsig' in signer

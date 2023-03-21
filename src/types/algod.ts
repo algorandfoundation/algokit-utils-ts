@@ -3,7 +3,7 @@ import { EncodedSignedTransaction } from 'algosdk'
 /** The response from the pending transaction API @see https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid */
 export interface PendingTransactionResponse {
   /**
-   * The application index if the transaction was found and it created an
+   * The application id if the transaction was found and it created an
    * application.
    */
   'application-index'?: number
@@ -12,7 +12,7 @@ export interface PendingTransactionResponse {
    */
   'asset-closing-amount'?: number
   /**
-   * The asset index if the transaction was found and it created an asset.
+   * The asset id if the transaction was found and it created an asset.
    */
   'asset-index'?: number
   /**

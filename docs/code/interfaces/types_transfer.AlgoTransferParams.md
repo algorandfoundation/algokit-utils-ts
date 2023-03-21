@@ -37,7 +37,7 @@ The amount to send
 
 #### Defined in
 
-types/transfer.ts:11
+[types/transfer.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L11)
 
 ___
 
@@ -49,7 +49,7 @@ The account (with private key loaded) that will send the µALGOs
 
 #### Defined in
 
-types/transfer.ts:7
+[types/transfer.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L7)
 
 ___
 
@@ -65,7 +65,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-types/transaction.ts:32
+[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -81,7 +81,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-types/transaction.ts:34
+[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -93,7 +93,7 @@ The (optional) transaction note
 
 #### Defined in
 
-types/transfer.ts:15
+[types/transfer.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L15)
 
 ___
 
@@ -110,7 +110,7 @@ Whether to skip signing and sending the transaction to the chain (default: trans
 
 #### Defined in
 
-types/transaction.ts:26
+[types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
 
 ___
 
@@ -126,7 +126,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-types/transaction.ts:28
+[types/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L28)
 
 ___
 
@@ -142,7 +142,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-types/transaction.ts:30
+[types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
 
 ___
 
@@ -154,7 +154,7 @@ The account address that will receive the ALGOs
 
 #### Defined in
 
-types/transfer.ts:9
+[types/transfer.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L9)
 
 ___
 
@@ -166,4 +166,4 @@ Optional transaction parameters
 
 #### Defined in
 
-types/transfer.ts:13
+[types/transfer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L13)

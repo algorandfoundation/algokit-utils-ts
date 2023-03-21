@@ -20,8 +20,8 @@ export type AppSpecAppDetails = {
   params?: SuggestedParams
 } & (
   | {
-      /** The index of an existing app to call using this client */
-      index: number
+      /** The id of an existing app to call using this client */
+      id: number
     }
   | {
       /** The address of the app creator account */
@@ -39,7 +39,7 @@ export class ApplicationClient {
   private params: SuggestedParams | undefined
   private existingDeployments: AppLookup | undefined
 
-  private _appIndex: number
+  private _appId: number
   private _appAddress: string
   private _creator: string | undefined
 
@@ -63,15 +63,15 @@ export class ApplicationClient {
         )
       }
       this.existingDeployments = appIdentifier.existingDeployments
-      this._appIndex = 0
+      this._appId = 0
     } else {
-      if (appIdentifier.index < 0) {
-        throw new Error(`Attempt to create application client with invalid app index of ${appIdentifier.index}`)
+      if (appIdentifier.id < 0) {
+        throw new Error(`Attempt to create application client with invalid app id of ${appIdentifier.id}`)
       }
-      this._appIndex = appIdentifier.index
+      this._appId = appIdentifier.id
     }
 
-    this._appAddress = algosdk.getApplicationAddress(this._appIndex)
+    this._appAddress = algosdk.getApplicationAddress(this._appId)
     this.sender = sender
     this.params = params
 
@@ -119,8 +119,8 @@ export class ApplicationClient {
   }) {
     const { sender, version, allowUpdate, allowDelete, sendParams, ...deployArgs } = deploy
 
-    if (this._appIndex !== 0) {
-      throw new Error(`Attempt to deploy app which already has an app index of ${this._appIndex}`)
+    if (this._appId !== 0) {
+      throw new Error(`Attempt to deploy app which already has an app id of ${this._appId}`)
     }
     if (!sender && !this.sender) {
       throw new Error('No sender provided, unable to deploy app')
@@ -214,8 +214,8 @@ export class ApplicationClient {
 
     // todo: Add deploy-time updatable/deletable etc.
 
-    if (this._appIndex !== 0) {
-      throw new Error(`Attempt to create app which already has an app index of ${this._appIndex}`)
+    if (this._appId !== 0) {
+      throw new Error(`Attempt to create app which already has an app id of ${this._appId}`)
     }
 
     if (!sender && !this.sender) {
@@ -247,8 +247,8 @@ export class ApplicationClient {
 
     if (result.confirmation) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this._appIndex = result.confirmation['application-index']!
-      this._appAddress = getApplicationAddress(this._appIndex)
+      this._appId = result.confirmation['application-index']!
+      this._appAddress = getApplicationAddress(this._appId)
     }
 
     return result
@@ -263,8 +263,8 @@ export class ApplicationClient {
   }) {
     const { sender, args, note, sendParams, deployTimeParameters } = update ?? {}
 
-    if (this._appIndex === 0) {
-      throw new Error(`Attempt to update app which doesn't have an app index defined`)
+    if (this._appId === 0) {
+      throw new Error(`Attempt to update app which doesn't have an app id defined`)
     }
 
     if (!sender && !this.sender) {
@@ -276,7 +276,7 @@ export class ApplicationClient {
 
     const result = await updateApp(
       {
-        appIndex: this._appIndex,
+        appId: this._appId,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         from: sender ?? this.sender!,
         approvalProgram: performTemplateSubstitution(approval, deployTimeParameters),
@@ -319,7 +319,7 @@ export class ApplicationClient {
     }
 
     const appMetadata = await this.loadAppReference()
-    if (appMetadata.appIndex === 0) {
+    if (appMetadata.appId === 0) {
       throw new Error(`Attempt to call an app that can't be found '${this.appSpec.contract.name}' for creator '${this._creator}'.`)
     }
 
@@ -346,7 +346,7 @@ export class ApplicationClient {
 
     return callApp(
       {
-        appIndex: appMetadata.appIndex,
+        appId: appMetadata.appId,
         callType: callType,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         from: sender ?? this.sender!,
@@ -379,11 +379,11 @@ export class ApplicationClient {
       this.existingDeployments = await getCreatorAppsByName(this._creator, this.indexer)
     }
 
-    if (this.existingDeployments && this._appIndex === 0) {
+    if (this.existingDeployments && this._appId === 0) {
       const app = this.existingDeployments.apps[this.appSpec.contract.name]
       if (!app) {
         return {
-          appIndex: 0,
+          appId: 0,
           appAddress: getApplicationAddress(0),
         }
       }
@@ -391,7 +391,7 @@ export class ApplicationClient {
     }
 
     return {
-      appIndex: this._appIndex,
+      appId: this._appId,
       appAddress: this._appAddress,
     } as AppReference
   }

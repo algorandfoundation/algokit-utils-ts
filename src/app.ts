@@ -54,19 +54,19 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
   const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
   if (confirmation) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const appIndex = confirmation['application-index']!
+    const appId = confirmation['application-index']!
 
-    Config.getLogger(sendParams.suppressLog).debug(`Created app ${appIndex} from creator ${getSenderAddress(from)}`)
+    Config.getLogger(sendParams.suppressLog).debug(`Created app ${appId} from creator ${getSenderAddress(from)}`)
 
     return {
       transaction,
       confirmation,
-      appIndex,
-      appAddress: algosdk.getApplicationAddress(appIndex),
+      appId,
+      appAddress: algosdk.getApplicationAddress(appId),
       return: getABIReturn(args, confirmation),
     }
   } else {
-    return { transaction, appIndex: 0, appAddress: '' }
+    return { transaction, appId: 0, appAddress: '' }
   }
 }
 
@@ -77,13 +77,13 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
  * @returns The transaction
  */
 export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promise<AppCallTransactionResult> {
-  const { appIndex, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
+  const { appId, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
 
   const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
   const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, algod)).compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationUpdateTxnFromObject({
-    appIndex,
+    appIndex: appId,
     approvalProgram: approvalProgram,
     clearProgram: clearProgram,
     suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -93,7 +93,7 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
     rekeyTo: undefined,
   })
 
-  Config.getLogger(sendParams.suppressLog).debug(`Updating app ${appIndex}`)
+  Config.getLogger(sendParams.suppressLog).debug(`Updating app ${appId}`)
 
   const result = await sendTransaction({ transaction, from, sendParams }, algod)
 
@@ -110,10 +110,10 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
  * @returns The result of the call
  */
 export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
-  const { appIndex, callType, from, args, note, transactionParams, ...sendParams } = call
+  const { appId, callType, from, args, note, transactionParams, ...sendParams } = call
 
   const appCallParameters = {
-    appIndex: appIndex,
+    appIndex: appId,
     from: getSenderAddress(from),
     suggestedParams: await getTransactionParams(transactionParams, algod),
     ...getAppArgsForTransaction(args),
@@ -216,7 +216,10 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
       appArgs: txn.txn.appArgs,
       apps: txn.txn.appForeignApps,
       assets: txn.txn.appForeignAssets,
-      boxes: txn.txn.boxes,
+      boxes: txn.txn.boxes?.map((b) => ({
+        appId: b.appIndex,
+        name: b.name,
+      })),
       lease: args.lease,
     }
   } else {
@@ -230,7 +233,7 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
     boxes: actualArgs?.boxes?.map(
       (ref) =>
         ({
-          appIndex: ref.appIndex,
+          appIndex: ref.appId,
           name: typeof ref.name === 'string' ? encoder.encode(ref.name) : ref.name,
         } as algosdk.BoxReference),
     ),
@@ -243,12 +246,12 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
 /**
  * Gets the current data for the given app from algod.
  *
- * @param appIndex The index of the app
+ * @param appId The id of the app
  * @param algod An algod client
  * @returns The data about the app
  */
-export async function getAppByIndex(appIndex: number, algod: Algodv2) {
-  return (await algod.getApplicationByID(appIndex).do()) as ApplicationResponse
+export async function getAppByIndex(appId: number, algod: Algodv2) {
+  return (await algod.getApplicationByID(appId).do()) as ApplicationResponse
 }
 
 /**

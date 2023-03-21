@@ -24,7 +24,7 @@ The ABI args to pass in
 
 #### Defined in
 
-types/app.ts:69
+[types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
 
 ___
 
@@ -36,7 +36,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-types/app.ts:71
+[types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
 
 ___
 
@@ -50,4 +50,4 @@ The ABI method to call, either:
 
 #### Defined in
 
-types/app.ts:67
+[types/app.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L67)

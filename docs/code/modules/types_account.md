@@ -27,4 +27,4 @@ The account name identifier used for fund dispensing in test environments
 
 #### Defined in
 
-types/account.ts:6
+[types/account.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L6)

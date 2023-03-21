@@ -53,7 +53,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 #### Defined in
 
-types/urlTokenBaseHTTPClient.ts:45
+[types/urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L45)
 
 ## Properties
 
@@ -63,7 +63,7 @@ types/urlTokenBaseHTTPClient.ts:45
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:8
+[types/algo-http-client-with-retry.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L8)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:7
+[types/algo-http-client-with-retry.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L7)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:13
+[types/algo-http-client-with-retry.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L13)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:12
+[types/algo-http-client-with-retry.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L12)
 
 ## Methods
 
@@ -113,7 +113,7 @@ types/algo-http-client-with-retry.ts:12
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:25
+[types/algo-http-client-with-retry.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L25)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:67
+[types/algo-http-client-with-retry.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L67)
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:54
+[types/algo-http-client-with-retry.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L54)
 
 ___
 
@@ -193,4 +193,4 @@ ___
 
 #### Defined in
 
-types/algo-http-client-with-retry.ts:58
+[types/algo-http-client-with-retry.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L58)

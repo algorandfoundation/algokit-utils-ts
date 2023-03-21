@@ -25,7 +25,7 @@ An optional algod client, if not specified then it will create one against defau
 
 #### Defined in
 
-types/testing.ts:43
+[types/testing.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L43)
 
 ___
 
@@ -37,7 +37,7 @@ An optional indexer client, if not specified then it will create one against def
 
 #### Defined in
 
-types/testing.ts:45
+[types/testing.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L45)
 
 ___
 
@@ -49,7 +49,7 @@ An optional kmd client, if not specified then it will create one against default
 
 #### Defined in
 
-types/testing.ts:47
+[types/testing.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L47)
 
 ___
 
@@ -61,4 +61,4 @@ The amount of funds to allocate to the default testing account, if not specified
 
 #### Defined in
 
-types/testing.ts:49
+[types/testing.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L49)

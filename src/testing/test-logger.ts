@@ -46,16 +46,13 @@ export class TestLogger implements Logger {
     const { transactions: transactionIds, accounts, apps } = config ?? {}
     let snapshot = this.capturedLogs.join('\n')
     transactionIds?.forEach(
-      (txn, index) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txID(), 'g'), `TXID_${index + 1}`)),
+      (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txID(), 'g'), `TXID_${id + 1}`)),
     )
     accounts?.forEach(
-      (sender, index) =>
-        (snapshot = snapshot.replace(
-          new RegExp(typeof sender === 'string' ? sender : getSenderAddress(sender), 'g'),
-          `ACCOUNT_${index + 1}`,
-        )),
+      (sender, id) =>
+        (snapshot = snapshot.replace(new RegExp(typeof sender === 'string' ? sender : getSenderAddress(sender), 'g'), `ACCOUNT_${id + 1}`)),
     )
-    apps?.forEach((app, index) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b`, 'g'), `APP_${index + 1}`)))
+    apps?.forEach((app, id) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b`, 'g'), `APP_${id + 1}`)))
     return snapshot
   }
 

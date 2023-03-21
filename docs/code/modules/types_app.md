@@ -50,7 +50,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-types/app.ts:156
+[types/app.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L156)
 
 ___
 
@@ -64,7 +64,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-types/app.ts:78
+[types/app.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L78)
 
 ## Variables
 
@@ -76,7 +76,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-types/app.ts:17
+[types/app.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L17)
 
 ___
 
@@ -88,7 +88,7 @@ The app create/update ARC-2 transaction note prefix
 
 #### Defined in
 
-types/app.ts:11
+[types/app.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L11)
 
 ___
 
@@ -100,7 +100,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-types/app.ts:14
+[types/app.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L14)
 
 ___
 
@@ -112,7 +112,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-types/app.ts:8
+[types/app.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L8)
 
 ___
 
@@ -124,4 +124,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-types/app.ts:5
+[types/app.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L5)

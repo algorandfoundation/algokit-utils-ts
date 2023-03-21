@@ -39,9 +39,9 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.appIndex).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appIndex))
-    expect(app.confirmation?.['application-index']).toBe(app.appIndex)
+    expect(app.appId).toBeGreaterThan(0)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.confirmation?.['application-index']).toBe(app.appId)
   })
 
   test('Deploy app', async () => {
@@ -65,9 +65,9 @@ describe('application-client', () => {
     })
 
     invariant(app.operationPerformed === 'create')
-    expect(app.appIndex).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appIndex))
-    expect(app.confirmation?.['application-index']).toBe(app.appIndex)
+    expect(app.appId).toBeGreaterThan(0)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.confirmation?.['application-index']).toBe(app.appId)
   })
 
   test('Create then call app', async () => {
@@ -76,7 +76,7 @@ describe('application-client', () => {
       {
         app: appSpec,
         sender: testAccount,
-        index: 0,
+        id: 0,
       },
       algod,
       indexer,

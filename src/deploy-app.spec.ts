@@ -27,7 +27,7 @@ describe('deploy-app', () => {
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps)).toEqual([name])
     const app = apps.apps[name]
-    expect(app.appIndex).toBe(app1.appIndex)
+    expect(app.appId).toBe(app1.appId)
     expect(app.appAddress).toBe(app1.appAddress)
     expect(app.createdRound).toBe(app1.confirmation?.['confirmed-round'])
     expect(app.createdMetadata).toEqual(creationMetadata)
@@ -49,11 +49,11 @@ describe('deploy-app', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
     const update1 = await algokit.updateApp(
-      { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appIndex: app1.appIndex },
+      { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appId: app1.appId },
       algod,
     )
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delete3 = await algokit.callApp({ appIndex: app3.appIndex, callType: 'delete', from: testAccount }, algod)
+    const delete3 = await algokit.callApp({ appId: app3.appId, callType: 'delete', from: testAccount }, algod)
     await waitForIndexer()
 
     const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
@@ -61,7 +61,7 @@ describe('deploy-app', () => {
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
     const app1Data = apps.apps[name]
-    expect(app1Data.appIndex).toBe(app1.appIndex)
+    expect(app1Data.appId).toBe(app1.appId)
     expect(app1Data.appAddress).toBe(app1.appAddress)
     expect(app1Data.createdRound).toBe(app1.confirmation?.['confirmed-round'])
     expect(app1Data.createdMetadata).toEqual(creationMetadata)
@@ -73,11 +73,11 @@ describe('deploy-app', () => {
     expect(app1Data.deleted).toBe(false)
 
     const app2Data = apps.apps[name2]
-    expect(app2Data.appIndex).toBe(app2.appIndex)
+    expect(app2Data.appId).toBe(app2.appId)
     expect(app2Data.deleted).toBe(false)
 
     const app3Data = apps.apps[name3]
-    expect(app3Data.appIndex).toBe(app3.appIndex)
+    expect(app3Data.appId).toBe(app3.appId)
     expect(app3Data.deleted).toBe(true)
   })
 
@@ -91,8 +91,8 @@ describe('deploy-app', () => {
 
     invariant('transaction' in result)
     invariant(result.confirmation)
-    expect(result.appIndex).toBe(result.confirmation['application-index'])
-    expect(result.appAddress).toBe(getApplicationAddress(result.appIndex))
+    expect(result.appId).toBe(result.confirmation['application-index'])
+    expect(result.appAddress).toBe(getApplicationAddress(result.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(result.confirmation['confirmed-round'])
     expect(result.updatedRound).toBe(result.createdRound)
@@ -105,7 +105,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result.transaction],
-        apps: [result.appIndex],
+        apps: [result.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -156,7 +156,7 @@ describe('deploy-app', () => {
     invariant('transaction' in result1)
     invariant('transaction' in result2)
     invariant(result2.confirmation)
-    expect(result2.appIndex).toBe(result1.appIndex)
+    expect(result2.appId).toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment1.metadata)
     expect(result2.createdRound).toBe(result1.createdRound)
     expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
@@ -169,7 +169,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction, result2.transaction],
-        apps: [result1.appIndex],
+        apps: [result1.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -198,7 +198,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction],
-        apps: [result1.appIndex],
+        apps: [result1.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -231,7 +231,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction],
-        apps: [result1.appIndex],
+        apps: [result1.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -260,7 +260,7 @@ describe('deploy-app', () => {
     invariant(result2.confirmation)
     invariant(result2.operationPerformed === 'replace')
     invariant(result2.deleteResult)
-    expect(result2.appIndex).not.toBe(result1.appIndex)
+    expect(result2.appId).not.toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment2.metadata)
     expect(result2.createdRound).toBe(result2.confirmation['confirmed-round'])
     expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
@@ -273,7 +273,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
-        apps: [result1.appIndex, result2.appIndex],
+        apps: [result1.appId, result2.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -303,7 +303,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction],
-        apps: [result1.appIndex],
+        apps: [result1.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -332,7 +332,7 @@ describe('deploy-app', () => {
     invariant(result2.confirmation)
     invariant(result2.operationPerformed === 'replace')
     invariant(result2.deleteResult)
-    expect(result2.appIndex).not.toBe(result1.appIndex)
+    expect(result2.appId).not.toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment2.metadata)
     expect(result2.createdRound).toBe(result2.createdRound)
     expect(result2.updatedRound).toBe(result2.createdRound)
@@ -345,7 +345,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
-        apps: [result1.appIndex, result2.appIndex],
+        apps: [result1.appId, result2.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -374,7 +374,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction],
-        apps: [result1.appIndex],
+        apps: [result1.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -407,7 +407,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [result1.transaction],
-        apps: [result1.appIndex],
+        apps: [result1.appId],
       }),
     ).toMatchSnapshot()
   })
@@ -426,8 +426,8 @@ describe('deploy-app', () => {
 
     invariant('transaction' in initialDeployment)
     invariant(!('transaction' in result))
-    expect(result.appIndex).toBe(initialDeployment.appIndex)
-    expect(result.appAddress).toBe(getApplicationAddress(initialDeployment.appIndex))
+    expect(result.appId).toBe(initialDeployment.appId)
+    expect(result.appAddress).toBe(getApplicationAddress(initialDeployment.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(initialDeployment.createdRound)
     expect(result.updatedRound).toBe(initialDeployment.createdRound)
@@ -440,7 +440,7 @@ describe('deploy-app', () => {
       logging.testLogger.getLogSnapshot({
         accounts: [testAccount],
         transactions: [initialDeployment.transaction],
-        apps: [result.appIndex],
+        apps: [result.appId],
       }),
     ).toMatchSnapshot()
   })
