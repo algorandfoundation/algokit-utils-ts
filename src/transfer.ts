@@ -36,15 +36,15 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
  * @see https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
  *
  * @param funding The funding configuration
- * @param client An algod client
+ * @param algod An algod client
  * @returns undefined if nothing was needed or the transaction send result
  */
-export async function ensureFunded(funding: EnsureFundedParams, client: Algodv2): Promise<SendTransactionResult | undefined> {
+export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2): Promise<SendTransactionResult | undefined> {
   const { accountToFund, fundingSource, minSpendingBalance, minFundingIncrement, transactionParams, note, ...sendParams } = funding
 
   const addressToFund = typeof accountToFund === 'string' ? accountToFund : getSenderAddress(accountToFund)
 
-  const accountInfo = await client.accountInformation(addressToFund).do()
+  const accountInfo = await algod.accountInformation(addressToFund).do()
   const balance = Number(accountInfo.amount)
   const minimumBalanceRequirement = microAlgos(Number(accountInfo['min-balance']))
   const currentSpendingBalance = microAlgos(balance - +minimumBalanceRequirement)
@@ -66,7 +66,7 @@ export async function ensureFunded(funding: EnsureFundedParams, client: Algodv2)
         transactionParams,
         ...sendParams,
       },
-      client,
+      algod,
     )
   }
 
