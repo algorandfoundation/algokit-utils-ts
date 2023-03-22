@@ -7,3 +7,4 @@
 ### Interfaces
 
 - [AlgoTransferParams](../interfaces/types_transfer.AlgoTransferParams.md)
+- [EnsureFundedParams](../interfaces/types_transfer.EnsureFundedParams.md)

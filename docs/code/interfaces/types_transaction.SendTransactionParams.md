@@ -14,6 +14,8 @@ The sending configuration for a transaction
 
   ↳ [`AlgoTransferParams`](types_transfer.AlgoTransferParams.md)
 
+  ↳ [`EnsureFundedParams`](types_transfer.EnsureFundedParams.md)
+
 ## Table of contents
 
 ### Properties

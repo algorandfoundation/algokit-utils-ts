@@ -18,6 +18,14 @@ export class AlgoAmount {
     this.amountInMicroAlgos = 'microAlgos' in amount ? amount.microAlgos : algosdk.algosToMicroalgos(amount.algos)
   }
 
+  toString(): string {
+    return `${this.microAlgos.toLocaleString('en-US')} µALGO${this.microAlgos === 1 ? '' : 's'}`
+  }
+
+  valueOf(): number {
+    return this.microAlgos
+  }
+
   /** Create a @see {AlgoAmount} object representing the given number of Algos */
   static Algos(amount: number) {
     return new AlgoAmount({ algos: amount })

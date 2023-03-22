@@ -17,6 +17,7 @@
 - [createApp](index.md#createapp)
 - [deployApp](index.md#deployapp)
 - [encodeTransactionNote](index.md#encodetransactionnote)
+- [ensureFunded](index.md#ensurefunded)
 - [executePaginatedRequest](index.md#executepaginatedrequest)
 - [getABIReturn](index.md#getabireturn)
 - [getAccount](index.md#getaccount)
@@ -265,6 +266,35 @@ the transaction note ready for inclusion in a transaction
 #### Defined in
 
 [transaction.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L21)
+
+___
+
+### ensureFunded
+
+▸ **ensureFunded**(`funding`, `client`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+
+Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
+
+**`See`**
+
+https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `funding` | [`EnsureFundedParams`](../interfaces/types_transfer.EnsureFundedParams.md) | The funding configuration |
+| `client` | `default` | An algod client |
+
+#### Returns
+
+`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+
+undefined if nothing was needed or the transaction send result
+
+#### Defined in
+
+[transfer.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L42)
 
 ___
 

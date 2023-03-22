@@ -1,48 +1,49 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/transfer](../modules/types_transfer.md) / AlgoTransferParams
+[@algorandfoundation/algokit-utils](../README.md) / [types/transfer](../modules/types_transfer.md) / EnsureFundedParams
 
-# Interface: AlgoTransferParams
+# Interface: EnsureFundedParams
 
-[types/transfer](../modules/types_transfer.md).AlgoTransferParams
+[types/transfer](../modules/types_transfer.md).EnsureFundedParams
 
 Parameters for
 
 **`See`**
 
-transferAlgos call.
+ensureFunded call.
 
 ## Hierarchy
 
 - [`SendTransactionParams`](types_transaction.SendTransactionParams.md)
 
-  ↳ **`AlgoTransferParams`**
+  ↳ **`EnsureFundedParams`**
 
 ## Table of contents
 
 ### Properties
 
-- [amount](types_transfer.AlgoTransferParams.md#amount)
-- [fee](types_transfer.AlgoTransferParams.md#fee)
-- [from](types_transfer.AlgoTransferParams.md#from)
-- [maxFee](types_transfer.AlgoTransferParams.md#maxfee)
-- [maxRoundsToWaitForConfirmation](types_transfer.AlgoTransferParams.md#maxroundstowaitforconfirmation)
-- [note](types_transfer.AlgoTransferParams.md#note)
-- [skipSending](types_transfer.AlgoTransferParams.md#skipsending)
-- [skipWaiting](types_transfer.AlgoTransferParams.md#skipwaiting)
-- [suppressLog](types_transfer.AlgoTransferParams.md#suppresslog)
-- [to](types_transfer.AlgoTransferParams.md#to)
-- [transactionParams](types_transfer.AlgoTransferParams.md#transactionparams)
+- [accountToFund](types_transfer.EnsureFundedParams.md#accounttofund)
+- [fee](types_transfer.EnsureFundedParams.md#fee)
+- [fundingSource](types_transfer.EnsureFundedParams.md#fundingsource)
+- [maxFee](types_transfer.EnsureFundedParams.md#maxfee)
+- [maxRoundsToWaitForConfirmation](types_transfer.EnsureFundedParams.md#maxroundstowaitforconfirmation)
+- [minFundingIncrement](types_transfer.EnsureFundedParams.md#minfundingincrement)
+- [minSpendingBalance](types_transfer.EnsureFundedParams.md#minspendingbalance)
+- [note](types_transfer.EnsureFundedParams.md#note)
+- [skipSending](types_transfer.EnsureFundedParams.md#skipsending)
+- [skipWaiting](types_transfer.EnsureFundedParams.md#skipwaiting)
+- [suppressLog](types_transfer.EnsureFundedParams.md#suppresslog)
+- [transactionParams](types_transfer.EnsureFundedParams.md#transactionparams)
 
 ## Properties
 
-### amount
+### accountToFund
 
-• **amount**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+• **accountToFund**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The amount to send
+The account to fund
 
 #### Defined in
 
-[types/transfer.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L12)
+[types/transfer.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L22)
 
 ___
 
@@ -62,15 +63,15 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 ___
 
-### from
+### fundingSource
 
-• **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account (with private key loaded) that will send the µALGOs
+The account to use as a funding source
 
 #### Defined in
 
-[types/transfer.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L8)
+[types/transfer.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L24)
 
 ___
 
@@ -106,15 +107,39 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 ___
 
+### minFundingIncrement
+
+• `Optional` **minFundingIncrement**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+When issuing a funding amount, the minimum amount to transfer (avoids many small transfers if this gets called often on an active account)
+
+#### Defined in
+
+[types/transfer.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L28)
+
+___
+
+### minSpendingBalance
+
+• **minSpendingBalance**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement)
+
+#### Defined in
+
+[types/transfer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L26)
+
+___
+
 ### note
 
 • `Optional` **note**: [`TransactionNote`](../modules/types_transaction.md#transactionnote)
 
-The (optional) transaction note
+The (optional) transaction note, default: "Funding account to meet minimum requirement"
 
 #### Defined in
 
-[types/transfer.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L16)
+[types/transfer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L32)
 
 ___
 
@@ -167,18 +192,6 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 ___
 
-### to
-
-• **to**: `string`
-
-The account address that will receive the ALGOs
-
-#### Defined in
-
-[types/transfer.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L10)
-
-___
-
 ### transactionParams
 
 • `Optional` **transactionParams**: `SuggestedParams`
@@ -187,4 +200,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[types/transfer.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L14)
+[types/transfer.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L30)

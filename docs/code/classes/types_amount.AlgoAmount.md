@@ -23,6 +23,8 @@ Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and num
 
 ### Methods
 
+- [toString](types_amount.AlgoAmount.md#tostring)
+- [valueOf](types_amount.AlgoAmount.md#valueof)
 - [Algos](types_amount.AlgoAmount.md#algos-1)
 - [MicroAlgos](types_amount.AlgoAmount.md#microalgos-1)
 
@@ -86,6 +88,34 @@ Return the amount as a number in µAlgos
 
 ## Methods
 
+### toString
+
+▸ **toString**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[types/amount.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L21)
+
+___
+
+### valueOf
+
+▸ **valueOf**(): `number`
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+[types/amount.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L25)
+
+___
+
 ### Algos
 
 ▸ `Static` **Algos**(`amount`): [`AlgoAmount`](types_amount.AlgoAmount.md)
@@ -108,7 +138,7 @@ object representing the given number of Algos
 
 #### Defined in
 
-[types/amount.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L22)
+[types/amount.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L30)
 
 ___
 
@@ -134,4 +164,4 @@ object representing the given number of µAlgos
 
 #### Defined in
 
-[types/amount.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L27)
+[types/amount.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L35)
