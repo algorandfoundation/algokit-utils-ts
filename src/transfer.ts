@@ -52,7 +52,7 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2):
   if (minSpendingBalance > currentSpendingBalance) {
     const minFundAmount = microAlgos(+minSpendingBalance - +currentSpendingBalance)
     const fundAmount = microAlgos(Math.max(+minFundAmount, minFundingIncrement?.microAlgos ?? 0))
-    Config.logger.info(
+    Config.getLogger(sendParams.suppressLog).info(
       `Funding ${addressToFund} ${fundAmount} from ${getSenderAddress(
         fundingSource,
       )} to reach minimum spend amount of ${minSpendingBalance} (balance = ${balance}, min_balance_req = ${minimumBalanceRequirement})`,
