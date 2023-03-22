@@ -145,7 +145,7 @@ the estimated rate.
 
 #### Defined in
 
-[transaction.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L261)
+[transaction.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L267)
 
 ___
 
@@ -961,7 +961,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[transaction.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L285)
+[transaction.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L291)
 
 ___
 
@@ -1311,7 +1311,7 @@ An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting`
 
 #### Defined in
 
-[transaction.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L109)
+[transaction.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L115)
 
 ___
 
@@ -1449,4 +1449,4 @@ Pending transaction information
 
 #### Defined in
 
-[transaction.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L214)
+[transaction.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L220)

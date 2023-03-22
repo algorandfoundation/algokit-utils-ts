@@ -20,6 +20,7 @@ Parameters that are passed in when updating an app.
 - [approvalProgram](types_app.UpdateAppParams.md#approvalprogram)
 - [args](types_app.UpdateAppParams.md#args)
 - [clearStateProgram](types_app.UpdateAppParams.md#clearstateprogram)
+- [fee](types_app.UpdateAppParams.md#fee)
 - [from](types_app.UpdateAppParams.md#from)
 - [maxFee](types_app.UpdateAppParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_app.UpdateAppParams.md#maxroundstowaitforconfirmation)
@@ -91,6 +92,22 @@ CreateOrUpdateAppParams.clearStateProgram
 
 ___
 
+### fee
+
+• `Optional` **fee**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+The flat fee you want to pay, useful for covering extra fees in a transaction group or app call
+
+#### Inherited from
+
+CreateOrUpdateAppParams.fee
+
+#### Defined in
+
+[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+
+___
+
 ### from
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -119,7 +136,7 @@ CreateOrUpdateAppParams.maxFee
 
 #### Defined in
 
-[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -135,7 +152,7 @@ CreateOrUpdateAppParams.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 

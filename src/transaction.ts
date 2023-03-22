@@ -62,7 +62,13 @@ export const sendTransaction = async function (
   algod: Algodv2,
 ): Promise<SendTransactionResult> {
   const { transaction, from, sendParams } = send
-  const { skipSending, skipWaiting, maxFee, suppressLog, maxRoundsToWaitForConfirmation } = sendParams ?? {}
+  const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation } = sendParams ?? {}
+
+  if (fee) {
+    transaction.fee = fee.microAlgos
+    transaction.flatFee = true
+  }
+
   if (maxFee !== undefined) {
     capTransactionFee(transaction, maxFee)
   }

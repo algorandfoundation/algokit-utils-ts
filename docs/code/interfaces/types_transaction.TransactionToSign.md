@@ -23,7 +23,7 @@ The account to use to sign the transaction, either an account (with private key 
 
 #### Defined in
 
-[types/transaction.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L58)
+[types/transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L60)
 
 ___
 
@@ -35,4 +35,4 @@ The unsigned transaction to sign and send
 
 #### Defined in
 
-[types/transaction.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L56)
+[types/transaction.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L58)

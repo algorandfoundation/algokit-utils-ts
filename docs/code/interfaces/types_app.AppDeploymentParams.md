@@ -22,6 +22,7 @@ The parameters to deploy an app
 - [deleteArgs](types_app.AppDeploymentParams.md#deleteargs)
 - [deployTimeParameters](types_app.AppDeploymentParams.md#deploytimeparameters)
 - [existingDeployments](types_app.AppDeploymentParams.md#existingdeployments)
+- [fee](types_app.AppDeploymentParams.md#fee)
 - [from](types_app.AppDeploymentParams.md#from)
 - [maxFee](types_app.AppDeploymentParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_app.AppDeploymentParams.md#maxroundstowaitforconfirmation)
@@ -115,6 +116,22 @@ Optional cached value of the existing apps for the given creator
 
 ___
 
+### fee
+
+• `Optional` **fee**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+The flat fee you want to pay, useful for covering extra fees in a transaction group or app call
+
+#### Inherited from
+
+Omit.fee
+
+#### Defined in
+
+[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+
+___
+
 ### from
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -143,7 +160,7 @@ Omit.maxFee
 
 #### Defined in
 
-[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -159,7 +176,7 @@ Omit.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 

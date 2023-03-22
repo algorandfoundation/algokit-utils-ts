@@ -28,6 +28,8 @@ export interface SendTransactionParams {
   skipWaiting?: boolean
   /** Whether to suppress log messages from transaction send, default: do not suppress */
   suppressLog?: boolean
+  /** The flat fee you want to pay, useful for covering extra fees in a transaction group or app call */
+  fee?: AlgoAmount
   /** The maximum fee that you are happy to pay (default: unbounded) - if this is set it's possible the transaction could get rejected during network congestion */
   maxFee?: AlgoAmount
   /** The maximum number of rounds to wait for confirmation, only applies if `skipWaiting` is `undefined` or `false`, default: wait up to 5 rounds */

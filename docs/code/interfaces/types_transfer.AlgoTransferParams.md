@@ -17,6 +17,7 @@ The sending configuration for a transaction
 ### Properties
 
 - [amount](types_transfer.AlgoTransferParams.md#amount)
+- [fee](types_transfer.AlgoTransferParams.md#fee)
 - [from](types_transfer.AlgoTransferParams.md#from)
 - [maxFee](types_transfer.AlgoTransferParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transfer.AlgoTransferParams.md#maxroundstowaitforconfirmation)
@@ -38,6 +39,22 @@ The amount to send
 #### Defined in
 
 [types/transfer.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L11)
+
+___
+
+### fee
+
+• `Optional` **fee**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+The flat fee you want to pay, useful for covering extra fees in a transaction group or app call
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[fee](types_transaction.SendTransactionParams.md#fee)
+
+#### Defined in
+
+[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -65,7 +82,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -81,7 +98,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 

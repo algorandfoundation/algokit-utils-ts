@@ -81,6 +81,25 @@ describe('transaction', () => {
     expect(confirmation?.txn.txn.fee).toBe(1000)
   })
 
+  test('Transaction fee is overridable', async () => {
+    const { algod, testAccount } = localnet.context
+    const txn = await getTestTransaction()
+    const fee = algokit.algos(1)
+    const result = await algokit.sendTransaction(
+      {
+        transaction: txn,
+        from: testAccount,
+        sendParams: {
+          fee: fee,
+        },
+      },
+      algod,
+    )
+
+    invariant(result.confirmation)
+    expect(result.confirmation.txn.txn.fee).toBe(fee.microAlgos)
+  })
+
   test('Transaction group is sent', async () => {
     const { algod, testAccount } = localnet.context
     const txn1 = await getTestTransaction(1)

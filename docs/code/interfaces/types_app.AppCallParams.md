@@ -19,6 +19,7 @@ The sending configuration for a transaction
 - [appId](types_app.AppCallParams.md#appid)
 - [args](types_app.AppCallParams.md#args)
 - [callType](types_app.AppCallParams.md#calltype)
+- [fee](types_app.AppCallParams.md#fee)
 - [from](types_app.AppCallParams.md#from)
 - [maxFee](types_app.AppCallParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_app.AppCallParams.md#maxroundstowaitforconfirmation)
@@ -66,6 +67,22 @@ The type of call, everything except create (@see createApp ) and update (@see up
 
 ___
 
+### fee
+
+• `Optional` **fee**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+The flat fee you want to pay, useful for covering extra fees in a transaction group or app call
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[fee](types_transaction.SendTransactionParams.md#fee)
+
+#### Defined in
+
+[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+
+___
+
 ### from
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -90,7 +107,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -106,7 +123,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 
