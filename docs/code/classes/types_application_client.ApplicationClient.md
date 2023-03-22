@@ -49,7 +49,7 @@ Create a new ApplicationClient instance
 
 #### Defined in
 
-[types/application-client.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L52)
+[types/application-client.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L63)
 
 ## Properties
 
@@ -59,7 +59,7 @@ Create a new ApplicationClient instance
 
 #### Defined in
 
-[types/application-client.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L43)
+[types/application-client.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L54)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L42)
+[types/application-client.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L53)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L44)
+[types/application-client.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L55)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L35)
+[types/application-client.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L46)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L37)
+[types/application-client.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L48)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L40)
+[types/application-client.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L51)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L36)
+[types/application-client.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L47)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L39)
+[types/application-client.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L50)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L38)
+[types/application-client.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L49)
 
 ## Methods
 
@@ -159,7 +159,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L295)
+[types/application-client.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L310)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L206)
+[types/application-client.ts:221](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L221)
 
 ___
 
@@ -229,7 +229,7 @@ The metadata and transaction result(s) of the deployment, or just the metadata i
 
 #### Defined in
 
-[types/application-client.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L92)
+[types/application-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L103)
 
 ___
 
@@ -249,7 +249,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L362)
+[types/application-client.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L377)
 
 ___
 
@@ -263,7 +263,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L377)
+[types/application-client.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L392)
 
 ___
 
@@ -288,4 +288,4 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L257)
+[types/application-client.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L272)

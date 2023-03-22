@@ -22,4 +22,4 @@ The details of an ARC-0032 app spec specified app
 
 #### Defined in
 
-[types/application-client.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L11)
+[types/application-client.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L22)
