@@ -3,7 +3,18 @@ import { Buffer } from 'buffer'
 import { callApp, createApp, updateApp } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution } from '../deploy-app'
 import { getSenderAddress } from '../transaction'
-import { AppCallArgs, AppLookup, AppMetadata, AppReference, OnSchemaBreak, OnUpdate, RawAppCallArgs, TealTemplateParameters } from './app'
+import {
+  AppCallArgs,
+  AppLookup,
+  AppMetadata,
+  AppReference,
+  DELETABLE_TEMPLATE_NAME,
+  OnSchemaBreak,
+  OnUpdate,
+  RawAppCallArgs,
+  TealTemplateParameters,
+  UPDATABLE_TEMPLATE_NAME,
+} from './app'
 import { AppSpec, getABISignature } from './appspec'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
@@ -154,19 +165,23 @@ export class ApplicationClient {
           // todo: intelligent version management
           version: version ?? '1.0',
           updatable:
-            allowUpdate ??
-            ((!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
-              !!Object.keys(this.appSpec.hints).filter(
-                (h) =>
-                  !this.appSpec.hints[h].call_config.update_application && this.appSpec.hints[h].call_config.update_application !== 'NEVER',
-              )[0]),
+            allowUpdate ?? this.appSpec.source.approval.includes(UPDATABLE_TEMPLATE_NAME)
+              ? (!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
+                !!Object.keys(this.appSpec.hints).filter(
+                  (h) =>
+                    !this.appSpec.hints[h].call_config.update_application &&
+                    this.appSpec.hints[h].call_config.update_application !== 'NEVER',
+                )[0]
+              : undefined,
           deletable:
-            allowDelete ??
-            ((!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
-              !!Object.keys(this.appSpec.hints).filter(
-                (h) =>
-                  !this.appSpec.hints[h].call_config.delete_application && this.appSpec.hints[h].call_config.delete_application !== 'NEVER',
-              )[0]),
+            allowDelete ?? this.appSpec.source.approval.includes(DELETABLE_TEMPLATE_NAME)
+              ? (!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
+                !!Object.keys(this.appSpec.hints).filter(
+                  (h) =>
+                    !this.appSpec.hints[h].call_config.delete_application &&
+                    this.appSpec.hints[h].call_config.delete_application !== 'NEVER',
+                )[0]
+              : undefined,
         },
         schema: {
           globalByteSlices: this.appSpec.state.global.num_byte_slices,
