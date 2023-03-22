@@ -21,11 +21,11 @@ describe('application-client', () => {
     const client = algokit.getApplicationClient(
       {
         app: appSpec,
-        creatorAddress: testAccount.addr,
         sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
       },
       algod,
-      indexer,
     )
 
     const app = await client.create({
@@ -50,11 +50,11 @@ describe('application-client', () => {
     const client = algokit.getApplicationClient(
       {
         app: appSpec,
-        creatorAddress: testAccount.addr,
         sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
       },
       algod,
-      indexer,
     )
 
     const app = await client.deploy({
@@ -71,7 +71,7 @@ describe('application-client', () => {
   })
 
   test('Create then call app', async () => {
-    const { algod, indexer, testAccount } = localnet.context
+    const { algod, testAccount } = localnet.context
     const client = algokit.getApplicationClient(
       {
         app: appSpec,
@@ -79,7 +79,6 @@ describe('application-client', () => {
         id: 0,
       },
       algod,
-      indexer,
     )
     await client.create({
       deployTimeParameters: {

@@ -18,6 +18,31 @@ import {
 import { AppSpec, getABISignature } from './appspec'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
+/** Configuration to resolve app by creator and name @see getCreatorAppsByName */
+export type ResolveAppByCreatorAndName = {
+  /** The address of the app creator account to resolve the app by */
+  creatorAddress: string
+  /** The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) */
+  name?: string
+} & (
+  | {
+      /** indexer An indexer instance to search the creator account apps */
+      indexer: Indexer
+    }
+  | {
+      /** Optional cached value of the existing apps for the given creator, @see getCreatorAppsByName */
+      existingDeployments: AppLookup
+    }
+)
+
+/** Configuration to resolve app by ID */
+export interface ResolveAppById {
+  /** The id of an existing app to call using this client, or 0 if the app hasn't been created yet */
+  id: number
+  /** The optional name to use to mark the app when deploying @see ApplicationClient.deploy (default: uses the name in the ABI contract) */
+  name?: string
+}
+
 /** The details of an ARC-0032 app spec specified app */
 export type AppSpecAppDetails = {
   /** The ARC-0032 application spec as either:
@@ -29,22 +54,12 @@ export type AppSpecAppDetails = {
   sender?: SendTransactionFrom
   /** Default suggested params object to use */
   params?: SuggestedParams
-} & (
-  | {
-      /** The id of an existing app to call using this client */
-      id: number
-    }
-  | {
-      /** The address of the app creator account */
-      creatorAddress: string
-      /** Optional cached value of the existing apps for the given creator */
-      existingDeployments?: AppLookup
-    }
-)
+} & (ResolveAppById | ResolveAppByCreatorAndName)
 
+/** Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
   private algod: Algodv2
-  private indexer: algosdk.Indexer
+  private indexer?: algosdk.Indexer
   private appSpec: AppSpec
   private sender: SendTransactionFrom | undefined
   private params: SuggestedParams | undefined
@@ -53,6 +68,7 @@ export class ApplicationClient {
   private _appId: number
   private _appAddress: string
   private _creator: string | undefined
+  private _appName: string
 
   /**
    * Create a new ApplicationClient instance
@@ -60,21 +76,25 @@ export class ApplicationClient {
    * @param algod An algod instance
    * @param indexer An indexer instance
    */
-  constructor(appDetails: AppSpecAppDetails, algod: Algodv2, indexer: Indexer) {
+  constructor(appDetails: AppSpecAppDetails, algod: Algodv2) {
     const { app, sender, params, ...appIdentifier } = appDetails
     this.algod = algod
-    this.indexer = indexer
     this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
+    this._appName = appIdentifier.name ?? this.appSpec.contract.name
 
     if ('creatorAddress' in appIdentifier) {
-      this._creator = appIdentifier.creatorAddress
-      if (appIdentifier.existingDeployments && appIdentifier.existingDeployments.creator !== this._creator) {
-        throw new Error(
-          `Attempt to create application client with invalid existingDeployments against a different creator (${appIdentifier.existingDeployments.creator}) instead of expected creator ${this._creator}`,
-        )
-      }
-      this.existingDeployments = appIdentifier.existingDeployments
       this._appId = 0
+      this._creator = appIdentifier.creatorAddress
+      if ('indexer' in appIdentifier) {
+        this.indexer = appIdentifier.indexer
+      } else {
+        if (appIdentifier.existingDeployments.creator !== this._creator) {
+          throw new Error(
+            `Attempt to create application client with invalid existingDeployments against a different creator (${appIdentifier.existingDeployments.creator}) instead of expected creator ${this._creator}`,
+          )
+        }
+        this.existingDeployments = appIdentifier.existingDeployments
+      }
     } else {
       if (appIdentifier.id < 0) {
         throw new Error(`Attempt to create application client with invalid app id of ${appIdentifier.id}`)
@@ -161,11 +181,11 @@ export class ApplicationClient {
         approvalProgram: approval,
         clearStateProgram: clear,
         metadata: {
-          name: this.appSpec.contract.name,
+          name: this._appName,
           // todo: intelligent version management
           version: version ?? '1.0',
           updatable:
-            allowUpdate ?? this.appSpec.source.approval.includes(UPDATABLE_TEMPLATE_NAME)
+            allowUpdate ?? approval.includes(UPDATABLE_TEMPLATE_NAME)
               ? (!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
                 !!Object.keys(this.appSpec.hints).filter(
                   (h) =>
@@ -174,7 +194,7 @@ export class ApplicationClient {
                 )[0]
               : undefined,
           deletable:
-            allowDelete ?? this.appSpec.source.approval.includes(DELETABLE_TEMPLATE_NAME)
+            allowDelete ?? approval.includes(DELETABLE_TEMPLATE_NAME)
               ? (!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
                 !!Object.keys(this.appSpec.hints).filter(
                   (h) =>
@@ -212,7 +232,7 @@ export class ApplicationClient {
     // }
     this.existingDeployments = {
       creator: this.existingDeployments.creator,
-      apps: { ...this.existingDeployments.apps, [this.appSpec.contract.name]: appMetadata },
+      apps: { ...this.existingDeployments.apps, [this._appName]: appMetadata },
     }
 
     return result
@@ -335,7 +355,7 @@ export class ApplicationClient {
 
     const appMetadata = await this.loadAppReference()
     if (appMetadata.appId === 0) {
-      throw new Error(`Attempt to call an app that can't be found '${this.appSpec.contract.name}' for creator '${this._creator}'.`)
+      throw new Error(`Attempt to call an app that can't be found '${this._appName}' for creator '${this._creator}'.`)
     }
 
     // todo: use this in create et. al. as well
@@ -380,7 +400,7 @@ export class ApplicationClient {
       if (methods.length > 1) {
         throw new Error(
           `Received a call to method ${method} in contract ${
-            this.appSpec.contract.name
+            this._appName
           }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods.map(getABISignature).join(', ')}`,
         )
       }
@@ -391,11 +411,13 @@ export class ApplicationClient {
 
   private async loadAppReference(): Promise<AppMetadata | AppReference> {
     if (!this.existingDeployments && this._creator) {
-      this.existingDeployments = await getCreatorAppsByName(this._creator, this.indexer)
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.existingDeployments = await getCreatorAppsByName(this._creator, this.indexer!)
     }
 
     if (this.existingDeployments && this._appId === 0) {
-      const app = this.existingDeployments.apps[this.appSpec.contract.name]
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const app = this.existingDeployments.apps[this._appName!]
       if (!app) {
         return {
           appId: 0,

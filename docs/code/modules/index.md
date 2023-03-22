@@ -201,7 +201,7 @@ ___
 
 ### deployApp
 
-▸ **deployApp**(`deployment`, `algod`, `indexer`): `Promise`<[`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"``  } \| [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+▸ **deployApp**(`deployment`, `algod`, `indexer?`): `Promise`<[`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"``  } \| [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
@@ -223,7 +223,7 @@ https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-de
 | :------ | :------ | :------ |
 | `deployment` | [`AppDeploymentParams`](../interfaces/types_app.AppDeploymentParams.md) | The arguments to control the app deployment |
 | `algod` | `default` | An algod client |
-| `indexer` | `default` | An indexer client |
+| `indexer?` | `default` | An indexer client, needed if `existingDeployments` not passed in |
 
 #### Returns
 
@@ -683,13 +683,13 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[deploy-app.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L450)
+[deploy-app.ts:454](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L454)
 
 ___
 
 ### getApplicationClient
 
-▸ **getApplicationClient**(`appDetails`, `algod`, `indexer`): [`ApplicationClient`](../classes/types_application_client.ApplicationClient.md)
+▸ **getApplicationClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_application_client.ApplicationClient.md)
 
 Create a new ApplicationClient instance
 
@@ -699,7 +699,6 @@ Create a new ApplicationClient instance
 | :------ | :------ | :------ |
 | `appDetails` | [`AppSpecAppDetails`](types_application_client.md#appspecappdetails) | The details of the app |
 | `algod` | `default` | An algod instance |
-| `indexer` | `default` | An indexer instance |
 
 #### Returns
 
@@ -709,7 +708,7 @@ The application client
 
 #### Defined in
 
-[application-client.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L11)
+[application-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L10)
 
 ___
 
@@ -740,7 +739,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[deploy-app.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L354)
+[deploy-app.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L358)
 
 ___
 
@@ -1011,7 +1010,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[deploy-app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L341)
+[deploy-app.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L345)
 
 ___
 
@@ -1167,7 +1166,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[deploy-app.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L499)
+[deploy-app.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L503)
 
 ___
 
@@ -1196,7 +1195,7 @@ The information about the compiled code
 
 #### Defined in
 
-[deploy-app.ts:529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L529)
+[deploy-app.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L533)
 
 ___
 
@@ -1257,7 +1256,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[deploy-app.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L468)
+[deploy-app.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L472)
 
 ___
 

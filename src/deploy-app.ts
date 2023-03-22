@@ -31,13 +31,13 @@ import { ConfirmedTransactionResult, SendTransactionFrom } from './types/transac
  * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
  * @param deployment The arguments to control the app deployment
  * @param algod An algod client
- * @param indexer An indexer client
+ * @param indexer An indexer client, needed if `existingDeployments` not passed in
  * @returns The app reference of the new/existing app
  */
 export async function deployApp(
   deployment: AppDeploymentParams,
   algod: Algodv2,
-  indexer: Indexer,
+  indexer?: Indexer,
 ): Promise<
   | (ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' | 'update' })
   | (ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' })
@@ -50,6 +50,9 @@ export async function deployApp(
     throw new Error(
       `Received invalid existingDeployments value for creator ${existingDeployments.creator} when attempting to deploy for creator ${appParams.from}`,
     )
+  }
+  if (!existingDeployments && !indexer) {
+    throw new Error(`Didn't receive an indexer client, but also didn't receive an existingDeployments cache - one of them must be provided`)
   }
 
   Config.getLogger(appParams.suppressLog).info(
@@ -68,7 +71,8 @@ export async function deployApp(
       ? (await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, algod, deployTimeParameters)).compiledBase64ToBytes
       : appParams.clearStateProgram
 
-  const apps = existingDeployments ?? (await getCreatorAppsByName(appParams.from, indexer))
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const apps = existingDeployments ?? (await getCreatorAppsByName(appParams.from, indexer!))
 
   const create = async (skipSending?: boolean): Promise<ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' }> => {
     const result = await createApp(
