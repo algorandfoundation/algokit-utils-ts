@@ -133,6 +133,25 @@ describe('transaction', () => {
     expect(Buffer.from(confirmations[1].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
   })
 
+  test('Transaction group is sent with same signer', async () => {
+    const { algod, testAccount } = localnet.context
+    const txn1 = await getTestTransaction(1)
+    const txn2 = await getTestTransaction(2)
+
+    const { confirmations } = await algokit.sendGroupOfTransactions({ transactions: [txn1, txn2], signer: testAccount }, algod)
+
+    invariant(confirmations)
+    invariant(confirmations[0].txn.txn.grp)
+    invariant(confirmations[1].txn.txn.grp)
+    invariant(txn1.group)
+    invariant(txn2.group)
+    expect(confirmations.length).toBe(2)
+    expect(confirmations[0]['confirmed-round']).toBeGreaterThanOrEqual(txn1.firstRound)
+    expect(confirmations[1]['confirmed-round']).toBeGreaterThanOrEqual(txn2.firstRound)
+    expect(Buffer.from(confirmations[0].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
+    expect(Buffer.from(confirmations[1].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
+  })
+
   test('Transaction group is sent using transaction signers', async () => {
     const { algod, testAccount, generateAccount } = localnet.context
     const account2 = await generateAccount({ suppressLog: true, initialFunds: algokit.algos(10) })

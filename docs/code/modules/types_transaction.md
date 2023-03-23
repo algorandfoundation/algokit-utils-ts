@@ -9,6 +9,7 @@
 - [ConfirmedTransactionResult](../interfaces/types_transaction.ConfirmedTransactionResult.md)
 - [SendTransactionParams](../interfaces/types_transaction.SendTransactionParams.md)
 - [SendTransactionResult](../interfaces/types_transaction.SendTransactionResult.md)
+- [TransactionGroupToSend](../interfaces/types_transaction.TransactionGroupToSend.md)
 - [TransactionToSign](../interfaces/types_transaction.TransactionToSign.md)
 
 ### Type Aliases

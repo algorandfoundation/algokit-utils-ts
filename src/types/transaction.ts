@@ -59,3 +59,15 @@ export interface TransactionToSign {
   /** The account to use to sign the transaction, either an account (with private key loaded) or a logic signature account */
   signer: SendTransactionFrom
 }
+
+/** A group of transactions to send together as an atomic group
+ * @see https://developer.algorand.org/docs/get-details/atomic_transfers/
+ */
+export interface TransactionGroupToSend {
+  /** Any parameters to control the semantics of the send to the network */
+  sendParams?: Omit<Omit<SendTransactionParams, 'maxFee'>, 'skipSending'>
+  /** The list of transactions to send, which can either be a raw transaction (in which case signer is required) or the transaction with its signer */
+  transactions: (TransactionToSign | Transaction)[]
+  /** Optional signer to pass in, required if at least one transaction provided is just the transaction, ignored otherwise */
+  signer?: SendTransactionFrom
+}

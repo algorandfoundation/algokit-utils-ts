@@ -4,7 +4,13 @@ import { Config } from './'
 import { TransactionSignerAccount } from './types/account'
 import { PendingTransactionResponse } from './types/algod'
 import { AlgoAmount } from './types/amount'
-import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './types/transaction'
+import {
+  SendTransactionFrom,
+  SendTransactionParams,
+  SendTransactionResult,
+  TransactionGroupToSend,
+  TransactionNote,
+} from './types/transaction'
 
 /** Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
@@ -112,13 +118,23 @@ const groupBy = <T>(array: T[], predicate: (value: T, id: number, array: T[]) =>
  * @param algod An algod client
  * @returns An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
-export const sendGroupOfTransactions = async function (
-  groupSend: { transactions: TransactionToSign[]; sendParams?: Omit<Omit<SendTransactionParams, 'maxFee'>, 'skipSending'> },
-  algod: Algodv2,
-) {
-  const { transactions, sendParams } = groupSend
+export const sendGroupOfTransactions = async function (groupSend: TransactionGroupToSend, algod: Algodv2) {
+  const { transactions, signer, sendParams } = groupSend
+
+  const transactionsWithSigner = transactions.map((t) => {
+    if ('transaction' in t) return t
+
+    if (!signer) {
+      throw new Error(`Attempt to send transaction ${t.txID()} as part of a group transaction, but no signer was provided.`)
+    }
+
+    return {
+      transaction: t,
+      signer: signer,
+    }
+  })
   const transactionsToSend = transactions.map((t) => {
-    return t.transaction
+    return 'transaction' in t ? t.transaction : t
   })
 
   const group = algosdk.assignGroupID(transactionsToSend)
@@ -129,9 +145,9 @@ export const sendGroupOfTransactions = async function (
 
   // Sign transactions either using TransactionSigners, or not
   let signedTransactions: Uint8Array[]
-  if (transactions.find((t) => 'signer' in t.signer)) {
+  if (transactionsWithSigner.find((t) => 'signer' in t.signer)) {
     // Validate all or nothing for transaction signers
-    if (transactions.find((t) => !('signer' in t.signer))) {
+    if (transactionsWithSigner.find((t) => !('signer' in t.signer))) {
       throw new Error(
         "When issuing a group transaction the signers should either all be TransactionSignerAccount's or all not. " +
           'Received at least one TransactionSignerAccount, but not all of them so failing the send.',
@@ -140,7 +156,7 @@ export const sendGroupOfTransactions = async function (
 
     // Group transaction signers by signer
     const groupedBySigner = groupBy(
-      transactions.map((t, i) => ({
+      transactionsWithSigner.map((t, i) => ({
         signer: t.signer as TransactionSignerAccount,
         id: i,
       })),
@@ -165,7 +181,7 @@ export const sendGroupOfTransactions = async function (
     signedTransactions = signed.sort((s1, s2) => s1.id - s2.id).map((s) => s.txn)
   } else {
     signedTransactions = group.map((groupedTransaction, id) => {
-      const signer = transactions[id].signer
+      const signer = transactionsWithSigner[id].signer
       return 'sk' in signer
         ? groupedTransaction.signTxn(signer.sk)
         : 'lsig' in signer
@@ -179,7 +195,7 @@ export const sendGroupOfTransactions = async function (
 
   Config.getLogger(sendParams?.suppressLog).debug(
     `Signer IDs (${groupId})`,
-    transactions.map((t) => getSenderAddress(t.signer)),
+    transactionsWithSigner.map((t) => getSenderAddress(t.signer)),
   )
 
   Config.getLogger(sendParams?.suppressLog).debug(

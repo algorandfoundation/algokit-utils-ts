@@ -147,7 +147,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L267)
+[src/transaction.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L283)
 
 ___
 
@@ -266,7 +266,7 @@ the transaction note ready for inclusion in a transaction
 
 #### Defined in
 
-[src/transaction.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L21)
+[src/transaction.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L27)
 
 ___
 
@@ -967,7 +967,7 @@ The public address
 
 #### Defined in
 
-[src/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L42)
+[src/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L48)
 
 ___
 
@@ -992,7 +992,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L291)
+[src/transaction.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L307)
 
 ___
 
@@ -1329,9 +1329,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `groupSend` | `Object` | The group details to send, with: * `transactions`: The array of transactions to send along with their signing account * `sendParams`: The parameters to dictate how the group is sent |
-| `groupSend.sendParams?` | `Omit`<`Omit`<[`SendTransactionParams`](../interfaces/types_transaction.SendTransactionParams.md), ``"maxFee"``\>, ``"skipSending"``\> | - |
-| `groupSend.transactions` | [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md)[] | - |
+| `groupSend` | [`TransactionGroupToSend`](../interfaces/types_transaction.TransactionGroupToSend.md) | The group details to send, with: * `transactions`: The array of transactions to send along with their signing account * `sendParams`: The parameters to dictate how the group is sent |
 | `algod` | `default` | An algod client |
 
 #### Returns
@@ -1342,7 +1340,7 @@ An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting`
 
 #### Defined in
 
-[src/transaction.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L115)
+[src/transaction.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L121)
 
 ___
 
@@ -1370,7 +1368,7 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or u
 
 #### Defined in
 
-[src/transaction.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L56)
+[src/transaction.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L62)
 
 ___
 
@@ -1506,4 +1504,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L220)
+[src/transaction.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L236)
