@@ -97,4 +97,32 @@ describe('application-client', () => {
     expect(call.return.decodeError).toBeUndefined()
     expect(call.return.returnValue).toBe('Hello, test')
   })
+
+  test('Construct transaction with boxes', async () => {
+    const { algod, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        id: 0,
+      },
+      algod,
+    )
+    await client.create({
+      deployTimeParameters: {
+        UPDATABLE: 0,
+        DELETABLE: 0,
+        VALUE: 1,
+      },
+    })
+
+    const call = await client.call({
+      method: 'call',
+      methodArgs: { args: ['test'], boxes: [{ appId: 0, name: '1' }] },
+      sendParams: { skipSending: true },
+    })
+
+    const encoder = new TextEncoder()
+    expect(call.transaction.boxes).toEqual([{ appIndex: 0, name: encoder.encode('1') }])
+  })
 })

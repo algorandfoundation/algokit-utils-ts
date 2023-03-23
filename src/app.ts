@@ -247,10 +247,7 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
       appArgs: txn.txn.appArgs,
       apps: txn.txn.appForeignApps,
       assets: txn.txn.appForeignAssets,
-      boxes: txn.txn.boxes?.map((b) => ({
-        appId: b.appIndex,
-        name: b.name,
-      })),
+      boxes: args.boxes,
       lease: args.lease,
     }
   } else {
