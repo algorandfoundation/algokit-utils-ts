@@ -35,8 +35,8 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 - [delete](types_application_client.ApplicationClient.md#delete)
 - [deploy](types_application_client.ApplicationClient.md#deploy)
 - [getABIMethod](types_application_client.ApplicationClient.md#getabimethod)
+- [getAppReference](types_application_client.ApplicationClient.md#getappreference)
 - [getCallArgs](types_application_client.ApplicationClient.md#getcallargs)
-- [loadAppReference](types_application_client.ApplicationClient.md#loadappreference)
 - [optIn](types_application_client.ApplicationClient.md#optin)
 - [update](types_application_client.ApplicationClient.md#update)
 
@@ -336,6 +336,20 @@ ___
 
 ___
 
+### getAppReference
+
+▸ **getAppReference**(): `Promise`<[`AppReference`](../interfaces/types_app.AppReference.md) \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md)\>
+
+#### Returns
+
+`Promise`<[`AppReference`](../interfaces/types_app.AppReference.md) \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md)\>
+
+#### Defined in
+
+[types/application-client.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L448)
+
+___
+
 ### getCallArgs
 
 ▸ **getCallArgs**(`args?`): `undefined` \| [`AppCallArgs`](../modules/types_app.md#appcallargs)
@@ -353,20 +367,6 @@ ___
 #### Defined in
 
 [types/application-client.ts:413](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L413)
-
-___
-
-### loadAppReference
-
-▸ `Private` **loadAppReference**(): `Promise`<[`AppReference`](../interfaces/types_app.AppReference.md) \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md)\>
-
-#### Returns
-
-`Promise`<[`AppReference`](../interfaces/types_app.AppReference.md) \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md)\>
-
-#### Defined in
-
-[types/application-client.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L448)
 
 ___
 
