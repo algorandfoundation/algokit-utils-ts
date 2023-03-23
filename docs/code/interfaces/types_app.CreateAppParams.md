@@ -44,7 +44,7 @@ CreateOrUpdateAppParams.approvalProgram
 
 #### Defined in
 
-[types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)
+[types/app.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L89)
 
 ___
 
@@ -60,7 +60,7 @@ CreateOrUpdateAppParams.args
 
 #### Defined in
 
-[types/app.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L95)
+[types/app.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L97)
 
 ___
 
@@ -76,7 +76,7 @@ CreateOrUpdateAppParams.clearStateProgram
 
 #### Defined in
 
-[types/app.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L89)
+[types/app.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L91)
 
 ___
 
@@ -108,7 +108,7 @@ CreateOrUpdateAppParams.from
 
 #### Defined in
 
-[types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
+[types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)
 
 ___
 
@@ -156,7 +156,7 @@ CreateOrUpdateAppParams.note
 
 #### Defined in
 
-[types/app.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L93)
+[types/app.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L95)
 
 ___
 
@@ -168,7 +168,7 @@ The storage schema to request for the created app
 
 #### Defined in
 
-[types/app.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L101)
+[types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
 
 ___
 
@@ -233,4 +233,4 @@ CreateOrUpdateAppParams.transactionParams
 
 #### Defined in
 
-[types/app.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L91)
+[types/app.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L93)

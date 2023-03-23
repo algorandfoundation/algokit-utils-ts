@@ -1,5 +1,5 @@
-import { ABIArgument, ABIMethod, ABIMethodParams, ABIValue, Address, SuggestedParams } from 'algosdk'
-import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote } from './transaction'
+import { ABIArgument, ABIMethod, ABIMethodParams, ABIValue, Address, SuggestedParams, Transaction } from 'algosdk'
+import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './transaction'
 
 /** The name of the TEAL template variable for deploy-time immutability control */
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
@@ -56,6 +56,8 @@ export interface RawAppCallArgs {
   lease?: string | Uint8Array
 }
 
+export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction
+
 /**
  * App call args for an ABI call
  */
@@ -66,7 +68,7 @@ export interface ABIAppCallArgs {
    **/
   method: ABIMethodParams | ABIMethod
   /** The ABI args to pass in */
-  args: ABIArgument[]
+  args: ABIAppCallArg[]
   /** The optional lease for the transaction */
   lease?: string | Uint8Array
   /** Any box references to load */

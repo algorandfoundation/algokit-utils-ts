@@ -29,6 +29,7 @@
 
 ### Type Aliases
 
+- [ABIAppCallArg](types_app.md#abiappcallarg)
 - [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
 
@@ -42,6 +43,16 @@
 
 ## Type Aliases
 
+### ABIAppCallArg
+
+Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction`
+
+#### Defined in
+
+[types/app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L59)
+
+___
+
 ### ABIReturn
 
 Ƭ **ABIReturn**: { `decodeError`: `undefined` ; `rawReturnValue`: `Uint8Array` ; `returnValue`: `ABIValue`  } \| { `decodeError`: `Error` ; `rawReturnValue`: `undefined` ; `returnValue`: `undefined`  }
@@ -50,7 +61,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[types/app.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L158)
+[types/app.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L160)
 
 ___
 
@@ -64,7 +75,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[types/app.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L80)
+[types/app.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L82)
 
 ## Variables
 

@@ -46,7 +46,7 @@ If an ABI method was called the processed return value
 
 #### Defined in
 
-[types/app.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L154)
+[types/app.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L156)
 
 ___
 

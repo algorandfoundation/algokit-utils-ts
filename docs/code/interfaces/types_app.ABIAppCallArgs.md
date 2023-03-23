@@ -19,13 +19,13 @@ App call args for an ABI call
 
 ### args
 
-• **args**: `ABIArgument`[]
+• **args**: [`ABIAppCallArg`](../modules/types_app.md#abiappcallarg)[]
 
 The ABI args to pass in
 
 #### Defined in
 
-[types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+[types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
 
 ___
 
@@ -37,7 +37,7 @@ Any box references to load
 
 #### Defined in
 
-[types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
+[types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
 
 ___
 
@@ -49,7 +49,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-[types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
+[types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
 
 ___
 
@@ -63,4 +63,4 @@ The ABI method to call, either:
 
 #### Defined in
 
-[types/app.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L67)
+[types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)

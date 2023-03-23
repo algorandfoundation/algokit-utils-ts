@@ -1,9 +1,10 @@
-import algosdk, { ABIArgument, ABIMethodParams, Algodv2, getApplicationAddress, Indexer, SuggestedParams } from 'algosdk'
+import algosdk, { ABIMethodParams, Algodv2, getApplicationAddress, Indexer, SuggestedParams } from 'algosdk'
 import { Buffer } from 'buffer'
 import { callApp, createApp, updateApp } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../deploy-app'
 import { getSenderAddress } from '../transaction'
 import {
+  ABIAppCallArg,
   ABIAppCallArgs,
   AppCallArgs,
   AppLookup,
@@ -97,7 +98,7 @@ export type AppClientCallArgs =
       /** If calling an ABI method then either the name of the method, or the ABI signature */
       method: string
       /** Either the ABI arguments or an object with the ABI arguments and other parameters like boxes */
-      methodArgs: Omit<ABIAppCallArgs, 'method'> | ABIArgument[]
+      methodArgs: Omit<ABIAppCallArgs, 'method'> | ABIAppCallArg[]
     }
 
 /** Parameters to construct a ApplicationClient contract call */

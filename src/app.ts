@@ -191,6 +191,7 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
     // Most of these values aren't being used since the transaction is discarded
     const dummyAtc = new AtomicTransactionComposer()
     const dummyAccount = algosdk.generateAccount()
+    const dummySigner = makeBasicAccountTransactionSigner(dummyAccount)
     const dummyAppId = 1
     const dummyParams = {
       fee: 1,
@@ -199,14 +200,28 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
       genesisID: 'a',
       lastRound: 1,
     }
+    const methodArgs = args.args?.map((a) => {
+      if (typeof a !== 'object') {
+        return a
+      }
+      // Handle the various forms of transactions to wrangle them for ATC
+      return 'txn' in a
+        ? a
+        : 'transaction' in a
+        ? { txn: a.transaction, signer: dummySigner }
+        : 'txID' in a
+        ? { txn: a, signer: dummySigner }
+        : a
+    })
+
     const dummyOnComplete = OnApplicationComplete.NoOpOC
     dummyAtc.addMethodCall({
       method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
-      methodArgs: args.args,
+      methodArgs,
       // Rest are dummy values
       appID: dummyAppId,
       sender: dummyAccount.addr,
-      signer: makeBasicAccountTransactionSigner(dummyAccount),
+      signer: dummySigner,
       suggestedParams: dummyParams,
       onComplete: dummyOnComplete,
     })
