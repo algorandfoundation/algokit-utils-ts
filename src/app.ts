@@ -241,7 +241,8 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
       suggestedParams: dummyParams,
       onComplete: dummyOnComplete,
     })
-    const txn = dummyAtc.buildGroup()[0]
+    const txns = dummyAtc.buildGroup()
+    const txn = txns[txns.length - 1]
     actualArgs = {
       accounts: txn.txn.appAccounts,
       appArgs: txn.txn.appArgs,

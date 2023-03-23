@@ -1,15 +1,50 @@
 #pragma version 8
 intcblock 0 1
+bytecblock 0x151f7c75 0x
 txn NumAppArgs
 intc_0 // 0
 ==
-bnz main_l4
+bnz main_l6
 txna ApplicationArgs 0
 pushbytes 0xf81e962d // "call(string)string"
 ==
-bnz main_l3
+bnz main_l5
+txna ApplicationArgs 0
+pushbytes 0x3d9fe353 // "call_txn(pay,string)string"
+==
+bnz main_l4
 err
-main_l3:
+main_l4:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+store 2
+txn GroupIndex
+intc_1 // 1
+-
+store 1
+load 1
+gtxns TypeEnum
+intc_1 // pay
+==
+assert
+load 1
+load 2
+callsub calltxn_1
+store 3
+bytec_0 // 0x151f7c75
+load 3
+concat
+log
+intc_1 // 1
+return
+main_l5:
 txn OnCompletion
 intc_0 // NoOp
 ==
@@ -21,55 +56,55 @@ assert
 txna ApplicationArgs 1
 callsub call_0
 store 0
-pushbytes 0x151f7c75 // 0x151f7c75
+bytec_0 // 0x151f7c75
 load 0
 concat
 log
 intc_1 // 1
 return
-main_l4:
+main_l6:
 txn OnCompletion
 intc_0 // NoOp
 ==
-bnz main_l10
+bnz main_l12
 txn OnCompletion
 pushint 4 // UpdateApplication
 ==
-bnz main_l9
+bnz main_l11
 txn OnCompletion
 pushint 5 // DeleteApplication
 ==
-bnz main_l8
+bnz main_l10
 err
-main_l8:
-txn ApplicationID
-intc_0 // 0
-!=
-assert
-callsub delete_3
-intc_1 // 1
-return
-main_l9:
-txn ApplicationID
-intc_0 // 0
-!=
-assert
-callsub update_2
-intc_1 // 1
-return
 main_l10:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub delete_4
+intc_1 // 1
+return
+main_l11:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub update_3
+intc_1 // 1
+return
+main_l12:
 txn ApplicationID
 intc_0 // 0
 ==
 assert
-callsub create_1
+callsub create_2
 intc_1 // 1
 return
 
 // call
 call_0:
 proto 1 1
-pushbytes 0x // ""
+bytec_1 // ""
 pushbytes 0x48656c6c6f2c20 // "Hello, "
 frame_dig -1
 extract 2 0
@@ -84,8 +119,32 @@ concat
 frame_bury 0
 retsub
 
+// call_txn
+calltxn_1:
+proto 2 1
+bytec_1 // ""
+pushbytes 0x53656e7420 // "Sent "
+frame_dig -2
+gtxns Amount
+itob
+concat
+pushbytes 0x2e20 // ". "
+concat
+frame_dig -1
+extract 2 0
+concat
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub
+
 // create
-create_1:
+create_2:
 proto 0 0
 txn Sender
 global CreatorAddress
@@ -98,7 +157,7 @@ app_global_put
 retsub
 
 // update
-update_2:
+update_3:
 proto 0 0
 txn Sender
 global CreatorAddress
@@ -111,7 +170,7 @@ assert
 retsub
 
 // delete
-delete_3:
+delete_4:
 proto 0 0
 txn Sender
 global CreatorAddress

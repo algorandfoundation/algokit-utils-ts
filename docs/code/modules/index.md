@@ -172,7 +172,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L292)
+[src/app.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L293)
 
 ___
 
@@ -684,7 +684,7 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L281)
+[src/app.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L282)
 
 ___
 

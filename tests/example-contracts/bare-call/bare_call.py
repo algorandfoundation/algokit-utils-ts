@@ -17,6 +17,11 @@ def call(value: pt.abi.String, *, output: pt.abi.String) -> pt.Expr:
     return output.set(pt.Concat(pt.Bytes("Hello, "), value.get()))
 
 
+@app.external(read_only=True)
+def call_txn(txn: pt.abi.PaymentTransaction, value: pt.abi.String, *, output: pt.abi.String) -> pt.Expr:
+    return output.set(pt.Concat(pt.Bytes("Sent "), pt.Itob(txn.get().amount()), pt.Bytes(". "), value.get()))
+
+
 @app.create(authorize=beaker.Authorize.only_creator(), bare=True)
 def create() -> pt.Expr:
     return app.state.value.set(pt.Tmpl.Int("TMPL_VALUE"))

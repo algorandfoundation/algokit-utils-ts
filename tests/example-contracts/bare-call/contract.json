@@ -12,6 +12,22 @@
             "returns": {
                 "type": "string"
             }
+        },
+        {
+            "name": "call_txn",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "txn"
+                },
+                {
+                    "type": "string",
+                    "name": "value"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
         }
     ],
     "networks": {}
