@@ -286,7 +286,7 @@ export class ApplicationClient {
 
       return result
     } catch (e) {
-      throw this.handleLogicError(e as Error)
+      throw this.exposeLogicError(e as Error)
     }
   }
 
@@ -339,7 +339,7 @@ export class ApplicationClient {
 
       return result
     } catch (e) {
-      throw this.handleLogicError(e as Error)
+      throw this.exposeLogicError(e as Error)
     }
   }
 
@@ -381,7 +381,7 @@ export class ApplicationClient {
 
       return result
     } catch (e) {
-      throw this.handleLogicError(e as Error)
+      throw this.exposeLogicError(e as Error)
     }
   }
 
@@ -436,7 +436,7 @@ export class ApplicationClient {
         this.algod,
       )
     } catch (e) {
-      throw this.handleLogicError(e as Error)
+      throw this.exposeLogicError(e as Error)
     }
   }
 
@@ -499,12 +499,20 @@ export class ApplicationClient {
     } as AppReference
   }
 
-  private handleLogicError(e: Error, isClear?: boolean): Error {
+  /**
+   * Takes an error that may include a logic error from a smart contract call and re-exposes the error to include source code information via the source map.
+   * This is automatically used within @see ApplicationClient but if you pass `skipSending: true` e.g. if doing a group transaction
+   *  then you can use this in a try/catch block to get better debugging information.
+   * @param e The error to parse
+   * @param isClear Whether or not the code was running the clear state program
+   * @returns The new error, or if there was no logic error or source map then the wrapped error with source details
+   */
+  exposeLogicError(e: Error, isClear?: boolean): Error {
     if ((!isClear && this._approvalSourceMap == undefined) || (isClear && this._clearSourceMap == undefined)) return e
 
     const errorDetails = LogicError.parseLogicError(e.message)
 
-    if (errorDetails.msg !== undefined)
+    if (errorDetails !== undefined)
       return new LogicError(
         errorDetails,
         Buffer.from(isClear ? this.appSpec.source.clear : this.appSpec.source.approval, 'base64')

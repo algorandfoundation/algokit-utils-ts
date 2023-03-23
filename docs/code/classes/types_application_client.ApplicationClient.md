@@ -36,10 +36,10 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 - [create](types_application_client.ApplicationClient.md#create)
 - [delete](types_application_client.ApplicationClient.md#delete)
 - [deploy](types_application_client.ApplicationClient.md#deploy)
+- [exposeLogicError](types_application_client.ApplicationClient.md#exposelogicerror)
 - [getABIMethod](types_application_client.ApplicationClient.md#getabimethod)
 - [getAppReference](types_application_client.ApplicationClient.md#getappreference)
 - [getCallArgs](types_application_client.ApplicationClient.md#getcallargs)
-- [handleLogicError](types_application_client.ApplicationClient.md#handlelogicerror)
 - [optIn](types_application_client.ApplicationClient.md#optin)
 - [update](types_application_client.ApplicationClient.md#update)
 
@@ -339,6 +339,37 @@ The metadata and transaction result(s) of the deployment, or just the metadata i
 
 ___
 
+### exposeLogicError
+
+▸ **exposeLogicError**(`e`, `isClear?`): `Error`
+
+Takes an error that may include a logic error from a smart contract call and re-exposes the error to include source code information via the source map.
+This is automatically used within
+
+**`See`**
+
+ApplicationClient but if you pass `skipSending: true` e.g. if doing a group transaction
+ then you can use this in a try/catch block to get better debugging information.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `e` | `Error` | The error to parse |
+| `isClear?` | `boolean` | Whether or not the code was running the clear state program |
+
+#### Returns
+
+`Error`
+
+The new error, or if there was no logic error or source map then the wrapped error with source details
+
+#### Defined in
+
+[src/types/application-client.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L510)
+
+___
+
 ### getABIMethod
 
 ▸ **getABIMethod**(`method`): `undefined` \| `ABIMethodParams`
@@ -390,27 +421,6 @@ ___
 #### Defined in
 
 [src/types/application-client.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L443)
-
-___
-
-### handleLogicError
-
-▸ `Private` **handleLogicError**(`e`, `isClear?`): `Error`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `e` | `Error` |
-| `isClear?` | `boolean` |
-
-#### Returns
-
-`Error`
-
-#### Defined in
-
-[src/types/application-client.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L502)
 
 ___
 

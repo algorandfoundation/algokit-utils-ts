@@ -4,6 +4,8 @@
 
 [types/logic-error](../modules/types_logic_error.md).LogicErrorDetails
 
+Details about a smart contract logic error
+
 ## Table of contents
 
 ### Properties
@@ -18,9 +20,11 @@
 
 • **msg**: `string`
 
+The error message
+
 #### Defined in
 
-[src/types/logic-error.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L10)
+[src/types/logic-error.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L16)
 
 ___
 
@@ -28,9 +32,11 @@ ___
 
 • **pc**: `number`
 
+The program counter where the error was
+
 #### Defined in
 
-[src/types/logic-error.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L9)
+[src/types/logic-error.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L14)
 
 ___
 
@@ -38,6 +44,8 @@ ___
 
 • **txId**: `string`
 
+The ID of the transaction with the logic error
+
 #### Defined in
 
-[src/types/logic-error.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L8)
+[src/types/logic-error.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L12)

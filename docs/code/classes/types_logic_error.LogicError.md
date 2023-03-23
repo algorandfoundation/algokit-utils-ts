@@ -4,6 +4,8 @@
 
 [types/logic-error](../modules/types_logic_error.md).LogicError
 
+Wraps key functionality around processing logic errors
+
 ## Hierarchy
 
 - `Error`
@@ -37,15 +39,17 @@
 
 ### constructor
 
-• **new LogicError**(`led`, `program`, `map`)
+• **new LogicError**(`errorDetails`, `program`, `map`)
+
+Create a new logic error object.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `led` | [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md) |
-| `program` | `string`[] |
-| `map` | `SourceMap` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `errorDetails` | [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md) | The details of the logic error |
+| `program` | `string`[] | The TEAL source code, split by line |
+| `map` | `SourceMap` | The source map of the TEAL source code |
 
 #### Overrides
 
@@ -53,7 +57,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L31)
+[src/types/logic-error.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L48)
 
 ## Properties
 
@@ -63,7 +67,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L25)
+[src/types/logic-error.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L36)
 
 ___
 
@@ -73,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L27)
+[src/types/logic-error.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L38)
 
 ___
 
@@ -111,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L26)
+[src/types/logic-error.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L37)
 
 ___
 
@@ -125,7 +129,7 @@ Error.stack
 
 #### Defined in
 
-[src/types/logic-error.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L29)
+[src/types/logic-error.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L40)
 
 ___
 
@@ -135,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L28)
+[src/types/logic-error.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L39)
 
 ___
 
@@ -217,18 +221,22 @@ ___
 
 ### parseLogicError
 
-▸ `Static` **parseLogicError**(`errMsg`): [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md)
+▸ `Static` **parseLogicError**(`errorMessage`): `undefined` \| [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md)
+
+Takes an error message and parses out the details of any logic errors in there.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `errMsg` | `string` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `errorMessage` | `string` | The error message to parse |
 
 #### Returns
 
-[`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md)
+`undefined` \| [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md)
+
+The logic error details if any, or undefined
 
 #### Defined in
 
-[src/types/logic-error.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L14)
+[src/types/logic-error.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L25)
