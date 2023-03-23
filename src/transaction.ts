@@ -121,20 +121,23 @@ const groupBy = <T>(array: T[], predicate: (value: T, id: number, array: T[]) =>
 export const sendGroupOfTransactions = async function (groupSend: TransactionGroupToSend, algod: Algodv2) {
   const { transactions, signer, sendParams } = groupSend
 
-  const transactionsWithSigner = transactions.map((t) => {
-    if ('transaction' in t) return t
+  const transactionsWithSigner = await Promise.all(
+    transactions.map(async (t) => {
+      if ('signer' in t) return t
 
-    if (!signer) {
-      throw new Error(`Attempt to send transaction ${t.txID()} as part of a group transaction, but no signer was provided.`)
-    }
+      const txn = 'then' in t ? (await t).transaction : t
+      if (!signer) {
+        throw new Error(`Attempt to send transaction ${txn.txID()} as part of a group transaction, but no signer was provided.`)
+      }
 
-    return {
-      transaction: t,
-      signer: signer,
-    }
-  })
-  const transactionsToSend = transactions.map((t) => {
-    return 'transaction' in t ? t.transaction : t
+      return {
+        transaction: txn,
+        signer: signer,
+      }
+    }),
+  )
+  const transactionsToSend = transactionsWithSigner.map((t) => {
+    return t.transaction
   })
 
   const group = algosdk.assignGroupID(transactionsToSend)

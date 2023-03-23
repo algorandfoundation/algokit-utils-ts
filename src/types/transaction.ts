@@ -66,8 +66,11 @@ export interface TransactionToSign {
 export interface TransactionGroupToSend {
   /** Any parameters to control the semantics of the send to the network */
   sendParams?: Omit<Omit<SendTransactionParams, 'maxFee'>, 'skipSending'>
-  /** The list of transactions to send, which can either be a raw transaction (in which case signer is required) or the transaction with its signer */
-  transactions: (TransactionToSign | Transaction)[]
+  /** The list of transactions to send, which can either be a raw transaction (in which case `signer` is required),
+   *   the async result of an AlgoKit utils method that returns a @see SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is required)
+   *   or the transaction with its signer
+   **/
+  transactions: (TransactionToSign | Transaction | Promise<SendTransactionResult>)[]
   /** Optional signer to pass in, required if at least one transaction provided is just the transaction, ignored otherwise */
   signer?: SendTransactionFrom
 }

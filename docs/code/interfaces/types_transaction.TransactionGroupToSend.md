@@ -40,16 +40,22 @@ Optional signer to pass in, required if at least one transaction provided is jus
 
 #### Defined in
 
-[src/types/transaction.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L72)
+[src/types/transaction.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L75)
 
 ___
 
 ### transactions
 
-• **transactions**: (`Transaction` \| [`TransactionToSign`](types_transaction.TransactionToSign.md))[]
+• **transactions**: (`Transaction` \| [`TransactionToSign`](types_transaction.TransactionToSign.md) \| `Promise`<[`SendTransactionResult`](types_transaction.SendTransactionResult.md)\>)[]
 
-The list of transactions to send, which can either be a raw transaction (in which case signer is required) or the transaction with its signer
+The list of transactions to send, which can either be a raw transaction (in which case `signer` is required),
+  the async result of an AlgoKit utils method that returns a
+
+**`See`**
+
+SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is required)
+  or the transaction with its signer
 
 #### Defined in
 
-[src/types/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L70)
+[src/types/transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L73)

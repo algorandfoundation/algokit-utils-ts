@@ -136,10 +136,19 @@ describe('transaction', () => {
   test('Transaction group is sent with same signer', async () => {
     const { algod, testAccount } = localnet.context
     const txn1 = await getTestTransaction(1)
-    const txn2 = await getTestTransaction(2)
+    const txn2Promise = algokit.transferAlgos(
+      {
+        amount: algokit.microAlgos(2),
+        from: testAccount,
+        to: testAccount.addr,
+        skipSending: true,
+      },
+      algod,
+    )
 
-    const { confirmations } = await algokit.sendGroupOfTransactions({ transactions: [txn1, txn2], signer: testAccount }, algod)
+    const { confirmations } = await algokit.sendGroupOfTransactions({ transactions: [txn1, txn2Promise], signer: testAccount }, algod)
 
+    const txn2 = (await txn2Promise).transaction
     invariant(confirmations)
     invariant(confirmations[0].txn.txn.grp)
     invariant(confirmations[1].txn.txn.grp)
