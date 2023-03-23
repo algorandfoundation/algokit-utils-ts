@@ -451,10 +451,17 @@ export class ApplicationClient {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
 
-      return {
-        method: abiMethod,
-        ...(Array.isArray(args.methodArgs) ? { args: args.methodArgs } : args.methodArgs),
-      } as ABIAppCallArgs
+      if (Array.isArray(args.methodArgs)) {
+        return {
+          method: abiMethod,
+          args: args.methodArgs,
+        } as ABIAppCallArgs
+      } else {
+        return {
+          method: abiMethod,
+          ...args.methodArgs,
+        } as ABIAppCallArgs
+      }
     } else {
       return args.args
     }

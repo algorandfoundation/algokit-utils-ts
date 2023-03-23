@@ -366,7 +366,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/application-client.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L510)
+[src/types/application-client.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L517)
 
 ___
 
@@ -386,7 +386,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L463)
+[src/types/application-client.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L470)
 
 ___
 
@@ -400,7 +400,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:478](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L478)
+[src/types/application-client.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L485)
 
 ___
 
