@@ -50,7 +50,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[types/app.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L156)
+[types/app.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L158)
 
 ___
 
@@ -64,7 +64,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[types/app.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L78)
+[types/app.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L80)
 
 ## Variables
 

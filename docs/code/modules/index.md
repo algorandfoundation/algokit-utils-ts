@@ -55,6 +55,7 @@
 - [searchTransactions](index.md#searchtransactions)
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
+- [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
 - [transferAlgos](index.md#transferalgos)
 - [updateApp](index.md#updateapp)
@@ -96,7 +97,7 @@ AlgoAmount
 
 #### Defined in
 
-[amount.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L4)
+[amount.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L5)
 
 ___
 
@@ -271,7 +272,7 @@ ___
 
 ### ensureFunded
 
-▸ **ensureFunded**(`funding`, `client`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+▸ **ensureFunded**(`funding`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
 
 Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
 
@@ -284,7 +285,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `funding` | [`EnsureFundedParams`](../interfaces/types_transfer.EnsureFundedParams.md) | The funding configuration |
-| `client` | `default` | An algod client |
+| `algod` | `default` | An algod client |
 
 #### Returns
 
@@ -1120,7 +1121,7 @@ AlgoAmount
 
 #### Defined in
 
-[amount.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L9)
+[amount.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L10)
 
 ___
 
@@ -1370,6 +1371,32 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or u
 #### Defined in
 
 [transaction.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L56)
+
+___
+
+### transactionFees
+
+▸ **transactionFees**(`numberOfTransactions`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+Returns an amount of µAlgos to cover standard fees for the given number of transactions using
+
+**`See`**
+
+AlgoAmount
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `numberOfTransactions` | `number` |
+
+#### Returns
+
+[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+#### Defined in
+
+[amount.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L15)
 
 ___
 

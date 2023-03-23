@@ -69,6 +69,8 @@ export interface ABIAppCallArgs {
   args: ABIArgument[]
   /** The optional lease for the transaction */
   lease?: string | Uint8Array
+  /** Any box references to load */
+  boxes?: BoxReference[]
 }
 
 /** Arguments to pass to an app call either:

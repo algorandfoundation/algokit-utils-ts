@@ -91,7 +91,6 @@ describe('application-client', () => {
     const call = await client.call({
       method: 'call',
       methodArgs: ['test'],
-      callType: 'normal',
     })
 
     invariant(call.return)

@@ -10,14 +10,67 @@
 
 ### Interfaces
 
+- [AppClientDeployParams](../interfaces/types_application_client.AppClientDeployParams.md)
 - [ResolveAppById](../interfaces/types_application_client.ResolveAppById.md)
 
 ### Type Aliases
 
+- [AppClientCallArgs](types_application_client.md#appclientcallargs)
+- [AppClientCallParams](types_application_client.md#appclientcallparams)
+- [AppClientCreateParams](types_application_client.md#appclientcreateparams)
+- [AppClientUpdateParams](types_application_client.md#appclientupdateparams)
 - [AppSpecAppDetails](types_application_client.md#appspecappdetails)
 - [ResolveAppByCreatorAndName](types_application_client.md#resolveappbycreatorandname)
 
 ## Type Aliases
+
+### AppClientCallArgs
+
+Ƭ **AppClientCallArgs**: { `args?`: [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md)  } \| { `method`: `string` ; `methodArgs`: `Omit`<[`ABIAppCallArgs`](../interfaces/types_app.ABIAppCallArgs.md), ``"method"``\> \| `ABIArgument`[]  }
+
+The arguments to pass to an Application Client smart contract call
+
+#### Defined in
+
+[types/application-client.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L91)
+
+___
+
+### AppClientCallParams
+
+Ƭ **AppClientCallParams**: [`AppClientCallArgs`](types_application_client.md#appclientcallargs) & { `note?`: [`TransactionNote`](types_transaction.md#transactionnote) ; `sendParams?`: `Omit`<[`SendTransactionParams`](../interfaces/types_transaction.SendTransactionParams.md), ``"args"`` \| ``"skipSending"`` \| ``"skipWaiting"``\> ; `sender?`: [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)  }
+
+Parameters to construct a ApplicationClient contract call
+
+#### Defined in
+
+[types/application-client.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L104)
+
+___
+
+### AppClientCreateParams
+
+Ƭ **AppClientCreateParams**: [`AppClientCallParams`](types_application_client.md#appclientcallparams) & { `deletable?`: `boolean` ; `deployTimeParameters?`: [`TealTemplateParameters`](../interfaces/types_app.TealTemplateParameters.md) ; `updatable?`: `boolean`  }
+
+Parameters for creating a contract using ApplicationClient
+
+#### Defined in
+
+[types/application-client.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L114)
+
+___
+
+### AppClientUpdateParams
+
+Ƭ **AppClientUpdateParams**: [`AppClientCreateParams`](types_application_client.md#appclientcreateparams)
+
+Parameters for updating a contract using ApplicationClient
+
+#### Defined in
+
+[types/application-client.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L124)
+
+___
 
 ### AppSpecAppDetails
 
@@ -27,7 +80,7 @@ The details of an ARC-0032 app spec specified app
 
 #### Defined in
 
-[types/application-client.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L47)
+[types/application-client.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L48)
 
 ___
 
@@ -43,4 +96,4 @@ getCreatorAppsByName
 
 #### Defined in
 
-[types/application-client.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L22)
+[types/application-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L23)

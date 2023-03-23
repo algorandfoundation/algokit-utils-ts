@@ -1,9 +1,10 @@
 import algosdk, { ABIArgument, ABIMethodParams, Algodv2, getApplicationAddress, Indexer, SuggestedParams } from 'algosdk'
 import { Buffer } from 'buffer'
 import { callApp, createApp, updateApp } from '../app'
-import { deployApp, getCreatorAppsByName, performTemplateSubstitution } from '../deploy-app'
+import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../deploy-app'
 import { getSenderAddress } from '../transaction'
 import {
+  ABIAppCallArgs,
   AppCallArgs,
   AppLookup,
   AppMetadata,
@@ -55,6 +56,72 @@ export type AppSpecAppDetails = {
   /** Default suggested params object to use */
   params?: SuggestedParams
 } & (ResolveAppById | ResolveAppByCreatorAndName)
+
+/** Parameters to pass into ApplicationClient.deploy */
+export interface AppClientDeployParams {
+  /** The version of the contract, uses "1.0" by default */
+  version?: string
+  /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
+  sender?: SendTransactionFrom
+  /** Whether or not to allow updates in the contract using the deploy-time updatability control if present in your contract.
+   * If this is not specified then it will automatically be determined based on the AppSpec definition
+   **/
+  allowUpdate?: boolean
+  /** Whether or not to allow deletes in the contract using the deploy-time deletability control if present in your contract.
+   * If this is not specified then it will automatically be determined based on the AppSpec definition
+   **/
+  allowDelete?: boolean
+  /** Parameters to control transaction sending */
+  sendParams?: Omit<SendTransactionParams, 'args' | 'skipSending' | 'skipWaiting'>
+  /** Any deploy-time parameters to replace in the TEAL code */
+  deployTimeParameters?: TealTemplateParameters
+  /** What action to perform if a schema break is detected */
+  onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
+  /** What action to perform if a TEAL update is detected */
+  onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
+  /** Any args to pass to any create transaction that is issued as part of deployment */
+  createArgs?: AppClientCallArgs
+  /** Any args to pass to any update transaction that is issued as part of deployment */
+  updateArgs?: AppClientCallArgs
+  /** Any args to pass to any delete transaction that is issued as part of deployment */
+  deleteArgs?: AppClientCallArgs
+}
+
+/** The arguments to pass to an Application Client smart contract call */
+export type AppClientCallArgs =
+  | {
+      /** Raw argument values to pass to the smart contract call */
+      args?: RawAppCallArgs
+    }
+  | {
+      /** If calling an ABI method then either the name of the method, or the ABI signature */
+      method: string
+      /** Either the ABI arguments or an object with the ABI arguments and other parameters like boxes */
+      methodArgs: Omit<ABIAppCallArgs, 'method'> | ABIArgument[]
+    }
+
+/** Parameters to construct a ApplicationClient contract call */
+export type AppClientCallParams = AppClientCallArgs & {
+  /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
+  sender?: SendTransactionFrom
+  /** The transaction note for the smart contract call */
+  note?: TransactionNote
+  /** Parameters to control transaction sending */
+  sendParams?: Omit<SendTransactionParams, 'args' | 'skipSending' | 'skipWaiting'>
+}
+
+/** Parameters for creating a contract using ApplicationClient */
+export type AppClientCreateParams = AppClientCallParams & {
+  /** Any deploy-time parameters to replace in the TEAL code */
+  deployTimeParameters?: TealTemplateParameters
+  /* Whether or not the contract should have deploy-time immutability control set, undefined = ignore */
+  updatable?: boolean
+  /* Whether or not the contract should have deploy-time permanence control set, undefined = ignore */
+  deletable?: boolean
+}
+
+/** Parameters for updating a contract using ApplicationClient */
+export type AppClientUpdateParams = AppClientCreateParams
 
 /** Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
@@ -120,35 +187,8 @@ export class ApplicationClient {
    * @param deploy Deployment details
    * @returns The metadata and transaction result(s) of the deployment, or just the metadata if it didn't need to issue transactions
    */
-  async deploy(deploy: {
-    /** The version of the contract, uses "1.0" by default */
-    version?: string
-    /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
-    sender?: SendTransactionFrom
-    /** Whether or not to allow updates in the contract using the deploy-time updatability control if present in your contract.
-     * If this is not specified then it will automatically be determined based on the AppSpec definition
-     **/
-    allowUpdate?: boolean
-    /** Whether or not to allow deletes in the contract using the deploy-time deletability control if present in your contract.
-     * If this is not specified then it will automatically be determined based on the AppSpec definition
-     **/
-    allowDelete?: boolean
-    /** Parameters to control transaction sending */
-    sendParams?: Omit<SendTransactionParams, 'args' | 'skipSending' | 'skipWaiting'>
-    /** Any deploy-time parameters to replace in the TEAL code */
-    deployTimeParameters?: TealTemplateParameters
-    /** What action to perform if a schema break is detected */
-    onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
-    /** What action to perform if a TEAL update is detected */
-    onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
-    /** Any args to pass to any create transaction that is issued as part of deployment */
-    createArgs?: AppCallArgs
-    /** Any args to pass to any update transaction that is issued as part of deployment */
-    updateArgs?: AppCallArgs
-    /** Any args to pass to any delete transaction that is issued as part of deployment */
-    deleteArgs?: AppCallArgs
-  }) {
-    const { sender, version, allowUpdate, allowDelete, sendParams, ...deployArgs } = deploy
+  async deploy(deploy: AppClientDeployParams) {
+    const { sender, version, allowUpdate, allowDelete, sendParams, createArgs, updateArgs, deleteArgs, ...deployArgs } = deploy
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to deploy app which already has an app id of ${this._appId}`)
@@ -211,8 +251,11 @@ export class ApplicationClient {
         },
         transactionParams: this.params,
         ...(sendParams ?? {}),
-        ...deployArgs,
         existingDeployments: this.existingDeployments,
+        createArgs: this.getCallArgs(createArgs),
+        updateArgs: this.getCallArgs(updateArgs),
+        deleteArgs: this.getCallArgs(deleteArgs),
+        ...deployArgs,
       },
       this.algod,
       this.indexer,
@@ -227,9 +270,6 @@ export class ApplicationClient {
       throw new Error('Expected existingDeployments to be present')
     }
     const { transaction, confirmation, operationPerformed, ...appMetadata } = result
-    // if (operationPerformed === 'replace') {
-    //   delete appMetadata.deleteResult
-    // }
     this.existingDeployments = {
       creator: this.existingDeployments.creator,
       apps: { ...this.existingDeployments.apps, [this._appName]: appMetadata },
@@ -238,16 +278,8 @@ export class ApplicationClient {
     return result
   }
 
-  async create(create?: {
-    sender?: SendTransactionFrom
-    args?: AppCallArgs
-    note?: TransactionNote
-    sendParams?: SendTransactionParams
-    deployTimeParameters?: TealTemplateParameters
-  }) {
-    const { sender, args, note, sendParams, deployTimeParameters } = create ?? {}
-
-    // todo: Add deploy-time updatable/deletable etc.
+  async create(create?: AppClientCreateParams) {
+    const { sender, note, sendParams, deployTimeParameters, updatable, deletable, ...args } = create ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to create app which already has an app id of ${this._appId}`)
@@ -264,7 +296,10 @@ export class ApplicationClient {
       {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         from: sender ?? this.sender!,
-        approvalProgram: performTemplateSubstitution(approval, deployTimeParameters),
+        approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
+          updatable,
+          deletable,
+        }),
         clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
         schema: {
           globalByteSlices: this.appSpec.state.global.num_byte_slices,
@@ -272,7 +307,7 @@ export class ApplicationClient {
           localByteSlices: this.appSpec.state.local.num_byte_slices,
           localInts: this.appSpec.state.local.num_uints,
         },
-        args: args,
+        args: this.getCallArgs(args),
         note: note,
         transactionParams: this.params,
         ...(sendParams ?? {}),
@@ -289,14 +324,8 @@ export class ApplicationClient {
     return result
   }
 
-  async update(update?: {
-    sender?: SendTransactionFrom
-    args?: AppCallArgs
-    note?: TransactionNote
-    sendParams?: SendTransactionParams
-    deployTimeParameters?: TealTemplateParameters
-  }) {
-    const { sender, args, note, sendParams, deployTimeParameters } = update ?? {}
+  async update(update?: AppClientUpdateParams) {
+    const { sender, note, sendParams, deployTimeParameters, updatable, deletable, ...args } = update ?? {}
 
     if (this._appId === 0) {
       throw new Error(`Attempt to update app which doesn't have an app id defined`)
@@ -314,9 +343,12 @@ export class ApplicationClient {
         appId: this._appId,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         from: sender ?? this.sender!,
-        approvalProgram: performTemplateSubstitution(approval, deployTimeParameters),
+        approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
+          updatable,
+          deletable,
+        }),
         clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
-        args: args,
+        args: this.getCallArgs(args),
         note: note,
         transactionParams: this.params,
         ...(sendParams ?? {}),
@@ -327,27 +359,28 @@ export class ApplicationClient {
     return result
   }
 
-  async call(
-    call: {
-      callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'
-      sender?: SendTransactionFrom
-      note?: TransactionNote
-      sendParams?: SendTransactionParams
-    } & (
-      | {
-          /** If calling an ABI method then either the name of the method, or the ABI signature, if undefined then a bare call will be made */
-          method: string
-          /** The ABI args to pass in */
-          methodArgs: ABIArgument[]
-          /** The optional lease for the transaction */
-          lease?: string | Uint8Array
-        }
-      | {
-          args?: RawAppCallArgs
-        }
-    ),
-  ) {
-    const { sender, callType, note, sendParams, ...args } = call
+  async call(call: AppClientCallParams) {
+    return await this._call(call, 'normal')
+  }
+
+  async optIn(call: AppClientCallParams) {
+    return await this._call(call, 'optin')
+  }
+
+  async closeOut(call: AppClientCallParams) {
+    return await this._call(call, 'optin')
+  }
+
+  async clearState(call: AppClientCallParams) {
+    return await this._call(call, 'optin')
+  }
+
+  async delete(call: AppClientCallParams) {
+    return await this._call(call, 'optin')
+  }
+
+  private async _call(call: AppClientCallParams, callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal') {
+    const { sender, note, sendParams, ...args } = call
 
     if (!sender && !this.sender) {
       throw new Error('No sender provided, unable to call app')
@@ -356,23 +389,6 @@ export class ApplicationClient {
     const appMetadata = await this.loadAppReference()
     if (appMetadata.appId === 0) {
       throw new Error(`Attempt to call an app that can't be found '${this._appName}' for creator '${this._creator}'.`)
-    }
-
-    // todo: use this in create et. al. as well
-    let callArgs: AppCallArgs
-    // ABI call
-    if ('method' in args) {
-      const abiMethod = this.getABIMethod(args.method)
-      if (!abiMethod) {
-        throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
-      }
-      callArgs = {
-        method: abiMethod,
-        args: args.methodArgs,
-        lease: args.lease,
-      }
-    } else {
-      callArgs = args.args ?? {}
     }
 
     // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
@@ -385,13 +401,33 @@ export class ApplicationClient {
         callType: callType,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         from: sender ?? this.sender!,
-        args: callArgs,
+        args: this.getCallArgs(args),
         note: note,
         transactionParams: this.params,
         ...(sendParams ?? {}),
       },
       this.algod,
     )
+  }
+
+  getCallArgs(args?: AppClientCallArgs): AppCallArgs | undefined {
+    if (!args) {
+      return undefined
+    }
+
+    if ('method' in args) {
+      const abiMethod = this.getABIMethod(args.method)
+      if (!abiMethod) {
+        throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
+      }
+
+      return {
+        method: abiMethod,
+        ...(Array.isArray(args.methodArgs) ? { args: args.methodArgs } : args.methodArgs),
+      } as ABIAppCallArgs
+    } else {
+      return args.args
+    }
   }
 
   getABIMethod(method: string): ABIMethodParams | undefined {

@@ -11,6 +11,7 @@ App call args for an ABI call
 ### Properties
 
 - [args](types_app.ABIAppCallArgs.md#args)
+- [boxes](types_app.ABIAppCallArgs.md#boxes)
 - [lease](types_app.ABIAppCallArgs.md#lease)
 - [method](types_app.ABIAppCallArgs.md#method)
 
@@ -25,6 +26,18 @@ The ABI args to pass in
 #### Defined in
 
 [types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+
+___
+
+### boxes
+
+• `Optional` **boxes**: [`BoxReference`](types_app.BoxReference.md)[]
+
+Any box references to load
+
+#### Defined in
+
+[types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
 
 ___
 
