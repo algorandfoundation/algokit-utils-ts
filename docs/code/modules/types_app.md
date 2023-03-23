@@ -14,6 +14,7 @@
 - [ABIAppCallArgs](../interfaces/types_app.ABIAppCallArgs.md)
 - [AppCallParams](../interfaces/types_app.AppCallParams.md)
 - [AppCallTransactionResult](../interfaces/types_app.AppCallTransactionResult.md)
+- [AppCompilationResult](../interfaces/types_app.AppCompilationResult.md)
 - [AppDeployMetadata](../interfaces/types_app.AppDeployMetadata.md)
 - [AppDeploymentParams](../interfaces/types_app.AppDeploymentParams.md)
 - [AppLookup](../interfaces/types_app.AppLookup.md)
@@ -49,7 +50,7 @@
 
 #### Defined in
 
-[types/app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L59)
+[src/types/app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L59)
 
 ___
 
@@ -61,7 +62,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[types/app.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L160)
+[src/types/app.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L162)
 
 ___
 
@@ -75,7 +76,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[types/app.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L82)
+[src/types/app.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L82)
 
 ## Variables
 
@@ -87,7 +88,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[types/app.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L17)
+[src/types/app.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L17)
 
 ___
 
@@ -99,7 +100,7 @@ The app create/update ARC-2 transaction note prefix
 
 #### Defined in
 
-[types/app.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L11)
+[src/types/app.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L11)
 
 ___
 
@@ -111,7 +112,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[types/app.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L14)
+[src/types/app.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L14)
 
 ___
 
@@ -123,7 +124,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[types/app.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L8)
+[src/types/app.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L8)
 
 ___
 
@@ -135,4 +136,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[types/app.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L5)
+[src/types/app.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L5)

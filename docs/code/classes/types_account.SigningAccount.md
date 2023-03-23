@@ -43,7 +43,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[types/account.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L90)
+[src/types/account.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L90)
 
 ## Properties
 
@@ -53,7 +53,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[types/account.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L56)
+[src/types/account.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L56)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[types/account.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L57)
+[src/types/account.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L57)
 
 ## Accessors
 
@@ -83,7 +83,7 @@ Account.addr
 
 #### Defined in
 
-[types/account.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L62)
+[src/types/account.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L62)
 
 ___
 
@@ -99,7 +99,7 @@ Algorand account of the sender address and signer private key
 
 #### Defined in
 
-[types/account.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L83)
+[src/types/account.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L83)
 
 ___
 
@@ -115,7 +115,7 @@ Algorand account of the underlying signing account
 
 #### Defined in
 
-[types/account.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L76)
+[src/types/account.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L76)
 
 ___
 
@@ -135,4 +135,4 @@ Account.sk
 
 #### Defined in
 
-[types/account.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L69)
+[src/types/account.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L69)

@@ -32,7 +32,7 @@ The arguments to pass to an Application Client smart contract call
 
 #### Defined in
 
-[types/application-client.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L92)
+[src/types/application-client.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L93)
 
 ___
 
@@ -44,7 +44,7 @@ Parameters to construct a ApplicationClient contract call
 
 #### Defined in
 
-[types/application-client.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L105)
+[src/types/application-client.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L106)
 
 ___
 
@@ -56,7 +56,7 @@ Parameters for creating a contract using ApplicationClient
 
 #### Defined in
 
-[types/application-client.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L115)
+[src/types/application-client.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L116)
 
 ___
 
@@ -68,7 +68,7 @@ Parameters for updating a contract using ApplicationClient
 
 #### Defined in
 
-[types/application-client.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L125)
+[src/types/application-client.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L126)
 
 ___
 
@@ -80,7 +80,7 @@ The details of an ARC-0032 app spec specified app
 
 #### Defined in
 
-[types/application-client.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L49)
+[src/types/application-client.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L50)
 
 ___
 
@@ -96,4 +96,4 @@ getCreatorAppsByName
 
 #### Defined in
 
-[types/application-client.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L24)
+[src/types/application-client.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L25)

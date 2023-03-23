@@ -38,7 +38,7 @@ context for that test.
 
 #### Defined in
 
-[types/testing.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L68)
+[src/types/testing.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L68)
 
 ## Accessors
 
@@ -63,4 +63,4 @@ test('My test', () => {
 
 #### Defined in
 
-[types/testing.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L63)
+[src/types/testing.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L63)

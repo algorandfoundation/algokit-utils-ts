@@ -20,6 +20,7 @@
 - [types/config](modules/types_config.md)
 - [types/indexer](modules/types_indexer.md)
 - [types/logging](modules/types_logging.md)
+- [types/logic-error](modules/types_logic_error.md)
 - [types/network-client](modules/types_network_client.md)
 - [types/testing](modules/types_testing.md)
 - [types/transaction](modules/types_transaction.md)

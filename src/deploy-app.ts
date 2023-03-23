@@ -1,10 +1,11 @@
 import { Algodv2, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
 import { Config } from './'
-import { callApp, createApp, getAppByIndex, updateApp } from './app'
+import { callApp, compileTeal, createApp, getAppByIndex, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
 import { getSenderAddress, sendGroupOfTransactions } from './transaction'
 import { ApplicationStateSchema } from './types/algod'
 import {
+  AppCompilationResult,
   AppDeploymentParams,
   AppDeployMetadata,
   AppLookup,
@@ -39,9 +40,12 @@ export async function deployApp(
   algod: Algodv2,
   indexer?: Indexer,
 ): Promise<
-  | (ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' | 'update' })
-  | (ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' })
-  | (AppMetadata & { operationPerformed: 'nothing' })
+  Partial<AppCompilationResult> &
+    (
+      | (ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' | 'update' })
+      | (ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' })
+      | (AppMetadata & { operationPerformed: 'nothing' })
+    )
 > {
   const { metadata, deployTimeParameters, onSchemaBreak, onUpdate, existingDeployments, createArgs, updateArgs, deleteArgs, ...appParams } =
     deployment
@@ -61,20 +65,25 @@ export async function deployApp(
     } bytes of teal code and ${appParams.clearStateProgram.length} bytes of teal code`,
   )
 
-  appParams.approvalProgram =
+  const compiledApproval =
     typeof appParams.approvalProgram === 'string'
-      ? (await performTemplateSubstitutionAndCompile(appParams.approvalProgram, algod, deployTimeParameters, metadata))
-          .compiledBase64ToBytes
-      : appParams.approvalProgram
-  appParams.clearStateProgram =
+      ? await performTemplateSubstitutionAndCompile(appParams.approvalProgram, algod, deployTimeParameters, metadata)
+      : undefined
+  appParams.approvalProgram = compiledApproval ? compiledApproval.compiledBase64ToBytes : appParams.approvalProgram
+
+  const compiledClear =
     typeof appParams.clearStateProgram === 'string'
-      ? (await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, algod, deployTimeParameters)).compiledBase64ToBytes
-      : appParams.clearStateProgram
+      ? await performTemplateSubstitutionAndCompile(appParams.clearStateProgram, algod, deployTimeParameters)
+      : undefined
+
+  appParams.clearStateProgram = compiledClear ? compiledClear.compiledBase64ToBytes : appParams.clearStateProgram
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const apps = existingDeployments ?? (await getCreatorAppsByName(appParams.from, indexer!))
 
-  const create = async (skipSending?: boolean): Promise<ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' }> => {
+  const create = async (
+    skipSending?: boolean,
+  ): Promise<Partial<AppCompilationResult> & ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' }> => {
     const result = await createApp(
       {
         ...appParams,
@@ -98,6 +107,8 @@ export async function deployApp(
       ...metadata,
       deleted: false,
       operationPerformed: 'create',
+      compiledApproval,
+      compiledClear,
     }
   }
 
@@ -142,7 +153,9 @@ export async function deployApp(
   const isSchemaBreak = isSchemaIsBroken(existingGlobalSchema, newGlobalSchema) || isSchemaIsBroken(existingLocalSchema, newLocalSchema)
 
   const replace = async (): Promise<
-    ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
+    Partial<AppCompilationResult> &
+      ConfirmedTransactionResult &
+      AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
   > => {
     // Create
 
@@ -219,10 +232,16 @@ export async function deployApp(
       deleted: false,
       deleteResult: { transaction: deleteTransaction, confirmation: deleteConfirmation },
       operationPerformed: 'replace',
-    } as ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
+      compiledApproval,
+      compiledClear,
+    } as Partial<AppCompilationResult> &
+      ConfirmedTransactionResult &
+      AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
   }
 
-  const update = async (): Promise<ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'update' }> => {
+  const update = async (): Promise<
+    Partial<AppCompilationResult> & ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'update' }
+  > => {
     Config.getLogger(appParams.suppressLog).info(
       `Updating existing ${metadata.name} app for ${getSenderAddress(appParams.from)} to version ${metadata.version}.`,
     )
@@ -255,6 +274,8 @@ export async function deployApp(
       ...metadata,
       deleted: false,
       operationPerformed: 'update',
+      compiledApproval,
+      compiledClear,
     }
   }
 
@@ -331,7 +352,7 @@ export async function deployApp(
 
   Config.getLogger(appParams.suppressLog).debug('No detected changes in app, nothing to do.')
 
-  return { ...existingApp, operationPerformed: 'nothing' }
+  return { ...existingApp, operationPerformed: 'nothing', compiledApproval, compiledClear }
 }
 
 /** Returns true is there is a breaking change in the application state schema from before to after.
@@ -542,11 +563,5 @@ export async function performTemplateSubstitutionAndCompile(
     tealCode = replaceDeployTimeControlParams(tealCode, deploymentMetadata)
   }
 
-  const compiled = await algod.compile(tealCode).do()
-  return {
-    teal: tealCode,
-    compiled: compiled.result,
-    compiledHash: compiled.hash,
-    compiledBase64ToBytes: new Uint8Array(Buffer.from(compiled.result, 'base64')),
-  }
+  return await compileTeal(tealCode, algod)
 }

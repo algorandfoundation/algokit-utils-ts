@@ -13,6 +13,7 @@ Information about a compiled teal program
 - [compiled](types_app.CompiledTeal.md#compiled)
 - [compiledBase64ToBytes](types_app.CompiledTeal.md#compiledbase64tobytes)
 - [compiledHash](types_app.CompiledTeal.md#compiledhash)
+- [sourceMap](types_app.CompiledTeal.md#sourcemap)
 - [teal](types_app.CompiledTeal.md#teal)
 
 ## Properties
@@ -25,7 +26,7 @@ The compiled code
 
 #### Defined in
 
-[types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
+[src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
 
 ___
 
@@ -37,7 +38,7 @@ The base64 encoded code as a byte array
 
 #### Defined in
 
-[types/app.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L150)
+[src/types/app.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L150)
 
 ___
 
@@ -49,7 +50,19 @@ The has returned by the compiler
 
 #### Defined in
 
-[types/app.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L148)
+[src/types/app.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L148)
+
+___
+
+### sourceMap
+
+• **sourceMap**: `SourceMap`
+
+Source map from the compilation
+
+#### Defined in
+
+[src/types/app.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L152)
 
 ___
 
@@ -61,4 +74,4 @@ Original TEAL code
 
 #### Defined in
 
-[types/app.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L144)
+[src/types/app.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L144)

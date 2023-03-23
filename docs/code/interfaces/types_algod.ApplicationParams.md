@@ -32,7 +32,7 @@ Base64 encoded TEAL approval program
 
 #### Defined in
 
-[types/algod.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L83)
+[src/types/algod.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L83)
 
 ___
 
@@ -44,7 +44,7 @@ Base64 encoded TEAL clear state program
 
 #### Defined in
 
-[types/algod.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L85)
+[src/types/algod.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L85)
 
 ___
 
@@ -56,7 +56,7 @@ Address of the account that created the app
 
 #### Defined in
 
-[types/algod.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L81)
+[src/types/algod.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L81)
 
 ___
 
@@ -68,7 +68,7 @@ The amount of extra program pages available to this app.
 
 #### Defined in
 
-[types/algod.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L87)
+[src/types/algod.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L87)
 
 ___
 
@@ -80,7 +80,7 @@ Current global state values
 
 #### Defined in
 
-[types/algod.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L89)
+[src/types/algod.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L89)
 
 ___
 
@@ -92,7 +92,7 @@ Global state schema
 
 #### Defined in
 
-[types/algod.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L91)
+[src/types/algod.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L91)
 
 ___
 
@@ -104,4 +104,4 @@ Local state schema
 
 #### Defined in
 
-[types/algod.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L93)
+[src/types/algod.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L93)

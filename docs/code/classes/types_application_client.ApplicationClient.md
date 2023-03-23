@@ -17,6 +17,8 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 - [\_appAddress](types_application_client.ApplicationClient.md#_appaddress)
 - [\_appId](types_application_client.ApplicationClient.md#_appid)
 - [\_appName](types_application_client.ApplicationClient.md#_appname)
+- [\_approvalSourceMap](types_application_client.ApplicationClient.md#_approvalsourcemap)
+- [\_clearSourceMap](types_application_client.ApplicationClient.md#_clearsourcemap)
 - [\_creator](types_application_client.ApplicationClient.md#_creator)
 - [algod](types_application_client.ApplicationClient.md#algod)
 - [appSpec](types_application_client.ApplicationClient.md#appspec)
@@ -37,6 +39,7 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 - [getABIMethod](types_application_client.ApplicationClient.md#getabimethod)
 - [getAppReference](types_application_client.ApplicationClient.md#getappreference)
 - [getCallArgs](types_application_client.ApplicationClient.md#getcallargs)
+- [handleLogicError](types_application_client.ApplicationClient.md#handlelogicerror)
 - [optIn](types_application_client.ApplicationClient.md#optin)
 - [update](types_application_client.ApplicationClient.md#update)
 
@@ -57,7 +60,7 @@ Create a new ApplicationClient instance
 
 #### Defined in
 
-[types/application-client.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L147)
+[src/types/application-client.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L151)
 
 ## Properties
 
@@ -67,7 +70,7 @@ Create a new ApplicationClient instance
 
 #### Defined in
 
-[types/application-client.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L137)
+[src/types/application-client.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L138)
 
 ___
 
@@ -77,7 +80,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L136)
+[src/types/application-client.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L137)
 
 ___
 
@@ -87,7 +90,27 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L139)
+[src/types/application-client.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L140)
+
+___
+
+### \_approvalSourceMap
+
+• `Private` **\_approvalSourceMap**: `undefined` \| `SourceMap`
+
+#### Defined in
+
+[src/types/application-client.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L142)
+
+___
+
+### \_clearSourceMap
+
+• `Private` **\_clearSourceMap**: `undefined` \| `SourceMap`
+
+#### Defined in
+
+[src/types/application-client.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L143)
 
 ___
 
@@ -97,7 +120,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L138)
+[src/types/application-client.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L139)
 
 ___
 
@@ -107,7 +130,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L129)
+[src/types/application-client.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L130)
 
 ___
 
@@ -117,7 +140,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L131)
+[src/types/application-client.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L132)
 
 ___
 
@@ -127,7 +150,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L134)
+[src/types/application-client.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L135)
 
 ___
 
@@ -137,7 +160,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L130)
+[src/types/application-client.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L131)
 
 ___
 
@@ -147,7 +170,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L133)
+[src/types/application-client.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L134)
 
 ___
 
@@ -157,7 +180,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L132)
+[src/types/application-client.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L133)
 
 ## Methods
 
@@ -178,7 +201,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L383)
+[src/types/application-client.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L408)
 
 ___
 
@@ -198,7 +221,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:363](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L363)
+[src/types/application-client.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L388)
 
 ___
 
@@ -218,7 +241,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:375](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L375)
+[src/types/application-client.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L400)
 
 ___
 
@@ -238,13 +261,13 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:371](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L371)
+[src/types/application-client.ts:396](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L396)
 
 ___
 
 ### create
 
-▸ **create**(`create?`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+▸ **create**(`create?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 #### Parameters
 
@@ -254,11 +277,11 @@ ___
 
 #### Returns
 
-`Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 #### Defined in
 
-[types/application-client.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L282)
+[src/types/application-client.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L293)
 
 ___
 
@@ -278,13 +301,13 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L379)
+[src/types/application-client.ts:404](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L404)
 
 ___
 
 ### deploy
 
-▸ **deploy**(`deploy`): `Promise`<[`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"update"`` \| ``"create"``  } \| [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+▸ **deploy**(`deploy`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"update"`` \| ``"create"``  } \| `Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| `Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
@@ -306,13 +329,13 @@ https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-de
 
 #### Returns
 
-`Promise`<[`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"update"`` \| ``"create"``  } \| [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"update"`` \| ``"create"``  } \| `Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| `Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
 
 The metadata and transaction result(s) of the deployment, or just the metadata if it didn't need to issue transactions
 
 #### Defined in
 
-[types/application-client.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L191)
+[src/types/application-client.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L195)
 
 ___
 
@@ -332,7 +355,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L434)
+[src/types/application-client.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L463)
 
 ___
 
@@ -346,7 +369,7 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:449](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L449)
+[src/types/application-client.ts:478](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L478)
 
 ___
 
@@ -366,7 +389,28 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L414)
+[src/types/application-client.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L443)
+
+___
+
+### handleLogicError
+
+▸ `Private` **handleLogicError**(`e`, `isClear?`): `Error`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `e` | `Error` |
+| `isClear?` | `boolean` |
+
+#### Returns
+
+`Error`
+
+#### Defined in
+
+[src/types/application-client.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L502)
 
 ___
 
@@ -386,13 +430,13 @@ ___
 
 #### Defined in
 
-[types/application-client.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L367)
+[src/types/application-client.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L392)
 
 ___
 
 ### update
 
-▸ **update**(`update?`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+▸ **update**(`update?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -402,8 +446,8 @@ ___
 
 #### Returns
 
-`Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Defined in
 
-[types/application-client.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L328)
+[src/types/application-client.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L346)

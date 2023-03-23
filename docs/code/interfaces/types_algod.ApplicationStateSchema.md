@@ -27,7 +27,7 @@ https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationstateschema
 
 #### Defined in
 
-[types/algod.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L125)
+[src/types/algod.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L125)
 
 ___
 
@@ -39,4 +39,4 @@ ___
 
 #### Defined in
 
-[types/algod.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L127)
+[src/types/algod.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L127)

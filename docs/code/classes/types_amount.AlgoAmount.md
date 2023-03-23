@@ -42,7 +42,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and num
 
 #### Defined in
 
-[types/amount.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L17)
+[src/types/amount.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L17)
 
 ## Properties
 
@@ -52,7 +52,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and num
 
 #### Defined in
 
-[types/amount.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L5)
+[src/types/amount.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L5)
 
 ## Accessors
 
@@ -68,7 +68,7 @@ Return the amount as a number in Algos
 
 #### Defined in
 
-[types/amount.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L13)
+[src/types/amount.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L13)
 
 ___
 
@@ -84,7 +84,7 @@ Return the amount as a number in µAlgos
 
 #### Defined in
 
-[types/amount.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L8)
+[src/types/amount.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L8)
 
 ## Methods
 
@@ -98,7 +98,7 @@ Return the amount as a number in µAlgos
 
 #### Defined in
 
-[types/amount.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L21)
+[src/types/amount.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L21)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[types/amount.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L25)
+[src/types/amount.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L25)
 
 ___
 
@@ -138,7 +138,7 @@ object representing the given number of Algos
 
 #### Defined in
 
-[types/amount.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L30)
+[src/types/amount.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L30)
 
 ___
 
@@ -164,4 +164,4 @@ object representing the given number of µAlgos
 
 #### Defined in
 
-[types/amount.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L35)
+[src/types/amount.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L35)

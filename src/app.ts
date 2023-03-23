@@ -4,6 +4,7 @@ import algosdk, {
   AtomicTransactionComposer,
   makeBasicAccountTransactionSigner,
   OnApplicationComplete,
+  SourceMap,
   Transaction,
 } from 'algosdk'
 import { Buffer } from 'buffer'
@@ -16,6 +17,7 @@ import {
   AppCallArgs,
   AppCallParams,
   AppCallTransactionResult,
+  AppCompilationResult,
   AppReference,
   APP_PAGE_MAX_SIZE,
   CompiledTeal,
@@ -29,15 +31,20 @@ import {
  * @param algod An algod client
  * @returns The details of the created app, or the transaction to create it if `skipSending`
  */
-export async function createApp(create: CreateAppParams, algod: Algodv2): Promise<AppCallTransactionResult & AppReference> {
+export async function createApp(
+  create: CreateAppParams,
+  algod: Algodv2,
+): Promise<Partial<AppCompilationResult> & AppCallTransactionResult & AppReference> {
   const { from, approvalProgram: approval, clearStateProgram: clear, schema, note, transactionParams, args, ...sendParams } = create
 
-  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
-  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, algod)).compiledBase64ToBytes : clear
+  const compiledApproval = typeof approval === 'string' ? await compileTeal(approval, algod) : undefined
+  const approvalProgram = compiledApproval ? compiledApproval.compiledBase64ToBytes : approval
+  const compiledClear = typeof clear === 'string' ? await compileTeal(clear, algod) : undefined
+  const clearProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationCreateTxnFromObject({
-    approvalProgram: approvalProgram,
-    clearProgram: clearProgram,
+    approvalProgram: approvalProgram as Uint8Array,
+    clearProgram: clearProgram as Uint8Array,
     numLocalInts: schema.localInts,
     numLocalByteSlices: schema.localByteSlices,
     numGlobalInts: schema.globalInts,
@@ -64,9 +71,11 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
       appId,
       appAddress: algosdk.getApplicationAddress(appId),
       return: getABIReturn(args, confirmation),
+      compiledApproval,
+      compiledClear,
     }
   } else {
-    return { transaction, appId: 0, appAddress: '' }
+    return { transaction, appId: 0, appAddress: '', compiledApproval, compiledClear }
   }
 }
 
@@ -76,16 +85,21 @@ export async function createApp(create: CreateAppParams, algod: Algodv2): Promis
  * @param algod An algod client
  * @returns The transaction
  */
-export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promise<AppCallTransactionResult> {
+export async function updateApp(
+  update: UpdateAppParams,
+  algod: Algodv2,
+): Promise<Partial<AppCompilationResult> & AppCallTransactionResult> {
   const { appId, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
 
-  const approvalProgram = typeof approval === 'string' ? (await compileTeal(approval, algod)).compiledBase64ToBytes : approval
-  const clearProgram = typeof clear === 'string' ? (await compileTeal(clear, algod)).compiledBase64ToBytes : clear
+  const compiledApproval = typeof approval === 'string' ? await compileTeal(approval, algod) : undefined
+  const approvalProgram = compiledApproval ? compiledApproval.compiledBase64ToBytes : approval
+  const compiledClear = typeof clear === 'string' ? await compileTeal(clear, algod) : undefined
+  const clearProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
 
   const transaction = algosdk.makeApplicationUpdateTxnFromObject({
     appIndex: appId,
-    approvalProgram: approvalProgram,
-    clearProgram: clearProgram,
+    approvalProgram: approvalProgram as Uint8Array,
+    clearProgram: clearProgram as Uint8Array,
     suggestedParams: await getTransactionParams(transactionParams, algod),
     from: getSenderAddress(from),
     note: encodeTransactionNote(note),
@@ -100,6 +114,8 @@ export async function updateApp(update: UpdateAppParams, algod: Algodv2): Promis
   return {
     ...result,
     return: getABIReturn(args, result.confirmation),
+    compiledApproval,
+    compiledClear,
   }
 }
 
@@ -277,11 +293,12 @@ export async function getAppByIndex(appId: number, algod: Algodv2) {
  * @returns The information about the compiled file
  */
 export async function compileTeal(tealCode: string, algod: Algodv2): Promise<CompiledTeal> {
-  const compiled = await algod.compile(tealCode).do()
+  const compiled = await algod.compile(tealCode).sourcemap(true).do()
   return {
     teal: tealCode,
     compiled: compiled.result,
     compiledHash: compiled.hash,
     compiledBase64ToBytes: new Uint8Array(Buffer.from(compiled.result, 'base64')),
+    sourceMap: new SourceMap(compiled['sourcemap']),
   }
 }

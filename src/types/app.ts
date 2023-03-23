@@ -1,4 +1,4 @@
-import { ABIArgument, ABIMethod, ABIMethodParams, ABIValue, Address, SuggestedParams, Transaction } from 'algosdk'
+import { ABIArgument, ABIMethod, ABIMethodParams, ABIValue, Address, SourceMap, SuggestedParams, Transaction } from 'algosdk'
 import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './transaction'
 
 /** The name of the TEAL template variable for deploy-time immutability control */
@@ -148,6 +148,8 @@ export interface CompiledTeal {
   compiledHash: string
   /** The base64 encoded code as a byte array */
   compiledBase64ToBytes: Uint8Array
+  /** Source map from the compilation */
+  sourceMap: SourceMap
 }
 
 /** Result from calling an app */
@@ -244,4 +246,12 @@ export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'not
   updateArgs?: AppCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
   deleteArgs?: AppCallArgs
+}
+
+/** The result of compiling the approval and clear TEAL for an app */
+export interface AppCompilationResult {
+  /** The compilation result of approval */
+  compiledApproval: CompiledTeal
+  /** The compilation result of clear */
+  compiledClear: CompiledTeal
 }

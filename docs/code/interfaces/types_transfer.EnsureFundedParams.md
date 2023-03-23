@@ -43,7 +43,7 @@ The account to fund
 
 #### Defined in
 
-[types/transfer.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L22)
+[src/types/transfer.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L22)
 
 ___
 
@@ -59,7 +59,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -71,7 +71,7 @@ The account to use as a funding source
 
 #### Defined in
 
-[types/transfer.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L24)
+[src/types/transfer.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L24)
 
 ___
 
@@ -87,7 +87,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -103,7 +103,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
+[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 
@@ -115,7 +115,7 @@ When issuing a funding amount, the minimum amount to transfer (avoids many small
 
 #### Defined in
 
-[types/transfer.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L28)
+[src/types/transfer.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L28)
 
 ___
 
@@ -127,7 +127,7 @@ The minimum balance of ALGOs that the account should have available to spend (i.
 
 #### Defined in
 
-[types/transfer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L26)
+[src/types/transfer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L26)
 
 ___
 
@@ -139,7 +139,7 @@ The (optional) transaction note, default: "Funding account to meet minimum requi
 
 #### Defined in
 
-[types/transfer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L32)
+[src/types/transfer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L32)
 
 ___
 
@@ -156,7 +156,7 @@ Whether to skip signing and sending the transaction to the chain (default: trans
 
 #### Defined in
 
-[types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
+[src/types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
 
 ___
 
@@ -172,7 +172,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[types/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L28)
+[src/types/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L28)
 
 ___
 
@@ -188,7 +188,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
+[src/types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
 
 ___
 
@@ -200,4 +200,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[types/transfer.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L30)
+[src/types/transfer.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L30)

@@ -30,4 +30,4 @@ https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
 
 #### Defined in
 
-[types/algod.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L99)
+[src/types/algod.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L99)

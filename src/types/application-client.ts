@@ -1,4 +1,4 @@
-import algosdk, { ABIMethodParams, Algodv2, getApplicationAddress, Indexer, SuggestedParams } from 'algosdk'
+import algosdk, { ABIMethodParams, Algodv2, getApplicationAddress, Indexer, SourceMap, SuggestedParams } from 'algosdk'
 import { Buffer } from 'buffer'
 import { callApp, createApp, updateApp } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../deploy-app'
@@ -18,6 +18,7 @@ import {
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
 import { AppSpec, getABISignature } from './appspec'
+import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
 /** Configuration to resolve app by creator and name @see getCreatorAppsByName */
@@ -138,6 +139,9 @@ export class ApplicationClient {
   private _creator: string | undefined
   private _appName: string
 
+  private _approvalSourceMap: SourceMap | undefined
+  private _clearSourceMap: SourceMap | undefined
+
   /**
    * Create a new ApplicationClient instance
    * @param appDetails The details of the app
@@ -214,69 +218,76 @@ export class ApplicationClient {
     const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
     const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
 
-    await this.getAppReference()
-    const result = await deployApp(
-      {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        from,
-        approvalProgram: approval,
-        clearStateProgram: clear,
-        metadata: {
-          name: this._appName,
-          // todo: intelligent version management
-          version: version ?? '1.0',
-          updatable:
-            allowUpdate ?? approval.includes(UPDATABLE_TEMPLATE_NAME)
-              ? (!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
-                !!Object.keys(this.appSpec.hints).filter(
-                  (h) =>
-                    !this.appSpec.hints[h].call_config.update_application &&
-                    this.appSpec.hints[h].call_config.update_application !== 'NEVER',
-                )[0]
-              : undefined,
-          deletable:
-            allowDelete ?? approval.includes(DELETABLE_TEMPLATE_NAME)
-              ? (!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
-                !!Object.keys(this.appSpec.hints).filter(
-                  (h) =>
-                    !this.appSpec.hints[h].call_config.delete_application &&
-                    this.appSpec.hints[h].call_config.delete_application !== 'NEVER',
-                )[0]
-              : undefined,
+    try {
+      await this.getAppReference()
+      const result = await deployApp(
+        {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          from,
+          approvalProgram: approval,
+          clearStateProgram: clear,
+          metadata: {
+            name: this._appName,
+            // todo: intelligent version management
+            version: version ?? '1.0',
+            updatable:
+              allowUpdate ?? approval.includes(UPDATABLE_TEMPLATE_NAME)
+                ? (!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
+                  !!Object.keys(this.appSpec.hints).filter(
+                    (h) =>
+                      !this.appSpec.hints[h].call_config.update_application &&
+                      this.appSpec.hints[h].call_config.update_application !== 'NEVER',
+                  )[0]
+                : undefined,
+            deletable:
+              allowDelete ?? approval.includes(DELETABLE_TEMPLATE_NAME)
+                ? (!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
+                  !!Object.keys(this.appSpec.hints).filter(
+                    (h) =>
+                      !this.appSpec.hints[h].call_config.delete_application &&
+                      this.appSpec.hints[h].call_config.delete_application !== 'NEVER',
+                  )[0]
+                : undefined,
+          },
+          schema: {
+            globalByteSlices: this.appSpec.state.global.num_byte_slices,
+            globalInts: this.appSpec.state.global.num_uints,
+            localByteSlices: this.appSpec.state.local.num_byte_slices,
+            localInts: this.appSpec.state.local.num_uints,
+          },
+          transactionParams: this.params,
+          ...(sendParams ?? {}),
+          existingDeployments: this.existingDeployments,
+          createArgs: this.getCallArgs(createArgs),
+          updateArgs: this.getCallArgs(updateArgs),
+          deleteArgs: this.getCallArgs(deleteArgs),
+          ...deployArgs,
         },
-        schema: {
-          globalByteSlices: this.appSpec.state.global.num_byte_slices,
-          globalInts: this.appSpec.state.global.num_uints,
-          localByteSlices: this.appSpec.state.local.num_byte_slices,
-          localInts: this.appSpec.state.local.num_uints,
-        },
-        transactionParams: this.params,
-        ...(sendParams ?? {}),
-        existingDeployments: this.existingDeployments,
-        createArgs: this.getCallArgs(createArgs),
-        updateArgs: this.getCallArgs(updateArgs),
-        deleteArgs: this.getCallArgs(deleteArgs),
-        ...deployArgs,
-      },
-      this.algod,
-      this.indexer,
-    )
+        this.algod,
+        this.indexer,
+      )
 
-    // Nothing needed to happen
-    if (result.operationPerformed === 'nothing') {
+      this._approvalSourceMap = result.compiledApproval?.sourceMap
+      this._clearSourceMap = result.compiledClear?.sourceMap
+
+      // Nothing needed to happen
+      if (result.operationPerformed === 'nothing') {
+        return result
+      }
+
+      if (!this.existingDeployments) {
+        throw new Error('Expected existingDeployments to be present')
+      }
+      const { transaction, confirmation, operationPerformed, ...appMetadata } = result
+      this.existingDeployments = {
+        creator: this.existingDeployments.creator,
+        apps: { ...this.existingDeployments.apps, [this._appName]: appMetadata },
+      }
+
       return result
+    } catch (e) {
+      throw this.handleLogicError(e as Error)
     }
-
-    if (!this.existingDeployments) {
-      throw new Error('Expected existingDeployments to be present')
-    }
-    const { transaction, confirmation, operationPerformed, ...appMetadata } = result
-    this.existingDeployments = {
-      creator: this.existingDeployments.creator,
-      apps: { ...this.existingDeployments.apps, [this._appName]: appMetadata },
-    }
-
-    return result
   }
 
   async create(create?: AppClientCreateParams) {
@@ -293,36 +304,43 @@ export class ApplicationClient {
     const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
     const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
 
-    const result = await createApp(
-      {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        from: sender ?? this.sender!,
-        approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
-          updatable,
-          deletable,
-        }),
-        clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
-        schema: {
-          globalByteSlices: this.appSpec.state.global.num_byte_slices,
-          globalInts: this.appSpec.state.global.num_uints,
-          localByteSlices: this.appSpec.state.local.num_byte_slices,
-          localInts: this.appSpec.state.local.num_uints,
+    try {
+      const result = await createApp(
+        {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          from: sender ?? this.sender!,
+          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
+            updatable,
+            deletable,
+          }),
+          clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
+          schema: {
+            globalByteSlices: this.appSpec.state.global.num_byte_slices,
+            globalInts: this.appSpec.state.global.num_uints,
+            localByteSlices: this.appSpec.state.local.num_byte_slices,
+            localInts: this.appSpec.state.local.num_uints,
+          },
+          args: this.getCallArgs(args),
+          note: note,
+          transactionParams: this.params,
+          ...(sendParams ?? {}),
         },
-        args: this.getCallArgs(args),
-        note: note,
-        transactionParams: this.params,
-        ...(sendParams ?? {}),
-      },
-      this.algod,
-    )
+        this.algod,
+      )
 
-    if (result.confirmation) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this._appId = result.confirmation['application-index']!
-      this._appAddress = getApplicationAddress(this._appId)
+      this._approvalSourceMap = result.compiledApproval?.sourceMap
+      this._clearSourceMap = result.compiledClear?.sourceMap
+
+      if (result.confirmation) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this._appId = result.confirmation['application-index']!
+        this._appAddress = getApplicationAddress(this._appId)
+      }
+
+      return result
+    } catch (e) {
+      throw this.handleLogicError(e as Error)
     }
-
-    return result
   }
 
   async update(update?: AppClientUpdateParams) {
@@ -339,25 +357,32 @@ export class ApplicationClient {
     const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
     const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
 
-    const result = await updateApp(
-      {
-        appId: this._appId,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        from: sender ?? this.sender!,
-        approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
-          updatable,
-          deletable,
-        }),
-        clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
-        args: this.getCallArgs(args),
-        note: note,
-        transactionParams: this.params,
-        ...(sendParams ?? {}),
-      },
-      this.algod,
-    )
+    try {
+      const result = await updateApp(
+        {
+          appId: this._appId,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          from: sender ?? this.sender!,
+          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
+            updatable,
+            deletable,
+          }),
+          clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
+          args: this.getCallArgs(args),
+          note: note,
+          transactionParams: this.params,
+          ...(sendParams ?? {}),
+        },
+        this.algod,
+      )
 
-    return result
+      this._approvalSourceMap = result.compiledApproval?.sourceMap
+      this._clearSourceMap = result.compiledClear?.sourceMap
+
+      return result
+    } catch (e) {
+      throw this.handleLogicError(e as Error)
+    }
   }
 
   async call(call: AppClientCallParams) {
@@ -396,19 +421,23 @@ export class ApplicationClient {
     // todo: support unwrapping a logic error and source map.
     // todo: support readonly method calls
 
-    return callApp(
-      {
-        appId: appMetadata.appId,
-        callType: callType,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        from: sender ?? this.sender!,
-        args: this.getCallArgs(args),
-        note: note,
-        transactionParams: this.params,
-        ...(sendParams ?? {}),
-      },
-      this.algod,
-    )
+    try {
+      return callApp(
+        {
+          appId: appMetadata.appId,
+          callType: callType,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          from: sender ?? this.sender!,
+          args: this.getCallArgs(args),
+          note: note,
+          transactionParams: this.params,
+          ...(sendParams ?? {}),
+        },
+        this.algod,
+      )
+    } catch (e) {
+      throw this.handleLogicError(e as Error)
+    }
   }
 
   getCallArgs(args?: AppClientCallArgs): AppCallArgs | undefined {
@@ -468,5 +497,22 @@ export class ApplicationClient {
       appId: this._appId,
       appAddress: this._appAddress,
     } as AppReference
+  }
+
+  private handleLogicError(e: Error, isClear?: boolean): Error {
+    if ((!isClear && this._approvalSourceMap == undefined) || (isClear && this._clearSourceMap == undefined)) return e
+
+    const errorDetails = LogicError.parseLogicError(e.message)
+
+    if (errorDetails.msg !== undefined)
+      return new LogicError(
+        errorDetails,
+        Buffer.from(isClear ? this.appSpec.source.clear : this.appSpec.source.approval, 'base64')
+          .toString()
+          .split('\n'),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        isClear ? this._clearSourceMap! : this._approvalSourceMap!,
+      )
+    else return e
   }
 }

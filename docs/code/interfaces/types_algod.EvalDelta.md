@@ -26,7 +26,7 @@ https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta
 
 #### Defined in
 
-[types/algod.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L67)
+[src/types/algod.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L67)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[types/algod.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L68)
+[src/types/algod.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L68)
 
 ___
 
@@ -46,4 +46,4 @@ ___
 
 #### Defined in
 
-[types/algod.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L69)
+[src/types/algod.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L69)

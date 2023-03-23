@@ -25,7 +25,7 @@ that also has the sender address.
 
 #### Defined in
 
-[types/account.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L98)
+[src/types/account.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L98)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[types/account.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L99)
+[src/types/account.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L99)
