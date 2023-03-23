@@ -72,7 +72,7 @@ export interface AppClientDeployParams {
    **/
   allowDelete?: boolean
   /** Parameters to control transaction sending */
-  sendParams?: Omit<SendTransactionParams, 'args' | 'skipSending' | 'skipWaiting'>
+  sendParams?: Omit<SendTransactionParams, 'skipSending' | 'skipWaiting'>
   /** Any deploy-time parameters to replace in the TEAL code */
   deployTimeParameters?: TealTemplateParameters
   /** What action to perform if a schema break is detected */
@@ -107,7 +107,7 @@ export type AppClientCallParams = AppClientCallArgs & {
   /** The transaction note for the smart contract call */
   note?: TransactionNote
   /** Parameters to control transaction sending */
-  sendParams?: Omit<SendTransactionParams, 'args' | 'skipSending' | 'skipWaiting'>
+  sendParams?: SendTransactionParams
 }
 
 /** Parameters for creating a contract using ApplicationClient */

@@ -38,7 +38,7 @@ ___
 
 ### AppClientCallParams
 
-Ƭ **AppClientCallParams**: [`AppClientCallArgs`](types_application_client.md#appclientcallargs) & { `note?`: [`TransactionNote`](types_transaction.md#transactionnote) ; `sendParams?`: `Omit`<[`SendTransactionParams`](../interfaces/types_transaction.SendTransactionParams.md), ``"args"`` \| ``"skipSending"`` \| ``"skipWaiting"``\> ; `sender?`: [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)  }
+Ƭ **AppClientCallParams**: [`AppClientCallArgs`](types_application_client.md#appclientcallargs) & { `note?`: [`TransactionNote`](types_transaction.md#transactionnote) ; `sendParams?`: [`SendTransactionParams`](../interfaces/types_transaction.SendTransactionParams.md) ; `sender?`: [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)  }
 
 Parameters to construct a ApplicationClient contract call
 
