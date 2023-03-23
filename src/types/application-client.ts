@@ -213,7 +213,7 @@ export class ApplicationClient {
     const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
     const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
 
-    await this.loadAppReference()
+    await this.getAppReference()
     const result = await deployApp(
       {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -386,7 +386,7 @@ export class ApplicationClient {
       throw new Error('No sender provided, unable to call app')
     }
 
-    const appMetadata = await this.loadAppReference()
+    const appMetadata = await this.getAppReference()
     if (appMetadata.appId === 0) {
       throw new Error(`Attempt to call an app that can't be found '${this._appName}' for creator '${this._creator}'.`)
     }
@@ -445,7 +445,7 @@ export class ApplicationClient {
     return this.appSpec.contract.methods.find((m) => getABISignature(m) === method)
   }
 
-  private async loadAppReference(): Promise<AppMetadata | AppReference> {
+  async getAppReference(): Promise<AppMetadata | AppReference> {
     if (!this.existingDeployments && this._creator) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.existingDeployments = await getCreatorAppsByName(this._creator, this.indexer!)
