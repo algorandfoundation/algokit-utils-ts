@@ -53,7 +53,7 @@ export class LogicError extends Error {
     const line = map.getLineForPc(errorDetails.pc)
     this.teal_line = line === undefined ? 0 : line
 
-    this.message = `${this.led.msg.slice(0, 20)}... at:${line}`
+    this.message = `${this.led.msg}. at:${line}`
 
     if (this.teal_line > 0) {
       const start = this.teal_line > this.lines ? this.teal_line - this.lines : 0
