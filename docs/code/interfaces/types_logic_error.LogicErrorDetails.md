@@ -20,7 +20,7 @@
 
 #### Defined in
 
-src/types/logic-error.ts:8
+[src/types/logic-error.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L10)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-src/types/logic-error.ts:7
+[src/types/logic-error.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L9)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-src/types/logic-error.ts:6
+[src/types/logic-error.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L8)
