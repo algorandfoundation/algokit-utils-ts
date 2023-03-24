@@ -142,6 +142,13 @@ export class ApplicationClient {
   private _approvalSourceMap: SourceMap | undefined
   private _clearSourceMap: SourceMap | undefined
 
+  // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
+  // todo: support unwrapping a logic error and source map.
+  // todo: support readonly method calls
+  // todo: support different oncomplete for create
+  // todo: find create, update, delete, etc. methods from app spec
+  // todo: intelligent version management
+
   /**
    * Create a new ApplicationClient instance
    * @param appDetails The details of the app
@@ -177,8 +184,6 @@ export class ApplicationClient {
     this._appAddress = algosdk.getApplicationAddress(this._appId)
     this.sender = sender
     this.params = params
-
-    // todo: find create, update, delete, etc. methods from app spec
   }
 
   /**
@@ -228,7 +233,6 @@ export class ApplicationClient {
           clearStateProgram: clear,
           metadata: {
             name: this._appName,
-            // todo: intelligent version management
             version: version ?? '1.0',
             updatable:
               allowUpdate ?? approval.includes(UPDATABLE_TEMPLATE_NAME)
@@ -416,10 +420,6 @@ export class ApplicationClient {
     if (appMetadata.appId === 0) {
       throw new Error(`Attempt to call an app that can't be found '${this._appName}' for creator '${this._creator}'.`)
     }
-
-    // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
-    // todo: support unwrapping a logic error and source map.
-    // todo: support readonly method calls
 
     try {
       return callApp(
