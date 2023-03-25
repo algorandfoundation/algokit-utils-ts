@@ -28,7 +28,7 @@
     "generate:code-docs": "typedoc"
   },
   "dependencies": {
-    "algosdk": "^2.1.0",
+    "algosdk": "^2.2.0",
     "buffer": "^6.0.3"
   },
   "devDependencies": {

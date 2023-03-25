@@ -4,17 +4,33 @@ bytecblock 0x151f7c75 0x
 txn NumAppArgs
 intc_0 // 0
 ==
-bnz main_l6
+bnz main_l8
 txna ApplicationArgs 0
 pushbytes 0xf81e962d // "call(string)string"
 ==
-bnz main_l5
+bnz main_l7
 txna ApplicationArgs 0
 pushbytes 0x3d9fe353 // "call_txn(pay,string)string"
 ==
-bnz main_l4
+bnz main_l6
+txna ApplicationArgs 0
+pushbytes 0x44d0da0d // "error()void"
+==
+bnz main_l5
 err
-main_l4:
+main_l5:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub error_2
+intc_1 // 1
+return
+main_l6:
 txn OnCompletion
 intc_0 // NoOp
 ==
@@ -44,7 +60,7 @@ concat
 log
 intc_1 // 1
 return
-main_l5:
+main_l7:
 txn OnCompletion
 intc_0 // NoOp
 ==
@@ -62,42 +78,42 @@ concat
 log
 intc_1 // 1
 return
-main_l6:
+main_l8:
 txn OnCompletion
 intc_0 // NoOp
 ==
-bnz main_l12
+bnz main_l14
 txn OnCompletion
 pushint 4 // UpdateApplication
 ==
-bnz main_l11
+bnz main_l13
 txn OnCompletion
 pushint 5 // DeleteApplication
 ==
-bnz main_l10
+bnz main_l12
 err
-main_l10:
-txn ApplicationID
-intc_0 // 0
-!=
-assert
-callsub delete_4
-intc_1 // 1
-return
-main_l11:
-txn ApplicationID
-intc_0 // 0
-!=
-assert
-callsub update_3
-intc_1 // 1
-return
 main_l12:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub delete_5
+intc_1 // 1
+return
+main_l13:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub update_4
+intc_1 // 1
+return
+main_l14:
 txn ApplicationID
 intc_0 // 0
 ==
 assert
-callsub create_2
+callsub create_3
 intc_1 // 1
 return
 
@@ -143,8 +159,15 @@ concat
 frame_bury 0
 retsub
 
+// error
+error_2:
+proto 0 0
+intc_0 // 0
+assert
+retsub
+
 // create
-create_2:
+create_3:
 proto 0 0
 txn Sender
 global CreatorAddress
@@ -157,7 +180,7 @@ app_global_put
 retsub
 
 // update
-update_3:
+update_4:
 proto 0 0
 txn Sender
 global CreatorAddress
@@ -170,7 +193,7 @@ assert
 retsub
 
 // delete
-delete_4:
+delete_5:
 proto 0 0
 txn Sender
 global CreatorAddress

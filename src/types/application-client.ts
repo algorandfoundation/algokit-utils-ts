@@ -197,8 +197,8 @@ export class ApplicationClient {
    * @param deploy Deployment details
    * @returns The metadata and transaction result(s) of the deployment, or just the metadata if it didn't need to issue transactions
    */
-  async deploy(deploy: AppClientDeployParams) {
-    const { sender, version, allowUpdate, allowDelete, sendParams, createArgs, updateArgs, deleteArgs, ...deployArgs } = deploy
+  async deploy(deploy?: AppClientDeployParams) {
+    const { sender, version, allowUpdate, allowDelete, sendParams, createArgs, updateArgs, deleteArgs, ...deployArgs } = deploy ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to deploy app which already has an app id of ${this._appId}`)
@@ -422,7 +422,7 @@ export class ApplicationClient {
     }
 
     try {
-      return callApp(
+      return await callApp(
         {
           appId: appMetadata.appId,
           callType: callType,

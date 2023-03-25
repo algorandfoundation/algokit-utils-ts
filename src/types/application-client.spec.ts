@@ -164,4 +164,41 @@ describe('application-client', () => {
     const methodArg = new ABIStringType().encode('test')
     expect(call.transaction.appArgs).toEqual([methodSelector, methodArg])
   })
+
+  test('Display nice error messages when there is a logic error', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer: indexer,
+      },
+      algod,
+    )
+    await client.deploy({
+      deployTimeParameters: { VALUE: 1 },
+    })
+
+    try {
+      await client.call({
+        method: 'error',
+        methodArgs: [],
+      })
+    } catch (e: any) {
+      expect(e.toString()).toMatchInlineSnapshot(`"Error: assert failed pc=279. at:165"`)
+      expect(e.stack).toMatchInlineSnapshot(`
+        "
+        // error
+        error_2:
+        proto 0 0
+        intc_0 // 0
+        assert <--- Error
+        retsub
+
+        // create
+        create_3:"
+      `)
+    }
+  })
 })

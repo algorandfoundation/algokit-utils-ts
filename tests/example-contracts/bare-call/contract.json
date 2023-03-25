@@ -28,6 +28,13 @@
             "returns": {
                 "type": "string"
             }
+        },
+        {
+            "name": "error",
+            "args": [],
+            "returns": {
+                "type": "void"
+            }
         }
     ],
     "networks": {}
