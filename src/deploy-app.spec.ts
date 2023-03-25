@@ -1,7 +1,7 @@
 import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
-import { getBareCallContractCreateParams, getBareCallContractDeployParams } from '../tests/example-contracts/bare-call/contract'
+import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import * as algokit from './'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './types/app'
@@ -19,7 +19,7 @@ describe('deploy-app', () => {
   test('Created app is retrieved by name with deployment metadata', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
-    const app1 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
+    const app1 = await algokit.createApp(await getTestingAppCreateParams(testAccount, creationMetadata), algod)
     await waitForIndexer()
 
     const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
@@ -43,15 +43,12 @@ describe('deploy-app', () => {
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
     const name3 = 'APP_3'
-    const app1 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, creationMetadata), algod)
-    const app2 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name2 }), algod)
-    const app3 = await algokit.createApp(await getBareCallContractCreateParams(testAccount, { ...creationMetadata, name: name3 }), algod)
+    const app1 = await algokit.createApp(await getTestingAppCreateParams(testAccount, creationMetadata), algod)
+    const app2 = await algokit.createApp(await getTestingAppCreateParams(testAccount, { ...creationMetadata, name: name2 }), algod)
+    const app3 = await algokit.createApp(await getTestingAppCreateParams(testAccount, { ...creationMetadata, name: name3 }), algod)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
-    const update1 = await algokit.updateApp(
-      { ...(await getBareCallContractCreateParams(testAccount, updateMetadata)), appId: app1.appId },
-      algod,
-    )
+    const update1 = await algokit.updateApp({ ...(await getTestingAppCreateParams(testAccount, updateMetadata)), appId: app1.appId }, algod)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const delete3 = await algokit.callApp({ appId: app3.appId, callType: 'delete', from: testAccount }, algod)
     await waitForIndexer()
@@ -83,7 +80,7 @@ describe('deploy-app', () => {
 
   test('Deploy new app', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const deployment = await getBareCallContractDeployParams({
+    const deployment = await getTestingAppDeployParams({
       from: testAccount,
       metadata: getMetadata(),
     })
@@ -112,7 +109,7 @@ describe('deploy-app', () => {
 
   test('Fail to deploy immutable app without TMPL_UPDATABLE', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const deployment = await getBareCallContractDeployParams({
+    const deployment = await getTestingAppDeployParams({
       from: testAccount,
       metadata: getMetadata({ updatable: true }),
     })
@@ -124,7 +121,7 @@ describe('deploy-app', () => {
 
   test('Fail to deploy permanent app without TMPL_DELETABLE', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const deployment = await getBareCallContractDeployParams({
+    const deployment = await getTestingAppDeployParams({
       from: testAccount,
       metadata: getMetadata({ deletable: true }),
     })
@@ -137,7 +134,7 @@ describe('deploy-app', () => {
   test('Deploy update to updatable updated app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: true })
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -145,7 +142,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
@@ -177,7 +174,7 @@ describe('deploy-app', () => {
   test('Deploy update to immutable updated app fails', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: false })
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -185,7 +182,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
@@ -206,7 +203,7 @@ describe('deploy-app', () => {
   test('Deploy failure for updated app fails if onupdate = Fail', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -214,7 +211,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
       codeInjectionValue: 2,
@@ -239,7 +236,7 @@ describe('deploy-app', () => {
   test('Deploy replacement to deletable, updated app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: true })
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -247,7 +244,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
@@ -281,7 +278,7 @@ describe('deploy-app', () => {
   test('Deploy failure for replacement of permanent, updated app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -289,7 +286,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
@@ -311,7 +308,7 @@ describe('deploy-app', () => {
   test('Deploy replacement of deletable schema broken app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: true })
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -319,7 +316,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       breakSchema: true,
@@ -353,7 +350,7 @@ describe('deploy-app', () => {
   test('Deploy replacement to schema broken, permanent app fails', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -361,7 +358,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       breakSchema: true,
@@ -382,7 +379,7 @@ describe('deploy-app', () => {
   test('Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
-    const deployment1 = await getBareCallContractDeployParams({
+    const deployment1 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
     })
@@ -390,7 +387,7 @@ describe('deploy-app', () => {
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getBareCallContractDeployParams({
+    const deployment2 = await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
       onSchemaBreak: 'fail',
@@ -414,7 +411,7 @@ describe('deploy-app', () => {
 
   test('Do nothing if deploying app with no changes', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
-    const deployment = await getBareCallContractDeployParams({
+    const deployment = await getTestingAppDeployParams({
       from: testAccount,
       metadata: getMetadata(),
     })

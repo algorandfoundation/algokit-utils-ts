@@ -1,8 +1,29 @@
-import algosdk, { ABIMethodParams, Algodv2, getApplicationAddress, Indexer, SourceMap, SuggestedParams } from 'algosdk'
+import algosdk, {
+  ABIMethod,
+  ABIMethodParams,
+  ABIType,
+  ABIValue,
+  Algodv2,
+  getApplicationAddress,
+  Indexer,
+  SourceMap,
+  SuggestedParams,
+} from 'algosdk'
 import { Buffer } from 'buffer'
-import { callApp, createApp, updateApp } from '../app'
+import {
+  callApp,
+  createApp,
+  getAppBoxNames,
+  getAppBoxValue,
+  getAppBoxValueFromABIType,
+  getAppGlobalState,
+  getAppLocalState,
+  updateApp,
+} from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../deploy-app'
 import { getSenderAddress } from '../transaction'
+import { transferAlgos } from '../transfer'
+import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
   ABIAppCallArgs,
@@ -10,11 +31,13 @@ import {
   AppLookup,
   AppMetadata,
   AppReference,
+  AppState,
+  BoxName,
   DELETABLE_TEMPLATE_NAME,
   OnSchemaBreak,
   OnUpdate,
   RawAppCallArgs,
-  TealTemplateParameters,
+  TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
 import { AppSpec, getABISignature } from './appspec'
@@ -76,7 +99,7 @@ export interface AppClientDeployParams {
   /** Parameters to control transaction sending */
   sendParams?: Omit<SendTransactionParams, 'skipSending' | 'skipWaiting'>
   /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParameters?: TealTemplateParameters
+  deployTimeParams?: TealTemplateParams
   /** What action to perform if a schema break is detected */
   onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
@@ -115,7 +138,7 @@ export type AppClientCallParams = AppClientCallArgs & {
 /** Parameters for creating a contract using ApplicationClient */
 export type AppClientCreateParams = AppClientCallParams & {
   /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParameters?: TealTemplateParameters
+  deployTimeParams?: TealTemplateParams
   /* Whether or not the contract should have deploy-time immutability control set, undefined = ignore */
   updatable?: boolean
   /* Whether or not the contract should have deploy-time permanence control set, undefined = ignore */
@@ -124,6 +147,17 @@ export type AppClientCreateParams = AppClientCallParams & {
 
 /** Parameters for updating a contract using ApplicationClient */
 export type AppClientUpdateParams = AppClientCreateParams
+
+/** Parameters for funding an app account */
+export interface FundAppAccountParams {
+  amount: AlgoAmount
+  /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
+  sender?: SendTransactionFrom
+  /** The transaction note for the smart contract call */
+  note?: TransactionNote
+  /** Parameters to control transaction sending */
+  sendParams?: SendTransactionParams
+}
 
 /** Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
@@ -143,11 +177,11 @@ export class ApplicationClient {
   private _clearSourceMap: SourceMap | undefined
 
   // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
-  // todo: support unwrapping a logic error and source map.
-  // todo: support readonly method calls
+  // todo: support importing and exporting a source map
+  // todo: support readonly, noop method calls
   // todo: support different oncomplete for create
-  // todo: find create, update, delete, etc. methods from app spec
-  // todo: intelligent version management
+  // todo: find create, update, delete, etc. methods from app spec and call them by default
+  // todo: intelligent version management when deploying
 
   /**
    * Create a new ApplicationClient instance
@@ -295,7 +329,7 @@ export class ApplicationClient {
   }
 
   async create(create?: AppClientCreateParams) {
-    const { sender, note, sendParams, deployTimeParameters, updatable, deletable, ...args } = create ?? {}
+    const { sender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = create ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to create app which already has an app id of ${this._appId}`)
@@ -313,11 +347,11 @@ export class ApplicationClient {
         {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           from: sender ?? this.sender!,
-          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
+          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParams), {
             updatable,
             deletable,
           }),
-          clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
+          clearStateProgram: performTemplateSubstitution(clear, deployTimeParams),
           schema: {
             globalByteSlices: this.appSpec.state.global.num_byte_slices,
             globalInts: this.appSpec.state.global.num_uints,
@@ -348,7 +382,7 @@ export class ApplicationClient {
   }
 
   async update(update?: AppClientUpdateParams) {
-    const { sender, note, sendParams, deployTimeParameters, updatable, deletable, ...args } = update ?? {}
+    const { sender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = update ?? {}
 
     if (this._appId === 0) {
       throw new Error(`Attempt to update app which doesn't have an app id defined`)
@@ -367,11 +401,11 @@ export class ApplicationClient {
           appId: this._appId,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           from: sender ?? this.sender!,
-          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParameters), {
+          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParams), {
             updatable,
             deletable,
           }),
-          clearStateProgram: performTemplateSubstitution(clear, deployTimeParameters),
+          clearStateProgram: performTemplateSubstitution(clear, deployTimeParams),
           args: this.getCallArgs(args),
           note: note,
           transactionParams: this.params,
@@ -440,13 +474,131 @@ export class ApplicationClient {
     }
   }
 
+  /**
+   * Funds ALGOs into the app account for this app.
+   * @param fund The parameters for the funding or the funding amount
+   * @returns The result of the funding
+   */
+  async fundAppAccount(fund: FundAppAccountParams | AlgoAmount) {
+    const { amount, sender, note, sendParams } = 'microAlgos' in fund ? ({ amount: fund } as FundAppAccountParams) : fund
+
+    if (!sender && !this.sender) {
+      throw new Error('No sender provided, unable to call app')
+    }
+
+    const ref = await this.getAppReference()
+    return await transferAlgos(
+      {
+        to: ref.appAddress,
+        amount: amount,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        from: this.sender ?? sender!,
+        note: note,
+        transactionParams: this.params,
+        ...(sendParams ?? {}),
+      },
+      this.algod,
+    )
+  }
+
+  /**
+   * Returns global state for the current app.
+   * @returns The global state
+   */
+  async getGlobalState(): Promise<AppState> {
+    const appRef = await this.getAppReference()
+
+    if (appRef.appId === 0) {
+      throw new Error('No app has been created yet, unable to get global state')
+    }
+
+    return getAppGlobalState(appRef.appId, this.algod)
+  }
+
+  /**
+   * Returns local state for the given account / account address.
+   * @returns The global state
+   */
+  async getLocalState(account: string | SendTransactionFrom): Promise<AppState> {
+    const appRef = await this.getAppReference()
+
+    if (appRef.appId === 0) {
+      throw new Error('No app has been created yet, unable to get global state')
+    }
+
+    return getAppLocalState(appRef.appId, account, this.algod)
+  }
+
+  /**
+   * Returns the names of all current boxes for the current app.
+   * @returns The names of the boxes
+   */
+  async getBoxNames(): Promise<BoxName[]> {
+    const appRef = await this.getAppReference()
+
+    if (appRef.appId === 0) {
+      throw new Error('No app has been created yet, unable to get global state')
+    }
+
+    return await getAppBoxNames(appRef.appId, this.algod)
+  }
+
+  /**
+   * Returns the values of all current boxes for the current app.
+   * Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
+   * @param filter Optional filter to filter which boxes' values are returned
+   * @returns The (name, value) pair of the boxes with values as raw byte arrays
+   */
+  async getBoxValues(filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: Uint8Array }[]> {
+    const appRef = await this.getAppReference()
+
+    if (appRef.appId === 0) {
+      throw new Error('No app has been created yet, unable to get global state')
+    }
+
+    const names = await this.getBoxNames()
+    return await Promise.all(
+      names
+        .filter(filter ?? ((_) => true))
+        .map(async (boxName) => ({ name: boxName, value: await getAppBoxValue(appRef.appId, boxName, this.algod) })),
+    )
+  }
+
+  /**
+   * Returns the values of all current boxes for the current app decoded using an ABI Type.
+   * Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
+   * @param type The ABI type to decode the values with
+   * @param filter Optional filter to filter which boxes' values are returned
+   * @returns The (name, value) pair of the boxes with values as the ABI Value
+   */
+  async getBoxValuesAsABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
+    const appRef = await this.getAppReference()
+
+    if (appRef.appId === 0) {
+      throw new Error('No app has been created yet, unable to get global state')
+    }
+
+    const names = await this.getBoxNames()
+    return await Promise.all(
+      names.filter(filter ?? ((_) => true)).map(async (boxName) => ({
+        name: boxName,
+        value: await getAppBoxValueFromABIType({ appId: appRef.appId, boxName, type }, this.algod),
+      })),
+    )
+  }
+
+  /**
+   * Returns the arguments for an app call for the given ABI method or raw method specification.
+   * @param args The call args specific to this application client
+   * @returns The call args ready to pass into an app call
+   */
   getCallArgs(args?: AppClientCallArgs): AppCallArgs | undefined {
     if (!args) {
       return undefined
     }
 
     if ('method' in args) {
-      const abiMethod = this.getABIMethod(args.method)
+      const abiMethod = this.getABIMethodParams(args.method)
       if (!abiMethod) {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
@@ -467,7 +619,12 @@ export class ApplicationClient {
     }
   }
 
-  getABIMethod(method: string): ABIMethodParams | undefined {
+  /**
+   * Returns the ABI Method parameters for the given method name string for the app represented by this application client instance
+   * @param method Either the name of the method or the ABI method spec definition string
+   * @returns The ABI method params for the given method
+   */
+  getABIMethodParams(method: string): ABIMethodParams | undefined {
     if (!method.includes('(')) {
       const methods = this.appSpec.contract.methods.filter((m) => m.name === method)
       if (methods.length > 1) {
@@ -482,6 +639,21 @@ export class ApplicationClient {
     return this.appSpec.contract.methods.find((m) => getABISignature(m) === method)
   }
 
+  /**
+   * Returns the ABI Method for the given method name string for the app represented by this application client instance
+   * @param method Either the name of the method or the ABI method spec definition string
+   * @returns The ABI method for the given method
+   */
+  getABIMethod(method: string): ABIMethod | undefined {
+    const methodParams = this.getABIMethodParams(method)
+    return methodParams ? new ABIMethod(methodParams) : undefined
+  }
+
+  /**
+   * Gets the reference information for the current application instance.
+   * `appId` will be 0 if it can't find an app.
+   * @returns The app reference, or if deployed using the `deploy` method, the app metadata too
+   */
   async getAppReference(): Promise<AppMetadata | AppReference> {
     if (!this.existingDeployments && this._creator) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

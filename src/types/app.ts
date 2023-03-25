@@ -1,4 +1,4 @@
-import { ABIArgument, ABIMethod, ABIMethodParams, ABIValue, Address, SourceMap, SuggestedParams, Transaction } from 'algosdk'
+import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, SourceMap, SuggestedParams, Transaction } from 'algosdk'
 import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './transaction'
 
 /** The name of the TEAL template variable for deploy-time immutability control */
@@ -71,8 +71,8 @@ export interface ABIAppCallArgs {
   args: ABIAppCallArg[]
   /** The optional lease for the transaction */
   lease?: string | Uint8Array
-  /** Any box references to load */
-  boxes?: BoxReference[]
+  /** Any box references to load either as the box name (if for the current app) or the reference with app id */
+  boxes?: (BoxReference | Uint8Array | string)[]
 }
 
 /** Arguments to pass to an app call either:
@@ -206,7 +206,7 @@ export interface AppLookup {
  * Note: Looks for `TMPL_{parameter}` for template replacements i.e. you can leave out the `TMPL_`.
  *
  */
-export interface TealTemplateParameters {
+export interface TealTemplateParams {
   [key: string]: string | bigint | number | Uint8Array
 }
 
@@ -233,7 +233,7 @@ export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'not
   /** The deployment metadata */
   metadata: AppDeployMetadata
   /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParameters?: TealTemplateParameters
+  deployTimeParams?: TealTemplateParams
   /** What action to perform if a schema break is detected */
   onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
@@ -254,4 +254,55 @@ export interface AppCompilationResult {
   compiledApproval: CompiledTeal
   /** The compilation result of clear */
   compiledClear: CompiledTeal
+}
+
+/** Object holding app state values */
+export interface AppState {
+  [key: string]:
+    | {
+        value: number | bigint
+        keyRaw: Uint8Array
+        keyBase64: string
+      }
+    | {
+        value: string
+        valueRaw: Uint8Array
+        valueBase64: string
+        keyRaw: Uint8Array
+        keyBase64: string
+      }
+}
+
+/** The name of a box storage box */
+export interface BoxName {
+  /** Name in UTF-8 */
+  name: string
+  /** Name in binary bytes */
+  nameRaw: Uint8Array
+  /** Name in Base64 */
+  nameBase64: string
+}
+
+/**
+ * Parameters to get and decode a box value as an ABI type.
+ */
+export interface BoxValueRequestParams {
+  /** The ID of the app return box names for */
+  appId: number
+  /** The name of the box to return either as a string, binary array or @see BoxName */
+  boxName: string | Uint8Array | BoxName
+  /** The ABI type to decode the value using */
+  type: ABIType
+}
+
+/**
+ * Parameters to get and decode a box value as an ABI type.
+ */
+export interface BoxValuesRequestParams {
+  /** The ID of the app return box names for */
+  appId: number
+  /** The names of the boxes to return either as a string, binary array or @see BoxName */
+  boxNames: (string | Uint8Array | BoxName)[]
+  /** The ABI type to decode the value using */
+  type: ABIType
 }

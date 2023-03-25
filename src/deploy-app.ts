@@ -15,7 +15,7 @@ import {
   DELETABLE_TEMPLATE_NAME,
   OnSchemaBreak,
   OnUpdate,
-  TealTemplateParameters,
+  TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './types/app'
 import { ConfirmedTransactionResult, SendTransactionFrom } from './types/transaction'
@@ -47,8 +47,17 @@ export async function deployApp(
       | (AppMetadata & { operationPerformed: 'nothing' })
     )
 > {
-  const { metadata, deployTimeParameters, onSchemaBreak, onUpdate, existingDeployments, createArgs, updateArgs, deleteArgs, ...appParams } =
-    deployment
+  const {
+    metadata,
+    deployTimeParams: deployTimeParameters,
+    onSchemaBreak,
+    onUpdate,
+    existingDeployments,
+    createArgs,
+    updateArgs,
+    deleteArgs,
+    ...appParams
+  } = deployment
 
   if (existingDeployments && existingDeployments.creator !== getSenderAddress(appParams.from)) {
     throw new Error(
@@ -518,13 +527,13 @@ export function replaceDeployTimeControlParams(tealCode: string, params: { updat
  * Looks for `TMPL_{parameter}` for template replacements.
  *
  * @param tealCode The TEAL logic to compile
- * @param templateParameters Any parameters to replace in the .teal file before compiling
+ * @param templateParams Any parameters to replace in the .teal file before compiling
  * @returns The TEAL code with replacements
  */
-export function performTemplateSubstitution(tealCode: string, templateParameters?: TealTemplateParameters) {
-  if (templateParameters !== undefined) {
-    for (const key in templateParameters) {
-      const value = templateParameters[key]
+export function performTemplateSubstitution(tealCode: string, templateParams?: TealTemplateParams) {
+  if (templateParams !== undefined) {
+    for (const key in templateParams) {
+      const value = templateParams[key]
       const token = `TMPL_${key.replace(/^TMPL_/, '')}`
       tealCode = tealCode.replace(
         new RegExp(token, 'g'),
@@ -547,17 +556,17 @@ export function performTemplateSubstitution(tealCode: string, templateParameters
  *
  * @param tealCode The TEAL logic to compile
  * @param algod An algod client
- * @param templateParameters Any parameters to replace in the .teal file before compiling
+ * @param templateParams Any parameters to replace in the .teal file before compiling
  * @param deploymentMetadata The deployment metadata the app will be deployed with
  * @returns The information about the compiled code
  */
 export async function performTemplateSubstitutionAndCompile(
   tealCode: string,
   algod: Algodv2,
-  templateParameters?: TealTemplateParameters,
+  templateParams?: TealTemplateParams,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {
-  tealCode = performTemplateSubstitution(tealCode, templateParameters)
+  tealCode = performTemplateSubstitution(tealCode, templateParams)
 
   if (deploymentMetadata) {
     tealCode = replaceDeployTimeControlParams(tealCode, deploymentMetadata)

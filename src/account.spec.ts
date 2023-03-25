@@ -15,7 +15,7 @@ describe('account', () => {
     const accountInfo = await algod.accountInformation(account.addr).do()
 
     expect(accountInfo['amount']).toBeGreaterThan(0)
-  })
+  }, 10_000)
 
   test('Same account is subsequently retrieved', async () => {
     const { algod, kmd } = localnet.context

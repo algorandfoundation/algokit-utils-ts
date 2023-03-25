@@ -1,0 +1,230 @@
+{
+    "hints": {
+        "call_abi(string)string": {
+            "read_only": true,
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "call_abi_txn(pay,string)string": {
+            "read_only": true,
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "set_global(uint64,uint64,string,byte[4])void": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "set_local(uint64,uint64,string,byte[4])void": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "set_box(byte[4],string)void": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "error()void": {
+            "read_only": true,
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "opt_in()void": {
+            "call_config": {
+                "opt_in": "CALL"
+            }
+        }
+    },
+    "source": {
+        "approval": "I3ByYWdtYSB2ZXJzaW9uIDgKaW50Y2Jsb2NrIDAgMQpieXRlY2Jsb2NrIDB4MTUxZjdjNzUgMHgKdHhuIE51bUFwcEFyZ3MKaW50Y18wIC8vIDAKPT0KYm56IG1haW5fbDE2CnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4ZjE3ZTgwYTUgLy8gImNhbGxfYWJpKHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2wxNQp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweDBhOTJhODFlIC8vICJjYWxsX2FiaV90eG4ocGF5LHN0cmluZylzdHJpbmciCj09CmJueiBtYWluX2wxNAp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweGE0Y2Y4ZGVhIC8vICJzZXRfZ2xvYmFsKHVpbnQ2NCx1aW50NjQsc3RyaW5nLGJ5dGVbNF0pdm9pZCIKPT0KYm56IG1haW5fbDEzCnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4Y2VjMjgzNGEgLy8gInNldF9sb2NhbCh1aW50NjQsdWludDY0LHN0cmluZyxieXRlWzRdKXZvaWQiCj09CmJueiBtYWluX2wxMgp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweGE0YjRhMjMwIC8vICJzZXRfYm94KGJ5dGVbNF0sc3RyaW5nKXZvaWQiCj09CmJueiBtYWluX2wxMQp0eG5hIEFwcGxpY2F0aW9uQXJncyAwCnB1c2hieXRlcyAweDQ0ZDBkYTBkIC8vICJlcnJvcigpdm9pZCIKPT0KYm56IG1haW5fbDEwCnR4bmEgQXBwbGljYXRpb25BcmdzIDAKcHVzaGJ5dGVzIDB4MzBjNmQ1OGEgLy8gIm9wdF9pbigpdm9pZCIKPT0KYm56IG1haW5fbDkKZXJyCm1haW5fbDk6CnR4biBPbkNvbXBsZXRpb24KaW50Y18xIC8vIE9wdEluCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIG9wdGluXzkKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDEwOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydApjYWxsc3ViIGVycm9yXzUKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDExOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydAp0eG5hIEFwcGxpY2F0aW9uQXJncyAxCnN0b3JlIDEyCnR4bmEgQXBwbGljYXRpb25BcmdzIDIKc3RvcmUgMTMKbG9hZCAxMgpsb2FkIDEzCmNhbGxzdWIgc2V0Ym94XzQKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDEyOgp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydAp0eG5hIEFwcGxpY2F0aW9uQXJncyAxCmJ0b2kKc3RvcmUgOAp0eG5hIEFwcGxpY2F0aW9uQXJncyAyCmJ0b2kKc3RvcmUgOQp0eG5hIEFwcGxpY2F0aW9uQXJncyAzCnN0b3JlIDEwCnR4bmEgQXBwbGljYXRpb25BcmdzIDQKc3RvcmUgMTEKbG9hZCA4CmxvYWQgOQpsb2FkIDEwCmxvYWQgMTEKY2FsbHN1YiBzZXRsb2NhbF8zCmludGNfMSAvLyAxCnJldHVybgptYWluX2wxMzoKdHhuIE9uQ29tcGxldGlvbgppbnRjXzAgLy8gTm9PcAo9PQp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAohPQomJgphc3NlcnQKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQpidG9pCnN0b3JlIDQKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgpidG9pCnN0b3JlIDUKdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMwpzdG9yZSA2CnR4bmEgQXBwbGljYXRpb25BcmdzIDQKc3RvcmUgNwpsb2FkIDQKbG9hZCA1CmxvYWQgNgpsb2FkIDcKY2FsbHN1YiBzZXRnbG9iYWxfMgppbnRjXzEgLy8gMQpyZXR1cm4KbWFpbl9sMTQ6CnR4biBPbkNvbXBsZXRpb24KaW50Y18wIC8vIE5vT3AKPT0KdHhuIEFwcGxpY2F0aW9uSUQKaW50Y18wIC8vIDAKIT0KJiYKYXNzZXJ0CnR4bmEgQXBwbGljYXRpb25BcmdzIDEKc3RvcmUgMgp0eG4gR3JvdXBJbmRleAppbnRjXzEgLy8gMQotCnN0b3JlIDEKbG9hZCAxCmd0eG5zIFR5cGVFbnVtCmludGNfMSAvLyBwYXkKPT0KYXNzZXJ0CmxvYWQgMQpsb2FkIDIKY2FsbHN1YiBjYWxsYWJpdHhuXzEKc3RvcmUgMwpieXRlY18wIC8vIDB4MTUxZjdjNzUKbG9hZCAzCmNvbmNhdApsb2cKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDE1Ogp0eG4gT25Db21wbGV0aW9uCmludGNfMCAvLyBOb09wCj09CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CiYmCmFzc2VydAp0eG5hIEFwcGxpY2F0aW9uQXJncyAxCmNhbGxzdWIgY2FsbGFiaV8wCnN0b3JlIDAKYnl0ZWNfMCAvLyAweDE1MWY3Yzc1CmxvYWQgMApjb25jYXQKbG9nCmludGNfMSAvLyAxCnJldHVybgptYWluX2wxNjoKdHhuIE9uQ29tcGxldGlvbgppbnRjXzAgLy8gTm9PcAo9PQpibnogbWFpbl9sMjIKdHhuIE9uQ29tcGxldGlvbgpwdXNoaW50IDQgLy8gVXBkYXRlQXBwbGljYXRpb24KPT0KYm56IG1haW5fbDIxCnR4biBPbkNvbXBsZXRpb24KcHVzaGludCA1IC8vIERlbGV0ZUFwcGxpY2F0aW9uCj09CmJueiBtYWluX2wyMAplcnIKbWFpbl9sMjA6CnR4biBBcHBsaWNhdGlvbklECmludGNfMCAvLyAwCiE9CmFzc2VydApjYWxsc3ViIGRlbGV0ZV84CmludGNfMSAvLyAxCnJldHVybgptYWluX2wyMToKdHhuIEFwcGxpY2F0aW9uSUQKaW50Y18wIC8vIDAKIT0KYXNzZXJ0CmNhbGxzdWIgdXBkYXRlXzcKaW50Y18xIC8vIDEKcmV0dXJuCm1haW5fbDIyOgp0eG4gQXBwbGljYXRpb25JRAppbnRjXzAgLy8gMAo9PQphc3NlcnQKY2FsbHN1YiBjcmVhdGVfNgppbnRjXzEgLy8gMQpyZXR1cm4KCi8vIGNhbGxfYWJpCmNhbGxhYmlfMDoKcHJvdG8gMSAxCmJ5dGVjXzEgLy8gIiIKcHVzaGJ5dGVzIDB4NDg2NTZjNmM2ZjJjMjAgLy8gIkhlbGxvLCAiCmZyYW1lX2RpZyAtMQpleHRyYWN0IDIgMApjb25jYXQKZnJhbWVfYnVyeSAwCmZyYW1lX2RpZyAwCmxlbgppdG9iCmV4dHJhY3QgNiAwCmZyYW1lX2RpZyAwCmNvbmNhdApmcmFtZV9idXJ5IDAKcmV0c3ViCgovLyBjYWxsX2FiaV90eG4KY2FsbGFiaXR4bl8xOgpwcm90byAyIDEKYnl0ZWNfMSAvLyAiIgpwdXNoYnl0ZXMgMHg1MzY1NmU3NDIwIC8vICJTZW50ICIKZnJhbWVfZGlnIC0yCmd0eG5zIEFtb3VudAppdG9iCmNvbmNhdApwdXNoYnl0ZXMgMHgyZTIwIC8vICIuICIKY29uY2F0CmZyYW1lX2RpZyAtMQpleHRyYWN0IDIgMApjb25jYXQKZnJhbWVfYnVyeSAwCmZyYW1lX2RpZyAwCmxlbgppdG9iCmV4dHJhY3QgNiAwCmZyYW1lX2RpZyAwCmNvbmNhdApmcmFtZV9idXJ5IDAKcmV0c3ViCgovLyBzZXRfZ2xvYmFsCnNldGdsb2JhbF8yOgpwcm90byA0IDAKcHVzaGJ5dGVzIDB4Njk2ZTc0MzEgLy8gImludDEiCmZyYW1lX2RpZyAtNAphcHBfZ2xvYmFsX3B1dApwdXNoYnl0ZXMgMHg2OTZlNzQzMiAvLyAiaW50MiIKZnJhbWVfZGlnIC0zCmFwcF9nbG9iYWxfcHV0CnB1c2hieXRlcyAweDYyNzk3NDY1NzMzMSAvLyAiYnl0ZXMxIgpmcmFtZV9kaWcgLTIKZXh0cmFjdCAyIDAKYXBwX2dsb2JhbF9wdXQKcHVzaGJ5dGVzIDB4NjI3OTc0NjU3MzMyIC8vICJieXRlczIiCmZyYW1lX2RpZyAtMQphcHBfZ2xvYmFsX3B1dApyZXRzdWIKCi8vIHNldF9sb2NhbApzZXRsb2NhbF8zOgpwcm90byA0IDAKdHhuIFNlbmRlcgpwdXNoYnl0ZXMgMHg2YzZmNjM2MTZjNWY2OTZlNzQzMSAvLyAibG9jYWxfaW50MSIKZnJhbWVfZGlnIC00CmFwcF9sb2NhbF9wdXQKdHhuIFNlbmRlcgpwdXNoYnl0ZXMgMHg2YzZmNjM2MTZjNWY2OTZlNzQzMiAvLyAibG9jYWxfaW50MiIKZnJhbWVfZGlnIC0zCmFwcF9sb2NhbF9wdXQKdHhuIFNlbmRlcgpwdXNoYnl0ZXMgMHg2YzZmNjM2MTZjNWY2Mjc5NzQ2NTczMzEgLy8gImxvY2FsX2J5dGVzMSIKZnJhbWVfZGlnIC0yCmV4dHJhY3QgMiAwCmFwcF9sb2NhbF9wdXQKdHhuIFNlbmRlcgpwdXNoYnl0ZXMgMHg2YzZmNjM2MTZjNWY2Mjc5NzQ2NTczMzIgLy8gImxvY2FsX2J5dGVzMiIKZnJhbWVfZGlnIC0xCmFwcF9sb2NhbF9wdXQKcmV0c3ViCgovLyBzZXRfYm94CnNldGJveF80Ogpwcm90byAyIDAKZnJhbWVfZGlnIC0yCmJveF9kZWwKcG9wCmZyYW1lX2RpZyAtMgpmcmFtZV9kaWcgLTEKZXh0cmFjdCAyIDAKYm94X3B1dApyZXRzdWIKCi8vIGVycm9yCmVycm9yXzU6CnByb3RvIDAgMAppbnRjXzAgLy8gMAphc3NlcnQKcmV0c3ViCgovLyBjcmVhdGUKY3JlYXRlXzY6CnByb3RvIDAgMAp0eG4gU2VuZGVyCmdsb2JhbCBDcmVhdG9yQWRkcmVzcwo9PQovLyB1bmF1dGhvcml6ZWQKYXNzZXJ0CnB1c2hieXRlcyAweDc2NjE2Yzc1NjUgLy8gInZhbHVlIgpwdXNoaW50IFRNUExfVkFMVUUgLy8gVE1QTF9WQUxVRQphcHBfZ2xvYmFsX3B1dApyZXRzdWIKCi8vIHVwZGF0ZQp1cGRhdGVfNzoKcHJvdG8gMCAwCnR4biBTZW5kZXIKZ2xvYmFsIENyZWF0b3JBZGRyZXNzCj09Ci8vIHVuYXV0aG9yaXplZAphc3NlcnQKcHVzaGludCBUTVBMX1VQREFUQUJMRSAvLyBUTVBMX1VQREFUQUJMRQovLyBDaGVjayBhcHAgaXMgdXBkYXRhYmxlCmFzc2VydApyZXRzdWIKCi8vIGRlbGV0ZQpkZWxldGVfODoKcHJvdG8gMCAwCnR4biBTZW5kZXIKZ2xvYmFsIENyZWF0b3JBZGRyZXNzCj09Ci8vIHVuYXV0aG9yaXplZAphc3NlcnQKcHVzaGludCBUTVBMX0RFTEVUQUJMRSAvLyBUTVBMX0RFTEVUQUJMRQovLyBDaGVjayBhcHAgaXMgZGVsZXRhYmxlCmFzc2VydApyZXRzdWIKCi8vIG9wdF9pbgpvcHRpbl85Ogpwcm90byAwIDAKaW50Y18xIC8vIDEKcmV0dXJu",
+        "clear": "I3ByYWdtYSB2ZXJzaW9uIDgKcHVzaGludCAwIC8vIDAKcmV0dXJu"
+    },
+    "state": {
+        "global": {
+            "num_byte_slices": 2,
+            "num_uints": 3
+        },
+        "local": {
+            "num_byte_slices": 2,
+            "num_uints": 2
+        }
+    },
+    "schema": {
+        "global": {
+            "declared": {
+                "bytes1": {
+                    "type": "bytes",
+                    "key": "bytes1",
+                    "descr": ""
+                },
+                "bytes2": {
+                    "type": "bytes",
+                    "key": "bytes2",
+                    "descr": ""
+                },
+                "int1": {
+                    "type": "uint64",
+                    "key": "int1",
+                    "descr": ""
+                },
+                "int2": {
+                    "type": "uint64",
+                    "key": "int2",
+                    "descr": ""
+                },
+                "value": {
+                    "type": "uint64",
+                    "key": "value",
+                    "descr": ""
+                }
+            },
+            "reserved": {}
+        },
+        "local": {
+            "declared": {
+                "local_bytes1": {
+                    "type": "bytes",
+                    "key": "local_bytes1",
+                    "descr": ""
+                },
+                "local_bytes2": {
+                    "type": "bytes",
+                    "key": "local_bytes2",
+                    "descr": ""
+                },
+                "local_int1": {
+                    "type": "uint64",
+                    "key": "local_int1",
+                    "descr": ""
+                },
+                "local_int2": {
+                    "type": "uint64",
+                    "key": "local_int2",
+                    "descr": ""
+                }
+            },
+            "reserved": {}
+        }
+    },
+    "contract": {
+        "name": "TestingApp",
+        "methods": [
+            {
+                "name": "call_abi",
+                "args": [
+                    {
+                        "type": "string",
+                        "name": "value"
+                    }
+                ],
+                "returns": {
+                    "type": "string"
+                }
+            },
+            {
+                "name": "call_abi_txn",
+                "args": [
+                    {
+                        "type": "pay",
+                        "name": "txn"
+                    },
+                    {
+                        "type": "string",
+                        "name": "value"
+                    }
+                ],
+                "returns": {
+                    "type": "string"
+                }
+            },
+            {
+                "name": "set_global",
+                "args": [
+                    {
+                        "type": "uint64",
+                        "name": "int1"
+                    },
+                    {
+                        "type": "uint64",
+                        "name": "int2"
+                    },
+                    {
+                        "type": "string",
+                        "name": "bytes1"
+                    },
+                    {
+                        "type": "byte[4]",
+                        "name": "bytes2"
+                    }
+                ],
+                "returns": {
+                    "type": "void"
+                }
+            },
+            {
+                "name": "set_local",
+                "args": [
+                    {
+                        "type": "uint64",
+                        "name": "int1"
+                    },
+                    {
+                        "type": "uint64",
+                        "name": "int2"
+                    },
+                    {
+                        "type": "string",
+                        "name": "bytes1"
+                    },
+                    {
+                        "type": "byte[4]",
+                        "name": "bytes2"
+                    }
+                ],
+                "returns": {
+                    "type": "void"
+                }
+            },
+            {
+                "name": "set_box",
+                "args": [
+                    {
+                        "type": "byte[4]",
+                        "name": "name"
+                    },
+                    {
+                        "type": "string",
+                        "name": "value"
+                    }
+                ],
+                "returns": {
+                    "type": "void"
+                }
+            },
+            {
+                "name": "error",
+                "args": [],
+                "returns": {
+                    "type": "void"
+                }
+            },
+            {
+                "name": "opt_in",
+                "args": [],
+                "returns": {
+                    "type": "void"
+                }
+            }
+        ],
+        "networks": {}
+    },
+    "bare_call_config": {
+        "no_op": "CREATE",
+        "update_application": "CALL",
+        "delete_application": "CALL"
+    }
+}

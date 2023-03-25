@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
-import { getBareCallContractData } from '../tests/example-contracts/bare-call/contract'
+import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import * as algokit from './'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 
@@ -14,7 +14,7 @@ describe('app', () => {
 
   test('createApp creates an app', async () => {
     const { algod, testAccount } = localnet.context
-    const contract = await getBareCallContractData()
+    const contract = await getTestingAppContract()
 
     const app = await algokit.createApp(
       {

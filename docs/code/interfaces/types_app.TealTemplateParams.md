@@ -1,8 +1,8 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/app](../modules/types_app.md) / TealTemplateParameters
+[@algorandfoundation/algokit-utils](../README.md) / [types/app](../modules/types_app.md) / TealTemplateParams
 
-# Interface: TealTemplateParameters
+# Interface: TealTemplateParams
 
-[types/app](../modules/types_app.md).TealTemplateParameters
+[types/app](../modules/types_app.md).TealTemplateParams
 
 Dictionary of deploy-time parameters to replace in a teal template.
 

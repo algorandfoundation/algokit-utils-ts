@@ -11,6 +11,7 @@
 ### Interfaces
 
 - [AppClientDeployParams](../interfaces/types_application_client.AppClientDeployParams.md)
+- [FundAppAccountParams](../interfaces/types_application_client.FundAppAccountParams.md)
 - [ResolveAppById](../interfaces/types_application_client.ResolveAppById.md)
 
 ### Type Aliases
@@ -32,7 +33,7 @@ The arguments to pass to an Application Client smart contract call
 
 #### Defined in
 
-[src/types/application-client.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L93)
+[src/types/application-client.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L116)
 
 ___
 
@@ -44,19 +45,19 @@ Parameters to construct a ApplicationClient contract call
 
 #### Defined in
 
-[src/types/application-client.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L106)
+[src/types/application-client.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L129)
 
 ___
 
 ### AppClientCreateParams
 
-Ƭ **AppClientCreateParams**: [`AppClientCallParams`](types_application_client.md#appclientcallparams) & { `deletable?`: `boolean` ; `deployTimeParameters?`: [`TealTemplateParameters`](../interfaces/types_app.TealTemplateParameters.md) ; `updatable?`: `boolean`  }
+Ƭ **AppClientCreateParams**: [`AppClientCallParams`](types_application_client.md#appclientcallparams) & { `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `updatable?`: `boolean`  }
 
 Parameters for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/application-client.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L116)
+[src/types/application-client.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L139)
 
 ___
 
@@ -68,7 +69,7 @@ Parameters for updating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/application-client.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L126)
+[src/types/application-client.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L149)
 
 ___
 
@@ -80,7 +81,7 @@ The details of an ARC-0032 app spec specified app
 
 #### Defined in
 
-[src/types/application-client.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L50)
+[src/types/application-client.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L73)
 
 ___
 
@@ -96,4 +97,4 @@ getCreatorAppsByName
 
 #### Defined in
 
-[src/types/application-client.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L25)
+[src/types/application-client.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L48)

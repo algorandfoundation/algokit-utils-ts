@@ -20,12 +20,16 @@
 - [AppLookup](../interfaces/types_app.AppLookup.md)
 - [AppMetadata](../interfaces/types_app.AppMetadata.md)
 - [AppReference](../interfaces/types_app.AppReference.md)
+- [AppState](../interfaces/types_app.AppState.md)
 - [AppStorageSchema](../interfaces/types_app.AppStorageSchema.md)
+- [BoxName](../interfaces/types_app.BoxName.md)
 - [BoxReference](../interfaces/types_app.BoxReference.md)
+- [BoxValueRequestParams](../interfaces/types_app.BoxValueRequestParams.md)
+- [BoxValuesRequestParams](../interfaces/types_app.BoxValuesRequestParams.md)
 - [CompiledTeal](../interfaces/types_app.CompiledTeal.md)
 - [CreateAppParams](../interfaces/types_app.CreateAppParams.md)
 - [RawAppCallArgs](../interfaces/types_app.RawAppCallArgs.md)
-- [TealTemplateParameters](../interfaces/types_app.TealTemplateParameters.md)
+- [TealTemplateParams](../interfaces/types_app.TealTemplateParams.md)
 - [UpdateAppParams](../interfaces/types_app.UpdateAppParams.md)
 
 ### Type Aliases

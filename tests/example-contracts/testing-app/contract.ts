@@ -5,7 +5,7 @@ import { AppDeployMetadata, APP_DEPLOY_NOTE_DAPP, OnSchemaBreak, OnUpdate } from
 import { AppSpec } from '../../../src/types/appspec'
 import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
 
-export const getBareCallContractData = async () => {
+export const getTestingAppContract = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'))
   const appSpec = JSON.parse(await appSpecFile.toString('utf-8')) as AppSpec
 
@@ -22,8 +22,8 @@ export const getBareCallContractData = async () => {
   }
 }
 
-export const getBareCallContractCreateParams = async (from: SendTransactionFrom, metadata: AppDeployMetadata) => {
-  const contract = await getBareCallContractData()
+export const getTestingAppCreateParams = async (from: SendTransactionFrom, metadata: AppDeployMetadata) => {
+  const contract = await getTestingAppContract()
   return {
     from: from,
     approvalProgram: replaceDeployTimeControlParams(contract.approvalProgram, metadata).replace('TMPL_VALUE', '1'),
@@ -37,7 +37,7 @@ export const getBareCallContractCreateParams = async (from: SendTransactionFrom,
   }
 }
 
-export const getBareCallContractDeployParams = async (deployment: {
+export const getTestingAppDeployParams = async (deployment: {
   from: SendTransactionFrom
   metadata: AppDeployMetadata
   codeInjectionValue?: number
@@ -45,7 +45,7 @@ export const getBareCallContractDeployParams = async (deployment: {
   onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
   breakSchema?: boolean
 }) => {
-  const contract = await getBareCallContractData()
+  const contract = await getTestingAppContract()
   return {
     approvalProgram: contract.approvalProgram,
     clearStateProgram: contract.clearStateProgram,
@@ -57,7 +57,7 @@ export const getBareCallContractDeployParams = async (deployment: {
           globalByteSlices: contract.stateSchema.globalByteSlices + 1,
         }
       : contract.stateSchema,
-    deployTimeParameters: {
+    deployTimeParams: {
       VALUE: deployment.codeInjectionValue ?? 1,
     },
     onSchemaBreak: deployment.onSchemaBreak,

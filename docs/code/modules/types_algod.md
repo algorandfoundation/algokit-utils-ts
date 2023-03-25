@@ -9,14 +9,30 @@
 - [ApplicationParams](../interfaces/types_algod.ApplicationParams.md)
 - [ApplicationResponse](../interfaces/types_algod.ApplicationResponse.md)
 - [ApplicationStateSchema](../interfaces/types_algod.ApplicationStateSchema.md)
-- [EvalDelta](../interfaces/types_algod.EvalDelta.md)
 - [PendingTransactionResponse](../interfaces/types_algod.PendingTransactionResponse.md)
 
 ### Type Aliases
 
+- [EvalDelta](types_algod.md#evaldelta)
 - [TealValue](types_algod.md#tealvalue)
 
 ## Type Aliases
+
+### EvalDelta
+
+Ƭ **EvalDelta**: { `action`: ``1`` ; `bytes`: `string`  } \| { `action`: ``2`` ; `uint`: `number` \| `bigint`  }
+
+Represents a TEAL value delta
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta
+
+#### Defined in
+
+[src/types/algod.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L66)
+
+___
 
 ### TealValue
 
@@ -30,4 +46,4 @@ https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
 
 #### Defined in
 
-[src/types/algod.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L99)
+[src/types/algod.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algod.ts#L116)

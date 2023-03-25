@@ -15,6 +15,7 @@
 - [capTransactionFee](index.md#captransactionfee)
 - [compileTeal](index.md#compileteal)
 - [createApp](index.md#createapp)
+- [decodeAppState](index.md#decodeappstate)
 - [deployApp](index.md#deployapp)
 - [encodeTransactionNote](index.md#encodetransactionnote)
 - [ensureFunded](index.md#ensurefunded)
@@ -29,8 +30,15 @@
 - [getAlgoNodeConfig](index.md#getalgonodeconfig)
 - [getAlgodConfigFromEnvironment](index.md#getalgodconfigfromenvironment)
 - [getAppArgsForTransaction](index.md#getappargsfortransaction)
+- [getAppBoxNames](index.md#getappboxnames)
+- [getAppBoxValue](index.md#getappboxvalue)
+- [getAppBoxValueFromABIType](index.md#getappboxvaluefromabitype)
+- [getAppBoxValues](index.md#getappboxvalues)
+- [getAppBoxValuesFromABIType](index.md#getappboxvaluesfromabitype)
 - [getAppByIndex](index.md#getappbyindex)
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
+- [getAppGlobalState](index.md#getappglobalstate)
+- [getAppLocalState](index.md#getapplocalstate)
 - [getApplicationClient](index.md#getapplicationclient)
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
 - [getDefaultLocalNetConfig](index.md#getdefaultlocalnetconfig)
@@ -122,7 +130,7 @@ The result of the call
 
 #### Defined in
 
-[src/app.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L128)
+[src/app.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L134)
 
 ___
 
@@ -172,7 +180,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L293)
+[src/app.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L443)
 
 ___
 
@@ -197,7 +205,27 @@ The details of the created app, or the transaction to create it if `skipSending`
 
 #### Defined in
 
-[src/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L34)
+[src/app.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L40)
+
+___
+
+### decodeAppState
+
+▸ **decodeAppState**(`state`): [`AppState`](../interfaces/types_app.AppState.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `state` | { `key`: `string` ; `value`: [`EvalDelta`](types_algod.md#evaldelta) \| [`TealValue`](types_algod.md#tealvalue)  }[] |
+
+#### Returns
+
+[`AppState`](../interfaces/types_app.AppState.md)
+
+#### Defined in
+
+[src/app.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L304)
 
 ___
 
@@ -344,7 +372,7 @@ ___
 
 #### Defined in
 
-[src/app.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L167)
+[src/app.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L173)
 
 ___
 
@@ -659,7 +687,142 @@ object
 
 #### Defined in
 
-[src/app.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L199)
+[src/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L347)
+
+___
+
+### getAppBoxNames
+
+▸ **getAppBoxNames**(`appId`, `algod`): `Promise`<[`BoxName`](../interfaces/types_app.BoxName.md)[]\>
+
+Returns the names of the boxes for the given app.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appId` | `number` | The ID of the app return box names for |
+| `algod` | `default` | An algod client instance |
+
+#### Returns
+
+`Promise`<[`BoxName`](../interfaces/types_app.BoxName.md)[]\>
+
+The current box names
+
+#### Defined in
+
+[src/app.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L244)
+
+___
+
+### getAppBoxValue
+
+▸ **getAppBoxValue**(`appId`, `boxName`, `algod`): `Promise`<`Uint8Array`\>
+
+Returns the value of the given box name for the given app.
+
+**`See`**
+
+BoxName
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appId` | `number` | The ID of the app return box names for |
+| `boxName` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or |
+| `algod` | `default` | An algod client instance |
+
+#### Returns
+
+`Promise`<`Uint8Array`\>
+
+The current box value as a byte array
+
+#### Defined in
+
+[src/app.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L262)
+
+___
+
+### getAppBoxValueFromABIType
+
+▸ **getAppBoxValueFromABIType**(`request`, `algod`): `Promise`<`ABIValue`\>
+
+Returns the value of the given box name for the given app decoded based on the given ABI type.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `request` | [`BoxValueRequestParams`](../interfaces/types_app.BoxValueRequestParams.md) | The parameters for the box value request |
+| `algod` | `default` | An algod client instance |
+
+#### Returns
+
+`Promise`<`ABIValue`\>
+
+The current box value as an ABI value
+
+#### Defined in
+
+[src/app.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L285)
+
+___
+
+### getAppBoxValues
+
+▸ **getAppBoxValues**(`appId`, `boxNames`, `algod`): `Promise`<`Uint8Array`[]\>
+
+Returns the value of the given box names for the given app.
+
+**`See`**
+
+BoxName
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appId` | `number` | The ID of the app return box names for |
+| `boxNames` | (`string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md))[] | The names of the boxes to return either as a string, binary array or |
+| `algod` | `default` | An algod client instance |
+
+#### Returns
+
+`Promise`<`Uint8Array`[]\>
+
+The current box values as a byte array in the same order as the passed in box names
+
+#### Defined in
+
+[src/app.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L275)
+
+___
+
+### getAppBoxValuesFromABIType
+
+▸ **getAppBoxValuesFromABIType**(`request`, `algod`): `Promise`<`ABIValue`[]\>
+
+Returns the value of the given box names for the given app decoded based on the given ABI type.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `request` | [`BoxValuesRequestParams`](../interfaces/types_app.BoxValuesRequestParams.md) | The parameters for the box value request |
+| `algod` | `default` | An algod client instance |
+
+#### Returns
+
+`Promise`<`ABIValue`[]\>
+
+The current box values as an ABI value in the same order as the passed in box names
+
+#### Defined in
+
+[src/app.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L297)
 
 ___
 
@@ -684,7 +847,7 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L282)
+[src/app.ts:432](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L432)
 
 ___
 
@@ -714,7 +877,58 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[src/deploy-app.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L475)
+[src/deploy-app.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L484)
+
+___
+
+### getAppGlobalState
+
+▸ **getAppGlobalState**(`appId`, `algod`): `Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+
+Returns the current global state values for the given app ID
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appId` | `number` | The ID of the app return global state for |
+| `algod` | `default` | An algod client instance |
+
+#### Returns
+
+`Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+
+The current global state
+
+#### Defined in
+
+[src/app.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L210)
+
+___
+
+### getAppLocalState
+
+▸ **getAppLocalState**(`appId`, `account`, `algod`): `Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+
+Returns the current global state values for the given app ID and account
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appId` | `number` | The ID of the app return global state for |
+| `account` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | Either the string address of an account or an account object for the account to get local state for the given app |
+| `algod` | `default` | An algod client instance |
+
+#### Returns
+
+`Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+
+The current local state for the given (app, account) combination
+
+#### Defined in
+
+[src/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L227)
 
 ___
 
@@ -770,7 +984,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[src/deploy-app.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L379)
+[src/deploy-app.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L388)
 
 ___
 
@@ -1041,7 +1255,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[src/deploy-app.ts:366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L366)
+[src/deploy-app.ts:375](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L375)
 
 ___
 
@@ -1176,7 +1390,7 @@ ___
 
 ### performTemplateSubstitution
 
-▸ **performTemplateSubstitution**(`tealCode`, `templateParameters?`): `string`
+▸ **performTemplateSubstitution**(`tealCode`, `templateParams?`): `string`
 
 Performs template substitution of a teal file.
 
@@ -1187,7 +1401,7 @@ Looks for `TMPL_{parameter}` for template replacements.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `tealCode` | `string` | The TEAL logic to compile |
-| `templateParameters?` | [`TealTemplateParameters`](../interfaces/types_app.TealTemplateParameters.md) | Any parameters to replace in the .teal file before compiling |
+| `templateParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Any parameters to replace in the .teal file before compiling |
 
 #### Returns
 
@@ -1197,13 +1411,13 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/deploy-app.ts:524](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L524)
+[src/deploy-app.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L533)
 
 ___
 
 ### performTemplateSubstitutionAndCompile
 
-▸ **performTemplateSubstitutionAndCompile**(`tealCode`, `algod`, `templateParameters?`, `deploymentMetadata?`): `Promise`<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
+▸ **performTemplateSubstitutionAndCompile**(`tealCode`, `algod`, `templateParams?`, `deploymentMetadata?`): `Promise`<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
 
 Performs template substitution of a teal file and compiles it, returning the compiled result.
 
@@ -1215,7 +1429,7 @@ Looks for `TMPL_{parameter}` for template replacements.
 | :------ | :------ | :------ |
 | `tealCode` | `string` | The TEAL logic to compile |
 | `algod` | `default` | An algod client |
-| `templateParameters?` | [`TealTemplateParameters`](../interfaces/types_app.TealTemplateParameters.md) | Any parameters to replace in the .teal file before compiling |
+| `templateParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Any parameters to replace in the .teal file before compiling |
 | `deploymentMetadata?` | [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) | The deployment metadata the app will be deployed with |
 
 #### Returns
@@ -1226,7 +1440,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/deploy-app.ts:554](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L554)
+[src/deploy-app.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L563)
 
 ___
 
@@ -1287,7 +1501,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/deploy-app.ts:493](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L493)
+[src/deploy-app.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L502)
 
 ___
 
@@ -1473,7 +1687,7 @@ The transaction
 
 #### Defined in
 
-[src/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L88)
+[src/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L94)
 
 ___
 

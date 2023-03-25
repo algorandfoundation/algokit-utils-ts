@@ -1,0 +1,112 @@
+{
+    "name": "TestingApp",
+    "methods": [
+        {
+            "name": "call_abi",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "value"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "call_abi_txn",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "txn"
+                },
+                {
+                    "type": "string",
+                    "name": "value"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "set_global",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "int1"
+                },
+                {
+                    "type": "uint64",
+                    "name": "int2"
+                },
+                {
+                    "type": "string",
+                    "name": "bytes1"
+                },
+                {
+                    "type": "byte[4]",
+                    "name": "bytes2"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "set_local",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "int1"
+                },
+                {
+                    "type": "uint64",
+                    "name": "int2"
+                },
+                {
+                    "type": "string",
+                    "name": "bytes1"
+                },
+                {
+                    "type": "byte[4]",
+                    "name": "bytes2"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "set_box",
+            "args": [
+                {
+                    "type": "byte[4]",
+                    "name": "name"
+                },
+                {
+                    "type": "string",
+                    "name": "value"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "error",
+            "args": [],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "opt_in",
+            "args": [],
+            "returns": {
+                "type": "void"
+            }
+        }
+    ],
+    "networks": {}
+}

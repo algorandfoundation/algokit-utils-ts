@@ -31,9 +31,9 @@ ___
 
 ### boxes
 
-• `Optional` **boxes**: [`BoxReference`](types_app.BoxReference.md)[]
+• `Optional` **boxes**: (`string` \| `Uint8Array` \| [`BoxReference`](types_app.BoxReference.md))[]
 
-Any box references to load
+Any box references to load either as the box name (if for the current app) or the reference with app id
 
 #### Defined in
 

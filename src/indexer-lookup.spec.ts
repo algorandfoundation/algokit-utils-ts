@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
-import { getBareCallContractCreateParams } from '../tests/example-contracts/bare-call/contract'
+import { getTestingAppCreateParams } from '../tests/example-contracts/testing-app/contract'
 import * as algokit from './'
 import { algorandFixture } from './testing'
 
@@ -61,7 +61,7 @@ describe('indexer-lookup', () => {
       initialFunds: algokit.algos(1),
       suppressLog: true,
     })
-    const createParams = await getBareCallContractCreateParams(testAccount, {
+    const createParams = await getTestingAppCreateParams(testAccount, {
       name: 'test',
       version: '1.0',
       updatable: false,

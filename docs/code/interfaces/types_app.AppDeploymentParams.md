@@ -20,7 +20,7 @@ The parameters to deploy an app
 - [clearStateProgram](types_app.AppDeploymentParams.md#clearstateprogram)
 - [createArgs](types_app.AppDeploymentParams.md#createargs)
 - [deleteArgs](types_app.AppDeploymentParams.md#deleteargs)
-- [deployTimeParameters](types_app.AppDeploymentParams.md#deploytimeparameters)
+- [deployTimeParams](types_app.AppDeploymentParams.md#deploytimeparams)
 - [existingDeployments](types_app.AppDeploymentParams.md#existingdeployments)
 - [fee](types_app.AppDeploymentParams.md#fee)
 - [from](types_app.AppDeploymentParams.md#from)
@@ -92,9 +92,9 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 ___
 
-### deployTimeParameters
+### deployTimeParams
 
-• `Optional` **deployTimeParameters**: [`TealTemplateParameters`](types_app.TealTemplateParameters.md)
+• `Optional` **deployTimeParams**: [`TealTemplateParams`](types_app.TealTemplateParams.md)
 
 Any deploy-time parameters to replace in the TEAL code
 

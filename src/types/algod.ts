@@ -63,11 +63,28 @@ export interface PendingTransactionResponse {
 }
 
 /** Represents a TEAL value delta @see https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta */
-export interface EvalDelta {
-  action: number
-  bytes: string
-  uint: number
-}
+export type EvalDelta =
+  | {
+      /**
+       * Value `1` refers to **bytes**, value `2` refers to **uint**
+       */
+      action: 1
+      /**
+       * Bytes value.
+       */
+      bytes: string
+    }
+  | {
+      /**
+       * Value `1` refers to **bytes**, value `2` refers to **uint**
+       */
+      action: 2
+
+      /**
+       * Uint value.
+       */
+      uint: number | bigint
+    }
 
 /** The response from the application API @see https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2applicationsapplication-id */
 export interface ApplicationResponse {

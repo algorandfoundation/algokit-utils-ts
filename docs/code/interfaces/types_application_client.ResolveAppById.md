@@ -23,7 +23,7 @@ The id of an existing app to call using this client, or 0 if the app hasn't been
 
 #### Defined in
 
-[src/types/application-client.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L44)
+[src/types/application-client.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L67)
 
 ___
 
@@ -39,4 +39,4 @@ ApplicationClient.deploy (default: uses the name in the ABI contract)
 
 #### Defined in
 
-[src/types/application-client.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L46)
+[src/types/application-client.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L69)
