@@ -1,0 +1,87 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - main
+      - release
+  workflow_dispatch:
+
+concurrency: release
+
+permissions:
+  contents: write
+
+jobs:
+  ci:
+    name: Continuous Integration
+    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
+    with:
+      run-commit-lint: true
+      pre-test-script: |
+        pipx install algokit
+        algokit localnet start
+
+  check_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Check docs are up to date
+        shell: bash
+        run: |
+          npm ci --ignore-scripts
+          npm run generate:code-docs
+          # Add untracked files as empty so they come up in diff
+          git add -N .
+          # Print changed files and error out if there are changes after generating docs
+          git diff --exit-code --name-only
+
+  build:
+    name: Build
+    uses: makerxstudio/shared-config/.github/workflows/node-build-zip.yml@main
+    needs:
+      - ci
+      - check_docs
+    with:
+      build-path: dist
+      artifact-name: package
+
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # semantic-release needs node 18
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Download built package
+        uses: actions/download-artifact@v3
+        with:
+          name: package
+          path: artifacts
+
+      - name: Unzip package
+        shell: bash
+        run: |
+          mkdir -p dist
+          unzip -q "artifacts/package.zip" -d dist
+
+      - name: Install dependencies to get semantic release components and plugins
+        run: npm ci --ignore-scripts
+
+      - name: 'Semantic release'
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

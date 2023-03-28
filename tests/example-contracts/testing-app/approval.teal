@@ -1,0 +1,362 @@
+#pragma version 8
+intcblock 0 1
+bytecblock 0x151f7c75 0x
+txn NumAppArgs
+intc_0 // 0
+==
+bnz main_l16
+txna ApplicationArgs 0
+pushbytes 0xf17e80a5 // "call_abi(string)string"
+==
+bnz main_l15
+txna ApplicationArgs 0
+pushbytes 0x0a92a81e // "call_abi_txn(pay,string)string"
+==
+bnz main_l14
+txna ApplicationArgs 0
+pushbytes 0xa4cf8dea // "set_global(uint64,uint64,string,byte[4])void"
+==
+bnz main_l13
+txna ApplicationArgs 0
+pushbytes 0xcec2834a // "set_local(uint64,uint64,string,byte[4])void"
+==
+bnz main_l12
+txna ApplicationArgs 0
+pushbytes 0xa4b4a230 // "set_box(byte[4],string)void"
+==
+bnz main_l11
+txna ApplicationArgs 0
+pushbytes 0x44d0da0d // "error()void"
+==
+bnz main_l10
+txna ApplicationArgs 0
+pushbytes 0x30c6d58a // "opt_in()void"
+==
+bnz main_l9
+err
+main_l9:
+txn OnCompletion
+intc_1 // OptIn
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub optin_9
+intc_1 // 1
+return
+main_l10:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub error_5
+intc_1 // 1
+return
+main_l11:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+store 12
+txna ApplicationArgs 2
+store 13
+load 12
+load 13
+callsub setbox_4
+intc_1 // 1
+return
+main_l12:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+btoi
+store 8
+txna ApplicationArgs 2
+btoi
+store 9
+txna ApplicationArgs 3
+store 10
+txna ApplicationArgs 4
+store 11
+load 8
+load 9
+load 10
+load 11
+callsub setlocal_3
+intc_1 // 1
+return
+main_l13:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+btoi
+store 4
+txna ApplicationArgs 2
+btoi
+store 5
+txna ApplicationArgs 3
+store 6
+txna ApplicationArgs 4
+store 7
+load 4
+load 5
+load 6
+load 7
+callsub setglobal_2
+intc_1 // 1
+return
+main_l14:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+store 2
+txn GroupIndex
+intc_1 // 1
+-
+store 1
+load 1
+gtxns TypeEnum
+intc_1 // pay
+==
+assert
+load 1
+load 2
+callsub callabitxn_1
+store 3
+bytec_0 // 0x151f7c75
+load 3
+concat
+log
+intc_1 // 1
+return
+main_l15:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+callsub callabi_0
+store 0
+bytec_0 // 0x151f7c75
+load 0
+concat
+log
+intc_1 // 1
+return
+main_l16:
+txn OnCompletion
+intc_0 // NoOp
+==
+bnz main_l22
+txn OnCompletion
+pushint 4 // UpdateApplication
+==
+bnz main_l21
+txn OnCompletion
+pushint 5 // DeleteApplication
+==
+bnz main_l20
+err
+main_l20:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub delete_8
+intc_1 // 1
+return
+main_l21:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub update_7
+intc_1 // 1
+return
+main_l22:
+txn ApplicationID
+intc_0 // 0
+==
+assert
+callsub create_6
+intc_1 // 1
+return
+
+// call_abi
+callabi_0:
+proto 1 1
+bytec_1 // ""
+pushbytes 0x48656c6c6f2c20 // "Hello, "
+frame_dig -1
+extract 2 0
+concat
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub
+
+// call_abi_txn
+callabitxn_1:
+proto 2 1
+bytec_1 // ""
+pushbytes 0x53656e7420 // "Sent "
+frame_dig -2
+gtxns Amount
+itob
+concat
+pushbytes 0x2e20 // ". "
+concat
+frame_dig -1
+extract 2 0
+concat
+frame_bury 0
+frame_dig 0
+len
+itob
+extract 6 0
+frame_dig 0
+concat
+frame_bury 0
+retsub
+
+// set_global
+setglobal_2:
+proto 4 0
+pushbytes 0x696e7431 // "int1"
+frame_dig -4
+app_global_put
+pushbytes 0x696e7432 // "int2"
+frame_dig -3
+app_global_put
+pushbytes 0x627974657331 // "bytes1"
+frame_dig -2
+extract 2 0
+app_global_put
+pushbytes 0x627974657332 // "bytes2"
+frame_dig -1
+app_global_put
+retsub
+
+// set_local
+setlocal_3:
+proto 4 0
+txn Sender
+pushbytes 0x6c6f63616c5f696e7431 // "local_int1"
+frame_dig -4
+app_local_put
+txn Sender
+pushbytes 0x6c6f63616c5f696e7432 // "local_int2"
+frame_dig -3
+app_local_put
+txn Sender
+pushbytes 0x6c6f63616c5f627974657331 // "local_bytes1"
+frame_dig -2
+extract 2 0
+app_local_put
+txn Sender
+pushbytes 0x6c6f63616c5f627974657332 // "local_bytes2"
+frame_dig -1
+app_local_put
+retsub
+
+// set_box
+setbox_4:
+proto 2 0
+frame_dig -2
+box_del
+pop
+frame_dig -2
+frame_dig -1
+extract 2 0
+box_put
+retsub
+
+// error
+error_5:
+proto 0 0
+intc_0 // 0
+assert
+retsub
+
+// create
+create_6:
+proto 0 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+pushbytes 0x76616c7565 // "value"
+pushint TMPL_VALUE // TMPL_VALUE
+app_global_put
+retsub
+
+// update
+update_7:
+proto 0 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+pushint TMPL_UPDATABLE // TMPL_UPDATABLE
+// Check app is updatable
+assert
+retsub
+
+// delete
+delete_8:
+proto 0 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+pushint TMPL_DELETABLE // TMPL_DELETABLE
+// Check app is deletable
+assert
+retsub
+
+// opt_in
+optin_9:
+proto 0 0
+intc_1 // 1
+return

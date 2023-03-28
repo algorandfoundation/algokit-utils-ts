@@ -1,0 +1,23 @@
+name: Prod Publish
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prod_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Merge main -> release
+        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f
+        with:
+          type: now
+          from_branch: main
+          target_branch: release
+          github_token: ${{ secrets.GITHUB_TOKEN }}
