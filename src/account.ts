@@ -47,6 +47,16 @@ export function mnemonicAccount(mnemonicSecret: string): Account {
   return algosdk.mnemonicToSecretKey(mnemonicSecret)
 }
 
+/** Returns a new, random Algorand account with secret key loaded.
+ *
+ * This is a wrapper around algosdk.generateAccount to provide a more friendly/obvious name.
+ *
+ */
+export function randomAccount(): Account {
+  // This method is confusingly named, so this function provides a more dev friendly "wrapper" name
+  return algosdk.generateAccount()
+}
+
 /**
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
