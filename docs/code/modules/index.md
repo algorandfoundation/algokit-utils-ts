@@ -58,6 +58,7 @@
 - [multisigAccount](index.md#multisigaccount)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
 - [performTemplateSubstitutionAndCompile](index.md#performtemplatesubstitutionandcompile)
+- [randomAccount](index.md#randomaccount)
 - [rekeyedAccount](index.md#rekeyedaccount)
 - [replaceDeployTimeControlParams](index.md#replacedeploytimecontrolparams)
 - [searchTransactions](index.md#searchtransactions)
@@ -424,7 +425,7 @@ The requested account with private key loaded from the environment variables or 
 
 #### Defined in
 
-[src/account.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L79)
+[src/account.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L89)
 
 ___
 
@@ -446,7 +447,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L132)
+[src/account.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L142)
 
 ___
 
@@ -468,7 +469,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L124)
+[src/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L134)
 
 ___
 
@@ -1037,7 +1038,7 @@ If running on Sandbox then it will return the default dispenser account automati
 
 #### Defined in
 
-[src/account.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L144)
+[src/account.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L154)
 
 ___
 
@@ -1441,6 +1442,24 @@ The information about the compiled code
 #### Defined in
 
 [src/deploy-app.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L563)
+
+___
+
+### randomAccount
+
+▸ **randomAccount**(): `Account`
+
+Returns a new, random Algorand account with secret key loaded.
+
+This is a wrapper around algosdk.generateAccount to provide a more friendly/obvious name.
+
+#### Returns
+
+`Account`
+
+#### Defined in
+
+[src/account.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L55)
 
 ___
 
