@@ -162,6 +162,7 @@ describe('application-client', () => {
         method: 'error',
         methodArgs: [],
       })
+      invariant(false)
     } catch (e: any) {
       expect(e.toString()).toMatchInlineSnapshot(`"Error: assert failed pc=607. at:315"`)
       expect(e.stack).toMatchInlineSnapshot(`
