@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Merge main -> release
-        uses: devmasx/merge-branch@854d3ac
+        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f
         with:
           type: now
           from_branch: main
