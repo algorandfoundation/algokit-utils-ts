@@ -508,7 +508,7 @@ AlgoNode (mainnet)
 
 **`Example`**
 
-Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const algod = getAlgoClient({server: 'http://localhost', port: '4001', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  await algod.healthCheck().do()
@@ -565,7 +565,7 @@ AlgoNode (mainnet)
 
 **`Example`**
 
-Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  await indexer.makeHealthCheck().do()
@@ -593,7 +593,7 @@ ___
 
 Returns a KMD SDK client that automatically retries on idempotent calls
 
-KMD client allows you to export private keys, which is useful to get the default account in a sandbox network.
+KMD client allows you to export private keys, which is useful to get the default account in a LocalNet network.
 
 **`Example`**
 
@@ -606,7 +606,7 @@ Default (load from environment variables)
 
 **`Example`**
 
-Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const kmd = getAlgoKmdClient({server: 'http://localhost', port: '4002', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
 ```
@@ -1017,7 +1017,7 @@ ___
 
 Returns an account (with private key loaded) that can act as a dispenser
 
-If running on Sandbox then it will return the default dispenser account automatically,
+If running on LocalNet then it will return the default dispenser account automatically,
  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC
 
 **`See`**
@@ -1128,9 +1128,9 @@ ___
 
 Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
 
-This is useful to get idempotent accounts from a local sandbox without having to specify the private key (which will change when resetting the sandbox).
+This is useful to get idempotent accounts from LocalNet without having to specify the private key (which will change when resetting the LocalNet).
 
-This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh sandbox.
+This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh LocalNet.
 
 If this is used via
 

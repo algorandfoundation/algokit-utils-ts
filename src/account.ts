@@ -145,14 +145,14 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
 
 /** Returns an account (with private key loaded) that can act as a dispenser
  *
- * If running on Sandbox then it will return the default dispenser account automatically,
+ * If running on LocalNet then it will return the default dispenser account automatically,
  *  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC @see {getAccount}
  *
  * @param algod An algod client
  * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
  */
 export async function getDispenserAccount(algod: Algodv2, kmd?: Kmd) {
-  // If we are running against a sandbox we can use the default account within it, otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
+  // If we are running against LocalNet we can use the default account within it, otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
   const canFundFromDefaultAccount = await isLocalNet(algod)
   return canFundFromDefaultAccount ? await getLocalNetDispenserAccount(algod, kmd) : await getAccount(DISPENSER_ACCOUNT, algod)
 }
