@@ -3,7 +3,9 @@ import { Buffer } from 'buffer'
 import { Config } from './'
 import { PendingTransactionResponse } from './types/algod'
 import { AlgoAmount } from './types/amount'
+import { ABIReturn } from './types/app'
 import {
+  AtomicTransactionComposerToSend,
   SendTransactionFrom,
   SendTransactionParams,
   SendTransactionResult,
@@ -71,15 +73,15 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
     : algosdk.makeBasicAccountTransactionSigner(sender)
 })
 
-/** Signs and sends the given transaction to the chain
+/** Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
  *
- * @param send The details for the transaction to send, including:
+ * @param send The details for the transaction to prepare/send, including:
  *   * `transaction`: The unsigned transaction
  *   * `from`: The account to sign the transaction with: either an account with private key loaded or a logic signature account
  *   * `config`: The sending configuration for this transaction
  * @param algod An algod client
  *
- * @returns An object with transaction (`transaction`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
+ * @returns An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `undefined`) confirmation (`confirmation`)
  */
 export const sendTransaction = async function (
   send: {
@@ -92,14 +94,7 @@ export const sendTransaction = async function (
   const { transaction, from, sendParams } = send
   const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, atc } = sendParams ?? {}
 
-  if (fee) {
-    transaction.fee = fee.microAlgos
-    transaction.flatFee = true
-  }
-
-  if (maxFee !== undefined) {
-    capTransactionFee(transaction, maxFee)
-  }
+  controlFees(transaction, { fee, maxFee })
 
   if (atc) {
     atc.addTransaction({ txn: transaction, signer: getSenderTransactionSigner(from) })
@@ -118,6 +113,7 @@ export const sendTransaction = async function (
       : 'sign' in from
       ? from.sign(transaction)
       : (await from.signer([transaction], [0]))[0]
+
   await algod.sendRawTransaction(signedTransaction).do()
 
   Config.getLogger(suppressLog).info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
@@ -131,13 +127,72 @@ export const sendTransaction = async function (
 }
 
 /**
+ * Signs and sends transactions that have been collected by an @see AtomicTransactionComposer.
+ * @param atcSend The parameters controlling the send, including:
+ *  * `atc` The @see AtomicTransactionComposer
+ *  * `sendParams` The parameters to control the send behaviour
+ * @param algod An algod client
+ * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
+ */
+export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: Algodv2) {
+  const { atc, sendParams } = atcSend
+
+  const transactionsWithSigner = atc.buildGroup()
+
+  const transactionsToSend = transactionsWithSigner.map((t) => {
+    return t.txn
+  })
+  let groupId: string | undefined = undefined
+  if (transactionsToSend.length === 1) {
+    Config.getLogger(sendParams?.suppressLog).info(`Sending transaction ${transactionsToSend[0].txID()}`)
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
+    Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
+      transactionsToSend,
+    })
+
+    Config.getLogger(sendParams?.suppressLog).debug(
+      `Transaction IDs (${groupId})`,
+      transactionsToSend.map((t) => t.txID()),
+    )
+  }
+
+  const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
+
+  Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
+
+  let confirmations: PendingTransactionResponse[] | undefined = undefined
+  if (!sendParams?.skipWaiting) {
+    confirmations = await Promise.all(
+      transactionsToSend.map(async (t) => (await algod.pendingTransactionInformation(t.txID()).do()) as PendingTransactionResponse),
+    )
+  }
+
+  return {
+    groupId,
+    confirmations,
+    txIds: transactionsToSend.map((t) => t.txID()),
+    transactions: transactionsToSend,
+    returns: result.methodResults.map(
+      (r) =>
+        ({
+          decodeError: r.decodeError,
+          returnValue: r.returnValue,
+          rawReturnValue: r.rawReturnValue,
+        } as ABIReturn),
+    ),
+  }
+}
+
+/**
  * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
  *
  * @param groupSend The group details to send, with:
  *   * `transactions`: The array of transactions to send along with their signing account
  *   * `sendParams`: The parameters to dictate how the group is sent
  * @param algod An algod client
- * @returns An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
+ * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendGroupOfTransactions = async function (groupSend: TransactionGroupToSend, algod: Algodv2) {
   const { transactions, signer, sendParams } = groupSend
@@ -169,44 +224,8 @@ export const sendGroupOfTransactions = async function (groupSend: TransactionGro
 
   const atc = new AtomicTransactionComposer()
   transactionsWithSigner.forEach((txn) => atc.addTransaction(txn))
-  const signedTransactions = await atc.gatherSignatures()
 
-  const transactionsToSend = transactionsWithSigner.map((t) => {
-    return t.txn
-  })
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const groupId = Buffer.from(transactionsToSend[0].group!).toString('base64')
-  Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
-    transactionsToSend,
-  })
-
-  Config.getLogger(sendParams?.suppressLog).debug(
-    `Sender Addresses (${groupId})`,
-    transactionsWithSigner.map((t) => getSenderAddress(t.sender)),
-  )
-
-  Config.getLogger(sendParams?.suppressLog).debug(
-    `Transaction IDs (${groupId})`,
-    transactionsToSend.map((t) => t.txID()),
-  )
-
-  // https://developer.algorand.org/docs/rest-apis/algod/v2/#post-v2transactions
-  await algod.sendRawTransaction(signedTransactions).do()
-
-  Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
-
-  let confirmations: PendingTransactionResponse[] | undefined = undefined
-  if (!sendParams?.skipWaiting) {
-    confirmations = await Promise.all(
-      transactionsToSend.map(async (t) => await waitForConfirmation(t.txID(), sendParams?.maxRoundsToWaitForConfirmation ?? 5, algod)),
-    )
-  }
-
-  return {
-    groupId,
-    confirmations,
-    txIds: transactionsToSend.map((t) => t.txID()),
-  }
+  return await sendAtomicTransactionComposer({ atc, sendParams }, algod)
 }
 
 /**
@@ -264,10 +283,10 @@ export const waitForConfirmation = async function (
  * Limit the acceptable fee to a defined amount of µALGOs.
  * This also sets the transaction to be flatFee to ensure the transaction only succeeds at
  * the estimated rate.
- * @param transaction The transaction to cap
+ * @param transaction The transaction to cap or suggested params object about to be used to create a transaction
  * @param maxAcceptableFee The maximum acceptable fee to pay
  */
-export function capTransactionFee(transaction: algosdk.Transaction, maxAcceptableFee: AlgoAmount) {
+export function capTransactionFee(transaction: algosdk.Transaction | SuggestedParams, maxAcceptableFee: AlgoAmount) {
   // If a flat fee hasn't already been defined
   if (!transaction.flatFee) {
     // Once a transaction has been constructed by algosdk, transaction.fee indicates what the total transaction fee
@@ -286,11 +305,46 @@ export function capTransactionFee(transaction: algosdk.Transaction, maxAcceptabl
 }
 
 /**
+ * Allows for control of fees on a @see Transaction or @see SuggestedParams object
+ * @param transaction The transaction or suggested params
+ * @param feeControl The fee control parameters
+ */
+export function controlFees<T extends SuggestedParams | Transaction>(
+  transaction: T,
+  feeControl: { fee?: AlgoAmount; maxFee?: AlgoAmount },
+) {
+  const { fee, maxFee } = feeControl
+  if (fee) {
+    transaction.fee = fee.microAlgos
+    transaction.flatFee = true
+  }
+
+  if (maxFee !== undefined) {
+    capTransactionFee(transaction, maxFee)
+  }
+
+  return transaction
+}
+
+/**
  * Returns suggested transaction parameters from algod unless some are already provided.
  * @param params Optionally provide parameters to use
  * @param algod Algod algod
  * @returns The suggested transaction parameters
  */
 export async function getTransactionParams(params: SuggestedParams | undefined, algod: Algodv2) {
-  return params ?? (await algod.getTransactionParams().do())
+  return params ? { ...params } : await algod.getTransactionParams().do()
+}
+
+/**
+ * Returns the array of transactions currently present in the given @see AtomicTransactionComposer
+ * @param atc The atomic transaction composer
+ * @returns The array of transactions with signers
+ */
+export function getAtomicTransactionComposerTransactions(atc: AtomicTransactionComposer) {
+  try {
+    return atc.clone().buildGroup()
+  } catch {
+    return []
+  }
 }

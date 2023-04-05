@@ -101,6 +101,42 @@
             }
         },
         {
+            "name": "create_abi",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "input"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "update_abi",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "input"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "delete_abi",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "input"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        },
+        {
             "name": "opt_in",
             "args": [],
             "returns": {

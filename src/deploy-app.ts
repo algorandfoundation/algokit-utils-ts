@@ -1,10 +1,11 @@
-import { Algodv2, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
+import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
 import { Config } from './'
 import { callApp, compileTeal, createApp, getAppByIndex, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
-import { getSenderAddress, sendGroupOfTransactions } from './transaction'
+import { getSenderAddress, sendAtomicTransactionComposer } from './transaction'
 import { ApplicationStateSchema } from './types/algod'
 import {
+  ABIReturn,
   AppCompilationResult,
   AppDeploymentParams,
   AppDeployMetadata,
@@ -18,7 +19,7 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './types/app'
-import { ConfirmedTransactionResult, SendTransactionFrom } from './types/transaction'
+import { ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
 
 /**
  * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
@@ -42,8 +43,14 @@ export async function deployApp(
 ): Promise<
   Partial<AppCompilationResult> &
     (
-      | (ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' | 'update' })
-      | (ConfirmedTransactionResult & AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' })
+      | (ConfirmedTransactionResults & AppMetadata & { return?: ABIReturn; operationPerformed: 'create' | 'update' })
+      | (ConfirmedTransactionResults &
+          AppMetadata & {
+            return?: ABIReturn
+            deleteReturn?: ABIReturn
+            deleteResult: ConfirmedTransactionResult
+            operationPerformed: 'replace'
+          })
       | (AppMetadata & { operationPerformed: 'nothing' })
     )
 > {
@@ -91,14 +98,16 @@ export async function deployApp(
   const apps = existingDeployments ?? (await getCreatorAppsByName(appParams.from, indexer!))
 
   const create = async (
-    skipSending?: boolean,
-  ): Promise<Partial<AppCompilationResult> & ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'create' }> => {
+    atc?: AtomicTransactionComposer,
+  ): Promise<
+    Partial<AppCompilationResult> & ConfirmedTransactionResults & AppMetadata & { return?: ABIReturn; operationPerformed: 'create' }
+  > => {
     const result = await createApp(
       {
         ...appParams,
         args: createArgs,
         note: getAppDeploymentTransactionNote(metadata),
-        skipSending: skipSending ?? false,
+        atc,
         skipWaiting: false,
       },
       algod,
@@ -106,8 +115,12 @@ export async function deployApp(
 
     return {
       transaction: result.transaction,
+      transactions: result.transactions,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       confirmation: result.confirmation!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      confirmations: result.confirmations!,
+      return: result.return,
       appId: result.appId,
       appAddress: result.appAddress,
       createdMetadata: metadata,
@@ -163,16 +176,24 @@ export async function deployApp(
 
   const replace = async (): Promise<
     Partial<AppCompilationResult> &
-      ConfirmedTransactionResult &
-      AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
+      ConfirmedTransactionResults &
+      AppMetadata & {
+        return?: ABIReturn
+        deleteReturn?: ABIReturn
+        deleteResult: ConfirmedTransactionResult
+        operationPerformed: 'replace'
+      }
   > => {
+    const atc = new AtomicTransactionComposer()
+
     // Create
 
     Config.getLogger(appParams.suppressLog).info(
       `Deploying a new ${metadata.name} app for ${getSenderAddress(appParams.from)}; deploying app with version ${metadata.version}.`,
     )
 
-    const { transaction: createTransaction } = await create(true)
+    const { transaction: createTransaction } = await create(atc)
+    const createTransactions = atc.clone().buildGroup()
 
     // Delete
 
@@ -189,23 +210,15 @@ export async function deployApp(
         transactionParams: appParams.transactionParams,
         suppressLog: appParams.suppressLog,
         skipSending: true,
+        atc,
       },
       algod,
     )
 
     // Ensure create and delete happen atomically
-    const { confirmations } = await sendGroupOfTransactions(
+    const { transactions, confirmations, returns } = await sendAtomicTransactionComposer(
       {
-        transactions: [
-          {
-            transaction: createTransaction,
-            signer: appParams.from,
-          },
-          {
-            transaction: deleteTransaction,
-            signer: appParams.from,
-          },
-        ],
+        atc,
         sendParams: {
           maxRoundsToWaitForConfirmation: appParams.maxRoundsToWaitForConfirmation,
           skipWaiting: false,
@@ -216,9 +229,9 @@ export async function deployApp(
     )
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const createConfirmation = confirmations![0]
+    const createConfirmation = confirmations![createTransactions.length - 1]
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const deleteConfirmation = confirmations![1]
+    const deleteConfirmation = confirmations![confirmations!.length - 1]
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const newAppIndex = createConfirmation['application-index']!
 
@@ -230,8 +243,13 @@ export async function deployApp(
 
     return {
       transaction: createTransaction,
+      transactions: transactions,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       confirmation: createConfirmation!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      confirmations: confirmations!,
+      return: returns[0],
+      deleteReturn: returns[1],
       appId: newAppIndex,
       appAddress: getApplicationAddress(newAppIndex),
       createdMetadata: metadata,
@@ -244,12 +262,12 @@ export async function deployApp(
       compiledApproval,
       compiledClear,
     } as Partial<AppCompilationResult> &
-      ConfirmedTransactionResult &
+      ConfirmedTransactionResults &
       AppMetadata & { deleteResult: ConfirmedTransactionResult; operationPerformed: 'replace' }
   }
 
   const update = async (): Promise<
-    Partial<AppCompilationResult> & ConfirmedTransactionResult & AppMetadata & { operationPerformed: 'update' }
+    Partial<AppCompilationResult> & ConfirmedTransactionResults & AppMetadata & { return?: ABIReturn; operationPerformed: 'update' }
   > => {
     Config.getLogger(appParams.suppressLog).info(
       `Updating existing ${metadata.name} app for ${getSenderAddress(appParams.from)} to version ${metadata.version}.`,
@@ -273,8 +291,12 @@ export async function deployApp(
 
     return {
       transaction: result.transaction,
+      transactions: result.transactions,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       confirmation: result.confirmation!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      confirmations: result.confirmations!,
+      return: result.return,
       appId: existingApp.appId,
       appAddress: existingApp.appAddress,
       createdMetadata: existingApp.createdMetadata,
