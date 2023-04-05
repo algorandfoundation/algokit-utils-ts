@@ -1,5 +1,6 @@
 import algosdk, {
   ABIMethod,
+  ABIResult,
   ABIValue,
   Algodv2,
   AtomicTransactionComposer,
@@ -14,7 +15,6 @@ import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTran
 import { ApplicationResponse, EvalDelta, PendingTransactionResponse, TealValue } from './types/algod'
 import {
   ABIReturn,
-  ABI_RETURN_PREFIX,
   AppCallArgs,
   AppCallParams,
   AppCallTransactionResult,
@@ -171,32 +171,31 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
 }
 
 export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransactionResponse): ABIReturn | undefined {
-  try {
-    if (!args || !('method' in args)) {
-      return undefined
+  if (!args || !('method' in args)) {
+    return undefined
+  }
+  const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
+
+  if (method.returns.type !== 'void' && confirmation) {
+    // The parseMethodResponse method mutates the second parameter :(
+    const resultDummy: ABIResult = {
+      txID: '',
+      method,
+      rawReturnValue: new Uint8Array(),
     }
-    const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
-    if (method.returns.type !== 'void' && confirmation) {
-      const logs = confirmation.logs || []
-      if (logs.length === 0) {
-        throw new Error('App call transaction did not log a return value')
-      }
-      const lastLog = logs[logs.length - 1]
-      if (lastLog.byteLength < 4 || lastLog.slice(0, 4).toString() !== ABI_RETURN_PREFIX.toString()) {
-        throw new Error('App call transaction did not log a return value (ABI_RETURN_PREFIX not found)')
-      }
-      return {
-        rawReturnValue: new Uint8Array(lastLog.slice(4)),
-        returnValue: method.returns.type.decode(new Uint8Array(lastLog.slice(4))),
-        decodeError: undefined,
-      }
-    }
-  } catch (e) {
-    return {
-      rawReturnValue: undefined,
-      returnValue: undefined,
-      decodeError: e as Error,
-    }
+    const response = AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation)
+    return !response.decodeError
+      ? {
+          rawReturnValue: response.rawReturnValue,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          returnValue: response.returnValue!,
+          decodeError: undefined,
+        }
+      : {
+          rawReturnValue: undefined,
+          returnValue: undefined,
+          decodeError: response.decodeError,
+        }
   }
   return undefined
 }
