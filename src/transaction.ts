@@ -1,7 +1,6 @@
-import algosdk, { Algodv2, SuggestedParams, Transaction } from 'algosdk'
+import algosdk, { Algodv2, AtomicTransactionComposer, SuggestedParams, Transaction, TransactionSigner } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
-import { TransactionSignerAccount } from './types/account'
 import { PendingTransactionResponse } from './types/algod'
 import { AlgoAmount } from './types/amount'
 import {
@@ -49,6 +48,29 @@ export const getSenderAddress = function (sender: SendTransactionFrom) {
   return 'addr' in sender ? sender.addr : sender.address()
 }
 
+const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
+  const cache = new Map()
+  const cached = function (this: unknown, val: T) {
+    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
+  }
+  cached.cache = cache
+  return cached as (val: T) => R
+}
+
+/**
+ * Returns a @see TransactionSigner for the given transaction sender.
+ * This function has memoization, so will return the same transaction signer for a given sender.
+ * @param sender A transaction sender
+ * @returns A transaction signer
+ */
+export const getSenderTransactionSigner = memoize(function (sender: SendTransactionFrom): TransactionSigner {
+  return 'signer' in sender
+    ? sender.signer
+    : 'lsig' in sender
+    ? algosdk.makeLogicSigAccountTransactionSigner(sender)
+    : algosdk.makeBasicAccountTransactionSigner(sender)
+})
+
 /** Signs and sends the given transaction to the chain
  *
  * @param send The details for the transaction to send, including:
@@ -68,7 +90,7 @@ export const sendTransaction = async function (
   algod: Algodv2,
 ): Promise<SendTransactionResult> {
   const { transaction, from, sendParams } = send
-  const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation } = sendParams ?? {}
+  const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, atc } = sendParams ?? {}
 
   if (fee) {
     transaction.fee = fee.microAlgos
@@ -77,6 +99,11 @@ export const sendTransaction = async function (
 
   if (maxFee !== undefined) {
     capTransactionFee(transaction, maxFee)
+  }
+
+  if (atc) {
+    atc.addTransaction({ txn: transaction, signer: getSenderTransactionSigner(from) })
+    return { transaction }
   }
 
   if (skipSending) {
@@ -88,9 +115,9 @@ export const sendTransaction = async function (
       ? transaction.signTxn(from.sk)
       : 'lsig' in from
       ? algosdk.signLogicSigTransactionObject(transaction, from).blob
-      : 'signer' in from
-      ? (await from.signer([transaction], [0]))[0]
-      : from.sign(transaction)
+      : 'sign' in from
+      ? from.sign(transaction)
+      : (await from.signer([transaction], [0]))[0]
   await algod.sendRawTransaction(signedTransaction).do()
 
   Config.getLogger(suppressLog).info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
@@ -102,12 +129,6 @@ export const sendTransaction = async function (
 
   return { transaction, confirmation }
 }
-
-const groupBy = <T>(array: T[], predicate: (value: T, id: number, array: T[]) => string) =>
-  array.reduce((acc, value, id, array) => {
-    ;(acc[predicate(value, id, array)] ||= []).push(value)
-    return acc
-  }, {} as { [key: string]: T[] })
 
 /**
  * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
@@ -121,84 +142,47 @@ const groupBy = <T>(array: T[], predicate: (value: T, id: number, array: T[]) =>
 export const sendGroupOfTransactions = async function (groupSend: TransactionGroupToSend, algod: Algodv2) {
   const { transactions, signer, sendParams } = groupSend
 
+  const defaultTransactionSigner = signer ? getSenderTransactionSigner(signer) : undefined
+
   const transactionsWithSigner = await Promise.all(
     transactions.map(async (t) => {
-      if ('signer' in t) return t
+      if ('signer' in t)
+        return {
+          txn: t.transaction,
+          signer: getSenderTransactionSigner(t.signer),
+          sender: t.signer,
+        }
 
       const txn = 'then' in t ? (await t).transaction : t
       if (!signer) {
-        throw new Error(`Attempt to send transaction ${txn.txID()} as part of a group transaction, but no signer was provided.`)
+        throw new Error(`Attempt to send transaction ${txn.txID()} as part of a group transaction, but no signer parameter was provided.`)
       }
 
       return {
-        transaction: txn,
-        signer: signer,
+        txn,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        signer: defaultTransactionSigner!,
+        sender: signer,
       }
     }),
   )
+
+  const atc = new AtomicTransactionComposer()
+  transactionsWithSigner.forEach((txn) => atc.addTransaction(txn))
+  const signedTransactions = await atc.gatherSignatures()
+
   const transactionsToSend = transactionsWithSigner.map((t) => {
-    return t.transaction
+    return t.txn
+  })
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const groupId = Buffer.from(transactionsToSend[0].group!).toString('base64')
+  Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
+    transactionsToSend,
   })
 
-  const group = algosdk.assignGroupID(transactionsToSend)
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const groupId = Buffer.from(group[0].group!).toString('base64')
-
-  Config.getLogger(sendParams?.suppressLog).info(`Sending group of transactions (${groupId})`, { transactionsToSend })
-
-  // Sign transactions either using TransactionSigners, or not
-  let signedTransactions: Uint8Array[]
-  if (transactionsWithSigner.find((t) => 'signer' in t.signer)) {
-    // Validate all or nothing for transaction signers
-    if (transactionsWithSigner.find((t) => !('signer' in t.signer))) {
-      throw new Error(
-        "When issuing a group transaction the signers should either all be TransactionSignerAccount's or all not. " +
-          'Received at least one TransactionSignerAccount, but not all of them so failing the send.',
-      )
-    }
-
-    // Group transaction signers by signer
-    const groupedBySigner = groupBy(
-      transactionsWithSigner.map((t, i) => ({
-        signer: t.signer as TransactionSignerAccount,
-        id: i,
-      })),
-      (t) => t.signer.addr,
-    )
-
-    // Perform the signature, grouped by signer
-    const signed = (
-      await Promise.all(
-        Object.values(groupedBySigner).map(async (signature) => {
-          const indexes = signature.map((s) => s.id)
-          const signed = await signature[0].signer.signer(group, indexes)
-          return signed.map((txn, i) => ({
-            txn,
-            id: indexes[i],
-          }))
-        }),
-      )
-    ).flatMap((a) => a)
-
-    // Extract the signed transactions in order
-    signedTransactions = signed.sort((s1, s2) => s1.id - s2.id).map((s) => s.txn)
-  } else {
-    signedTransactions = group.map((groupedTransaction, id) => {
-      const signer = transactionsWithSigner[id].signer
-      return 'sk' in signer
-        ? groupedTransaction.signTxn(signer.sk)
-        : 'lsig' in signer
-        ? algosdk.signLogicSigTransactionObject(groupedTransaction, signer).blob
-        : 'sign' in signer
-        ? signer.sign(groupedTransaction)
-        : // This bit will never happen because above if statement
-          new Uint8Array()
-    })
-  }
-
   Config.getLogger(sendParams?.suppressLog).debug(
-    `Signer IDs (${groupId})`,
-    transactionsWithSigner.map((t) => getSenderAddress(t.signer)),
+    `Sender Addresses (${groupId})`,
+    transactionsWithSigner.map((t) => getSenderAddress(t.sender)),
   )
 
   Config.getLogger(sendParams?.suppressLog).debug(

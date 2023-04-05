@@ -10,6 +10,7 @@ export class MultisigAccount {
   _params: algosdk.MultisigMetadata
   _signingAccounts: (algosdk.Account | SigningAccount)[]
   _addr: string
+  _signer: TransactionSigner
 
   /** The parameters for the multisig account */
   get params(): Readonly<algosdk.MultisigMetadata> {
@@ -26,10 +27,18 @@ export class MultisigAccount {
     return this._addr
   }
 
+  get signer(): TransactionSigner {
+    return this._signer
+  }
+
   constructor(multisigParams: MultisigMetadata, signingAccounts: (Account | SigningAccount)[]) {
     this._params = multisigParams
     this._signingAccounts = signingAccounts
     this._addr = algosdk.multisigAddress(multisigParams)
+    this._signer = algosdk.makeMultiSigAccountTransactionSigner(
+      multisigParams,
+      signingAccounts.map((a) => a.sk),
+    )
   }
 
   /**
@@ -54,6 +63,7 @@ export class MultisigAccount {
 /** Account wrapper that supports a rekeyed account */
 export class SigningAccount implements Account {
   private _account: Account
+  private _signer: TransactionSigner
   private _sender: string
 
   /**
@@ -71,10 +81,10 @@ export class SigningAccount implements Account {
   }
 
   /**
-   * Algorand account of the underlying signing account
+   * Transaction signer for the underlying signing account
    */
-  get signer(): Account {
-    return this._account
+  get signer(): TransactionSigner {
+    return this._signer
   }
 
   /**
@@ -90,6 +100,7 @@ export class SigningAccount implements Account {
   constructor(account: Account, sender: string | undefined) {
     this._account = account
     this._sender = sender ?? account.addr
+    this._signer = algosdk.makeBasicAccountTransactionSigner(account)
   }
 }
 

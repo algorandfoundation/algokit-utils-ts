@@ -1,4 +1,4 @@
-import { Account, LogicSigAccount, Transaction } from 'algosdk'
+import { Account, AtomicTransactionComposer, LogicSigAccount, Transaction } from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { PendingTransactionResponse } from './algod'
 import { AlgoAmount } from './amount'
@@ -26,6 +26,8 @@ export interface SendTransactionParams {
   skipSending?: boolean
   /** Whether to skip waiting for the submitted transaction (only relevant if `skipSending` is `false` or unset) */
   skipWaiting?: boolean
+  /** An optional @see AtomicTransactionComposer to add the transaction to, if specified then has the same effect as `skipSending: true` */
+  atc?: AtomicTransactionComposer
   /** Whether to suppress log messages from transaction send, default: do not suppress */
   suppressLog?: boolean
   /** The flat fee you want to pay, useful for covering extra fees in a transaction group or app call */
@@ -65,10 +67,10 @@ export interface TransactionToSign {
  */
 export interface TransactionGroupToSend {
   /** Any parameters to control the semantics of the send to the network */
-  sendParams?: Omit<Omit<SendTransactionParams, 'maxFee'>, 'skipSending'>
+  sendParams?: Omit<SendTransactionParams, 'maxFee' | 'skipSending' | 'atc'>
   /** The list of transactions to send, which can either be a raw transaction (in which case `signer` is required),
-   *   the async result of an AlgoKit utils method that returns a @see SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is required)
-   *   or the transaction with its signer
+   *   the async result of an AlgoKit utils method that returns a @see SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is also required)
+   *   or the transaction with its signer (`signer` is ignored)
    **/
   transactions: (TransactionToSign | Transaction | Promise<SendTransactionResult>)[]
   /** Optional signer to pass in, required if at least one transaction provided is just the transaction, ignored otherwise */
