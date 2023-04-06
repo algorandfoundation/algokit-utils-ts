@@ -492,7 +492,7 @@ export class ApplicationClient {
         to: ref.appAddress,
         amount: amount,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        from: this.sender ?? sender!,
+        from: sender ?? this.sender!,
         note: note,
         transactionParams: this.params,
         ...(sendParams ?? {}),
