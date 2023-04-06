@@ -17,8 +17,10 @@ Result from calling an app
 ### Properties
 
 - [confirmation](types_app.AppCallTransactionResult.md#confirmation)
+- [confirmations](types_app.AppCallTransactionResult.md#confirmations)
 - [return](types_app.AppCallTransactionResult.md#return)
 - [transaction](types_app.AppCallTransactionResult.md#transaction)
+- [transactions](types_app.AppCallTransactionResult.md#transactions)
 
 ## Properties
 
@@ -34,7 +36,19 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+
+___
+
+### confirmations
+
+• `Optional` **confirmations**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)[]
+
+The responses if the transactions are sent and waited for
+
+#### Defined in
+
+[src/types/app.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L162)
 
 ___
 
@@ -46,7 +60,7 @@ If an ABI method was called the processed return value
 
 #### Defined in
 
-[src/types/app.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L158)
+[src/types/app.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L164)
 
 ___
 
@@ -62,4 +76,16 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+
+___
+
+### transactions
+
+• **transactions**: `Transaction`[]
+
+All transactions sent as part of the app call (i.e. multiple if an ABI call is made which includes transaction arguments)
+
+#### Defined in
+
+[src/types/app.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L160)

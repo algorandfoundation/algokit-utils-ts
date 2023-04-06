@@ -24,7 +24,7 @@ Name in UTF-8
 
 #### Defined in
 
-[src/types/app.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L279)
+[src/types/app.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L285)
 
 ___
 
@@ -36,7 +36,7 @@ Name in Base64
 
 #### Defined in
 
-[src/types/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L283)
+[src/types/app.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L289)
 
 ___
 
@@ -48,4 +48,4 @@ Name in binary bytes
 
 #### Defined in
 
-[src/types/app.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L281)
+[src/types/app.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L287)

@@ -21,6 +21,7 @@ transferAlgos call.
 ### Properties
 
 - [amount](types_transfer.AlgoTransferParams.md#amount)
+- [atc](types_transfer.AlgoTransferParams.md#atc)
 - [fee](types_transfer.AlgoTransferParams.md#fee)
 - [from](types_transfer.AlgoTransferParams.md#from)
 - [maxFee](types_transfer.AlgoTransferParams.md#maxfee)
@@ -46,6 +47,26 @@ The amount to send
 
 ___
 
+### atc
+
+• `Optional` **atc**: `AtomicTransactionComposer`
+
+An optional
+
+**`See`**
+
+AtomicTransactionComposer to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[atc](types_transaction.SendTransactionParams.md#atc)
+
+#### Defined in
+
+[src/types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
+
+___
+
 ### fee
 
 • `Optional` **fee**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
@@ -58,7 +79,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -86,7 +107,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 
@@ -102,7 +123,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
+[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
 
 ___
 
@@ -122,7 +143,7 @@ ___
 
 • `Optional` **skipSending**: `boolean`
 
-Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain)
+Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain, unless `atc` specified)
   (and instead just return the raw transaction, e.g. so you can add it to a group of transactions)
 
 #### Inherited from
@@ -163,7 +184,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
+[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 

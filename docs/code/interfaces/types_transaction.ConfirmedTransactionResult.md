@@ -25,7 +25,7 @@ The result of sending and confirming a transaction
 
 • **confirmation**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)
 
-The response if the transaction was sent and waited for
+The response from sending and waiting for the transaction
 
 #### Overrides
 
@@ -33,7 +33,7 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
+[src/types/transaction.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L52)
 
 ___
 
@@ -49,4 +49,4 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)

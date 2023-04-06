@@ -18,6 +18,7 @@ Parameters that are passed in when creating an app.
 
 - [approvalProgram](types_app.CreateAppParams.md#approvalprogram)
 - [args](types_app.CreateAppParams.md#args)
+- [atc](types_app.CreateAppParams.md#atc)
 - [clearStateProgram](types_app.CreateAppParams.md#clearstateprogram)
 - [fee](types_app.CreateAppParams.md#fee)
 - [from](types_app.CreateAppParams.md#from)
@@ -44,7 +45,7 @@ CreateOrUpdateAppParams.approvalProgram
 
 #### Defined in
 
-[src/types/app.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L89)
+[src/types/app.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L90)
 
 ___
 
@@ -60,7 +61,27 @@ CreateOrUpdateAppParams.args
 
 #### Defined in
 
-[src/types/app.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L97)
+[src/types/app.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L98)
+
+___
+
+### atc
+
+• `Optional` **atc**: `AtomicTransactionComposer`
+
+An optional
+
+**`See`**
+
+AtomicTransactionComposer to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+
+#### Inherited from
+
+CreateOrUpdateAppParams.atc
+
+#### Defined in
+
+[src/types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
 
 ___
 
@@ -76,7 +97,7 @@ CreateOrUpdateAppParams.clearStateProgram
 
 #### Defined in
 
-[src/types/app.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L91)
+[src/types/app.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L92)
 
 ___
 
@@ -92,7 +113,7 @@ CreateOrUpdateAppParams.fee
 
 #### Defined in
 
-[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -108,7 +129,7 @@ CreateOrUpdateAppParams.from
 
 #### Defined in
 
-[src/types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)
+[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)
 
 ___
 
@@ -124,7 +145,7 @@ CreateOrUpdateAppParams.maxFee
 
 #### Defined in
 
-[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 
@@ -140,7 +161,7 @@ CreateOrUpdateAppParams.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
+[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
 
 ___
 
@@ -156,7 +177,7 @@ CreateOrUpdateAppParams.note
 
 #### Defined in
 
-[src/types/app.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L95)
+[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
 
 ___
 
@@ -168,7 +189,7 @@ The storage schema to request for the created app
 
 #### Defined in
 
-[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
+[src/types/app.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L104)
 
 ___
 
@@ -176,7 +197,7 @@ ___
 
 • `Optional` **skipSending**: `boolean`
 
-Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain)
+Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain, unless `atc` specified)
   (and instead just return the raw transaction, e.g. so you can add it to a group of transactions)
 
 #### Inherited from
@@ -217,7 +238,7 @@ CreateOrUpdateAppParams.suppressLog
 
 #### Defined in
 
-[src/types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
+[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -233,4 +254,4 @@ CreateOrUpdateAppParams.transactionParams
 
 #### Defined in
 
-[src/types/app.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L93)
+[src/types/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L94)
