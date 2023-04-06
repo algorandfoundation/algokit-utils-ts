@@ -15,9 +15,9 @@ export async function isLocalNet(algod: Algodv2): Promise<boolean> {
 /**
  * Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
  *
- * This is useful to get idempotent accounts from a local sandbox without having to specify the private key (which will change when resetting the sandbox).
+ * This is useful to get idempotent accounts from LocalNet without having to specify the private key (which will change when resetting the LocalNet).
  *
- * This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh sandbox.
+ * This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh LocalNet.
  *
  * If this is used via @see {getAccount}, then you can even use the same code that runs on production without changes for local development!
  *

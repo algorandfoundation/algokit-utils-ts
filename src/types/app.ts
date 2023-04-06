@@ -1,4 +1,5 @@
 import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, SourceMap, SuggestedParams, Transaction } from 'algosdk'
+import { PendingTransactionResponse } from './algod'
 import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './transaction'
 
 /** The name of the TEAL template variable for deploy-time immutability control */
@@ -109,6 +110,7 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
   appId: number
 }
 
+/** Parameters representing a call to an app. */
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
   appId: number
@@ -154,6 +156,10 @@ export interface CompiledTeal {
 
 /** Result from calling an app */
 export interface AppCallTransactionResult extends SendTransactionResult {
+  /** All transactions sent as part of the app call (i.e. multiple if an ABI call is made which includes transaction arguments) */
+  transactions: Transaction[]
+  /** The responses if the transactions are sent and waited for */
+  confirmations?: PendingTransactionResponse[]
   /** If an ABI method was called the processed return value */
   return?: ABIReturn
 }
@@ -229,7 +235,7 @@ export enum OnSchemaBreak {
 }
 
 /** The parameters to deploy an app */
-export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'note' | 'skipSending' | 'skipWaiting'> {
+export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'note' | 'skipSending' | 'skipWaiting' | 'atc'> {
   /** The deployment metadata */
   metadata: AppDeployMetadata
   /** Any deploy-time parameters to replace in the TEAL code */

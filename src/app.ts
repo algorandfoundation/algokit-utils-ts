@@ -1,20 +1,29 @@
 import algosdk, {
   ABIMethod,
+  ABIResult,
   ABIValue,
   Algodv2,
   AtomicTransactionComposer,
-  makeBasicAccountTransactionSigner,
   OnApplicationComplete,
   SourceMap,
   Transaction,
 } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
-import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
+import {
+  controlFees,
+  encodeTransactionNote,
+  getAtomicTransactionComposerTransactions,
+  getSenderAddress,
+  getSenderTransactionSigner,
+  getTransactionParams,
+  sendAtomicTransactionComposer,
+  sendTransaction,
+} from './transaction'
 import { ApplicationResponse, EvalDelta, PendingTransactionResponse, TealValue } from './types/algod'
 import {
+  ABIAppCallArgs,
   ABIReturn,
-  ABI_RETURN_PREFIX,
   AppCallArgs,
   AppCallParams,
   AppCallTransactionResult,
@@ -27,9 +36,10 @@ import {
   BoxValuesRequestParams,
   CompiledTeal,
   CreateAppParams,
+  RawAppCallArgs,
   UpdateAppParams,
 } from './types/app'
-import { SendTransactionFrom } from './types/transaction'
+import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
 
 /**
  * Creates a smart contract app, returns the details of the created app.
@@ -48,40 +58,108 @@ export async function createApp(
   const compiledClear = typeof clear === 'string' ? await compileTeal(clear, algod) : undefined
   const clearProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
 
-  const transaction = algosdk.makeApplicationCreateTxnFromObject({
-    approvalProgram: approvalProgram as Uint8Array,
-    clearProgram: clearProgram as Uint8Array,
-    numLocalInts: schema.localInts,
-    numLocalByteSlices: schema.localByteSlices,
-    numGlobalInts: schema.globalInts,
-    numGlobalByteSlices: schema.globalByteSlices,
-    extraPages: schema.extraPages ?? Math.floor((approvalProgram.length + clearProgram.length) / APP_PAGE_MAX_SIZE),
-    onComplete: algosdk.OnApplicationComplete.NoOpOC,
-    suggestedParams: await getTransactionParams(transactionParams, algod),
-    from: getSenderAddress(from),
-    note: encodeTransactionNote(note),
-    ...getAppArgsForTransaction(args),
-    rekeyTo: undefined,
-  })
+  if (args && 'method' in args) {
+    const atc = attachATC(sendParams)
 
-  const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
-  if (confirmation) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const appId = confirmation['application-index']!
+    const before = getAtomicTransactionComposerTransactions(atc)
 
-    Config.getLogger(sendParams.suppressLog).debug(`Created app ${appId} from creator ${getSenderAddress(from)}`)
+    atc.addMethodCall({
+      appID: 0,
+      approvalProgram: approvalProgram as Uint8Array,
+      clearProgram: clearProgram as Uint8Array,
+      numLocalInts: schema.localInts,
+      numLocalByteSlices: schema.localByteSlices,
+      numGlobalInts: schema.globalInts,
+      numGlobalByteSlices: schema.globalByteSlices,
+      extraPages: schema.extraPages ?? Math.floor((approvalProgram.length + clearProgram.length) / APP_PAGE_MAX_SIZE),
+      onComplete: algosdk.OnApplicationComplete.NoOpOC,
+      suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
+      note: encodeTransactionNote(note),
+      ...getAppArgsForABICall(args, from),
+    })
 
-    return {
-      transaction,
-      confirmation,
-      appId,
-      appAddress: algosdk.getApplicationAddress(appId),
-      return: getABIReturn(args, confirmation),
-      compiledApproval,
-      compiledClear,
+    if (sendParams.skipSending) {
+      const after = atc.clone().buildGroup()
+      return {
+        transaction: after[after.length - 1].txn,
+        transactions: after.slice(before.length).map((t) => t.txn),
+        appId: 0,
+        appAddress: '',
+        compiledApproval,
+        compiledClear,
+      }
+    }
+
+    const result = await sendAtomicTransactionComposer({ atc, sendParams }, algod)
+    const confirmation = result.confirmations ? result.confirmations[result.confirmations?.length - 1] : undefined
+    if (confirmation) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const appId = confirmation['application-index']!
+
+      Config.getLogger(sendParams.suppressLog).debug(`Created app ${appId} from creator ${getSenderAddress(from)}`)
+
+      return {
+        transactions: result.transactions,
+        confirmations: result.confirmations,
+        return: confirmation ? getABIReturn(args, confirmation) : undefined,
+        transaction: result.transactions[result.transactions.length - 1],
+        confirmation: confirmation,
+        appId,
+        appAddress: algosdk.getApplicationAddress(appId),
+        compiledApproval,
+        compiledClear,
+      }
+    } else {
+      return {
+        transactions: result.transactions,
+        confirmations: result.confirmations,
+        return: confirmation ? getABIReturn(args, confirmation) : undefined,
+        transaction: result.transactions[result.transactions.length - 1],
+        confirmation: confirmation,
+        appId: 0,
+        appAddress: '',
+        compiledApproval,
+        compiledClear,
+      }
     }
   } else {
-    return { transaction, appId: 0, appAddress: '', compiledApproval, compiledClear }
+    const transaction = algosdk.makeApplicationCreateTxnFromObject({
+      approvalProgram: approvalProgram as Uint8Array,
+      clearProgram: clearProgram as Uint8Array,
+      numLocalInts: schema.localInts,
+      numLocalByteSlices: schema.localByteSlices,
+      numGlobalInts: schema.globalInts,
+      numGlobalByteSlices: schema.globalByteSlices,
+      extraPages: schema.extraPages ?? Math.floor((approvalProgram.length + clearProgram.length) / APP_PAGE_MAX_SIZE),
+      onComplete: algosdk.OnApplicationComplete.NoOpOC,
+      suggestedParams: await getTransactionParams(transactionParams, algod),
+      from: getSenderAddress(from),
+      note: encodeTransactionNote(note),
+      ...getAppArgsForTransaction(args),
+      rekeyTo: undefined,
+    })
+
+    const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
+    if (confirmation) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const appId = confirmation['application-index']!
+
+      Config.getLogger(sendParams.suppressLog).debug(`Created app ${appId} from creator ${getSenderAddress(from)}`)
+
+      return {
+        transaction,
+        transactions: [transaction],
+        confirmation,
+        confirmations: confirmation ? [confirmation] : undefined,
+        appId,
+        appAddress: algosdk.getApplicationAddress(appId),
+        return: getABIReturn(args, confirmation),
+        compiledApproval,
+        compiledClear,
+      }
+    } else {
+      return { transaction, transactions: [transaction], appId: 0, appAddress: '', compiledApproval, compiledClear }
+    }
   }
 }
 
@@ -102,27 +180,71 @@ export async function updateApp(
   const compiledClear = typeof clear === 'string' ? await compileTeal(clear, algod) : undefined
   const clearProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
 
-  const transaction = algosdk.makeApplicationUpdateTxnFromObject({
-    appIndex: appId,
-    approvalProgram: approvalProgram as Uint8Array,
-    clearProgram: clearProgram as Uint8Array,
-    suggestedParams: await getTransactionParams(transactionParams, algod),
-    from: getSenderAddress(from),
-    note: encodeTransactionNote(note),
-    ...getAppArgsForTransaction(args),
-    rekeyTo: undefined,
-  })
-
   Config.getLogger(sendParams.suppressLog).debug(`Updating app ${appId}`)
 
-  const result = await sendTransaction({ transaction, from, sendParams }, algod)
+  if (args && 'method' in args) {
+    const atc = attachATC(sendParams)
 
-  return {
-    ...result,
-    return: getABIReturn(args, result.confirmation),
-    compiledApproval,
-    compiledClear,
+    const before = getAtomicTransactionComposerTransactions(atc)
+
+    atc.addMethodCall({
+      appID: appId,
+      onComplete: OnApplicationComplete.UpdateApplicationOC,
+      approvalProgram: approvalProgram as Uint8Array,
+      clearProgram: clearProgram as Uint8Array,
+      suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
+      note: encodeTransactionNote(note),
+      ...getAppArgsForABICall(args, from),
+    })
+
+    if (sendParams.skipSending) {
+      const after = atc.clone().buildGroup()
+      return {
+        transaction: after[after.length - 1].txn,
+        transactions: after.slice(before.length).map((t) => t.txn),
+      }
+    }
+
+    const result = await sendAtomicTransactionComposer({ atc, sendParams }, algod)
+    const confirmation = result.confirmations ? result.confirmations[result.confirmations?.length - 1] : undefined
+    return {
+      transactions: result.transactions,
+      confirmations: result.confirmations,
+      return: confirmation ? getABIReturn(args, confirmation) : undefined,
+      transaction: result.transactions[result.transactions.length - 1],
+      confirmation: confirmation,
+    }
+  } else {
+    const transaction = algosdk.makeApplicationUpdateTxnFromObject({
+      appIndex: appId,
+      approvalProgram: approvalProgram as Uint8Array,
+      clearProgram: clearProgram as Uint8Array,
+      suggestedParams: await getTransactionParams(transactionParams, algod),
+      from: getSenderAddress(from),
+      note: encodeTransactionNote(note),
+      ...getAppArgsForTransaction(args),
+      rekeyTo: undefined,
+    })
+
+    const result = await sendTransaction({ transaction, from, sendParams }, algod)
+
+    return {
+      ...result,
+      transactions: [result.transaction],
+      confirmations: result.confirmation ? [result.confirmation] : undefined,
+      return: getABIReturn(args, result.confirmation),
+      compiledApproval,
+      compiledClear,
+    }
   }
+}
+
+function attachATC(sendParams: SendTransactionParams) {
+  if (sendParams.atc) {
+    sendParams.skipSending = true
+  }
+  sendParams.atc = sendParams.atc ?? new AtomicTransactionComposer()
+  return sendParams.atc
 }
 
 /**
@@ -133,6 +255,47 @@ export async function updateApp(
  */
 export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
   const { appId, callType, from, args, note, transactionParams, ...sendParams } = call
+
+  if (args && 'method' in args) {
+    const atc = attachATC(sendParams)
+
+    const before = getAtomicTransactionComposerTransactions(atc)
+
+    atc.addMethodCall({
+      appID: appId,
+      suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
+      note: encodeTransactionNote(note),
+      onComplete:
+        callType === 'normal'
+          ? OnApplicationComplete.NoOpOC
+          : callType === 'clearstate'
+          ? OnApplicationComplete.ClearStateOC
+          : callType === 'closeout'
+          ? OnApplicationComplete.CloseOutOC
+          : callType === 'delete'
+          ? OnApplicationComplete.DeleteApplicationOC
+          : OnApplicationComplete.OptInOC,
+      ...getAppArgsForABICall(args, from),
+    })
+
+    if (sendParams.skipSending) {
+      const after = atc.clone().buildGroup()
+      return {
+        transaction: after[after.length - 1].txn,
+        transactions: after.slice(before.length).map((t) => t.txn),
+      }
+    }
+
+    const result = await sendAtomicTransactionComposer({ atc, sendParams }, algod)
+    const confirmation = result.confirmations ? result.confirmations[result.confirmations?.length - 1] : undefined
+    return {
+      transactions: result.transactions,
+      confirmations: result.confirmations,
+      return: confirmation ? getABIReturn(args, confirmation) : undefined,
+      transaction: result.transactions[result.transactions.length - 1],
+      confirmation: confirmation,
+    }
+  }
 
   const appCallParams = {
     appIndex: appId,
@@ -166,37 +329,38 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
 
   return {
     ...result,
+    transactions: [result.transaction],
+    confirmations: result.confirmation ? [result.confirmation] : undefined,
     return: getABIReturn(args, result.confirmation),
   }
 }
 
 export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransactionResponse): ABIReturn | undefined {
-  try {
-    if (!args || !('method' in args)) {
-      return undefined
+  if (!args || !('method' in args)) {
+    return undefined
+  }
+  const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
+
+  if (method.returns.type !== 'void' && confirmation) {
+    // The parseMethodResponse method mutates the second parameter :(
+    const resultDummy: ABIResult = {
+      txID: '',
+      method,
+      rawReturnValue: new Uint8Array(),
     }
-    const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
-    if (method.returns.type !== 'void' && confirmation) {
-      const logs = confirmation.logs || []
-      if (logs.length === 0) {
-        throw new Error('App call transaction did not log a return value')
-      }
-      const lastLog = logs[logs.length - 1]
-      if (lastLog.byteLength < 4 || lastLog.slice(0, 4).toString() !== ABI_RETURN_PREFIX.toString()) {
-        throw new Error('App call transaction did not log a return value (ABI_RETURN_PREFIX not found)')
-      }
-      return {
-        rawReturnValue: new Uint8Array(lastLog.slice(4)),
-        returnValue: method.returns.type.decode(new Uint8Array(lastLog.slice(4))),
-        decodeError: undefined,
-      }
-    }
-  } catch (e) {
-    return {
-      rawReturnValue: undefined,
-      returnValue: undefined,
-      decodeError: e as Error,
-    }
+    const response = AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation)
+    return !response.decodeError
+      ? {
+          rawReturnValue: response.rawReturnValue,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          returnValue: response.returnValue!,
+          decodeError: undefined,
+        }
+      : {
+          rawReturnValue: undefined,
+          returnValue: undefined,
+          decodeError: response.decodeError,
+        }
   }
   return undefined
 }
@@ -344,70 +508,14 @@ export function decodeAppState(state: { key: string; value: TealValue | EvalDelt
 }
 
 /** Returns the app args ready to load onto an app @see {Transaction} object */
-export function getAppArgsForTransaction(args?: AppCallArgs) {
+export function getAppArgsForTransaction(args?: RawAppCallArgs) {
   if (!args) return undefined
-
-  let actualArgs: AppCallArgs
-  if ('method' in args) {
-    // todo: Land a change to algosdk that extracts the logic from ATC, because (fair warning) this is a HACK
-    // I don't want to have to rewrite all of the ABI resolution logic so using an ATC temporarily here
-    // and passing stuff in to keep it happy like a randomly generated account :O
-    // Most of these values aren't being used since the transaction is discarded
-    const dummyAtc = new AtomicTransactionComposer()
-    const dummyAccount = algosdk.generateAccount()
-    const dummySigner = makeBasicAccountTransactionSigner(dummyAccount)
-    const dummyAppId = 1
-    const dummyParams = {
-      fee: 1,
-      firstRound: 1,
-      genesisHash: Buffer.from('abcd', 'utf-8').toString('base64'),
-      genesisID: 'a',
-      lastRound: 1,
-    }
-    const methodArgs = args.args?.map((a) => {
-      if (typeof a !== 'object') {
-        return a
-      }
-      // Handle the various forms of transactions to wrangle them for ATC
-      return 'txn' in a
-        ? a
-        : 'transaction' in a
-        ? { txn: a.transaction, signer: dummySigner }
-        : 'txID' in a
-        ? { txn: a, signer: dummySigner }
-        : a
-    })
-
-    const dummyOnComplete = OnApplicationComplete.NoOpOC
-    dummyAtc.addMethodCall({
-      method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
-      methodArgs,
-      // Rest are dummy values
-      appID: dummyAppId,
-      sender: dummyAccount.addr,
-      signer: dummySigner,
-      suggestedParams: dummyParams,
-      onComplete: dummyOnComplete,
-    })
-    const txns = dummyAtc.buildGroup()
-    const txn = txns[txns.length - 1]
-    actualArgs = {
-      accounts: txn.txn.appAccounts,
-      appArgs: txn.txn.appArgs,
-      apps: txn.txn.appForeignApps,
-      assets: txn.txn.appForeignAssets,
-      boxes: args.boxes?.map((b) => (typeof b === 'object' && 'appId' in b ? b : { appId: 0, name: b })),
-      lease: args.lease,
-    }
-  } else {
-    actualArgs = args
-  }
 
   const encoder = new TextEncoder()
   return {
-    accounts: actualArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
-    appArgs: actualArgs?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a)),
-    boxes: actualArgs?.boxes
+    accounts: args?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
+    appArgs: args?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a)),
+    boxes: args?.boxes
       ?.map((b) => (typeof b === 'object' && 'appId' in b ? b : { appId: 0, name: b }))
       ?.map(
         (ref) =>
@@ -416,9 +524,39 @@ export function getAppArgsForTransaction(args?: AppCallArgs) {
             name: typeof ref.name === 'string' ? encoder.encode(ref.name) : ref.name,
           } as algosdk.BoxReference),
       ),
-    foreignApps: actualArgs?.apps,
-    foreignAssets: actualArgs?.assets,
-    lease: typeof actualArgs?.lease === 'string' ? encoder.encode(actualArgs?.lease) : actualArgs?.lease,
+    foreignApps: args?.apps,
+    foreignAssets: args?.assets,
+    lease: typeof args?.lease === 'string' ? encoder.encode(args?.lease) : args?.lease,
+  }
+}
+
+/** Returns the app args ready to load onto an ABI method call in @see AtomicTransactionComposer */
+export function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
+  const encoder = new TextEncoder()
+  const signer = getSenderTransactionSigner(from)
+  const methodArgs = args.args?.map((a) => {
+    if (typeof a !== 'object') {
+      return a
+    }
+    // Handle the various forms of transactions to wrangle them for ATC
+    return 'txn' in a ? a : 'transaction' in a ? { txn: a.transaction, signer } : 'txID' in a ? { txn: a, signer } : a
+  })
+  return {
+    method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
+    sender: getSenderAddress(from),
+    signer: signer,
+    boxes: args.boxes
+      ?.map((b) => (typeof b === 'object' && 'appId' in b ? b : { appId: 0, name: b }))
+      ?.map(
+        (ref) =>
+          ({
+            appIndex: ref.appId,
+            name: typeof ref.name === 'string' ? encoder.encode(ref.name) : ref.name,
+          } as algosdk.BoxReference),
+      ),
+    lease: typeof args.lease === 'string' ? encoder.encode(args.lease) : args.lease,
+    methodArgs: methodArgs,
+    rekeyTo: undefined,
   }
 }
 

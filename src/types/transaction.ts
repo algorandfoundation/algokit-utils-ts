@@ -1,4 +1,4 @@
-import { Account, LogicSigAccount, Transaction } from 'algosdk'
+import { Account, AtomicTransactionComposer, LogicSigAccount, Transaction } from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { PendingTransactionResponse } from './algod'
 import { AlgoAmount } from './amount'
@@ -21,11 +21,13 @@ export type Arc2TransactionNote =
 
 /** The sending configuration for a transaction */
 export interface SendTransactionParams {
-  /** Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain)
+  /** Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain, unless `atc` specified)
    *   (and instead just return the raw transaction, e.g. so you can add it to a group of transactions) */
   skipSending?: boolean
   /** Whether to skip waiting for the submitted transaction (only relevant if `skipSending` is `false` or unset) */
   skipWaiting?: boolean
+  /** An optional @see AtomicTransactionComposer to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true` */
+  atc?: AtomicTransactionComposer
   /** Whether to suppress log messages from transaction send, default: do not suppress */
   suppressLog?: boolean
   /** The flat fee you want to pay, useful for covering extra fees in a transaction group or app call */
@@ -46,8 +48,18 @@ export interface SendTransactionResult {
 
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
-  /** The response if the transaction was sent and waited for */
+  /** The response from sending and waiting for the transaction */
   confirmation: PendingTransactionResponse
+}
+
+/** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
+export interface ConfirmedTransactionResults extends SendTransactionResult {
+  /** The transactions */
+  transactions: Transaction[]
+  /** The response from sending and waiting for the primary transaction */
+  confirmation: PendingTransactionResponse
+  /** The response from sending and waiting for the transactions */
+  confirmations: PendingTransactionResponse[]
 }
 
 export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount
@@ -65,12 +77,20 @@ export interface TransactionToSign {
  */
 export interface TransactionGroupToSend {
   /** Any parameters to control the semantics of the send to the network */
-  sendParams?: Omit<Omit<SendTransactionParams, 'maxFee'>, 'skipSending'>
+  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
   /** The list of transactions to send, which can either be a raw transaction (in which case `signer` is required),
-   *   the async result of an AlgoKit utils method that returns a @see SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is required)
-   *   or the transaction with its signer
+   *   the async result of an AlgoKit utils method that returns a @see SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is also required)
+   *   or the transaction with its signer (`signer` is ignored)
    **/
   transactions: (TransactionToSign | Transaction | Promise<SendTransactionResult>)[]
   /** Optional signer to pass in, required if at least one transaction provided is just the transaction, ignored otherwise */
   signer?: SendTransactionFrom
+}
+
+/** An @see AtomicTransactionComposer with transactions to send. */
+export interface AtomicTransactionComposerToSend {
+  /** The @see AtomicTransactionComposer with transactions loaded to send */
+  atc: AtomicTransactionComposer
+  /** Any parameters to control the semantics of the send to the network */
+  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
 }

@@ -90,7 +90,7 @@ function getAlgoTokenHeader(server: string, token?: string | TokenHeader, defaul
  *  const algod = getAlgoClient(getAlgoNodeConfig('mainnet', 'algod'))
  *  await algod.healthCheck().do()
  * ```
- * @example Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+ * @example Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
  * ```typescript
  *  const algod = getAlgoClient({server: 'http://localhost', port: '4001', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  *  await algod.healthCheck().do()
@@ -123,7 +123,7 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  *  const indexer = getAlgoIndexerClient(getAlgoNodeConfig('mainnet', 'indexer'))
  *  await indexer.makeHealthCheck().do()
  * ```
- * @example Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+ * @example Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
  * ```typescript
  *  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  *  await indexer.makeHealthCheck().do()
@@ -138,7 +138,7 @@ export function getAlgoIndexerClient(config?: AlgoClientConfig): Indexer {
 /**
  * Returns a KMD SDK client that automatically retries on idempotent calls
  *
- * KMD client allows you to export private keys, which is useful to get the default account in a sandbox network.
+ * KMD client allows you to export private keys, which is useful to get the default account in a LocalNet network.
  *
  * @param config The config if you want to override the default (getting config from process.env)
  * @example Default (load from environment variables)
@@ -147,14 +147,14 @@ export function getAlgoIndexerClient(config?: AlgoClientConfig): Indexer {
  *  // Uses process.env.ALGOD_SERVER, process.env.KMD_PORT (or if not specified: port 4002) and process.env.ALGOD_TOKEN
  *  const kmd = getAlgoKmdClient()
  *  ```
- * @example Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+ * @example Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
  * ```typescript
  *  const kmd = getAlgoKmdClient({server: 'http://localhost', port: '4002', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  * ```
  */
 export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
   const { token, server } = config ?? getAlgodConfigFromEnvironment()
-  // We can only use Kmd on the Sandbox otherwise it's not exposed so this makes some assumptions
+  // We can only use Kmd on the LocalNet otherwise it's not exposed so this makes some assumptions
   // (e.g. same token and server as algod and port 4002 by default)
   return new Kmd(token as string, server, process?.env?.KMD_PORT ?? '4002')
 }

@@ -22,13 +22,13 @@ https://developer.algorand.org/docs/get-details/atomic_transfers/
 
 ### sendParams
 
-• `Optional` **sendParams**: `Omit`<`Omit`<[`SendTransactionParams`](types_transaction.SendTransactionParams.md), ``"maxFee"``\>, ``"skipSending"``\>
+• `Optional` **sendParams**: `Omit`<[`SendTransactionParams`](types_transaction.SendTransactionParams.md), ``"fee"`` \| ``"maxFee"`` \| ``"skipSending"`` \| ``"atc"``\>
 
 Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L68)
+[src/types/transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L80)
 
 ___
 
@@ -40,7 +40,7 @@ Optional signer to pass in, required if at least one transaction provided is jus
 
 #### Defined in
 
-[src/types/transaction.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L75)
+[src/types/transaction.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L87)
 
 ___
 
@@ -53,9 +53,9 @@ The list of transactions to send, which can either be a raw transaction (in whic
 
 **`See`**
 
-SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is required)
-  or the transaction with its signer
+SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is also required)
+  or the transaction with its signer (`signer` is ignored)
 
 #### Defined in
 
-[src/types/transaction.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L73)
+[src/types/transaction.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L85)

@@ -1,5 +1,5 @@
 import { describe, test } from '@jest/globals'
-import algosdk, { ABIMethod, ABIStringType, ABIUintType, Account, Algodv2, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
+import algosdk, { ABIUintType, Account, Algodv2, getApplicationAddress, Indexer, OnApplicationComplete, TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '../'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
@@ -60,7 +60,7 @@ describe('application-client', () => {
     expect(app.confirmation?.['application-index']).toBe(app.appId)
   })
 
-  test('Deploy app', async () => {
+  test('Deploy app - create', async () => {
     const { algod, indexer, testAccount } = localnet.context
 
     const client = algokit.getApplicationClient(
@@ -84,6 +84,195 @@ describe('application-client', () => {
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
     expect(app.confirmation?.['application-index']).toBe(app.appId)
+  })
+
+  test('Deploy app - create (abi)', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
+      },
+      algod,
+    )
+
+    const app = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 1,
+      },
+      createArgs: {
+        method: 'create_abi',
+        methodArgs: ['arg_io'],
+      },
+    })
+
+    invariant(app.operationPerformed === 'create')
+    expect(app.appId).toBeGreaterThan(0)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.return?.returnValue).toBe('arg_io')
+  })
+
+  test('Deploy app - update', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
+      },
+      algod,
+    )
+    const createdApp = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 1,
+      },
+      allowUpdate: true,
+    })
+    const app = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 2,
+      },
+      onUpdate: 'update',
+    })
+
+    invariant(app.operationPerformed === 'update')
+    expect(app.appId).toBe(createdApp.appId)
+    expect(app.appAddress).toBe(createdApp.appAddress)
+    invariant(app.confirmation)
+    expect(app.createdRound).toBe(createdApp.createdRound)
+    expect(app.updatedRound).not.toBe(app.createdRound)
+    expect(app.updatedRound).toBe(app.confirmation['confirmed-round'])
+  })
+
+  test('Deploy app - update (abi)', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
+      },
+      algod,
+    )
+    const createdApp = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 1,
+      },
+      allowUpdate: true,
+    })
+    const app = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 2,
+      },
+      onUpdate: 'update',
+      updateArgs: {
+        method: 'update_abi',
+        methodArgs: ['arg_io'],
+      },
+    })
+
+    invariant(app.operationPerformed === 'update')
+    expect(app.appId).toBe(createdApp.appId)
+    expect(app.appAddress).toBe(createdApp.appAddress)
+    invariant(app.confirmation)
+    expect(app.createdRound).toBe(createdApp.createdRound)
+    expect(app.updatedRound).not.toBe(app.createdRound)
+    expect(app.updatedRound).toBe(app.confirmation['confirmed-round'])
+    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.return?.returnValue).toBe('arg_io')
+  })
+
+  test('Deploy app - replace', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
+      },
+      algod,
+    )
+    const createdApp = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 1,
+      },
+      allowDelete: true,
+    })
+    const app = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 2,
+      },
+      onUpdate: 'replace',
+    })
+
+    invariant(app.operationPerformed === 'replace')
+    expect(app.appId).toBeGreaterThan(createdApp.appId)
+    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    invariant(app.confirmation)
+    invariant(app.deleteResult)
+    invariant(app.deleteResult.confirmation)
+    expect(app.deleteResult.transaction.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+  })
+
+  test('Deploy app - replace (abi)', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
+      },
+      algod,
+    )
+    const createdApp = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 1,
+      },
+      allowDelete: true,
+    })
+    const app = await client.deploy({
+      version: '1.0',
+      deployTimeParams: {
+        VALUE: 2,
+      },
+      onUpdate: 'replace',
+      createArgs: {
+        method: 'create_abi',
+        methodArgs: ['arg_io'],
+      },
+      deleteArgs: {
+        method: 'delete_abi',
+        methodArgs: ['arg2_io'],
+      },
+    })
+
+    invariant(app.operationPerformed === 'replace')
+    expect(app.appId).toBeGreaterThan(createdApp.appId)
+    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    invariant(app.confirmation)
+    invariant(app.deleteResult)
+    invariant(app.deleteResult.confirmation)
+    expect(app.deleteResult.transaction.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.return?.returnValue).toBe('arg_io')
+    expect(app.deleteReturn?.returnValue).toBe('arg2_io')
   })
 
   test('Create then call app', async () => {
@@ -114,6 +303,90 @@ describe('application-client', () => {
     expect(call.return.returnValue).toBe('Hello, test')
   })
 
+  test('Create app with abi', async () => {
+    const { algod, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        id: 0,
+      },
+      algod,
+    )
+
+    const call = await client.create({
+      deployTimeParams: {
+        UPDATABLE: 0,
+        DELETABLE: 0,
+        VALUE: 1,
+      },
+      method: 'create_abi',
+      methodArgs: ['string_io'],
+    })
+
+    invariant(call.return)
+    expect(call.return.decodeError).toBeUndefined()
+    expect(call.return.returnValue).toBe('string_io')
+  })
+
+  test('Update app with abi', async () => {
+    const { algod, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        id: 0,
+      },
+      algod,
+    )
+    const deployTimeParams = {
+      UPDATABLE: 1,
+      DELETABLE: 0,
+      VALUE: 1,
+    }
+    await client.create({
+      deployTimeParams,
+    })
+
+    const call = await client.update({
+      method: 'update_abi',
+      methodArgs: ['string_io'],
+      deployTimeParams,
+    })
+
+    invariant(call.return)
+    expect(call.return.decodeError).toBeUndefined()
+    expect(call.return.returnValue).toBe('string_io')
+  })
+
+  test('Delete app with abi', async () => {
+    const { algod, testAccount } = localnet.context
+    const client = algokit.getApplicationClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        id: 0,
+      },
+      algod,
+    )
+    await client.create({
+      deployTimeParams: {
+        UPDATABLE: 0,
+        DELETABLE: 1,
+        VALUE: 1,
+      },
+    })
+
+    const call = await client.delete({
+      method: 'delete_abi',
+      methodArgs: ['string_io'],
+    })
+
+    invariant(call.return)
+    expect(call.return.decodeError).toBeUndefined()
+    expect(call.return.returnValue).toBe('string_io')
+  })
+
   test('Construct transaction with boxes', async () => {
     const { algod, indexer, testAccount } = localnet.context
     const { client } = await deploy(testAccount, algod, indexer)
@@ -134,23 +407,24 @@ describe('application-client', () => {
       {
         from: testAccount,
         to: testAccount.addr,
-        amount: algokit.microAlgos(1),
+        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
         skipSending: true,
       },
       algod,
     )
     const { client } = await deploy(testAccount, algod, indexer)
 
-    const call = await client.call({
+    const result = await client.call({
       method: 'call_abi_txn',
       methodArgs: { args: [txn.transaction, 'test'] },
-      sendParams: { skipSending: true },
     })
 
+    invariant(result.confirmations)
+    invariant(result.confirmations[1])
+    expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const methodSelector = new ABIMethod(client.getABIMethodParams('call_abi_txn')!).getSelector()
-    const methodArg = new ABIStringType().encode('test')
-    expect(call.transaction.appArgs).toEqual([methodSelector, methodArg])
+    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, args: [] }, result.confirmations[1])
+    expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
   })
 
   test('Display nice error messages when there is a logic error', async () => {
@@ -164,18 +438,18 @@ describe('application-client', () => {
       })
       invariant(false)
     } catch (e: any) {
-      expect(e.toString()).toMatchInlineSnapshot(`"Error: assert failed pc=607. at:315"`)
+      expect(e.toString()).toMatchInlineSnapshot(`"Error: assert failed pc=783. at:416"`)
       expect(e.stack).toMatchInlineSnapshot(`
-        "
-        // error
-        error_5:
+        "// error
+        error_6:
         proto 0 0
         intc_0 // 0
+        // Deliberate error
         assert <--- Error
         retsub
 
         // create
-        create_6:"
+        create_7:"
       `)
     }
   })

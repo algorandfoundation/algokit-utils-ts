@@ -14,6 +14,7 @@
 - [callApp](index.md#callapp)
 - [capTransactionFee](index.md#captransactionfee)
 - [compileTeal](index.md#compileteal)
+- [controlFees](index.md#controlfees)
 - [createApp](index.md#createapp)
 - [decodeAppState](index.md#decodeappstate)
 - [deployApp](index.md#deployapp)
@@ -29,6 +30,7 @@
 - [getAlgoKmdClient](index.md#getalgokmdclient)
 - [getAlgoNodeConfig](index.md#getalgonodeconfig)
 - [getAlgodConfigFromEnvironment](index.md#getalgodconfigfromenvironment)
+- [getAppArgsForABICall](index.md#getappargsforabicall)
 - [getAppArgsForTransaction](index.md#getappargsfortransaction)
 - [getAppBoxNames](index.md#getappboxnames)
 - [getAppBoxValue](index.md#getappboxvalue)
@@ -40,6 +42,7 @@
 - [getAppGlobalState](index.md#getappglobalstate)
 - [getAppLocalState](index.md#getapplocalstate)
 - [getApplicationClient](index.md#getapplicationclient)
+- [getAtomicTransactionComposerTransactions](index.md#getatomictransactioncomposertransactions)
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
 - [getDefaultLocalNetConfig](index.md#getdefaultlocalnetconfig)
 - [getDispenserAccount](index.md#getdispenseraccount)
@@ -48,6 +51,7 @@
 - [getLocalNetDispenserAccount](index.md#getlocalnetdispenseraccount)
 - [getOrCreateKmdWalletAccount](index.md#getorcreatekmdwalletaccount)
 - [getSenderAddress](index.md#getsenderaddress)
+- [getSenderTransactionSigner](index.md#getsendertransactionsigner)
 - [getTransactionParams](index.md#gettransactionparams)
 - [isLocalNet](index.md#islocalnet)
 - [isSchemaIsBroken](index.md#isschemaisbroken)
@@ -62,6 +66,7 @@
 - [rekeyedAccount](index.md#rekeyedaccount)
 - [replaceDeployTimeControlParams](index.md#replacedeploytimecontrolparams)
 - [searchTransactions](index.md#searchtransactions)
+- [sendAtomicTransactionComposer](index.md#sendatomictransactioncomposer)
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
 - [transactionFees](index.md#transactionfees)
@@ -131,7 +136,7 @@ The result of the call
 
 #### Defined in
 
-[src/app.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L134)
+[src/app.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L256)
 
 ___
 
@@ -147,7 +152,7 @@ the estimated rate.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `transaction` | `Transaction` | The transaction to cap |
+| `transaction` | `Transaction` \| `SuggestedParams` | The transaction to cap or suggested params object about to be used to create a transaction |
 | `maxAcceptableFee` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | The maximum acceptable fee to pay |
 
 #### Returns
@@ -156,7 +161,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L286)
+[src/transaction.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L289)
 
 ___
 
@@ -181,7 +186,43 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L443)
+[src/app.ts:581](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L581)
+
+___
+
+### controlFees
+
+▸ **controlFees**<`T`\>(`transaction`, `feeControl`): `T`
+
+Allows for control of fees on a
+
+**`See`**
+
+ - Transaction or
+ - SuggestedParams object
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `Transaction` \| `SuggestedParams` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `transaction` | `T` | The transaction or suggested params |
+| `feeControl` | `Object` | The fee control parameters |
+| `feeControl.fee?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
+| `feeControl.maxFee?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
+
+#### Returns
+
+`T`
+
+#### Defined in
+
+[src/transaction.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L312)
 
 ___
 
@@ -206,7 +247,7 @@ The details of the created app, or the transaction to create it if `skipSending`
 
 #### Defined in
 
-[src/app.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L40)
+[src/app.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L50)
 
 ___
 
@@ -226,13 +267,13 @@ ___
 
 #### Defined in
 
-[src/app.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L304)
+[src/app.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L468)
 
 ___
 
 ### deployApp
 
-▸ **deployApp**(`deployment`, `algod`, `indexer?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"``  } \| [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+▸ **deployApp**(`deployment`, `algod`, `indexer?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](types_app.md#abireturn) ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
@@ -258,13 +299,13 @@ https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-de
 
 #### Returns
 
-`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"``  } \| [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `operationPerformed`: ``"replace"``  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](types_app.md#abireturn) ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
 
 The app reference of the new/existing app
 
 #### Defined in
 
-[src/deploy-app.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L38)
+[src/deploy-app.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L39)
 
 ___
 
@@ -295,7 +336,7 @@ the transaction note ready for inclusion in a transaction
 
 #### Defined in
 
-[src/transaction.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L27)
+[src/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L28)
 
 ___
 
@@ -373,7 +414,7 @@ ___
 
 #### Defined in
 
-[src/app.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L173)
+[src/app.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L338)
 
 ___
 
@@ -508,7 +549,7 @@ AlgoNode (mainnet)
 
 **`Example`**
 
-Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const algod = getAlgoClient({server: 'http://localhost', port: '4001', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  await algod.healthCheck().do()
@@ -565,7 +606,7 @@ AlgoNode (mainnet)
 
 **`Example`**
 
-Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  await indexer.makeHealthCheck().do()
@@ -593,7 +634,7 @@ ___
 
 Returns a KMD SDK client that automatically retries on idempotent calls
 
-KMD client allows you to export private keys, which is useful to get the default account in a sandbox network.
+KMD client allows you to export private keys, which is useful to get the default account in a LocalNet network.
 
 **`Example`**
 
@@ -606,7 +647,7 @@ Default (load from environment variables)
 
 **`Example`**
 
-Custom (e.g. default local sandbox, although we recommend loading this into a .env and using the Default option instead)
+Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const kmd = getAlgoKmdClient({server: 'http://localhost', port: '4002', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
 ```
@@ -666,9 +707,46 @@ Retrieve the algod configuration from environment variables (expects to be calle
 
 ___
 
+### getAppArgsForABICall
+
+▸ **getAppArgsForABICall**(`args`, `from`): `Object`
+
+Returns the app args ready to load onto an ABI method call in
+
+**`See`**
+
+AtomicTransactionComposer
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `args` | [`ABIAppCallArgs`](../interfaces/types_app.ABIAppCallArgs.md) |
+| `from` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) |
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `boxes` | `undefined` \| `BoxReference`[] |
+| `lease` | `undefined` \| `Uint8Array` |
+| `method` | `ABIMethod` |
+| `methodArgs` | (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] |
+| `rekeyTo` | `undefined` |
+| `sender` | `string` |
+| `signer` | `TransactionSigner` |
+
+#### Defined in
+
+[src/app.ts:534](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L534)
+
+___
+
 ### getAppArgsForTransaction
 
-▸ **getAppArgsForTransaction**(`args?`): `undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = actualArgs.apps; `foreignAssets`: `undefined` \| `number`[] = actualArgs.assets; `lease`: `undefined` \| `Uint8Array`  }
+▸ **getAppArgsForTransaction**(`args?`): `undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
 
 Returns the app args ready to load onto an app
 
@@ -680,15 +758,15 @@ object
 
 | Name | Type |
 | :------ | :------ |
-| `args?` | [`AppCallArgs`](types_app.md#appcallargs) |
+| `args?` | [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md) |
 
 #### Returns
 
-`undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = actualArgs.apps; `foreignAssets`: `undefined` \| `number`[] = actualArgs.assets; `lease`: `undefined` \| `Uint8Array`  }
+`undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
 
 #### Defined in
 
-[src/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L347)
+[src/app.ts:511](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L511)
 
 ___
 
@@ -713,7 +791,7 @@ The current box names
 
 #### Defined in
 
-[src/app.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L244)
+[src/app.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L408)
 
 ___
 
@@ -743,7 +821,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/app.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L262)
+[src/app.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L426)
 
 ___
 
@@ -768,7 +846,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/app.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L285)
+[src/app.ts:449](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L449)
 
 ___
 
@@ -798,7 +876,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L275)
+[src/app.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L439)
 
 ___
 
@@ -823,7 +901,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L297)
+[src/app.ts:461](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L461)
 
 ___
 
@@ -848,7 +926,7 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:432](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L432)
+[src/app.ts:570](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L570)
 
 ___
 
@@ -878,7 +956,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[src/deploy-app.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L484)
+[src/deploy-app.ts:506](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L506)
 
 ___
 
@@ -903,7 +981,7 @@ The current global state
 
 #### Defined in
 
-[src/app.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L210)
+[src/app.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L374)
 
 ___
 
@@ -929,7 +1007,7 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L227)
+[src/app.ts:391](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L391)
 
 ___
 
@@ -955,6 +1033,34 @@ The application client
 #### Defined in
 
 [src/application-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L10)
+
+___
+
+### getAtomicTransactionComposerTransactions
+
+▸ **getAtomicTransactionComposerTransactions**(`atc`): `TransactionWithSigner`[]
+
+Returns the array of transactions currently present in the given
+
+**`See`**
+
+AtomicTransactionComposer
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `atc` | `AtomicTransactionComposer` | The atomic transaction composer |
+
+#### Returns
+
+`TransactionWithSigner`[]
+
+The array of transactions with signers
+
+#### Defined in
+
+[src/transaction.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L344)
 
 ___
 
@@ -985,7 +1091,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[src/deploy-app.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L388)
+[src/deploy-app.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L410)
 
 ___
 
@@ -1017,7 +1123,7 @@ ___
 
 Returns an account (with private key loaded) that can act as a dispenser
 
-If running on Sandbox then it will return the default dispenser account automatically,
+If running on LocalNet then it will return the default dispenser account automatically,
  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC
 
 **`See`**
@@ -1128,9 +1234,9 @@ ___
 
 Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
 
-This is useful to get idempotent accounts from a local sandbox without having to specify the private key (which will change when resetting the sandbox).
+This is useful to get idempotent accounts from LocalNet without having to specify the private key (which will change when resetting the LocalNet).
 
-This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh sandbox.
+This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh LocalNet.
 
 If this is used via
 
@@ -1182,7 +1288,36 @@ The public address
 
 #### Defined in
 
-[src/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L48)
+[src/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L49)
+
+___
+
+### getSenderTransactionSigner
+
+▸ **getSenderTransactionSigner**(`val`): `TransactionSigner`
+
+Returns a
+
+**`See`**
+
+TransactionSigner for the given transaction sender.
+This function has memoization, so will return the same transaction signer for a given sender.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `val` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) |
+
+#### Returns
+
+`TransactionSigner`
+
+A transaction signer
+
+#### Defined in
+
+[src/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L59)
 
 ___
 
@@ -1207,7 +1342,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L310)
+[src/transaction.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L335)
 
 ___
 
@@ -1256,7 +1391,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[src/deploy-app.ts:375](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L375)
+[src/deploy-app.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L397)
 
 ___
 
@@ -1412,7 +1547,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/deploy-app.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L533)
+[src/deploy-app.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L555)
 
 ___
 
@@ -1441,7 +1576,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/deploy-app.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L563)
+[src/deploy-app.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L585)
 
 ___
 
@@ -1520,7 +1655,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/deploy-app.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L502)
+[src/deploy-app.ts:524](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L524)
 
 ___
 
@@ -1552,9 +1687,40 @@ The search results
 
 ___
 
+### sendAtomicTransactionComposer
+
+▸ **sendAtomicTransactionComposer**(`atcSend`, `algod`): `Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
+
+Signs and sends transactions that have been collected by an
+
+**`See`**
+
+ - AtomicTransactionComposer.
+ - AtomicTransactionComposer
+ * `sendParams` The parameters to control the send behaviour
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The |
+| `algod` | `default` | An algod client |
+
+#### Returns
+
+`Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
+
+An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
+
+#### Defined in
+
+[src/transaction.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L137)
+
+___
+
 ### sendGroupOfTransactions
 
-▸ **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `string` ; `txIds`: `string`[]  }\>
+▸ **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
 
 Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
 
@@ -1567,13 +1733,13 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Returns
 
-`Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `string` ; `txIds`: `string`[]  }\>
+`Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
 
-An object with group transaction ID (`groupTransactionId`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
+An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
 
 #### Defined in
 
-[src/transaction.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L121)
+[src/transaction.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L197)
 
 ___
 
@@ -1581,13 +1747,13 @@ ___
 
 ▸ **sendTransaction**(`send`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
-Signs and sends the given transaction to the chain
+Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `send` | `Object` | The details for the transaction to send, including: * `transaction`: The unsigned transaction * `from`: The account to sign the transaction with: either an account with private key loaded or a logic signature account * `config`: The sending configuration for this transaction |
+| `send` | `Object` | The details for the transaction to prepare/send, including: * `transaction`: The unsigned transaction * `from`: The account to sign the transaction with: either an account with private key loaded or a logic signature account * `config`: The sending configuration for this transaction |
 | `send.from` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | - |
 | `send.sendParams?` | [`SendTransactionParams`](../interfaces/types_transaction.SendTransactionParams.md) | - |
 | `send.transaction` | `Transaction` | - |
@@ -1597,11 +1763,11 @@ Signs and sends the given transaction to the chain
 
 `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
-An object with transaction (`transaction`) and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
+An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `undefined`) confirmation (`confirmation`)
 
 #### Defined in
 
-[src/transaction.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L62)
+[src/transaction.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L86)
 
 ___
 
@@ -1706,7 +1872,7 @@ The transaction
 
 #### Defined in
 
-[src/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L94)
+[src/app.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L172)
 
 ___
 
@@ -1737,4 +1903,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L239)
+[src/transaction.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L242)

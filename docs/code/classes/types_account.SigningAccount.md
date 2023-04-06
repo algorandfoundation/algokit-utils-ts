@@ -20,6 +20,7 @@ Account wrapper that supports a rekeyed account
 
 - [\_account](types_account.SigningAccount.md#_account)
 - [\_sender](types_account.SigningAccount.md#_sender)
+- [\_signer](types_account.SigningAccount.md#_signer)
 
 ### Accessors
 
@@ -43,7 +44,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[src/types/account.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L90)
+[src/types/account.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L100)
 
 ## Properties
 
@@ -53,7 +54,7 @@ Account wrapper that supports a rekeyed account
 
 #### Defined in
 
-[src/types/account.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L56)
+[src/types/account.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L65)
 
 ___
 
@@ -63,7 +64,17 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L57)
+[src/types/account.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L67)
+
+___
+
+### \_signer
+
+• `Private` **\_signer**: `TransactionSigner`
+
+#### Defined in
+
+[src/types/account.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L66)
 
 ## Accessors
 
@@ -83,7 +94,7 @@ Account.addr
 
 #### Defined in
 
-[src/types/account.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L62)
+[src/types/account.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L72)
 
 ___
 
@@ -99,23 +110,23 @@ Algorand account of the sender address and signer private key
 
 #### Defined in
 
-[src/types/account.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L83)
+[src/types/account.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L93)
 
 ___
 
 ### signer
 
-• `get` **signer**(): `default`
+• `get` **signer**(): `TransactionSigner`
 
-Algorand account of the underlying signing account
+Transaction signer for the underlying signing account
 
 #### Returns
 
-`default`
+`TransactionSigner`
 
 #### Defined in
 
-[src/types/account.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L76)
+[src/types/account.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L86)
 
 ___
 
@@ -135,4 +146,4 @@ Account.sk
 
 #### Defined in
 
-[src/types/account.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L69)
+[src/types/account.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L79)

@@ -432,15 +432,15 @@ export class ApplicationClient {
   }
 
   async closeOut(call: AppClientCallParams) {
-    return await this._call(call, 'optin')
+    return await this._call(call, 'closeout')
   }
 
   async clearState(call: AppClientCallParams) {
-    return await this._call(call, 'optin')
+    return await this._call(call, 'clearstate')
   }
 
   async delete(call: AppClientCallParams) {
-    return await this._call(call, 'optin')
+    return await this._call(call, 'delete')
   }
 
   private async _call(call: AppClientCallParams, callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal') {
