@@ -37,6 +37,7 @@
 - [ABIAppCallArg](types_app.md#abiappcallarg)
 - [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
+- [BoxIdentifier](types_app.md#boxidentifier)
 
 ### Variables
 
@@ -60,7 +61,7 @@ SendTransactionResult
 
 #### Defined in
 
-[src/types/app.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L61)
+[src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
 
 ___
 
@@ -72,7 +73,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L169)
+[src/types/app.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L177)
 
 ___
 
@@ -86,7 +87,28 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L84)
+[src/types/app.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L92)
+
+___
+
+### BoxIdentifier
+
+Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)
+
+Something that identifies a box name - either a:
+ *
+
+**`See`**
+
+ - Uint8Array
+ *
+ - string (that will be encoded to a Uint8Array)
+ *
+ - SendTransactionFrom (encoded into the public key address of the corresponding account)
+
+#### Defined in
+
+[src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
 
 ## Variables
 

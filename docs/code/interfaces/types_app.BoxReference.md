@@ -29,7 +29,7 @@ ___
 
 ### name
 
-• **name**: `string` \| `Uint8Array`
+• **name**: [`BoxIdentifier`](../modules/types_app.md#boxidentifier)
 
 Name of box to reference
 

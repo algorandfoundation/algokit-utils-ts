@@ -31,7 +31,9 @@ import {
   AppReference,
   AppState,
   APP_PAGE_MAX_SIZE,
+  BoxIdentifier,
   BoxName,
+  BoxReference,
   BoxValueRequestParams,
   BoxValuesRequestParams,
   CompiledTeal,
@@ -515,15 +517,7 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
   return {
     accounts: args?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
     appArgs: args?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a)),
-    boxes: args?.boxes
-      ?.map((b) => (typeof b === 'object' && 'appId' in b ? b : { appId: 0, name: b }))
-      ?.map(
-        (ref) =>
-          ({
-            appIndex: ref.appId,
-            name: typeof ref.name === 'string' ? encoder.encode(ref.name) : ref.name,
-          } as algosdk.BoxReference),
-      ),
+    boxes: args.boxes?.map(getBoxReference),
     foreignApps: args?.apps,
     foreignAssets: args?.assets,
     lease: typeof args?.lease === 'string' ? encoder.encode(args?.lease) : args?.lease,
@@ -555,19 +549,30 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
     method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
     sender: getSenderAddress(from),
     signer: signer,
-    boxes: args.boxes
-      ?.map((b) => (typeof b === 'object' && 'appId' in b ? b : { appId: 0, name: b }))
-      ?.map(
-        (ref) =>
-          ({
-            appIndex: ref.appId,
-            name: typeof ref.name === 'string' ? encoder.encode(ref.name) : ref.name,
-          } as algosdk.BoxReference),
-      ),
+    boxes: args.boxes?.map(getBoxReference),
     lease: typeof args.lease === 'string' ? encoder.encode(args.lease) : args.lease,
     methodArgs: methodArgs,
     rekeyTo: undefined,
   }
+}
+
+/**
+ * Returns a @see algosdk.BoxReference given a @see BoxIdentifier or @see BoxReference.
+ * @param box The box to return a reference for
+ * @returns The box reference ready to pass into a @see Transaction
+ */
+export function getBoxReference(box: BoxIdentifier | BoxReference): algosdk.BoxReference {
+  const encoder = new TextEncoder()
+  const ref = typeof box === 'object' && 'appId' in box ? box : { appId: 0, name: box }
+  return {
+    appIndex: ref.appId,
+    name:
+      typeof ref.name === 'string'
+        ? encoder.encode(ref.name)
+        : 'length' in ref.name
+        ? ref.name
+        : algosdk.decodeAddress(getSenderAddress(ref.name)).publicKey,
+  } as algosdk.BoxReference
 }
 
 /**
