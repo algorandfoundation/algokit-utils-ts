@@ -36,8 +36,16 @@ export interface BoxReference {
   /**
    * Name of box to reference
    */
-  name: Uint8Array | string
+  name: BoxIdentifier
 }
+
+/**
+ * Something that identifies a box name - either a:
+ *  * @see Uint8Array
+ *  * @see string (that will be encoded to a Uint8Array)
+ *  * @see SendTransactionFrom (encoded into the public key address of the corresponding account)
+ */
+export type BoxIdentifier = string | Uint8Array | SendTransactionFrom
 
 /**
  * App call args with raw values (minus some processing like encoding strings as binary)
@@ -48,7 +56,7 @@ export interface RawAppCallArgs {
   /** Any application arguments to pass through */
   appArgs?: (Uint8Array | string)[]
   /** Any box references to load */
-  boxes?: BoxReference[]
+  boxes?: (BoxReference | BoxIdentifier)[]
   /** IDs of any apps to load into the foreignApps array */
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
@@ -74,7 +82,7 @@ export interface ABIAppCallArgs {
   /** The optional lease for the transaction */
   lease?: string | Uint8Array
   /** Any box references to load either as the box name (if for the current app) or the reference with app id */
-  boxes?: (BoxReference | Uint8Array | string)[]
+  boxes?: (BoxReference | BoxIdentifier)[]
 }
 
 /** Arguments to pass to an app call either:

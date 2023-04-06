@@ -48,7 +48,7 @@ Omit.approvalProgram
 
 #### Defined in
 
-[src/types/app.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L91)
+[src/types/app.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L99)
 
 ___
 
@@ -64,7 +64,7 @@ Omit.clearStateProgram
 
 #### Defined in
 
-[src/types/app.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L93)
+[src/types/app.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L101)
 
 ___
 
@@ -76,7 +76,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L251)
+[src/types/app.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L259)
 
 ___
 
@@ -88,7 +88,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L255)
+[src/types/app.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L263)
 
 ___
 
@@ -100,7 +100,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/app.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L243)
+[src/types/app.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L251)
 
 ___
 
@@ -112,7 +112,7 @@ Optional cached value of the existing apps for the given creator
 
 #### Defined in
 
-[src/types/app.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L249)
+[src/types/app.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L257)
 
 ___
 
@@ -144,7 +144,7 @@ Omit.from
 
 #### Defined in
 
-[src/types/app.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L89)
+[src/types/app.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L97)
 
 ___
 
@@ -188,7 +188,7 @@ The deployment metadata
 
 #### Defined in
 
-[src/types/app.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L241)
+[src/types/app.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L249)
 
 ___
 
@@ -200,7 +200,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/app.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L245)
+[src/types/app.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L253)
 
 ___
 
@@ -212,7 +212,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/app.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L247)
+[src/types/app.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L255)
 
 ___
 
@@ -228,7 +228,7 @@ Omit.schema
 
 #### Defined in
 
-[src/types/app.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L105)
+[src/types/app.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L113)
 
 ___
 
@@ -260,7 +260,7 @@ Omit.transactionParams
 
 #### Defined in
 
-[src/types/app.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L95)
+[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
 
 ___
 
@@ -272,4 +272,4 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L253)
+[src/types/app.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L261)
