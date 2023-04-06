@@ -25,7 +25,7 @@ The ABI args to pass in
 
 #### Defined in
 
-[src/types/app.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L72)
+[src/types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
 
 ___
 
@@ -37,7 +37,7 @@ Any box references to load either as the box name (if for the current app) or th
 
 #### Defined in
 
-[src/types/app.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L76)
+[src/types/app.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L77)
 
 ___
 
@@ -49,7 +49,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-[src/types/app.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L74)
+[src/types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
 
 ___
 
@@ -63,4 +63,4 @@ The ABI method to call, either:
 
 #### Defined in
 
-[src/types/app.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L70)
+[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)

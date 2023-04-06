@@ -50,11 +50,17 @@
 
 ### ABIAppCallArg
 
-Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction`
+Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+
+An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a
+
+**`See`**
+
+SendTransactionResult
 
 #### Defined in
 
-[src/types/app.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L60)
+[src/types/app.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L61)
 
 ___
 
@@ -66,7 +72,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L168)
+[src/types/app.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L169)
 
 ___
 
@@ -80,7 +86,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
+[src/types/app.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L84)
 
 ## Variables
 

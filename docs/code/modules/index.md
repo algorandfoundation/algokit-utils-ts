@@ -186,7 +186,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:581](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L581)
+[src/app.ts:591](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L591)
 
 ___
 
@@ -709,7 +709,7 @@ ___
 
 ### getAppArgsForABICall
 
-▸ **getAppArgsForABICall**(`args`, `from`): `Object`
+▸ **getAppArgsForABICall**(`args`, `from`): `Promise`<{ `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` = undefined; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 Returns the app args ready to load onto an ABI method call in
 
@@ -726,17 +726,7 @@ AtomicTransactionComposer
 
 #### Returns
 
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `boxes` | `undefined` \| `BoxReference`[] |
-| `lease` | `undefined` \| `Uint8Array` |
-| `method` | `ABIMethod` |
-| `methodArgs` | (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] |
-| `rekeyTo` | `undefined` |
-| `sender` | `string` |
-| `signer` | `TransactionSigner` |
+`Promise`<{ `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` = undefined; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 #### Defined in
 
@@ -926,7 +916,7 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:570](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L570)
+[src/app.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L580)
 
 ___
 
