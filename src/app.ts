@@ -75,7 +75,7 @@ export async function createApp(
       onComplete: algosdk.OnApplicationComplete.NoOpOC,
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
-      ...getAppArgsForABICall(args, from),
+      ...(await getAppArgsForABICall(args, from)),
     })
 
     if (sendParams.skipSending) {
@@ -194,7 +194,7 @@ export async function updateApp(
       clearProgram: clearProgram as Uint8Array,
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
-      ...getAppArgsForABICall(args, from),
+      ...(await getAppArgsForABICall(args, from)),
     })
 
     if (sendParams.skipSending) {
@@ -275,7 +275,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
           : callType === 'delete'
           ? OnApplicationComplete.DeleteApplicationOC
           : OnApplicationComplete.OptInOC,
-      ...getAppArgsForABICall(args, from),
+      ...(await getAppArgsForABICall(args, from)),
     })
 
     if (sendParams.skipSending) {
@@ -531,16 +531,26 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
 }
 
 /** Returns the app args ready to load onto an ABI method call in @see AtomicTransactionComposer */
-export function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
+export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
   const encoder = new TextEncoder()
   const signer = getSenderTransactionSigner(from)
-  const methodArgs = args.args?.map((a) => {
-    if (typeof a !== 'object') {
-      return a
-    }
-    // Handle the various forms of transactions to wrangle them for ATC
-    return 'txn' in a ? a : 'transaction' in a ? { txn: a.transaction, signer } : 'txID' in a ? { txn: a, signer } : a
-  })
+  const methodArgs = await Promise.all(
+    args.args?.map(async (a) => {
+      if (typeof a !== 'object') {
+        return a
+      }
+      // Handle the various forms of transactions to wrangle them for ATC
+      return 'txn' in a
+        ? a
+        : 'then' in a
+        ? { txn: (await a).transaction, signer }
+        : 'transaction' in a
+        ? { txn: a.transaction, signer }
+        : 'txID' in a
+        ? { txn: a, signer }
+        : a
+    }),
+  )
   return {
     method: 'txnCount' in args.method ? args.method : new ABIMethod(args.method),
     sender: getSenderAddress(from),

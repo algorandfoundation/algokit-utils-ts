@@ -57,7 +57,8 @@ export interface RawAppCallArgs {
   lease?: string | Uint8Array
 }
 
-export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction
+/** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a @see SendTransactionResult */
+export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction | Promise<SendTransactionResult>
 
 /**
  * App call args for an ABI call
