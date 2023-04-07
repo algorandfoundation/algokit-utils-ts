@@ -38,6 +38,21 @@ describe('deploy-app', () => {
     expect(app.version).toBe(creationMetadata.version)
   })
 
+  test('Latest created app is retrieved', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
+    const app1 = await algokit.createApp(await getTestingAppCreateParams(testAccount, creationMetadata), algod)
+    const app2 = await algokit.createApp(await getTestingAppCreateParams(testAccount, creationMetadata), algod)
+    const app3 = await algokit.createApp(await getTestingAppCreateParams(testAccount, creationMetadata), algod)
+    await waitForIndexer()
+
+    const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
+
+    expect(apps.apps[name].appId).not.toBe(app1.appId)
+    expect(apps.apps[name].appId).not.toBe(app2.appId)
+    expect(apps.apps[name].appId).toBe(app3.appId)
+  })
+
   test('Created, updated and deleted apps are retrieved by name with deployment metadata', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }

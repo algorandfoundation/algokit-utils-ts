@@ -947,7 +947,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[src/deploy-app.ts:506](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L506)
+[src/deploy-app.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L517)
 
 ___
 
@@ -1569,7 +1569,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/deploy-app.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L555)
+[src/deploy-app.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L566)
 
 ___
 
@@ -1598,7 +1598,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/deploy-app.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L585)
+[src/deploy-app.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L596)
 
 ___
 
@@ -1677,7 +1677,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/deploy-app.ts:524](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L524)
+[src/deploy-app.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L535)
 
 ___
 
