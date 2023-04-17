@@ -27,12 +27,17 @@ export const algorandFixture = (fixtureConfig?: AlgorandFixtureConfig): Algorand
 
   const beforeEach = async () => {
     const transactionLogger = new TransactionLogger()
+    const transactionLoggerAlgod = transactionLogger.capture(algod)
     context = {
-      algod: transactionLogger.capture(algod),
+      algod: transactionLoggerAlgod,
       indexer: indexer,
       kmd: kmd,
-      testAccount: await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algod, kmd),
-      generateAccount: (params: GetTestAccountParams) => getTestAccount(params, algod, kmd),
+      testAccount: await getTestAccount(
+        { initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true },
+        transactionLoggerAlgod,
+        kmd,
+      ),
+      generateAccount: (params: GetTestAccountParams) => getTestAccount(params, transactionLoggerAlgod, kmd),
       transactionLogger: transactionLogger,
       waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
       waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => lookupTransactionById(transactionId, indexer)),

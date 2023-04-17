@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).Struct
 
+A user-defined struct/tuple type
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +19,11 @@
 
 • **elements**: [`StructElement`](../modules/types_appspec.md#structelement)[]
 
+The elements (in order) that make up the struct/tuple
+
 #### Defined in
 
-[src/types/appspec.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L46)
+[src/types/appspec.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L82)
 
 ___
 
@@ -27,6 +31,8 @@ ___
 
 • **name**: `string`
 
+The name of the type
+
 #### Defined in
 
-[src/types/appspec.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L45)
+[src/types/appspec.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L80)

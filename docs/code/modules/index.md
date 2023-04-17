@@ -21,6 +21,7 @@
 - [encodeTransactionNote](index.md#encodetransactionnote)
 - [ensureFunded](index.md#ensurefunded)
 - [executePaginatedRequest](index.md#executepaginatedrequest)
+- [getABIMethodSignature](index.md#getabimethodsignature)
 - [getABIReturn](index.md#getabireturn)
 - [getAccount](index.md#getaccount)
 - [getAccountAddressAsString](index.md#getaccountaddressasstring)
@@ -56,6 +57,7 @@
 - [getTransactionParams](index.md#gettransactionparams)
 - [isLocalNet](index.md#islocalnet)
 - [isSchemaIsBroken](index.md#isschemaisbroken)
+- [lookupAccountByAddress](index.md#lookupaccountbyaddress)
 - [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
 - [lookupTransactionById](index.md#lookuptransactionbyid)
 - [microAlgos](index.md#microalgos)
@@ -102,9 +104,9 @@ AlgoAmount
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `algos` | `number` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `algos` | `number` | The amount in Algos |
 
 #### Returns
 
@@ -112,7 +114,7 @@ AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L5)
+[src/amount.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L22)
 
 ___
 
@@ -137,7 +139,7 @@ The result of the call
 
 #### Defined in
 
-[src/app.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L258)
+[src/app.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L259)
 
 ___
 
@@ -162,7 +164,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L289)
+[src/transaction.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L295)
 
 ___
 
@@ -187,7 +189,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L596)
+[src/app.ts:597](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L597)
 
 ___
 
@@ -223,7 +225,7 @@ Allows for control of fees on a
 
 #### Defined in
 
-[src/transaction.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L312)
+[src/transaction.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L318)
 
 ___
 
@@ -248,7 +250,7 @@ The details of the created app, or the transaction to create it if `skipSending`
 
 #### Defined in
 
-[src/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L52)
+[src/app.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L53)
 
 ___
 
@@ -268,7 +270,7 @@ ___
 
 #### Defined in
 
-[src/app.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L470)
+[src/app.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L471)
 
 ___
 
@@ -394,7 +396,31 @@ ___
 
 #### Defined in
 
-[src/indexer-lookup.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L92)
+[src/indexer-lookup.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L108)
+
+___
+
+### getABIMethodSignature
+
+▸ **getABIMethodSignature**(`method`): `string`
+
+Returns the encoded ABI spec for a given ABI Method
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `method` | `ABIMethodParams` \| `ABIMethod` | The method to return a signature for |
+
+#### Returns
+
+`string`
+
+The encoded ABI method spec e.g. `method_name(uint64,string)string`
+
+#### Defined in
+
+[src/app.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L613)
 
 ___
 
@@ -415,7 +441,7 @@ ___
 
 #### Defined in
 
-[src/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L340)
+[src/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L341)
 
 ___
 
@@ -731,7 +757,7 @@ AtomicTransactionComposer
 
 #### Defined in
 
-[src/app.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L528)
+[src/app.ts:529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L529)
 
 ___
 
@@ -757,7 +783,7 @@ object
 
 #### Defined in
 
-[src/app.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L513)
+[src/app.ts:514](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L514)
 
 ___
 
@@ -782,7 +808,7 @@ The current box names
 
 #### Defined in
 
-[src/app.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L410)
+[src/app.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L411)
 
 ___
 
@@ -812,7 +838,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/app.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L428)
+[src/app.ts:429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L429)
 
 ___
 
@@ -837,7 +863,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/app.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L451)
+[src/app.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L452)
 
 ___
 
@@ -867,7 +893,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L441)
+[src/app.ts:442](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L442)
 
 ___
 
@@ -892,7 +918,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L463)
+[src/app.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L464)
 
 ___
 
@@ -917,13 +943,13 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L585)
+[src/app.ts:586](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L586)
 
 ___
 
 ### getAppDeploymentTransactionNote
 
-▸ **getAppDeploymentTransactionNote**(`metadata`): `Object`
+▸ **getAppDeploymentTransactionNote**(`metadata`): [`Arc2TransactionNote`](types_transaction.md#arc2transactionnote)
 
 Return the transaction note for an app deployment.
 
@@ -935,19 +961,13 @@ Return the transaction note for an app deployment.
 
 #### Returns
 
-`Object`
+[`Arc2TransactionNote`](types_transaction.md#arc2transactionnote)
 
 The transaction note as a utf-8 string
 
-| Name | Type |
-| :------ | :------ |
-| `dAppName` | `string` |
-| `data` | [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) |
-| `format` | `string` |
-
 #### Defined in
 
-[src/deploy-app.ts:506](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L506)
+[src/deploy-app.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L517)
 
 ___
 
@@ -972,7 +992,7 @@ The current global state
 
 #### Defined in
 
-[src/app.ts:376](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L376)
+[src/app.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L377)
 
 ___
 
@@ -998,7 +1018,7 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/app.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L393)
+[src/app.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L394)
 
 ___
 
@@ -1051,7 +1071,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L344)
+[src/transaction.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L350)
 
 ___
 
@@ -1082,7 +1102,7 @@ The box reference ready to pass into a
 
 #### Defined in
 
-[src/app.ts:564](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L564)
+[src/app.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L565)
 
 ___
 
@@ -1364,7 +1384,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L335)
+[src/transaction.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L341)
 
 ___
 
@@ -1417,6 +1437,31 @@ Whether or not there is a breaking change
 
 ___
 
+### lookupAccountByAddress
+
+▸ **lookupAccountByAddress**(`accountAddress`, `indexer`): `Promise`<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
+
+Looks up an account by address using Indexer.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `accountAddress` | `string` | - |
+| `indexer` | `default` | An indexer client |
+
+#### Returns
+
+`Promise`<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
+
+The result of the look-up
+
+#### Defined in
+
+[src/indexer-lookup.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L29)
+
+___
+
 ### lookupAccountCreatedApplicationByAddress
 
 ▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
@@ -1442,7 +1487,7 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L25)
+[src/indexer-lookup.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L41)
 
 ___
 
@@ -1467,7 +1512,7 @@ The result of the look-up
 
 #### Defined in
 
-[src/indexer-lookup.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L13)
+[src/indexer-lookup.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L19)
 
 ___
 
@@ -1483,9 +1528,9 @@ AlgoAmount
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `microAlgos` | `number` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `microAlgos` | `number` | The amount in µAlgos |
 
 #### Returns
 
@@ -1493,7 +1538,7 @@ AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L10)
+[src/amount.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L29)
 
 ___
 
@@ -1569,7 +1614,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/deploy-app.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L555)
+[src/deploy-app.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L566)
 
 ___
 
@@ -1598,7 +1643,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/deploy-app.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L585)
+[src/deploy-app.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L596)
 
 ___
 
@@ -1677,7 +1722,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/deploy-app.ts:524](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L524)
+[src/deploy-app.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L535)
 
 ___
 
@@ -1705,7 +1750,7 @@ The search results
 
 #### Defined in
 
-[src/indexer-lookup.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L58)
+[src/indexer-lookup.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L74)
 
 ___
 
@@ -1761,7 +1806,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L197)
+[src/transaction.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L203)
 
 ___
 
@@ -1805,9 +1850,9 @@ AlgoAmount
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `numberOfTransactions` | `number` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `numberOfTransactions` | `number` | The of standard transaction fees to return the amount of ALGOs |
 
 #### Returns
 
@@ -1815,7 +1860,7 @@ AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L15)
+[src/amount.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L36)
 
 ___
 
@@ -1894,7 +1939,7 @@ The transaction
 
 #### Defined in
 
-[src/app.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L174)
+[src/app.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L175)
 
 ___
 
@@ -1925,4 +1970,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L242)
+[src/transaction.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L248)

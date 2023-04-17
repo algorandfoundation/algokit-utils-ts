@@ -4,6 +4,12 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationParams
 
+Stores the global information associated with an application
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams
+
 ## Table of contents
 
 ### Properties
@@ -22,9 +28,17 @@
 
 • **approval-program**: `string`
 
+[apap]/[approv] Logic executed for every application transaction, except when on-completion is set to "clear".
+
+It can read and write global state for the application, as well as account-specific local state.
+
+Approval programs may reject the transaction.
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+
 #### Defined in
 
-[src/types/indexer.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L200)
+[src/types/indexer.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L456)
 
 ___
 
@@ -32,9 +46,17 @@ ___
 
 • **clear-state-program**: `string`
 
+[apsu]/[clearp] Logic executed for application transactions with on-completion set to "clear".
+
+It can read and write global state for the application, as well as account-specific local state.
+
+Clear state programs cannot reject the transaction.
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+
 #### Defined in
 
-[src/types/indexer.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L201)
+[src/types/indexer.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L466)
 
 ___
 
@@ -42,9 +64,11 @@ ___
 
 • **creator**: `string`
 
+The address that created this application. This is the address where the parameters and global state for this application can be found.
+
 #### Defined in
 
-[src/types/indexer.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L199)
+[src/types/indexer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L446)
 
 ___
 
@@ -52,9 +76,11 @@ ___
 
 • `Optional` **extra-program-pages**: `number`
 
+[epp] the amount of extra program pages available to this app.
+
 #### Defined in
 
-[src/types/indexer.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L202)
+[src/types/indexer.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L468)
 
 ___
 
@@ -62,9 +88,11 @@ ___
 
 • **global-state**: `TealKeyValue`[]
 
+[\gs] global schema
+
 #### Defined in
 
-[src/types/indexer.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L203)
+[src/types/indexer.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L470)
 
 ___
 
@@ -72,9 +100,11 @@ ___
 
 • `Optional` **global-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
+[\gsch] global schema
+
 #### Defined in
 
-[src/types/indexer.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L204)
+[src/types/indexer.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L472)
 
 ___
 
@@ -82,6 +112,8 @@ ___
 
 • `Optional` **local-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
+[\lsch] local schema
+
 #### Defined in
 
-[src/types/indexer.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L205)
+[src/types/indexer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L474)

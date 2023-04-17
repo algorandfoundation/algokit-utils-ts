@@ -4,6 +4,14 @@
 
 [types/indexer](../modules/types_indexer.md).AssetConfigTransactionResult
 
+Fields for asset allocation, re-configuration, and destruction.
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetconfig
+
+A zero value for asset-id indicates asset creation. A zero value for the params indicates asset destruction.
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +25,11 @@
 
 • **asset-id**: `number`
 
+[xaid] ID of the asset being configured or empty if creating.
+
 #### Defined in
 
-[src/types/indexer.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L130)
+[src/types/indexer.ts:288](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L288)
 
 ___
 
@@ -27,6 +37,8 @@ ___
 
 • **params**: [`AssetParams`](types_indexer.AssetParams.md)
 
+[apar] the parameters for the asset.
+
 #### Defined in
 
-[src/types/indexer.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L131)
+[src/types/indexer.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L290)

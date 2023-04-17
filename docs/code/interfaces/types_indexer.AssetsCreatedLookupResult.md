@@ -4,6 +4,10 @@
 
 [types/indexer](../modules/types_indexer.md).AssetsCreatedLookupResult
 
+Indexer result for an account's created assets,
+
+**`See`**
+
 https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-assets
 
 ## Table of contents
@@ -20,19 +24,23 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idc
 
 • **assets**: [`AssetResult`](types_indexer.AssetResult.md)[]
 
+The returned assets
+
 #### Defined in
 
-[src/types/indexer.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L28)
+[src/types/indexer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L39)
 
 ___
 
 ### current-round
 
-• **current-round**: `string`
+• **current-round**: `number`
+
+Round at which the results were computed.
 
 #### Defined in
 
-[src/types/indexer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L26)
+[src/types/indexer.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L35)
 
 ___
 
@@ -40,6 +48,8 @@ ___
 
 • **next-token**: `string`
 
+Used for pagination, when making another request provide this token with the next parameter.
+
 #### Defined in
 
-[src/types/indexer.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L27)
+[src/types/indexer.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L37)

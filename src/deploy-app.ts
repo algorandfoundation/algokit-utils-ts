@@ -19,7 +19,7 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './types/app'
-import { ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
+import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
 
 /**
  * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
@@ -413,13 +413,15 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
   const creatorAddress = typeof creatorAccount !== 'string' ? getSenderAddress(creatorAccount) : creatorAccount
 
   // Extract all apps that account created
-  const createdApps = (await lookupAccountCreatedApplicationByAddress(indexer, creatorAddress)).map((a) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return { id: a.id, createdAtRound: a['created-at-round']!, deleted: a.deleted }
-  })
+  const createdApps = (await lookupAccountCreatedApplicationByAddress(indexer, creatorAddress))
+    .map((a) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return { id: a.id, createdAtRound: a['created-at-round']!, deleted: a.deleted }
+    })
+    .sort((a, b) => a.createdAtRound - b.createdAtRound)
 
   // For each app that account created (in parallel)...
-  await Promise.all(
+  const apps = await Promise.all(
     createdApps.map(async (createdApp) => {
       // Find any app transactions for that app in the round it was created (should always just be a single creation transaction)
       const appTransactions = await searchTransactions(indexer, (s) =>
@@ -452,7 +454,17 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
 
       if (!appCreationTransaction?.note)
         // No note; ignoring
-        return
+        return null
+
+      return { createdApp, appCreationTransaction, latestAppUpdateTransaction }
+    }),
+  )
+
+  apps
+    .filter((a) => a !== null)
+    .forEach((a) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { createdApp, appCreationTransaction, latestAppUpdateTransaction } = a!
 
       const parseNote = (note?: string) => {
         if (!note) {
@@ -489,8 +501,7 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
         Config.logger.warn(`Received error trying to retrieve app with ${createdApp.id} for creator ${creatorAddress}; failing silently`, e)
         return
       }
-    }),
-  )
+    })
 
   return {
     creator: creatorAddress,
@@ -503,7 +514,7 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
  * @param metadata The metadata of the deployment
  * @returns The transaction note as a utf-8 string
  */
-export function getAppDeploymentTransactionNote(metadata: AppDeployMetadata) {
+export function getAppDeploymentTransactionNote(metadata: AppDeployMetadata): Arc2TransactionNote {
   return {
     dAppName: APP_DEPLOY_NOTE_DAPP,
     data: metadata,

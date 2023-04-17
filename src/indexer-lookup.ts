@@ -1,17 +1,33 @@
 import { Indexer } from 'algosdk'
 import SearchForTransactions from 'algosdk/dist/types/client/v2/indexer/searchForTransactions'
-import { ApplicationCreatedLookupResult, ApplicationResult, TransactionLookupResult, TransactionSearchResults } from './types/indexer'
+import {
+  AccountLookupResult,
+  ApplicationCreatedLookupResult,
+  ApplicationResult,
+  TransactionLookupResult,
+  TransactionSearchResults,
+} from './types/indexer'
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
 
 /**
  * Looks up a transaction by ID using Indexer.
- * @param indexer An indexer client
  * @param transactionId The ID of the transaction to look up
+ * @param indexer An indexer client
  * @returns The result of the look-up
  */
 export async function lookupTransactionById(transactionId: string, indexer: Indexer): Promise<TransactionLookupResult> {
   return (await indexer.lookupTransactionByID(transactionId).do()) as TransactionLookupResult
+}
+
+/**
+ * Looks up an account by address using Indexer.
+ * @param transactionId The address of the account to look up
+ * @param indexer An indexer client
+ * @returns The result of the look-up
+ */
+export async function lookupAccountByAddress(accountAddress: string, indexer: Indexer): Promise<AccountLookupResult> {
+  return (await indexer.lookupAccountByID(accountAddress).do()) as AccountLookupResult
 }
 
 /**
@@ -66,8 +82,8 @@ export async function searchTransactions(
       if ('message' in response) {
         throw { status: 404, ...response }
       }
-      if (Number(response['current-round']) > currentRound) {
-        currentRound = Number(response['current-round'])
+      if (response['current-round'] > currentRound) {
+        currentRound = response['current-round']
       }
       return response.transactions
     },
@@ -81,7 +97,7 @@ export async function searchTransactions(
   )
 
   return {
-    'current-round': currentRound.toString(),
+    'current-round': currentRound,
     'next-token': '',
     transactions: txns,
   }

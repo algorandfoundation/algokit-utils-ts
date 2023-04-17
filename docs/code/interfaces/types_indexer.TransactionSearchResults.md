@@ -4,6 +4,10 @@
 
 [types/indexer](../modules/types_indexer.md).TransactionSearchResults
 
+Indexer result for a transaction search,
+
+**`See`**
+
 https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions
 
 ## Table of contents
@@ -18,17 +22,9 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions
 
 ### current-round
 
-• **current-round**: `string`
+• **current-round**: `number`
 
-#### Defined in
-
-[src/types/indexer.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L6)
-
-___
-
-### next-token
-
-• **next-token**: `string`
+Round at which the results were computed.
 
 #### Defined in
 
@@ -36,10 +32,24 @@ ___
 
 ___
 
+### next-token
+
+• **next-token**: `string`
+
+Used for pagination, when making another request provide this token with the next parameter.
+
+#### Defined in
+
+[src/types/indexer.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L9)
+
+___
+
 ### transactions
 
 • **transactions**: [`TransactionResult`](types_indexer.TransactionResult.md)[]
 
+The returned transactions
+
 #### Defined in
 
-[src/types/indexer.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L8)
+[src/types/indexer.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L11)

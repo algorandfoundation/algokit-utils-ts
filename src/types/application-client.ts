@@ -13,6 +13,7 @@ import { Buffer } from 'buffer'
 import {
   callApp,
   createApp,
+  getABIMethodSignature,
   getAppBoxNames,
   getAppBoxValue,
   getAppBoxValueFromABIType,
@@ -40,7 +41,7 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import { AppSpec, getABISignature } from './appspec'
+import { AppSpec } from './appspec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
@@ -544,6 +545,36 @@ export class ApplicationClient {
   }
 
   /**
+   * Returns the value of the given box for the current app.
+   * @param name The name of the box to return either as a string, binary array or @see BoxName
+   * @returns The current box value as a byte array
+   */
+  async getBoxValue(name: BoxName | string | Uint8Array): Promise<Uint8Array> {
+    const appRef = await this.getAppReference()
+
+    if (appRef.appId === 0) {
+      throw new Error('No app has been created yet, unable to get global state')
+    }
+
+    return await getAppBoxValue(appRef.appId, name, this.algod)
+  }
+
+  /**
+   * Returns the value of the given box for the current app.
+   * @param name The name of the box to return either as a string, binary array or @see BoxName
+   * @returns The current box value as a byte array
+   */
+  async getBoxValueAsABIType(name: BoxName | string | Uint8Array, type: ABIType): Promise<ABIValue> {
+    const appRef = await this.getAppReference()
+
+    if (appRef.appId === 0) {
+      throw new Error('No app has been created yet, unable to get global state')
+    }
+
+    return await getAppBoxValueFromABIType({ appId: appRef.appId, boxName: name, type }, this.algod)
+  }
+
+  /**
    * Returns the values of all current boxes for the current app.
    * Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
    * @param filter Optional filter to filter which boxes' values are returned
@@ -631,12 +662,14 @@ export class ApplicationClient {
         throw new Error(
           `Received a call to method ${method} in contract ${
             this._appName
-          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods.map(getABISignature).join(', ')}`,
+          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods
+            .map(getABIMethodSignature)
+            .join(', ')}`,
         )
       }
       return methods[0]
     }
-    return this.appSpec.contract.methods.find((m) => getABISignature(m) === method)
+    return this.appSpec.contract.methods.find((m) => getABIMethodSignature(m) === method)
   }
 
   /**

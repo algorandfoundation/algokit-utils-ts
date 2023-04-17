@@ -28,6 +28,15 @@ describe('indexer-lookup', () => {
     expect(txn['current-round']).toBeGreaterThanOrEqual(transaction.firstRound)
   })
 
+  test('Account is found by id', async () => {
+    const { indexer, testAccount, transactionLogger } = localnet.context
+    await transactionLogger.waitForIndexer(indexer)
+
+    const account = await algokit.lookupAccountByAddress(testAccount.addr, indexer)
+
+    expect(account.account.address).toBe(testAccount.addr)
+  })
+
   test('Transactions are searched with pagination', async () => {
     const { algod, indexer, testAccount, generateAccount, transactionLogger } = localnet.context
     const secondAccount = await generateAccount({
@@ -69,7 +78,7 @@ describe('indexer-lookup', () => {
     })
     const app1 = await algokit.createApp(createParams, algod)
     const app2 = await algokit.createApp(createParams, algod)
-    const app3 = await algokit.createApp({ ...createParams, from: secondAccount }, algod)
+    await algokit.createApp({ ...createParams, from: secondAccount }, algod)
 
     const apps = await algokit.lookupAccountCreatedApplicationByAddress(indexer, testAccount.addr, true, 1)
 

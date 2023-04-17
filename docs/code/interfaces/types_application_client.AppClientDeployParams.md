@@ -33,7 +33,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-[src/types/application-client.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L98)
+[src/types/application-client.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L99)
 
 ___
 
@@ -46,7 +46,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-[src/types/application-client.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L94)
+[src/types/application-client.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L95)
 
 ___
 
@@ -58,7 +58,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/application-client.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L108)
+[src/types/application-client.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L109)
 
 ___
 
@@ -70,7 +70,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/application-client.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L112)
+[src/types/application-client.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L113)
 
 ___
 
@@ -82,7 +82,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/application-client.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L102)
+[src/types/application-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L103)
 
 ___
 
@@ -94,7 +94,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/application-client.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L104)
+[src/types/application-client.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L105)
 
 ___
 
@@ -106,7 +106,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/application-client.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L106)
+[src/types/application-client.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L107)
 
 ___
 
@@ -118,7 +118,7 @@ Parameters to control transaction sending
 
 #### Defined in
 
-[src/types/application-client.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L100)
+[src/types/application-client.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L101)
 
 ___
 
@@ -130,7 +130,7 @@ The optional sender to send the transaction from, will use the application clien
 
 #### Defined in
 
-[src/types/application-client.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L90)
+[src/types/application-client.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L91)
 
 ___
 
@@ -142,7 +142,7 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/application-client.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L110)
+[src/types/application-client.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L111)
 
 ___
 
@@ -154,4 +154,4 @@ The version of the contract, uses "1.0" by default
 
 #### Defined in
 
-[src/types/application-client.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L88)
+[src/types/application-client.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L89)

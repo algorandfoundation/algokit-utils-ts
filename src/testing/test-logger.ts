@@ -52,7 +52,7 @@ export class TestLogger implements Logger {
       (sender, id) =>
         (snapshot = snapshot.replace(new RegExp(typeof sender === 'string' ? sender : getSenderAddress(sender), 'g'), `ACCOUNT_${id + 1}`)),
     )
-    apps?.forEach((app, id) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b`, 'g'), `APP_${id + 1}`)))
+    apps?.forEach((app, id) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b(?! bytes)`, 'g'), `APP_${id + 1}`)))
     return snapshot
   }
 

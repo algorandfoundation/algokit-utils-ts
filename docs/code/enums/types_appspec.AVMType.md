@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).AVMType
 
+AVM data type
+
 ## Table of contents
 
 ### Enumeration Members
@@ -19,7 +21,7 @@
 
 #### Defined in
 
-[src/types/appspec.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L56)
+[src/types/appspec.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L101)
 
 ___
 
@@ -29,4 +31,4 @@ ___
 
 #### Defined in
 
-[src/types/appspec.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L55)
+[src/types/appspec.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L100)

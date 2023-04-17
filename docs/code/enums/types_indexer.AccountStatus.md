@@ -4,6 +4,8 @@
 
 [types/indexer](../modules/types_indexer.md).AccountStatus
 
+Delegation status of the account
+
 ## Table of contents
 
 ### Enumeration Members
@@ -18,9 +20,11 @@
 
 • **NotParticipating** = ``"NotParticipating"``
 
+Indicates that the associated account is neither a delegator nor a delegate
+
 #### Defined in
 
-[src/types/indexer.ts:305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L305)
+[src/types/indexer.ts:593](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L593)
 
 ___
 
@@ -28,9 +32,11 @@ ___
 
 • **Offline** = ``"Offline"``
 
+Indicates that the associated account is delegated
+
 #### Defined in
 
-[src/types/indexer.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L303)
+[src/types/indexer.ts:589](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L589)
 
 ___
 
@@ -38,6 +44,8 @@ ___
 
 • **Online** = ``"Online"``
 
+Indicates that the associated account used as part of the delegation pool
+
 #### Defined in
 
-[src/types/indexer.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L304)
+[src/types/indexer.ts:591](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L591)

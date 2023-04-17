@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).Schema
 
+The storage schema definition
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +19,11 @@
 
 • **declared**: `Record`<`string`, [`DeclaredSchemaValueSpec`](types_appspec.DeclaredSchemaValueSpec.md)\>
 
+Declared storage schema
+
 #### Defined in
 
-[src/types/appspec.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L77)
+[src/types/appspec.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L137)
 
 ___
 
@@ -27,6 +31,8 @@ ___
 
 • **reserved**: `Record`<`string`, [`ReservedSchemaValueSpec`](types_appspec.ReservedSchemaValueSpec.md)\>
 
+Reserved storage schema
+
 #### Defined in
 
-[src/types/appspec.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L78)
+[src/types/appspec.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L139)

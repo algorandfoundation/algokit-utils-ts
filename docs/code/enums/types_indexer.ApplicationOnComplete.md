@@ -4,6 +4,12 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationOnComplete
 
+Defines the what additional actions occur with the transaction
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#oncompletion
+
 ## Table of contents
 
 ### Enumeration Members
@@ -23,7 +29,7 @@
 
 #### Defined in
 
-[src/types/indexer.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L217)
+[src/types/indexer.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L496)
 
 ___
 
@@ -33,7 +39,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L216)
+[src/types/indexer.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L495)
 
 ___
 
@@ -43,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L219)
+[src/types/indexer.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L498)
 
 ___
 
@@ -53,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L214)
+[src/types/indexer.ts:493](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L493)
 
 ___
 
@@ -63,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:215](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L215)
+[src/types/indexer.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L494)
 
 ___
 
@@ -73,4 +79,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L218)
+[src/types/indexer.ts:497](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L497)

@@ -1,5 +1,6 @@
 import algosdk, {
   ABIMethod,
+  ABIMethodParams,
   ABIResult,
   ABIValue,
   Algodv2,
@@ -602,4 +603,13 @@ export async function compileTeal(tealCode: string, algod: Algodv2): Promise<Com
     compiledBase64ToBytes: new Uint8Array(Buffer.from(compiled.result, 'base64')),
     sourceMap: new SourceMap(compiled['sourcemap']),
   }
+}
+
+/**
+ * Returns the encoded ABI spec for a given ABI Method
+ * @param method The method to return a signature for
+ * @returns The encoded ABI method spec e.g. `method_name(uint64,string)string`
+ */
+export const getABIMethodSignature = (method: ABIMethodParams | ABIMethod) => {
+  return 'getSignature' in method ? method.getSignature() : new ABIMethod(method).getSignature()
 }

@@ -4,6 +4,8 @@
 
 [types/indexer](../modules/types_indexer.md).SignatureType
 
+Type of signature used by an account
+
 ## Table of contents
 
 ### Enumeration Members
@@ -18,9 +20,11 @@
 
 • **lsig** = ``"lsig"``
 
+Logic signature
+
 #### Defined in
 
-[src/types/indexer.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L299)
+[src/types/indexer.ts:583](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L583)
 
 ___
 
@@ -28,9 +32,11 @@ ___
 
 • **msig** = ``"msig"``
 
+Multisig
+
 #### Defined in
 
-[src/types/indexer.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L298)
+[src/types/indexer.ts:581](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L581)
 
 ___
 
@@ -38,6 +44,8 @@ ___
 
 • **sig** = ``"sig"``
 
+Normal signature
+
 #### Defined in
 
-[src/types/indexer.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L297)
+[src/types/indexer.ts:579](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L579)

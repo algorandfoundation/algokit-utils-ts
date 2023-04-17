@@ -23,7 +23,9 @@
 
 ### Type Aliases
 
+- [ABIType](types_appspec.md#abitype)
 - [CallConfigValue](types_appspec.md#callconfigvalue)
+- [FieldName](types_appspec.md#fieldname)
 - [HintSpec](types_appspec.md#hintspec)
 - [StateSchema](types_appspec.md#stateschema)
 - [StructElement](types_appspec.md#structelement)
@@ -34,13 +36,43 @@
 
 ## Type Aliases
 
+### ABIType
+
+Ƭ **ABIType**: `string`
+
+The string name of an ABI type
+
+#### Defined in
+
+[src/types/appspec.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L72)
+
+___
+
 ### CallConfigValue
 
 Ƭ **CallConfigValue**: ``"NEVER"`` \| ``"CALL"`` \| ``"CREATE"`` \| ``"ALL"``
 
+The various call configs:
+ * `NEVER`: Will not be called
+ * `CALL`: Can be called during a non-create call i.e. app id != 0
+ * `CREATE`: Can be called during a create call i.e. app id = 0
+ * `ALL`: Can be during a create OR non-create call
+
 #### Defined in
 
-[src/types/appspec.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L26)
+[src/types/appspec.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L50)
+
+___
+
+### FieldName
+
+Ƭ **FieldName**: `string`
+
+The name of a field
+
+#### Defined in
+
+[src/types/appspec.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L69)
 
 ___
 
@@ -48,9 +80,11 @@ ___
 
 Ƭ **HintSpec**: `Record`<`string`, [`Hint`](../interfaces/types_appspec.Hint.md)\>
 
+A lookup of encoded method call spec to hint
+
 #### Defined in
 
-[src/types/appspec.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L19)
+[src/types/appspec.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L34)
 
 ___
 
@@ -58,32 +92,38 @@ ___
 
 Ƭ **StateSchema**: `Object`
 
+Schema spec summary for global or local storage
+
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `num_byte_slices` | `number` |
-| `num_uints` | `number` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `num_byte_slices` | `number` | Number of byte slots |
+| `num_uints` | `number` | Number of uint slots |
 
 #### Defined in
 
-[src/types/appspec.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L86)
+[src/types/appspec.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L151)
 
 ___
 
 ### StructElement
 
-Ƭ **StructElement**: [`string`, `string`]
+Ƭ **StructElement**: [[`FieldName`](types_appspec.md#fieldname), [`ABIType`](types_appspec.md#abitype)]
+
+The elements of the struct/tuple: `FieldName`, `ABIType`
 
 #### Defined in
 
-[src/types/appspec.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L42)
+[src/types/appspec.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L75)
 
 ## Functions
 
 ### getABISignature
 
 ▸ **getABISignature**(`method`): `string`
+
+Deprecated - here for backwards compatibility, instead use algokit.getABIMethodSignature
 
 #### Parameters
 
@@ -97,4 +137,4 @@ ___
 
 #### Defined in
 
-[src/types/appspec.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L91)
+[src/app.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L613)

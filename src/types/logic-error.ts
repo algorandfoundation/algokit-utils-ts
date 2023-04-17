@@ -2,8 +2,6 @@ import type algosdk from 'algosdk'
 
 const LOGIC_ERROR = /TransactionPool.Remember: transaction ([A-Z0-9]+): logic eval error: (.*). Details: pc=([0-9]+), opcodes=.*/
 
-// todo: jsdoc comments
-
 /**
  * Details about a smart contract logic error
  */
@@ -14,6 +12,8 @@ export interface LogicErrorDetails {
   pc: number
   /** The error message */
   msg: string
+  /** The full error description */
+  desc: string
 }
 
 /** Wraps key functionality around processing logic errors */
@@ -29,6 +29,7 @@ export class LogicError extends Error {
     return {
       txId: res[1],
       msg: res[2],
+      desc: errorMessage,
       pc: parseInt(res[3] ? res[3] : '0'),
     } as LogicErrorDetails
   }
@@ -53,7 +54,7 @@ export class LogicError extends Error {
     const line = map.getLineForPc(errorDetails.pc)
     this.teal_line = line === undefined ? 0 : line
 
-    this.message = `${this.led.msg}. at:${line}`
+    this.message = `${this.led.msg}. at:${line}. ${this.led.desc}`
 
     if (this.teal_line > 0) {
       const start = this.teal_line > this.lines ? this.teal_line - this.lines : 0

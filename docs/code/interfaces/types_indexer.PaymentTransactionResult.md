@@ -4,6 +4,12 @@
 
 [types/indexer](../modules/types_indexer.md).PaymentTransactionResult
 
+Fields for a payment transaction
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#transactionpayment
+
 ## Table of contents
 
 ### Properties
@@ -19,9 +25,11 @@
 
 • **amount**: `number`
 
+[amt] number of MicroAlgos intended to be transferred.
+
 #### Defined in
 
-[src/types/indexer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L114)
+[src/types/indexer.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L256)
 
 ___
 
@@ -29,9 +37,11 @@ ___
 
 • `Optional` **close-amount**: `number`
 
+Number of MicroAlgos that were sent to the close-remainder-to address when closing the sender account.
+
 #### Defined in
 
-[src/types/indexer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L115)
+[src/types/indexer.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L258)
 
 ___
 
@@ -39,9 +49,11 @@ ___
 
 • `Optional` **close-remainder-to**: `string`
 
+[close] when set, indicates that the sending account should be closed and all remaining funds be transferred to this address.
+
 #### Defined in
 
-[src/types/indexer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L116)
+[src/types/indexer.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L260)
 
 ___
 
@@ -49,6 +61,8 @@ ___
 
 • **receiver**: `string`
 
+[rcv] receiver's address.
+
 #### Defined in
 
-[src/types/indexer.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L117)
+[src/types/indexer.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L262)

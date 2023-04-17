@@ -143,9 +143,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     return t.txn
   })
   let groupId: string | undefined = undefined
-  if (transactionsToSend.length === 1) {
-    Config.getLogger(sendParams?.suppressLog).info(`Sending transaction ${transactionsToSend[0].txID()}`)
-  } else {
+  if (transactionsToSend.length > 1) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
     Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
@@ -160,7 +158,15 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
   const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
 
-  Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
+  if (transactionsToSend.length > 1) {
+    Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
+  } else {
+    Config.getLogger(sendParams?.suppressLog).info(
+      `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${algosdk.encodeAddress(
+        transactionsToSend[0].from.publicKey,
+      )}`,
+    )
+  }
 
   let confirmations: PendingTransactionResponse[] | undefined = undefined
   if (!sendParams?.skipWaiting) {

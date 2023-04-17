@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).StateSchemaSpec
 
+The rolled-up schema allocation specification for local and global state
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +19,11 @@
 
 • **global**: [`StateSchema`](../modules/types_appspec.md#stateschema)
 
+Global storage spec
+
 #### Defined in
 
-[src/types/appspec.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L82)
+[src/types/appspec.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L145)
 
 ___
 
@@ -27,6 +31,8 @@ ___
 
 • **local**: [`StateSchema`](../modules/types_appspec.md#stateschema)
 
+Local storage spec
+
 #### Defined in
 
-[src/types/appspec.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L83)
+[src/types/appspec.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L147)

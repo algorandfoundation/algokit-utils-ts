@@ -4,13 +4,18 @@
 
 [types/indexer](../modules/types_indexer.md).AssetHolding
 
+Describes an asset held by an account.
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#assetholding
+
 ## Table of contents
 
 ### Properties
 
 - [amount](types_indexer.AssetHolding.md#amount)
 - [asset-id](types_indexer.AssetHolding.md#asset-id)
-- [creator](types_indexer.AssetHolding.md#creator)
 - [deleted](types_indexer.AssetHolding.md#deleted)
 - [is-frozen](types_indexer.AssetHolding.md#is-frozen)
 - [opted-in-at-round](types_indexer.AssetHolding.md#opted-in-at-round)
@@ -26,7 +31,7 @@
 
 #### Defined in
 
-[src/types/indexer.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L321)
+[src/types/indexer.ts:642](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L642)
 
 ___
 
@@ -38,21 +43,7 @@ Asset ID of the holding.
 
 #### Defined in
 
-[src/types/indexer.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L325)
-
-___
-
-### creator
-
-• **creator**: `string`
-
-Address that created this asset. This is the address where the parameters for
-this asset can be found, and also the address where unwanted asset units can be
-sent in the worst case.
-
-#### Defined in
-
-[src/types/indexer.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L331)
+[src/types/indexer.ts:646](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L646)
 
 ___
 
@@ -60,9 +51,11 @@ ___
 
 • `Optional` **deleted**: `boolean`
 
+Whether or not the asset holding is currently deleted from its account.
+
 #### Defined in
 
-[src/types/indexer.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L336)
+[src/types/indexer.ts:648](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L648)
 
 ___
 
@@ -70,11 +63,11 @@ ___
 
 • **is-frozen**: `boolean`
 
-(f) whether or not the holding is frozen.
+[f] whether or not the holding is frozen.
 
 #### Defined in
 
-[src/types/indexer.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L335)
+[src/types/indexer.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L652)
 
 ___
 
@@ -82,9 +75,11 @@ ___
 
 • **opted-in-at-round**: `number`
 
+Round during which the account opted into this asset holding.
+
 #### Defined in
 
-[src/types/indexer.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L337)
+[src/types/indexer.ts:654](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L654)
 
 ___
 
@@ -92,6 +87,8 @@ ___
 
 • **opted-out-at-round**: `number`
 
+Round during which the account opted out of this asset holding.
+
 #### Defined in
 
-[src/types/indexer.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L338)
+[src/types/indexer.ts:656](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L656)

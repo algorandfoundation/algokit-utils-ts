@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).ReservedSchemaValueSpec
 
+Reserved schema value specification
+
 ## Table of contents
 
 ### Properties
@@ -18,9 +20,11 @@
 
 • **desc**: `string`
 
+The description of the reserved storage space
+
 #### Defined in
 
-[src/types/appspec.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L67)
+[src/types/appspec.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L121)
 
 ___
 
@@ -28,9 +32,11 @@ ___
 
 • **max\_keys**: `number`
 
+The maximum number of slots to reserve
+
 #### Defined in
 
-[src/types/appspec.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L68)
+[src/types/appspec.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L123)
 
 ___
 
@@ -38,6 +44,8 @@ ___
 
 • **type**: [`AVMType`](../enums/types_appspec.AVMType.md)
 
+The type of value
+
 #### Defined in
 
-[src/types/appspec.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L66)
+[src/types/appspec.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L119)
