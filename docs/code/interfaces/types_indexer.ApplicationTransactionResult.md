@@ -4,9 +4,15 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationTransactionResult
 
+Fields for an application transaction
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication
+
 ## Hierarchy
 
-- `Exclude`<{ `creator`: `string` ; `global-state`: `TealKeyValue`[]  }, [`ApplicationParams`](types_indexer.ApplicationParams.md)\>
+- `Omit`<[`ApplicationParams`](types_indexer.ApplicationParams.md), ``"creator"`` \| ``"global-state"``\>
 
   ↳ **`ApplicationTransactionResult`**
 
@@ -17,10 +23,13 @@
 - [accounts](types_indexer.ApplicationTransactionResult.md#accounts)
 - [application-args](types_indexer.ApplicationTransactionResult.md#application-args)
 - [application-id](types_indexer.ApplicationTransactionResult.md#application-id)
-- [creator](types_indexer.ApplicationTransactionResult.md#creator)
+- [approval-program](types_indexer.ApplicationTransactionResult.md#approval-program)
+- [clear-state-program](types_indexer.ApplicationTransactionResult.md#clear-state-program)
+- [extra-program-pages](types_indexer.ApplicationTransactionResult.md#extra-program-pages)
 - [foreign-apps](types_indexer.ApplicationTransactionResult.md#foreign-apps)
 - [foreign-assets](types_indexer.ApplicationTransactionResult.md#foreign-assets)
-- [global-state](types_indexer.ApplicationTransactionResult.md#global-state)
+- [global-state-schema](types_indexer.ApplicationTransactionResult.md#global-state-schema)
+- [local-state-schema](types_indexer.ApplicationTransactionResult.md#local-state-schema)
 - [on-completion](types_indexer.ApplicationTransactionResult.md#on-completion)
 
 ## Properties
@@ -29,9 +38,11 @@
 
 • `Optional` **accounts**: `string`[]
 
+[apat] List of accounts in addition to the sender that may be accessed from the application's approval-program and clear-state-program.
+
 #### Defined in
 
-[src/types/indexer.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L124)
+[src/types/indexer.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L268)
 
 ___
 
@@ -39,9 +50,11 @@ ___
 
 • `Optional` **application-args**: `string`[]
 
+[apaa] transaction specific arguments accessed from the application's approval-program and clear-state-program.
+
 #### Defined in
 
-[src/types/indexer.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L123)
+[src/types/indexer.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L270)
 
 ___
 
@@ -49,23 +62,71 @@ ___
 
 • **application-id**: `number`
 
+[apid] ID of the application being configured or empty if creating.
+
 #### Defined in
 
-[src/types/indexer.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L121)
+[src/types/indexer.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L272)
 
 ___
 
-### creator
+### approval-program
 
-• **creator**: `string`
+• **approval-program**: `string`
+
+[apap]/[approv] Logic executed for every application transaction, except when on-completion is set to "clear".
+
+It can read and write global state for the application, as well as account-specific local state.
+
+Approval programs may reject the transaction.
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
 
 #### Inherited from
 
-Exclude.creator
+Omit.approval-program
 
 #### Defined in
 
-[src/types/indexer.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L120)
+[src/types/indexer.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L456)
+
+___
+
+### clear-state-program
+
+• **clear-state-program**: `string`
+
+[apsu]/[clearp] Logic executed for application transactions with on-completion set to "clear".
+
+It can read and write global state for the application, as well as account-specific local state.
+
+Clear state programs cannot reject the transaction.
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+
+#### Inherited from
+
+Omit.clear-state-program
+
+#### Defined in
+
+[src/types/indexer.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L466)
+
+___
+
+### extra-program-pages
+
+• `Optional` **extra-program-pages**: `number`
+
+[epp] the amount of extra program pages available to this app.
+
+#### Inherited from
+
+Omit.extra-program-pages
+
+#### Defined in
+
+[src/types/indexer.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L468)
 
 ___
 
@@ -73,9 +134,11 @@ ___
 
 • `Optional` **foreign-apps**: `number`[]
 
+[apfa] Lists the applications in addition to the application-id whose global states may be accessed by this application's approval-program and clear-state-program. The access is read-only.
+
 #### Defined in
 
-[src/types/indexer.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L125)
+[src/types/indexer.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L274)
 
 ___
 
@@ -83,23 +146,43 @@ ___
 
 • `Optional` **foreign-assets**: `number`[]
 
+[apas] lists the assets whose parameters may be accessed by this application's ApprovalProgram and ClearStateProgram. The access is read-only.
+
 #### Defined in
 
-[src/types/indexer.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L126)
+[src/types/indexer.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L276)
 
 ___
 
-### global-state
+### global-state-schema
 
-• **global-state**: `TealKeyValue`[]
+• `Optional` **global-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
+
+[\gsch] global schema
 
 #### Inherited from
 
-Exclude.global-state
+Omit.global-state-schema
 
 #### Defined in
 
-[src/types/indexer.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L120)
+[src/types/indexer.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L472)
+
+___
+
+### local-state-schema
+
+• `Optional` **local-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
+
+[\lsch] local schema
+
+#### Inherited from
+
+Omit.local-state-schema
+
+#### Defined in
+
+[src/types/indexer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L474)
 
 ___
 
@@ -107,6 +190,8 @@ ___
 
 • **on-completion**: [`ApplicationOnComplete`](../enums/types_indexer.ApplicationOnComplete.md)
 
+[apan] defines the what additional actions occur with the transaction.
+
 #### Defined in
 
-[src/types/indexer.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L122)
+[src/types/indexer.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L278)

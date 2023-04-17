@@ -4,6 +4,10 @@
 
 [types/indexer](../modules/types_indexer.md).AssetLookupResult
 
+Indexer result for an asset lookup,
+
+**`See`**
+
 https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id
 
 ## Table of contents
@@ -19,16 +23,20 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id
 
 • **asset**: [`AssetResult`](types_indexer.AssetResult.md)
 
+The returned asset
+
 #### Defined in
 
-[src/types/indexer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L41)
+[src/types/indexer.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L57)
 
 ___
 
 ### current-round
 
-• **current-round**: `string`
+• **current-round**: `number`
+
+Round at which the results were computed.
 
 #### Defined in
 
-[src/types/indexer.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L40)
+[src/types/indexer.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L55)

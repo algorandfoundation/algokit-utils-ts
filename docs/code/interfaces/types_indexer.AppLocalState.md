@@ -4,6 +4,12 @@
 
 [types/indexer](../modules/types_indexer.md).AppLocalState
 
+Stores local state associated with an application.
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#applicationlocalstate
+
 ## Table of contents
 
 ### Properties
@@ -19,21 +25,25 @@
 
 ### closed-out-at-round
 
-• **closed-out-at-round**: `number`
+• `Optional` **closed-out-at-round**: `number`
+
+Round when account closed out of the application.
 
 #### Defined in
 
-[src/types/indexer.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L309)
+[src/types/indexer.ts:624](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L624)
 
 ___
 
 ### deleted
 
-• **deleted**: `boolean`
+• `Optional` **deleted**: `boolean`
+
+Whether or not the application local state is currently deleted from its account.
 
 #### Defined in
 
-[src/types/indexer.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L310)
+[src/types/indexer.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L626)
 
 ___
 
@@ -41,29 +51,35 @@ ___
 
 • **id**: `number`
 
+The application which this local state is for.
+
 #### Defined in
 
-[src/types/indexer.ts:311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L311)
+[src/types/indexer.ts:628](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L628)
 
 ___
 
 ### key-value
 
-• **key-value**: `TealKeyValue`[]
+• `Optional` **key-value**: `TealKeyValue`[]
+
+[tkv] storage.
 
 #### Defined in
 
-[src/types/indexer.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L312)
+[src/types/indexer.ts:630](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L630)
 
 ___
 
 ### opted-in-at-round
 
-• **opted-in-at-round**: `number`
+• `Optional` **opted-in-at-round**: `number`
+
+Round when the account opted into the application.
 
 #### Defined in
 
-[src/types/indexer.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L313)
+[src/types/indexer.ts:632](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L632)
 
 ___
 
@@ -71,6 +87,8 @@ ___
 
 • **schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
+[hsch] schema.
+
 #### Defined in
 
-[src/types/indexer.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L314)
+[src/types/indexer.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L634)

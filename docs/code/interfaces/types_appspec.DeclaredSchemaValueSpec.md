@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).DeclaredSchemaValueSpec
 
+Declared schema value specification
+
 ## Table of contents
 
 ### Properties
@@ -17,11 +19,13 @@
 
 ### desc
 
-• **desc**: `string`
+• `Optional` **desc**: `string`
+
+A description of the variable
 
 #### Defined in
 
-[src/types/appspec.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L61)
+[src/types/appspec.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L111)
 
 ___
 
@@ -29,9 +33,11 @@ ___
 
 • **key**: `string`
 
+The name of the key
+
 #### Defined in
 
-[src/types/appspec.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L60)
+[src/types/appspec.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L109)
 
 ___
 
@@ -39,9 +45,11 @@ ___
 
 • **static**: `boolean`
 
+Whether or not the value is set statically (at create time only) or dynamically
+
 #### Defined in
 
-[src/types/appspec.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L62)
+[src/types/appspec.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L113)
 
 ___
 
@@ -49,6 +57,8 @@ ___
 
 • **type**: [`AVMType`](../enums/types_appspec.AVMType.md)
 
+The type of value
+
 #### Defined in
 
-[src/types/appspec.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L59)
+[src/types/appspec.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L107)

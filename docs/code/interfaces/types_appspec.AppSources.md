@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).AppSources
 
+The TEAL source of a contract
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +19,11 @@
 
 • **approval**: `string`
 
+The TEAL source of the approval program
+
 #### Defined in
 
-[src/types/appspec.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L22)
+[src/types/appspec.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L39)
 
 ___
 
@@ -27,6 +31,8 @@ ___
 
 • **clear**: `string`
 
+The TEAL source of the clear program
+
 #### Defined in
 
-[src/types/appspec.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L23)
+[src/types/appspec.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L41)

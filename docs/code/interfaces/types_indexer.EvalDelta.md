@@ -4,6 +4,12 @@
 
 [types/indexer](../modules/types_indexer.md).EvalDelta
 
+Represents a TEAL value delta.
+
+**`See`**
+
+https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta
+
 ## Table of contents
 
 ### Properties
@@ -18,26 +24,32 @@
 
 • **action**: `number`
 
+[at] delta action.
+
 #### Defined in
 
-[src/types/indexer.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L193)
+[src/types/indexer.ts:436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L436)
 
 ___
 
 ### bytes
 
-• **bytes**: `string`
+• `Optional` **bytes**: `string`
+
+[bs] bytes value.
 
 #### Defined in
 
-[src/types/indexer.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L194)
+[src/types/indexer.ts:438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L438)
 
 ___
 
 ### uint
 
-• **uint**: `number`
+• `Optional` **uint**: `number`
+
+[ui] uint value.
 
 #### Defined in
 
-[src/types/indexer.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L195)
+[src/types/indexer.ts:440](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L440)

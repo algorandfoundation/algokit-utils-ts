@@ -57,7 +57,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L48)
+[src/types/logic-error.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L49)
 
 ## Properties
 
@@ -67,7 +67,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L36)
+[src/types/logic-error.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L37)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L38)
+[src/types/logic-error.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L39)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L37)
+[src/types/logic-error.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L38)
 
 ___
 
@@ -129,7 +129,7 @@ Error.stack
 
 #### Defined in
 
-[src/types/logic-error.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L40)
+[src/types/logic-error.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L41)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L39)
+[src/types/logic-error.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L40)
 
 ___
 

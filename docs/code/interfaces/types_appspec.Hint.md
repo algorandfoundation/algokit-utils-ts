@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).Hint
 
+Hint information for a given method call to allow client generation
+
 ## Table of contents
 
 ### Properties
@@ -32,7 +34,7 @@
 
 #### Defined in
 
-[src/types/appspec.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L32)
+[src/types/appspec.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L58)
 
 ___
 
@@ -42,7 +44,7 @@ ___
 
 #### Defined in
 
-[src/types/appspec.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L31)
+[src/types/appspec.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L57)
 
 ___
 
@@ -52,7 +54,7 @@ ___
 
 #### Defined in
 
-[src/types/appspec.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L30)
+[src/types/appspec.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L56)
 
 ___
 
@@ -60,6 +62,8 @@ ___
 
 • **structs**: `Record`<`string`, [`Struct`](types_appspec.Struct.md)\>
 
+Any user-defined struct/tuple types used in the method call, keyed by parameter name or `output` for return type
+
 #### Defined in
 
-[src/types/appspec.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L29)
+[src/types/appspec.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L55)

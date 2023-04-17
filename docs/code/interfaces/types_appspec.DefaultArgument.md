@@ -4,6 +4,8 @@
 
 [types/appspec](../modules/types_appspec.md).DefaultArgument
 
+Any default argument specifications for the given parameter
+
 ## Table of contents
 
 ### Properties
@@ -17,16 +19,24 @@
 
 • **data**: `string` \| `number` \| `bigint`
 
+The name or value corresponding to the source
+
 #### Defined in
 
-[src/types/appspec.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L51)
+[src/types/appspec.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L95)
 
 ___
 
 ### source
 
-• **source**: `string`
+• **source**: ``"global-state"`` \| ``"local-state"`` \| ``"abi-method"`` \| ``"constant"``
+
+The source of the default argument value:
+ * `global-state`: Global state; `data` is the name of the global state variable
+ * `local-state`: Local state; `data` is the name of the local state variable
+ * `abi-method`: ABI method call; `data` is the method spec of the ABI method to call
+ * `constant`: A constant value; `data` is the value to use
 
 #### Defined in
 
-[src/types/appspec.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L50)
+[src/types/appspec.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/appspec.ts#L93)

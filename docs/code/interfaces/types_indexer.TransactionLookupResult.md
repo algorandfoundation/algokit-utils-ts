@@ -4,6 +4,10 @@
 
 [types/indexer](../modules/types_indexer.md).TransactionLookupResult
 
+Indexer result for a transaction lookup,
+
+**`See`**
+
 https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid
 
 ## Table of contents
@@ -19,9 +23,11 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid
 
 • **current-round**: `number`
 
+Round at which the results were computed.
+
 #### Defined in
 
-[src/types/indexer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L46)
+[src/types/indexer.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L63)
 
 ___
 
@@ -29,6 +35,8 @@ ___
 
 • **transaction**: [`TransactionResult`](types_indexer.TransactionResult.md)
 
+The returned transaction
+
 #### Defined in
 
-[src/types/indexer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L47)
+[src/types/indexer.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L65)
