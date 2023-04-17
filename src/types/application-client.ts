@@ -739,7 +739,7 @@ export class ApplicationClient {
   exposeLogicError(e: Error, isClear?: boolean): Error {
     if ((!isClear && this._approvalSourceMap == undefined) || (isClear && this._clearSourceMap == undefined)) return e
 
-    const errorDetails = LogicError.parseLogicError(e.message)
+    const errorDetails = LogicError.parseLogicError(e)
 
     if (errorDetails !== undefined)
       return new LogicError(

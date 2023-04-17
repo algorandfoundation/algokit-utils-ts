@@ -13,6 +13,7 @@ Details about a smart contract logic error
 - [desc](types_logic_error.LogicErrorDetails.md#desc)
 - [msg](types_logic_error.LogicErrorDetails.md#msg)
 - [pc](types_logic_error.LogicErrorDetails.md#pc)
+- [traces](types_logic_error.LogicErrorDetails.md#traces)
 - [txId](types_logic_error.LogicErrorDetails.md#txid)
 
 ## Properties
@@ -50,6 +51,18 @@ The program counter where the error was
 #### Defined in
 
 [src/types/logic-error.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L12)
+
+___
+
+### traces
+
+• **traces**: `Record`<`string`, `unknown`\>[]
+
+Any trace information included in the error
+
+#### Defined in
+
+[src/types/logic-error.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L18)
 
 ___
 
