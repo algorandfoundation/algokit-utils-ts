@@ -192,17 +192,16 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-    if (Config.debug) {
+    if (Config.debug && typeof e === 'object') {
+      e.traces = []
       Config.logger.debug(
         'Received error executing Atomic Transaction Composer and debug flag enabled; attempting dry run to get more information',
       )
       const dryrun = await performAtomicTransactionComposerDryrun(atc, algod)
-      if (dryrun.error) {
-        Config.logger.error('Received the following error when attempting a dryrun of failed transaction(s)', { error: dryrun.error })
-      }
+
       for (const txn of dryrun.txns) {
         if (txn.appCallRejected()) {
-          Config.logger.error(`Received the following application error when executing dry run of transaction`, {
+          e.traces.push({
             trace: txn.appTrace(),
             cost: txn.cost,
             logs: txn.logs,

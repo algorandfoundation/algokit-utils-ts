@@ -57,7 +57,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L49)
+[src/types/logic-error.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L54)
 
 ## Properties
 
@@ -67,7 +67,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L37)
+[src/types/logic-error.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L42)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L39)
+[src/types/logic-error.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L38)
+[src/types/logic-error.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L43)
 
 ___
 
@@ -129,7 +129,7 @@ Error.stack
 
 #### Defined in
 
-[src/types/logic-error.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L41)
+[src/types/logic-error.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L46)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L40)
+[src/types/logic-error.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L45)
 
 ___
 
@@ -221,15 +221,15 @@ ___
 
 ### parseLogicError
 
-▸ `Static` **parseLogicError**(`errorMessage`): `undefined` \| [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md)
+▸ `Static` **parseLogicError**(`error`): `undefined` \| [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md)
 
 Takes an error message and parses out the details of any logic errors in there.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `errorMessage` | `string` | The error message to parse |
+| Name | Type |
+| :------ | :------ |
+| `error` | `any` |
 
 #### Returns
 
@@ -239,4 +239,4 @@ The logic error details if any, or undefined
 
 #### Defined in
 
-[src/types/logic-error.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L25)
+[src/types/logic-error.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L28)

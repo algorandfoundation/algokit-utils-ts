@@ -14,6 +14,8 @@ export interface LogicErrorDetails {
   msg: string
   /** The full error description */
   desc: string
+  /** Any trace information included in the error */
+  traces: Record<string, unknown>[]
 }
 
 /** Wraps key functionality around processing logic errors */
@@ -22,7 +24,9 @@ export class LogicError extends Error {
    * @param errorMessage The error message to parse
    * @returns The logic error details if any, or undefined
    */
-  static parseLogicError(errorMessage: string): LogicErrorDetails | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static parseLogicError(error: any): LogicErrorDetails | undefined {
+    const errorMessage = error.message
     const res = LOGIC_ERROR.exec(errorMessage)
     if (res === null || res.length <= 3) return undefined
 
@@ -31,6 +35,7 @@ export class LogicError extends Error {
       msg: res[2],
       desc: errorMessage,
       pc: parseInt(res[3] ? res[3] : '0'),
+      traces: error.traces,
     } as LogicErrorDetails
   }
 
