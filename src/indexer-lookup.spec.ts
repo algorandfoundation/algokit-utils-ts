@@ -28,6 +28,15 @@ describe('indexer-lookup', () => {
     expect(txn['current-round']).toBeGreaterThanOrEqual(transaction.firstRound)
   })
 
+  test('Account is found by id', async () => {
+    const { indexer, testAccount, transactionLogger } = localnet.context
+    await transactionLogger.waitForIndexer(indexer)
+
+    const account = await algokit.lookupAccountByAddress(testAccount.addr, indexer)
+
+    expect(account.account.address).toBe(testAccount.addr)
+  })
+
   test('Transactions are searched with pagination', async () => {
     const { algod, indexer, testAccount, generateAccount, transactionLogger } = localnet.context
     const secondAccount = await generateAccount({
