@@ -438,7 +438,12 @@ describe('application-client', () => {
       })
       invariant(false)
     } catch (e: any) {
-      expect(e.toString()).toMatchInlineSnapshot(`"Error: assert failed pc=783. at:416"`)
+      expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
+        "Error: assert failed pc=783. at:416. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
+        intc_0 // 0
+        assert
+        "
+      `)
       expect(e.stack).toMatchInlineSnapshot(`
         "// error
         error_6:
