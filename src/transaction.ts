@@ -156,39 +156,78 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     )
   }
 
-  const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
+  try {
+    const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
 
-  if (transactionsToSend.length > 1) {
-    Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
-  } else {
-    Config.getLogger(sendParams?.suppressLog).info(
-      `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${algosdk.encodeAddress(
-        transactionsToSend[0].from.publicKey,
-      )}`,
-    )
-  }
+    if (transactionsToSend.length > 1) {
+      Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
+    } else {
+      Config.getLogger(sendParams?.suppressLog).info(
+        `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${algosdk.encodeAddress(
+          transactionsToSend[0].from.publicKey,
+        )}`,
+      )
+    }
 
-  let confirmations: PendingTransactionResponse[] | undefined = undefined
-  if (!sendParams?.skipWaiting) {
-    confirmations = await Promise.all(
-      transactionsToSend.map(async (t) => (await algod.pendingTransactionInformation(t.txID()).do()) as PendingTransactionResponse),
-    )
-  }
+    let confirmations: PendingTransactionResponse[] | undefined = undefined
+    if (!sendParams?.skipWaiting) {
+      confirmations = await Promise.all(
+        transactionsToSend.map(async (t) => (await algod.pendingTransactionInformation(t.txID()).do()) as PendingTransactionResponse),
+      )
+    }
 
-  return {
-    groupId,
-    confirmations,
-    txIds: transactionsToSend.map((t) => t.txID()),
-    transactions: transactionsToSend,
-    returns: result.methodResults.map(
-      (r) =>
-        ({
-          decodeError: r.decodeError,
-          returnValue: r.returnValue,
-          rawReturnValue: r.rawReturnValue,
-        } as ABIReturn),
-    ),
+    return {
+      groupId,
+      confirmations,
+      txIds: transactionsToSend.map((t) => t.txID()),
+      transactions: transactionsToSend,
+      returns: result.methodResults.map(
+        (r) =>
+          ({
+            decodeError: r.decodeError,
+            returnValue: r.returnValue,
+            rawReturnValue: r.rawReturnValue,
+          } as ABIReturn),
+      ),
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    if (Config.debug) {
+      Config.logger.debug(
+        'Received error executing Atomic Transaction Composer and debug flag enabled; attempting dry run to get more information',
+      )
+      const dryrun = await performAtomicTransactionComposerDryrun(atc, algod)
+      if (dryrun.error) {
+        Config.logger.error('Received the following error when attempting a dryrun of failed transaction(s)', { error: dryrun.error })
+      }
+      for (const txn of dryrun.txns) {
+        if (txn.appCallRejected()) {
+          Config.logger.error(`Received the following application error when executing dry run of transaction`, {
+            trace: txn.appTrace(),
+            cost: txn.cost,
+            logs: txn.logs,
+          })
+        }
+      }
+    }
+
+    throw e
   }
+}
+
+/**
+ * Performs a dry run of the transactions loaded into the given @see AtomicTransactionComposer
+ * @param atc The @see AtomicTransactionComposer with transaction(s) loaded
+ * @param algod An Algod client
+ * @returns The dryrun result
+ */
+export async function performAtomicTransactionComposerDryrun(atc: AtomicTransactionComposer, algod: Algodv2) {
+  const signedTransactions = await atc.gatherSignatures()
+  const txns = signedTransactions.map((t) => {
+    return algosdk.decodeSignedTransaction(t)
+  })
+  const dryrun = await algosdk.createDryrun({ client: algod, txns })
+  return new algosdk.DryrunResult(await algod.dryrun(dryrun).do())
 }
 
 /**

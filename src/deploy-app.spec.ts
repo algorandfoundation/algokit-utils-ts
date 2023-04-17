@@ -291,6 +291,7 @@ describe('deploy-app', () => {
   })
 
   test('Deploy failure for replacement of permanent, updated app', async () => {
+    algokit.Config.configure({ debug: false }) // Remove noise from snapshot
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = await getTestingAppDeployParams({
@@ -363,6 +364,7 @@ describe('deploy-app', () => {
   })
 
   test('Deploy replacement to schema broken, permanent app fails', async () => {
+    algokit.Config.configure({ debug: false }) // Remove noise from snapshot
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = await getTestingAppDeployParams({

@@ -63,6 +63,7 @@
 - [microAlgos](index.md#microalgos)
 - [mnemonicAccount](index.md#mnemonicaccount)
 - [multisigAccount](index.md#multisigaccount)
+- [performAtomicTransactionComposerDryrun](index.md#performatomictransactioncomposerdryrun)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
 - [performTemplateSubstitutionAndCompile](index.md#performtemplatesubstitutionandcompile)
 - [randomAccount](index.md#randomaccount)
@@ -164,7 +165,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L295)
+[src/transaction.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L334)
 
 ___
 
@@ -225,7 +226,7 @@ Allows for control of fees on a
 
 #### Defined in
 
-[src/transaction.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L318)
+[src/transaction.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L357)
 
 ___
 
@@ -1071,7 +1072,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L350)
+[src/transaction.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L389)
 
 ___
 
@@ -1384,7 +1385,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L341)
+[src/transaction.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L380)
 
 ___
 
@@ -1588,6 +1589,36 @@ A multisig account wrapper
 #### Defined in
 
 [src/account.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L14)
+
+___
+
+### performAtomicTransactionComposerDryrun
+
+▸ **performAtomicTransactionComposerDryrun**(`atc`, `algod`): `Promise`<`DryrunResult`\>
+
+Performs a dry run of the transactions loaded into the given
+
+**`See`**
+
+ - AtomicTransactionComposer
+ - AtomicTransactionComposer with transaction(s) loaded
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `atc` | `AtomicTransactionComposer` | The |
+| `algod` | `default` | An Algod client |
+
+#### Returns
+
+`Promise`<`DryrunResult`\>
+
+The dryrun result
+
+#### Defined in
+
+[src/transaction.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L224)
 
 ___
 
@@ -1806,7 +1837,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L203)
+[src/transaction.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L242)
 
 ___
 
@@ -1970,4 +2001,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L248)
+[src/transaction.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L287)
