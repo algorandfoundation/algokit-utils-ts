@@ -12,6 +12,7 @@ import algosdk, {
 import { Buffer } from 'buffer'
 import {
   callApp,
+  compileTeal,
   createApp,
   getABIMethodSignature,
   getAppBoxNames,
@@ -136,8 +137,7 @@ export type AppClientCallParams = AppClientCallArgs & {
   sendParams?: SendTransactionParams
 }
 
-/** Parameters for creating a contract using ApplicationClient */
-export type AppClientCreateParams = AppClientCallParams & {
+export interface AppClientCompilationParams {
   /** Any deploy-time parameters to replace in the TEAL code */
   deployTimeParams?: TealTemplateParams
   /* Whether or not the contract should have deploy-time immutability control set, undefined = ignore */
@@ -145,6 +145,9 @@ export type AppClientCreateParams = AppClientCallParams & {
   /* Whether or not the contract should have deploy-time permanence control set, undefined = ignore */
   deletable?: boolean
 }
+
+/** Parameters for creating a contract using ApplicationClient */
+export type AppClientCreateParams = AppClientCallParams & AppClientCompilationParams
 
 /** Parameters for updating a contract using ApplicationClient */
 export type AppClientUpdateParams = AppClientCreateParams
@@ -222,6 +225,28 @@ export class ApplicationClient {
   }
 
   /**
+   * Compiles the approval and clear programs and sets up the source map.
+   * @param compilation The deploy-time parameters for the compilation
+   * @returns The compiled approval and clear programs
+   */
+  async compile(compilation?: AppClientCompilationParams) {
+    const { deployTimeParams, updatable, deletable } = compilation ?? {}
+    const approvalTemplate = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
+    const approval = replaceDeployTimeControlParams(performTemplateSubstitution(approvalTemplate, deployTimeParams), {
+      updatable,
+      deletable,
+    })
+    const approvalCompiled = await compileTeal(approval, this.algod)
+    this._approvalSourceMap = approvalCompiled?.sourceMap
+    const clearTemplate = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
+    const clear = performTemplateSubstitution(clearTemplate, deployTimeParams)
+    const clearCompiled = await compileTeal(clear, this.algod)
+    this._clearSourceMap = clearCompiled?.sourceMap
+
+    return { approvalCompiled, clearCompiled }
+  }
+
+  /**
    * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
    *
    * To understand the architecture decisions behind this functionality please @see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
@@ -258,35 +283,41 @@ export class ApplicationClient {
     const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
     const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
 
+    const compilation = {
+      deployTimeParams: deployArgs.deployTimeParams,
+      updatable:
+        allowUpdate ?? approval.includes(UPDATABLE_TEMPLATE_NAME)
+          ? (!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
+            !!Object.keys(this.appSpec.hints).filter(
+              (h) =>
+                !this.appSpec.hints[h].call_config.update_application && this.appSpec.hints[h].call_config.update_application !== 'NEVER',
+            )[0]
+          : undefined,
+      deletable:
+        allowDelete ?? approval.includes(DELETABLE_TEMPLATE_NAME)
+          ? (!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
+            !!Object.keys(this.appSpec.hints).filter(
+              (h) =>
+                !this.appSpec.hints[h].call_config.delete_application && this.appSpec.hints[h].call_config.delete_application !== 'NEVER',
+            )[0]
+          : undefined,
+    }
+
+    const { approvalCompiled, clearCompiled } = await this.compile(compilation)
+
     try {
       await this.getAppReference()
       const result = await deployApp(
         {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           from,
-          approvalProgram: approval,
-          clearStateProgram: clear,
+          approvalProgram: approvalCompiled.compiledBase64ToBytes,
+          clearStateProgram: clearCompiled.compiledBase64ToBytes,
           metadata: {
             name: this._appName,
             version: version ?? '1.0',
-            updatable:
-              allowUpdate ?? approval.includes(UPDATABLE_TEMPLATE_NAME)
-                ? (!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
-                  !!Object.keys(this.appSpec.hints).filter(
-                    (h) =>
-                      !this.appSpec.hints[h].call_config.update_application &&
-                      this.appSpec.hints[h].call_config.update_application !== 'NEVER',
-                  )[0]
-                : undefined,
-            deletable:
-              allowDelete ?? approval.includes(DELETABLE_TEMPLATE_NAME)
-                ? (!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
-                  !!Object.keys(this.appSpec.hints).filter(
-                    (h) =>
-                      !this.appSpec.hints[h].call_config.delete_application &&
-                      this.appSpec.hints[h].call_config.delete_application !== 'NEVER',
-                  )[0]
-                : undefined,
+            updatable: compilation.updatable,
+            deletable: compilation.deletable,
           },
           schema: {
             globalByteSlices: this.appSpec.state.global.num_byte_slices,
@@ -305,9 +336,6 @@ export class ApplicationClient {
         this.algod,
         this.indexer,
       )
-
-      this._approvalSourceMap = result.compiledApproval?.sourceMap
-      this._clearSourceMap = result.compiledClear?.sourceMap
 
       // Nothing needed to happen
       if (result.operationPerformed === 'nothing') {
@@ -340,19 +368,15 @@ export class ApplicationClient {
       throw new Error('No sender provided, unable to create app')
     }
 
-    const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
-    const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
+    const { approvalCompiled, clearCompiled } = await this.compile(create)
 
     try {
       const result = await createApp(
         {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           from: sender ?? this.sender!,
-          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParams), {
-            updatable,
-            deletable,
-          }),
-          clearStateProgram: performTemplateSubstitution(clear, deployTimeParams),
+          approvalProgram: approvalCompiled.compiledBase64ToBytes,
+          clearStateProgram: clearCompiled.compiledBase64ToBytes,
           schema: {
             globalByteSlices: this.appSpec.state.global.num_byte_slices,
             globalInts: this.appSpec.state.global.num_uints,
@@ -366,9 +390,6 @@ export class ApplicationClient {
         },
         this.algod,
       )
-
-      this._approvalSourceMap = result.compiledApproval?.sourceMap
-      this._clearSourceMap = result.compiledClear?.sourceMap
 
       if (result.confirmation) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -393,8 +414,7 @@ export class ApplicationClient {
       throw new Error('No sender provided, unable to create app')
     }
 
-    const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
-    const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
+    const { approvalCompiled, clearCompiled } = await this.compile(update)
 
     try {
       const result = await updateApp(
@@ -402,11 +422,8 @@ export class ApplicationClient {
           appId: this._appId,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           from: sender ?? this.sender!,
-          approvalProgram: replaceDeployTimeControlParams(performTemplateSubstitution(approval, deployTimeParams), {
-            updatable,
-            deletable,
-          }),
-          clearStateProgram: performTemplateSubstitution(clear, deployTimeParams),
+          approvalProgram: approvalCompiled.compiledBase64ToBytes,
+          clearStateProgram: clearCompiled.compiledBase64ToBytes,
           args: this.getCallArgs(args),
           note: note,
           transactionParams: this.params,
