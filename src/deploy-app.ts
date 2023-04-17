@@ -19,7 +19,7 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './types/app'
-import { ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
+import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
 
 /**
  * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
@@ -514,7 +514,7 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
  * @param metadata The metadata of the deployment
  * @returns The transaction note as a utf-8 string
  */
-export function getAppDeploymentTransactionNote(metadata: AppDeployMetadata) {
+export function getAppDeploymentTransactionNote(metadata: AppDeployMetadata): Arc2TransactionNote {
   return {
     dAppName: APP_DEPLOY_NOTE_DAPP,
     data: metadata,
