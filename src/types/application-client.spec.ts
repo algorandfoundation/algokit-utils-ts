@@ -531,10 +531,12 @@ describe('application-client', () => {
     })
 
     const boxValues = await client.getBoxValues()
+    const box1Value = await client.getBoxValue(boxName1)
     expect(boxValues.map((b) => b.name.nameBase64).sort()).toEqual([boxName1Base64, boxName2Base64].sort())
     const box1 = boxValues.find((b) => b.name.nameBase64 === boxName1Base64)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(box1!.value).toEqual(new Uint8Array(Buffer.from('value1')))
+    expect(box1Value).toEqual(box1?.value)
     const box2 = boxValues.find((b) => b.name.nameBase64 === boxName2Base64)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(box2!.value).toEqual(new Uint8Array(Buffer.from('value2')))
@@ -548,8 +550,10 @@ describe('application-client', () => {
       },
     })
     const boxes = await client.getBoxValuesAsABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
+    const box1AbiValue = await client.getBoxValueAsABIType(boxName1, new ABIUintType(32))
     expect(boxes.length).toBe(1)
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
+    expect(Number(box1AbiValue)).toBe(expectedValue)
   })
 })
