@@ -155,8 +155,5 @@ export type StateSchema = {
   num_byte_slices: number
 }
 
-export const getABISignature = (method: ABIMethodParams | ABIMethod) => {
-  const argSignature = method.args.map((a) => a.type).join(',')
-  const returnSignature = method.returns.type
-  return `{${method.name}}(${argSignature})${returnSignature}`
-}
+/** Deprecated - here for backwards compatibility, instead use algokit.getABIMethodSignature */
+export const getABISignature = getABIMethodSignature

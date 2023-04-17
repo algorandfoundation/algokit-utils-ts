@@ -13,6 +13,7 @@ import { Buffer } from 'buffer'
 import {
   callApp,
   createApp,
+  getABIMethodSignature,
   getAppBoxNames,
   getAppBoxValue,
   getAppBoxValueFromABIType,
@@ -40,7 +41,7 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import { AppSpec, getABISignature } from './appspec'
+import { AppSpec } from './appspec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
@@ -631,12 +632,14 @@ export class ApplicationClient {
         throw new Error(
           `Received a call to method ${method} in contract ${
             this._appName
-          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods.map(getABISignature).join(', ')}`,
+          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods
+            .map(getABIMethodSignature)
+            .join(', ')}`,
         )
       }
       return methods[0]
     }
-    return this.appSpec.contract.methods.find((m) => getABISignature(m) === method)
+    return this.appSpec.contract.methods.find((m) => getABIMethodSignature(m) === method)
   }
 
   /**
