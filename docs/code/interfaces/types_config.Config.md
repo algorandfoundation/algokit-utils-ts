@@ -10,14 +10,29 @@ The AlgoKit configuration type
 
 ### Properties
 
+- [debug](types_config.Config.md#debug)
 - [logger](types_config.Config.md#logger)
 
 ## Properties
+
+### debug
+
+• **debug**: `boolean`
+
+Whether or not debug mode is enabled
+
+#### Defined in
+
+[src/types/config.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L8)
+
+___
 
 ### logger
 
 • **logger**: [`Logger`](../modules/types_logging.md#logger)
 
+Logger
+
 #### Defined in
 
-[src/types/config.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L5)
+[src/types/config.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L6)
