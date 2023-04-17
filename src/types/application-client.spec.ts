@@ -437,6 +437,7 @@ describe('application-client', () => {
         methodArgs: [],
       })
       invariant(false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
         "Error: assert failed pc=783. at:416. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0

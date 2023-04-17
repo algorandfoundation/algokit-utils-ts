@@ -16,6 +16,7 @@ export async function runWhenIndexerCaughtUp<T>(run: () => Promise<T>): Promise<
     try {
       result = await run()
       ok = true
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e?.status === 404) {
         tries++

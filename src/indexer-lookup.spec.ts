@@ -69,7 +69,7 @@ describe('indexer-lookup', () => {
     })
     const app1 = await algokit.createApp(createParams, algod)
     const app2 = await algokit.createApp(createParams, algod)
-    const app3 = await algokit.createApp({ ...createParams, from: secondAccount }, algod)
+    await algokit.createApp({ ...createParams, from: secondAccount }, algod)
 
     const apps = await algokit.lookupAccountCreatedApplicationByAddress(indexer, testAccount.addr, true, 1)
 
