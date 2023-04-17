@@ -82,7 +82,7 @@ The fixture
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L22)
+[src/testing/fixtures/algorand-fixture.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L30)
 
 ___
 

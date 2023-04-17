@@ -1,5 +1,13 @@
 import { getTestAccount, runWhenIndexerCaughtUp, TransactionLogger } from '../'
-import { algos, getAlgoClient, getAlgoIndexerClient, getAlgoKmdClient, getDefaultLocalNetConfig, lookupTransactionById } from '../../'
+import {
+  algos,
+  Config,
+  getAlgoClient,
+  getAlgoIndexerClient,
+  getAlgoKmdClient,
+  getDefaultLocalNetConfig,
+  lookupTransactionById,
+} from '../../'
 import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
 
 /**
@@ -26,6 +34,7 @@ export const algorandFixture = (fixtureConfig?: AlgorandFixtureConfig): Algorand
   let context: AlgorandTestAutomationContext
 
   const beforeEach = async () => {
+    Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
     context = {

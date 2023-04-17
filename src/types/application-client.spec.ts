@@ -3,7 +3,7 @@ import algosdk, { ABIUintType, Account, Algodv2, getApplicationAddress, Indexer,
 import invariant from 'tiny-invariant'
 import * as algokit from '../'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
-import { algorandFixture } from '../testing'
+import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AppSpec } from './appspec'
 
 describe('application-client', () => {
@@ -427,25 +427,30 @@ describe('application-client', () => {
     expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
   })
 
-  test('Display nice error messages when there is a logic error', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const { client } = await deploy(testAccount, algod, indexer)
+  describe('Errors', () => {
+    const logging = algoKitLogCaptureFixture()
+    beforeEach(logging.beforeEach)
+    afterEach(logging.afterEach)
 
-    try {
-      await client.call({
-        method: 'error',
-        methodArgs: [],
-      })
-      invariant(false)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
+    test('Display nice error messages when there is a logic error', async () => {
+      const { algod, indexer, testAccount } = localnet.context
+      const { client, app } = await deploy(testAccount, algod, indexer)
+
+      try {
+        await client.call({
+          method: 'error',
+          methodArgs: [],
+        })
+        invariant(false)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
         "Error: assert failed pc=783. at:416. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
         intc_0 // 0
         assert
         "
       `)
-      expect(e.stack).toMatchInlineSnapshot(`
+        expect(e.stack).toMatchInlineSnapshot(`
         "// error
         error_6:
         proto 0 0
@@ -457,7 +462,16 @@ describe('application-client', () => {
         // create
         create_7:"
       `)
-    }
+      }
+
+      expect(
+        logging.testLogger.getLogSnapshot({
+          accounts: [testAccount],
+          transactions: app.operationPerformed === 'create' ? [app.transaction] : [],
+          apps: [app.appId],
+        }),
+      ).toMatchSnapshot()
+    })
   })
 
   test('Fund app account', async () => {
