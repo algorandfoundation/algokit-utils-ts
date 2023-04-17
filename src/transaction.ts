@@ -205,6 +205,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
             trace: txn.appTrace(),
             cost: txn.cost,
             logs: txn.logs,
+            messages: txn.appCallMessages,
           })
         }
       }

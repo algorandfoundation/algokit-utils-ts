@@ -468,6 +468,14 @@ describe('application-client', () => {
           {
             "cost": undefined,
             "logs": undefined,
+            "messages": [
+              "ApprovalProgram",
+              "REJECT",
+              "logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
+          intc_0 // 0
+          assert
+          ",
+            ],
             "trace": "pc# |ln# |source                            |scratch |stack
           1   |1   |intcblock 0 1 10 5 1 1            |        |[]
           9   |2   |bytecblock 0x 0x151f7c75          |        |[]

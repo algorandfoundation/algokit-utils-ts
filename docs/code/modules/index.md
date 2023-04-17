@@ -165,7 +165,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L333)
+[src/transaction.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L334)
 
 ___
 
@@ -226,7 +226,7 @@ Allows for control of fees on a
 
 #### Defined in
 
-[src/transaction.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L356)
+[src/transaction.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L357)
 
 ___
 
@@ -1072,7 +1072,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L388)
+[src/transaction.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L389)
 
 ___
 
@@ -1385,7 +1385,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L379)
+[src/transaction.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L380)
 
 ___
 
@@ -1618,7 +1618,7 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L223)
+[src/transaction.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L224)
 
 ___
 
@@ -1837,7 +1837,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L241)
+[src/transaction.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L242)
 
 ___
 
@@ -2001,4 +2001,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L286)
+[src/transaction.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L287)
