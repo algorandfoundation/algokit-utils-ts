@@ -1,12 +1,22 @@
 # AlgoKit TypeScript Utilities
 
-A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand. This project is part of [AlgoKit](https://github.com/algorandfoundation/algokit-cli).
+A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build, test and deploy solutions on the Algorand Blockchain, including APIs, console apps and dApps. This project is part of [AlgoKit](https://github.com/algorandfoundation/algokit-cli).
 
-The goal of this library is to provide intuitive, productive utility functions that make it easier, quicker and safer to build applications on Algorand. Largely these functions wrap the underlying Algorand SDK, but provide a higher level interface with sensible defaults and capabilities for common tasks.
+The goal of this library is to provide intuitive, productive utility functions that make it easier, quicker and safer to build applications on Algorand. Largely these functions provide a thin wrapper over the underlying Algorand SDK, but provide a higher level interface with sensible defaults and capabilities for common tasks that make development faster and easier.
 
 Note: If you prefer Python there's an equivalent [Python utility library](https://github.com/algorandfoundation/algokit-utils-py).
 
-# Install documentation
+[Core principles](#core-principles) | [Installation](#installation) | [Usage](#usage) | [Capabilities](#capabilities) | [Reference docs](#reference-documentation)
+
+# Core principles
+
+This library is designed with the following principles:
+
+- **Modularity** - This library is a thin wrapper of modular building blocks over the Algorand SDK; the primitives from the underlying Algorand SDK are exposed and used wherever possible so you can opt-in to which parts of this library you want to use without having to use an all or nothing approach.
+- **Type-safety** - This library provides strong TypeScript support with effort put into creating types that provide good type safety and intellisense.
+- **Productive** - This library is built for productivity; it has a number of mechanisms to make common code easier and terser to write
+
+# Installation
 
 This library can be installed from NPM using your favourite npm client, e.g.:
 
@@ -14,6 +24,68 @@ This library can be installed from NPM using your favourite npm client, e.g.:
 npm install @algorandfoundation/algokit-utils
 ```
 
-# Code documentation
+# Usage
 
-We have [auto-generated documentation for the code](code/README.md).
+To use this library simply include the following at the top of your file:
+
+```typescript
+import * as algokit from '@algorandfoudation/algokit-utils'
+```
+
+Then you can use intellisense to auto-complete the various functions that are available by typing `algokit.` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](code/modules/index.md).
+
+## Testing
+
+To use the automated testing functionality, you can import the testing module:
+
+```typescript
+import * as algotesting from '@algorandfoundation/algokit-utils/testing'
+```
+
+Or, you can generally get away with just importing the `algorandFixture` since it exposes the rest of the functionality in a manner that is easy to integrate with an underlying test framework like Jest or vitest:
+
+```typescript
+import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
+```
+
+To see what's available feel free to consult the [reference documentation](code/modules/testing.md) or consulting the [testing capability page](capabilities/testing.md).
+
+## Types
+
+If you want to extend or pass around any of the types the various functions take then they are all defined in isolated modules under the `types` namespace. This is to provide a better intellisense experience without overwhelming you with hundreds of types. If you determine a type to import then you can import it like so:
+
+```typescript
+import {<type>} from '@algorandfoundation/types/<module>'
+```
+
+Where `<type>` would be replaced with the type and `<module>` would be replaced with the module. You can use intellisense to discover the modules and types in your favourite IDE, or you can explore the [types modules in the reference documentation](code/README.md#modules).
+
+# Capabilities
+
+The library helps you with the following capabilities:
+
+- Core primitives
+  - [**Client management**](capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration
+  - **Account management** - Creation and use of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
+  - **Algo amount handling** - Reliable and terse specification of microAlgo and Algo amounts and conversion between them
+  - **Transaction management** - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
+- Higher-order use cases
+  - **App management** - Creation, updating, deleting, deploying, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
+  - **ARC-0032 Application Spec client** - Builds on top of the App management capability to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
+  - **Algo transfers** - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
+  - **Automated testing** - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
+  - **Indexer lookups / searching** - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
+
+# Reference documentation
+
+We have [auto-generated reference documentation for the code](code/README.md).
+
+# Roadmap
+
+This library will naturally evolve with any logical developer experience improvements needed to facilitate the [AlgoKit](https://github.com/algorandfoundation/algokit-cli) roadmap as it evolves.
+
+Likely future capability additions include:
+
+- Typed application client (similar to [beaker-ts](https://github.com/algorand-devrel/beaker-ts))
+- Asset management
+- Expanded indexer API wrapper support
