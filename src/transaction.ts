@@ -6,6 +6,7 @@ import { AlgoAmount } from './types/amount'
 import { ABIReturn } from './types/app'
 import {
   AtomicTransactionComposerToSend,
+  SendAtomicTransactionComposerResults,
   SendTransactionFrom,
   SendTransactionParams,
   SendTransactionResult,
@@ -198,7 +199,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
             rawReturnValue: r.rawReturnValue,
           } as ABIReturn),
       ),
-    }
+    } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     if (Config.debug && typeof e === 'object') {
@@ -279,7 +280,7 @@ export const sendGroupOfTransactions = async function (groupSend: TransactionGro
   const atc = new AtomicTransactionComposer()
   transactionsWithSigner.forEach((txn) => atc.addTransaction(txn))
 
-  return await sendAtomicTransactionComposer({ atc, sendParams }, algod)
+  return (await sendAtomicTransactionComposer({ atc, sendParams }, algod)) as Omit<SendAtomicTransactionComposerResults, 'returns'>
 }
 
 /**

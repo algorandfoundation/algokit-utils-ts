@@ -9,8 +9,10 @@
 - [AtomicTransactionComposerToSend](../interfaces/types_transaction.AtomicTransactionComposerToSend.md)
 - [ConfirmedTransactionResult](../interfaces/types_transaction.ConfirmedTransactionResult.md)
 - [ConfirmedTransactionResults](../interfaces/types_transaction.ConfirmedTransactionResults.md)
+- [SendAtomicTransactionComposerResults](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)
 - [SendTransactionParams](../interfaces/types_transaction.SendTransactionParams.md)
 - [SendTransactionResult](../interfaces/types_transaction.SendTransactionResult.md)
+- [SendTransactionResults](../interfaces/types_transaction.SendTransactionResults.md)
 - [TransactionGroupToSend](../interfaces/types_transaction.TransactionGroupToSend.md)
 - [TransactionToSign](../interfaces/types_transaction.TransactionToSign.md)
 
@@ -35,7 +37,7 @@ https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md
 
 #### Defined in
 
-[src/types/transaction.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L10)
+[src/types/transaction.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L11)
 
 ___
 
@@ -61,7 +63,7 @@ many types of accounts, including:
 
 #### Defined in
 
-[src/types/transaction.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L75)
+[src/types/transaction.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L94)
 
 ___
 
@@ -71,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L6)
+[src/types/transaction.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L7)
 
 ___
 
@@ -81,4 +83,4 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L8)
+[src/types/transaction.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L9)

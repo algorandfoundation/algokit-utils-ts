@@ -68,7 +68,7 @@ The library helps you with the following capabilities:
   - [**Client management**](capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration
   - [**Account management**](capabilities/account.md) - Creation and use of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
   - [**Algo amount handling**](capabilities/amount.md) - Reliable and terse specification of microAlgo and Algo amounts and conversion between them
-  - **Transaction management** - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
+  - [**Transaction management**](capabilities/transaction.md) - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
 - Higher-order use cases
   - **App management** - Creation, updating, deleting, deploying, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
   - **ARC-0032 Application Spec client** - Builds on top of the App management capability to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)

@@ -28,7 +28,7 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L90)
+[src/types/transaction.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L109)
 
 ___
 
@@ -40,7 +40,7 @@ Optional signer to pass in, required if at least one transaction provided is jus
 
 #### Defined in
 
-[src/types/transaction.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L97)
+[src/types/transaction.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L116)
 
 ___
 
@@ -58,4 +58,4 @@ SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSendin
 
 #### Defined in
 
-[src/types/transaction.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L95)
+[src/types/transaction.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L114)

@@ -2,6 +2,7 @@ import { Account, AtomicTransactionComposer, LogicSigAccount, Transaction } from
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { PendingTransactionResponse } from './algod'
 import { AlgoAmount } from './amount'
+import { ABIReturn } from './app'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +23,7 @@ export type Arc2TransactionNote =
 /** The sending configuration for a transaction */
 export interface SendTransactionParams {
   /** Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain, unless `atc` specified)
-   *   (and instead just return the raw transaction, e.g. so you can add it to a group of transactions) */
+   * and instead just return the raw transaction, e.g. so you can add it to a group of transactions */
   skipSending?: boolean
   /** Whether to skip waiting for the submitted transaction (only relevant if `skipSending` is `false` or unset) */
   skipWaiting?: boolean
@@ -46,6 +47,26 @@ export interface SendTransactionResult {
   confirmation?: PendingTransactionResponse
 }
 
+/** The result of preparing and/or sending multiple transactions */
+export interface SendTransactionResults {
+  /** The transactions that have been prepared and/or sent */
+  transactions: Transaction[]
+  /** The responses if the transactions were sent and waited for,
+   * the index of the confirmation will match the index of the underlying transaction
+   */
+  confirmations?: PendingTransactionResponse[]
+}
+
+/** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
+export interface SendAtomicTransactionComposerResults extends SendTransactionResults {
+  /** base64 encoded representation of the group ID of the atomic group */
+  groupId: string
+  /** The transaction IDs that have been prepared and/or sent */
+  txIds: string[]
+  /** If ABI method(s) were called the processed return values */
+  returns?: ABIReturn[]
+}
+
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
   /** The response from sending and waiting for the transaction */
@@ -53,9 +74,7 @@ export interface ConfirmedTransactionResult extends SendTransactionResult {
 }
 
 /** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
-export interface ConfirmedTransactionResults extends SendTransactionResult {
-  /** The transactions */
-  transactions: Transaction[]
+export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
   /** The response from sending and waiting for the primary transaction */
   confirmation: PendingTransactionResponse
   /** The response from sending and waiting for the transactions */

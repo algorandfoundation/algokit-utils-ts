@@ -1,6 +1,12 @@
 import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, SourceMap, SuggestedParams, Transaction } from 'algosdk'
-import { PendingTransactionResponse } from './algod'
-import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './transaction'
+import {
+  SendTransactionFrom,
+  SendTransactionParams,
+  SendTransactionResult,
+  SendTransactionResults,
+  TransactionNote,
+  TransactionToSign,
+} from './transaction'
 
 /** The name of the TEAL template variable for deploy-time immutability control */
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
@@ -164,11 +170,7 @@ export interface CompiledTeal {
 }
 
 /** Result from calling an app */
-export interface AppCallTransactionResult extends SendTransactionResult {
-  /** All transactions sent as part of the app call (i.e. multiple if an ABI call is made which includes transaction arguments) */
-  transactions: Transaction[]
-  /** The responses if the transactions are sent and waited for */
-  confirmations?: PendingTransactionResponse[]
+export interface AppCallTransactionResult extends SendTransactionResults, SendTransactionResult {
   /** If an ABI method was called the processed return value */
   return?: ABIReturn
 }

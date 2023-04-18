@@ -248,8 +248,8 @@ export async function deployApp(
       confirmation: createConfirmation!,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       confirmations: confirmations!,
-      return: returns[0],
-      deleteReturn: returns[1],
+      return: returns?.[0],
+      deleteReturn: returns?.[1],
       appId: newAppIndex,
       appAddress: getApplicationAddress(newAppIndex),
       createdMetadata: metadata,

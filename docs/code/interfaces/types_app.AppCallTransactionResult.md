@@ -8,6 +8,8 @@ Result from calling an app
 
 ## Hierarchy
 
+- [`SendTransactionResults`](types_transaction.SendTransactionResults.md)
+
 - [`SendTransactionResult`](types_transaction.SendTransactionResult.md)
 
   ↳ **`AppCallTransactionResult`**
@@ -36,7 +38,7 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
 
 ___
 
@@ -44,11 +46,16 @@ ___
 
 • `Optional` **confirmations**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)[]
 
-The responses if the transactions are sent and waited for
+The responses if the transactions were sent and waited for,
+the index of the confirmation will match the index of the underlying transaction
+
+#### Inherited from
+
+[SendTransactionResults](types_transaction.SendTransactionResults.md).[confirmations](types_transaction.SendTransactionResults.md#confirmations)
 
 #### Defined in
 
-[src/types/app.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L171)
+[src/types/transaction.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L57)
 
 ___
 
@@ -60,7 +67,7 @@ If an ABI method was called the processed return value
 
 #### Defined in
 
-[src/types/app.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L173)
+[src/types/app.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L175)
 
 ___
 
@@ -76,7 +83,7 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
@@ -84,8 +91,12 @@ ___
 
 • **transactions**: `Transaction`[]
 
-All transactions sent as part of the app call (i.e. multiple if an ABI call is made which includes transaction arguments)
+The transactions that have been prepared and/or sent
+
+#### Inherited from
+
+[SendTransactionResults](types_transaction.SendTransactionResults.md).[transactions](types_transaction.SendTransactionResults.md#transactions)
 
 #### Defined in
 
-[src/types/app.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L169)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)

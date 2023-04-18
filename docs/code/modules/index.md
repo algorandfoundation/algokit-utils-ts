@@ -166,7 +166,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L343)
+[src/transaction.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L344)
 
 ___
 
@@ -227,7 +227,7 @@ Allows for control of fees on a
 
 #### Defined in
 
-[src/transaction.ts:366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L366)
+[src/transaction.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L367)
 
 ___
 
@@ -341,7 +341,7 @@ the transaction note ready for inclusion in a transaction
 
 #### Defined in
 
-[src/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L28)
+[src/transaction.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L29)
 
 ___
 
@@ -1073,7 +1073,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L398)
+[src/transaction.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L399)
 
 ___
 
@@ -1332,7 +1332,7 @@ The public address
 
 #### Defined in
 
-[src/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L49)
+[src/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L50)
 
 ___
 
@@ -1361,7 +1361,7 @@ A transaction signer
 
 #### Defined in
 
-[src/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L59)
+[src/transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L60)
 
 ___
 
@@ -1386,7 +1386,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L389)
+[src/transaction.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L390)
 
 ___
 
@@ -1619,7 +1619,7 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L233)
+[src/transaction.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L234)
 
 ___
 
@@ -1788,7 +1788,7 @@ ___
 
 ### sendAtomicTransactionComposer
 
-▸ **sendAtomicTransactionComposer**(`atcSend`, `algod`): `Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
+▸ **sendAtomicTransactionComposer**(`atcSend`, `algod`): `Promise`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
 
 Signs and sends transactions that have been collected by an
 
@@ -1807,19 +1807,19 @@ Signs and sends transactions that have been collected by an
 
 #### Returns
 
-`Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
+`Promise`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
 
 An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
 
 #### Defined in
 
-[src/transaction.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L146)
+[src/transaction.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L147)
 
 ___
 
 ### sendGroupOfTransactions
 
-▸ **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
+▸ **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`<`Omit`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md), ``"returns"``\>\>
 
 Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
 
@@ -1832,13 +1832,13 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Returns
 
-`Promise`<{ `confirmations`: `undefined` \| [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `groupId`: `undefined` \| `string` ; `returns`: [`ABIReturn`](types_app.md#abireturn)[] ; `transactions`: `Transaction`[] = transactionsToSend; `txIds`: `string`[]  }\>
+`Promise`<`Omit`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md), ``"returns"``\>\>
 
 An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
 
 #### Defined in
 
-[src/transaction.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L251)
+[src/transaction.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L252)
 
 ___
 
@@ -1866,7 +1866,7 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `
 
 #### Defined in
 
-[src/transaction.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L102)
+[src/transaction.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L103)
 
 ___
 
@@ -1895,7 +1895,7 @@ The signed transaction as a
 
 #### Defined in
 
-[src/transaction.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L82)
+[src/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L83)
 
 ___
 
@@ -2031,4 +2031,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L296)
+[src/transaction.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L297)
