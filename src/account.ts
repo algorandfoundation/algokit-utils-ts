@@ -2,8 +2,10 @@ import algosdk, { Account, Algodv2, Kmd, MultisigMetadata, TransactionSigner } f
 import { Config } from './'
 import { getLocalNetDispenserAccount, getOrCreateKmdWalletAccount } from './localnet'
 import { isLocalNet } from './network-client'
+import { getSenderAddress } from './transaction'
 import { DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './types/account'
 import { AlgoAmount } from './types/amount'
+import { SendTransactionFrom } from './types/transaction'
 
 /**
  * Returns an account wrapper that supports partial or full multisig signing.
@@ -17,12 +19,12 @@ export function multisigAccount(multisigParams: MultisigMetadata, signingAccount
 
 /**
  * Returns an account wrapper that supports a rekeyed account.
- * @param account The account, with private key loaded, that is signing
+ * @param signer The account, with private key loaded, that is signing
  * @param sender The address of the rekeyed account that will act as a sender
  * @returns The @see SigningAccount wrapper
  */
-export function rekeyedAccount(account: Account, sender: string) {
-  return new SigningAccount(account, sender)
+export function rekeyedAccount(signer: Account, sender: string) {
+  return new SigningAccount(signer, sender)
 }
 
 /**
@@ -131,8 +133,8 @@ export async function getAccount(
  *
  * @param account Either an account (with private key loaded) or the string address of an account
  */
-export function getAccountAddressAsUint8Array(account: Account | string) {
-  return algosdk.decodeAddress(typeof account === 'string' ? account : account.addr).publicKey
+export function getAccountAddressAsUint8Array(account: SendTransactionFrom | string) {
+  return algosdk.decodeAddress(typeof account === 'string' ? account : getSenderAddress(account)).publicKey
 }
 
 /** Returns the string address of an Algorand account from a base64 encoded version of the underlying byte array of the address public key

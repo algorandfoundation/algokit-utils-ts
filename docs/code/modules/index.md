@@ -73,6 +73,7 @@
 - [sendAtomicTransactionComposer](index.md#sendatomictransactioncomposer)
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
+- [signTransaction](index.md#signtransaction)
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
 - [transferAlgos](index.md#transferalgos)
@@ -165,7 +166,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L334)
+[src/transaction.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L343)
 
 ___
 
@@ -226,7 +227,7 @@ Allows for control of fees on a
 
 #### Defined in
 
-[src/transaction.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L357)
+[src/transaction.ts:366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L366)
 
 ___
 
@@ -494,7 +495,7 @@ The requested account with private key loaded from the environment variables or 
 
 #### Defined in
 
-[src/account.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L89)
+[src/account.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L91)
 
 ___
 
@@ -516,7 +517,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L142)
+[src/account.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L144)
 
 ___
 
@@ -530,7 +531,7 @@ Returns an account's address as a byte array
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| `default` | Either an account (with private key loaded) or the string address of an account |
+| `account` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | Either an account (with private key loaded) or the string address of an account |
 
 #### Returns
 
@@ -538,7 +539,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L134)
+[src/account.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L136)
 
 ___
 
@@ -1072,7 +1073,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L389)
+[src/transaction.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L398)
 
 ___
 
@@ -1187,7 +1188,7 @@ If running on LocalNet then it will return the default dispenser account automat
 
 #### Defined in
 
-[src/account.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L154)
+[src/account.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L156)
 
 ___
 
@@ -1385,7 +1386,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L380)
+[src/transaction.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L389)
 
 ___
 
@@ -1563,7 +1564,7 @@ This is a wrapper around algosdk.mnemonicToSecretKey to provide a more friendly/
 
 #### Defined in
 
-[src/account.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L45)
+[src/account.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L47)
 
 ___
 
@@ -1588,7 +1589,7 @@ A multisig account wrapper
 
 #### Defined in
 
-[src/account.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L14)
+[src/account.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L16)
 
 ___
 
@@ -1618,7 +1619,7 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L224)
+[src/transaction.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L233)
 
 ___
 
@@ -1692,13 +1693,13 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L55)
+[src/account.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L57)
 
 ___
 
 ### rekeyedAccount
 
-▸ **rekeyedAccount**(`account`, `sender`): [`SigningAccount`](../classes/types_account.SigningAccount.md)
+▸ **rekeyedAccount**(`signer`, `sender`): [`SigningAccount`](../classes/types_account.SigningAccount.md)
 
 Returns an account wrapper that supports a rekeyed account.
 
@@ -1710,7 +1711,7 @@ SigningAccount wrapper
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `default` | The account, with private key loaded, that is signing |
+| `signer` | `default` | The account, with private key loaded, that is signing |
 | `sender` | `string` | The address of the rekeyed account that will act as a sender |
 
 #### Returns
@@ -1721,7 +1722,7 @@ The
 
 #### Defined in
 
-[src/account.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L24)
+[src/account.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L26)
 
 ___
 
@@ -1812,7 +1813,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L137)
+[src/transaction.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L146)
 
 ___
 
@@ -1837,7 +1838,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L242)
+[src/transaction.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L251)
 
 ___
 
@@ -1865,7 +1866,36 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `
 
 #### Defined in
 
-[src/transaction.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L86)
+[src/transaction.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L102)
+
+___
+
+### signTransaction
+
+▸ **signTransaction**(`transaction`, `signer`): `Promise`<`Uint8Array`\>
+
+Signs a single transaction by the given signer.
+
+**`See`**
+
+Uint8Array
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `transaction` | `Transaction` | The transaction to sign |
+| `signer` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The signer to sign |
+
+#### Returns
+
+`Promise`<`Uint8Array`\>
+
+The signed transaction as a
+
+#### Defined in
+
+[src/transaction.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L82)
 
 ___
 
@@ -1920,7 +1950,7 @@ The
 
 #### Defined in
 
-[src/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L34)
+[src/account.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L36)
 
 ___
 
@@ -2001,4 +2031,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L287)
+[src/transaction.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L296)

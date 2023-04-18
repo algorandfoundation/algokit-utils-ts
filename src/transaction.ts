@@ -73,6 +73,22 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
     : algosdk.makeBasicAccountTransactionSigner(sender)
 })
 
+/**
+ * Signs a single transaction by the given signer.
+ * @param transaction The transaction to sign
+ * @param signer The signer to sign
+ * @returns The signed transaction as a @see Uint8Array
+ */
+export const signTransaction = async (transaction: Transaction, signer: SendTransactionFrom) => {
+  return 'sk' in signer
+    ? transaction.signTxn(signer.sk)
+    : 'lsig' in signer
+    ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
+    : 'sign' in signer
+    ? signer.sign(transaction)
+    : (await signer.signer([transaction], [0]))[0]
+}
+
 /** Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
  *
  * @param send The details for the transaction to prepare/send, including:
@@ -105,14 +121,7 @@ export const sendTransaction = async function (
     return { transaction }
   }
 
-  const signedTransaction =
-    'sk' in from
-      ? transaction.signTxn(from.sk)
-      : 'lsig' in from
-      ? algosdk.signLogicSigTransactionObject(transaction, from).blob
-      : 'sign' in from
-      ? from.sign(transaction)
-      : (await from.signer([transaction], [0]))[0]
+  const signedTransaction = await signTransaction(transaction, from)
 
   await algod.sendRawTransaction(signedTransaction).do()
 

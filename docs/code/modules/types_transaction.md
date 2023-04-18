@@ -43,9 +43,25 @@ ___
 
 Ƭ **SendTransactionFrom**: `Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md) \| `LogicSigAccount` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)
 
+Core account abstraction when signing/sending transactions
+
+This type is used across the entire AlgoKit Utils library and allows you to pass through
+many types of accounts, including:
+* `Account` - The in-built
+
+**`See`**
+
+ - algosdk.Account type for mnemonic accounts
+* `SigningAccount` - An AlgoKit Utils class that wraps Account to provide support for rekeyed accounts
+* `LogicSigAccount` - The in-built
+ - algosdk.LogicSigAccount type for logic signatures
+* `MultisigAccount` - An AlgoKit Utils class that wraps a multisig account and provides mechanisms to get a multisig account
+* `TransactionSignerAccount` - An AlgoKitUtils class that wraps the in-built
+ - algosdk.TransactionSigner along with the sender address
+
 #### Defined in
 
-[src/types/transaction.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L65)
+[src/types/transaction.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L75)
 
 ___
 

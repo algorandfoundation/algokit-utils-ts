@@ -62,6 +62,16 @@ export interface ConfirmedTransactionResults extends SendTransactionResult {
   confirmations: PendingTransactionResponse[]
 }
 
+/** Core account abstraction when signing/sending transactions
+ *
+ * This type is used across the entire AlgoKit Utils library and allows you to pass through
+ * many types of accounts, including:
+ * * `Account` - The in-built @see algosdk.Account type for mnemonic accounts
+ * * `SigningAccount` - An AlgoKit Utils class that wraps Account to provide support for rekeyed accounts
+ * * `LogicSigAccount` - The in-built @see algosdk.LogicSigAccount type for logic signatures
+ * * `MultisigAccount` - An AlgoKit Utils class that wraps a multisig account and provides mechanisms to get a multisig account
+ * * `TransactionSignerAccount` - An AlgoKitUtils class that wraps the in-built @see algosdk.TransactionSigner along with the sender address
+ */
 export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount
 
 /** Defines an unsigned transaction that will appear in a group of transactions along with its signing information */
