@@ -106,13 +106,17 @@ ___
 
 ▸ **valueOf**(): `number`
 
+valueOf allows you to use `AlgoAmount` in comparison operations such as `<` and `>=` etc.,
+but it's not recommended to use this to convert to a number, it's much safer to explicitly call
+the algos or microAlgos properties
+
 #### Returns
 
 `number`
 
 #### Defined in
 
-[src/types/amount.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L25)
+[src/types/amount.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L29)
 
 ___
 
@@ -138,7 +142,7 @@ object representing the given number of Algos
 
 #### Defined in
 
-[src/types/amount.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L30)
+[src/types/amount.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L34)
 
 ___
 
@@ -164,4 +168,4 @@ object representing the given number of µAlgos
 
 #### Defined in
 
-[src/types/amount.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L35)
+[src/types/amount.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L39)

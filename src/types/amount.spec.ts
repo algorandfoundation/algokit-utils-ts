@@ -9,9 +9,6 @@ describe('amount', () => {
   test('toString on big amount', () => {
     expect(`${algos(100)}`).toBe(`100,000,000 µALGOs`)
   })
-  test('value coersion to microalgos', () => {
-    expect(+microAlgos(100)).toBe(100)
-  })
   test('microalgos to microalgos', () => {
     expect(microAlgos(100).microAlgos).toBe(100)
   })

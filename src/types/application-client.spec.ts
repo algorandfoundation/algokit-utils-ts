@@ -544,7 +544,7 @@ describe('application-client', () => {
       amount: fundAmount,
     })
 
-    expect(result.transaction.amount).toBe(+fundAmount)
+    expect(result.transaction.amount).toBe(fundAmount.microAlgos)
     expect(result.transaction.type).toBe(TransactionType.pay)
     expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
     expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
