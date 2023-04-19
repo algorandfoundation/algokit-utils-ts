@@ -55,20 +55,39 @@ The functionality provided by the transaction capability includes a set of lower
 
 ### Signing
 
-If you want to sign a transaction there are the [`algokit.signTransaction`](../code/modules/index.md#signtransaction) method and [`algokit.getSenderTransactionSigner`](../code/modules/index.md#getsendertransactionsigner) methods that both work with `SendTransactionFrom` as described in the [Account capability](./account.md).
+If you want to sign a transaction there are the [`algokit.signTransaction(transaction, signer)`](../code/modules/index.md#signtransaction) method and [`algokit.getSenderTransactionSigner(sender)`](../code/modules/index.md#getsendertransactionsigner) methods that both work with `SendTransactionFrom` as described in the [Account capability](./account.md).
 
 ### Waiting
 
-There is a [`algokit.waitForConfirmation`](../code/modules/index.md#waitforconfirmation) method which helps you wait until a given `algosdk.Transaction` has been confirmed.
+There is a [`algokit.waitForConfirmation(transactionId, maxRoundsToWait, algod)`](../code/modules/index.md#waitforconfirmation) method which helps you wait until a given `algosdk.Transaction` has been confirmed by the network.
 
 ### Fees
 
-todo: capTransactionFee, controlFees
+If you want to control the fees of a transaction before sending then you can use:
+
+- [`algokit.capTransactionFee(transaction, maxAcceptableFee)`](../code/modules/index.md#captransactionfee) - Limit the acceptable maximum fee of a `algosdk.Transaction` or `algosdk.SuggestedParams` to a defined amount of algos.
+- [`algokit.controlFees(transaction, feeControl)`](../code/modules/index.md#controlfees) - Allows you to control fees on a `algosdk.Transaction` or `algosdk.SuggestedParams` object either applying a flat fee or a max fee
 
 ### Transaction notes
 
-todo: encodeTransactionNote
+If you want to create an encoded transaction note for adding to a transaction you can use the [`algokit.encodeTransactionNote(note)`](../code/modules/index.md#encodetransactionnote) function. This takes a `TransactionNote` type, which is a union of:
+
+- `null` or `undefined` if there is no note
+- `Uint8Array` which is passed straight through
+- Data that us turned into JSON, any one of:
+  - `string`
+  - `number`
+  - `any[]`
+  - `Record<string, any>`
+- A `Arc2TransactionNote` object, which creates an [ARC-0002 compliant transaction note](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) and has the following properties:
+  - `dAppName` - The name of the app that is generating the note
+  - `format`:
+    - `m` - Message Pack format
+    - `b` - Byte string
+    - `u` - UTF-8 string
+    - `j` - JSON data
+  - `data` either a string or an object that is encoded to JSON (if `format` is `j`)
 
 ### Transaction params
 
-todo: getTransactionParams
+If you want to specify transaction params to add to a transaction you can use the [`algokit.getTransactionParams(params, algod)`](../code/modules/index.md#gettransactionparams) method. This let's you pass in an existing params object if one exists or if that's `undefined` then it will retrieve a new params object from the Algod client.
