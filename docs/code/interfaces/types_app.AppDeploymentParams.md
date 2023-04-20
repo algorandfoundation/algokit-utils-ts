@@ -48,7 +48,7 @@ Omit.approvalProgram
 
 #### Defined in
 
-[src/types/app.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L105)
+[src/types/app.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L112)
 
 ___
 
@@ -64,7 +64,7 @@ Omit.clearStateProgram
 
 #### Defined in
 
-[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)
+[src/types/app.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L114)
 
 ___
 
@@ -76,7 +76,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L261)
+[src/types/app.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L268)
 
 ___
 
@@ -88,7 +88,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:265](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L265)
+[src/types/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L272)
 
 ___
 
@@ -100,7 +100,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/app.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L253)
+[src/types/app.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L260)
 
 ___
 
@@ -112,7 +112,7 @@ Optional cached value of the existing apps for the given creator
 
 #### Defined in
 
-[src/types/app.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L259)
+[src/types/app.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L266)
 
 ___
 
@@ -136,7 +136,7 @@ ___
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account (with private key loaded) that will send the µALGOs
+The account (with private key loaded) that will send the transaction
 
 #### Inherited from
 
@@ -144,7 +144,7 @@ Omit.from
 
 #### Defined in
 
-[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
+[src/types/app.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L110)
 
 ___
 
@@ -188,7 +188,7 @@ The deployment metadata
 
 #### Defined in
 
-[src/types/app.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L251)
+[src/types/app.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L258)
 
 ___
 
@@ -200,7 +200,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/app.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L255)
+[src/types/app.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L262)
 
 ___
 
@@ -212,7 +212,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/app.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L257)
+[src/types/app.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L264)
 
 ___
 
@@ -228,7 +228,7 @@ Omit.schema
 
 #### Defined in
 
-[src/types/app.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L119)
+[src/types/app.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L126)
 
 ___
 
@@ -260,7 +260,7 @@ Omit.transactionParams
 
 #### Defined in
 
-[src/types/app.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L109)
+[src/types/app.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L116)
 
 ___
 
@@ -272,4 +272,4 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L263)
+[src/types/app.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L270)

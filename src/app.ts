@@ -338,6 +338,12 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
   }
 }
 
+/**
+ * Returns any ABI return values for the given app call arguments and transaction confirmation.
+ * @param args The arguments that were used for the call
+ * @param confirmation The transaction confirmation from algod
+ * @returns The return value for the method call
+ */
 export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransactionResponse): ABIReturn | undefined {
   if (!args || !('method' in args)) {
     return undefined
@@ -375,7 +381,7 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransacti
  * @returns The current global state
  */
 export async function getAppGlobalState(appId: number, algod: Algodv2) {
-  const appInfo = await getAppByIndex(appId, algod)
+  const appInfo = await getAppById(appId, algod)
 
   if (!appInfo.params || !appInfo.params['global-state']) {
     throw new Error("Couldn't find global state")
@@ -466,8 +472,12 @@ export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams
   return await Promise.all(boxNames.map(async (boxName) => await getAppBoxValueFromABIType({ appId, boxName, type }, algod)))
 }
 
-// Converts an array of global-state or global-state-deltas to a more
-// friendly generic object
+/**
+ * Converts an array of global/local state values from the algod api to a more friendly
+ * generic object keyed by the UTF-8 value of the key.
+ * @param state A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas`
+ * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
+ */
 export function decodeAppState(state: { key: string; value: TealValue | EvalDelta }[]): AppState {
   const stateValues = {} as AppState
 
@@ -510,7 +520,11 @@ export function decodeAppState(state: { key: string; value: TealValue | EvalDelt
   return stateValues
 }
 
-/** Returns the app args ready to load onto an app @see {Transaction} object */
+/**
+ * Returns the app args ready to load onto an app @see {Transaction} object
+ * @param args The app call args
+ * @returns The args ready to load into a `Transaction`
+ */
 export function getAppArgsForTransaction(args?: RawAppCallArgs) {
   if (!args) return undefined
 
@@ -525,7 +539,12 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
   }
 }
 
-/** Returns the app args ready to load onto an ABI method call in @see AtomicTransactionComposer */
+/**
+ * Returns the app args ready to load onto an ABI method call in @see AtomicTransactionComposer
+ * @param args The ABI app call args
+ * @param from The transaction signer
+ * @returns The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
+ */
 export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
   const encoder = new TextEncoder()
   const signer = getSenderTransactionSigner(from)
@@ -562,8 +581,13 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
  * @param box The box to return a reference for
  * @returns The box reference ready to pass into a @see Transaction
  */
-export function getBoxReference(box: BoxIdentifier | BoxReference): algosdk.BoxReference {
+export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxReference): algosdk.BoxReference {
   const encoder = new TextEncoder()
+
+  if (typeof box === 'object' && 'appIndex' in box) {
+    return box
+  }
+
   const ref = typeof box === 'object' && 'appId' in box ? box : { appId: 0, name: box }
   return {
     appIndex: ref.appId,
@@ -583,12 +607,15 @@ export function getBoxReference(box: BoxIdentifier | BoxReference): algosdk.BoxR
  * @param algod An algod client
  * @returns The data about the app
  */
-export async function getAppByIndex(appId: number, algod: Algodv2) {
+export async function getAppById(appId: number, algod: Algodv2) {
   return (await algod.getApplicationByID(appId).do()) as ApplicationResponse
 }
 
+/** Deprecated, use `getAppById` instead. */
+export const getAppByIndex = getAppById
+
 /**
- * Compiles the given TEAL using algod and returns the result.
+ * Compiles the given TEAL using algod and returns the result, including source map.
  *
  * @param algod An algod client
  * @param tealCode The TEAL code

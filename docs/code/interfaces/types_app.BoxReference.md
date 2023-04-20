@@ -23,7 +23,7 @@ A unique application id
 
 #### Defined in
 
-[src/types/app.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L41)
+[src/types/app.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L51)
 
 ___
 
@@ -35,4 +35,4 @@ Name of box to reference
 
 #### Defined in
 
-[src/types/app.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L45)
+[src/types/app.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L55)

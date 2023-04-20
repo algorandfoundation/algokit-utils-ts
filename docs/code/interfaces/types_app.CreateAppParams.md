@@ -45,7 +45,7 @@ CreateOrUpdateAppParams.approvalProgram
 
 #### Defined in
 
-[src/types/app.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L105)
+[src/types/app.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L112)
 
 ___
 
@@ -61,7 +61,7 @@ CreateOrUpdateAppParams.args
 
 #### Defined in
 
-[src/types/app.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L113)
+[src/types/app.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L120)
 
 ___
 
@@ -97,7 +97,7 @@ CreateOrUpdateAppParams.clearStateProgram
 
 #### Defined in
 
-[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)
+[src/types/app.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L114)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account (with private key loaded) that will send the µALGOs
+The account (with private key loaded) that will send the transaction
 
 #### Inherited from
 
@@ -129,7 +129,7 @@ CreateOrUpdateAppParams.from
 
 #### Defined in
 
-[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
+[src/types/app.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L110)
 
 ___
 
@@ -177,7 +177,7 @@ CreateOrUpdateAppParams.note
 
 #### Defined in
 
-[src/types/app.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L111)
+[src/types/app.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L118)
 
 ___
 
@@ -189,7 +189,7 @@ The storage schema to request for the created app
 
 #### Defined in
 
-[src/types/app.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L119)
+[src/types/app.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L126)
 
 ___
 
@@ -254,4 +254,4 @@ CreateOrUpdateAppParams.transactionParams
 
 #### Defined in
 
-[src/types/app.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L109)
+[src/types/app.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L116)

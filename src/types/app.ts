@@ -1,4 +1,14 @@
-import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, SourceMap, SuggestedParams, Transaction } from 'algosdk'
+import algosdk, {
+  ABIArgument,
+  ABIMethod,
+  ABIMethodParams,
+  ABIType,
+  ABIValue,
+  Address,
+  SourceMap,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk'
 import {
   SendTransactionFrom,
   SendTransactionParams,
@@ -62,7 +72,7 @@ export interface RawAppCallArgs {
   /** Any application arguments to pass through */
   appArgs?: (Uint8Array | string)[]
   /** Any box references to load */
-  boxes?: (BoxReference | BoxIdentifier)[]
+  boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
   /** IDs of any apps to load into the foreignApps array */
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
@@ -78,17 +88,14 @@ export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction | Prom
  * App call args for an ABI call
  */
 export interface ABIAppCallArgs {
-  /** The ABI method to call, either:
-   *  * `method_name` e.g. `hello`; or
-   *  * `method_signature` e.g. `hello(string)string`
-   **/
+  /** The ABI method to call */
   method: ABIMethodParams | ABIMethod
   /** The ABI args to pass in */
   args: ABIAppCallArg[]
   /** The optional lease for the transaction */
   lease?: string | Uint8Array
   /** Any box references to load either as the box name (if for the current app) or the reference with app id */
-  boxes?: (BoxReference | BoxIdentifier)[]
+  boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
 }
 
 /** Arguments to pass to an app call either:
@@ -99,7 +106,7 @@ export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
 /** Base interface for common data passed to an app create or update. */
 interface CreateOrUpdateAppParams extends SendTransactionParams {
-  /** The account (with private key loaded) that will send the µALGOs */
+  /** The account (with private key loaded) that will send the transaction */
   from: SendTransactionFrom
   /** The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
   approvalProgram: Uint8Array | string

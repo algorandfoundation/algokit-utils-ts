@@ -61,7 +61,7 @@ SendTransactionResult
 
 #### Defined in
 
-[src/types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
+[src/types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
 
 ___
 
@@ -73,7 +73,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L179)
+[src/types/app.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L186)
 
 ___
 
@@ -87,7 +87,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L98)
+[src/types/app.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L105)
 
 ___
 
@@ -108,7 +108,7 @@ Something that identifies a box name - either a:
 
 #### Defined in
 
-[src/types/app.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L54)
+[src/types/app.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L64)
 
 ## Variables
 
@@ -120,7 +120,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L24)
+[src/types/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L34)
 
 ___
 
@@ -132,7 +132,7 @@ The app create/update ARC-2 transaction note prefix
 
 #### Defined in
 
-[src/types/app.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L18)
+[src/types/app.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L28)
 
 ___
 
@@ -144,7 +144,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L21)
+[src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
 
 ___
 
@@ -156,7 +156,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L15)
+[src/types/app.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L25)
 
 ___
 
@@ -168,4 +168,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L12)
+[src/types/app.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L22)

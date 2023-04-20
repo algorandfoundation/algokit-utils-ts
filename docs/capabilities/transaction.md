@@ -57,6 +57,8 @@ The functionality provided by the transaction capability includes a set of lower
 
 If you want to sign a transaction there are the [`algokit.signTransaction(transaction, signer)`](../code/modules/index.md#signtransaction) method and [`algokit.getSenderTransactionSigner(sender)`](../code/modules/index.md#getsendertransactionsigner) methods that both work with `SendTransactionFrom` as described in the [Account capability](./account.md).
 
+There are also some methods that take a [`TransactionToSign`](../code/interfaces/types_transaction.TransactionToSign.md), which is the AlgoKit Utils equivalent of `algosdk.TransactionWithSigner`, but has a `SendTransactionFrom` as the signer.
+
 ### Waiting
 
 There is a [`algokit.waitForConfirmation(transactionId, maxRoundsToWait, algod)`](../code/modules/index.md#waitforconfirmation) method which helps you wait until a given `algosdk.Transaction` has been confirmed by the network.

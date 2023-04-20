@@ -1,6 +1,6 @@
 import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
 import { Config } from './'
-import { callApp, compileTeal, createApp, getAppByIndex, updateApp } from './app'
+import { callApp, compileTeal, createApp, getAppById, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
 import { getSenderAddress, sendAtomicTransactionComposer } from './transaction'
 import { ApplicationStateSchema } from './types/algod'
@@ -152,7 +152,7 @@ export async function deployApp(
     }.`,
   )
 
-  const existingAppRecord = await getAppByIndex(existingApp.appId, algod)
+  const existingAppRecord = await getAppById(existingApp.appId, algod)
   const existingApproval = existingAppRecord.params['approval-program']
   const existingClear = existingAppRecord.params['clear-state-program']
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

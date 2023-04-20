@@ -137,4 +137,4 @@ Deprecated - here for backwards compatibility, instead use algokit.getABIMethodS
 
 #### Defined in
 
-[src/app.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L613)
+[src/app.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L640)

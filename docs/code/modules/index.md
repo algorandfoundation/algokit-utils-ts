@@ -38,6 +38,7 @@
 - [getAppBoxValueFromABIType](index.md#getappboxvaluefromabitype)
 - [getAppBoxValues](index.md#getappboxvalues)
 - [getAppBoxValuesFromABIType](index.md#getappboxvaluesfromabitype)
+- [getAppById](index.md#getappbyid)
 - [getAppByIndex](index.md#getappbyindex)
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
 - [getAppGlobalState](index.md#getappglobalstate)
@@ -174,7 +175,7 @@ ___
 
 ▸ **compileTeal**(`tealCode`, `algod`): `Promise`<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
 
-Compiles the given TEAL using algod and returns the result.
+Compiles the given TEAL using algod and returns the result, including source map.
 
 #### Parameters
 
@@ -191,7 +192,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:597](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L597)
+[src/app.ts:624](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L624)
 
 ___
 
@@ -260,19 +261,24 @@ ___
 
 ▸ **decodeAppState**(`state`): [`AppState`](../interfaces/types_app.AppState.md)
 
+Converts an array of global/local state values from the algod api to a more friendly
+generic object keyed by the UTF-8 value of the key.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `state` | { `key`: `string` ; `value`: [`EvalDelta`](types_algod.md#evaldelta) \| [`TealValue`](types_algod.md#tealvalue)  }[] |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `state` | { `key`: `string` ; `value`: [`EvalDelta`](types_algod.md#evaldelta) \| [`TealValue`](types_algod.md#tealvalue)  }[] | A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas` |
 
 #### Returns
 
 [`AppState`](../interfaces/types_app.AppState.md)
 
+An object keyeed by the UTF-8 representation of the key with various parsings of the values
+
 #### Defined in
 
-[src/app.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L471)
+[src/app.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L481)
 
 ___
 
@@ -422,7 +428,7 @@ The encoded ABI method spec e.g. `method_name(uint64,string)string`
 
 #### Defined in
 
-[src/app.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L613)
+[src/app.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L640)
 
 ___
 
@@ -430,20 +436,24 @@ ___
 
 ▸ **getABIReturn**(`args?`, `confirmation?`): [`ABIReturn`](types_app.md#abireturn) \| `undefined`
 
+Returns any ABI return values for the given app call arguments and transaction confirmation.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `args?` | [`AppCallArgs`](types_app.md#appcallargs) |
-| `confirmation?` | [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `args?` | [`AppCallArgs`](types_app.md#appcallargs) | The arguments that were used for the call |
+| `confirmation?` | [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) | The transaction confirmation from algod |
 
 #### Returns
 
 [`ABIReturn`](types_app.md#abireturn) \| `undefined`
 
+The return value for the method call
+
 #### Defined in
 
-[src/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L341)
+[src/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L347)
 
 ___
 
@@ -748,18 +758,20 @@ AtomicTransactionComposer
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `args` | [`ABIAppCallArgs`](../interfaces/types_app.ABIAppCallArgs.md) |
-| `from` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `args` | [`ABIAppCallArgs`](../interfaces/types_app.ABIAppCallArgs.md) | The ABI app call args |
+| `from` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The transaction signer |
 
 #### Returns
 
 `Promise`<{ `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` = undefined; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
+The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
+
 #### Defined in
 
-[src/app.ts:529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L529)
+[src/app.ts:548](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L548)
 
 ___
 
@@ -775,17 +787,19 @@ object
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `args?` | [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `args?` | [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md) | The app call args |
 
 #### Returns
 
 `undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
 
+The args ready to load into a `Transaction`
+
 #### Defined in
 
-[src/app.ts:514](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L514)
+[src/app.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L528)
 
 ___
 
@@ -810,7 +824,7 @@ The current box names
 
 #### Defined in
 
-[src/app.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L411)
+[src/app.ts:417](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L417)
 
 ___
 
@@ -840,7 +854,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/app.ts:429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L429)
+[src/app.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L435)
 
 ___
 
@@ -865,7 +879,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/app.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L452)
+[src/app.ts:458](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L458)
 
 ___
 
@@ -895,7 +909,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:442](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L442)
+[src/app.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L448)
 
 ___
 
@@ -920,13 +934,13 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L464)
+[src/app.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L470)
 
 ___
 
-### getAppByIndex
+### getAppById
 
-▸ **getAppByIndex**(`appId`, `algod`): `Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
+▸ **getAppById**(`appId`, `algod`): `Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
 
 Gets the current data for the given app from algod.
 
@@ -945,7 +959,30 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:586](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L586)
+[src/app.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L610)
+
+___
+
+### getAppByIndex
+
+▸ **getAppByIndex**(`appId`, `algod`): `Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
+
+Deprecated, use `getAppById` instead.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `appId` | `number` |
+| `algod` | `default` |
+
+#### Returns
+
+`Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
+
+#### Defined in
+
+[src/app.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L610)
 
 ___
 
@@ -994,7 +1031,7 @@ The current global state
 
 #### Defined in
 
-[src/app.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L377)
+[src/app.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L383)
 
 ___
 
@@ -1020,7 +1057,7 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/app.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L394)
+[src/app.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L400)
 
 ___
 
@@ -1094,7 +1131,7 @@ Returns a
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `box` | [`BoxReference`](../interfaces/types_app.BoxReference.md) \| [`BoxIdentifier`](types_app.md#boxidentifier) | The box to return a reference for |
+| `box` | [`BoxReference`](../interfaces/types_app.BoxReference.md) \| [`BoxIdentifier`](types_app.md#boxidentifier) \| `BoxReference` | The box to return a reference for |
 
 #### Returns
 
@@ -1104,7 +1141,7 @@ The box reference ready to pass into a
 
 #### Defined in
 
-[src/app.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L565)
+[src/app.ts:584](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L584)
 
 ___
 

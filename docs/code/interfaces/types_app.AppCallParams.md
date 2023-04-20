@@ -40,7 +40,7 @@ The id of the app to call
 
 #### Defined in
 
-[src/types/app.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L131)
+[src/types/app.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L138)
 
 ___
 
@@ -52,7 +52,7 @@ The arguments passed in to the app call
 
 #### Defined in
 
-[src/types/app.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L141)
+[src/types/app.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L148)
 
 ___
 
@@ -84,7 +84,7 @@ The type of call, everything except create (@see createApp ) and update (@see up
 
 #### Defined in
 
-[src/types/app.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L133)
+[src/types/app.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L140)
 
 ___
 
@@ -112,7 +112,7 @@ The account to make the call from
 
 #### Defined in
 
-[src/types/app.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L135)
+[src/types/app.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L142)
 
 ___
 
@@ -156,7 +156,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/app.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L139)
+[src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
 
 ___
 
@@ -217,4 +217,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/app.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L137)
+[src/types/app.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L144)
