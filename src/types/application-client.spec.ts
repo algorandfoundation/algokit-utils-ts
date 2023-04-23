@@ -432,6 +432,63 @@ describe('application-client', () => {
     beforeEach(logging.beforeEach)
     afterEach(logging.afterEach)
 
+    test('Export and import of source map works', async () => {
+      const { algod, indexer, testAccount } = localnet.context
+      const { client, app } = await deploy(testAccount, algod, indexer)
+
+      const oldSourceMaps = client.exportSourceMaps()
+      const newClient = algokit.getApplicationClient(
+        {
+          creatorAddress: testAccount.addr,
+          id: app.appId,
+          sender: testAccount,
+          app: appSpec,
+        },
+        algod,
+      )
+
+      try {
+        await newClient.call({
+          method: 'error',
+          methodArgs: [],
+        })
+        invariant(false)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        expect(e.stack.split(' at ')[0].replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
+          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
+          intc_0 // 0
+          assert
+
+             "
+        `)
+      }
+
+      newClient.importSourceMaps(JSON.parse(JSON.stringify(oldSourceMaps)))
+
+      try {
+        await newClient.call({
+          method: 'error',
+          methodArgs: [],
+        })
+        invariant(false)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        expect(e.stack).toMatchInlineSnapshot(`
+          "// error
+          error_6:
+          proto 0 0
+          intc_0 // 0
+          // Deliberate error
+          assert <--- Error
+          retsub
+
+          // create
+          create_7:"
+        `)
+      }
+    })
+
     test('Display nice error messages when there is a logic error', async () => {
       const { algod, indexer, testAccount } = localnet.context
       const { client, app } = await deploy(testAccount, algod, indexer)
