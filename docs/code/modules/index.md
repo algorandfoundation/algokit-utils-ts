@@ -40,6 +40,7 @@
 - [getAppBoxValuesFromABIType](index.md#getappboxvaluesfromabitype)
 - [getAppById](index.md#getappbyid)
 - [getAppByIndex](index.md#getappbyindex)
+- [getAppClient](index.md#getappclient)
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
 - [getAppGlobalState](index.md#getappglobalstate)
 - [getAppLocalState](index.md#getapplocalstate)
@@ -316,7 +317,7 @@ The app reference of the new/existing app
 
 #### Defined in
 
-[src/deploy-app.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L39)
+src/app-deploy.ts:39
 
 ___
 
@@ -967,7 +968,9 @@ ___
 
 ▸ **getAppByIndex**(`appId`, `algod`): `Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
 
-Deprecated, use `getAppById` instead.
+**`Deprecated`**
+
+Use `algokit.getAppById` instead.
 
 #### Parameters
 
@@ -983,6 +986,31 @@ Deprecated, use `getAppById` instead.
 #### Defined in
 
 [src/app.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L610)
+
+___
+
+### getAppClient
+
+▸ **getAppClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+Create a new ApplicationClient instance
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appDetails` | [`AppSpecAppDetails`](types_app_client.md#appspecappdetails) | The details of the app |
+| `algod` | `default` | An algod instance |
+
+#### Returns
+
+[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+The application client
+
+#### Defined in
+
+src/app-client.ts:15
 
 ___
 
@@ -1006,7 +1034,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[src/deploy-app.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L517)
+src/app-deploy.ts:517
 
 ___
 
@@ -1063,26 +1091,26 @@ ___
 
 ### getApplicationClient
 
-▸ **getApplicationClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_application_client.ApplicationClient.md)
+▸ **getApplicationClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
 
-Create a new ApplicationClient instance
+**`Deprecated`**
+
+Use `algokit.getAppClient`
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `appDetails` | [`AppSpecAppDetails`](types_application_client.md#appspecappdetails) | The details of the app |
-| `algod` | `default` | An algod instance |
+| Name | Type |
+| :------ | :------ |
+| `appDetails` | [`AppSpecAppDetails`](types_app_client.md#appspecappdetails) |
+| `algod` | `default` |
 
 #### Returns
 
-[`ApplicationClient`](../classes/types_application_client.ApplicationClient.md)
-
-The application client
+[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
 
 #### Defined in
 
-[src/application-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/application-client.ts#L10)
+src/app-client.ts:15
 
 ___
 
@@ -1172,7 +1200,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[src/deploy-app.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L410)
+src/app-deploy.ts:410
 
 ___
 
@@ -1472,7 +1500,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[src/deploy-app.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L397)
+src/app-deploy.ts:397
 
 ___
 
@@ -1683,7 +1711,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/deploy-app.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L566)
+src/app-deploy.ts:566
 
 ___
 
@@ -1712,7 +1740,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/deploy-app.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L596)
+src/app-deploy.ts:596
 
 ___
 
@@ -1791,7 +1819,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/deploy-app.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/deploy-app.ts#L535)
+src/app-deploy.ts:535
 
 ___
 

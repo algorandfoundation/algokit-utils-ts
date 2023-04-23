@@ -1,5 +1,5 @@
 import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
-import { Config } from './'
+import { Config } from '.'
 import { callApp, compileTeal, createApp, getAppById, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
 import { getSenderAddress, sendAtomicTransactionComposer } from './transaction'

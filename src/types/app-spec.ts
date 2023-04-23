@@ -155,5 +155,5 @@ export type StateSchema = {
   num_byte_slices: number
 }
 
-/** Deprecated - here for backwards compatibility, instead use algokit.getABIMethodSignature */
+/** @deprecated Use `algokit.getABIMethodSignature` instead */
 export const getABISignature = getABIMethodSignature

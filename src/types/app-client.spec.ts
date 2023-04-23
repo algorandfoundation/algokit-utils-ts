@@ -1,10 +1,10 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { ABIUintType, Account, Algodv2, getApplicationAddress, Indexer, OnApplicationComplete, TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
-import * as algokit from '../'
+import * as algokit from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
-import { AppSpec } from './appspec'
+import { AppSpec } from './app-spec'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
@@ -16,7 +16,7 @@ describe('application-client', () => {
   })
 
   const deploy = async (account: Account, algod: Algodv2, indexer: Indexer) => {
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: account,
@@ -34,7 +34,7 @@ describe('application-client', () => {
   test('Create app', async () => {
     const { algod, indexer, testAccount } = localnet.context
 
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -63,7 +63,7 @@ describe('application-client', () => {
   test('Deploy app - create', async () => {
     const { algod, indexer, testAccount } = localnet.context
 
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -89,7 +89,7 @@ describe('application-client', () => {
   test('Deploy app - create (abi)', async () => {
     const { algod, indexer, testAccount } = localnet.context
 
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -119,7 +119,7 @@ describe('application-client', () => {
 
   test('Deploy app - update', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -154,7 +154,7 @@ describe('application-client', () => {
 
   test('Deploy app - update (abi)', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -195,7 +195,7 @@ describe('application-client', () => {
 
   test('Deploy app - replace', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -231,7 +231,7 @@ describe('application-client', () => {
 
   test('Deploy app - replace (abi)', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -277,7 +277,7 @@ describe('application-client', () => {
 
   test('Create then call app', async () => {
     const { algod, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -305,7 +305,7 @@ describe('application-client', () => {
 
   test('Create app with abi', async () => {
     const { algod, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -331,7 +331,7 @@ describe('application-client', () => {
 
   test('Update app with abi', async () => {
     const { algod, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,
@@ -361,7 +361,7 @@ describe('application-client', () => {
 
   test('Delete app with abi', async () => {
     const { algod, testAccount } = localnet.context
-    const client = algokit.getApplicationClient(
+    const client = algokit.getAppClient(
       {
         app: appSpec,
         sender: testAccount,

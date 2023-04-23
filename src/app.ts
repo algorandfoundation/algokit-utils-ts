@@ -611,7 +611,7 @@ export async function getAppById(appId: number, algod: Algodv2) {
   return (await algod.getApplicationByID(appId).do()) as ApplicationResponse
 }
 
-/** Deprecated, use `getAppById` instead. */
+/** @deprecated Use `algokit.getAppById` instead. */
 export const getAppByIndex = getAppById
 
 /**

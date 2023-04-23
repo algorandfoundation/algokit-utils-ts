@@ -1,8 +1,8 @@
 import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
+import * as algokit from '.'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
-import * as algokit from './'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './types/app'
 

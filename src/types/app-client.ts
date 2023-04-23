@@ -22,7 +22,7 @@ import {
   getAppLocalState,
   updateApp,
 } from '../app'
-import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../deploy-app'
+import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
 import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
@@ -42,7 +42,7 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import { AppSpec } from './appspec'
+import { AppSpec } from './app-spec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 

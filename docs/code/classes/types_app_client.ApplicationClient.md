@@ -1,8 +1,8 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/application-client](../modules/types_application_client.md) / ApplicationClient
+[@algorandfoundation/algokit-utils](../README.md) / [types/app-client](../modules/types_app_client.md) / ApplicationClient
 
 # Class: ApplicationClient
 
-[types/application-client](../modules/types_application_client.md).ApplicationClient
+[types/app-client](../modules/types_app_client.md).ApplicationClient
 
 Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app
 
@@ -10,48 +10,48 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 
 ### Constructors
 
-- [constructor](types_application_client.ApplicationClient.md#constructor)
+- [constructor](types_app_client.ApplicationClient.md#constructor)
 
 ### Properties
 
-- [\_appAddress](types_application_client.ApplicationClient.md#_appaddress)
-- [\_appId](types_application_client.ApplicationClient.md#_appid)
-- [\_appName](types_application_client.ApplicationClient.md#_appname)
-- [\_approvalSourceMap](types_application_client.ApplicationClient.md#_approvalsourcemap)
-- [\_clearSourceMap](types_application_client.ApplicationClient.md#_clearsourcemap)
-- [\_creator](types_application_client.ApplicationClient.md#_creator)
-- [algod](types_application_client.ApplicationClient.md#algod)
-- [appSpec](types_application_client.ApplicationClient.md#appspec)
-- [existingDeployments](types_application_client.ApplicationClient.md#existingdeployments)
-- [indexer](types_application_client.ApplicationClient.md#indexer)
-- [params](types_application_client.ApplicationClient.md#params)
-- [sender](types_application_client.ApplicationClient.md#sender)
+- [\_appAddress](types_app_client.ApplicationClient.md#_appaddress)
+- [\_appId](types_app_client.ApplicationClient.md#_appid)
+- [\_appName](types_app_client.ApplicationClient.md#_appname)
+- [\_approvalSourceMap](types_app_client.ApplicationClient.md#_approvalsourcemap)
+- [\_clearSourceMap](types_app_client.ApplicationClient.md#_clearsourcemap)
+- [\_creator](types_app_client.ApplicationClient.md#_creator)
+- [algod](types_app_client.ApplicationClient.md#algod)
+- [appSpec](types_app_client.ApplicationClient.md#appspec)
+- [existingDeployments](types_app_client.ApplicationClient.md#existingdeployments)
+- [indexer](types_app_client.ApplicationClient.md#indexer)
+- [params](types_app_client.ApplicationClient.md#params)
+- [sender](types_app_client.ApplicationClient.md#sender)
 
 ### Methods
 
-- [\_call](types_application_client.ApplicationClient.md#_call)
-- [call](types_application_client.ApplicationClient.md#call)
-- [clearState](types_application_client.ApplicationClient.md#clearstate)
-- [closeOut](types_application_client.ApplicationClient.md#closeout)
-- [compile](types_application_client.ApplicationClient.md#compile)
-- [create](types_application_client.ApplicationClient.md#create)
-- [delete](types_application_client.ApplicationClient.md#delete)
-- [deploy](types_application_client.ApplicationClient.md#deploy)
-- [exposeLogicError](types_application_client.ApplicationClient.md#exposelogicerror)
-- [fundAppAccount](types_application_client.ApplicationClient.md#fundappaccount)
-- [getABIMethod](types_application_client.ApplicationClient.md#getabimethod)
-- [getABIMethodParams](types_application_client.ApplicationClient.md#getabimethodparams)
-- [getAppReference](types_application_client.ApplicationClient.md#getappreference)
-- [getBoxNames](types_application_client.ApplicationClient.md#getboxnames)
-- [getBoxValue](types_application_client.ApplicationClient.md#getboxvalue)
-- [getBoxValueAsABIType](types_application_client.ApplicationClient.md#getboxvalueasabitype)
-- [getBoxValues](types_application_client.ApplicationClient.md#getboxvalues)
-- [getBoxValuesAsABIType](types_application_client.ApplicationClient.md#getboxvaluesasabitype)
-- [getCallArgs](types_application_client.ApplicationClient.md#getcallargs)
-- [getGlobalState](types_application_client.ApplicationClient.md#getglobalstate)
-- [getLocalState](types_application_client.ApplicationClient.md#getlocalstate)
-- [optIn](types_application_client.ApplicationClient.md#optin)
-- [update](types_application_client.ApplicationClient.md#update)
+- [\_call](types_app_client.ApplicationClient.md#_call)
+- [call](types_app_client.ApplicationClient.md#call)
+- [clearState](types_app_client.ApplicationClient.md#clearstate)
+- [closeOut](types_app_client.ApplicationClient.md#closeout)
+- [compile](types_app_client.ApplicationClient.md#compile)
+- [create](types_app_client.ApplicationClient.md#create)
+- [delete](types_app_client.ApplicationClient.md#delete)
+- [deploy](types_app_client.ApplicationClient.md#deploy)
+- [exposeLogicError](types_app_client.ApplicationClient.md#exposelogicerror)
+- [fundAppAccount](types_app_client.ApplicationClient.md#fundappaccount)
+- [getABIMethod](types_app_client.ApplicationClient.md#getabimethod)
+- [getABIMethodParams](types_app_client.ApplicationClient.md#getabimethodparams)
+- [getAppReference](types_app_client.ApplicationClient.md#getappreference)
+- [getBoxNames](types_app_client.ApplicationClient.md#getboxnames)
+- [getBoxValue](types_app_client.ApplicationClient.md#getboxvalue)
+- [getBoxValueAsABIType](types_app_client.ApplicationClient.md#getboxvalueasabitype)
+- [getBoxValues](types_app_client.ApplicationClient.md#getboxvalues)
+- [getBoxValuesAsABIType](types_app_client.ApplicationClient.md#getboxvaluesasabitype)
+- [getCallArgs](types_app_client.ApplicationClient.md#getcallargs)
+- [getGlobalState](types_app_client.ApplicationClient.md#getglobalstate)
+- [getLocalState](types_app_client.ApplicationClient.md#getlocalstate)
+- [optIn](types_app_client.ApplicationClient.md#optin)
+- [update](types_app_client.ApplicationClient.md#update)
 
 ## Constructors
 
@@ -65,12 +65,12 @@ Create a new ApplicationClient instance
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `appDetails` | [`AppSpecAppDetails`](../modules/types_application_client.md#appspecappdetails) | The details of the app |
+| `appDetails` | [`AppSpecAppDetails`](../modules/types_app_client.md#appspecappdetails) | The details of the app |
 | `algod` | `default` | An algod instance |
 
 #### Defined in
 
-[src/types/application-client.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L196)
+src/types/app-client.ts:196
 
 ## Properties
 
@@ -80,7 +80,7 @@ Create a new ApplicationClient instance
 
 #### Defined in
 
-[src/types/application-client.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L176)
+src/types/app-client.ts:176
 
 ___
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L175)
+src/types/app-client.ts:175
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L178)
+src/types/app-client.ts:178
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L180)
+src/types/app-client.ts:180
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L181)
+src/types/app-client.ts:181
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L177)
+src/types/app-client.ts:177
 
 ___
 
@@ -140,17 +140,17 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L168)
+src/types/app-client.ts:168
 
 ___
 
 ### appSpec
 
-• `Private` **appSpec**: [`AppSpec`](../interfaces/types_appspec.AppSpec.md)
+• `Private` **appSpec**: [`AppSpec`](../interfaces/types_app_spec.AppSpec.md)
 
 #### Defined in
 
-[src/types/application-client.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L170)
+src/types/app-client.ts:170
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L173)
+src/types/app-client.ts:173
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L169)
+src/types/app-client.ts:169
 
 ___
 
@@ -180,7 +180,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L172)
+src/types/app-client.ts:172
 
 ___
 
@@ -190,7 +190,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L171)
+src/types/app-client.ts:171
 
 ## Methods
 
@@ -202,7 +202,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `call` | [`AppClientCallParams`](../modules/types_application_client.md#appclientcallparams) |
+| `call` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
 | `callType` | ``"optin"`` \| ``"closeout"`` \| ``"clearstate"`` \| ``"delete"`` \| ``"normal"`` |
 
 #### Returns
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L464)
+src/types/app-client.ts:464
 
 ___
 
@@ -223,7 +223,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `call` | [`AppClientCallParams`](../modules/types_application_client.md#appclientcallparams) |
+| `call` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
 
 #### Returns
 
@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:444](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L444)
+src/types/app-client.ts:444
 
 ___
 
@@ -243,7 +243,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `call` | [`AppClientCallParams`](../modules/types_application_client.md#appclientcallparams) |
+| `call` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
 
 #### Returns
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L456)
+src/types/app-client.ts:456
 
 ___
 
@@ -263,7 +263,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `call` | [`AppClientCallParams`](../modules/types_application_client.md#appclientcallparams) |
+| `call` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
 
 #### Returns
 
@@ -271,7 +271,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L452)
+src/types/app-client.ts:452
 
 ___
 
@@ -285,7 +285,7 @@ Compiles the approval and clear programs and sets up the source map.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `compilation?` | [`AppClientCompilationParams`](../interfaces/types_application_client.AppClientCompilationParams.md) | The deploy-time parameters for the compilation |
+| `compilation?` | [`AppClientCompilationParams`](../interfaces/types_app_client.AppClientCompilationParams.md) | The deploy-time parameters for the compilation |
 
 #### Returns
 
@@ -295,7 +295,7 @@ The compiled approval and clear programs
 
 #### Defined in
 
-[src/types/application-client.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L232)
+src/types/app-client.ts:232
 
 ___
 
@@ -307,7 +307,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `create?` | [`AppClientCreateParams`](../modules/types_application_client.md#appclientcreateparams) |
+| `create?` | [`AppClientCreateParams`](../modules/types_app_client.md#appclientcreateparams) |
 
 #### Returns
 
@@ -315,7 +315,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:360](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L360)
+src/types/app-client.ts:360
 
 ___
 
@@ -327,7 +327,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `call` | [`AppClientCallParams`](../modules/types_application_client.md#appclientcallparams) |
+| `call` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
 
 #### Returns
 
@@ -335,7 +335,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:460](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L460)
+src/types/app-client.ts:460
 
 ___
 
@@ -359,7 +359,7 @@ https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-de
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `deploy?` | [`AppClientDeployParams`](../interfaces/types_application_client.AppClientDeployParams.md) | Deployment details |
+| `deploy?` | [`AppClientDeployParams`](../interfaces/types_app_client.AppClientDeployParams.md) | Deployment details |
 
 #### Returns
 
@@ -369,7 +369,7 @@ The metadata and transaction result(s) of the deployment, or just the metadata i
 
 #### Defined in
 
-[src/types/application-client.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L260)
+src/types/app-client.ts:260
 
 ___
 
@@ -400,7 +400,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/application-client.ts:739](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L739)
+src/types/app-client.ts:739
 
 ___
 
@@ -414,7 +414,7 @@ Funds ALGOs into the app account for this app.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `fund` | [`AlgoAmount`](types_amount.AlgoAmount.md) \| [`FundAppAccountParams`](../interfaces/types_application_client.FundAppAccountParams.md) | The parameters for the funding or the funding amount |
+| `fund` | [`AlgoAmount`](types_amount.AlgoAmount.md) \| [`FundAppAccountParams`](../interfaces/types_app_client.FundAppAccountParams.md) | The parameters for the funding or the funding amount |
 
 #### Returns
 
@@ -424,7 +424,7 @@ The result of the funding
 
 #### Defined in
 
-[src/types/application-client.ts:500](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L500)
+src/types/app-client.ts:500
 
 ___
 
@@ -448,7 +448,7 @@ The ABI method for the given method
 
 #### Defined in
 
-[src/types/application-client.ts:697](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L697)
+src/types/app-client.ts:697
 
 ___
 
@@ -472,7 +472,7 @@ The ABI method params for the given method
 
 #### Defined in
 
-[src/types/application-client.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L675)
+src/types/app-client.ts:675
 
 ___
 
@@ -491,7 +491,7 @@ The app reference, or if deployed using the `deploy` method, the app metadata to
 
 #### Defined in
 
-[src/types/application-client.ts:707](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L707)
+src/types/app-client.ts:707
 
 ___
 
@@ -509,7 +509,7 @@ The names of the boxes
 
 #### Defined in
 
-[src/types/application-client.ts:554](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L554)
+src/types/app-client.ts:554
 
 ___
 
@@ -537,7 +537,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/application-client.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L569)
+src/types/app-client.ts:569
 
 ___
 
@@ -566,7 +566,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/application-client.ts:584](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L584)
+src/types/app-client.ts:584
 
 ___
 
@@ -591,7 +591,7 @@ The (name, value) pair of the boxes with values as raw byte arrays
 
 #### Defined in
 
-[src/types/application-client.ts:600](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L600)
+src/types/app-client.ts:600
 
 ___
 
@@ -617,7 +617,7 @@ The (name, value) pair of the boxes with values as the ABI Value
 
 #### Defined in
 
-[src/types/application-client.ts:622](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L622)
+src/types/app-client.ts:622
 
 ___
 
@@ -631,7 +631,7 @@ Returns the arguments for an app call for the given ABI method or raw method spe
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `args?` | [`AppClientCallArgs`](../modules/types_application_client.md#appclientcallargs) | The call args specific to this application client |
+| `args?` | [`AppClientCallArgs`](../modules/types_app_client.md#appclientcallargs) | The call args specific to this application client |
 
 #### Returns
 
@@ -641,7 +641,7 @@ The call args ready to pass into an app call
 
 #### Defined in
 
-[src/types/application-client.ts:643](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L643)
+src/types/app-client.ts:643
 
 ___
 
@@ -659,7 +659,7 @@ The global state
 
 #### Defined in
 
-[src/types/application-client.ts:526](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L526)
+src/types/app-client.ts:526
 
 ___
 
@@ -683,7 +683,7 @@ The global state
 
 #### Defined in
 
-[src/types/application-client.ts:540](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L540)
+src/types/app-client.ts:540
 
 ___
 
@@ -695,7 +695,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `call` | [`AppClientCallParams`](../modules/types_application_client.md#appclientcallparams) |
+| `call` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
 
 #### Returns
 
@@ -703,7 +703,7 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L448)
+src/types/app-client.ts:448
 
 ___
 
@@ -715,7 +715,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `update?` | [`AppClientCreateParams`](../modules/types_application_client.md#appclientcreateparams) |
+| `update?` | [`AppClientCreateParams`](../modules/types_app_client.md#appclientcreateparams) |
 
 #### Returns
 
@@ -723,4 +723,4 @@ ___
 
 #### Defined in
 
-[src/types/application-client.ts:406](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/application-client.ts#L406)
+src/types/app-client.ts:406

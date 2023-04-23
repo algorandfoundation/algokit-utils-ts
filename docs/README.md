@@ -71,7 +71,7 @@ The library helps you with the following capabilities:
   - [**Transaction management**](capabilities/transaction.md) - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
 - Higher-order use cases
   - [**App management**](capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
-  - **App deployment** - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
+  - [**App deployment**](capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
   - **ARC-0032 Application Spec client** - Builds on top of the App management capability to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
   - **Algo transfers** - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
   - **Automated testing** - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
