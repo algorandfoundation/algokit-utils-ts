@@ -317,7 +317,7 @@ The app reference of the new/existing app
 
 #### Defined in
 
-src/app-deploy.ts:39
+[src/app-deploy.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L39)
 
 ___
 
@@ -1010,7 +1010,7 @@ The application client
 
 #### Defined in
 
-src/app-client.ts:15
+[src/app-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L15)
 
 ___
 
@@ -1034,7 +1034,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-src/app-deploy.ts:517
+[src/app-deploy.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L517)
 
 ___
 
@@ -1110,7 +1110,7 @@ Use `algokit.getAppClient`
 
 #### Defined in
 
-src/app-client.ts:15
+[src/app-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L15)
 
 ___
 
@@ -1200,7 +1200,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-src/app-deploy.ts:410
+[src/app-deploy.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L410)
 
 ___
 
@@ -1500,7 +1500,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-src/app-deploy.ts:397
+[src/app-deploy.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L397)
 
 ___
 
@@ -1711,7 +1711,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-src/app-deploy.ts:566
+[src/app-deploy.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L566)
 
 ___
 
@@ -1740,7 +1740,7 @@ The information about the compiled code
 
 #### Defined in
 
-src/app-deploy.ts:596
+[src/app-deploy.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L596)
 
 ___
 
@@ -1819,7 +1819,7 @@ The replaced TEAL code
 
 #### Defined in
 
-src/app-deploy.ts:535
+[src/app-deploy.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L535)
 
 ___
 

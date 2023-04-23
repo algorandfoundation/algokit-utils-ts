@@ -34,7 +34,7 @@ Hint information for a given method call to allow client generation
 
 #### Defined in
 
-src/types/app-spec.ts:58
+[src/types/app-spec.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L58)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-src/types/app-spec.ts:57
+[src/types/app-spec.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L57)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-src/types/app-spec.ts:56
+[src/types/app-spec.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L56)
 
 ___
 
@@ -66,4 +66,4 @@ Any user-defined struct/tuple types used in the method call, keyed by parameter 
 
 #### Defined in
 
-src/types/app-spec.ts:55
+[src/types/app-spec.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L55)

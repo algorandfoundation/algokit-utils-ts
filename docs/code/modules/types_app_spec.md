@@ -44,7 +44,7 @@ The string name of an ABI type
 
 #### Defined in
 
-src/types/app-spec.ts:72
+[src/types/app-spec.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L72)
 
 ___
 
@@ -60,7 +60,7 @@ The various call configs:
 
 #### Defined in
 
-src/types/app-spec.ts:50
+[src/types/app-spec.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L50)
 
 ___
 
@@ -72,7 +72,7 @@ The name of a field
 
 #### Defined in
 
-src/types/app-spec.ts:69
+[src/types/app-spec.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L69)
 
 ___
 
@@ -84,7 +84,7 @@ A lookup of encoded method call spec to hint
 
 #### Defined in
 
-src/types/app-spec.ts:34
+[src/types/app-spec.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L34)
 
 ___
 
@@ -103,7 +103,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-src/types/app-spec.ts:151
+[src/types/app-spec.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L151)
 
 ___
 
@@ -115,7 +115,7 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 #### Defined in
 
-src/types/app-spec.ts:75
+[src/types/app-spec.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L75)
 
 ## Functions
 

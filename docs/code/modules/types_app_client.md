@@ -34,7 +34,7 @@ The arguments to pass to an Application Client smart contract call
 
 #### Defined in
 
-src/types/app-client.ts:118
+[src/types/app-client.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L118)
 
 ___
 
@@ -46,7 +46,7 @@ Parameters to construct a ApplicationClient contract call
 
 #### Defined in
 
-src/types/app-client.ts:131
+[src/types/app-client.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L131)
 
 ___
 
@@ -58,7 +58,7 @@ Parameters for creating a contract using ApplicationClient
 
 #### Defined in
 
-src/types/app-client.ts:150
+[src/types/app-client.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L150)
 
 ___
 
@@ -70,7 +70,7 @@ Parameters for updating a contract using ApplicationClient
 
 #### Defined in
 
-src/types/app-client.ts:153
+[src/types/app-client.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L153)
 
 ___
 
@@ -82,7 +82,7 @@ The details of an ARC-0032 app spec specified app
 
 #### Defined in
 
-src/types/app-client.ts:75
+[src/types/app-client.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L75)
 
 ___
 
@@ -98,4 +98,4 @@ getCreatorAppsByName
 
 #### Defined in
 
-src/types/app-client.ts:50
+[src/types/app-client.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L50)
