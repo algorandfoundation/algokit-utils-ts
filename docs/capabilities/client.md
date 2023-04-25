@@ -36,3 +36,7 @@ Once you have the configuration for a client, to get the client you can use the 
 - [`algokit.getAlgoClient(config)`](../code/modules/index.md#getalgoclient) - Returns an Algod client for the given configuration; the client automatically retries on transient HTTP errors; if one isn't provided it retrieves it from the environment
 - [`algokit.getAlgoIndexerClient(config)`](../code/modules/index.md#getalgoindexerclient) - Returns an Indexer client for given configuration; if one isn't provided it retrieves it from the environment
 - [`algokit.getAlgoKmdClient(config)`](../code/modules/index.md#getalgokmdclient) - Returns a Kmd client for the given configuration; if one isn't provided it retrieves it from the environment
+
+## Automatic retry
+
+When receiving an Algod client from AlgoKit Utils, it will be a special wrapper client that has transient failure retries in there. This is done via the [`AlgoHttpClientWithRetry`](../code/classes/types_algo_http_client_with_retry.AlgoHttpClientWithRetry.md) class.
