@@ -163,6 +163,21 @@ export interface FundAppAccountParams {
   sendParams?: SendTransactionParams
 }
 
+/** Source maps for an Algorand app */
+export interface AppSourceMaps {
+  /** The source map of the approval program */
+  approvalSourceMap: SourceMapExport
+  /** The source map of the clear program */
+  clearSourceMap: SourceMapExport
+}
+
+export interface SourceMapExport {
+  version: number
+  sources: string[]
+  names: string[]
+  mappings: string
+}
+
 /** Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
   private algod: Algodv2
@@ -181,7 +196,6 @@ export class ApplicationClient {
   private _clearSourceMap: SourceMap | undefined
 
   // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
-  // todo: support importing and exporting a source map
   // todo: support readonly, noop method calls
   // todo: support different oncomplete for create
   // todo: find create, update, delete, etc. methods from app spec and call them by default
@@ -199,7 +213,12 @@ export class ApplicationClient {
     this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
     this._appName = appIdentifier.name ?? this.appSpec.contract.name
 
-    if ('creatorAddress' in appIdentifier) {
+    if ('id' in appIdentifier) {
+      if (appIdentifier.id < 0) {
+        throw new Error(`Attempt to create application client with invalid app id of ${appIdentifier.id}`)
+      }
+      this._appId = appIdentifier.id
+    } else {
       this._appId = 0
       this._creator = appIdentifier.creatorAddress
       if ('indexer' in appIdentifier) {
@@ -212,11 +231,6 @@ export class ApplicationClient {
         }
         this.existingDeployments = appIdentifier.existingDeployments
       }
-    } else {
-      if (appIdentifier.id < 0) {
-        throw new Error(`Attempt to create application client with invalid app id of ${appIdentifier.id}`)
-      }
-      this._appId = appIdentifier.id
     }
 
     this._appAddress = algosdk.getApplicationAddress(this._appId)
@@ -244,6 +258,32 @@ export class ApplicationClient {
     this._clearSourceMap = clearCompiled?.sourceMap
 
     return { approvalCompiled, clearCompiled }
+  }
+
+  /**
+   * Export the current source maps for the app.
+   * @returns The source maps
+   */
+  exportSourceMaps(): AppSourceMaps {
+    if (!this._approvalSourceMap || !this._clearSourceMap) {
+      throw new Error(
+        "Unable to export source maps; they haven't been loaded into this client - you need to call create, update, or deploy first",
+      )
+    }
+
+    return {
+      approvalSourceMap: this._approvalSourceMap,
+      clearSourceMap: this._clearSourceMap,
+    }
+  }
+
+  /**
+   * Import source maps for the app.
+   * @param sourceMaps The source maps to import
+   */
+  importSourceMaps(sourceMaps: AppSourceMaps) {
+    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
   }
 
   /**

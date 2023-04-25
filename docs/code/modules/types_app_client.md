@@ -12,8 +12,10 @@
 
 - [AppClientCompilationParams](../interfaces/types_app_client.AppClientCompilationParams.md)
 - [AppClientDeployParams](../interfaces/types_app_client.AppClientDeployParams.md)
+- [AppSourceMaps](../interfaces/types_app_client.AppSourceMaps.md)
 - [FundAppAccountParams](../interfaces/types_app_client.FundAppAccountParams.md)
 - [ResolveAppById](../interfaces/types_app_client.ResolveAppById.md)
+- [SourceMapExport](../interfaces/types_app_client.SourceMapExport.md)
 
 ### Type Aliases
 
