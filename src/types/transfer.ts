@@ -4,10 +4,10 @@ import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './t
 
 /** Parameters for @see transferAlgos call. */
 export interface AlgoTransferParams extends SendTransactionParams {
-  /** The account (with private key loaded) that will send the µALGOs */
+  /** The account that will send the ALGOs */
   from: SendTransactionFrom
-  /** The account address that will receive the ALGOs */
-  to: string
+  /** The account / account address that will receive the ALGOs */
+  to: SendTransactionFrom | string
   /** The amount to send */
   amount: AlgoAmount
   /** Optional transaction parameters */

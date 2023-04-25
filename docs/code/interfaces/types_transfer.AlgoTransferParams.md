@@ -87,7 +87,7 @@ ___
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account (with private key loaded) that will send the µALGOs
+The account that will send the ALGOs
 
 #### Defined in
 
@@ -190,9 +190,9 @@ ___
 
 ### to
 
-• **to**: `string`
+• **to**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account address that will receive the ALGOs
+The account / account address that will receive the ALGOs
 
 #### Defined in
 

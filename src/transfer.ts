@@ -15,7 +15,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
-    to: to,
+    to: typeof to === 'string' ? to : getSenderAddress(to),
     amount: amount.microAlgos,
     note: encodeTransactionNote(note),
     suggestedParams: await getTransactionParams(transactionParams, algod),
