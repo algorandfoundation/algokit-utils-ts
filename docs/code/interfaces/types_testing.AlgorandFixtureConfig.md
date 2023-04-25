@@ -21,7 +21,7 @@ Configuration for creating an Algorand testing fixture.
 
 • `Optional` **algod**: `default`
 
-An optional algod client, if not specified then it will create one against default LocalNet.
+An optional algod client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet.
 
 #### Defined in
 
@@ -33,7 +33,7 @@ ___
 
 • `Optional` **indexer**: `default`
 
-An optional indexer client, if not specified then it will create one against default LocalNet.
+An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet.
 
 #### Defined in
 
@@ -45,7 +45,7 @@ ___
 
 • `Optional` **kmd**: `default`
 
-An optional kmd client, if not specified then it will create one against default LocalNet.
+An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet.
 
 #### Defined in
 

@@ -39,11 +39,11 @@ export interface GetTestAccountParams {
 
 /** Configuration for creating an Algorand testing fixture. */
 export interface AlgorandFixtureConfig {
-  /** An optional algod client, if not specified then it will create one against default LocalNet. */
+  /** An optional algod client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
   algod?: Algodv2
-  /** An optional indexer client, if not specified then it will create one against default LocalNet. */
+  /** An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
   indexer?: Indexer
-  /** An optional kmd client, if not specified then it will create one against default LocalNet. */
+  /** An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
   kmd?: Kmd
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGOs. */
   testAccountFunding?: AlgoAmount

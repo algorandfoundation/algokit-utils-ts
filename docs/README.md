@@ -74,7 +74,7 @@ The library helps you with the following capabilities:
   - [**App deployment**](capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
   - [**ARC-0032 Application Spec client**](capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
   - [**Algo transfers**](capabilities/transfer.md) - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
-  - **Automated testing** - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
+  - [**Automated testing**](capabilities/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
   - **Indexer lookups / searching** - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
 
 # Reference documentation
