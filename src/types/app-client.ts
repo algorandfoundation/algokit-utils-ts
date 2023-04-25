@@ -90,6 +90,10 @@ export interface AppClientDeployParams {
   version?: string
   /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
   sender?: SendTransactionFrom
+  /** Parameters to control transaction sending */
+  sendParams?: Omit<SendTransactionParams, 'skipSending' | 'skipWaiting'>
+  /** Any deploy-time parameters to replace in the TEAL code */
+  deployTimeParams?: TealTemplateParams
   /** Whether or not to allow updates in the contract using the deploy-time updatability control if present in your contract.
    * If this is not specified then it will automatically be determined based on the AppSpec definition
    **/
@@ -98,10 +102,6 @@ export interface AppClientDeployParams {
    * If this is not specified then it will automatically be determined based on the AppSpec definition
    **/
   allowDelete?: boolean
-  /** Parameters to control transaction sending */
-  sendParams?: Omit<SendTransactionParams, 'skipSending' | 'skipWaiting'>
-  /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParams?: TealTemplateParams
   /** What action to perform if a schema break is detected */
   onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
@@ -281,7 +281,6 @@ export class ApplicationClient {
     }
 
     const approval = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
-    const clear = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
 
     const compilation = {
       deployTimeParams: deployArgs.deployTimeParams,
@@ -441,28 +440,28 @@ export class ApplicationClient {
     }
   }
 
-  async call(call: AppClientCallParams) {
+  async call(call?: AppClientCallParams) {
     return await this._call(call, 'normal')
   }
 
-  async optIn(call: AppClientCallParams) {
+  async optIn(call?: AppClientCallParams) {
     return await this._call(call, 'optin')
   }
 
-  async closeOut(call: AppClientCallParams) {
+  async closeOut(call?: AppClientCallParams) {
     return await this._call(call, 'closeout')
   }
 
-  async clearState(call: AppClientCallParams) {
+  async clearState(call?: AppClientCallParams) {
     return await this._call(call, 'clearstate')
   }
 
-  async delete(call: AppClientCallParams) {
+  async delete(call?: AppClientCallParams) {
     return await this._call(call, 'delete')
   }
 
-  private async _call(call: AppClientCallParams, callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal') {
-    const { sender, note, sendParams, ...args } = call
+  private async _call(call: AppClientCallParams | undefined, callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal') {
+    const { sender, note, sendParams, ...args } = call ?? {}
 
     if (!sender && !this.sender) {
       throw new Error('No sender provided, unable to call app')
@@ -581,7 +580,7 @@ export class ApplicationClient {
    * @param name The name of the box to return either as a string, binary array or @see BoxName
    * @returns The current box value as a byte array
    */
-  async getBoxValueAsABIType(name: BoxName | string | Uint8Array, type: ABIType): Promise<ABIValue> {
+  async getBoxValueFromABIType(name: BoxName | string | Uint8Array, type: ABIType): Promise<ABIValue> {
     const appRef = await this.getAppReference()
 
     if (appRef.appId === 0) {
@@ -619,7 +618,7 @@ export class ApplicationClient {
    * @param filter Optional filter to filter which boxes' values are returned
    * @returns The (name, value) pair of the boxes with values as the ABI Value
    */
-  async getBoxValuesAsABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
+  async getBoxValuesFromABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
     const appRef = await this.getAppReference()
 
     if (appRef.appId === 0) {
@@ -633,6 +632,11 @@ export class ApplicationClient {
         value: await getAppBoxValueFromABIType({ appId: appRef.appId, boxName, type }, this.algod),
       })),
     )
+  }
+
+  /** @deprecated Use `getBoxValuesFromABIType` instead */
+  async getBoxValuesAsABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
+    return this.getBoxValuesFromABIType(type, filter)
   }
 
   /**
@@ -711,8 +715,7 @@ export class ApplicationClient {
     }
 
     if (this.existingDeployments && this._appId === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const app = this.existingDeployments.apps[this._appName!]
+      const app = this.existingDeployments.apps[this._appName]
       if (!app) {
         return {
           appId: 0,

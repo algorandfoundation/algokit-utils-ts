@@ -6,31 +6,40 @@ App management is a higher-order use case capability provided by AlgoKit Utils t
 
 All calls to smart contracts will allow you to optionally specify the arguments you want to pass in to the call.
 
-This [type](../code/modules/types_app.md#appcallargs) is a union of two types:
+This [type](../code/modules/types_app.md#appcallargs) is a union of two types: `RawAppCallArgs` and `ABIAppCallArgs`.
 
-- [`RawAppCallArgs`](../code/interfaces/types_app.RawAppCallArgs.md) - Which allows you to explicitly specify all of the arguments and has the following properties (all of which are optional):
-  - `accounts: (string | algosdk.Address)[]` - Any accounts to add to the [accounts array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays) either as the `string` or `algosdk.Address` representation of the public address of the account(s)
-  - `appArgs: (Uint8Array | string)[]` - Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays), either as the binary representation or a string (that will be encoded to binary using `TextEncoder`)
-  - `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-  - `apps: number[]`: The ID of any apps to load to the [foreign apps array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-  - `assets: number[]`: The ID of any assets to load to the [foreign assets array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-  - `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
-- [`ABIAppCallArgs`](../code/interfaces/types_app.ABIAppCallArgs.md) - Which allows you to specify an [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
-  - `method: algosdk.ABIMethodParams | algosdk.ABIMethod` - The ABI method to call
-  - `args: ABIAppCallArg[]` - The arguments to pass to the ABI call, which can be one of:
-    - `algosdk.ABIArgument` - Which can be one of:
-      - `boolean`
-      - `number`
-      - `bigint`
-      - `string`
-      - `Uint8Array`
-      - An array of one of the above types
-      - `algosdk.TransactionWithSigner`
-    - [`TransactionToSign`](transaction.md#signing)
-    - `algosdk.Transaction`
-    - `Promise<SendTransactionResult>` - which allows you to use an AlgoKit Utils method call that [returns a transaction](transaction.md#sendtransactionresult) without needing to await the call and extract the transaction, if you do this be sure to use `skipWaiting: true` when specifying the [sending parameters](transaction.md#sendtransactionparams) so you get the transaction without sending it to the network
-  - `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-  - `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
+### `RawAppCallArgs`
+
+[`RawAppCallArgs`](../code/interfaces/types_app.RawAppCallArgs.md) allows you to explicitly specify all of the arguments and has the following properties (all of which are optional):
+
+- `accounts: (string | algosdk.Address)[]` - Any accounts to add to the [accounts array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays) either as the `string` or `algosdk.Address` representation of the public address of the account(s)
+- `appArgs: (Uint8Array | string)[]` - Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays), either as the binary representation or a string (that will be encoded to binary using `TextEncoder`)
+- `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
+- `apps: number[]`: The ID of any apps to load to the [foreign apps array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
+- `assets: number[]`: The ID of any assets to load to the [foreign assets array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
+- `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
+
+### `ABIAppCallArgs`
+
+[`ABIAppCallArgs`](../code/interfaces/types_app.ABIAppCallArgs.md) allows you to specify an [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
+
+- `method: algosdk.ABIMethodParams | algosdk.ABIMethod` - The ABI method to call
+- `args: ABIAppCallArg[]` - The arguments to pass to the ABI call, which can be one of:
+  - `algosdk.ABIArgument` - Which can be one of:
+    - `boolean`
+    - `number`
+    - `bigint`
+    - `string`
+    - `Uint8Array`
+    - An array of one of the above types
+    - `algosdk.TransactionWithSigner`
+  - [`TransactionToSign`](transaction.md#signing)
+  - `algosdk.Transaction`
+  - `Promise<SendTransactionResult>` - which allows you to use an AlgoKit Utils method call that [returns a transaction](transaction.md#sendtransactionresult) without needing to await the call and extract the transaction, if you do this be sure to use `skipWaiting: true` when specifying the [sending parameters](transaction.md#sendtransactionparams) so you get the transaction without sending it to the network
+- `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
+- `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
+
+### Utility methods
 
 If you want to manually construct a transaction, but use these types to specify the arguments then you can use the following methods:
 
