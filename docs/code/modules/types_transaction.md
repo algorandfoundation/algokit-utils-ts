@@ -29,11 +29,7 @@
 
 Ƭ **Arc2TransactionNote**: { `dAppName`: `string` ; `data`: `string` ; `format`: ``"m"`` \| ``"b"`` \| ``"u"``  } \| { `dAppName`: `string` ; `data`: [`TransactionNoteData`](types_transaction.md#transactionnotedata) ; `format`: ``"j"``  }
 
-ARC-0002 compatible transaction note components,
-
-**`See`**
-
-https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md
+ARC-0002 compatible transaction note components https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md
 
 #### Defined in
 
@@ -49,17 +45,11 @@ Core account abstraction when signing/sending transactions
 
 This type is used across the entire AlgoKit Utils library and allows you to pass through
 many types of accounts, including:
-* `Account` - The in-built
-
-**`See`**
-
- - algosdk.Account type for mnemonic accounts
+* `Account` - The in-built `algosdk.Account` type for mnemonic accounts
 * `SigningAccount` - An AlgoKit Utils class that wraps Account to provide support for rekeyed accounts
-* `LogicSigAccount` - The in-built
- - algosdk.LogicSigAccount type for logic signatures
+* `LogicSigAccount` - The in-built `algosdk.LogicSigAccount` type for logic signatures
 * `MultisigAccount` - An AlgoKit Utils class that wraps a multisig account and provides mechanisms to get a multisig account
-* `TransactionSignerAccount` - An AlgoKitUtils class that wraps the in-built
- - algosdk.TransactionSigner along with the sender address
+* `TransactionSignerAccount` - An AlgoKitUtils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
 
 #### Defined in
 

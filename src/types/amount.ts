@@ -30,12 +30,12 @@ export class AlgoAmount {
     return this.microAlgos
   }
 
-  /** Create a @see {AlgoAmount} object representing the given number of Algos */
+  /** Create a `AlgoAmount` object representing the given number of Algos */
   static Algos(amount: number) {
     return new AlgoAmount({ algos: amount })
   }
 
-  /** Create a @see {AlgoAmount} object representing the given number of µAlgos */
+  /** Create a `AlgoAmount` object representing the given number of µAlgos */
   static MicroAlgos(amount: number) {
     return new AlgoAmount({ microAlgos: amount })
   }

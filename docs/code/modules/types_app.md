@@ -53,11 +53,7 @@
 
 Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
-An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a
-
-**`See`**
-
-SendTransactionResult
+An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult`
 
 #### Defined in
 
@@ -96,15 +92,9 @@ ___
 Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)
 
 Something that identifies a box name - either a:
- *
-
-**`See`**
-
- - Uint8Array
- *
- - string (that will be encoded to a Uint8Array)
- *
- - SendTransactionFrom (encoded into the public key address of the corresponding account)
+ * `Uint8Array`
+ * `string` (that will be encoded to a Uint8Array)
+ * `SendTransactionFrom` (encoded into the public key address of the corresponding account)
 
 #### Defined in
 

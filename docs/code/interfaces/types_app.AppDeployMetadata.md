@@ -4,11 +4,7 @@
 
 [types/app](../modules/types_app.md).AppDeployMetadata
 
-The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with
-
-**`See`**
-
-.
+The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.
 
 ## Hierarchy
 

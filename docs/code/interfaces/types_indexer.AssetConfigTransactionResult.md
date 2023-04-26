@@ -5,9 +5,6 @@
 [types/indexer](../modules/types_indexer.md).AssetConfigTransactionResult
 
 Fields for asset allocation, re-configuration, and destruction.
-
-**`See`**
-
 https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetconfig
 
 A zero value for asset-id indicates asset creation. A zero value for the params indicates asset destruction.

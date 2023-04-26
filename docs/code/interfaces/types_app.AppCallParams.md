@@ -60,11 +60,7 @@ ___
 
 • `Optional` **atc**: `AtomicTransactionComposer`
 
-An optional
-
-**`See`**
-
-AtomicTransactionComposer to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
 
 #### Inherited from
 
@@ -80,7 +76,7 @@ ___
 
 • **callType**: ``"optin"`` \| ``"closeout"`` \| ``"clearstate"`` \| ``"delete"`` \| ``"normal"``
 
-The type of call, everything except create (@see createApp ) and update (@see updateApp )
+The type of call, everything except create (`createApp`) and update (`updateApp`)
 
 #### Defined in
 

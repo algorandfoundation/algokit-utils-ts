@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).TransactionLookupResult
 
-Indexer result for a transaction lookup,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid
+Indexer result for a transaction lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid
 
 ## Table of contents
 

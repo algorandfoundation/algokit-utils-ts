@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).TransactionSignature
 
-Validation signature associated with some data. Only one of the signatures should be provided.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignature
+Validation signature associated with some data. Only one of the signatures should be provided. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignature
 
 ## Table of contents
 

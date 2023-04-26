@@ -2,7 +2,7 @@ import { Algodv2, decodeSignedTransaction, Indexer } from 'algosdk'
 import { runWhenIndexerCaughtUp } from './'
 
 /**
- * Allows you to keep track of Algorand transaction IDs by wrapping an @see Algodv2 in a proxy.
+ * Allows you to keep track of Algorand transaction IDs by wrapping an `Algodv2` in a proxy.
  * Useful for automated tests.
  */
 export class TransactionLogger {
@@ -39,14 +39,14 @@ export class TransactionLogger {
 
   /** Return a proxy that wraps the given Algodv2 with this transaction logger.
    *
-   * @param algod The @see Algodv2 to wrap
-   * @returns The wrapped @see Algodv2, any transactions sent using this algod instance will be logged by this transaction logger
+   * @param algod The `Algodv2` to wrap
+   * @returns The wrapped `Algodv2`, any transactions sent using this algod instance will be logged by this transaction logger
    */
   capture(algod: Algodv2): Algodv2 {
     return new Proxy<Algodv2>(algod, new TransactionLoggingAlgodv2ProxyHandler(this))
   }
 
-  /** Wait until all logged transactions IDs appear in the given @see Indexer. */
+  /** Wait until all logged transactions IDs appear in the given `Indexer`. */
   async waitForIndexer(indexer: Indexer) {
     await Promise.all(this._sentTransactionIds.map((txnId) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(txnId).do())))
   }

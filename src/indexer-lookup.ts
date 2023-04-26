@@ -35,7 +35,7 @@ export async function lookupAccountByAddress(accountAddress: string, indexer: In
  * @param indexer An indexer instance
  * @param address The address of the creator to look up
  * @param getAll Whether or not to include deleted applications
- * @param paginationLimit The number of records to return per paginated request, default @see {DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT}
+ * @param paginationLimit The number of records to return per paginated request, default 1000
  * @returns The list of application results
  */
 export async function lookupAccountCreatedApplicationByAddress(
@@ -68,7 +68,7 @@ export async function lookupAccountCreatedApplicationByAddress(
  * Allows transactions to be searched for the given criteria.
  * @param indexer An indexer client
  * @param searchCriteria The criteria to search for
- * @param paginationLimit The number of records to return per paginated request, default @see {DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT}
+ * @param paginationLimit The number of records to return per paginated request, default 1000
  * @returns The search results
  */
 export async function searchTransactions(

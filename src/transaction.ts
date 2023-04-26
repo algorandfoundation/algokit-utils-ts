@@ -61,7 +61,7 @@ const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
 }
 
 /**
- * Returns a @see TransactionSigner for the given transaction sender.
+ * Returns a `TransactionSigner` for the given transaction sender.
  * This function has memoization, so will return the same transaction signer for a given sender.
  * @param sender A transaction sender
  * @returns A transaction signer
@@ -78,7 +78,7 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
  * Signs a single transaction by the given signer.
  * @param transaction The transaction to sign
  * @param signer The signer to sign
- * @returns The signed transaction as a @see Uint8Array
+ * @returns The signed transaction as a `Uint8Array`
  */
 export const signTransaction = async (transaction: Transaction, signer: SendTransactionFrom) => {
   return 'sk' in signer
@@ -137,9 +137,9 @@ export const sendTransaction = async function (
 }
 
 /**
- * Signs and sends transactions that have been collected by an @see AtomicTransactionComposer.
+ * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
  * @param atcSend The parameters controlling the send, including:
- *  * `atc` The @see AtomicTransactionComposer
+ *  * `atc` The `AtomicTransactionComposer`
  *  * `sendParams` The parameters to control the send behaviour
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
@@ -226,8 +226,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 }
 
 /**
- * Performs a dry run of the transactions loaded into the given @see AtomicTransactionComposer
- * @param atc The @see AtomicTransactionComposer with transaction(s) loaded
+ * Performs a dry run of the transactions loaded into the given AtomicTransactionComposer`
+ * @param atc The AtomicTransactionComposer` with transaction(s) loaded
  * @param algod An Algod client
  * @returns The dryrun result
  */
@@ -360,7 +360,7 @@ export function capTransactionFee(transaction: algosdk.Transaction | SuggestedPa
 }
 
 /**
- * Allows for control of fees on a @see Transaction or @see SuggestedParams object
+ * Allows for control of fees on a `Transaction` or `SuggestedParams` object
  * @param transaction The transaction or suggested params
  * @param feeControl The fee control parameters
  */
@@ -392,7 +392,7 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
 }
 
 /**
- * Returns the array of transactions currently present in the given @see AtomicTransactionComposer
+ * Returns the array of transactions currently present in the given `AtomicTransactionComposer`
  * @param atc The atomic transaction composer
  * @returns The array of transactions with signers
  */

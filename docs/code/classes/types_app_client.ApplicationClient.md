@@ -348,11 +348,7 @@ ___
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
-To understand the architecture decisions behind this functionality please
-
-**`See`**
-
-https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
+To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
 
 **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
 
@@ -399,11 +395,7 @@ ___
 ▸ **exposeLogicError**(`e`, `isClear?`): `Error`
 
 Takes an error that may include a logic error from a smart contract call and re-exposes the error to include source code information via the source map.
-This is automatically used within
-
-**`See`**
-
-ApplicationClient but if you pass `skipSending: true` e.g. if doing a group transaction
+This is automatically used within `ApplicationClient` but if you pass `skipSending: true` e.g. if doing a group transaction
  then you can use this in a try/catch block to get better debugging information.
 
 #### Parameters
@@ -540,15 +532,11 @@ ___
 
 Returns the value of the given box for the current app.
 
-**`See`**
-
-BoxName
-
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `name` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or |
+| `name` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or `BoxName` |
 
 #### Returns
 
@@ -568,15 +556,11 @@ ___
 
 Returns the value of the given box for the current app.
 
-**`See`**
-
-BoxName
-
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `name` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or |
+| `name` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or `BoxName` |
 | `type` | `ABIType` | - |
 
 #### Returns

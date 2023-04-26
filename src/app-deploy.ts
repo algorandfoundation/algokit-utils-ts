@@ -24,7 +24,7 @@ import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionRe
 /**
  * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
  *
- * To understand the architecture decisions behind this functionality please @see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
+ * To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
  *
  * **Note:** When using the return from this function be sure to check `operationPerformed` to get access to various return properties like `transaction`, `confirmation` and `deleteResult`.
  *
@@ -399,7 +399,7 @@ export function isSchemaIsBroken(before: ApplicationStateSchema, after: Applicat
 }
 
 /**
- * Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have an @see {AppDeployNote} in the transaction note of the creation transaction.
+ * Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have an `AppDeployNote` in the transaction note of the creation transaction.
  *
  * **Note:** It's recommended this is only called once and then stored since it's a somewhat expensive operation (multiple indexer calls).
  *
@@ -525,8 +525,11 @@ export function getAppDeploymentTransactionNote(metadata: AppDeployMetadata): Ar
 /**
  * Replaces deploy-time deployment control parameters within the given teal code.
  *
- * @see {UPDATABLE_TEMPLATE_NAME}
- * @see {DELETABLE_TEMPLATE_NAME}
+ * * `TMPL_UPDATABLE` for updatability / immutability control
+ * * `TMPL_DELETABLE` for deletability / permanence control
+ *
+ * Note: If these values are not undefined, but the corresponding `TMPL_*` value
+ *  isn't in the teal code it will throw an exception.
  *
  * @param tealCode The TEAL code to substitute
  * @param params The deploy-time deployment control parameter value to replace

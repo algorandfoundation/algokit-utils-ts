@@ -26,11 +26,7 @@ An Algorand automated testing fixture
 
 ▸ (): `Promise`<`void`\>
 
-Testing framework agnostic handler method to run before each test to prepare the
-
-**`See`**
-
-context for that test.
+Testing framework agnostic handler method to run before each test to prepare the `context` for that test.
 
 ##### Returns
 

@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationTransactionResult
 
-Fields for an application transaction
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication
+Fields for an application transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication
 
 ## Hierarchy
 

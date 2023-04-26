@@ -4,11 +4,7 @@
 
 [types/transaction](../modules/types_transaction.md).AtomicTransactionComposerToSend
 
-An
-
-**`See`**
-
-AtomicTransactionComposer with transactions to send.
+An `AtomicTransactionComposer` with transactions to send.
 
 ## Table of contents
 
@@ -23,11 +19,7 @@ AtomicTransactionComposer with transactions to send.
 
 • **atc**: `AtomicTransactionComposer`
 
-The
-
-**`See`**
-
-AtomicTransactionComposer with transactions loaded to send
+The `AtomicTransactionComposer` with transactions loaded to send
 
 #### Defined in
 

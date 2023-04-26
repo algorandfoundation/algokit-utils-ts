@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationParams
 
-Stores the global information associated with an application
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams
+Stores the global information associated with an application https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams
 
 ## Table of contents
 

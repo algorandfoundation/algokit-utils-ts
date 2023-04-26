@@ -22,11 +22,7 @@
 
 Ƭ **EvalDelta**: { `action`: ``1`` ; `bytes`: `string`  } \| { `action`: ``2`` ; `uint`: `number` \| `bigint`  }
 
-Represents a TEAL value delta
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta
+Represents a TEAL value delta https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta
 
 #### Defined in
 
@@ -38,11 +34,7 @@ ___
 
 Ƭ **TealValue**: { `bytes`: `string` ; `type`: ``1``  } \| { `type`: ``2`` ; `uint`: `number` \| `bigint`  }
 
-Represents a TEAL value
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
+Represents a TEAL value https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
 
 #### Defined in
 

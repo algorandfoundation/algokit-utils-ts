@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationLookupResult
 
-Indexer result for an application lookup,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplication-id
+Indexer result for an application lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplication-id
 
 ## Table of contents
 

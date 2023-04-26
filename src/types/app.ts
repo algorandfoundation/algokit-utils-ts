@@ -57,9 +57,9 @@ export interface BoxReference {
 
 /**
  * Something that identifies a box name - either a:
- *  * @see Uint8Array
- *  * @see string (that will be encoded to a Uint8Array)
- *  * @see SendTransactionFrom (encoded into the public key address of the corresponding account)
+ *  * `Uint8Array`
+ *  * `string` (that will be encoded to a Uint8Array)
+ *  * `SendTransactionFrom` (encoded into the public key address of the corresponding account)
  */
 export type BoxIdentifier = string | Uint8Array | SendTransactionFrom
 
@@ -81,7 +81,7 @@ export interface RawAppCallArgs {
   lease?: string | Uint8Array
 }
 
-/** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a @see SendTransactionResult */
+/** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
 export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction | Promise<SendTransactionResult>
 
 /**
@@ -136,7 +136,7 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
   appId: number
-  /** The type of call, everything except create (@see createApp ) and update (@see updateApp ) */
+  /** The type of call, everything except create (`createApp`) and update (`updateApp`) */
   callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'
   /** The account to make the call from */
   from: SendTransactionFrom
@@ -192,7 +192,7 @@ export type ABIReturn =
   | { rawReturnValue: undefined; returnValue: undefined; decodeError: Error }
 
 /**
- * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with @see {APP_DEPLOY_NOTE_PREFIX}.
+ * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.
  */
 export interface AppDeployMetadata {
   /** The unique name identifier of the app within the creator account */
@@ -313,7 +313,7 @@ export interface BoxName {
 export interface BoxValueRequestParams {
   /** The ID of the app return box names for */
   appId: number
-  /** The name of the box to return either as a string, binary array or @see BoxName */
+  /** The name of the box to return either as a string, binary array or `BoxName` */
   boxName: string | Uint8Array | BoxName
   /** The ABI type to decode the value using */
   type: ABIType
@@ -325,7 +325,7 @@ export interface BoxValueRequestParams {
 export interface BoxValuesRequestParams {
   /** The ID of the app return box names for */
   appId: number
-  /** The names of the boxes to return either as a string, binary array or @see BoxName */
+  /** The names of the boxes to return either as a string, binary array or BoxName` */
   boxNames: (string | Uint8Array | BoxName)[]
   /** The ABI type to decode the value using */
   type: ABIType

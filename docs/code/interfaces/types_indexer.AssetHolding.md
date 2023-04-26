@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetHolding
 
-Describes an asset held by an account.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#assetholding
+Describes an asset held by an account. https://developer.algorand.org/docs/rest-apis/indexer/#assetholding
 
 ## Table of contents
 

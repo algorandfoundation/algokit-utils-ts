@@ -100,11 +100,7 @@ The AlgoKit config. To update it use the configure method.
 
 ▸ **algos**(`algos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-Returns an amount of Algos using
-
-**`See`**
-
-AlgoAmount
+Returns an amount of Algos using AlgoAmount
 
 #### Parameters
 
@@ -201,12 +197,7 @@ ___
 
 ▸ **controlFees**<`T`\>(`transaction`, `feeControl`): `T`
 
-Allows for control of fees on a
-
-**`See`**
-
- - Transaction or
- - SuggestedParams object
+Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Type parameters
 
@@ -289,11 +280,7 @@ ___
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
-To understand the architecture decisions behind this functionality please
-
-**`See`**
-
-https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
+To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
 
 **Note:** When using the return from this function be sure to check `operationPerformed` to get access to various return properties like `transaction`, `confirmation` and `deleteResult`.
 
@@ -357,8 +344,6 @@ ___
 ▸ **ensureFunded**(`funding`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
 
 Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
-
-**`See`**
 
 https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
@@ -484,11 +469,6 @@ const account = await getAccount('ACCOUNT', algod)
 ```
 
 If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
-
-**`See`**
-
- - 
- - 
 
 #### Parameters
 
@@ -751,11 +731,7 @@ ___
 
 ▸ **getAppArgsForABICall**(`args`, `from`): `Promise`<{ `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` = undefined; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
-Returns the app args ready to load onto an ABI method call in
-
-**`See`**
-
-AtomicTransactionComposer
+Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
 
 #### Parameters
 
@@ -780,11 +756,7 @@ ___
 
 ▸ **getAppArgsForTransaction**(`args?`): `undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
 
-Returns the app args ready to load onto an app
-
-**`See`**
-
-object
+Returns the app args ready to load onto an app `Transaction` object
 
 #### Parameters
 
@@ -835,16 +807,12 @@ ___
 
 Returns the value of the given box name for the given app.
 
-**`See`**
-
-BoxName
-
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appId` | `number` | The ID of the app return box names for |
-| `boxName` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or |
+| `boxName` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or `BoxName` |
 | `algod` | `default` | An algod client instance |
 
 #### Returns
@@ -890,16 +858,12 @@ ___
 
 Returns the value of the given box names for the given app.
 
-**`See`**
-
-BoxName
-
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appId` | `number` | The ID of the app return box names for |
-| `boxNames` | (`string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md))[] | The names of the boxes to return either as a string, binary array or |
+| `boxNames` | (`string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md))[] | The names of the boxes to return either as a string, binary array or `BoxName` |
 | `algod` | `default` | An algod client instance |
 
 #### Returns
@@ -1118,11 +1082,7 @@ ___
 
 ▸ **getAtomicTransactionComposerTransactions**(`atc`): `TransactionWithSigner`[]
 
-Returns the array of transactions currently present in the given
-
-**`See`**
-
-AtomicTransactionComposer
+Returns the array of transactions currently present in the given `AtomicTransactionComposer`
 
 #### Parameters
 
@@ -1146,14 +1106,7 @@ ___
 
 ▸ **getBoxReference**(`box`): `algosdk.BoxReference`
 
-Returns a
-
-**`See`**
-
- - algosdk.BoxReference given a
- - BoxIdentifier or
- - BoxReference.
- - Transaction
+Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
 
 #### Parameters
 
@@ -1165,7 +1118,7 @@ Returns a
 
 `algosdk.BoxReference`
 
-The box reference ready to pass into a
+The box reference ready to pass into a `Transaction`
 
 #### Defined in
 
@@ -1177,11 +1130,7 @@ ___
 
 ▸ **getCreatorAppsByName**(`creatorAccount`, `indexer`): `Promise`<[`AppLookup`](../interfaces/types_app.AppLookup.md)\>
 
-Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have an
-
-**`See`**
-
-in the transaction note of the creation transaction.
+Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have an `AppDeployNote` in the transaction note of the creation transaction.
 
 **Note:** It's recommended this is only called once and then stored since it's a somewhat expensive operation (multiple indexer calls).
 
@@ -1235,11 +1184,6 @@ Returns an account (with private key loaded) that can act as a dispenser
 If running on LocalNet then it will return the default dispenser account automatically,
  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC
 
-**`See`**
-
- - 
- - 
-
 #### Parameters
 
 | Name | Type | Description |
@@ -1279,8 +1223,6 @@ ___
 
 Returns an Algorand account with private key loaded from the given KMD wallet (identified by name).
 
-**`See`**
-
 **`Example`**
 
 Get default funded account in a LocalNet
@@ -1318,8 +1260,6 @@ ___
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts)
 
-**`See`**
-
 #### Parameters
 
 | Name | Type | Description |
@@ -1347,13 +1287,7 @@ This is useful to get idempotent accounts from LocalNet without having to specif
 
 This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh LocalNet.
 
-If this is used via
-
-**`See`**
-
- - , then you can even use the same code that runs on production without changes for local development!
- - 
- - 
+If this is used via `getAccount`, then you can even use the same code that runs on production without changes for local development!
 
 #### Parameters
 
@@ -1405,11 +1339,7 @@ ___
 
 ▸ **getSenderTransactionSigner**(`val`): `TransactionSigner`
 
-Returns a
-
-**`See`**
-
-TransactionSigner for the given transaction sender.
+Returns a `TransactionSigner` for the given transaction sender.
 This function has memoization, so will return the same transaction signer for a given sender.
 
 #### Parameters
@@ -1535,8 +1465,6 @@ ___
 
 Looks up applications that were created by the given address.
 
-**`See`**
-
 #### Parameters
 
 | Name | Type | Default value | Description |
@@ -1544,7 +1472,7 @@ Looks up applications that were created by the given address.
 | `indexer` | `default` | `undefined` | An indexer instance |
 | `address` | `string` | `undefined` | The address of the creator to look up |
 | `getAll` | `undefined` \| `boolean` | `undefined` | Whether or not to include deleted applications |
-| `paginationLimit?` | `number` | `undefined` | The number of records to return per paginated request, default |
+| `paginationLimit?` | `number` | `undefined` | The number of records to return per paginated request, default 1000 |
 
 #### Returns
 
@@ -1587,11 +1515,7 @@ ___
 
 ▸ **microAlgos**(`microAlgos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-Returns an amount of µAlgos using
-
-**`See`**
-
-AlgoAmount
+Returns an amount of µAlgos using AlgoAmount
 
 #### Parameters
 
@@ -1662,18 +1586,14 @@ ___
 
 ▸ **performAtomicTransactionComposerDryrun**(`atc`, `algod`): `Promise`<`DryrunResult`\>
 
-Performs a dry run of the transactions loaded into the given
-
-**`See`**
-
- - AtomicTransactionComposer
- - AtomicTransactionComposer with transaction(s) loaded
+Performs a dry run of the transactions loaded into the given AtomicTransactionComposer`
+@param atc The AtomicTransactionComposer` with transaction(s) loaded
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `atc` | `AtomicTransactionComposer` | The |
+| `atc` | `AtomicTransactionComposer` | - |
 | `algod` | `default` | An Algod client |
 
 #### Returns
@@ -1711,7 +1631,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/app-deploy.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L566)
+[src/app-deploy.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L569)
 
 ___
 
@@ -1740,7 +1660,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/app-deploy.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L596)
+[src/app-deploy.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L599)
 
 ___
 
@@ -1768,10 +1688,6 @@ ___
 
 Returns an account wrapper that supports a rekeyed account.
 
-**`See`**
-
-SigningAccount wrapper
-
 #### Parameters
 
 | Name | Type | Description |
@@ -1783,7 +1699,7 @@ SigningAccount wrapper
 
 [`SigningAccount`](../classes/types_account.SigningAccount.md)
 
-The
+The SigningAccount wrapper
 
 #### Defined in
 
@@ -1797,10 +1713,11 @@ ___
 
 Replaces deploy-time deployment control parameters within the given teal code.
 
-**`See`**
+* `TMPL_UPDATABLE` for updatability / immutability control
+* `TMPL_DELETABLE` for deletability / permanence control
 
- - 
- - 
+Note: If these values are not undefined, but the corresponding `TMPL_*` value
+ isn't in the teal code it will throw an exception.
 
 #### Parameters
 
@@ -1819,7 +1736,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/app-deploy.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L535)
+[src/app-deploy.ts:538](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L538)
 
 ___
 
@@ -1829,15 +1746,13 @@ ___
 
 Allows transactions to be searched for the given criteria.
 
-**`See`**
-
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `indexer` | `default` | An indexer client |
 | `searchCriteria` | (`s`: `default`) => `default` | The criteria to search for |
-| `paginationLimit?` | `number` | The number of records to return per paginated request, default |
+| `paginationLimit?` | `number` | The number of records to return per paginated request, default 1000 |
 
 #### Returns
 
@@ -1855,19 +1770,13 @@ ___
 
 ▸ **sendAtomicTransactionComposer**(`atcSend`, `algod`): `Promise`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
 
-Signs and sends transactions that have been collected by an
-
-**`See`**
-
- - AtomicTransactionComposer.
- - AtomicTransactionComposer
- * `sendParams` The parameters to control the send behaviour
+Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The |
+| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The `AtomicTransactionComposer` * `sendParams` The parameters to control the send behaviour |
 | `algod` | `default` | An algod client |
 
 #### Returns
@@ -1941,10 +1850,6 @@ ___
 
 Signs a single transaction by the given signer.
 
-**`See`**
-
-Uint8Array
-
 #### Parameters
 
 | Name | Type | Description |
@@ -1956,7 +1861,7 @@ Uint8Array
 
 `Promise`<`Uint8Array`\>
 
-The signed transaction as a
+The signed transaction as a `Uint8Array`
 
 #### Defined in
 
@@ -1968,11 +1873,7 @@ ___
 
 ▸ **transactionFees**(`numberOfTransactions`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-Returns an amount of µAlgos to cover standard fees for the given number of transactions using
-
-**`See`**
-
-AlgoAmount
+Returns an amount of µAlgos to cover standard fees for the given number of transactions using AlgoAmount
 
 #### Parameters
 
@@ -1996,10 +1897,6 @@ ___
 
 Returns an account wrapper that supports a transaction signer with associated sender address.
 
-**`See`**
-
-SigningAccount wrapper
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2011,7 +1908,7 @@ SigningAccount wrapper
 
 [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)
 
-The
+The SigningAccount wrapper
 
 #### Defined in
 

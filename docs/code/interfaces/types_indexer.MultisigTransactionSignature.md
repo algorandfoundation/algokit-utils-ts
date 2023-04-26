@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).MultisigTransactionSignature
 
-[msig] structure holding multiple subsignatures.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisig
+[msig] structure holding multiple subsignatures. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisig
 
 ## Table of contents
 

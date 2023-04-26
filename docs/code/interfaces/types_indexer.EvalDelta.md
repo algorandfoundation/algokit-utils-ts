@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).EvalDelta
 
-Represents a TEAL value delta.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta
+Represents a TEAL value delta. https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta
 
 ## Table of contents
 

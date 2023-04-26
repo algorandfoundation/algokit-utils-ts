@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).TransactionResult
 
-Indexer result for a transaction,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transaction
+Indexer result for a transaction, https://developer.algorand.org/docs/rest-apis/indexer/#transaction
 
 ## Hierarchy
 
@@ -60,11 +56,7 @@ https://developer.algorand.org/docs/rest-apis/indexer/#transaction
 
 • `Optional` **application-transaction**: [`ApplicationTransactionResult`](types_indexer.ApplicationTransactionResult.md)
 
-If the transaction is an `appl` transaction this will be populated
-
-**`See`**
-
-tx-type
+If the transaction is an `appl` transaction this will be populated see `tx-type`
 
 #### Defined in
 
@@ -76,11 +68,7 @@ ___
 
 • **asset-config-transaction**: [`AssetConfigTransactionResult`](types_indexer.AssetConfigTransactionResult.md)
 
-If the transaction is an `acfg` transaction this will be populated
-
-**`See`**
-
-tx-type
+If the transaction is an `acfg` transaction this will be populated see `tx-type`
 
 #### Defined in
 
@@ -92,11 +80,7 @@ ___
 
 • `Optional` **asset-freeze-transaction**: [`AssetFreezeTransactionResult`](types_indexer.AssetFreezeTransactionResult.md)
 
-If the transaction is an `afrz` transaction this will be populated
-
-**`See`**
-
-tx-type
+If the transaction is an `afrz` transaction this will be populated see `tx-type`
 
 #### Defined in
 
@@ -108,11 +92,7 @@ ___
 
 • `Optional` **asset-transfer-transaction**: [`AssetTransferTransactionResult`](types_indexer.AssetTransferTransactionResult.md)
 
-If the transaction is an `axfer` transaction this will be populated
-
-**`See`**
-
-tx-type
+If the transaction is an `axfer` transaction this will be populated see `tx-type`
 
 #### Defined in
 
@@ -314,11 +294,7 @@ ___
 
 • `Optional` **keyreg-transaction**: [`KeyRegistrationTransactionResult`](types_indexer.KeyRegistrationTransactionResult.md)
 
-If the transaction is a `keyreg` transaction this will be populated
-
-**`See`**
-
-tx-type
+If the transaction is a `keyreg` transaction this will be populated see `tx-type`
 
 #### Defined in
 
@@ -399,11 +375,7 @@ ___
 
 • `Optional` **payment-transaction**: [`PaymentTransactionResult`](types_indexer.PaymentTransactionResult.md)
 
-If the transaction is a `pay` transaction this will be populated
-
-**`See`**
-
-tx-type
+If the transaction is a `pay` transaction this will be populated see `tx-type`
 
 #### Defined in
 

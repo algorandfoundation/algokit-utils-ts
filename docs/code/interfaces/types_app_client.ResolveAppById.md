@@ -31,11 +31,7 @@ ___
 
 • `Optional` **name**: `string`
 
-The optional name to use to mark the app when deploying
-
-**`See`**
-
-ApplicationClient.deploy (default: uses the name in the ABI contract)
+The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract)
 
 #### Defined in
 

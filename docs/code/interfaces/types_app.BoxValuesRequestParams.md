@@ -32,11 +32,7 @@ ___
 
 • **boxNames**: (`string` \| `Uint8Array` \| [`BoxName`](types_app.BoxName.md))[]
 
-The names of the boxes to return either as a string, binary array or
-
-**`See`**
-
-BoxName
+The names of the boxes to return either as a string, binary array or BoxName`
 
 #### Defined in
 

@@ -428,7 +428,7 @@ export async function getAppBoxNames(appId: number, algod: Algodv2): Promise<Box
 /**
  * Returns the value of the given box name for the given app.
  * @param appId The ID of the app return box names for
- * @param boxName The name of the box to return either as a string, binary array or @see BoxName
+ * @param boxName The name of the box to return either as a string, binary array or `BoxName`
  * @param algod An algod client instance
  * @returns The current box value as a byte array
  */
@@ -441,7 +441,7 @@ export async function getAppBoxValue(appId: number, boxName: string | Uint8Array
 /**
  * Returns the value of the given box names for the given app.
  * @param appId The ID of the app return box names for
- * @param boxNames The names of the boxes to return either as a string, binary array or @see BoxName
+ * @param boxNames The names of the boxes to return either as a string, binary array or `BoxName`
  * @param algod An algod client instance
  * @returns The current box values as a byte array in the same order as the passed in box names
  */
@@ -521,7 +521,7 @@ export function decodeAppState(state: { key: string; value: TealValue | EvalDelt
 }
 
 /**
- * Returns the app args ready to load onto an app @see {Transaction} object
+ * Returns the app args ready to load onto an app `Transaction` object
  * @param args The app call args
  * @returns The args ready to load into a `Transaction`
  */
@@ -540,7 +540,7 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
 }
 
 /**
- * Returns the app args ready to load onto an ABI method call in @see AtomicTransactionComposer
+ * Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
  * @param args The ABI app call args
  * @param from The transaction signer
  * @returns The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
@@ -577,9 +577,9 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
 }
 
 /**
- * Returns a @see algosdk.BoxReference given a @see BoxIdentifier or @see BoxReference.
+ * Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
  * @param box The box to return a reference for
- * @returns The box reference ready to pass into a @see Transaction
+ * @returns The box reference ready to pass into a `Transaction`
  */
 export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxReference): algosdk.BoxReference {
   const encoder = new TextEncoder()

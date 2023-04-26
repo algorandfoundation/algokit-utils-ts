@@ -25,11 +25,7 @@ Test automation context.
 
 • **algod**: `default`
 
-Algod client instance that will log transactions in
-
-**`See`**
-
-transactionLogger
+Algod client instance that will log transactions in `transactionLogger`
 
 #### Defined in
 
@@ -103,11 +99,7 @@ ___
 
 • **transactionLogger**: [`TransactionLogger`](../classes/testing.TransactionLogger.md)
 
-Transaction logger that will log transaction IDs for all transactions issued by
-
-**`See`**
-
-algod
+Transaction logger that will log transaction IDs for all transactions issued by `algod`
 
 #### Defined in
 
@@ -123,11 +115,7 @@ ___
 
 ▸ (): `Promise`<`void`\>
 
-Wait for the indexer to catch up with all transactions logged by
-
-**`See`**
-
-transactionLogger
+Wait for the indexer to catch up with all transactions logged by `transactionLogger`
 
 ##### Returns
 

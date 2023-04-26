@@ -33,7 +33,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
 /**
  * Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
  *
- * @see https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+ * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
  *
  * @param funding The funding configuration
  * @param algod An algod client

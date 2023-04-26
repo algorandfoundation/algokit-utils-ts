@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).MultisigTransactionSubSignature
 
-Sub-signature for a multisig signature
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisigsubsignature
+Sub-signature for a multisig signature https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisigsubsignature
 
 ## Table of contents
 

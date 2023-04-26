@@ -6,10 +6,9 @@
 
 [lsig] Programatic transaction signature.
 
-**`See`**
+https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturelogicsig
 
- - https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturelogicsig
- - https://developer.algorand.org/docs/get-details/transactions/signatures/#logic-signatures
+https://developer.algorand.org/docs/get-details/transactions/signatures/#logic-signatures
 
 ## Table of contents
 
@@ -54,11 +53,7 @@ ___
 
 • `Optional` **multisig-signature**: [`MultisigTransactionSignature`](types_indexer.MultisigTransactionSignature.md)
 
-The signature of the multisig the logic signature delegating the logicsig.
-
-**`See`**
-
-https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
+The signature of the multisig the logic signature delegating the logicsig. https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
 
 #### Defined in
 
@@ -70,11 +65,7 @@ ___
 
 • `Optional` **signature**: `string`
 
-[sig] Standard ed25519 signature delegating the logicsig.
-
-**`See`**
-
-https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
+[sig] Standard ed25519 signature delegating the logicsig. https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
 
 *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
 

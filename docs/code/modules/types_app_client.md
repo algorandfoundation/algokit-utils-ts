@@ -92,11 +92,7 @@ ___
 
 Ƭ **ResolveAppByCreatorAndName**: { `creatorAddress`: `string` ; `name?`: `string`  } & { `indexer`: `Indexer`  } \| { `existingDeployments`: [`AppLookup`](../interfaces/types_app.AppLookup.md)  }
 
-Configuration to resolve app by creator and name
-
-**`See`**
-
-getCreatorAppsByName
+Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 #### Defined in
 

@@ -4,11 +4,7 @@
 
 [types/transfer](../modules/types_transfer.md).AlgoTransferParams
 
-Parameters for
-
-**`See`**
-
-transferAlgos call.
+Parameters for `transferAlgos` call.
 
 ## Hierarchy
 
@@ -51,11 +47,7 @@ ___
 
 • `Optional` **atc**: `AtomicTransactionComposer`
 
-An optional
-
-**`See`**
-
-AtomicTransactionComposer to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
 
 #### Inherited from
 

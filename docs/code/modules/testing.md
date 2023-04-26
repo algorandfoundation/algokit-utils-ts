@@ -96,12 +96,8 @@ ___
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
-
-**`See`**
-
- - DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
+DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
 Note: By default this will log the mnemonic of the account.
- - 
 
 #### Parameters
 

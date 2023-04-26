@@ -4,11 +4,7 @@
 
 [types/testing](../modules/types_testing.md).GetTestAccountParams
 
-Parameters for the
-
-**`See`**
-
-getTestAccount function.
+Parameters for the `getTestAccount` function.
 
 ## Table of contents
 

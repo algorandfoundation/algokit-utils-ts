@@ -4,11 +4,7 @@
 
 [types/algod](../modules/types_algod.md).ApplicationParams
 
-Stores the global information associated with an application
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationparams
+Stores the global information associated with an application https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationparams
 
 ## Table of contents
 

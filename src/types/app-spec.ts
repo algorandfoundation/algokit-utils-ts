@@ -1,13 +1,13 @@
 import { ABIContractParams } from 'algosdk'
 import { getABIMethodSignature } from '../app'
 
-/** An ARC-0032 Application Specification @see https://github.com/algorandfoundation/ARCs/pull/150 */
+/** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
 export interface AppSpec {
   /** Method call hints */
   hints: HintSpec
   /** The TEAL source */
   source: AppSources
-  /** The ABI-0004 contract definition @see https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md */
+  /** The ABI-0004 contract definition see https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md */
   contract: ABIContractParams
   /** The values that make up the local and global state */
   schema: SchemaSpec

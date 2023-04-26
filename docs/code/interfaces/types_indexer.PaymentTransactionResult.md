@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).PaymentTransactionResult
 
-Fields for a payment transaction
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionpayment
+Fields for a payment transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionpayment
 
 ## Table of contents
 

@@ -104,7 +104,7 @@ export class SigningAccount implements Account {
   }
 }
 
-/** A wrapper around @see {TransactionSigner} that also has the sender address. */
+/** A wrapper around `TransactionSigner` that also has the sender address. */
 export interface TransactionSignerAccount {
   addr: Readonly<string>
   signer: TransactionSigner

@@ -34,11 +34,7 @@ The sending configuration for a transaction
 
 • `Optional` **atc**: `AtomicTransactionComposer`
 
-An optional
-
-**`See`**
-
-AtomicTransactionComposer to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
 
 #### Defined in
 

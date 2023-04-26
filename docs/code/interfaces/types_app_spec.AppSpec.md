@@ -4,11 +4,7 @@
 
 [types/app-spec](../modules/types_app_spec.md).AppSpec
 
-An ARC-0032 Application Specification
-
-**`See`**
-
-https://github.com/algorandfoundation/ARCs/pull/150
+An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150
 
 ## Table of contents
 
@@ -50,11 +46,7 @@ ___
 
 • **contract**: `ABIContractParams`
 
-The ABI-0004 contract definition
-
-**`See`**
-
-https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md
+The ABI-0004 contract definition see https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md
 
 #### Defined in
 

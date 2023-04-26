@@ -46,7 +46,7 @@ import { AppSpec } from './app-spec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
-/** Configuration to resolve app by creator and name @see getCreatorAppsByName */
+/** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndName = {
   /** The address of the app creator account to resolve the app by */
   creatorAddress: string
@@ -58,7 +58,7 @@ export type ResolveAppByCreatorAndName = {
       indexer: Indexer
     }
   | {
-      /** Optional cached value of the existing apps for the given creator, @see getCreatorAppsByName */
+      /** Optional cached value of the existing apps for the given creator, `getCreatorAppsByName` */
       existingDeployments: AppLookup
     }
 )
@@ -67,14 +67,14 @@ export type ResolveAppByCreatorAndName = {
 export interface ResolveAppById {
   /** The id of an existing app to call using this client, or 0 if the app hasn't been created yet */
   id: number
-  /** The optional name to use to mark the app when deploying @see ApplicationClient.deploy (default: uses the name in the ABI contract) */
+  /** The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract) */
   name?: string
 }
 
 /** The details of an ARC-0032 app spec specified app */
 export type AppSpecAppDetails = {
   /** The ARC-0032 application spec as either:
-   *  * Parsed JSON @see {AppSpec}
+   *  * Parsed JSON `AppSpec`
    *  * Raw JSON string
    */
   app: AppSpec | string
@@ -289,7 +289,7 @@ export class ApplicationClient {
   /**
    * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
    *
-   * To understand the architecture decisions behind this functionality please @see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
+   * To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
    *
    * **Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
    *
@@ -602,7 +602,7 @@ export class ApplicationClient {
 
   /**
    * Returns the value of the given box for the current app.
-   * @param name The name of the box to return either as a string, binary array or @see BoxName
+   * @param name The name of the box to return either as a string, binary array or `BoxName`
    * @returns The current box value as a byte array
    */
   async getBoxValue(name: BoxName | string | Uint8Array): Promise<Uint8Array> {
@@ -617,7 +617,7 @@ export class ApplicationClient {
 
   /**
    * Returns the value of the given box for the current app.
-   * @param name The name of the box to return either as a string, binary array or @see BoxName
+   * @param name The name of the box to return either as a string, binary array or `BoxName`
    * @returns The current box value as a byte array
    */
   async getBoxValueFromABIType(name: BoxName | string | Uint8Array, type: ABIType): Promise<ABIValue> {
@@ -773,7 +773,7 @@ export class ApplicationClient {
 
   /**
    * Takes an error that may include a logic error from a smart contract call and re-exposes the error to include source code information via the source map.
-   * This is automatically used within @see ApplicationClient but if you pass `skipSending: true` e.g. if doing a group transaction
+   * This is automatically used within `ApplicationClient` but if you pass `skipSending: true` e.g. if doing a group transaction
    *  then you can use this in a try/catch block to get better debugging information.
    * @param e The error to parse
    * @param isClear Whether or not the code was running the clear state program

@@ -124,11 +124,7 @@ ___
 
 ▸ `Static` **Algos**(`amount`): [`AlgoAmount`](types_amount.AlgoAmount.md)
 
-Create a
-
-**`See`**
-
-object representing the given number of Algos
+Create a `AlgoAmount` object representing the given number of Algos
 
 #### Parameters
 
@@ -150,11 +146,7 @@ ___
 
 ▸ `Static` **MicroAlgos**(`amount`): [`AlgoAmount`](types_amount.AlgoAmount.md)
 
-Create a
-
-**`See`**
-
-object representing the given number of µAlgos
+Create a `AlgoAmount` object representing the given number of µAlgos
 
 #### Parameters
 
