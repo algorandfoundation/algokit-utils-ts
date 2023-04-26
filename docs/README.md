@@ -14,7 +14,7 @@ This library is designed with the following principles:
 
 - **Modularity** - This library is a thin wrapper of modular building blocks over the Algorand SDK; the primitives from the underlying Algorand SDK are exposed and used wherever possible so you can opt-in to which parts of this library you want to use without having to use an all or nothing approach.
 - **Type-safety** - This library provides strong TypeScript support with effort put into creating types that provide good type safety and intellisense.
-- **Productive** - This library is built for productivity; it has a number of mechanisms to make common code easier and terser to write
+- **Productivity** - This library is built to make solution developers highly productive; it has a number of mechanisms to make common code easier and terser to write
 
 # Installation
 
@@ -75,7 +75,7 @@ The library helps you with the following capabilities:
   - [**ARC-0032 Application Spec client**](capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
   - [**Algo transfers**](capabilities/transfer.md) - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
   - [**Automated testing**](capabilities/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
-  - **Indexer lookups / searching** - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
+  - [**Indexer lookups / searching**](capabilities/indexer.md) - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
 
 # Reference documentation
 

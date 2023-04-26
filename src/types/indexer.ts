@@ -466,11 +466,11 @@ export interface ApplicationParams {
   'clear-state-program': string
   /** [epp] the amount of extra program pages available to this app. */
   'extra-program-pages'?: number
-  /** [\gs] global schema */
+  /** [gs] global schema */
   'global-state': TealKeyValue[]
-  /** [\gsch] global schema */
+  /** [gsch] global schema */
   'global-state-schema'?: StateSchema
-  /** [\lsch] local schema */
+  /** [lsch] local schema */
   'local-state-schema'?: StateSchema
 }
 

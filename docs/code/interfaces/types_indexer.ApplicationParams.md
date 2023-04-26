@@ -88,7 +88,7 @@ ___
 
 • **global-state**: `TealKeyValue`[]
 
-[\gs] global schema
+[gs] global schema
 
 #### Defined in
 
@@ -100,7 +100,7 @@ ___
 
 • `Optional` **global-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\gsch] global schema
+[gsch] global schema
 
 #### Defined in
 
@@ -112,7 +112,7 @@ ___
 
 • `Optional` **local-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\lsch] local schema
+[lsch] local schema
 
 #### Defined in
 

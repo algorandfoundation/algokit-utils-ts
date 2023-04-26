@@ -158,7 +158,7 @@ ___
 
 • `Optional` **global-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\gsch] global schema
+[gsch] global schema
 
 #### Inherited from
 
@@ -174,7 +174,7 @@ ___
 
 • `Optional` **local-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\lsch] local schema
+[lsch] local schema
 
 #### Inherited from
 

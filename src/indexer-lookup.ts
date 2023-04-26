@@ -77,7 +77,7 @@ export async function searchTransactions(
   paginationLimit?: number,
 ): Promise<TransactionSearchResults> {
   let currentRound = 0
-  const txns = await executePaginatedRequest(
+  const transactions = await executePaginatedRequest(
     (response: TransactionSearchResults | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
@@ -99,7 +99,7 @@ export async function searchTransactions(
   return {
     'current-round': currentRound,
     'next-token': '',
-    transactions: txns,
+    transactions: transactions,
   }
 }
 
