@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AppLocalState
 
-Stores local state associated with an application.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#applicationlocalstate
+Stores local state associated with an application. https://developer.algorand.org/docs/rest-apis/indexer/#applicationlocalstate
 
 ## Table of contents
 

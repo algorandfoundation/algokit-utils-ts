@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).KeyRegistrationTransactionResult
 
-Fields for a `keyreg` transaction
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionkeyreg
+Fields for a `keyreg` transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionkeyreg
 
 ## Table of contents
 

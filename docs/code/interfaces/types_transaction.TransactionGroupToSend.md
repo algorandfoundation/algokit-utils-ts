@@ -5,9 +5,6 @@
 [types/transaction](../modules/types_transaction.md).TransactionGroupToSend
 
 A group of transactions to send together as an atomic group
-
-**`See`**
-
 https://developer.algorand.org/docs/get-details/atomic_transfers/
 
 ## Table of contents
@@ -28,7 +25,7 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L80)
+[src/types/transaction.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L109)
 
 ___
 
@@ -40,7 +37,7 @@ Optional signer to pass in, required if at least one transaction provided is jus
 
 #### Defined in
 
-[src/types/transaction.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L87)
+[src/types/transaction.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L116)
 
 ___
 
@@ -49,13 +46,9 @@ ___
 • **transactions**: (`Transaction` \| [`TransactionToSign`](types_transaction.TransactionToSign.md) \| `Promise`<[`SendTransactionResult`](types_transaction.SendTransactionResult.md)\>)[]
 
 The list of transactions to send, which can either be a raw transaction (in which case `signer` is required),
-  the async result of an AlgoKit utils method that returns a
-
-**`See`**
-
-SendTransactionResult (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is also required)
+  the async result of an AlgoKit utils method that returns a `SendTransactionResult` (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is also required)
   or the transaction with its signer (`signer` is ignored)
 
 #### Defined in
 
-[src/types/transaction.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L85)
+[src/types/transaction.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L114)

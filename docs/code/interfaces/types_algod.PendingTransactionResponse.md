@@ -4,11 +4,7 @@
 
 [types/algod](../modules/types_algod.md).PendingTransactionResponse
 
-The response from the pending transaction API
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid
+The response from the pending transaction API https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid
 
 ## Table of contents
 

@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetTransferTransactionResult
 
-Fields for an asset transfer transaction.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer
+Fields for an asset transfer transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer
 
 ## Table of contents
 

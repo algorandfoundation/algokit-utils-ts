@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationCreatedLookupResult
 
-Indexer result for an account's created applications,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-applications
+Indexer result for an account's created applications, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-applications
 
 ## Table of contents
 

@@ -15,7 +15,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
-    to: to,
+    to: typeof to === 'string' ? to : getSenderAddress(to),
     amount: amount.microAlgos,
     note: encodeTransactionNote(note),
     suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -33,7 +33,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
 /**
  * Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
  *
- * @see https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+ * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
  *
  * @param funding The funding configuration
  * @param algod An algod client
@@ -47,11 +47,11 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2):
   const accountInfo = await algod.accountInformation(addressToFund).do()
   const balance = Number(accountInfo.amount)
   const minimumBalanceRequirement = microAlgos(Number(accountInfo['min-balance']))
-  const currentSpendingBalance = microAlgos(balance - +minimumBalanceRequirement)
+  const currentSpendingBalance = microAlgos(balance - minimumBalanceRequirement.microAlgos)
 
   if (minSpendingBalance > currentSpendingBalance) {
-    const minFundAmount = microAlgos(+minSpendingBalance - +currentSpendingBalance)
-    const fundAmount = microAlgos(Math.max(+minFundAmount, minFundingIncrement?.microAlgos ?? 0))
+    const minFundAmount = microAlgos(minSpendingBalance.microAlgos - currentSpendingBalance.microAlgos)
+    const fundAmount = microAlgos(Math.max(minFundAmount.microAlgos, minFundingIncrement?.microAlgos ?? 0))
     Config.getLogger(sendParams.suppressLog).info(
       `Funding ${addressToFund} ${fundAmount} from ${getSenderAddress(
         fundingSource,

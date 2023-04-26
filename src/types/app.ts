@@ -1,6 +1,22 @@
-import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, SourceMap, SuggestedParams, Transaction } from 'algosdk'
-import { PendingTransactionResponse } from './algod'
-import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote, TransactionToSign } from './transaction'
+import algosdk, {
+  ABIArgument,
+  ABIMethod,
+  ABIMethodParams,
+  ABIType,
+  ABIValue,
+  Address,
+  SourceMap,
+  SuggestedParams,
+  Transaction,
+} from 'algosdk'
+import {
+  SendTransactionFrom,
+  SendTransactionParams,
+  SendTransactionResult,
+  SendTransactionResults,
+  TransactionNote,
+  TransactionToSign,
+} from './transaction'
 
 /** The name of the TEAL template variable for deploy-time immutability control */
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
@@ -41,9 +57,9 @@ export interface BoxReference {
 
 /**
  * Something that identifies a box name - either a:
- *  * @see Uint8Array
- *  * @see string (that will be encoded to a Uint8Array)
- *  * @see SendTransactionFrom (encoded into the public key address of the corresponding account)
+ *  * `Uint8Array`
+ *  * `string` (that will be encoded to a Uint8Array)
+ *  * `SendTransactionFrom` (encoded into the public key address of the corresponding account)
  */
 export type BoxIdentifier = string | Uint8Array | SendTransactionFrom
 
@@ -56,7 +72,7 @@ export interface RawAppCallArgs {
   /** Any application arguments to pass through */
   appArgs?: (Uint8Array | string)[]
   /** Any box references to load */
-  boxes?: (BoxReference | BoxIdentifier)[]
+  boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
   /** IDs of any apps to load into the foreignApps array */
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
@@ -65,24 +81,21 @@ export interface RawAppCallArgs {
   lease?: string | Uint8Array
 }
 
-/** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a @see SendTransactionResult */
+/** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
 export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction | Promise<SendTransactionResult>
 
 /**
  * App call args for an ABI call
  */
 export interface ABIAppCallArgs {
-  /** The ABI method to call, either:
-   *  * `method_name` e.g. `hello`; or
-   *  * `method_signature` e.g. `hello(string)string`
-   **/
+  /** The ABI method to call */
   method: ABIMethodParams | ABIMethod
   /** The ABI args to pass in */
   args: ABIAppCallArg[]
   /** The optional lease for the transaction */
   lease?: string | Uint8Array
   /** Any box references to load either as the box name (if for the current app) or the reference with app id */
-  boxes?: (BoxReference | BoxIdentifier)[]
+  boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
 }
 
 /** Arguments to pass to an app call either:
@@ -93,7 +106,7 @@ export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
 /** Base interface for common data passed to an app create or update. */
 interface CreateOrUpdateAppParams extends SendTransactionParams {
-  /** The account (with private key loaded) that will send the µALGOs */
+  /** The account (with private key loaded) that will send the transaction */
   from: SendTransactionFrom
   /** The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
   approvalProgram: Uint8Array | string
@@ -123,7 +136,7 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
   appId: number
-  /** The type of call, everything except create (@see createApp ) and update (@see updateApp ) */
+  /** The type of call, everything except create (`createApp`) and update (`updateApp`) */
   callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'
   /** The account to make the call from */
   from: SendTransactionFrom
@@ -164,11 +177,7 @@ export interface CompiledTeal {
 }
 
 /** Result from calling an app */
-export interface AppCallTransactionResult extends SendTransactionResult {
-  /** All transactions sent as part of the app call (i.e. multiple if an ABI call is made which includes transaction arguments) */
-  transactions: Transaction[]
-  /** The responses if the transactions are sent and waited for */
-  confirmations?: PendingTransactionResponse[]
+export interface AppCallTransactionResult extends SendTransactionResults, SendTransactionResult {
   /** If an ABI method was called the processed return value */
   return?: ABIReturn
 }
@@ -183,7 +192,7 @@ export type ABIReturn =
   | { rawReturnValue: undefined; returnValue: undefined; decodeError: Error }
 
 /**
- * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with @see {APP_DEPLOY_NOTE_PREFIX}.
+ * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.
  */
 export interface AppDeployMetadata {
   /** The unique name identifier of the app within the creator account */
@@ -304,7 +313,7 @@ export interface BoxName {
 export interface BoxValueRequestParams {
   /** The ID of the app return box names for */
   appId: number
-  /** The name of the box to return either as a string, binary array or @see BoxName */
+  /** The name of the box to return either as a string, binary array or `BoxName` */
   boxName: string | Uint8Array | BoxName
   /** The ABI type to decode the value using */
   type: ABIType
@@ -316,7 +325,7 @@ export interface BoxValueRequestParams {
 export interface BoxValuesRequestParams {
   /** The ID of the app return box names for */
   appId: number
-  /** The names of the boxes to return either as a string, binary array or @see BoxName */
+  /** The names of the boxes to return either as a string, binary array or BoxName` */
   boxNames: (string | Uint8Array | BoxName)[]
   /** The ABI type to decode the value using */
   type: ABIType

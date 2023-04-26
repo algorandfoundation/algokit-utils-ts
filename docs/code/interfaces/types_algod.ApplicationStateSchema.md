@@ -4,11 +4,7 @@
 
 [types/algod](../modules/types_algod.md).ApplicationStateSchema
 
-Specifies maximums on the number of each type that may be stored
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationstateschema
+Specifies maximums on the number of each type that may be stored https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationstateschema
 
 ## Table of contents
 

@@ -4,11 +4,7 @@
 
 [types/transaction](../modules/types_transaction.md).AtomicTransactionComposerToSend
 
-An
-
-**`See`**
-
-AtomicTransactionComposer with transactions to send.
+An `AtomicTransactionComposer` with transactions to send.
 
 ## Table of contents
 
@@ -23,15 +19,11 @@ AtomicTransactionComposer with transactions to send.
 
 • **atc**: `AtomicTransactionComposer`
 
-The
-
-**`See`**
-
-AtomicTransactionComposer with transactions loaded to send
+The `AtomicTransactionComposer` with transactions loaded to send
 
 #### Defined in
 
-[src/types/transaction.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L93)
+[src/types/transaction.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L122)
 
 ___
 
@@ -43,4 +35,4 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L95)
+[src/types/transaction.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L124)

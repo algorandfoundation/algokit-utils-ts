@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AccountParticipation
 
-AccountParticipation describes the parameters used by this account in consensus protocol.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#accountparticipation
+AccountParticipation describes the parameters used by this account in consensus protocol. https://developer.algorand.org/docs/rest-apis/indexer/#accountparticipation
 
 ## Table of contents
 

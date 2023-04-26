@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetsCreatedLookupResult
 
-Indexer result for an account's created assets,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-assets
+Indexer result for an account's created assets, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-assets
 
 ## Table of contents
 

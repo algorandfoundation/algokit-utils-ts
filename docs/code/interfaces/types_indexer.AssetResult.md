@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetResult
 
-Specifies both the unique identifier and the parameters for an asset.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#asset
+Specifies both the unique identifier and the parameters for an asset. https://developer.algorand.org/docs/rest-apis/indexer/#asset
 
 ## Table of contents
 

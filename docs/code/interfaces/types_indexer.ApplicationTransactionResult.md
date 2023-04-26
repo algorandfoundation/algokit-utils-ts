@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationTransactionResult
 
-Fields for an application transaction
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication
+Fields for an application transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication
 
 ## Hierarchy
 
@@ -158,7 +154,7 @@ ___
 
 • `Optional` **global-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\gsch] global schema
+[gsch] global schema
 
 #### Inherited from
 
@@ -174,7 +170,7 @@ ___
 
 • `Optional` **local-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\lsch] local schema
+[lsch] local schema
 
 #### Inherited from
 

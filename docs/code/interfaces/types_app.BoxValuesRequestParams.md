@@ -24,7 +24,7 @@ The ID of the app return box names for
 
 #### Defined in
 
-[src/types/app.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L318)
+[src/types/app.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L327)
 
 ___
 
@@ -32,15 +32,11 @@ ___
 
 • **boxNames**: (`string` \| `Uint8Array` \| [`BoxName`](types_app.BoxName.md))[]
 
-The names of the boxes to return either as a string, binary array or
-
-**`See`**
-
-BoxName
+The names of the boxes to return either as a string, binary array or BoxName`
 
 #### Defined in
 
-[src/types/app.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L320)
+[src/types/app.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L329)
 
 ___
 
@@ -52,4 +48,4 @@ The ABI type to decode the value using
 
 #### Defined in
 
-[src/types/app.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L322)
+[src/types/app.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L331)

@@ -5,9 +5,6 @@
 [types/indexer](../modules/types_indexer.md).StateSchema
 
 Represents a [apls] local-state or [apgs] global-state schema.
-
-**`See`**
-
 https://developer.algorand.org/docs/rest-apis/indexer/#stateschema
 
 These schemas determine how much storage may be used in a local-state or global-state for an application.

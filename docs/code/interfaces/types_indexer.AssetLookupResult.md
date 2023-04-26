@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetLookupResult
 
-Indexer result for an asset lookup,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id
+Indexer result for an asset lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id
 
 ## Table of contents
 

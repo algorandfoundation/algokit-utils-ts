@@ -2,12 +2,12 @@ import { SuggestedParams } from 'algosdk'
 import { AlgoAmount } from './amount'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
-/** Parameters for @see transferAlgos call. */
+/** Parameters for `transferAlgos` call. */
 export interface AlgoTransferParams extends SendTransactionParams {
-  /** The account (with private key loaded) that will send the µALGOs */
+  /** The account that will send the ALGOs */
   from: SendTransactionFrom
-  /** The account address that will receive the ALGOs */
-  to: string
+  /** The account / account address that will receive the ALGOs */
+  to: SendTransactionFrom | string
   /** The amount to send */
   amount: AlgoAmount
   /** Optional transaction parameters */
@@ -16,7 +16,7 @@ export interface AlgoTransferParams extends SendTransactionParams {
   note?: TransactionNote
 }
 
-/** Parameters for @see ensureFunded call. */
+/** Parameters for `ensureFunded` call. */
 export interface EnsureFundedParams extends SendTransactionParams {
   /** The account to fund */
   accountToFund: SendTransactionFrom | string

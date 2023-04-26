@@ -53,15 +53,11 @@
 
 Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
-An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a
-
-**`See`**
-
-SendTransactionResult
+An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult`
 
 #### Defined in
 
-[src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+[src/types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
 
 ___
 
@@ -73,7 +69,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L177)
+[src/types/app.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L186)
 
 ___
 
@@ -87,7 +83,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L92)
+[src/types/app.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L105)
 
 ___
 
@@ -96,19 +92,13 @@ ___
 Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)
 
 Something that identifies a box name - either a:
- *
-
-**`See`**
-
- - Uint8Array
- *
- - string (that will be encoded to a Uint8Array)
- *
- - SendTransactionFrom (encoded into the public key address of the corresponding account)
+ * `Uint8Array`
+ * `string` (that will be encoded to a Uint8Array)
+ * `SendTransactionFrom` (encoded into the public key address of the corresponding account)
 
 #### Defined in
 
-[src/types/app.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L48)
+[src/types/app.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L64)
 
 ## Variables
 
@@ -120,7 +110,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L18)
+[src/types/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L34)
 
 ___
 
@@ -132,7 +122,7 @@ The app create/update ARC-2 transaction note prefix
 
 #### Defined in
 
-[src/types/app.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L12)
+[src/types/app.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L28)
 
 ___
 
@@ -144,7 +134,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L15)
+[src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
 
 ___
 
@@ -156,7 +146,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L9)
+[src/types/app.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L25)
 
 ___
 
@@ -168,4 +158,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L6)
+[src/types/app.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L22)

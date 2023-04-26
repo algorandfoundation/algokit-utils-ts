@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetsLookupResult
 
-Indexer result for an account's asset holdings,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idassets
+Indexer result for an account's asset holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idassets
 
 ## Table of contents
 

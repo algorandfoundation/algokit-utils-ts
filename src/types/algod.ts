@@ -1,6 +1,6 @@
 import { EncodedSignedTransaction } from 'algosdk'
 
-/** The response from the pending transaction API @see https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid */
+/** The response from the pending transaction API https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid */
 export interface PendingTransactionResponse {
   /**
    * The application id if the transaction was found and it created an
@@ -62,7 +62,7 @@ export interface PendingTransactionResponse {
   txn: EncodedSignedTransaction
 }
 
-/** Represents a TEAL value delta @see https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta */
+/** Represents a TEAL value delta https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta */
 export type EvalDelta =
   | {
       /**
@@ -86,13 +86,13 @@ export type EvalDelta =
       uint: number | bigint
     }
 
-/** The response from the application API @see https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2applicationsapplication-id */
+/** The response from the application API https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2applicationsapplication-id */
 export interface ApplicationResponse {
   id: number
   params: ApplicationParams
 }
 
-/** Stores the global information associated with an application @see https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationparams */
+/** Stores the global information associated with an application https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationparams */
 export interface ApplicationParams {
   /** Address of the account that created the app */
   creator: string
@@ -111,7 +111,7 @@ export interface ApplicationParams {
 }
 
 /**
- * Represents a TEAL value @see https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
+ * Represents a TEAL value https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
  */
 export type TealValue =
   | {
@@ -136,7 +136,7 @@ export type TealValue =
       uint: number | bigint
     }
 
-/** Specifies maximums on the number of each type that may be stored @see https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationstateschema */
+/** Specifies maximums on the number of each type that may be stored https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationstateschema */
 export interface ApplicationStateSchema {
   /** [nbs] num of byte slices */
   'num-byte-slice': number

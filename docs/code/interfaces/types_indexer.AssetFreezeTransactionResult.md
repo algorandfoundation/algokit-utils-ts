@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetFreezeTransactionResult
 
-Fields for an asset freeze transaction.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetfreeze
+Fields for an asset freeze transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetfreeze
 
 ## Table of contents
 

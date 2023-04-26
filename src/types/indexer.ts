@@ -1,7 +1,7 @@
 import { TransactionType } from 'algosdk'
 import { TealKeyValue } from 'algosdk/dist/types/client/v2/algod/models/types'
 
-/** Indexer result for a transaction search, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions */
+/** Indexer result for a transaction search, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions */
 export interface TransactionSearchResults {
   /** Round at which the results were computed. */
   'current-round': number
@@ -11,7 +11,7 @@ export interface TransactionSearchResults {
   transactions: TransactionResult[]
 }
 
-/** Indexer result for an account lookup, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id */
+/** Indexer result for an account lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id */
 export interface AccountLookupResult {
   /** Round at which the results were computed. */
   'current-round': number
@@ -19,7 +19,7 @@ export interface AccountLookupResult {
   account: AccountResult
 }
 
-/** Indexer result for an account's asset holdings, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idassets */
+/** Indexer result for an account's asset holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idassets */
 export interface AssetsLookupResult {
   /** Round at which the results were computed. */
   'current-round': number
@@ -29,7 +29,7 @@ export interface AssetsLookupResult {
   assets: AssetHolding[]
 }
 
-/** Indexer result for an account's created assets, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-assets */
+/** Indexer result for an account's created assets, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-assets */
 export interface AssetsCreatedLookupResult {
   /** Round at which the results were computed. */
   'current-round': number
@@ -39,7 +39,7 @@ export interface AssetsCreatedLookupResult {
   assets: AssetResult[]
 }
 
-/** Indexer result for an account's created applications, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-applications */
+/** Indexer result for an account's created applications, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-applications */
 export interface ApplicationCreatedLookupResult {
   /** Round at which the results were computed. */
   'current-round': number
@@ -49,7 +49,7 @@ export interface ApplicationCreatedLookupResult {
   applications: ApplicationResult[]
 }
 
-/** Indexer result for an asset lookup, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id */
+/** Indexer result for an asset lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id */
 export interface AssetLookupResult {
   /** Round at which the results were computed. */
   'current-round': number
@@ -57,7 +57,7 @@ export interface AssetLookupResult {
   asset: AssetResult
 }
 
-/** Indexer result for a transaction lookup, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid */
+/** Indexer result for a transaction lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid */
 export interface TransactionLookupResult {
   /** Round at which the results were computed. */
   'current-round': number
@@ -65,7 +65,7 @@ export interface TransactionLookupResult {
   transaction: TransactionResult
 }
 
-/** Indexer result for an application lookup, @see https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplication-id */
+/** Indexer result for an application lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplication-id */
 export interface ApplicationLookupResult {
   /** Round at which the results were computed. */
   'current-round': number
@@ -73,7 +73,7 @@ export interface ApplicationLookupResult {
   application: ApplicationResult
 }
 
-/** Indexer result for a transaction, @see https://developer.algorand.org/docs/rest-apis/indexer/#transaction */
+/** Indexer result for a transaction, https://developer.algorand.org/docs/rest-apis/indexer/#transaction */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface TransactionResult extends Record<string, any> {
   /** Transaction ID */
@@ -112,25 +112,25 @@ export interface TransactionResult extends Record<string, any> {
   'intra-round-offset'?: number
   /** Signature of the transaction */
   signature?: TransactionSignature
-  /** If the transaction is an `appl` transaction this will be populated @see tx-type */
+  /** If the transaction is an `appl` transaction this will be populated see `tx-type` */
   'application-transaction'?: ApplicationTransactionResult
   /** If the transaction is an `appl` transaction that resulted in an application creation then this
    * specifies the application index (ID) of that application.
    */
   'created-application-index'?: number
-  /** If the transaction is an `acfg` transaction this will be populated @see tx-type */
+  /** If the transaction is an `acfg` transaction this will be populated see `tx-type` */
   'asset-config-transaction': AssetConfigTransactionResult
   /** If the transaction is an `acfg` transaction that resulted in an asset creation then this
    * specifies the asset index (ID) of that asset.
    */
   'created-asset-index'?: number
-  /** If the transaction is an `afrz` transaction this will be populated @see tx-type */
+  /** If the transaction is an `afrz` transaction this will be populated see `tx-type` */
   'asset-freeze-transaction'?: AssetFreezeTransactionResult
-  /** If the transaction is an `axfer` transaction this will be populated @see tx-type */
+  /** If the transaction is an `axfer` transaction this will be populated see `tx-type` */
   'asset-transfer-transaction'?: AssetTransferTransactionResult
-  /** If the transaction is a `keyreg` transaction this will be populated @see tx-type */
+  /** If the transaction is a `keyreg` transaction this will be populated see `tx-type` */
   'keyreg-transaction'?: KeyRegistrationTransactionResult
-  /** If the transaction is a `pay` transaction this will be populated @see tx-type */
+  /** If the transaction is a `pay` transaction this will be populated see `tx-type` */
   'payment-transaction'?: PaymentTransactionResult
   /** [sgnr] this is included with signed transactions when the signing address does not equal the sender.
    * The backend can use this to ensure that auth addr is equal to the accounts auth addr.
@@ -173,7 +173,7 @@ export interface TransactionResult extends Record<string, any> {
   'close-rewards'?: number
 }
 
-/** Account information at a given round @see https://developer.algorand.org/docs/rest-apis/indexer/#account */
+/** Account information at a given round https://developer.algorand.org/docs/rest-apis/indexer/#account */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AccountResult extends Record<string, any> {
   /** the account public key */
@@ -250,7 +250,7 @@ export interface AccountResult extends Record<string, any> {
   'total-created-assets': number
 }
 
-/** Fields for a payment transaction @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionpayment */
+/** Fields for a payment transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionpayment */
 export interface PaymentTransactionResult {
   /** [amt] number of MicroAlgos intended to be transferred. */
   amount: number
@@ -262,7 +262,7 @@ export interface PaymentTransactionResult {
   receiver: string
 }
 
-/** Fields for an application transaction @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication */
+/** Fields for an application transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication */
 export interface ApplicationTransactionResult extends Omit<ApplicationParams, 'creator' | 'global-state'> {
   /** [apat] List of accounts in addition to the sender that may be accessed from the application's approval-program and clear-state-program. */
   accounts?: string[]
@@ -279,7 +279,7 @@ export interface ApplicationTransactionResult extends Omit<ApplicationParams, 'c
 }
 
 /** Fields for asset allocation, re-configuration, and destruction.
- * @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetconfig
+ * https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetconfig
  *
  * A zero value for asset-id indicates asset creation. A zero value for the params indicates asset destruction.
  */
@@ -290,7 +290,7 @@ export interface AssetConfigTransactionResult {
   params: AssetParams
 }
 
-/** Fields for an asset freeze transaction. @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetfreeze */
+/** Fields for an asset freeze transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetfreeze */
 export interface AssetFreezeTransactionResult {
   /** [fadd] Address of the account whose asset is being frozen or thawed. */
   address: string
@@ -300,7 +300,7 @@ export interface AssetFreezeTransactionResult {
   'new-freeze-status': boolean
 }
 
-/** Fields for an asset transfer transaction. @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer */
+/** Fields for an asset transfer transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer */
 export interface AssetTransferTransactionResult {
   /** [aamt] Amount of asset to transfer. A zero amount transferred to self allocates that asset in the account's Assets map. */
   amount: number
@@ -316,7 +316,7 @@ export interface AssetTransferTransactionResult {
   sender?: string
 }
 
-/** Fields for a `keyreg` transaction @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionkeyreg */
+/** Fields for a `keyreg` transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionkeyreg */
 export interface KeyRegistrationTransactionResult {
   /** [nonpart] Mark the account as participating or non-participating. */
   'non-participation'?: boolean
@@ -343,7 +343,7 @@ export interface KeyRegistrationTransactionResult {
   'vote-participation-key'?: string
 }
 
-/** Specifies both the unique identifier and the parameters for an asset. @see https://developer.algorand.org/docs/rest-apis/indexer/#asset */
+/** Specifies both the unique identifier and the parameters for an asset. https://developer.algorand.org/docs/rest-apis/indexer/#asset */
 export interface AssetResult {
   /** Unique asset identifier. */
   index: number
@@ -368,7 +368,7 @@ export interface ApplicationResult {
   'deleted-at-round'?: number
 }
 
-/** Validation signature associated with some data. Only one of the signatures should be provided. @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignature */
+/** Validation signature associated with some data. Only one of the signatures should be provided. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignature */
 export interface TransactionSignature {
   /** Logicsig signature */
   logicsig: LogicTransactionSignature
@@ -383,9 +383,9 @@ export interface TransactionSignature {
 
 /** [lsig] Programatic transaction signature.
  *
- * @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturelogicsig
+ * https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturelogicsig
  *
- * @see https://developer.algorand.org/docs/get-details/transactions/signatures/#logic-signatures
+ * https://developer.algorand.org/docs/get-details/transactions/signatures/#logic-signatures
  */
 export interface LogicTransactionSignature {
   /** [arg] Logic arguments, base64 encoded. */
@@ -397,16 +397,16 @@ export interface LogicTransactionSignature {
    * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
    */
   logic: string
-  /** The signature of the multisig the logic signature delegating the logicsig. @see https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval */
+  /** The signature of the multisig the logic signature delegating the logicsig. https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval */
   'multisig-signature'?: MultisigTransactionSignature
-  /** [sig] Standard ed25519 signature delegating the logicsig. @see https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
+  /** [sig] Standard ed25519 signature delegating the logicsig. https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
    *
    * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
    */
   signature?: string
 }
 
-/** [msig] structure holding multiple subsignatures. @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisig */
+/** [msig] structure holding multiple subsignatures. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisig */
 export interface MultisigTransactionSignature {
   /** [subsig] Holds pairs of public key and signatures. */
   subsignature: MultisigTransactionSubSignature
@@ -416,7 +416,7 @@ export interface MultisigTransactionSignature {
   version: number
 }
 
-/** Sub-signature for a multisig signature @see https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisigsubsignature */
+/** Sub-signature for a multisig signature https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisigsubsignature */
 export interface MultisigTransactionSubSignature {
   /** [pk] The public key of the account making the signature
    *
@@ -430,7 +430,7 @@ export interface MultisigTransactionSubSignature {
   signature: string
 }
 
-/** Represents a TEAL value delta. @see https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta */
+/** Represents a TEAL value delta. https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta */
 export interface EvalDelta {
   /** [at] delta action. */
   action: number
@@ -440,7 +440,7 @@ export interface EvalDelta {
   uint?: number
 }
 
-/** Stores the global information associated with an application @see https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams */
+/** Stores the global information associated with an application https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams */
 export interface ApplicationParams {
   /** The address that created this application. This is the address where the parameters and global state for this application can be found. */
   creator: string
@@ -466,16 +466,16 @@ export interface ApplicationParams {
   'clear-state-program': string
   /** [epp] the amount of extra program pages available to this app. */
   'extra-program-pages'?: number
-  /** [\gs] global schema */
+  /** [gs] global schema */
   'global-state': TealKeyValue[]
-  /** [\gsch] global schema */
+  /** [gsch] global schema */
   'global-state-schema'?: StateSchema
-  /** [\lsch] local schema */
+  /** [lsch] local schema */
   'local-state-schema'?: StateSchema
 }
 
 /** Represents a [apls] local-state or [apgs] global-state schema.
- * @see https://developer.algorand.org/docs/rest-apis/indexer/#stateschema
+ * https://developer.algorand.org/docs/rest-apis/indexer/#stateschema
  *
  * These schemas determine how much storage may be used in a local-state or global-state for an application.
  *
@@ -488,7 +488,7 @@ export interface StateSchema {
   'num-uint': number
 }
 
-/** Defines the what additional actions occur with the transaction @see https://developer.algorand.org/docs/rest-apis/indexer/#oncompletion */
+/** Defines the what additional actions occur with the transaction https://developer.algorand.org/docs/rest-apis/indexer/#oncompletion */
 export enum ApplicationOnComplete {
   noop = 'noop',
   optin = 'optin',
@@ -498,7 +498,7 @@ export enum ApplicationOnComplete {
   delete = 'delete',
 }
 
-/** AssetParams specifies the parameters for an asset. @see https://developer.algorand.org/docs/rest-apis/indexer/#assetparams */
+/** AssetParams specifies the parameters for an asset. https://developer.algorand.org/docs/rest-apis/indexer/#assetparams */
 export interface AssetParams {
   /**
    * The address that created this asset. This is the address where the parameters
@@ -593,7 +593,7 @@ export enum AccountStatus {
   NotParticipating = 'NotParticipating',
 }
 
-/** AccountParticipation describes the parameters used by this account in consensus protocol. @see https://developer.algorand.org/docs/rest-apis/indexer/#accountparticipation */
+/** AccountParticipation describes the parameters used by this account in consensus protocol. https://developer.algorand.org/docs/rest-apis/indexer/#accountparticipation */
 export interface AccountParticipation {
   /** [sel] Selection public key (if any) currently registered for this round.
    *
@@ -618,7 +618,7 @@ export interface AccountParticipation {
   'vote-participation-key': string
 }
 
-/** Stores local state associated with an application. @see https://developer.algorand.org/docs/rest-apis/indexer/#applicationlocalstate */
+/** Stores local state associated with an application. https://developer.algorand.org/docs/rest-apis/indexer/#applicationlocalstate */
 export interface AppLocalState {
   /** Round when account closed out of the application. */
   'closed-out-at-round'?: number
@@ -634,7 +634,7 @@ export interface AppLocalState {
   schema: StateSchema
 }
 
-/** Describes an asset held by an account. @see https://developer.algorand.org/docs/rest-apis/indexer/#assetholding */
+/** Describes an asset held by an account. https://developer.algorand.org/docs/rest-apis/indexer/#assetholding */
 export interface AssetHolding {
   /**
    * (a) number of units held.

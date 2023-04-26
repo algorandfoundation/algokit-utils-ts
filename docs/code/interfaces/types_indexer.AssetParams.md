@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AssetParams
 
-AssetParams specifies the parameters for an asset.
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#assetparams
+AssetParams specifies the parameters for an asset. https://developer.algorand.org/docs/rest-apis/indexer/#assetparams
 
 ## Table of contents
 

@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationParams
 
-Stores the global information associated with an application
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams
+Stores the global information associated with an application https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams
 
 ## Table of contents
 
@@ -88,7 +84,7 @@ ___
 
 • **global-state**: `TealKeyValue`[]
 
-[\gs] global schema
+[gs] global schema
 
 #### Defined in
 
@@ -100,7 +96,7 @@ ___
 
 • `Optional` **global-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\gsch] global schema
+[gsch] global schema
 
 #### Defined in
 
@@ -112,7 +108,7 @@ ___
 
 • `Optional` **local-state-schema**: [`StateSchema`](types_indexer.StateSchema.md)
 
-[\lsch] local schema
+[lsch] local schema
 
 #### Defined in
 

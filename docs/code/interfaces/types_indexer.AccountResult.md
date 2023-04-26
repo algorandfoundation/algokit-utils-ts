@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AccountResult
 
-Account information at a given round
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#account
+Account information at a given round https://developer.algorand.org/docs/rest-apis/indexer/#account
 
 ## Hierarchy
 

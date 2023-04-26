@@ -10,6 +10,8 @@ The result of sending and confirming one or more transactions, but where there i
 
 - [`SendTransactionResult`](types_transaction.SendTransactionResult.md)
 
+- [`SendTransactionResults`](types_transaction.SendTransactionResults.md)
+
   ↳ **`ConfirmedTransactionResults`**
 
 ## Table of contents
@@ -35,7 +37,7 @@ The response from sending and waiting for the primary transaction
 
 #### Defined in
 
-[src/types/transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L60)
+[src/types/transaction.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L79)
 
 ___
 
@@ -45,9 +47,13 @@ ___
 
 The response from sending and waiting for the transactions
 
+#### Overrides
+
+[SendTransactionResults](types_transaction.SendTransactionResults.md).[confirmations](types_transaction.SendTransactionResults.md#confirmations)
+
 #### Defined in
 
-[src/types/transaction.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L62)
+[src/types/transaction.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L81)
 
 ___
 
@@ -63,7 +69,7 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
@@ -71,8 +77,12 @@ ___
 
 • **transactions**: `Transaction`[]
 
-The transactions
+The transactions that have been prepared and/or sent
+
+#### Inherited from
+
+[SendTransactionResults](types_transaction.SendTransactionResults.md).[transactions](types_transaction.SendTransactionResults.md#transactions)
 
 #### Defined in
 
-[src/types/transaction.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L58)
+[src/types/transaction.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L53)

@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).TransactionSearchResults
 
-Indexer result for a transaction search,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions
+Indexer result for a transaction search, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions
 
 ## Table of contents
 

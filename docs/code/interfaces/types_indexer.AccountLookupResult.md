@@ -4,11 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AccountLookupResult
 
-Indexer result for an account lookup,
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id
+Indexer result for an account lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id
 
 ## Table of contents
 

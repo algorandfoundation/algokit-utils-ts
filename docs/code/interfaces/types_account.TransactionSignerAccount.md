@@ -4,11 +4,7 @@
 
 [types/account](../modules/types_account.md).TransactionSignerAccount
 
-A wrapper around
-
-**`See`**
-
-that also has the sender address.
+A wrapper around `TransactionSigner` that also has the sender address.
 
 ## Table of contents
 

@@ -22,16 +22,20 @@ export class AlgoAmount {
     return `${this.microAlgos.toLocaleString('en-US')} µALGO${this.microAlgos === 1 ? '' : 's'}`
   }
 
+  /** valueOf allows you to use `AlgoAmount` in comparison operations such as `<` and `>=` etc.,
+   * but it's not recommended to use this to convert to a number, it's much safer to explicitly call
+   * the algos or microAlgos properties
+   */
   valueOf(): number {
     return this.microAlgos
   }
 
-  /** Create a @see {AlgoAmount} object representing the given number of Algos */
+  /** Create a `AlgoAmount` object representing the given number of Algos */
   static Algos(amount: number) {
     return new AlgoAmount({ algos: amount })
   }
 
-  /** Create a @see {AlgoAmount} object representing the given number of µAlgos */
+  /** Create a `AlgoAmount` object representing the given number of µAlgos */
   static MicroAlgos(amount: number) {
     return new AlgoAmount({ microAlgos: amount })
   }
