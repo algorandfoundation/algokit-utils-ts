@@ -17,11 +17,11 @@ The key function to facilitate Algo transfers is `algokit.transferAlgos(transfer
 
 ## `ensureFunded`
 
-The ability to automatically fund an account to have a minimum amount of disposable ALGOs to spend is incredibly useful for automation and deployment scripts. The function to facilitate this is `algokit.ensureFunded(funding, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) (or undefined if it didn't need to send a transaction) and takes a [`EnsureFundedParams`](../code/interfaces/types_transfer.EnsureFundedParams.md):
+The ability to automatically fund an account to have a minimum amount of disposable ALGOs to spend is incredibly useful for automation and deployment scripts. The function to facilitate this is `algokit.ensureFunded(funding, algod, kmd?)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) (or undefined if it didn't need to send a transaction) and takes a [`EnsureFundedParams`](../code/interfaces/types_transfer.EnsureFundedParams.md):
 
 - All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
 - `accountToFund: SendTransactionFrom | string` - The account that is to be funded
-- `fundingSource: SendTransactionFrom` - The account that is the source of funds
+- `fundingSource?: SendTransactionFrom` - The account that is the source of funds, if not specified then it will use the [dispenser](./account.md#dispenser)
 - `minSpendingBalance: AlgoAmount` - The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement)
 - `minFundingIncrement?: AlgoAmount` - When issuing a funding amount, the minimum amount to transfer (avoids many small transfers if this gets called often on an active account)
 - `amount: AlgoAmount` - The [amount](./amount.md) of ALGOs to send

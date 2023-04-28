@@ -33,4 +33,7 @@ In order to get the accounts you can use the underlying algosdk methods where re
 - [`algokit.rekeyedAccount(signer, sender)`](../code/modules/index.md#rekeyedaccount) - Returns a `SigningAccount` representing the given rekeyed sender/signer combination
 - [`algokit.transactionSignerAccount(signer, sender)`](../code/modules/index.md#transactionsigneraccount) - Returns a `TransactionSigner` along with its sender address
 - [`algokit.randomAccount()`](../code/modules/index.md#randomaccount) - Returns a new, cryptographically randomly generated account with private key loaded.
+
+### Dispenser
+
 - [`algokit.getDispenserAccount(algod, kmd?)`](../code/modules/index.md#getdispenseraccount) - Returns an account that can act as a dispenser to fund other accounts either via Kmd (when targeting LocalNet) or by convention from environment variable via `process.env.DISPENSER_MNEMONIC` (and optionally `process.env.DISPENSER_SENDER` if rekeyed)

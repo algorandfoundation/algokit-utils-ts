@@ -24,8 +24,15 @@ This library follows the [Guiding Principles of AlgoKit](https://github.com/algo
 
 This is an open source project managed by the Algorand Foundation. See the [AlgoKit contributing page](https://github.com/algorandfoundation/algokit-cli/blob/main/CONTRIBUTING.MD) to learn about making improvements.
 
-To successfully run the tests in this repository you need to be running LocalNet via [AlgoKit](https://github.com/algorandfoundation/algokit-cli):
+To successfully run the tests in this repository you need to be running LocalNet via [AlgoKit](https://github.com/algorandfoundation/algokit-cli) and also have package dependencies and `.env.template` copied to `.env` (both of which `algokit bootstrap all` can do for you):
 
 ```
+algokit bootstrap all
 algokit localnet start
+```
+
+To run tests you can use VS Code, or:
+
+```
+npm run test
 ```

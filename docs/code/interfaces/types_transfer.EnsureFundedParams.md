@@ -78,9 +78,9 @@ ___
 
 ### fundingSource
 
-• **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account to use as a funding source
+The account to use as a funding source, will default to using the dispenser account returned by `algokit.getDispenserAccount`
 
 #### Defined in
 

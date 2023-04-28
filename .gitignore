@@ -56,3 +56,4 @@ out/
 # dotenv environment variable files
 .env
 .env.*
+!.env.template

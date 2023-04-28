@@ -10,5 +10,6 @@
     "watch": false,
     "onSave": "test-file",
     "onStartup": ["all-tests"]
-  }
+  },
+  "dotenv.enableAutocloaking": false
 }
