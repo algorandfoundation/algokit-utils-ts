@@ -1,4 +1,4 @@
-import algosdk, { Algodv2 } from 'algosdk'
+import algosdk, { Algodv2, Kmd } from 'algosdk'
 import { Config, getDispenserAccount, microAlgos } from './'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { SendTransactionResult } from './types/transaction'
@@ -37,9 +37,10 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
  *
  * @param funding The funding configuration
  * @param algod An algod client
+ * @param kmd An optional kmd client
  * @returns undefined if nothing was needed or the transaction send result
  */
-export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2): Promise<SendTransactionResult | undefined> {
+export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, kmd?: Kmd): Promise<SendTransactionResult | undefined> {
   const { accountToFund, fundingSource, minSpendingBalance, minFundingIncrement, transactionParams, note, ...sendParams } = funding
 
   const addressToFund = typeof accountToFund === 'string' ? accountToFund : getSenderAddress(accountToFund)
@@ -50,7 +51,7 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2):
   const currentSpendingBalance = microAlgos(balance - minimumBalanceRequirement.microAlgos)
 
   if (minSpendingBalance > currentSpendingBalance) {
-    const from = fundingSource ?? (await getDispenserAccount(algod))
+    const from = fundingSource ?? (await getDispenserAccount(algod, kmd))
     const minFundAmount = microAlgos(minSpendingBalance.microAlgos - currentSpendingBalance.microAlgos)
     const fundAmount = microAlgos(Math.max(minFundAmount.microAlgos, minFundingIncrement?.microAlgos ?? 0))
     Config.getLogger(sendParams.suppressLog).info(

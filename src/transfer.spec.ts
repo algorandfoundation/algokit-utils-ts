@@ -37,7 +37,7 @@ describe('transfer', () => {
   })
 
   test('ensureFunded is sent and waited for with correct amount for new account', async () => {
-    const { algod, testAccount } = localnet.context
+    const { algod, kmd, testAccount } = localnet.context
     const secondAccount = algosdk.generateAccount()
 
     const result = await algokit.ensureFunded(
@@ -47,6 +47,7 @@ describe('transfer', () => {
         minSpendingBalance: algokit.microAlgos(1),
       },
       algod,
+      kmd,
     )
     const accountInfo = await algod.accountInformation(secondAccount.addr).do()
 
@@ -69,7 +70,7 @@ describe('transfer', () => {
   })
 
   test('ensureFunded respects minimum funding increment', async () => {
-    const { algod, testAccount } = localnet.context
+    const { algod, testAccount, kmd } = localnet.context
     const secondAccount = algosdk.generateAccount()
 
     await algokit.ensureFunded(
@@ -80,6 +81,7 @@ describe('transfer', () => {
         minFundingIncrement: algokit.algos(1),
       },
       algod,
+      kmd,
     )
 
     const accountInfo = await algod.accountInformation(secondAccount.addr).do()
@@ -87,9 +89,9 @@ describe('transfer', () => {
   })
 
   test('ensureFunded uses dispenser account by default', async () => {
-    const { algod } = localnet.context
+    const { algod, kmd } = localnet.context
     const secondAccount = algosdk.generateAccount()
-    const dispenser = await algokit.getDispenserAccount(algod)
+    const dispenser = await algokit.getDispenserAccount(algod, kmd)
 
     const result = await algokit.ensureFunded(
       {
@@ -98,6 +100,7 @@ describe('transfer', () => {
         minFundingIncrement: algokit.algos(1),
       },
       algod,
+      kmd,
     )
 
     invariant(result)

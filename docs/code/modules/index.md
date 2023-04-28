@@ -341,7 +341,7 @@ ___
 
 ### ensureFunded
 
-▸ **ensureFunded**(`funding`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+▸ **ensureFunded**(`funding`, `algod`, `kmd?`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
 
 Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
 
@@ -353,6 +353,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 | :------ | :------ | :------ |
 | `funding` | [`EnsureFundedParams`](../interfaces/types_transfer.EnsureFundedParams.md) | The funding configuration |
 | `algod` | `default` | An algod client |
+| `kmd?` | `default` | An optional kmd client |
 
 #### Returns
 
@@ -362,7 +363,7 @@ undefined if nothing was needed or the transaction send result
 
 #### Defined in
 
-[src/transfer.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L42)
+[src/transfer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L43)
 
 ___
 
