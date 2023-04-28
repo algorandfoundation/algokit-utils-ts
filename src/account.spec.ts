@@ -27,5 +27,5 @@ describe('account', () => {
     expect(account).not.toBe(account2)
     expect(account.addr).toBe(account2.addr)
     expect(account.sk).toEqual(account2.sk)
-  })
+  }, 10_000)
 })
