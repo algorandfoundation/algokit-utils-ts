@@ -20,8 +20,8 @@ export interface AlgoTransferParams extends SendTransactionParams {
 export interface EnsureFundedParams extends SendTransactionParams {
   /** The account to fund */
   accountToFund: SendTransactionFrom | string
-  /** The account to use as a funding source */
-  fundingSource: SendTransactionFrom
+  /** The account to use as a funding source, will default to using the dispenser account returned by `algokit.getDispenserAccount` */
+  fundingSource?: SendTransactionFrom
   /** The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement) */
   minSpendingBalance: AlgoAmount
   /** When issuing a funding amount, the minimum amount to transfer (avoids many small transfers if this gets called often on an active account) */

@@ -1,5 +1,5 @@
 import algosdk, { Algodv2 } from 'algosdk'
-import { Config, microAlgos } from './'
+import { Config, getDispenserAccount, microAlgos } from './'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { SendTransactionResult } from './types/transaction'
 import { AlgoTransferParams, EnsureFundedParams } from './types/transfer'
@@ -50,16 +50,17 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2):
   const currentSpendingBalance = microAlgos(balance - minimumBalanceRequirement.microAlgos)
 
   if (minSpendingBalance > currentSpendingBalance) {
+    const from = fundingSource ?? (await getDispenserAccount(algod))
     const minFundAmount = microAlgos(minSpendingBalance.microAlgos - currentSpendingBalance.microAlgos)
     const fundAmount = microAlgos(Math.max(minFundAmount.microAlgos, minFundingIncrement?.microAlgos ?? 0))
     Config.getLogger(sendParams.suppressLog).info(
       `Funding ${addressToFund} ${fundAmount} from ${getSenderAddress(
-        fundingSource,
+        from,
       )} to reach minimum spend amount of ${minSpendingBalance} (balance = ${balance}, min_balance_req = ${minimumBalanceRequirement})`,
     )
     return await transferAlgos(
       {
-        from: fundingSource,
+        from,
         to: addressToFund,
         note: note ?? 'Funding account to meet minimum requirement',
         amount: fundAmount,
