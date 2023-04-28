@@ -4,11 +4,7 @@
 
 [types/algod](../modules/types_algod.md).ApplicationResponse
 
-The response from the application API
-
-**`See`**
-
-https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2applicationsapplication-id
+The response from the application API https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2applicationsapplication-id
 
 ## Table of contents
 

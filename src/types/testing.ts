@@ -9,26 +9,26 @@ import { TransactionLookupResult } from './indexer'
  * Test automation context.
  */
 export interface AlgorandTestAutomationContext {
-  /** Algod client instance that will log transactions in @see transactionLogger */
+  /** Algod client instance that will log transactions in `transactionLogger` */
   algod: Algodv2
   /** Indexer client instance */
   indexer: Indexer
   /** KMD client instance */
   kmd: Kmd
-  /** Transaction logger that will log transaction IDs for all transactions issued by @see algod */
+  /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
   testAccount: Account
   /** Generate and fund an additional ephemerally created account */
   generateAccount: (params: GetTestAccountParams) => Promise<Account>
-  /** Wait for the indexer to catch up with all transactions logged by @see transactionLogger */
+  /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
   waitForIndexerTransaction: (transactionId: string) => Promise<TransactionLookupResult>
 }
 
 /**
- * Parameters for the @see getTestAccount function.
+ * Parameters for the `getTestAccount` function.
  */
 export interface GetTestAccountParams {
   /** Initial funds to ensure the account has */
@@ -39,11 +39,11 @@ export interface GetTestAccountParams {
 
 /** Configuration for creating an Algorand testing fixture. */
 export interface AlgorandFixtureConfig {
-  /** An optional algod client, if not specified then it will create one against default LocalNet. */
+  /** An optional algod client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
   algod?: Algodv2
-  /** An optional indexer client, if not specified then it will create one against default LocalNet. */
+  /** An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
   indexer?: Indexer
-  /** An optional kmd client, if not specified then it will create one against default LocalNet. */
+  /** An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
   kmd?: Kmd
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGOs. */
   testAccountFunding?: AlgoAmount
@@ -63,7 +63,7 @@ export interface AlgorandFixture {
   get context(): AlgorandTestAutomationContext
 
   /**
-   * Testing framework agnostic handler method to run before each test to prepare the @see context for that test.
+   * Testing framework agnostic handler method to run before each test to prepare the `context` for that test.
    */
   beforeEach: () => Promise<void>
 }
@@ -85,7 +85,7 @@ export interface AlgoKitLogCaptureFixture {
   /** The test logger instance for the current test */
   get testLogger(): TestLogger
   /**
-   * Testing framework agnostic handler method to run before each test to prepare the @see testLogger for that test.
+   * Testing framework agnostic handler method to run before each test to prepare the `testLogger` for that test.
    */
   beforeEach: () => void
   /**

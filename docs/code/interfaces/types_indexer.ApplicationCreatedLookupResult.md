@@ -4,7 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationCreatedLookupResult
 
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-applications
+Indexer result for an account's created applications, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-applications
 
 ## Table of contents
 
@@ -20,19 +20,23 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idc
 
 • **applications**: [`ApplicationResult`](types_indexer.ApplicationResult.md)[]
 
+The returned applications
+
 #### Defined in
 
-[src/types/indexer.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L35)
+[src/types/indexer.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L49)
 
 ___
 
 ### current-round
 
-• **current-round**: `string`
+• **current-round**: `number`
+
+Round at which the results were computed.
 
 #### Defined in
 
-[src/types/indexer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L33)
+[src/types/indexer.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L45)
 
 ___
 
@@ -40,6 +44,8 @@ ___
 
 • **next-token**: `string`
 
+Used for pagination, when making another request provide this token with the next parameter.
+
 #### Defined in
 
-[src/types/indexer.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L34)
+[src/types/indexer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L47)

@@ -4,7 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).AccountLookupResult
 
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id
+Indexer result for an account lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id
 
 ## Table of contents
 
@@ -19,16 +19,20 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id
 
 • **account**: [`AccountResult`](types_indexer.AccountResult.md)
 
+The returned account
+
 #### Defined in
 
-[src/types/indexer.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L14)
+[src/types/indexer.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L19)
 
 ___
 
 ### current-round
 
-• **current-round**: `string`
+• **current-round**: `number`
+
+Round at which the results were computed.
 
 #### Defined in
 
-[src/types/indexer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L13)
+[src/types/indexer.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L17)

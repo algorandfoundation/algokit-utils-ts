@@ -4,6 +4,8 @@
 
 [types/indexer](../modules/types_indexer.md).AssetTransferTransactionResult
 
+Fields for an asset transfer transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer
+
 ## Table of contents
 
 ### Properties
@@ -21,9 +23,11 @@
 
 • **amount**: `number`
 
+[aamt] Amount of asset to transfer. A zero amount transferred to self allocates that asset in the account's Assets map.
+
 #### Defined in
 
-[src/types/indexer.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L141)
+[src/types/indexer.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L306)
 
 ___
 
@@ -31,9 +35,11 @@ ___
 
 • **asset-id**: `number`
 
+[xaid] ID of the asset being transferred.
+
 #### Defined in
 
-[src/types/indexer.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L142)
+[src/types/indexer.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L308)
 
 ___
 
@@ -41,9 +47,11 @@ ___
 
 • `Optional` **close-amount**: `number`
 
+Number of assets transfered to the close-to account as part of the transaction.
+
 #### Defined in
 
-[src/types/indexer.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L143)
+[src/types/indexer.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L310)
 
 ___
 
@@ -51,19 +59,23 @@ ___
 
 • `Optional` **close-to**: `string`
 
+[aclose] Indicates that the asset should be removed from the account's Assets map, and specifies where the remaining asset holdings should be transferred. It's always valid to transfer remaining asset holdings to the creator account.
+
 #### Defined in
 
-[src/types/indexer.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L144)
+[src/types/indexer.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L312)
 
 ___
 
 ### receiver
 
-• `Optional` **receiver**: `string`
+• **receiver**: `string`
+
+[arcv] Recipient address of the transfer.
 
 #### Defined in
 
-[src/types/indexer.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L145)
+[src/types/indexer.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L314)
 
 ___
 
@@ -71,6 +83,8 @@ ___
 
 • `Optional` **sender**: `string`
 
+[asnd] The effective sender during a clawback transactions. If this is not a zero value, the real transaction sender must be the Clawback address from the AssetParams.
+
 #### Defined in
 
-[src/types/indexer.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L146)
+[src/types/indexer.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L316)

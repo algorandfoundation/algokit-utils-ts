@@ -4,6 +4,8 @@
 
 [types/indexer](../modules/types_indexer.md).MultisigTransactionSubSignature
 
+Sub-signature for a multisig signature https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisigsubsignature
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +19,13 @@
 
 • **public-key**: `string`
 
+[pk] The public key of the account making the signature
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+
 #### Defined in
 
-[src/types/indexer.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L188)
+[src/types/indexer.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L425)
 
 ___
 
@@ -27,6 +33,10 @@ ___
 
 • **signature**: `string`
 
+[s] The signature
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+
 #### Defined in
 
-[src/types/indexer.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L189)
+[src/types/indexer.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L430)

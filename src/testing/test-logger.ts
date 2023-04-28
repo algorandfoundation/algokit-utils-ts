@@ -32,7 +32,9 @@ export class TestLogger implements Logger {
    * Returns a captured log snapshot.
    * This helps ensure that the provided configuration items won't appear
    *  with random values in the log snapshot, but rather will get substituted with predictable ids.
-   * @see https://jestjs.io/docs/snapshot-testing#2-tests-should-be-deterministic
+   *
+   * https://jestjs.io/docs/snapshot-testing#2-tests-should-be-deterministic
+   *
    * @example Jest Example
    * ```typescript
    * const logger = new TestLogger()
@@ -52,7 +54,7 @@ export class TestLogger implements Logger {
       (sender, id) =>
         (snapshot = snapshot.replace(new RegExp(typeof sender === 'string' ? sender : getSenderAddress(sender), 'g'), `ACCOUNT_${id + 1}`)),
     )
-    apps?.forEach((app, id) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b`, 'g'), `APP_${id + 1}`)))
+    apps?.forEach((app, id) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b(?! bytes)`, 'g'), `APP_${id + 1}`)))
     return snapshot
   }
 

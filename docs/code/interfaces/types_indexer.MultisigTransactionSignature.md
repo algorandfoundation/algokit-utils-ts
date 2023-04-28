@@ -4,6 +4,8 @@
 
 [types/indexer](../modules/types_indexer.md).MultisigTransactionSignature
 
+[msig] structure holding multiple subsignatures. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisig
+
 ## Table of contents
 
 ### Properties
@@ -18,9 +20,11 @@
 
 • **subsignature**: [`MultisigTransactionSubSignature`](types_indexer.MultisigTransactionSubSignature.md)
 
+[subsig] Holds pairs of public key and signatures.
+
 #### Defined in
 
-[src/types/indexer.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L182)
+[src/types/indexer.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L412)
 
 ___
 
@@ -28,9 +32,11 @@ ___
 
 • **threshold**: `number`
 
+[thr] The threshold of signatures required for the multisig
+
 #### Defined in
 
-[src/types/indexer.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L183)
+[src/types/indexer.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L414)
 
 ___
 
@@ -38,6 +44,8 @@ ___
 
 • **version**: `number`
 
+[v] The version of the multisig
+
 #### Defined in
 
-[src/types/indexer.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L184)
+[src/types/indexer.ts:416](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L416)

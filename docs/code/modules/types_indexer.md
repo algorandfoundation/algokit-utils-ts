@@ -13,6 +13,7 @@
 ### Interfaces
 
 - [AccountLookupResult](../interfaces/types_indexer.AccountLookupResult.md)
+- [AccountParticipation](../interfaces/types_indexer.AccountParticipation.md)
 - [AccountResult](../interfaces/types_indexer.AccountResult.md)
 - [AppLocalState](../interfaces/types_indexer.AppLocalState.md)
 - [ApplicationCreatedLookupResult](../interfaces/types_indexer.ApplicationCreatedLookupResult.md)
@@ -30,6 +31,7 @@
 - [AssetsCreatedLookupResult](../interfaces/types_indexer.AssetsCreatedLookupResult.md)
 - [AssetsLookupResult](../interfaces/types_indexer.AssetsLookupResult.md)
 - [EvalDelta](../interfaces/types_indexer.EvalDelta.md)
+- [KeyRegistrationTransactionResult](../interfaces/types_indexer.KeyRegistrationTransactionResult.md)
 - [LogicTransactionSignature](../interfaces/types_indexer.LogicTransactionSignature.md)
 - [MultisigTransactionSignature](../interfaces/types_indexer.MultisigTransactionSignature.md)
 - [MultisigTransactionSubSignature](../interfaces/types_indexer.MultisigTransactionSubSignature.md)

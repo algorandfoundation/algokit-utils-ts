@@ -2,8 +2,6 @@ import type algosdk from 'algosdk'
 
 const LOGIC_ERROR = /TransactionPool.Remember: transaction ([A-Z0-9]+): logic eval error: (.*). Details: pc=([0-9]+), opcodes=.*/
 
-// todo: jsdoc comments
-
 /**
  * Details about a smart contract logic error
  */
@@ -14,6 +12,10 @@ export interface LogicErrorDetails {
   pc: number
   /** The error message */
   msg: string
+  /** The full error description */
+  desc: string
+  /** Any trace information included in the error */
+  traces: Record<string, unknown>[]
 }
 
 /** Wraps key functionality around processing logic errors */
@@ -22,14 +24,18 @@ export class LogicError extends Error {
    * @param errorMessage The error message to parse
    * @returns The logic error details if any, or undefined
    */
-  static parseLogicError(errorMessage: string): LogicErrorDetails | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static parseLogicError(error: any): LogicErrorDetails | undefined {
+    const errorMessage = error.message
     const res = LOGIC_ERROR.exec(errorMessage)
     if (res === null || res.length <= 3) return undefined
 
     return {
       txId: res[1],
       msg: res[2],
+      desc: errorMessage,
       pc: parseInt(res[3] ? res[3] : '0'),
+      traces: error.traces,
     } as LogicErrorDetails
   }
 
@@ -53,7 +59,7 @@ export class LogicError extends Error {
     const line = map.getLineForPc(errorDetails.pc)
     this.teal_line = line === undefined ? 0 : line
 
-    this.message = `${this.led.msg}. at:${line}`
+    this.message = `${this.led.msg}. at:${line}. ${this.led.desc}`
 
     if (this.teal_line > 0) {
       const start = this.teal_line > this.lines ? this.teal_line - this.lines : 0

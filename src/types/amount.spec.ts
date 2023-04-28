@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 import { algos, microAlgos, transactionFees } from '../'
+import { AlgoAmount } from './amount'
 
 describe('amount', () => {
   test('toString on 1', () => {
@@ -7,9 +8,6 @@ describe('amount', () => {
   })
   test('toString on big amount', () => {
     expect(`${algos(100)}`).toBe(`100,000,000 µALGOs`)
-  })
-  test('value coersion to microalgos', () => {
-    expect(+microAlgos(100)).toBe(100)
   })
   test('microalgos to microalgos', () => {
     expect(microAlgos(100).microAlgos).toBe(100)
@@ -31,5 +29,13 @@ describe('amount', () => {
   })
   test('multiple transaction fees', () => {
     expect(transactionFees(10).microAlgos).toBe(10_000)
+  })
+  test('algos via Number.prototype', () => {
+    expect((100).algos()).toBeInstanceOf(AlgoAmount)
+    expect((100).algos().algos).toBe(100)
+  })
+  test('microAlgos via Number.prototype', () => {
+    expect((100).microAlgos()).toBeInstanceOf(AlgoAmount)
+    expect((100).microAlgos().microAlgos).toBe(100)
   })
 })

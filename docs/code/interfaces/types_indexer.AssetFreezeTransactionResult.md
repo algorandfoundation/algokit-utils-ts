@@ -4,6 +4,8 @@
 
 [types/indexer](../modules/types_indexer.md).AssetFreezeTransactionResult
 
+Fields for an asset freeze transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetfreeze
+
 ## Table of contents
 
 ### Properties
@@ -18,9 +20,11 @@
 
 • **address**: `string`
 
+[fadd] Address of the account whose asset is being frozen or thawed.
+
 #### Defined in
 
-[src/types/indexer.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L135)
+[src/types/indexer.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L296)
 
 ___
 
@@ -28,9 +32,11 @@ ___
 
 • **asset-id**: `number`
 
+[faid] ID of the asset being frozen or thawed.
+
 #### Defined in
 
-[src/types/indexer.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L136)
+[src/types/indexer.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L298)
 
 ___
 
@@ -38,6 +44,8 @@ ___
 
 • **new-freeze-status**: `boolean`
 
+[afrz] The new freeze status.
+
 #### Defined in
 
-[src/types/indexer.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L137)
+[src/types/indexer.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L300)

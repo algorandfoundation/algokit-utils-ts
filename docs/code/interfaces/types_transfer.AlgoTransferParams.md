@@ -4,11 +4,7 @@
 
 [types/transfer](../modules/types_transfer.md).AlgoTransferParams
 
-Parameters for
-
-**`See`**
-
-transferAlgos call.
+Parameters for `transferAlgos` call.
 
 ## Hierarchy
 
@@ -21,6 +17,7 @@ transferAlgos call.
 ### Properties
 
 - [amount](types_transfer.AlgoTransferParams.md#amount)
+- [atc](types_transfer.AlgoTransferParams.md#atc)
 - [fee](types_transfer.AlgoTransferParams.md#fee)
 - [from](types_transfer.AlgoTransferParams.md#from)
 - [maxFee](types_transfer.AlgoTransferParams.md#maxfee)
@@ -46,6 +43,22 @@ The amount to send
 
 ___
 
+### atc
+
+• `Optional` **atc**: `AtomicTransactionComposer`
+
+An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[atc](types_transaction.SendTransactionParams.md#atc)
+
+#### Defined in
+
+[src/types/transaction.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L31)
+
+___
+
 ### fee
 
 • `Optional` **fee**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
@@ -58,7 +71,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
+[src/types/transaction.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L35)
 
 ___
 
@@ -66,7 +79,7 @@ ___
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account (with private key loaded) that will send the µALGOs
+The account that will send the ALGOs
 
 #### Defined in
 
@@ -86,7 +99,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
+[src/types/transaction.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L37)
 
 ___
 
@@ -102,7 +115,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
+[src/types/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L39)
 
 ___
 
@@ -122,8 +135,8 @@ ___
 
 • `Optional` **skipSending**: `boolean`
 
-Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain)
-  (and instead just return the raw transaction, e.g. so you can add it to a group of transactions)
+Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain, unless `atc` specified)
+and instead just return the raw transaction, e.g. so you can add it to a group of transactions
 
 #### Inherited from
 
@@ -131,7 +144,7 @@ Whether to skip signing and sending the transaction to the chain (default: trans
 
 #### Defined in
 
-[src/types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
+[src/types/transaction.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L27)
 
 ___
 
@@ -147,7 +160,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[src/types/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L28)
+[src/types/transaction.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L29)
 
 ___
 
@@ -163,15 +176,15 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
+[src/types/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L33)
 
 ___
 
 ### to
 
-• **to**: `string`
+• **to**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account address that will receive the ALGOs
+The account / account address that will receive the ALGOs
 
 #### Defined in
 

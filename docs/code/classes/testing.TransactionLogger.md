@@ -4,11 +4,7 @@
 
 [testing](../modules/testing.md).TransactionLogger
 
-Allows you to keep track of Algorand transaction IDs by wrapping an
-
-**`See`**
-
-Algodv2 in a proxy.
+Allows you to keep track of Algorand transaction IDs by wrapping an `Algodv2` in a proxy.
 Useful for automated tests.
 
 ## Table of contents
@@ -72,22 +68,17 @@ readonly `string`[]
 
 Return a proxy that wraps the given Algodv2 with this transaction logger.
 
-**`See`**
-
- - Algodv2 to wrap
- - Algodv2, any transactions sent using this algod instance will be logged by this transaction logger
-
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algod` | `default` | The |
+| `algod` | `default` | The `Algodv2` to wrap |
 
 #### Returns
 
 `default`
 
-The wrapped
+The wrapped `Algodv2`, any transactions sent using this algod instance will be logged by this transaction logger
 
 #### Defined in
 
@@ -137,11 +128,7 @@ ___
 
 ▸ **waitForIndexer**(`indexer`): `Promise`<`void`\>
 
-Wait until all logged transactions IDs appear in the given
-
-**`See`**
-
-Indexer.
+Wait until all logged transactions IDs appear in the given `Indexer`.
 
 #### Parameters
 

@@ -4,11 +4,7 @@
 
 [types/account](../modules/types_account.md).TransactionSignerAccount
 
-A wrapper around
-
-**`See`**
-
-that also has the sender address.
+A wrapper around `TransactionSigner` that also has the sender address.
 
 ## Table of contents
 
@@ -25,7 +21,7 @@ that also has the sender address.
 
 #### Defined in
 
-[src/types/account.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L98)
+[src/types/account.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L109)
 
 ___
 
@@ -35,4 +31,4 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L99)
+[src/types/account.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L110)

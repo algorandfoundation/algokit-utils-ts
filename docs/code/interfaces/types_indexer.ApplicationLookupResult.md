@@ -4,7 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationLookupResult
 
-https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplication-id
+Indexer result for an application lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplication-id
 
 ## Table of contents
 
@@ -19,16 +19,20 @@ https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplica
 
 • **application**: [`ApplicationResult`](types_indexer.ApplicationResult.md)
 
+The returned application
+
 #### Defined in
 
-[src/types/indexer.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L53)
+[src/types/indexer.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L73)
 
 ___
 
 ### current-round
 
-• **current-round**: `string`
+• **current-round**: `number`
+
+Round at which the results were computed.
 
 #### Defined in
 
-[src/types/indexer.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L52)
+[src/types/indexer.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L71)

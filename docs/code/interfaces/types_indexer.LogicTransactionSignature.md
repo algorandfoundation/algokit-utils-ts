@@ -4,6 +4,12 @@
 
 [types/indexer](../modules/types_indexer.md).LogicTransactionSignature
 
+[lsig] Programatic transaction signature.
+
+https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturelogicsig
+
+https://developer.algorand.org/docs/get-details/transactions/signatures/#logic-signatures
+
 ## Table of contents
 
 ### Properties
@@ -17,11 +23,13 @@
 
 ### args
 
-• **args**: `string`[]
+• `Optional` **args**: `string`[]
+
+[arg] Logic arguments, base64 encoded.
 
 #### Defined in
 
-[src/types/indexer.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L175)
+[src/types/indexer.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L392)
 
 ___
 
@@ -29,26 +37,38 @@ ___
 
 • **logic**: `string`
 
+[l] Program signed by a signature or multi signature, or hashed to be the address of ana ccount.
+
+Base64 encoded TEAL program.
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+
 #### Defined in
 
-[src/types/indexer.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L176)
+[src/types/indexer.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L399)
 
 ___
 
 ### multisig-signature
 
-• **multisig-signature**: [`MultisigTransactionSignature`](types_indexer.MultisigTransactionSignature.md)
+• `Optional` **multisig-signature**: [`MultisigTransactionSignature`](types_indexer.MultisigTransactionSignature.md)
+
+The signature of the multisig the logic signature delegating the logicsig. https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
 
 #### Defined in
 
-[src/types/indexer.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L177)
+[src/types/indexer.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L401)
 
 ___
 
 ### signature
 
-• **signature**: `string`
+• `Optional` **signature**: `string`
+
+[sig] Standard ed25519 signature delegating the logicsig. https://developer.algorand.org/docs/get-details/dapps/smart-contracts/smartsigs/modes/#delegated-approval
+
+*Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
 
 #### Defined in
 
-[src/types/indexer.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L178)
+[src/types/indexer.ts:406](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L406)

@@ -1,5 +1,5 @@
-import algosdk, { Algodv2 } from 'algosdk'
-import { Config, microAlgos } from './'
+import algosdk, { Algodv2, Kmd } from 'algosdk'
+import { Config, getDispenserAccount, microAlgos } from './'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { SendTransactionResult } from './types/transaction'
 import { AlgoTransferParams, EnsureFundedParams } from './types/transfer'
@@ -15,7 +15,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
-    to: to,
+    to: typeof to === 'string' ? to : getSenderAddress(to),
     amount: amount.microAlgos,
     note: encodeTransactionNote(note),
     suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -33,13 +33,14 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
 /**
  * Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
  *
- * @see https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+ * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
  *
  * @param funding The funding configuration
  * @param algod An algod client
+ * @param kmd An optional kmd client
  * @returns undefined if nothing was needed or the transaction send result
  */
-export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2): Promise<SendTransactionResult | undefined> {
+export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, kmd?: Kmd): Promise<SendTransactionResult | undefined> {
   const { accountToFund, fundingSource, minSpendingBalance, minFundingIncrement, transactionParams, note, ...sendParams } = funding
 
   const addressToFund = typeof accountToFund === 'string' ? accountToFund : getSenderAddress(accountToFund)
@@ -47,19 +48,20 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2):
   const accountInfo = await algod.accountInformation(addressToFund).do()
   const balance = Number(accountInfo.amount)
   const minimumBalanceRequirement = microAlgos(Number(accountInfo['min-balance']))
-  const currentSpendingBalance = microAlgos(balance - +minimumBalanceRequirement)
+  const currentSpendingBalance = microAlgos(balance - minimumBalanceRequirement.microAlgos)
 
   if (minSpendingBalance > currentSpendingBalance) {
-    const minFundAmount = microAlgos(+minSpendingBalance - +currentSpendingBalance)
-    const fundAmount = microAlgos(Math.max(+minFundAmount, minFundingIncrement?.microAlgos ?? 0))
+    const from = fundingSource ?? (await getDispenserAccount(algod, kmd))
+    const minFundAmount = microAlgos(minSpendingBalance.microAlgos - currentSpendingBalance.microAlgos)
+    const fundAmount = microAlgos(Math.max(minFundAmount.microAlgos, minFundingIncrement?.microAlgos ?? 0))
     Config.getLogger(sendParams.suppressLog).info(
       `Funding ${addressToFund} ${fundAmount} from ${getSenderAddress(
-        fundingSource,
+        from,
       )} to reach minimum spend amount of ${minSpendingBalance} (balance = ${balance}, min_balance_req = ${minimumBalanceRequirement})`,
     )
     return await transferAlgos(
       {
-        from: fundingSource,
+        from,
         to: addressToFund,
         note: note ?? 'Funding account to meet minimum requirement',
         amount: fundAmount,

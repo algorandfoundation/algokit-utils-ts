@@ -15,17 +15,17 @@ export async function isLocalNet(algod: Algodv2): Promise<boolean> {
 /**
  * Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
  *
- * This is useful to get idempotent accounts from a local sandbox without having to specify the private key (which will change when resetting the sandbox).
+ * This is useful to get idempotent accounts from LocalNet without having to specify the private key (which will change when resetting the LocalNet).
  *
- * This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh sandbox.
+ * This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh LocalNet.
  *
- * If this is used via @see {getAccount}, then you can even use the same code that runs on production without changes for local development!
+ * If this is used via `getAccount`, then you can even use the same code that runs on production without changes for local development!
  *
  * @param walletAccount The wallet details with:
  *   * `name`: The name of the wallet to retrieve / create
- *   * `fundWith`: The number of Algos to fund the account with it it gets created, if not specified then 1000 Algos will be funded from the dispenser account @see {getDispenserAccount}
+ *   * `fundWith`: The number of Algos to fund the account with it it gets created, if not specified then 1000 Algos will be funded from the dispenser account
  * @param algod An algod client
- * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
+ * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables
  *
  * @returns An Algorand account with private key loaded - either one that already existed in the given KMD wallet, or a new one that is funded for you
  */
@@ -77,7 +77,7 @@ export async function getOrCreateKmdWalletAccount(
  *   * `name`: The name of the wallet to retrieve an account from
  *   * `predicate`: An optional filter to use to find the account (otherwise it will return a random account from the wallet)
  * @param algod An algod client
- * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
+ * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables
  * @example Get default funded account in a LocalNet
  *
  * ```typescript
@@ -136,7 +136,7 @@ export async function getKmdWalletAccount(
  * Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts)
  *
  * @param algod An algod client
- * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
+ * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables
  */
 export async function getLocalNetDispenserAccount(algod: Algodv2, kmd?: Kmd): Promise<Account> {
   if (!(await isLocalNet(algod))) {

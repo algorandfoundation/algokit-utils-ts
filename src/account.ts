@@ -2,8 +2,10 @@ import algosdk, { Account, Algodv2, Kmd, MultisigMetadata, TransactionSigner } f
 import { Config } from './'
 import { getLocalNetDispenserAccount, getOrCreateKmdWalletAccount } from './localnet'
 import { isLocalNet } from './network-client'
+import { getSenderAddress } from './transaction'
 import { DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './types/account'
 import { AlgoAmount } from './types/amount'
+import { SendTransactionFrom } from './types/transaction'
 
 /**
  * Returns an account wrapper that supports partial or full multisig signing.
@@ -17,19 +19,19 @@ export function multisigAccount(multisigParams: MultisigMetadata, signingAccount
 
 /**
  * Returns an account wrapper that supports a rekeyed account.
- * @param account The account, with private key loaded, that is signing
+ * @param signer The account, with private key loaded, that is signing
  * @param sender The address of the rekeyed account that will act as a sender
- * @returns The @see SigningAccount wrapper
+ * @returns The SigningAccount wrapper
  */
-export function rekeyedAccount(account: Account, sender: string) {
-  return new SigningAccount(account, sender)
+export function rekeyedAccount(signer: Account, sender: string) {
+  return new SigningAccount(signer, sender)
 }
 
 /**
  * Returns an account wrapper that supports a transaction signer with associated sender address.
  * @param signer The transaction signer
  * @param sender The address of sender account
- * @returns The @see SigningAccount wrapper
+ * @returns The SigningAccount wrapper
  */
 export function transactionSignerAccount(signer: TransactionSigner, sender: string): TransactionSignerAccount {
   return { addr: sender, signer }
@@ -81,9 +83,9 @@ export function randomAccount(): Account {
  *
  * @param account The details of the account to get, wither the name identifier (string) or an object with:
  *   * `name`: The name identifier of the account
- *   * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account @see {getDispenserAccount}
+ *   * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
  * @param algod An algod client
- * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
+ * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
  */
 export async function getAccount(
@@ -131,8 +133,8 @@ export async function getAccount(
  *
  * @param account Either an account (with private key loaded) or the string address of an account
  */
-export function getAccountAddressAsUint8Array(account: Account | string) {
-  return algosdk.decodeAddress(typeof account === 'string' ? account : account.addr).publicKey
+export function getAccountAddressAsUint8Array(account: SendTransactionFrom | string) {
+  return algosdk.decodeAddress(typeof account === 'string' ? account : getSenderAddress(account)).publicKey
 }
 
 /** Returns the string address of an Algorand account from a base64 encoded version of the underlying byte array of the address public key
@@ -145,14 +147,14 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
 
 /** Returns an account (with private key loaded) that can act as a dispenser
  *
- * If running on Sandbox then it will return the default dispenser account automatically,
- *  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC @see {getAccount}
+ * If running on LocalNet then it will return the default dispenser account automatically,
+ *  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC
  *
  * @param algod An algod client
- * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables @see {getAlgoKmdClient}
+ * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables
  */
 export async function getDispenserAccount(algod: Algodv2, kmd?: Kmd) {
-  // If we are running against a sandbox we can use the default account within it, otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
+  // If we are running against LocalNet we can use the default account within it, otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
   const canFundFromDefaultAccount = await isLocalNet(algod)
   return canFundFromDefaultAccount ? await getLocalNetDispenserAccount(algod, kmd) : await getAccount(DISPENSER_ACCOUNT, algod)
 }

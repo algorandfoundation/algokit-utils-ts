@@ -45,11 +45,7 @@ ___
 
 ▸ (): `void`
 
-Testing framework agnostic handler method to run before each test to prepare the
-
-**`See`**
-
-testLogger for that test.
+Testing framework agnostic handler method to run before each test to prepare the `testLogger` for that test.
 
 ##### Returns
 

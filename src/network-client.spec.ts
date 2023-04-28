@@ -18,6 +18,9 @@ describe('network-clients', () => {
     })
 
     test('Throws error when getting algod config when no environment defined', () => {
+      process.env.ALGOD_SERVER = undefined
+      process.env.ALGOD_PORT = undefined
+      process.env.ALGOD_TOKEN = undefined
       expect(() => algokit.getAlgodConfigFromEnvironment()).toThrowError(
         'Attempt to get default algod configuration without specifying ALGOD_SERVER in the environment variables',
       )
@@ -59,6 +62,9 @@ describe('network-clients', () => {
     })
 
     test('Throws error when getting indexer config when no environment defined', () => {
+      process.env.INDEXER_SERVER = undefined
+      process.env.INDEXER_PORT = undefined
+      process.env.INDEXER_TOKEN = undefined
       expect(() => algokit.getIndexerConfigFromEnvironment()).toThrowError(
         'Attempt to get default indexer configuration without specifying INDEXER_SERVER in the environment variables',
       )

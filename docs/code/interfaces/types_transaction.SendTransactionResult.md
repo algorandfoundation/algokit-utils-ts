@@ -14,6 +14,8 @@ The result of sending a transaction
 
   ↳ [`ConfirmedTransactionResult`](types_transaction.ConfirmedTransactionResult.md)
 
+  ↳ [`ConfirmedTransactionResults`](types_transaction.ConfirmedTransactionResults.md)
+
 ## Table of contents
 
 ### Properties
@@ -31,7 +33,7 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
 
 ___
 
@@ -43,4 +45,4 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)

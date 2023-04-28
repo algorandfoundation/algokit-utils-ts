@@ -54,7 +54,10 @@ ___
 ▸ **algorandFixture**(`fixtureConfig?`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
 Creates a test fixture for automated testing against Algorand.
-By default it tests against a default LocalNet instance, but you can pass in an algod and indexer if you want to test against, say, TestNet.
+By default it tests against an environment variable specified client
+ if the standard environment variables are specified, otherwise against
+ a default LocalNet instance, but you can pass in an algod, indexer
+ and/or kmd if you want to test against an explicitly defined network.
 
 **`Example`**
 
@@ -63,8 +66,9 @@ const algorand = algorandFixture()
 
 beforeEach(algorand.beforeEach, 10_000)
 
-test('My test', () => {
+test('My test', async () => {
     const {algod, indexer, testAccount, ...} = algorand.context
+    // test things...
 })
 ```
 
@@ -82,7 +86,7 @@ The fixture
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L22)
+[src/testing/fixtures/algorand-fixture.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L37)
 
 ___
 
@@ -92,12 +96,8 @@ ___
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
-
-**`See`**
-
- - DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
+DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
 Note: By default this will log the mnemonic of the account.
- - 
 
 #### Parameters
 

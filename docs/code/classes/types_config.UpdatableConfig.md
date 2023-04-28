@@ -22,12 +22,14 @@ Updatable AlgoKit config
 
 ### Accessors
 
+- [debug](types_config.UpdatableConfig.md#debug)
 - [logger](types_config.UpdatableConfig.md#logger)
 
 ### Methods
 
 - [configure](types_config.UpdatableConfig.md#configure)
 - [getLogger](types_config.UpdatableConfig.md#getlogger)
+- [withDebug](types_config.UpdatableConfig.md#withdebug)
 
 ## Constructors
 
@@ -37,7 +39,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L24)
+[src/types/config.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L50)
 
 ## Properties
 
@@ -47,9 +49,27 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L10)
+[src/types/config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L13)
 
 ## Accessors
+
+### debug
+
+• `get` **debug**(): `boolean`
+
+#### Returns
+
+`boolean`
+
+#### Implementation of
+
+Readonly.debug
+
+#### Defined in
+
+[src/types/config.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L19)
+
+___
 
 ### logger
 
@@ -65,7 +85,7 @@ Readonly.logger
 
 #### Defined in
 
-[src/types/config.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L12)
+[src/types/config.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L15)
 
 ## Methods
 
@@ -77,9 +97,9 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `newConfig` | [`Config`](../interfaces/types_config.Config.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `newConfig` | `Partial`<[`Config`](../interfaces/types_config.Config.md)\> | Partial or complete config to replace |
 
 #### Returns
 
@@ -87,7 +107,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-[src/types/config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L31)
+[src/types/config.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L61)
 
 ___
 
@@ -95,16 +115,42 @@ ___
 
 ▸ **getLogger**(`returnNullLogger?`): [`Logger`](../modules/types_logging.md#logger)
 
+Returns the current logger, or the null logger if true is passed in to `returnNullLogger`
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `returnNullLogger?` | `boolean` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `returnNullLogger?` | `boolean` | Whether or not to return the null logger |
 
 #### Returns
 
 [`Logger`](../modules/types_logging.md#logger)
 
+The requested logger
+
 #### Defined in
 
-[src/types/config.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L16)
+[src/types/config.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L28)
+
+___
+
+### withDebug
+
+▸ **withDebug**(`lambda`): `void`
+
+Temporarily run with debug set to true.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `lambda` | () => `unknown` | A lambda expression with code to run with debug config set to true |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/types/config.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L40)

@@ -129,7 +129,7 @@ Logger.debug
 
 #### Defined in
 
-[src/testing/test-logger.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L75)
+[src/testing/test-logger.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L77)
 
 ___
 
@@ -154,7 +154,7 @@ Logger.error
 
 #### Defined in
 
-[src/testing/test-logger.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L59)
+[src/testing/test-logger.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L61)
 
 ___
 
@@ -165,8 +165,6 @@ ___
 Returns a captured log snapshot.
 This helps ensure that the provided configuration items won't appear
  with random values in the log snapshot, but rather will get substituted with predictable ids.
-
-**`See`**
 
 https://jestjs.io/docs/snapshot-testing#2-tests-should-be-deterministic
 
@@ -193,7 +191,7 @@ The snapshotted logs.
 
 #### Defined in
 
-[src/testing/test-logger.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L45)
+[src/testing/test-logger.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L47)
 
 ___
 
@@ -218,7 +216,7 @@ Logger.info
 
 #### Defined in
 
-[src/testing/test-logger.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L67)
+[src/testing/test-logger.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L69)
 
 ___
 
@@ -243,7 +241,7 @@ Logger.verbose
 
 #### Defined in
 
-[src/testing/test-logger.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L71)
+[src/testing/test-logger.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L73)
 
 ___
 
@@ -268,4 +266,4 @@ Logger.warn
 
 #### Defined in
 
-[src/testing/test-logger.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L63)
+[src/testing/test-logger.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L65)

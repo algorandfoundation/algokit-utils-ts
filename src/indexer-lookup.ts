@@ -1,13 +1,19 @@
 import { Indexer } from 'algosdk'
 import SearchForTransactions from 'algosdk/dist/types/client/v2/indexer/searchForTransactions'
-import { ApplicationCreatedLookupResult, ApplicationResult, TransactionLookupResult, TransactionSearchResults } from './types/indexer'
+import {
+  AccountLookupResult,
+  ApplicationCreatedLookupResult,
+  ApplicationResult,
+  TransactionLookupResult,
+  TransactionSearchResults,
+} from './types/indexer'
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
 
 /**
  * Looks up a transaction by ID using Indexer.
- * @param indexer An indexer client
  * @param transactionId The ID of the transaction to look up
+ * @param indexer An indexer client
  * @returns The result of the look-up
  */
 export async function lookupTransactionById(transactionId: string, indexer: Indexer): Promise<TransactionLookupResult> {
@@ -15,11 +21,21 @@ export async function lookupTransactionById(transactionId: string, indexer: Inde
 }
 
 /**
+ * Looks up an account by address using Indexer.
+ * @param transactionId The address of the account to look up
+ * @param indexer An indexer client
+ * @returns The result of the look-up
+ */
+export async function lookupAccountByAddress(accountAddress: string, indexer: Indexer): Promise<AccountLookupResult> {
+  return (await indexer.lookupAccountByID(accountAddress).do()) as AccountLookupResult
+}
+
+/**
  * Looks up applications that were created by the given address.
  * @param indexer An indexer instance
  * @param address The address of the creator to look up
  * @param getAll Whether or not to include deleted applications
- * @param paginationLimit The number of records to return per paginated request, default @see {DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT}
+ * @param paginationLimit The number of records to return per paginated request, default 1000
  * @returns The list of application results
  */
 export async function lookupAccountCreatedApplicationByAddress(
@@ -52,7 +68,7 @@ export async function lookupAccountCreatedApplicationByAddress(
  * Allows transactions to be searched for the given criteria.
  * @param indexer An indexer client
  * @param searchCriteria The criteria to search for
- * @param paginationLimit The number of records to return per paginated request, default @see {DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT}
+ * @param paginationLimit The number of records to return per paginated request, default 1000
  * @returns The search results
  */
 export async function searchTransactions(
@@ -61,13 +77,13 @@ export async function searchTransactions(
   paginationLimit?: number,
 ): Promise<TransactionSearchResults> {
   let currentRound = 0
-  const txns = await executePaginatedRequest(
+  const transactions = await executePaginatedRequest(
     (response: TransactionSearchResults | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
-      if (Number(response['current-round']) > currentRound) {
-        currentRound = Number(response['current-round'])
+      if (response['current-round'] > currentRound) {
+        currentRound = response['current-round']
       }
       return response.transactions
     },
@@ -81,9 +97,9 @@ export async function searchTransactions(
   )
 
   return {
-    'current-round': currentRound.toString(),
+    'current-round': currentRound,
     'next-token': '',
-    transactions: txns,
+    transactions: transactions,
   }
 }
 
