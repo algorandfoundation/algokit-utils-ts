@@ -91,7 +91,7 @@ Error.message
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1054
+node_modules/typescript/lib/lib.es5.d.ts:1055
 
 ___
 
@@ -105,7 +105,7 @@ Error.name
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1053
+node_modules/typescript/lib/lib.es5.d.ts:1054
 
 ___
 
