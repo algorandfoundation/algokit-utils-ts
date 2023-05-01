@@ -19,22 +19,11 @@ Hint information for a given method call to allow client generation
 
 ### call\_config
 
-• **call\_config**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `clear_state?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) |
-| `close_out?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) |
-| `delete_application?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) |
-| `no_op?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) |
-| `opt_in?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) |
-| `update_application?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) |
+• **call\_config**: [`CallConfig`](types_app_spec.CallConfig.md)
 
 #### Defined in
 
-[src/types/app-spec.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L58)
+[src/types/app-spec.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L61)
 
 ___
 
@@ -44,7 +33,7 @@ ___
 
 #### Defined in
 
-[src/types/app-spec.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L57)
+[src/types/app-spec.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L60)
 
 ___
 
@@ -54,7 +43,7 @@ ___
 
 #### Defined in
 
-[src/types/app-spec.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L56)
+[src/types/app-spec.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L59)
 
 ___
 
@@ -66,4 +55,4 @@ Any user-defined struct/tuple types used in the method call, keyed by parameter 
 
 #### Defined in
 
-[src/types/app-spec.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L55)
+[src/types/app-spec.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L58)

@@ -14,20 +14,7 @@ export interface AppSpec {
   /** The rolled-up schema allocation values for local and global state */
   state: StateSchemaSpec
   /** The config of all BARE calls (i.e. non ABI calls with no args) */
-  bare_call_config: {
-    /** NoOp bare call config */
-    no_op?: CallConfigValue
-    /** Opt-in bare call config */
-    opt_in?: CallConfigValue
-    /** Close out bare call config */
-    close_out?: CallConfigValue
-    /** Clear state bare call config */
-    clear_state?: CallConfigValue
-    /** Update bare call config */
-    update_application?: CallConfigValue
-    /** Delete bare call config */
-    delete_application?: CallConfigValue
-  }
+  bare_call_config: CallConfig
 }
 
 /** A lookup of encoded method call spec to hint */
@@ -49,20 +36,29 @@ export interface AppSources {
  **/
 export type CallConfigValue = 'NEVER' | 'CALL' | 'CREATE' | 'ALL'
 
+/** Call configuration for a method */
+export interface CallConfig {
+  /** NoOp call config */
+  no_op?: CallConfigValue
+  /** Opt-in call config */
+  opt_in?: CallConfigValue
+  /** Close out call config */
+  close_out?: CallConfigValue
+  /** Clear state call config */
+  clear_state?: CallConfigValue
+  /** Update call config */
+  update_application?: CallConfigValue
+  /** Delete call config */
+  delete_application?: CallConfigValue
+}
+
 /** Hint information for a given method call to allow client generation */
 export interface Hint {
   /** Any user-defined struct/tuple types used in the method call, keyed by parameter name or `output` for return type */
   structs: Record<string, Struct>
   readonly: boolean
   default_arguments: Record<string, DefaultArgument>
-  call_config: {
-    no_op?: CallConfigValue
-    opt_in?: CallConfigValue
-    close_out?: CallConfigValue
-    clear_state?: CallConfigValue
-    update_application?: CallConfigValue
-    delete_application?: CallConfigValue
-  }
+  call_config: CallConfig
 }
 
 /** The name of a field */

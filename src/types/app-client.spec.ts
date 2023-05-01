@@ -1,5 +1,5 @@
 import { describe, test } from '@jest/globals'
-import algosdk, { ABIUintType, Account, Algodv2, getApplicationAddress, Indexer, OnApplicationComplete, TransactionType } from 'algosdk'
+import algosdk, { ABIUintType, Account, Algodv2, Indexer, OnApplicationComplete, TransactionType, getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
@@ -58,6 +58,30 @@ describe('application-client', () => {
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
     expect(app.confirmation?.['application-index']).toBe(app.appId)
+  })
+
+  test('Deploy app - can still deploy when immutable and permanent', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+
+    const client = algokit.getAppClient(
+      {
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        indexer,
+      },
+      algod,
+    )
+
+    const app = await client.deploy({
+      allowDelete: false,
+      allowUpdate: false,
+      onSchemaBreak: 'fail',
+      onUpdate: 'fail',
+      deployTimeParams: {
+        VALUE: 1,
+      },
+    })
   })
 
   test('Deploy app - create', async () => {

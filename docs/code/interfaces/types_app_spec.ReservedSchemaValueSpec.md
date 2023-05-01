@@ -24,7 +24,7 @@ The description of the reserved storage space
 
 #### Defined in
 
-[src/types/app-spec.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L121)
+[src/types/app-spec.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L117)
 
 ___
 
@@ -36,7 +36,7 @@ The maximum number of slots to reserve
 
 #### Defined in
 
-[src/types/app-spec.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L123)
+[src/types/app-spec.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L119)
 
 ___
 
@@ -48,4 +48,4 @@ The type of value
 
 #### Defined in
 
-[src/types/app-spec.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L119)
+[src/types/app-spec.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L115)

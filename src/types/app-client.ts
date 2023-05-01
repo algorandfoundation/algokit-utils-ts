@@ -178,6 +178,34 @@ export interface SourceMapExport {
   mappings: string
 }
 
+/**
+ * Determines deploy time control (UPDATABLE, DELETABLE) value by inspecting application specification
+ * @param approval TEAL Approval program, not the base64 version found on the appSpec
+ * @param appSpec Application Specification
+ * @param templateVariableName Template variable
+ * @param callConfigKey Call config type
+ * @returns true if applicable call config is found, false if not found or undefined if variable not present
+ */
+function getDeployTimeControl(
+  approval: string,
+  appSpec: AppSpec,
+  templateVariableName: string,
+  callConfigKey: 'update_application' | 'delete_application',
+): boolean | undefined {
+  // variable not present, so unknown control value
+  if (!approval.includes(templateVariableName)) return undefined
+
+  // a bare call for specified CallConfig is present and configured
+  const bareCallConfig = appSpec.bare_call_config[callConfigKey]
+  if (!!bareCallConfig && bareCallConfig !== 'NEVER') return true
+
+  // an ABI call for specified CallConfig is present and configured
+  return Object.values(appSpec.hints).some((h) => {
+    const abiCallConfig = h.call_config[callConfigKey]
+    return !!abiCallConfig && abiCallConfig !== 'NEVER'
+  })
+}
+
 /** Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
   private algod: Algodv2
@@ -325,21 +353,13 @@ export class ApplicationClient {
     const compilation = {
       deployTimeParams: deployArgs.deployTimeParams,
       updatable:
-        allowUpdate ?? approval.includes(UPDATABLE_TEMPLATE_NAME)
-          ? (!this.appSpec.bare_call_config.update_application && this.appSpec.bare_call_config.update_application !== 'NEVER') ||
-            !!Object.keys(this.appSpec.hints).filter(
-              (h) =>
-                !this.appSpec.hints[h].call_config.update_application && this.appSpec.hints[h].call_config.update_application !== 'NEVER',
-            )[0]
-          : undefined,
+        allowUpdate !== undefined
+          ? allowUpdate
+          : getDeployTimeControl(approval, this.appSpec, UPDATABLE_TEMPLATE_NAME, 'update_application'),
       deletable:
-        allowDelete ?? approval.includes(DELETABLE_TEMPLATE_NAME)
-          ? (!this.appSpec.bare_call_config.delete_application && this.appSpec.bare_call_config.delete_application !== 'NEVER') ||
-            !!Object.keys(this.appSpec.hints).filter(
-              (h) =>
-                !this.appSpec.hints[h].call_config.delete_application && this.appSpec.hints[h].call_config.delete_application !== 'NEVER',
-            )[0]
-          : undefined,
+        allowDelete !== undefined
+          ? allowDelete
+          : getDeployTimeControl(approval, this.appSpec, DELETABLE_TEMPLATE_NAME, 'delete_application'),
     }
 
     const { approvalCompiled, clearCompiled } = await this.compile(compilation)
