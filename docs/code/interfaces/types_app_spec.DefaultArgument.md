@@ -23,7 +23,7 @@ The name or value corresponding to the source
 
 #### Defined in
 
-[src/types/app-spec.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L95)
+[src/types/app-spec.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L91)
 
 ___
 
@@ -39,4 +39,4 @@ The source of the default argument value:
 
 #### Defined in
 
-[src/types/app-spec.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L93)
+[src/types/app-spec.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L89)

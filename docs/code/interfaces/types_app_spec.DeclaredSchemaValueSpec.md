@@ -25,7 +25,7 @@ A description of the variable
 
 #### Defined in
 
-[src/types/app-spec.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L111)
+[src/types/app-spec.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L107)
 
 ___
 
@@ -37,7 +37,7 @@ The name of the key
 
 #### Defined in
 
-[src/types/app-spec.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L109)
+[src/types/app-spec.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L105)
 
 ___
 
@@ -49,7 +49,7 @@ Whether or not the value is set statically (at create time only) or dynamically
 
 #### Defined in
 
-[src/types/app-spec.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L113)
+[src/types/app-spec.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L109)
 
 ___
 
@@ -61,4 +61,4 @@ The type of value
 
 #### Defined in
 
-[src/types/app-spec.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L107)
+[src/types/app-spec.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L103)

@@ -21,20 +21,9 @@ An ARC-0032 Application Specification see https://github.com/algorandfoundation/
 
 ### bare\_call\_config
 
-• **bare\_call\_config**: `Object`
+• **bare\_call\_config**: [`CallConfig`](types_app_spec.CallConfig.md)
 
 The config of all BARE calls (i.e. non ABI calls with no args)
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `clear_state?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) | Clear state bare call config |
-| `close_out?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) | Close out bare call config |
-| `delete_application?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) | Delete bare call config |
-| `no_op?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) | NoOp bare call config |
-| `opt_in?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) | Opt-in bare call config |
-| `update_application?` | [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue) | Update bare call config |
 
 #### Defined in
 

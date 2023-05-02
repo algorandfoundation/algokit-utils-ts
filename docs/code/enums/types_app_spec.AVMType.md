@@ -21,7 +21,7 @@ AVM data type
 
 #### Defined in
 
-[src/types/app-spec.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L101)
+[src/types/app-spec.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L97)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[src/types/app-spec.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L100)
+[src/types/app-spec.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L96)
