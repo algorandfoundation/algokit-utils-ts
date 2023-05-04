@@ -6,6 +6,12 @@
 
 App call args for an ABI call
 
+## Hierarchy
+
+- [`CoreAppCallArgs`](types_app.CoreAppCallArgs.md)
+
+  ↳ **`ABIAppCallArgs`**
+
 ## Table of contents
 
 ### Properties
@@ -25,7 +31,7 @@ The ABI args to pass in
 
 #### Defined in
 
-[src/types/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L94)
+[src/types/app.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L98)
 
 ___
 
@@ -33,11 +39,15 @@ ___
 
 • `Optional` **boxes**: ([`BoxReference`](types_app.BoxReference.md) \| [`BoxIdentifier`](../modules/types_app.md#boxidentifier) \| `BoxReference`)[]
 
-Any box references to load either as the box name (if for the current app) or the reference with app id
+Any box references to load
+
+#### Inherited from
+
+[CoreAppCallArgs](types_app.CoreAppCallArgs.md).[boxes](types_app.CoreAppCallArgs.md#boxes)
 
 #### Defined in
 
-[src/types/app.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L98)
+[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
 
 ___
 
@@ -47,9 +57,13 @@ ___
 
 The optional lease for the transaction
 
+#### Inherited from
+
+[CoreAppCallArgs](types_app.CoreAppCallArgs.md).[lease](types_app.CoreAppCallArgs.md#lease)
+
 #### Defined in
 
-[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
+[src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
 
 ___
 
@@ -61,4 +75,4 @@ The ABI method to call
 
 #### Defined in
 
-[src/types/app.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L92)
+[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)

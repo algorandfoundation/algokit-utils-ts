@@ -1,26 +1,36 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/app](../modules/types_app.md) / AppCallTransactionResult
+[@algorandfoundation/algokit-utils](../README.md) / [types/app](../modules/types_app.md) / AppCallTransactionResultOfType
 
-# Interface: AppCallTransactionResult
+# Interface: AppCallTransactionResultOfType<T\>
 
-[types/app](../modules/types_app.md).AppCallTransactionResult
+[types/app](../modules/types_app.md).AppCallTransactionResultOfType
 
-Result from calling an app
+The result of preparing and/or sending multiple transactions
+
+## Type parameters
+
+| Name |
+| :------ |
+| `T` |
 
 ## Hierarchy
 
-- [`AppCallTransactionResultOfType`](types_app.AppCallTransactionResultOfType.md)<[`ABIReturn`](../modules/types_app.md#abireturn)\>
+- [`SendTransactionResults`](types_transaction.SendTransactionResults.md)
 
-  ↳ **`AppCallTransactionResult`**
+- [`SendTransactionResult`](types_transaction.SendTransactionResult.md)
+
+  ↳ **`AppCallTransactionResultOfType`**
+
+  ↳↳ [`AppCallTransactionResult`](types_app.AppCallTransactionResult.md)
 
 ## Table of contents
 
 ### Properties
 
-- [confirmation](types_app.AppCallTransactionResult.md#confirmation)
-- [confirmations](types_app.AppCallTransactionResult.md#confirmations)
-- [return](types_app.AppCallTransactionResult.md#return)
-- [transaction](types_app.AppCallTransactionResult.md#transaction)
-- [transactions](types_app.AppCallTransactionResult.md#transactions)
+- [confirmation](types_app.AppCallTransactionResultOfType.md#confirmation)
+- [confirmations](types_app.AppCallTransactionResultOfType.md#confirmations)
+- [return](types_app.AppCallTransactionResultOfType.md#return)
+- [transaction](types_app.AppCallTransactionResultOfType.md#transaction)
+- [transactions](types_app.AppCallTransactionResultOfType.md#transactions)
 
 ## Properties
 
@@ -32,7 +42,7 @@ The response if the transaction was sent and waited for
 
 #### Inherited from
 
-[AppCallTransactionResultOfType](types_app.AppCallTransactionResultOfType.md).[confirmation](types_app.AppCallTransactionResultOfType.md#confirmation)
+[SendTransactionResult](types_transaction.SendTransactionResult.md).[confirmation](types_transaction.SendTransactionResult.md#confirmation)
 
 #### Defined in
 
@@ -49,7 +59,7 @@ the index of the confirmation will match the index of the underlying transaction
 
 #### Inherited from
 
-[AppCallTransactionResultOfType](types_app.AppCallTransactionResultOfType.md).[confirmations](types_app.AppCallTransactionResultOfType.md#confirmations)
+[SendTransactionResults](types_transaction.SendTransactionResults.md).[confirmations](types_transaction.SendTransactionResults.md#confirmations)
 
 #### Defined in
 
@@ -59,13 +69,9 @@ ___
 
 ### return
 
-• `Optional` **return**: [`ABIReturn`](../modules/types_app.md#abireturn)
+• `Optional` **return**: `T`
 
 If an ABI method was called the processed return value
-
-#### Inherited from
-
-[AppCallTransactionResultOfType](types_app.AppCallTransactionResultOfType.md).[return](types_app.AppCallTransactionResultOfType.md#return)
 
 #### Defined in
 
@@ -81,7 +87,7 @@ The transaction
 
 #### Inherited from
 
-[AppCallTransactionResultOfType](types_app.AppCallTransactionResultOfType.md).[transaction](types_app.AppCallTransactionResultOfType.md#transaction)
+[SendTransactionResult](types_transaction.SendTransactionResult.md).[transaction](types_transaction.SendTransactionResult.md#transaction)
 
 #### Defined in
 
@@ -97,7 +103,7 @@ The transactions that have been prepared and/or sent
 
 #### Inherited from
 
-[AppCallTransactionResultOfType](types_app.AppCallTransactionResultOfType.md).[transactions](types_app.AppCallTransactionResultOfType.md#transactions)
+[SendTransactionResults](types_transaction.SendTransactionResults.md).[transactions](types_transaction.SendTransactionResults.md#transactions)
 
 #### Defined in
 
