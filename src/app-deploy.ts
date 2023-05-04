@@ -6,12 +6,12 @@ import { getSenderAddress, sendAtomicTransactionComposer } from './transaction'
 import { ApplicationStateSchema } from './types/algod'
 import {
   ABIReturn,
+  APP_DEPLOY_NOTE_DAPP,
   AppCompilationResult,
   AppDeploymentParams,
   AppDeployMetadata,
   AppLookup,
   AppMetadata,
-  APP_DEPLOY_NOTE_DAPP,
   CompiledTeal,
   DELETABLE_TEMPLATE_NAME,
   OnSchemaBreak,
@@ -602,6 +602,8 @@ export async function performTemplateSubstitutionAndCompile(
   templateParams?: TealTemplateParams,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {
+  tealCode = stripCommments(tealCode)
+
   tealCode = performTemplateSubstitution(tealCode, templateParams)
 
   if (deploymentMetadata) {
@@ -609,4 +611,18 @@ export async function performTemplateSubstitutionAndCompile(
   }
 
   return await compileTeal(tealCode, algod)
+}
+
+export function stripCommments(tealCode: string) {
+  // find // outside parenteses
+  const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
+
+  tealCode = tealCode
+    .split('\n')
+    .map((tealCodeLine) => {
+      return tealCodeLine.split(regex)[0].trim()
+    })
+    .join('\n')
+
+  return tealCode
 }

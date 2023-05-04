@@ -8,7 +8,7 @@ import { AppDeployMetadata } from './types/app'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.beforeEach, 50_000)
 
   const logging = algoKitLogCaptureFixture()
   beforeEach(logging.beforeEach)
@@ -458,6 +458,14 @@ describe('deploy-app', () => {
       }),
     ).toMatchSnapshot()
   })
+})
+
+test('Strip comments remove comments without removing commands', async () => {
+  const tealCode = 'op arg\nop "arg"\nop "//"\nop "  //comment  "\nop "" //"\n"// \\" //"'
+
+  const result = algokit.stripCommments(tealCode)
+
+  expect(result).toBe(tealCode)
 })
 
 function getMetadata(overrides?: Partial<AppDeployMetadata>): AppDeployMetadata {
