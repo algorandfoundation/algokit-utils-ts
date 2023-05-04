@@ -139,7 +139,7 @@ export type AppClientCallArgs =
   | {
       /** If calling an ABI method then either the name of the method, or the ABI signature */
       method: string
-      /** A object with the ABI arguments and other parameters like boxes */
+      /** An object with the ABI arguments and other parameters like boxes */
       methodArgs: Omit<ABIAppCallArgs, 'method'> | ABIAppCallArg[]
     }
   | (CoreAppCallArgs & {
