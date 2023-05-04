@@ -65,7 +65,7 @@ describe('indexer-lookup', () => {
   })
 
   test('Application create transactions are found by creator with pagination', async () => {
-    const { algod, indexer, testAccount, generateAccount } = localnet.context
+    const { algod, indexer, testAccount, generateAccount, waitForIndexer } = localnet.context
     const secondAccount = await generateAccount({
       initialFunds: algokit.algos(1),
       suppressLog: true,
@@ -79,6 +79,7 @@ describe('indexer-lookup', () => {
     const app1 = await algokit.createApp(createParams, algod)
     const app2 = await algokit.createApp(createParams, algod)
     await algokit.createApp({ ...createParams, from: secondAccount }, algod)
+    await waitForIndexer()
 
     const apps = await algokit.lookupAccountCreatedApplicationByAddress(indexer, testAccount.addr, true, 1)
 

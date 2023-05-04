@@ -10,7 +10,7 @@ The result of preparing and/or sending multiple transactions
 
 - **`SendTransactionResults`**
 
-  ↳ [`AppCallTransactionResult`](types_app.AppCallTransactionResult.md)
+  ↳ [`AppCallTransactionResultOfType`](types_app.AppCallTransactionResultOfType.md)
 
   ↳ [`SendAtomicTransactionComposerResults`](types_transaction.SendAtomicTransactionComposerResults.md)
 

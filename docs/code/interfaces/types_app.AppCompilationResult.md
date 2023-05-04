@@ -23,7 +23,7 @@ The compilation result of approval
 
 #### Defined in
 
-[src/types/app.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L278)
+[src/types/app.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L281)
 
 ___
 
@@ -35,4 +35,4 @@ The compilation result of clear
 
 #### Defined in
 
-[src/types/app.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L280)
+[src/types/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L283)

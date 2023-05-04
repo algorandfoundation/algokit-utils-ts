@@ -35,6 +35,7 @@ import {
   AppReference,
   AppState,
   BoxName,
+  CoreAppCallArgs,
   DELETABLE_TEMPLATE_NAME,
   OnSchemaBreak,
   OnUpdate,
@@ -46,22 +47,26 @@ import { AppSpec } from './app-spec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
-/** Configuration to resolve app by creator and name `getCreatorAppsByName` */
-export type ResolveAppByCreatorAndName = {
+export type ResolveAppByCreatorAndNameWithIndexer = {
   /** The address of the app creator account to resolve the app by */
   creatorAddress: string
   /** The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) */
   name?: string
-} & (
-  | {
-      /** indexer An indexer instance to search the creator account apps */
-      indexer: Indexer
-    }
-  | {
-      /** Optional cached value of the existing apps for the given creator, `getCreatorAppsByName` */
-      existingDeployments: AppLookup
-    }
-)
+  /** An indexer instance to search the creator account apps */
+  indexer: Indexer
+}
+
+export type ResolveAppByCreatorAndNameWithoutIndexer = {
+  /** The address of the app creator account to resolve the app by */
+  creatorAddress: string
+  /** The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) */
+  name?: string
+  /** Cached value of the existing apps for the given creator, `getCreatorAppsByName` */
+  existingDeployments: AppLookup
+}
+
+/** Configuration to resolve app by creator and name `getCreatorAppsByName` */
+export type ResolveAppByCreatorAndName = ResolveAppByCreatorAndNameWithIndexer | ResolveAppByCreatorAndNameWithoutIndexer
 
 /** Configuration to resolve app by ID */
 export interface ResolveAppById {
@@ -71,29 +76,31 @@ export interface ResolveAppById {
   name?: string
 }
 
-/** The details of an ARC-0032 app spec specified app */
-export type AppSpecAppDetails = {
-  /** The ARC-0032 application spec as either:
-   *  * Parsed JSON `AppSpec`
-   *  * Raw JSON string
-   */
-  app: AppSpec | string
+/** The details of an AlgoKit Utils deployed app */
+export type AppDetails = {
   /** Default sender to use for transactions issued by this application client */
   sender?: SendTransactionFrom
   /** Default suggested params object to use */
   params?: SuggestedParams
 } & (ResolveAppById | ResolveAppByCreatorAndName)
 
-/** Parameters to pass into ApplicationClient.deploy */
-export interface AppClientDeployParams {
+/** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app */
+export type AppSpecAppDetails = AppDetails & {
+  /** The ARC-0032 application spec as either:
+   *  * Parsed JSON `AppSpec`
+   *  * Raw JSON string
+   */
+  app: AppSpec | string
+}
+
+/** Core parameters to pass into ApplicationClient.deploy */
+export interface AppClientDeployCoreParams {
   /** The version of the contract, uses "1.0" by default */
   version?: string
   /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
   sender?: SendTransactionFrom
   /** Parameters to control transaction sending */
   sendParams?: Omit<SendTransactionParams, 'skipSending' | 'skipWaiting'>
-  /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParams?: TealTemplateParams
   /** Whether or not to allow updates in the contract using the deploy-time updatability control if present in your contract.
    * If this is not specified then it will automatically be determined based on the AppSpec definition
    **/
@@ -106,6 +113,12 @@ export interface AppClientDeployParams {
   onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
   onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
+}
+
+/** Call interface parameters to pass into ApplicationClient.deploy */
+export interface AppClientDeployCallInterfaceParams {
+  /** Any deploy-time parameters to replace in the TEAL code */
+  deployTimeParams?: TealTemplateParams
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppClientCallArgs
   /** Any args to pass to any update transaction that is issued as part of deployment */
@@ -113,6 +126,9 @@ export interface AppClientDeployParams {
   /** Any args to pass to any delete transaction that is issued as part of deployment */
   deleteArgs?: AppClientCallArgs
 }
+
+/** Parameters to pass into ApplicationClient.deploy */
+export interface AppClientDeployParams extends AppClientDeployCoreParams, AppClientDeployCallInterfaceParams {}
 
 /** The arguments to pass to an Application Client smart contract call */
 export type AppClientCallArgs =
@@ -123,12 +139,18 @@ export type AppClientCallArgs =
   | {
       /** If calling an ABI method then either the name of the method, or the ABI signature */
       method: string
-      /** Either the ABI arguments or an object with the ABI arguments and other parameters like boxes */
+      /** A object with the ABI arguments and other parameters like boxes */
       methodArgs: Omit<ABIAppCallArgs, 'method'> | ABIAppCallArg[]
     }
+  | (CoreAppCallArgs & {
+      /** If calling an ABI method then either the name of the method, or the ABI signature */
+      method: string
+      /** The ABI arguments */
+      methodArgs: ABIAppCallArg[]
+    })
 
-/** Parameters to construct a ApplicationClient contract call */
-export type AppClientCallParams = AppClientCallArgs & {
+/** Common (core) parameters to construct a ApplicationClient contract call */
+export interface AppClientCallCoreParams {
   /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
   sender?: SendTransactionFrom
   /** The transaction note for the smart contract call */
@@ -136,6 +158,9 @@ export type AppClientCallParams = AppClientCallArgs & {
   /** Parameters to control transaction sending */
   sendParams?: SendTransactionParams
 }
+
+/** Parameters to construct a ApplicationClient contract call */
+export type AppClientCallParams = AppClientCallArgs & AppClientCallCoreParams
 
 export interface AppClientCompilationParams {
   /** Any deploy-time parameters to replace in the TEAL code */
@@ -719,6 +744,8 @@ export class ApplicationClient {
         return {
           method: abiMethod,
           args: args.methodArgs,
+          boxes: 'boxes' in args ? args.boxes : undefined,
+          lease: 'lease' in args ? args.lease : undefined,
         } as ABIAppCallArgs
       } else {
         return {

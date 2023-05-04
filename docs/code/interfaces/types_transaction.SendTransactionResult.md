@@ -10,7 +10,7 @@ The result of sending a transaction
 
 - **`SendTransactionResult`**
 
-  ↳ [`AppCallTransactionResult`](types_app.AppCallTransactionResult.md)
+  ↳ [`AppCallTransactionResultOfType`](types_app.AppCallTransactionResultOfType.md)
 
   ↳ [`ConfirmedTransactionResult`](types_transaction.ConfirmedTransactionResult.md)
 

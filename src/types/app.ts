@@ -63,22 +63,26 @@ export interface BoxReference {
  */
 export type BoxIdentifier = string | Uint8Array | SendTransactionFrom
 
-/**
- * App call args with raw values (minus some processing like encoding strings as binary)
- */
-export interface RawAppCallArgs {
-  /** The address of any accounts to load in */
-  accounts?: (string | Address)[]
-  /** Any application arguments to pass through */
-  appArgs?: (Uint8Array | string)[]
+/** Common app call arguments for ABI and non-ABI (raw) calls */
+export interface CoreAppCallArgs {
+  /** The optional lease for the transaction */
+  lease?: string | Uint8Array
   /** Any box references to load */
   boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
+}
+
+/**
+ * App call args with non-ABI (raw) values (minus some processing like encoding strings as binary)
+ */
+export interface RawAppCallArgs extends CoreAppCallArgs {
+  /** Any application arguments to pass through */
+  appArgs?: (Uint8Array | string)[]
+  /** The address of any accounts to load in */
+  accounts?: (string | Address)[]
   /** IDs of any apps to load into the foreignApps array */
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
   assets?: number[]
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
 }
 
 /** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
@@ -87,15 +91,11 @@ export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction | Prom
 /**
  * App call args for an ABI call
  */
-export interface ABIAppCallArgs {
+export interface ABIAppCallArgs extends CoreAppCallArgs {
   /** The ABI method to call */
   method: ABIMethodParams | ABIMethod
   /** The ABI args to pass in */
   args: ABIAppCallArg[]
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
-  /** Any box references to load either as the box name (if for the current app) or the reference with app id */
-  boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
 }
 
 /** Arguments to pass to an app call either:
@@ -176,11 +176,14 @@ export interface CompiledTeal {
   sourceMap: SourceMap
 }
 
-/** Result from calling an app */
-export interface AppCallTransactionResult extends SendTransactionResults, SendTransactionResult {
+export interface AppCallTransactionResultOfType<T> extends SendTransactionResults, SendTransactionResult {
   /** If an ABI method was called the processed return value */
-  return?: ABIReturn
+  return?: T
 }
+
+/** Result from calling an app */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AppCallTransactionResult extends AppCallTransactionResultOfType<ABIReturn> {}
 
 /** The return value of an ABI method call */
 export type ABIReturn =
