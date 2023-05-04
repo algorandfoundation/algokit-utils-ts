@@ -613,6 +613,12 @@ export async function performTemplateSubstitutionAndCompile(
   return await compileTeal(tealCode, algod)
 }
 
+/**
+ * Remove comments from tealCode
+ *
+ * @param tealCode The TEAL logic to compile
+ * @returns The TEAL without comments
+ */
 export function stripCommments(tealCode: string) {
   // find // outside parenteses
   const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
