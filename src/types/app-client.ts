@@ -27,7 +27,6 @@ import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
 import {
-  ABIAppCallArg,
   ABIAppCallArgs,
   AppCallArgs,
   AppLookup,
@@ -35,7 +34,6 @@ import {
   AppReference,
   AppState,
   BoxName,
-  CoreAppCallArgs,
   DELETABLE_TEMPLATE_NAME,
   OnSchemaBreak,
   OnUpdate,
@@ -130,24 +128,16 @@ export interface AppClientDeployCallInterfaceParams {
 /** Parameters to pass into ApplicationClient.deploy */
 export interface AppClientDeployParams extends AppClientDeployCoreParams, AppClientDeployCallInterfaceParams {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AppClientCallRawArgs extends RawAppCallArgs {}
+
+export interface AppClientCallABIArgs extends Omit<ABIAppCallArgs, 'method'> {
+  /** If calling an ABI method then either the name of the method, or the ABI signature */
+  method: string
+}
+
 /** The arguments to pass to an Application Client smart contract call */
-export type AppClientCallArgs =
-  | {
-      /** Raw argument values to pass to the smart contract call */
-      args?: RawAppCallArgs
-    }
-  | {
-      /** If calling an ABI method then either the name of the method, or the ABI signature */
-      method: string
-      /** An object with the ABI arguments and other parameters like boxes */
-      methodArgs: Omit<ABIAppCallArgs, 'method'> | ABIAppCallArg[]
-    }
-  | (CoreAppCallArgs & {
-      /** If calling an ABI method then either the name of the method, or the ABI signature */
-      method: string
-      /** The ABI arguments */
-      methodArgs: ABIAppCallArg[]
-    })
+export type AppClientCallArgs = AppClientCallRawArgs | AppClientCallABIArgs
 
 /** Common (core) parameters to construct a ApplicationClient contract call */
 export interface AppClientCallCoreParams {
@@ -740,21 +730,14 @@ export class ApplicationClient {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
 
-      if (Array.isArray(args.methodArgs)) {
-        return {
-          method: abiMethod,
-          args: args.methodArgs,
-          boxes: 'boxes' in args ? args.boxes : undefined,
-          lease: 'lease' in args ? args.lease : undefined,
-        } as ABIAppCallArgs
-      } else {
-        return {
-          method: abiMethod,
-          ...args.methodArgs,
-        } as ABIAppCallArgs
-      }
+      return {
+        method: abiMethod,
+        methodArgs: args.methodArgs,
+        boxes: 'boxes' in args ? args.boxes : undefined,
+        lease: 'lease' in args ? args.lease : undefined,
+      } as ABIAppCallArgs
     } else {
-      return args.args
+      return args
     }
   }
 

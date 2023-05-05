@@ -12,8 +12,6 @@ Common app call arguments for ABI and non-ABI (raw) calls
 
   ↳ [`RawAppCallArgs`](types_app.RawAppCallArgs.md)
 
-  ↳ [`ABIAppCallArgs`](types_app.ABIAppCallArgs.md)
-
 ## Table of contents
 
 ### Properties

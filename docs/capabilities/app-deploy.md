@@ -103,9 +103,9 @@ It will automatically add metadata to the transaction note of the create or upda
 The first parameter `deployment` is an [`AppDeploymentParams`](../code/interfaces/types_app.AppDeploymentParams.md) object, that consists of the same parameters as [creating an app](app.md#createapp) with the following differences:
 
 - `args` is replaced with three parameters:
-  - `createArgs` - The args to use if a create is needed
-  - `updateArgs` - The args to use if an update is needed
-  - `deleteArgs` - The args to use if a delete is needed
+  - `createArgs` - The [args](./app.md#appcallargs) to use if a create is needed
+  - `updateArgs` - The [args](./app.md#appcallargs) to use if an update is needed
+  - `deleteArgs` - The [args](./app.md#appcallargs) to use if a delete is needed
 - `note` is excluded since deployment must add a `ALGOKIT_DEPLOYER:j{...}` note for the [name lookup](#getcreatorappsbyname) to work
 - `skipSending`, `skipWaiting` and `atc` are excluded because `deployApp` needs to control the deployment and actually send to the network to function correctly
 - `metadata: AppDeployMetadata` is added to allow the [deployment metadata](../code/interfaces/types_app.AppDeployMetadata.md) to be provided (`name`, `version`, `updatable` and `deletable`)

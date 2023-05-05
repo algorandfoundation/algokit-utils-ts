@@ -91,11 +91,11 @@ export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction | Prom
 /**
  * App call args for an ABI call
  */
-export interface ABIAppCallArgs extends CoreAppCallArgs {
+export type ABIAppCallArgs = CoreAppCallArgs & {
   /** The ABI method to call */
   method: ABIMethodParams | ABIMethod
-  /** The ABI args to pass in */
-  args: ABIAppCallArg[]
+  /** The ABI method args to pass in */
+  methodArgs: ABIAppCallArg[]
 }
 
 /** Arguments to pass to an app call either:

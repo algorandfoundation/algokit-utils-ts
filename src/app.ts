@@ -25,13 +25,13 @@ import { ApplicationResponse, EvalDelta, PendingTransactionResponse, TealValue }
 import {
   ABIAppCallArgs,
   ABIReturn,
+  APP_PAGE_MAX_SIZE,
   AppCallArgs,
   AppCallParams,
   AppCallTransactionResult,
   AppCompilationResult,
   AppReference,
   AppState,
-  APP_PAGE_MAX_SIZE,
   BoxIdentifier,
   BoxName,
   BoxReference,
@@ -549,7 +549,7 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
   const encoder = new TextEncoder()
   const signer = getSenderTransactionSigner(from)
   const methodArgs = await Promise.all(
-    args.args?.map(async (a) => {
+    ('methodArgs' in args ? args.methodArgs : args)?.map(async (a) => {
       if (typeof a !== 'object') {
         return a
       }

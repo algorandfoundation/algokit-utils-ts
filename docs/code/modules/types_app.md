@@ -11,7 +11,6 @@
 
 ### Interfaces
 
-- [ABIAppCallArgs](../interfaces/types_app.ABIAppCallArgs.md)
 - [AppCallParams](../interfaces/types_app.AppCallParams.md)
 - [AppCallTransactionResult](../interfaces/types_app.AppCallTransactionResult.md)
 - [AppCallTransactionResultOfType](../interfaces/types_app.AppCallTransactionResultOfType.md)
@@ -37,6 +36,7 @@
 ### Type Aliases
 
 - [ABIAppCallArg](types_app.md#abiappcallarg)
+- [ABIAppCallArgs](types_app.md#abiappcallargs)
 - [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
 - [BoxIdentifier](types_app.md#boxidentifier)
@@ -63,6 +63,18 @@ An argument for an ABI method, either a primitive value, or a transaction with o
 
 ___
 
+### ABIAppCallArgs
+
+Ƭ **ABIAppCallArgs**: [`CoreAppCallArgs`](../interfaces/types_app.CoreAppCallArgs.md) & { `method`: `ABIMethodParams` \| `ABIMethod` ; `methodArgs`: [`ABIAppCallArg`](types_app.md#abiappcallarg)[]  }
+
+App call args for an ABI call
+
+#### Defined in
+
+[src/types/app.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L94)
+
+___
+
 ### ABIReturn
 
 Ƭ **ABIReturn**: { `decodeError`: `undefined` ; `rawReturnValue`: `Uint8Array` ; `returnValue`: `ABIValue`  } \| { `decodeError`: `Error` ; `rawReturnValue`: `undefined` ; `returnValue`: `undefined`  }
@@ -77,7 +89,7 @@ ___
 
 ### AppCallArgs
 
-Ƭ **AppCallArgs**: [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md) \| [`ABIAppCallArgs`](../interfaces/types_app.ABIAppCallArgs.md)
+Ƭ **AppCallArgs**: [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md) \| [`ABIAppCallArgs`](types_app.md#abiappcallargs)
 
 Arguments to pass to an app call either:
   * The raw app call values to pass through into the transaction (after processing); or

@@ -73,7 +73,7 @@ describe('application-client', () => {
       algod,
     )
 
-    const app = await client.deploy({
+    await client.deploy({
       allowDelete: false,
       allowUpdate: false,
       onSchemaBreak: 'fail',
@@ -417,7 +417,8 @@ describe('application-client', () => {
 
     const call = await client.call({
       method: 'call_abi',
-      methodArgs: { args: ['test'], boxes: [{ appId: 0, name: '1' }] },
+      methodArgs: ['test'],
+      boxes: [{ appId: 0, name: '1' }],
       sendParams: { skipSending: true },
     })
 
@@ -440,14 +441,14 @@ describe('application-client', () => {
 
     const result = await client.call({
       method: 'call_abi_txn',
-      methodArgs: { args: [txn.transaction, 'test'] },
+      methodArgs: [txn.transaction, 'test'],
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, args: [] }, result.confirmations[1])
+    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, assets: [] }, result.confirmations[1])
     expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
   })
 
@@ -673,17 +674,13 @@ describe('application-client', () => {
     await client.fundAppAccount(algokit.algos(1))
     await client.call({
       method: 'set_box',
-      methodArgs: {
-        args: [boxName1, 'value1'],
-        boxes: [boxName1],
-      },
+      methodArgs: [boxName1, 'value1'],
+      boxes: [boxName1],
     })
     await client.call({
       method: 'set_box',
-      methodArgs: {
-        args: [boxName2, 'value2'],
-        boxes: [boxName2],
-      },
+      methodArgs: [boxName2, 'value2'],
+      boxes: [boxName2],
     })
 
     const boxValues = await client.getBoxValues()
@@ -700,10 +697,8 @@ describe('application-client', () => {
     const expectedValue = 1234524352
     await client.call({
       method: 'set_box',
-      methodArgs: {
-        args: [boxName1, new ABIUintType(32).encode(expectedValue)],
-        boxes: [boxName1],
-      },
+      methodArgs: [boxName1, new ABIUintType(32).encode(expectedValue)],
+      boxes: [boxName1],
     })
     const boxes = await client.getBoxValuesFromABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
     const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))
