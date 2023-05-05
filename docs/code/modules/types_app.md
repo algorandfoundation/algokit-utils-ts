@@ -14,6 +14,7 @@
 - [ABIAppCallArgs](../interfaces/types_app.ABIAppCallArgs.md)
 - [AppCallParams](../interfaces/types_app.AppCallParams.md)
 - [AppCallTransactionResult](../interfaces/types_app.AppCallTransactionResult.md)
+- [AppCallTransactionResultOfType](../interfaces/types_app.AppCallTransactionResultOfType.md)
 - [AppCompilationResult](../interfaces/types_app.AppCompilationResult.md)
 - [AppDeployMetadata](../interfaces/types_app.AppDeployMetadata.md)
 - [AppDeploymentParams](../interfaces/types_app.AppDeploymentParams.md)
@@ -27,6 +28,7 @@
 - [BoxValueRequestParams](../interfaces/types_app.BoxValueRequestParams.md)
 - [BoxValuesRequestParams](../interfaces/types_app.BoxValuesRequestParams.md)
 - [CompiledTeal](../interfaces/types_app.CompiledTeal.md)
+- [CoreAppCallArgs](../interfaces/types_app.CoreAppCallArgs.md)
 - [CreateAppParams](../interfaces/types_app.CreateAppParams.md)
 - [RawAppCallArgs](../interfaces/types_app.RawAppCallArgs.md)
 - [TealTemplateParams](../interfaces/types_app.TealTemplateParams.md)
@@ -57,7 +59,7 @@ An argument for an ABI method, either a primitive value, or a transaction with o
 
 #### Defined in
 
-[src/types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
+[src/types/app.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L89)
 
 ___
 
@@ -69,7 +71,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L186)
+[src/types/app.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L189)
 
 ___
 
