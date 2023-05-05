@@ -8,7 +8,7 @@ import { AppDeployMetadata } from './types/app'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 50_000)
+  beforeEach(localnet.beforeEach, 10_000)
 
   const logging = algoKitLogCaptureFixture()
   beforeEach(logging.beforeEach)
