@@ -602,7 +602,7 @@ export async function performTemplateSubstitutionAndCompile(
   templateParams?: TealTemplateParams,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {
-  tealCode = stripCommments(tealCode)
+  tealCode = stripTealComments(tealCode)
 
   tealCode = performTemplateSubstitution(tealCode, templateParams)
 
@@ -614,13 +614,13 @@ export async function performTemplateSubstitutionAndCompile(
 }
 
 /**
- * Remove comments from tealCode
+ * Remove comments from TEAL Code
  *
  * @param tealCode The TEAL logic to compile
  * @returns The TEAL without comments
  */
-export function stripCommments(tealCode: string) {
-  // find // outside parenteses
+export function stripTealComments(tealCode: string) {
+  // find // outside quotes, i.e. won't pick up "//not a comment"
   const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
 
   tealCode = tealCode

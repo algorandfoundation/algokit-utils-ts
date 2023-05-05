@@ -463,7 +463,7 @@ describe('deploy-app', () => {
 test('Strip comments remove comments without removing commands', async () => {
   const tealCode = 'op arg\nop "arg"\nop "//"\nop "  //comment  "\nop "" //"\n"// \\" //"'
 
-  const result = algokit.stripCommments(tealCode)
+  const result = algokit.stripTealComments(tealCode)
 
   expect(result).toBe(tealCode)
 })

@@ -76,7 +76,7 @@
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
 - [signTransaction](index.md#signtransaction)
-- [stripCommments](index.md#stripcommments)
+- [stripTealComments](index.md#striptealcomments)
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
 - [transferAlgos](index.md#transferalgos)
@@ -1871,11 +1871,11 @@ The signed transaction as a `Uint8Array`
 
 ___
 
-### stripCommments
+### stripTealComments
 
-▸ **stripCommments**(`tealCode`): `string`
+▸ **stripTealComments**(`tealCode`): `string`
 
-Remove comments from tealCode
+Remove comments from TEAL Code
 
 #### Parameters
 
