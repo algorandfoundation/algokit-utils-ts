@@ -6,6 +6,8 @@ module.exports = {
     'type-empty': [1, 'never'],
     'subject-empty': [1, 'always'],
     'body-leading-blank': [0, 'always'],
-    'header-max-length': [1, 'always', 120],
+    'header-max-length': [1, 'always', 150],
+    'footer-max-length': [1, 'always', 150],
+    'footer-max-line-length': [1, 'always', 150],
   },
 }
