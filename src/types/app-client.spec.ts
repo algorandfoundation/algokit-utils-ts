@@ -448,7 +448,7 @@ describe('application-client', () => {
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, assets: [] }, result.confirmations[1])
+    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, methodArgs: [] }, result.confirmations[1])
     expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
   })
 

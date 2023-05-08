@@ -22,6 +22,7 @@ App call args with non-ABI (raw) values (minus some processing like encoding str
 - [assets](types_app_client.AppClientCallRawArgs.md#assets)
 - [boxes](types_app_client.AppClientCallRawArgs.md#boxes)
 - [lease](types_app_client.AppClientCallRawArgs.md#lease)
+- [method](types_app_client.AppClientCallRawArgs.md#method)
 
 ## Properties
 
@@ -118,3 +119,19 @@ The optional lease for the transaction
 #### Defined in
 
 [src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+
+___
+
+### method
+
+• `Optional` **method**: `undefined`
+
+Property to aid intellisense
+
+#### Inherited from
+
+[RawAppCallArgs](types_app.RawAppCallArgs.md).[method](types_app.RawAppCallArgs.md#method)
+
+#### Defined in
+
+[src/types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)

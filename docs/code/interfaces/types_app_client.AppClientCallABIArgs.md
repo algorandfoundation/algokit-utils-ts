@@ -77,4 +77,4 @@ Omit.methodArgs
 
 #### Defined in
 
-[src/types/app.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L98)
+[src/types/app.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L100)

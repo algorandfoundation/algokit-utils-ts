@@ -61,7 +61,7 @@ export async function createApp(
   const compiledClear = typeof clear === 'string' ? await compileTeal(clear, algod) : undefined
   const clearProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
 
-  if (args && 'method' in args) {
+  if (args && args.method) {
     const atc = attachATC(sendParams)
 
     const before = getAtomicTransactionComposerTransactions(atc)
@@ -185,7 +185,7 @@ export async function updateApp(
 
   Config.getLogger(sendParams.suppressLog).debug(`Updating app ${appId}`)
 
-  if (args && 'method' in args) {
+  if (args && args.method) {
     const atc = attachATC(sendParams)
 
     const before = getAtomicTransactionComposerTransactions(atc)
@@ -259,7 +259,7 @@ function attachATC(sendParams: SendTransactionParams) {
 export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
   const { appId, callType, from, args, note, transactionParams, ...sendParams } = call
 
-  if (args && 'method' in args) {
+  if (args && args.method) {
     const atc = attachATC(sendParams)
 
     const before = getAtomicTransactionComposerTransactions(atc)
@@ -345,7 +345,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
  * @returns The return value for the method call
  */
 export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransactionResponse): ABIReturn | undefined {
-  if (!args || !('method' in args)) {
+  if (!args || !args.method) {
     return undefined
   }
   const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)

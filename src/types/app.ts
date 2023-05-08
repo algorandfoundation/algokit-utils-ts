@@ -83,6 +83,8 @@ export interface RawAppCallArgs extends CoreAppCallArgs {
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
   assets?: number[]
+  /** Property to aid intellisense */
+  method?: undefined
 }
 
 /** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */

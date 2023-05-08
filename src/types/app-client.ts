@@ -724,20 +724,18 @@ export class ApplicationClient {
       return undefined
     }
 
-    if ('method' in args) {
+    if (args.method) {
       const abiMethod = this.getABIMethodParams(args.method)
       if (!abiMethod) {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
 
       return {
+        ...args,
         method: abiMethod,
-        methodArgs: args.methodArgs,
-        boxes: 'boxes' in args ? args.boxes : undefined,
-        lease: 'lease' in args ? args.lease : undefined,
-      } as ABIAppCallArgs
+      }
     } else {
-      return args
+      return args as RawAppCallArgs
     }
   }
 
