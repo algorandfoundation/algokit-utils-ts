@@ -31,8 +31,6 @@
 - [AppDetails](types_app_client.md#appdetails)
 - [AppSpecAppDetails](types_app_client.md#appspecappdetails)
 - [ResolveAppByCreatorAndName](types_app_client.md#resolveappbycreatorandname)
-- [ResolveAppByCreatorAndNameWithIndexer](types_app_client.md#resolveappbycreatorandnamewithindexer)
-- [ResolveAppByCreatorAndNameWithoutIndexer](types_app_client.md#resolveappbycreatorandnamewithoutindexer)
 
 ## Type Aliases
 
@@ -44,7 +42,7 @@ The arguments to pass to an Application Client smart contract call
 
 #### Defined in
 
-[src/types/app-client.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L140)
+[src/types/app-client.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L136)
 
 ___
 
@@ -56,7 +54,7 @@ Parameters to construct a ApplicationClient contract call
 
 #### Defined in
 
-[src/types/app-client.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L153)
+[src/types/app-client.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L149)
 
 ___
 
@@ -68,7 +66,7 @@ Parameters for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L165)
+[src/types/app-client.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L161)
 
 ___
 
@@ -80,7 +78,7 @@ Parameters for updating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L168)
+[src/types/app-client.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L164)
 
 ___
 
@@ -92,7 +90,7 @@ The details of an AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L78)
+[src/types/app-client.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L74)
 
 ___
 
@@ -104,52 +102,25 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L86)
+[src/types/app-client.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L82)
 
 ___
 
 ### ResolveAppByCreatorAndName
 
-Ƭ **ResolveAppByCreatorAndName**: [`ResolveAppByCreatorAndNameWithIndexer`](types_app_client.md#resolveappbycreatorandnamewithindexer) \| [`ResolveAppByCreatorAndNameWithoutIndexer`](types_app_client.md#resolveappbycreatorandnamewithoutindexer)
+Ƭ **ResolveAppByCreatorAndName**: `Object`
 
 Configuration to resolve app by creator and name `getCreatorAppsByName`
 
-#### Defined in
-
-[src/types/app-client.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L67)
-
-___
-
-### ResolveAppByCreatorAndNameWithIndexer
-
-Ƭ **ResolveAppByCreatorAndNameWithIndexer**: `Object`
-
 #### Type declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `creatorAddress` | `string` | The address of the app creator account to resolve the app by |
-| `indexer` | `Indexer` | An indexer instance to search the creator account apps |
-| `name?` | `string` | The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) |
+| `findExistingUsing` | `Indexer` \| [`AppLookup`](../interfaces/types_app.AppLookup.md) | The mechanism to find an existing app instance metadata for the given creator and name; either: * An indexer instance to search the creator account apps; or * The cached value of the existing apps for the given creator from `getCreatorAppsByName` |
+| `name?` | `string` | The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) |
+| `resolveBy` | ``"creatorAndName"`` | How the app ID is resolved, either by `'id'` or `'creatorAndName'` |
 
 #### Defined in
 
-[src/types/app-client.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L48)
-
-___
-
-### ResolveAppByCreatorAndNameWithoutIndexer
-
-Ƭ **ResolveAppByCreatorAndNameWithoutIndexer**: `Object`
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `creatorAddress` | `string` | The address of the app creator account to resolve the app by |
-| `existingDeployments` | [`AppLookup`](../interfaces/types_app.AppLookup.md) | Cached value of the existing apps for the given creator, `getCreatorAppsByName` |
-| `name?` | `string` | The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) |
-
-#### Defined in
-
-[src/types/app-client.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L57)
+[src/types/app-client.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L49)

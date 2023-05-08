@@ -18,10 +18,11 @@ describe('application-client', () => {
   const deploy = async (account: Account, algod: Algodv2, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: account,
         creatorAddress: account.addr,
-        indexer: indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -33,13 +34,13 @@ describe('application-client', () => {
 
   test('Create app', async () => {
     const { algod, indexer, testAccount } = localnet.context
-
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -65,10 +66,11 @@ describe('application-client', () => {
 
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -89,10 +91,11 @@ describe('application-client', () => {
 
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -115,10 +118,11 @@ describe('application-client', () => {
 
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -145,10 +149,11 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -180,10 +185,11 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -221,10 +227,11 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -257,10 +264,11 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -303,6 +311,7 @@ describe('application-client', () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -331,6 +340,7 @@ describe('application-client', () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -357,6 +367,7 @@ describe('application-client', () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -387,6 +398,7 @@ describe('application-client', () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -462,9 +474,9 @@ describe('application-client', () => {
       const { client, app } = await deploy(testAccount, algod, indexer)
 
       const oldSourceMaps = client.exportSourceMaps()
-      const newClient = algokit.getApplicationClient(
+      const newClient = algokit.getAppClient(
         {
-          creatorAddress: testAccount.addr,
+          resolveBy: 'id',
           id: app.appId,
           sender: testAccount,
           app: appSpec,
