@@ -23,7 +23,7 @@ The id of an existing app to call using this client, or 0 if the app hasn't been
 
 #### Defined in
 
-[src/types/app-client.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L74)
+[src/types/app-client.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L72)
 
 ___
 
@@ -35,4 +35,4 @@ The optional name to use to mark the app when deploying `ApplicationClient.deplo
 
 #### Defined in
 
-[src/types/app-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L76)
+[src/types/app-client.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L74)

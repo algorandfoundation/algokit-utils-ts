@@ -21,10 +21,10 @@ This [type](../code/modules/types_app.md#appcallargs) is a union of two types: `
 
 ### `ABIAppCallArgs`
 
-[`ABIAppCallArgs`](../code/interfaces/types_app.ABIAppCallArgs.md) allows you to specify an [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
+[`ABIAppCallArgs`](../code/modules/types_app.md#abiappcallargs) allows you to specify an [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
 
 - `method: algosdk.ABIMethodParams | algosdk.ABIMethod` - The ABI method to call
-- `args: ABIAppCallArg[]` - The arguments to pass to the ABI call, which can be one of:
+- `methodArgs: ABIAppCallArg[]` - The arguments to pass to the ABI call, which can be one of:
   - `algosdk.ABIArgument` - Which can be one of:
     - `boolean`
     - `number`

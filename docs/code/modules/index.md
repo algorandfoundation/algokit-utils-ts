@@ -739,7 +739,7 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `args` | [`ABIAppCallArgs`](../interfaces/types_app.ABIAppCallArgs.md) | The ABI app call args |
+| `args` | [`ABIAppCallArgs`](types_app.md#abiappcallargs) | The ABI app call args |
 | `from` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The transaction signer |
 
 #### Returns

@@ -168,7 +168,7 @@ If you do that then the exception will have the `traces` property within the und
 
 ## `AppClientCallParams`
 
-All methods that call the smart contract apart from `deploy` make use of [this type](../code/modules/types_app_client.md#appclientcallparams). It consists of the following properties, all of which are optional:
+All methods that call the smart contract apart from `deploy` make use of [this type](../code/modules/types_app_client.md#appclientcallparams). It consists of the following core properties, all of which are optional:
 
 - `sender?: SendTransactionFrom` - The [sender/signer](./account.md#sendtransactionfrom) to use; if unspecified then the sender that was passed into the constructor of the Application Client is used
 - `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes) to use when issuing the transaction
@@ -180,13 +180,12 @@ In addition to these parameters, it may specify [call arguments](#appclientcalla
 
 Whenever an app call is specified, including within `deploy` [this type](../code/modules/types_app_client.md#appclientcallargs) specifies the arguments. There are two forms you can use:
 
-- **Raw call** - Directly specifies the values that will be populated onto an `algosdk.Transaction`:
-  - `args?: RawAppCallArgs` - The [raw app call args](./app.md#rawappcallargs)
-- **ABI call** - Specifies a [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/) along with relevant values (like boxes) that will be directly populated onto an `algosdk.Transaction`:
+- **Raw call** - Directly specifies the [values](./app.md#rawappcallargs) that will be populated onto an `algosdk.Transaction`
+- **ABI call** - Specifies a [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/) along with relevant values (like boxes) that will be directly populated onto an `algosdk.Transaction`. Consists of the [ABI app call args type](./app.md#abiappcallargs) with the `method` parameter replaced with a string (since the Application Client only needs it as a string):
   - `method: string` - The name of the method (e.g. `hello`) or the ABI signature of the method (e.g. `hello(string)string`) for when you have multiple methods with the same name and need to differentiate between them
-  - `methodArgs?: Omit<ABIAppCallArgs, 'method'> | ABIAppCallArg[]` - Either:
-    - An array of arguments to pass into the ABI method
-    - The [ABI app call args](./app.md#abiappcallargs) minus the `method` parameter (since the Application Client only needs it as a string)
+  - `methodArgs?: ABIAppCallArg[]` - An array of arguments to pass into the ABI method
+  - `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](./app.md#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
+  - `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
 
 If you want to get call args for manually populating into an `algosdk.Transaction` you can use the `getCallArgs` method on Application Client.
 
