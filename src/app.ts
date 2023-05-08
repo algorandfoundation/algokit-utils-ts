@@ -611,9 +611,6 @@ export async function getAppById(appId: number, algod: Algodv2) {
   return (await algod.getApplicationByID(appId).do()) as ApplicationResponse
 }
 
-/** @deprecated Use `algokit.getAppById` instead. */
-export const getAppByIndex = getAppById
-
 /**
  * Compiles the given TEAL using algod and returns the result, including source map.
  *

@@ -47,7 +47,6 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 - [getBoxValue](types_app_client.ApplicationClient.md#getboxvalue)
 - [getBoxValueFromABIType](types_app_client.ApplicationClient.md#getboxvaluefromabitype)
 - [getBoxValues](types_app_client.ApplicationClient.md#getboxvalues)
-- [getBoxValuesAsABIType](types_app_client.ApplicationClient.md#getboxvaluesasabitype)
 - [getBoxValuesFromABIType](types_app_client.ApplicationClient.md#getboxvaluesfromabitype)
 - [getCallArgs](types_app_client.ApplicationClient.md#getcallargs)
 - [getGlobalState](types_app_client.ApplicationClient.md#getglobalstate)
@@ -413,7 +412,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-client.ts:806](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L806)
+[src/types/app-client.ts:801](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L801)
 
 ___
 
@@ -461,7 +460,7 @@ The ABI method for the given method
 
 #### Defined in
 
-[src/types/app-client.ts:765](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L765)
+[src/types/app-client.ts:760](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L760)
 
 ___
 
@@ -485,7 +484,7 @@ The ABI method params for the given method
 
 #### Defined in
 
-[src/types/app-client.ts:743](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L743)
+[src/types/app-client.ts:738](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L738)
 
 ___
 
@@ -504,7 +503,7 @@ The app reference, or if deployed using the `deploy` method, the app metadata to
 
 #### Defined in
 
-[src/types/app-client.ts:775](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L775)
+[src/types/app-client.ts:770](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L770)
 
 ___
 
@@ -600,31 +599,6 @@ The (name, value) pair of the boxes with values as raw byte arrays
 
 ___
 
-### getBoxValuesAsABIType
-
-▸ **getBoxValuesAsABIType**(`type`, `filter?`): `Promise`<{ `name`: [`BoxName`](../interfaces/types_app.BoxName.md) ; `value`: `ABIValue`  }[]\>
-
-**`Deprecated`**
-
-Use `getBoxValuesFromABIType` instead
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `type` | `ABIType` |
-| `filter?` | (`name`: [`BoxName`](../interfaces/types_app.BoxName.md)) => `boolean` |
-
-#### Returns
-
-`Promise`<{ `name`: [`BoxName`](../interfaces/types_app.BoxName.md) ; `value`: `ABIValue`  }[]\>
-
-#### Defined in
-
-[src/types/app-client.ts:709](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L709)
-
-___
-
 ### getBoxValuesFromABIType
 
 ▸ **getBoxValuesFromABIType**(`type`, `filter?`): `Promise`<{ `name`: [`BoxName`](../interfaces/types_app.BoxName.md) ; `value`: `ABIValue`  }[]\>
@@ -671,7 +645,7 @@ The call args ready to pass into an app call
 
 #### Defined in
 
-[src/types/app-client.ts:718](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L718)
+[src/types/app-client.ts:713](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L713)
 
 ___
 

@@ -705,11 +705,6 @@ export class ApplicationClient {
     )
   }
 
-  /** @deprecated Use `getBoxValuesFromABIType` instead */
-  async getBoxValuesAsABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
-    return this.getBoxValuesFromABIType(type, filter)
-  }
-
   /**
    * Returns the arguments for an app call for the given ABI method or raw method specification.
    * @param args The call args specific to this application client
