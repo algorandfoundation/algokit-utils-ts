@@ -45,29 +45,25 @@ import { AppSpec } from './app-spec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
-export type ResolveAppByCreatorAndNameWithIndexer = {
-  /** The address of the app creator account to resolve the app by */
-  creatorAddress: string
-  /** The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) */
-  name?: string
-  /** An indexer instance to search the creator account apps */
-  indexer: Indexer
-}
-
-export type ResolveAppByCreatorAndNameWithoutIndexer = {
-  /** The address of the app creator account to resolve the app by */
-  creatorAddress: string
-  /** The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) */
-  name?: string
-  /** Cached value of the existing apps for the given creator, `getCreatorAppsByName` */
-  existingDeployments: AppLookup
-}
-
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
-export type ResolveAppByCreatorAndName = ResolveAppByCreatorAndNameWithIndexer | ResolveAppByCreatorAndNameWithoutIndexer
+export type ResolveAppByCreatorAndName = {
+  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'` */
+  resolveBy: 'creatorAndName'
+  /** The address of the app creator account to resolve the app by */
+  creatorAddress: string
+  /** The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) */
+  name?: string
+  /** The mechanism to find an existing app instance metadata for the given creator and name; either:
+   *  * An indexer instance to search the creator account apps; or
+   *  * The cached value of the existing apps for the given creator from `getCreatorAppsByName`
+   */
+  findExistingUsing: Indexer | AppLookup
+}
 
 /** Configuration to resolve app by ID */
 export interface ResolveAppById {
+  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'` */
+  resolveBy: 'id'
   /** The id of an existing app to call using this client, or 0 if the app hasn't been created yet */
   id: number
   /** The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract) */
@@ -256,7 +252,7 @@ export class ApplicationClient {
     this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
     this._appName = appIdentifier.name ?? this.appSpec.contract.name
 
-    if ('id' in appIdentifier) {
+    if (appIdentifier.resolveBy === 'id') {
       if (appIdentifier.id < 0) {
         throw new Error(`Attempt to create application client with invalid app id of ${appIdentifier.id}`)
       }
@@ -264,15 +260,15 @@ export class ApplicationClient {
     } else {
       this._appId = 0
       this._creator = appIdentifier.creatorAddress
-      if ('indexer' in appIdentifier) {
-        this.indexer = appIdentifier.indexer
+      if (appIdentifier.findExistingUsing instanceof Indexer) {
+        this.indexer = appIdentifier.findExistingUsing
       } else {
-        if (appIdentifier.existingDeployments.creator !== this._creator) {
+        if (appIdentifier.findExistingUsing.creator !== this._creator) {
           throw new Error(
-            `Attempt to create application client with invalid existingDeployments against a different creator (${appIdentifier.existingDeployments.creator}) instead of expected creator ${this._creator}`,
+            `Attempt to create application client with invalid existingDeployments against a different creator (${appIdentifier.findExistingUsing.creator}) instead of expected creator ${this._creator}`,
           )
         }
-        this.existingDeployments = appIdentifier.existingDeployments
+        this.existingDeployments = appIdentifier.findExistingUsing
       }
     }
 
