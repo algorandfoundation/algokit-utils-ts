@@ -1,5 +1,4 @@
 import { ABIContractParams } from 'algosdk'
-import { getABIMethodSignature } from '../app'
 
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
 export interface AppSpec {
@@ -150,6 +149,3 @@ export type StateSchema = {
   /** Number of byte slots */
   num_byte_slices: number
 }
-
-/** @deprecated Use `algokit.getABIMethodSignature` instead */
-export const getABISignature = getABIMethodSignature

@@ -31,10 +31,6 @@
 - [StateSchema](types_app_spec.md#stateschema)
 - [StructElement](types_app_spec.md#structelement)
 
-### Functions
-
-- [getABISignature](types_app_spec.md#getabisignature)
-
 ## Type Aliases
 
 ### ABIType
@@ -45,7 +41,7 @@ The string name of an ABI type
 
 #### Defined in
 
-[src/types/app-spec.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L68)
+[src/types/app-spec.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L67)
 
 ___
 
@@ -61,7 +57,7 @@ The various call configs:
 
 #### Defined in
 
-[src/types/app-spec.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L37)
+[src/types/app-spec.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L36)
 
 ___
 
@@ -73,7 +69,7 @@ The name of a field
 
 #### Defined in
 
-[src/types/app-spec.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L65)
+[src/types/app-spec.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L64)
 
 ___
 
@@ -85,7 +81,7 @@ A lookup of encoded method call spec to hint
 
 #### Defined in
 
-[src/types/app-spec.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L21)
+[src/types/app-spec.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L20)
 
 ___
 
@@ -104,7 +100,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-[src/types/app-spec.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L147)
+[src/types/app-spec.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L146)
 
 ___
 
@@ -116,28 +112,4 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 #### Defined in
 
-[src/types/app-spec.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L71)
-
-## Functions
-
-### getABISignature
-
-▸ **getABISignature**(`method`): `string`
-
-**`Deprecated`**
-
-Use `algokit.getABIMethodSignature` instead
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `method` | `ABIMethodParams` \| `ABIMethod` |
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[src/app.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L640)
+[src/types/app-spec.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L70)

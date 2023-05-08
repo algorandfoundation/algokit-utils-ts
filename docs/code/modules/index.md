@@ -39,12 +39,10 @@
 - [getAppBoxValues](index.md#getappboxvalues)
 - [getAppBoxValuesFromABIType](index.md#getappboxvaluesfromabitype)
 - [getAppById](index.md#getappbyid)
-- [getAppByIndex](index.md#getappbyindex)
 - [getAppClient](index.md#getappclient)
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
 - [getAppGlobalState](index.md#getappglobalstate)
 - [getAppLocalState](index.md#getapplocalstate)
-- [getApplicationClient](index.md#getapplicationclient)
 - [getAtomicTransactionComposerTransactions](index.md#getatomictransactioncomposertransactions)
 - [getBoxReference](index.md#getboxreference)
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
@@ -190,7 +188,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:624](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L624)
+[src/app.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L621)
 
 ___
 
@@ -416,7 +414,7 @@ The encoded ABI method spec e.g. `method_name(uint64,string)string`
 
 #### Defined in
 
-[src/app.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L640)
+[src/app.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L637)
 
 ___
 
@@ -930,31 +928,6 @@ The data about the app
 
 ___
 
-### getAppByIndex
-
-▸ **getAppByIndex**(`appId`, `algod`): `Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
-
-**`Deprecated`**
-
-Use `algokit.getAppById` instead.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `appId` | `number` |
-| `algod` | `default` |
-
-#### Returns
-
-`Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
-
-#### Defined in
-
-[src/app.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L610)
-
-___
-
 ### getAppClient
 
 ▸ **getAppClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
@@ -976,7 +949,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L15)
+[src/app-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L10)
 
 ___
 
@@ -1052,31 +1025,6 @@ The current local state for the given (app, account) combination
 #### Defined in
 
 [src/app.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L400)
-
-___
-
-### getApplicationClient
-
-▸ **getApplicationClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
-
-**`Deprecated`**
-
-Use `algokit.getAppClient`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `appDetails` | [`AppSpecAppDetails`](types_app_client.md#appspecappdetails) |
-| `algod` | `default` |
-
-#### Returns
-
-[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
-
-#### Defined in
-
-[src/app-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L15)
 
 ___
 
