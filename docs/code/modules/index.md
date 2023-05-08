@@ -76,6 +76,7 @@
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
 - [signTransaction](index.md#signtransaction)
+- [stripTealComments](index.md#striptealcomments)
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
 - [transferAlgos](index.md#transferalgos)
@@ -1867,6 +1868,30 @@ The signed transaction as a `Uint8Array`
 #### Defined in
 
 [src/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L83)
+
+___
+
+### stripTealComments
+
+▸ **stripTealComments**(`tealCode`): `string`
+
+Remove comments from TEAL Code
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tealCode` | `string` | The TEAL logic to compile |
+
+#### Returns
+
+`string`
+
+The TEAL without comments
+
+#### Defined in
+
+[src/app-deploy.ts:622](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L622)
 
 ___
 

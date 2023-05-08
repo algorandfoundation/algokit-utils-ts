@@ -460,6 +460,16 @@ describe('deploy-app', () => {
   })
 })
 
+test('Strip comments remove comments without removing commands', async () => {
+  const tealCode =
+    '//comment\nop arg //comment\nop "arg" //comment\nop "//" //comment\nop "  //comment  " //comment\nop "" //" //comment\nop "" //comment\n//\nop 123\nop 123 // something\nop "" // more comments\nop "//" //op "//"\nop "//"'
+  const tealCodeResult = '\nop arg\nop "arg"\nop "//"\nop "  //comment  "\nop "" //"\nop ""\n\nop 123\nop 123\nop ""\nop "//"\nop "//"'
+
+  const result = algokit.stripTealComments(tealCode)
+
+  expect(result).toBe(tealCodeResult)
+})
+
 function getMetadata(overrides?: Partial<AppDeployMetadata>): AppDeployMetadata {
   return {
     name: 'test',
