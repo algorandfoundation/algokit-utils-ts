@@ -24,7 +24,7 @@ The description of the reserved storage space
 
 #### Defined in
 
-[src/types/app-spec.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L116)
+[src/types/app-spec.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L113)
 
 ___
 
@@ -36,16 +36,16 @@ The maximum number of slots to reserve
 
 #### Defined in
 
-[src/types/app-spec.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L118)
+[src/types/app-spec.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L115)
 
 ___
 
 ### type
 
-• **type**: [`AVMType`](../enums/types_app_spec.AVMType.md)
+• **type**: [`AVMType`](../modules/types_app_spec.md#avmtype)
 
 The type of value
 
 #### Defined in
 
-[src/types/app-spec.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L114)
+[src/types/app-spec.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L111)

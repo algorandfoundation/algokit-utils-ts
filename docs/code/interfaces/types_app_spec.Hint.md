@@ -12,7 +12,7 @@ Hint information for a given method call to allow client generation
 
 - [call\_config](types_app_spec.Hint.md#call_config)
 - [default\_arguments](types_app_spec.Hint.md#default_arguments)
-- [readonly](types_app_spec.Hint.md#readonly)
+- [read\_only](types_app_spec.Hint.md#read_only)
 - [structs](types_app_spec.Hint.md#structs)
 
 ## Properties
@@ -29,7 +29,7 @@ ___
 
 ### default\_arguments
 
-• **default\_arguments**: `Record`<`string`, [`DefaultArgument`](types_app_spec.DefaultArgument.md)\>
+• `Optional` **default\_arguments**: `Record`<`string`, [`DefaultArgument`](types_app_spec.DefaultArgument.md)\>
 
 #### Defined in
 
@@ -37,9 +37,9 @@ ___
 
 ___
 
-### readonly
+### read\_only
 
-• **readonly**: `boolean`
+• `Optional` **read\_only**: `boolean`
 
 #### Defined in
 
@@ -49,7 +49,7 @@ ___
 
 ### structs
 
-• **structs**: `Record`<`string`, [`Struct`](types_app_spec.Struct.md)\>
+• `Optional` **structs**: `Record`<`string`, [`Struct`](types_app_spec.Struct.md)\>
 
 Any user-defined struct/tuple types used in the method call, keyed by parameter name or `output` for return type
 
