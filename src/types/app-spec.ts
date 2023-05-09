@@ -54,9 +54,9 @@ export interface CallConfig {
 /** Hint information for a given method call to allow client generation */
 export interface Hint {
   /** Any user-defined struct/tuple types used in the method call, keyed by parameter name or `output` for return type */
-  structs: Record<string, Struct>
-  readonly: boolean
-  default_arguments: Record<string, DefaultArgument>
+  structs?: Record<string, Struct>
+  read_only?: boolean
+  default_arguments?: Record<string, DefaultArgument>
   call_config: CallConfig
 }
 
@@ -91,10 +91,7 @@ export interface DefaultArgument {
 }
 
 /** AVM data type */
-export enum AVMType {
-  uint64,
-  bytes,
-}
+export type AVMType = 'uint64' | 'bytes'
 
 /** Declared schema value specification */
 export interface DeclaredSchemaValueSpec {
@@ -103,9 +100,9 @@ export interface DeclaredSchemaValueSpec {
   /** The name of the key */
   key: string
   /** A description of the variable */
-  desc?: string
+  descr?: string
   /** Whether or not the value is set statically (at create time only) or dynamically */
-  static: boolean
+  static?: boolean
 }
 
 /** Reserved schema value specification */
