@@ -4,10 +4,6 @@
 
 ## Table of contents
 
-### Enumerations
-
-- [AVMType](../enums/types_app_spec.AVMType.md)
-
 ### Interfaces
 
 - [AppSources](../interfaces/types_app_spec.AppSources.md)
@@ -25,6 +21,7 @@
 ### Type Aliases
 
 - [ABIType](types_app_spec.md#abitype)
+- [AVMType](types_app_spec.md#avmtype)
 - [CallConfigValue](types_app_spec.md#callconfigvalue)
 - [FieldName](types_app_spec.md#fieldname)
 - [HintSpec](types_app_spec.md#hintspec)
@@ -42,6 +39,18 @@ The string name of an ABI type
 #### Defined in
 
 [src/types/app-spec.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L67)
+
+___
+
+### AVMType
+
+Ƭ **AVMType**: ``"uint64"`` \| ``"bytes"``
+
+AVM data type
+
+#### Defined in
+
+[src/types/app-spec.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L94)
 
 ___
 
@@ -100,7 +109,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-[src/types/app-spec.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L146)
+[src/types/app-spec.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L143)
 
 ___
 
