@@ -145,7 +145,7 @@ export async function createApp(
       numGlobalInts: schema.globalInts,
       numGlobalByteSlices: schema.globalByteSlices,
       extraPages: schema.extraPages ?? Math.floor((approvalProgram.length + clearProgram.length) / APP_PAGE_MAX_SIZE),
-      onComplete: algosdk.OnApplicationComplete.NoOpOC,
+      onComplete: getAppOnCompleteAction(onCompleteAction),
       suggestedParams: await getTransactionParams(transactionParams, algod),
       from: getSenderAddress(from),
       note: encodeTransactionNote(note),
