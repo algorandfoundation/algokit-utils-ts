@@ -149,6 +149,9 @@ export interface AppClientCallCoreParams {
 /** Parameters to construct a ApplicationClient contract call */
 export type AppClientCallParams = AppClientCallArgs & AppClientCallCoreParams
 
+/** Parameters to construct a ApplicationClient clear state contract call */
+export type AppClientClearStateParams = AppClientCallRawArgs & AppClientCallCoreParams
+
 export interface AppClientCompilationParams {
   /** Any deploy-time parameters to replace in the TEAL code */
   deployTimeParams?: TealTemplateParams
@@ -529,7 +532,7 @@ export class ApplicationClient {
     return await this._call(call, 'closeout')
   }
 
-  async clearState(call?: AppClientCallParams) {
+  async clearState(call?: AppClientClearStateParams) {
     return await this._call(call, 'clearstate')
   }
 
