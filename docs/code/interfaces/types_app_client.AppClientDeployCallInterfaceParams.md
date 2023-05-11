@@ -17,6 +17,7 @@ Call interface parameters to pass into ApplicationClient.deploy
 ### Properties
 
 - [createArgs](types_app_client.AppClientDeployCallInterfaceParams.md#createargs)
+- [createOnCompleteAction](types_app_client.AppClientDeployCallInterfaceParams.md#createoncompleteaction)
 - [deleteArgs](types_app_client.AppClientDeployCallInterfaceParams.md#deleteargs)
 - [deployTimeParams](types_app_client.AppClientDeployCallInterfaceParams.md#deploytimeparams)
 - [updateArgs](types_app_client.AppClientDeployCallInterfaceParams.md#updateargs)
@@ -35,6 +36,18 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 ___
 
+### createOnCompleteAction
+
+• `Optional` **createOnCompleteAction**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"update_application"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC`
+
+Override the on-completion action for the create call; defaults to NoOp
+
+#### Defined in
+
+[src/types/app-client.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L121)
+
+___
+
 ### deleteArgs
 
 • `Optional` **deleteArgs**: [`AppClientCallArgs`](../modules/types_app_client.md#appclientcallargs)
@@ -43,7 +56,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app-client.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L123)
+[src/types/app-client.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L125)
 
 ___
 
@@ -67,4 +80,4 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app-client.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L121)
+[src/types/app-client.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L123)

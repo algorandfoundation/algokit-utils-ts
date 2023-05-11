@@ -974,7 +974,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[src/app-deploy.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L517)
+[src/app-deploy.ts:519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L519)
 
 ___
 
@@ -1128,7 +1128,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[src/app-deploy.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L410)
+[src/app-deploy.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L412)
 
 ___
 
@@ -1409,7 +1409,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[src/app-deploy.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L397)
+[src/app-deploy.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L399)
 
 ___
 
@@ -1610,7 +1610,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/app-deploy.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L569)
+[src/app-deploy.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L571)
 
 ___
 
@@ -1639,7 +1639,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/app-deploy.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L599)
+[src/app-deploy.ts:601](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L601)
 
 ___
 
@@ -1715,7 +1715,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/app-deploy.ts:538](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L538)
+[src/app-deploy.ts:540](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L540)
 
 ___
 
@@ -1868,7 +1868,7 @@ The TEAL without comments
 
 #### Defined in
 
-[src/app-deploy.ts:622](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L622)
+[src/app-deploy.ts:624](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L624)
 
 ___
 

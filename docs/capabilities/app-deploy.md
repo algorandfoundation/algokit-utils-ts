@@ -106,6 +106,7 @@ The first parameter `deployment` is an [`AppDeploymentParams`](../code/interface
   - `createArgs` - The [args](./app.md#appcallargs) to use if a create is needed
   - `updateArgs` - The [args](./app.md#appcallargs) to use if an update is needed
   - `deleteArgs` - The [args](./app.md#appcallargs) to use if a delete is needed
+- `onCompleteAction` is replaced with `createOnCompleteAction` - Override the on-completion action for the create call; defaults to NoOp
 - `note` is excluded since deployment must add a `ALGOKIT_DEPLOYER:j{...}` note for the [name lookup](#getcreatorappsbyname) to work
 - `skipSending`, `skipWaiting` and `atc` are excluded because `deployApp` needs to control the deployment and actually send to the network to function correctly
 - `metadata: AppDeployMetadata` is added to allow the [deployment metadata](../code/interfaces/types_app.AppDeployMetadata.md) to be provided (`name`, `version`, `updatable` and `deletable`)

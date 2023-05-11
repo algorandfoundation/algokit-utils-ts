@@ -117,6 +117,8 @@ export interface AppClientDeployCallInterfaceParams {
   deployTimeParams?: TealTemplateParams
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppClientCallArgs
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppClientCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
@@ -348,7 +350,18 @@ export class ApplicationClient {
    * @returns The metadata and transaction result(s) of the deployment, or just the metadata if it didn't need to issue transactions
    */
   async deploy(deploy?: AppClientDeployParams) {
-    const { sender, version, allowUpdate, allowDelete, sendParams, createArgs, updateArgs, deleteArgs, ...deployArgs } = deploy ?? {}
+    const {
+      sender,
+      version,
+      allowUpdate,
+      allowDelete,
+      sendParams,
+      createArgs,
+      createOnCompleteAction,
+      updateArgs,
+      deleteArgs,
+      ...deployArgs
+    } = deploy ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to deploy app which already has an app id of ${this._appId}`)
@@ -410,6 +423,7 @@ export class ApplicationClient {
           ...(sendParams ?? {}),
           existingDeployments: this.existingDeployments,
           createArgs: this.getCallArgs(createArgs),
+          createOnCompleteAction: createOnCompleteAction,
           updateArgs: this.getCallArgs(updateArgs),
           deleteArgs: this.getCallArgs(deleteArgs),
           ...deployArgs,

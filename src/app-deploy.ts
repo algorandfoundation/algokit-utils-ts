@@ -63,6 +63,7 @@ export async function deployApp(
     createArgs,
     updateArgs,
     deleteArgs,
+    createOnCompleteAction,
     ...appParams
   } = deployment
 
@@ -105,6 +106,7 @@ export async function deployApp(
     const result = await createApp(
       {
         ...appParams,
+        onCompleteAction: createOnCompleteAction,
         args: createArgs,
         note: getAppDeploymentTransactionNote(metadata),
         atc,
