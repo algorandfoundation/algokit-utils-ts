@@ -29,8 +29,8 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 
 ### Methods
 
-- [\_call](types_app_client.ApplicationClient.md#_call)
 - [call](types_app_client.ApplicationClient.md#call)
+- [callOfType](types_app_client.ApplicationClient.md#calloftype)
 - [clearState](types_app_client.ApplicationClient.md#clearstate)
 - [closeOut](types_app_client.ApplicationClient.md#closeout)
 - [compile](types_app_client.ApplicationClient.md#compile)
@@ -196,44 +196,52 @@ ___
 
 ## Methods
 
-### \_call
-
-▸ `Private` **_call**(`call`, `callType`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `call` | `undefined` \| [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
-| `callType` | ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"clear_state"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `ClearStateOC` \| `DeleteApplicationOC` |
-
-#### Returns
-
-`Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
-
-#### Defined in
-
-[src/types/app-client.ts:546](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L546)
-
-___
-
 ### call
 
 ▸ **call**(`call?`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+Issues a no_op (normal) call to the app.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) | The call details. |
 
 #### Returns
 
 `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+The result of the call
+
 #### Defined in
 
-[src/types/app-client.ts:526](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L526)
+[src/types/app-client.ts:541](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L541)
+
+___
+
+### callOfType
+
+▸ **callOfType**(`call?`, `callType`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+
+Issues a call to the app with the given call type.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `call` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) | The call details. |
+| `callType` | ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"clear_state"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `ClearStateOC` \| `DeleteApplicationOC` | The call type |
+
+#### Returns
+
+`Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+
+The result of the call
+
+#### Defined in
+
+[src/types/app-client.ts:587](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L587)
 
 ___
 
@@ -241,19 +249,23 @@ ___
 
 ▸ **clearState**(`call?`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+Issues a clear_state call to the app.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `call?` | [`AppClientClearStateParams`](../modules/types_app_client.md#appclientclearstateparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `call?` | [`AppClientClearStateParams`](../modules/types_app_client.md#appclientclearstateparams) | The call details. |
 
 #### Returns
 
 `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+The result of the call
+
 #### Defined in
 
-[src/types/app-client.ts:538](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L538)
+[src/types/app-client.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L568)
 
 ___
 
@@ -261,19 +273,23 @@ ___
 
 ▸ **closeOut**(`call?`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+Issues a close_out call to the app.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) | The call details. |
 
 #### Returns
 
 `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+The result of the call
+
 #### Defined in
 
-[src/types/app-client.ts:534](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L534)
+[src/types/app-client.ts:559](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L559)
 
 ___
 
@@ -305,19 +321,23 @@ ___
 
 ▸ **create**(`create?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
+Creates a smart contract app, returns the details of the created app.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `create?` | [`AppClientCreateParams`](../modules/types_app_client.md#appclientcreateparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `create?` | [`AppClientCreateParams`](../modules/types_app_client.md#appclientcreateparams) | The parameters to create the app with |
 
 #### Returns
 
 `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
+The details of the created app, or the transaction to create it if `skipSending` and the compilation result
+
 #### Defined in
 
-[src/types/app-client.ts:441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L441)
+[src/types/app-client.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L446)
 
 ___
 
@@ -325,19 +345,23 @@ ___
 
 ▸ **delete**(`call?`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+Issues a delete_application call to the app.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) | The call details. |
 
 #### Returns
 
 `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+The result of the call
+
 #### Defined in
 
-[src/types/app-client.ts:542](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L542)
+[src/types/app-client.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L577)
 
 ___
 
@@ -412,7 +436,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-client.ts:816](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L816)
+[src/types/app-client.ts:857](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L857)
 
 ___
 
@@ -436,7 +460,7 @@ The result of the funding
 
 #### Defined in
 
-[src/types/app-client.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L585)
+[src/types/app-client.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L626)
 
 ___
 
@@ -460,7 +484,7 @@ The ABI method for the given method
 
 #### Defined in
 
-[src/types/app-client.ts:775](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L775)
+[src/types/app-client.ts:816](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L816)
 
 ___
 
@@ -484,7 +508,7 @@ The ABI method params for the given method
 
 #### Defined in
 
-[src/types/app-client.ts:753](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L753)
+[src/types/app-client.ts:794](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L794)
 
 ___
 
@@ -503,7 +527,7 @@ The app reference, or if deployed using the `deploy` method, the app metadata to
 
 #### Defined in
 
-[src/types/app-client.ts:785](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L785)
+[src/types/app-client.ts:826](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L826)
 
 ___
 
@@ -521,7 +545,7 @@ The names of the boxes
 
 #### Defined in
 
-[src/types/app-client.ts:639](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L639)
+[src/types/app-client.ts:680](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L680)
 
 ___
 
@@ -545,7 +569,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/app-client.ts:654](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L654)
+[src/types/app-client.ts:695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L695)
 
 ___
 
@@ -570,7 +594,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/app-client.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L669)
+[src/types/app-client.ts:710](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L710)
 
 ___
 
@@ -595,7 +619,7 @@ The (name, value) pair of the boxes with values as raw byte arrays
 
 #### Defined in
 
-[src/types/app-client.ts:685](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L685)
+[src/types/app-client.ts:726](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L726)
 
 ___
 
@@ -621,7 +645,7 @@ The (name, value) pair of the boxes with values as the ABI Value
 
 #### Defined in
 
-[src/types/app-client.ts:707](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L707)
+[src/types/app-client.ts:748](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L748)
 
 ___
 
@@ -645,7 +669,7 @@ The call args ready to pass into an app call
 
 #### Defined in
 
-[src/types/app-client.ts:728](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L728)
+[src/types/app-client.ts:769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L769)
 
 ___
 
@@ -663,7 +687,7 @@ The global state
 
 #### Defined in
 
-[src/types/app-client.ts:611](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L611)
+[src/types/app-client.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L652)
 
 ___
 
@@ -687,7 +711,7 @@ The global state
 
 #### Defined in
 
-[src/types/app-client.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L625)
+[src/types/app-client.ts:666](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L666)
 
 ___
 
@@ -717,19 +741,23 @@ ___
 
 ▸ **optIn**(`call?`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+Issues a opt_in call to the app.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `call?` | [`AppClientCallParams`](../modules/types_app_client.md#appclientcallparams) | The call details. |
 
 #### Returns
 
 `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+The result of the call
+
 #### Defined in
 
-[src/types/app-client.ts:530](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L530)
+[src/types/app-client.ts:550](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L550)
 
 ___
 
@@ -737,16 +765,20 @@ ___
 
 ▸ **update**(`update?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+Updates the smart contract app.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `update?` | [`AppClientUpdateParams`](../modules/types_app_client.md#appclientupdateparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `update?` | [`AppClientUpdateParams`](../modules/types_app_client.md#appclientupdateparams) | The parameters to update the app with |
 
 #### Returns
 
 `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
+The transaction send result and the compilation result
+
 #### Defined in
 
-[src/types/app-client.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L488)
+[src/types/app-client.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L498)

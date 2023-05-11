@@ -241,7 +241,7 @@ Creates a smart contract app, returns the details of the created app.
 
 `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
-The details of the created app, or the transaction to create it if `skipSending`
+The details of the created app, or the transaction to create it if `skipSending` and the compilation result
 
 #### Defined in
 
@@ -1961,7 +1961,7 @@ Updates a smart contract app.
 
 `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
-The transaction
+The transaction send result and the compilation result
 
 #### Defined in
 

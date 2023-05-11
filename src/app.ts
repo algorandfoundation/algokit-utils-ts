@@ -49,7 +49,7 @@ import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
  * Creates a smart contract app, returns the details of the created app.
  * @param create The parameters to create the app with
  * @param algod An algod client
- * @returns The details of the created app, or the transaction to create it if `skipSending`
+ * @returns The details of the created app, or the transaction to create it if `skipSending` and the compilation result
  */
 export async function createApp(
   create: CreateAppParams,
@@ -181,7 +181,7 @@ export async function createApp(
  * Updates a smart contract app.
  * @param update The parameters to update the app with
  * @param algod An algod client
- * @returns The transaction
+ * @returns The transaction send result and the compilation result
  */
 export async function updateApp(
   update: UpdateAppParams,

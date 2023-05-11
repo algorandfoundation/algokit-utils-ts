@@ -58,6 +58,7 @@ To make a call to a smart contract you can use the following methods (which dete
 - `optIn(call?)` - An opt-in call
 - `closeOut(call?)` - A close-out call
 - `clearState(call?)` - A clear state call (note: calls the clear program)
+- `callOfType(call, callType)` - Make a call with a specified call type
 
 These calls will only work if the Application Client knows the ID of the app, which will occur if:
 
