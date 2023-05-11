@@ -23,7 +23,7 @@ Fail the deployment
 
 #### Defined in
 
-[src/types/app.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L264)
+[src/types/app.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L271)
 
 ___
 
@@ -35,4 +35,4 @@ Delete the app and create a new one in its place
 
 #### Defined in
 
-[src/types/app.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L266)
+[src/types/app.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L273)

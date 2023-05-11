@@ -180,7 +180,7 @@ ___
 
 ### onCompleteAction
 
-• `Optional` **onCompleteAction**: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC`
+• `Optional` **onCompleteAction**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"update_application"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC`
 
 Override the on-completion action for the create call; defaults to NoOp
 

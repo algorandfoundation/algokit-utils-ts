@@ -29,6 +29,7 @@ import {
   AppCallArgs,
   AppCallParams,
   AppCallTransactionResult,
+  AppCallType,
   AppCompilationResult,
   AppReference,
   AppState,
@@ -85,7 +86,7 @@ export async function createApp(
       numGlobalInts: schema.globalInts,
       numGlobalByteSlices: schema.globalByteSlices,
       extraPages: schema.extraPages ?? Math.floor((approvalProgram.length + clearProgram.length) / APP_PAGE_MAX_SIZE),
-      onComplete: onCompleteAction ?? algosdk.OnApplicationComplete.NoOpOC,
+      onComplete: getAppOnCompleteAction(onCompleteAction),
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
       ...(await getAppArgsForABICall(args, from)),
@@ -260,6 +261,39 @@ function attachATC(sendParams: SendTransactionParams) {
   return sendParams.atc
 }
 
+/** Returns an `algosdk.OnApplicationComplete` for the given onCompleteAction.
+ *
+ * If given `undefined` will return `OnApplicationComplete.NoOpOC`.
+ *
+ * If given an `AppCallType` will convert the string enum to the correct underlying `algosdk.OnApplicationComplete`.
+ *
+ * @param onCompletionAction The on completion action
+ * @returns The `algosdk.OnApplicationComplete`
+ */
+export function getAppOnCompleteAction(onCompletionAction?: AppCallType | OnApplicationComplete) {
+  switch (onCompletionAction) {
+    case undefined:
+    case 'no_op':
+    case OnApplicationComplete.NoOpOC:
+      return OnApplicationComplete.NoOpOC
+    case 'opt_in':
+    case OnApplicationComplete.OptInOC:
+      return OnApplicationComplete.OptInOC
+    case 'close_out':
+    case OnApplicationComplete.CloseOutOC:
+      return OnApplicationComplete.CloseOutOC
+    case 'clear_state':
+    case OnApplicationComplete.ClearStateOC:
+      return OnApplicationComplete.ClearStateOC
+    case 'update_application':
+    case OnApplicationComplete.UpdateApplicationOC:
+      return OnApplicationComplete.UpdateApplicationOC
+    case 'delete_application':
+    case OnApplicationComplete.DeleteApplicationOC:
+      return OnApplicationComplete.DeleteApplicationOC
+  }
+}
+
 /**
  * Issues a call to a given app.
  * @param call The call details.
@@ -278,16 +312,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
       appID: appId,
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
-      onComplete:
-        callType === 'normal'
-          ? OnApplicationComplete.NoOpOC
-          : callType === 'clearstate'
-          ? OnApplicationComplete.ClearStateOC
-          : callType === 'closeout'
-          ? OnApplicationComplete.CloseOutOC
-          : callType === 'delete'
-          ? OnApplicationComplete.DeleteApplicationOC
-          : OnApplicationComplete.OptInOC,
+      onComplete: getAppOnCompleteAction(callType),
       ...(await getAppArgsForABICall(args, from)),
     })
 
@@ -320,27 +345,24 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
   }
 
   let transaction: Transaction
-  switch (callType) {
-    case 'optin':
+  switch (getAppOnCompleteAction(callType)) {
     case OnApplicationComplete.OptInOC:
       transaction = algosdk.makeApplicationOptInTxnFromObject(appCallParams)
       break
-    case 'clearstate':
     case OnApplicationComplete.ClearStateOC:
       transaction = algosdk.makeApplicationClearStateTxnFromObject(appCallParams)
       break
-    case 'closeout':
     case OnApplicationComplete.CloseOutOC:
       transaction = algosdk.makeApplicationCloseOutTxnFromObject(appCallParams)
       break
-    case 'delete':
     case OnApplicationComplete.DeleteApplicationOC:
       transaction = algosdk.makeApplicationDeleteTxnFromObject(appCallParams)
       break
-    case 'normal':
     case OnApplicationComplete.NoOpOC:
       transaction = algosdk.makeApplicationNoOpTxnFromObject(appCallParams)
       break
+    default:
+      throw new Error(`Received unexpected call type ${callType}`)
   }
 
   const result = await sendTransaction({ transaction, from, sendParams }, algod)

@@ -43,6 +43,7 @@
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
 - [getAppGlobalState](index.md#getappglobalstate)
 - [getAppLocalState](index.md#getapplocalstate)
+- [getAppOnCompleteAction](index.md#getapponcompleteaction)
 - [getAtomicTransactionComposerTransactions](index.md#getatomictransactioncomposertransactions)
 - [getBoxReference](index.md#getboxreference)
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
@@ -138,7 +139,7 @@ The result of the call
 
 #### Defined in
 
-[src/app.ts:269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L269)
+[src/app.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L303)
 
 ___
 
@@ -188,7 +189,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:636](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L636)
+[src/app.ts:658](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L658)
 
 ___
 
@@ -244,7 +245,7 @@ The details of the created app, or the transaction to create it if `skipSending`
 
 #### Defined in
 
-[src/app.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L53)
+[src/app.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L54)
 
 ___
 
@@ -269,7 +270,7 @@ An object keyeed by the UTF-8 representation of the key with various parsings of
 
 #### Defined in
 
-[src/app.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L496)
+[src/app.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L518)
 
 ___
 
@@ -414,7 +415,7 @@ The encoded ABI method spec e.g. `method_name(uint64,string)string`
 
 #### Defined in
 
-[src/app.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L652)
+[src/app.ts:674](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L674)
 
 ___
 
@@ -439,7 +440,7 @@ The return value for the method call
 
 #### Defined in
 
-[src/app.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L362)
+[src/app.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L384)
 
 ___
 
@@ -748,7 +749,7 @@ The parameters ready to pass into `addMethodCall` within AtomicTransactionCompos
 
 #### Defined in
 
-[src/app.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L563)
+[src/app.ts:585](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L585)
 
 ___
 
@@ -772,7 +773,7 @@ The args ready to load into a `Transaction`
 
 #### Defined in
 
-[src/app.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L543)
+[src/app.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L565)
 
 ___
 
@@ -797,7 +798,7 @@ The current box names
 
 #### Defined in
 
-[src/app.ts:432](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L432)
+[src/app.ts:454](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L454)
 
 ___
 
@@ -823,7 +824,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/app.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L450)
+[src/app.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L472)
 
 ___
 
@@ -848,7 +849,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/app.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L473)
+[src/app.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L495)
 
 ___
 
@@ -874,7 +875,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L463)
+[src/app.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L485)
 
 ___
 
@@ -899,7 +900,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L485)
+[src/app.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L507)
 
 ___
 
@@ -924,7 +925,7 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L625)
+[src/app.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L647)
 
 ___
 
@@ -998,7 +999,7 @@ The current global state
 
 #### Defined in
 
-[src/app.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L398)
+[src/app.ts:420](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L420)
 
 ___
 
@@ -1024,7 +1025,35 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/app.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L415)
+[src/app.ts:437](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L437)
+
+___
+
+### getAppOnCompleteAction
+
+▸ **getAppOnCompleteAction**(`onCompletionAction?`): `OnApplicationComplete`
+
+Returns an `algosdk.OnApplicationComplete` for the given onCompleteAction.
+
+If given `undefined` will return `OnApplicationComplete.NoOpOC`.
+
+If given an `AppCallType` will convert the string enum to the correct underlying `algosdk.OnApplicationComplete`.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `onCompletionAction?` | [`AppCallType`](types_app.md#appcalltype) \| `OnApplicationComplete` | The on completion action |
+
+#### Returns
+
+`OnApplicationComplete`
+
+The `algosdk.OnApplicationComplete`
+
+#### Defined in
+
+[src/app.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L273)
 
 ___
 
@@ -1072,7 +1101,7 @@ The box reference ready to pass into a `Transaction`
 
 #### Defined in
 
-[src/app.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L599)
+[src/app.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L621)
 
 ___
 
@@ -1936,7 +1965,7 @@ The transaction
 
 #### Defined in
 
-[src/app.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L185)
+[src/app.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L186)
 
 ___
 

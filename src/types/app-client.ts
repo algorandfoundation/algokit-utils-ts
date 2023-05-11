@@ -30,6 +30,7 @@ import { AlgoAmount } from './amount'
 import {
   ABIAppCallArgs,
   AppCallArgs,
+  AppCallType,
   AppLookup,
   AppMetadata,
   AppReference,
@@ -161,15 +162,17 @@ export interface AppClientCompilationParams {
   deletable?: boolean
 }
 
+/** On-complete action parameter for creating a contract using ApplicationClient */
+export type AppClientCreateOnComplete = {
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+}
+
 /** Parameters for creating a contract using ApplicationClient */
-export type AppClientCreateParams = AppClientCallParams &
-  AppClientCompilationParams & {
-    /** Override the on-completion action for the create call; defaults to NoOp */
-    onCompleteAction?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
-  }
+export type AppClientCreateParams = AppClientCallParams & AppClientCompilationParams & AppClientCreateOnComplete
 
 /** Parameters for updating a contract using ApplicationClient */
-export type AppClientUpdateParams = AppClientCreateParams
+export type AppClientUpdateParams = AppClientCallParams & AppClientCompilationParams
 
 /** Parameters for funding an app account */
 export interface FundAppAccountParams {
@@ -521,26 +524,29 @@ export class ApplicationClient {
   }
 
   async call(call?: AppClientCallParams) {
-    return await this._call(call, 'normal')
+    return await this._call(call, 'no_op')
   }
 
   async optIn(call?: AppClientCallParams) {
-    return await this._call(call, 'optin')
+    return await this._call(call, 'opt_in')
   }
 
   async closeOut(call?: AppClientCallParams) {
-    return await this._call(call, 'closeout')
+    return await this._call(call, 'close_out')
   }
 
   async clearState(call?: AppClientClearStateParams) {
-    return await this._call(call, 'clearstate')
+    return await this._call(call, 'clear_state')
   }
 
   async delete(call?: AppClientCallParams) {
-    return await this._call(call, 'delete')
+    return await this._call(call, 'delete_application')
   }
 
-  private async _call(call: AppClientCallParams | undefined, callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal') {
+  private async _call(
+    call: AppClientCallParams | undefined,
+    callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>,
+  ) {
     const { sender, note, sendParams, ...args } = call ?? {}
 
     if (!sender && !this.sender) {

@@ -112,7 +112,7 @@ The payload to configure an app call consists of a union of [`SendTransactionPar
 - Required:
 
   - `appId: number` - The ID of the app to call
-  - `callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal' | algosdk.OnApplicationComplete` - The [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for the call where `normal` equates to `NoOp`
+  - `callType: AppCallType | algosdk.OnApplicationComplete` - The [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for the call (either as an `algosdk.OnApplicationComplete` enum or a [string enum](../code/modules/types_app.md#appcalltype))
   - `from: SendTransactionFrom` - The [account](account.md) (with private key loaded) that will send the transaction
 
 - Optional:
