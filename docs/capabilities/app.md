@@ -84,6 +84,7 @@ The payload to configure an app consists of a union of [`SendTransactionParams`]
   - `approvalProgram: Uint8Array | string` - The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array)
   - `clearStateProgram: Uint8Array | string` - The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array)
   - `schema: AppStorageSchema` - The storage schema to request for the created app
+  - `onCompleteAction?: algosdk.OnApplicationComplete` - The on-completion action to specify for the call; defaults to NoOp
 - Optional:
   - `transactionParams: SuggestedParams` - Any [transaction parameters](transaction.md#transaction-params)
   - `note: TransactionNote` - A [transaction note](transaction.md#transaction-notes)
@@ -111,7 +112,7 @@ The payload to configure an app call consists of a union of [`SendTransactionPar
 - Required:
 
   - `appId: number` - The ID of the app to call
-  - `callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'` - The [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for the call where `normal` equates to `NoOp`
+  - `callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal' | algosdk.OnApplicationComplete` - The [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for the call where `normal` equates to `NoOp`
   - `from: SendTransactionFrom` - The [account](account.md) (with private key loaded) that will send the transaction
 
 - Optional:

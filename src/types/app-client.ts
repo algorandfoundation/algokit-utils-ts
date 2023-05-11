@@ -6,6 +6,7 @@ import algosdk, {
   Algodv2,
   getApplicationAddress,
   Indexer,
+  OnApplicationComplete,
   SourceMap,
   SuggestedParams,
 } from 'algosdk'
@@ -158,7 +159,11 @@ export interface AppClientCompilationParams {
 }
 
 /** Parameters for creating a contract using ApplicationClient */
-export type AppClientCreateParams = AppClientCallParams & AppClientCompilationParams
+export type AppClientCreateParams = AppClientCallParams &
+  AppClientCompilationParams & {
+    /** Override the on-completion action for the create call; defaults to NoOp */
+    onCompleteAction?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  }
 
 /** Parameters for updating a contract using ApplicationClient */
 export type AppClientUpdateParams = AppClientCreateParams
@@ -428,7 +433,7 @@ export class ApplicationClient {
   }
 
   async create(create?: AppClientCreateParams) {
-    const { sender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = create ?? {}
+    const { sender, note, sendParams, deployTimeParams, updatable, deletable, onCompleteAction, ...args } = create ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to create app which already has an app id of ${this._appId}`)
@@ -453,6 +458,7 @@ export class ApplicationClient {
             localByteSlices: this.appSpec.state.local.num_byte_slices,
             localInts: this.appSpec.state.local.num_uints,
           },
+          onCompleteAction,
           args: this.getCallArgs(args),
           note: note,
           transactionParams: this.params,
