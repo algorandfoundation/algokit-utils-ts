@@ -65,7 +65,7 @@ describe('deploy-app', () => {
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
     const update1 = await algokit.updateApp({ ...(await getTestingAppCreateParams(testAccount, updateMetadata)), appId: app1.appId }, algod)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delete3 = await algokit.callApp({ appId: app3.appId, callType: 'delete', from: testAccount }, algod)
+    const delete3 = await algokit.callApp({ appId: app3.appId, callType: 'delete_application', from: testAccount }, algod)
     await waitForIndexer()
 
     const apps = await algokit.getCreatorAppsByName(testAccount, indexer)

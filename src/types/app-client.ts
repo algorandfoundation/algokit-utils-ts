@@ -30,6 +30,7 @@ import { AlgoAmount } from './amount'
 import {
   ABIAppCallArgs,
   AppCallArgs,
+  AppCallType,
   AppLookup,
   AppMetadata,
   AppReference,
@@ -161,15 +162,17 @@ export interface AppClientCompilationParams {
   deletable?: boolean
 }
 
+/** On-complete action parameter for creating a contract using ApplicationClient */
+export type AppClientCreateOnComplete = {
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+}
+
 /** Parameters for creating a contract using ApplicationClient */
-export type AppClientCreateParams = AppClientCallParams &
-  AppClientCompilationParams & {
-    /** Override the on-completion action for the create call; defaults to NoOp */
-    onCompleteAction?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
-  }
+export type AppClientCreateParams = AppClientCallParams & AppClientCompilationParams & AppClientCreateOnComplete
 
 /** Parameters for updating a contract using ApplicationClient */
-export type AppClientUpdateParams = AppClientCreateParams
+export type AppClientUpdateParams = AppClientCallParams & AppClientCompilationParams
 
 /** Parameters for funding an app account */
 export interface FundAppAccountParams {
@@ -435,6 +438,11 @@ export class ApplicationClient {
     }
   }
 
+  /**
+   * Creates a smart contract app, returns the details of the created app.
+   * @param create The parameters to create the app with
+   * @returns The details of the created app, or the transaction to create it if `skipSending` and the compilation result
+   */
   async create(create?: AppClientCreateParams) {
     const { sender, note, sendParams, deployTimeParams, updatable, deletable, onCompleteAction, ...args } = create ?? {}
 
@@ -482,6 +490,11 @@ export class ApplicationClient {
     }
   }
 
+  /**
+   * Updates the smart contract app.
+   * @param update The parameters to update the app with
+   * @returns The transaction send result and the compilation result
+   */
   async update(update?: AppClientUpdateParams) {
     const { sender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = update ?? {}
 
@@ -520,28 +533,62 @@ export class ApplicationClient {
     }
   }
 
+  /**
+   * Issues a no_op (normal) call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async call(call?: AppClientCallParams) {
-    return await this._call(call, 'normal')
+    return await this.callOfType(call, 'no_op')
   }
 
+  /**
+   * Issues a opt_in call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async optIn(call?: AppClientCallParams) {
-    return await this._call(call, 'optin')
+    return await this.callOfType(call, 'opt_in')
   }
 
+  /**
+   * Issues a close_out call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async closeOut(call?: AppClientCallParams) {
-    return await this._call(call, 'closeout')
+    return await this.callOfType(call, 'close_out')
   }
 
+  /**
+   * Issues a clear_state call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async clearState(call?: AppClientClearStateParams) {
-    return await this._call(call, 'clearstate')
+    return await this.callOfType(call, 'clear_state')
   }
 
+  /**
+   * Issues a delete_application call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async delete(call?: AppClientCallParams) {
-    return await this._call(call, 'delete')
+    return await this.callOfType(call, 'delete_application')
   }
 
-  private async _call(call: AppClientCallParams | undefined, callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal') {
-    const { sender, note, sendParams, ...args } = call ?? {}
+  /**
+   * Issues a call to the app with the given call type.
+   * @param call The call details.
+   * @param callType The call type
+   * @returns The result of the call
+   */
+  async callOfType(
+    call: AppClientCallParams = {},
+    callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>,
+  ) {
+    const { sender, note, sendParams, ...args } = call
 
     if (!sender && !this.sender) {
       throw new Error('No sender provided, unable to call app')

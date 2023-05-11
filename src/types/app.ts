@@ -128,7 +128,7 @@ export interface CreateAppParams extends CreateOrUpdateAppParams {
   /** The storage schema to request for the created app */
   schema: AppStorageSchema
   /** Override the on-completion action for the create call; defaults to NoOp */
-  onCompleteAction?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
 }
 
 /** Parameters that are passed in when updating an app. */
@@ -137,18 +137,25 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
   appId: number
 }
 
+/** The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
+ *
+ * Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
+ *
+ * * `no_op`: Normal smart contract call, no special on-complete action
+ * * `opt_in`: Opt-in to smart contract local storage
+ * * `close_out`: Close-out local storage storage
+ * * `clear_state`: Clear local storage state
+ * * `update_application`: Update the smart contract
+ * * `delete_application`: Delete the smart contract
+ */
+export type AppCallType = 'no_op' | 'opt_in' | 'close_out' | 'clear_state' | 'update_application' | 'delete_application'
+
 /** Parameters representing a call to an app. */
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
   appId: number
   /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
-  callType:
-    | 'optin'
-    | 'closeout'
-    | 'clearstate'
-    | 'delete'
-    | 'normal'
-    | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
+  callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
   /** The account to make the call from */
   from: SendTransactionFrom
   /** Optional transaction parameters */

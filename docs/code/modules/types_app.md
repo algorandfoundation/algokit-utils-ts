@@ -39,6 +39,7 @@
 - [ABIAppCallArgs](types_app.md#abiappcallargs)
 - [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
+- [AppCallType](types_app.md#appcalltype)
 - [BoxIdentifier](types_app.md#boxidentifier)
 
 ### Variables
@@ -83,7 +84,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L200)
+[src/types/app.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L207)
 
 ___
 
@@ -98,6 +99,27 @@ Arguments to pass to an app call either:
 #### Defined in
 
 [src/types/app.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L108)
+
+___
+
+### AppCallType
+
+Ƭ **AppCallType**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"clear_state"`` \| ``"update_application"`` \| ``"delete_application"``
+
+The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
+
+Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
+
+* `no_op`: Normal smart contract call, no special on-complete action
+* `opt_in`: Opt-in to smart contract local storage
+* `close_out`: Close-out local storage storage
+* `clear_state`: Clear local storage state
+* `update_application`: Update the smart contract
+* `delete_application`: Delete the smart contract
+
+#### Defined in
+
+[src/types/app.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L151)
 
 ___
 

@@ -77,7 +77,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L282)
+[src/types/app.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L289)
 
 ___
 
@@ -89,7 +89,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L286)
+[src/types/app.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L293)
 
 ___
 
@@ -101,7 +101,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/app.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L274)
+[src/types/app.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L281)
 
 ___
 
@@ -113,7 +113,7 @@ Optional cached value of the existing apps for the given creator
 
 #### Defined in
 
-[src/types/app.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L280)
+[src/types/app.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L287)
 
 ___
 
@@ -189,13 +189,13 @@ The deployment metadata
 
 #### Defined in
 
-[src/types/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L272)
+[src/types/app.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L279)
 
 ___
 
 ### onCompleteAction
 
-• `Optional` **onCompleteAction**: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC`
+• `Optional` **onCompleteAction**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"update_application"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC`
 
 Override the on-completion action for the create call; defaults to NoOp
 
@@ -217,7 +217,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/app.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L276)
+[src/types/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L283)
 
 ___
 
@@ -229,7 +229,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/app.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L278)
+[src/types/app.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L285)
 
 ___
 
@@ -289,4 +289,4 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L284)
+[src/types/app.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L291)

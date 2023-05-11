@@ -204,7 +204,7 @@ export async function deployApp(
     const { transaction: deleteTransaction } = await callApp(
       {
         appId: existingApp.appId,
-        callType: 'delete',
+        callType: 'delete_application',
         from: appParams.from,
         args: deleteArgs,
         transactionParams: appParams.transactionParams,
