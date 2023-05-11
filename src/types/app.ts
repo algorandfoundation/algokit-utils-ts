@@ -274,7 +274,8 @@ export enum OnSchemaBreak {
 }
 
 /** The parameters to deploy an app */
-export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'note' | 'skipSending' | 'skipWaiting' | 'atc'> {
+export interface AppDeploymentParams
+  extends Omit<CreateAppParams, 'onCompleteAction' | 'args' | 'note' | 'skipSending' | 'skipWaiting' | 'atc'> {
   /** The deployment metadata */
   metadata: AppDeployMetadata
   /** Any deploy-time parameters to replace in the TEAL code */
@@ -287,6 +288,8 @@ export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'not
   existingDeployments?: AppLookup
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppCallArgs
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
