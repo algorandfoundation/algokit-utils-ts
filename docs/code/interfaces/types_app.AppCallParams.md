@@ -40,7 +40,7 @@ The id of the app to call
 
 #### Defined in
 
-[src/types/app.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L140)
+[src/types/app.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L143)
 
 ___
 
@@ -52,7 +52,7 @@ The arguments passed in to the app call
 
 #### Defined in
 
-[src/types/app.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L150)
+[src/types/app.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L159)
 
 ___
 
@@ -74,13 +74,13 @@ ___
 
 ### callType
 
-• **callType**: ``"optin"`` \| ``"closeout"`` \| ``"clearstate"`` \| ``"delete"`` \| ``"normal"``
+• **callType**: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `ClearStateOC` \| `DeleteApplicationOC` \| ``"optin"`` \| ``"closeout"`` \| ``"clearstate"`` \| ``"delete"`` \| ``"normal"``
 
-The type of call, everything except create (`createApp`) and update (`updateApp`)
+The type of call, everything except create (see `createApp`) and update (see `updateApp`)
 
 #### Defined in
 
-[src/types/app.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L142)
+[src/types/app.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L145)
 
 ___
 
@@ -108,7 +108,7 @@ The account to make the call from
 
 #### Defined in
 
-[src/types/app.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L144)
+[src/types/app.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L153)
 
 ___
 
@@ -152,7 +152,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/app.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L148)
+[src/types/app.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L157)
 
 ___
 
@@ -213,4 +213,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/app.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L146)
+[src/types/app.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L155)

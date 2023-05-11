@@ -138,7 +138,7 @@ The result of the call
 
 #### Defined in
 
-[src/app.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L259)
+[src/app.ts:269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L269)
 
 ___
 
@@ -188,7 +188,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L621)
+[src/app.ts:636](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L636)
 
 ___
 
@@ -269,7 +269,7 @@ An object keyeed by the UTF-8 representation of the key with various parsings of
 
 #### Defined in
 
-[src/app.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L481)
+[src/app.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L496)
 
 ___
 
@@ -414,7 +414,7 @@ The encoded ABI method spec e.g. `method_name(uint64,string)string`
 
 #### Defined in
 
-[src/app.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L637)
+[src/app.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L652)
 
 ___
 
@@ -439,7 +439,7 @@ The return value for the method call
 
 #### Defined in
 
-[src/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L347)
+[src/app.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L362)
 
 ___
 
@@ -748,7 +748,7 @@ The parameters ready to pass into `addMethodCall` within AtomicTransactionCompos
 
 #### Defined in
 
-[src/app.ts:548](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L548)
+[src/app.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L563)
 
 ___
 
@@ -772,7 +772,7 @@ The args ready to load into a `Transaction`
 
 #### Defined in
 
-[src/app.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L528)
+[src/app.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L543)
 
 ___
 
@@ -797,7 +797,7 @@ The current box names
 
 #### Defined in
 
-[src/app.ts:417](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L417)
+[src/app.ts:432](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L432)
 
 ___
 
@@ -823,7 +823,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/app.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L435)
+[src/app.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L450)
 
 ___
 
@@ -848,7 +848,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/app.ts:458](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L458)
+[src/app.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L473)
 
 ___
 
@@ -874,7 +874,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L448)
+[src/app.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L463)
 
 ___
 
@@ -899,7 +899,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L470)
+[src/app.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L485)
 
 ___
 
@@ -924,7 +924,7 @@ The data about the app
 
 #### Defined in
 
-[src/app.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L610)
+[src/app.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L625)
 
 ___
 
@@ -998,7 +998,7 @@ The current global state
 
 #### Defined in
 
-[src/app.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L383)
+[src/app.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L398)
 
 ___
 
@@ -1024,7 +1024,7 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/app.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L400)
+[src/app.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L415)
 
 ___
 
@@ -1072,7 +1072,7 @@ The box reference ready to pass into a `Transaction`
 
 #### Defined in
 
-[src/app.ts:584](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L584)
+[src/app.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L599)
 
 ___
 
@@ -1936,7 +1936,7 @@ The transaction
 
 #### Defined in
 
-[src/app.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L175)
+[src/app.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L185)
 
 ___
 

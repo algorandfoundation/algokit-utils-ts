@@ -10,7 +10,6 @@ Call configuration for a method
 
 ### Properties
 
-- [clear\_state](types_app_spec.CallConfig.md#clear_state)
 - [close\_out](types_app_spec.CallConfig.md#close_out)
 - [delete\_application](types_app_spec.CallConfig.md#delete_application)
 - [no\_op](types_app_spec.CallConfig.md#no_op)
@@ -18,18 +17,6 @@ Call configuration for a method
 - [update\_application](types_app_spec.CallConfig.md#update_application)
 
 ## Properties
-
-### clear\_state
-
-• `Optional` **clear\_state**: [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue)
-
-Clear state call config
-
-#### Defined in
-
-[src/types/app-spec.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L47)
-
-___
 
 ### close\_out
 
@@ -51,7 +38,7 @@ Delete call config
 
 #### Defined in
 
-[src/types/app-spec.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L51)
+[src/types/app-spec.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L49)
 
 ___
 
@@ -87,4 +74,4 @@ Update call config
 
 #### Defined in
 
-[src/types/app-spec.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L49)
+[src/types/app-spec.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L47)
