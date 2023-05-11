@@ -5,6 +5,7 @@ import algosdk, {
   ABIType,
   ABIValue,
   Address,
+  OnApplicationComplete,
   SourceMap,
   SuggestedParams,
   Transaction,
@@ -126,6 +127,8 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
 export interface CreateAppParams extends CreateOrUpdateAppParams {
   /** The storage schema to request for the created app */
   schema: AppStorageSchema
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  onCompleteAction?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
 }
 
 /** Parameters that are passed in when updating an app. */
@@ -138,8 +141,14 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
   appId: number
-  /** The type of call, everything except create (`createApp`) and update (`updateApp`) */
-  callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'
+  /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
+  callType:
+    | 'optin'
+    | 'closeout'
+    | 'clearstate'
+    | 'delete'
+    | 'normal'
+    | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
   /** The account to make the call from */
   from: SendTransactionFrom
   /** Optional transaction parameters */

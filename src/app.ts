@@ -54,7 +54,17 @@ export async function createApp(
   create: CreateAppParams,
   algod: Algodv2,
 ): Promise<Partial<AppCompilationResult> & AppCallTransactionResult & AppReference> {
-  const { from, approvalProgram: approval, clearStateProgram: clear, schema, note, transactionParams, args, ...sendParams } = create
+  const {
+    from,
+    approvalProgram: approval,
+    clearStateProgram: clear,
+    schema,
+    note,
+    transactionParams,
+    args,
+    onCompleteAction,
+    ...sendParams
+  } = create
 
   const compiledApproval = typeof approval === 'string' ? await compileTeal(approval, algod) : undefined
   const approvalProgram = compiledApproval ? compiledApproval.compiledBase64ToBytes : approval
@@ -75,7 +85,7 @@ export async function createApp(
       numGlobalInts: schema.globalInts,
       numGlobalByteSlices: schema.globalByteSlices,
       extraPages: schema.extraPages ?? Math.floor((approvalProgram.length + clearProgram.length) / APP_PAGE_MAX_SIZE),
-      onComplete: algosdk.OnApplicationComplete.NoOpOC,
+      onComplete: onCompleteAction ?? algosdk.OnApplicationComplete.NoOpOC,
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
       ...(await getAppArgsForABICall(args, from)),
@@ -312,18 +322,23 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
   let transaction: Transaction
   switch (callType) {
     case 'optin':
+    case OnApplicationComplete.OptInOC:
       transaction = algosdk.makeApplicationOptInTxnFromObject(appCallParams)
       break
     case 'clearstate':
+    case OnApplicationComplete.ClearStateOC:
       transaction = algosdk.makeApplicationClearStateTxnFromObject(appCallParams)
       break
     case 'closeout':
+    case OnApplicationComplete.CloseOutOC:
       transaction = algosdk.makeApplicationCloseOutTxnFromObject(appCallParams)
       break
     case 'delete':
+    case OnApplicationComplete.DeleteApplicationOC:
       transaction = algosdk.makeApplicationDeleteTxnFromObject(appCallParams)
       break
     case 'normal':
+    case OnApplicationComplete.NoOpOC:
       transaction = algosdk.makeApplicationNoOpTxnFromObject(appCallParams)
       break
   }

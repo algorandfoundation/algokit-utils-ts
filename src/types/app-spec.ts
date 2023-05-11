@@ -43,8 +43,6 @@ export interface CallConfig {
   opt_in?: CallConfigValue
   /** Close out call config */
   close_out?: CallConfigValue
-  /** Clear state call config */
-  clear_state?: CallConfigValue
   /** Update call config */
   update_application?: CallConfigValue
   /** Delete call config */

@@ -33,7 +33,7 @@ Omit.boxes
 
 #### Defined in
 
-[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
+[src/types/app.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L72)
 
 ___
 
@@ -49,7 +49,7 @@ Omit.lease
 
 #### Defined in
 
-[src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+[src/types/app.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L70)
 
 ___
 
@@ -61,7 +61,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 #### Defined in
 
-[src/types/app-client.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L132)
+[src/types/app-client.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L133)
 
 ___
 
@@ -77,4 +77,4 @@ Omit.methodArgs
 
 #### Defined in
 
-[src/types/app.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L100)
+[src/types/app.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L101)

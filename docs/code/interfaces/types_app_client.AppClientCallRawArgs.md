@@ -38,7 +38,7 @@ The address of any accounts to load in
 
 #### Defined in
 
-[src/types/app.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L81)
+[src/types/app.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L82)
 
 ___
 
@@ -54,7 +54,7 @@ Any application arguments to pass through
 
 #### Defined in
 
-[src/types/app.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L79)
+[src/types/app.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L80)
 
 ___
 
@@ -70,7 +70,7 @@ IDs of any apps to load into the foreignApps array
 
 #### Defined in
 
-[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
+[src/types/app.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L84)
 
 ___
 
@@ -86,7 +86,7 @@ IDs of any assets to load into the foreignAssets array
 
 #### Defined in
 
-[src/types/app.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L85)
+[src/types/app.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L86)
 
 ___
 
@@ -102,7 +102,7 @@ Any box references to load
 
 #### Defined in
 
-[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
+[src/types/app.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L72)
 
 ___
 
@@ -118,7 +118,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-[src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+[src/types/app.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L70)
 
 ___
 
@@ -134,4 +134,4 @@ Property to aid intellisense
 
 #### Defined in
 
-[src/types/app.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L87)
+[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)
