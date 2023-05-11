@@ -246,17 +246,21 @@ main_l22:
 txn OnCompletion
 intc_0 // NoOp
 ==
-bnz main_l28
+bnz main_l30
+txn OnCompletion
+intc_1 // OptIn
+==
+bnz main_l29
 txn OnCompletion
 pushint 4 // UpdateApplication
 ==
-bnz main_l27
+bnz main_l28
 txn OnCompletion
 intc_3 // DeleteApplication
 ==
-bnz main_l26
+bnz main_l27
 err
-main_l26:
+main_l27:
 txn ApplicationID
 intc_0 // 0
 !=
@@ -264,7 +268,7 @@ assert
 callsub delete_11
 intc_1 // 1
 return
-main_l27:
+main_l28:
 txn ApplicationID
 intc_0 // 0
 !=
@@ -272,7 +276,15 @@ assert
 callsub update_9
 intc_1 // 1
 return
-main_l28:
+main_l29:
+txn ApplicationID
+intc_0 // 0
+==
+assert
+callsub create_7
+intc_1 // 1
+return
+main_l30:
 txn ApplicationID
 intc_0 // 0
 ==

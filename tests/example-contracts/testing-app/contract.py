@@ -1,7 +1,9 @@
-import beaker
-from beaker.lib.storage import BoxMapping
-import pyteal as pt
 from typing import Literal
+
+import beaker
+import pyteal as pt
+from beaker.lib.storage import BoxMapping
+from pyteal.ast import CallConfig, MethodConfig
 
 UPDATABLE_TEMPLATE_NAME = "TMPL_UPDATABLE"
 DELETABLE_TEMPLATE_NAME = "TMPL_DELETABLE"
@@ -88,7 +90,11 @@ def error() -> pt.Expr:
     return pt.Assert(pt.Int(0), comment="Deliberate error")
 
 
-@app.create(authorize=beaker.Authorize.only_creator(), bare=True)
+@app.external(
+    authorize=beaker.Authorize.only_creator(),
+    bare=True,
+    method_config=MethodConfig(no_op=CallConfig.CREATE, opt_in=CallConfig.CREATE),
+)
 def create() -> pt.Expr:
     return app.state.value.set(pt.Tmpl.Int("TMPL_VALUE"))
 

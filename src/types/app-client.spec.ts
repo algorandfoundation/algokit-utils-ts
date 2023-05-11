@@ -61,6 +61,34 @@ describe('application-client', () => {
     expect(app.confirmation?.['application-index']).toBe(app.appId)
   })
 
+  test('Create app with oncomplete overload', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const client = algokit.getAppClient(
+      {
+        resolveBy: 'creatorAndName',
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        findExistingUsing: indexer,
+      },
+      algod,
+    )
+
+    const app = await client.create({
+      onCompleteAction: 'opt_in',
+      updatable: true,
+      deletable: true,
+      deployTimeParams: {
+        VALUE: 1,
+      },
+    })
+
+    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.appId).toBeGreaterThan(0)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.confirmation?.['application-index']).toBe(app.appId)
+  })
+
   test('Deploy app - can still deploy when immutable and permanent', async () => {
     const { algod, indexer, testAccount } = localnet.context
 
@@ -493,7 +521,7 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.stack.split(' at ')[0].replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
+          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
           intc_0 // 0
           assert
 
@@ -539,23 +567,23 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-                  "Error: assert failed pc=783. at:416. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
-                  intc_0 // 0
-                  assert
-                  "
-              `)
+          "Error: assert failed pc=800. at:428. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
+          intc_0 // 0
+          assert
+          "
+        `)
         expect(e.stack).toMatchInlineSnapshot(`
-                  "// error
-                  error_6:
-                  proto 0 0
-                  intc_0 // 0
-                  // Deliberate error
-                  assert <--- Error
-                  retsub
+          "// error
+          error_6:
+          proto 0 0
+          intc_0 // 0
+          // Deliberate error
+          assert <--- Error
+          retsub
 
-                  // create
-                  create_7:"
-              `)
+          // create
+          create_7:"
+        `)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         e.led.traces[0].trace = e.led.traces[0].trace!.replace(new RegExp(`${app.appId}(]|,)`, 'g'), '{APP_ID}$1')
         expect(e.led.traces[0]).toMatchInlineSnapshot(`
@@ -565,7 +593,7 @@ describe('application-client', () => {
             "messages": [
               "ApprovalProgram",
               "REJECT",
-              "logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
+              "logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
           intc_0 // 0
           assert
           ",
@@ -610,10 +638,10 @@ describe('application-client', () => {
           254 |121 |&&                                |        |[1, 1]
           255 |122 |assert                            |        |[1]
           256 |123 |callsub label16                   |        |[]
-          779 |399 |proto 0 0                         |        |[]
-          782 |400 |intc_0 // 0                       |        |[]
-          783 |401 |assert                            |        |[0]
-          783 |401 |!! assert failed pc=783 !!        |        |[0]
+          796 |411 |proto 0 0                         |        |[]
+          799 |412 |intc_0 // 0                       |        |[]
+          800 |413 |assert                            |        |[0]
+          800 |413 |!! assert failed pc=800 !!        |        |[0]
           ",
           }
         `)
