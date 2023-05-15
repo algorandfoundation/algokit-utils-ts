@@ -35,7 +35,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-[src/types/app-client.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L107)
+[src/types/app-client.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L108)
 
 ___
 
@@ -48,7 +48,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-[src/types/app-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L103)
+[src/types/app-client.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L104)
 
 ___
 
@@ -60,7 +60,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/app-client.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L109)
+[src/types/app-client.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L110)
 
 ___
 
@@ -72,7 +72,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/app-client.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L111)
+[src/types/app-client.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L112)
 
 ___
 
@@ -84,7 +84,7 @@ Parameters to control transaction sending
 
 #### Defined in
 
-[src/types/app-client.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L99)
+[src/types/app-client.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L100)
 
 ___
 
@@ -96,7 +96,7 @@ The optional sender to send the transaction from, will use the application clien
 
 #### Defined in
 
-[src/types/app-client.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L97)
+[src/types/app-client.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L98)
 
 ___
 
@@ -108,4 +108,4 @@ The version of the contract, uses "1.0" by default
 
 #### Defined in
 
-[src/types/app-client.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L95)
+[src/types/app-client.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L96)

@@ -31,6 +31,7 @@ import {
   ABIAppCallArgs,
   AppCallArgs,
   AppCallType,
+  AppCompilationResult,
   AppLookup,
   AppMetadata,
   AppReference,
@@ -446,7 +447,7 @@ export class ApplicationClient {
         apps: { ...this.existingDeployments.apps, [this._appName]: appMetadata },
       }
 
-      return result
+      return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
       throw this.exposeLogicError(e as Error)
     }
@@ -498,7 +499,7 @@ export class ApplicationClient {
         this._appAddress = getApplicationAddress(this._appId)
       }
 
-      return result
+      return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
       throw this.exposeLogicError(e as Error)
     }
@@ -538,10 +539,7 @@ export class ApplicationClient {
         this.algod,
       )
 
-      this._approvalSourceMap = result.compiledApproval?.sourceMap
-      this._clearSourceMap = result.compiledClear?.sourceMap
-
-      return result
+      return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
       throw this.exposeLogicError(e as Error)
     }
