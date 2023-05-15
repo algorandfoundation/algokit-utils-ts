@@ -16,7 +16,7 @@ The use of in-built algosdk types like `Account`, `LogicSigAccount` and `Transac
 
 ## Using `SendTransactionFrom`
 
-AlgoKit Utils provides two helper methods to take one of these `SendTransactionFrom` objects:
+AlgoKit Utils provides a few helper methods to take one of these `SendTransactionFrom` objects:
 
 - [`algokit.getSenderAddress`](../code/modules/index.md#getsenderaddress) - Returns the public address of the sender the account represents
 - [`algokit.getSenderTransactionSigner`](../code/modules/index.md#getsendertransactionsigner) - Returns a `TransactionSigner` to represent the signer of the account' note: this is memoized so multiple calls to this for the same account will safely return the same `TransactionSigner` instance; this works nicely with `AtomicTransactionComposer`
