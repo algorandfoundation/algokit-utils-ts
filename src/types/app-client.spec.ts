@@ -59,6 +59,7 @@ describe('application-client', () => {
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
     expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.compiledApproval).toBeTruthy()
   })
 
   test('Create app with oncomplete overload', async () => {
@@ -139,6 +140,7 @@ describe('application-client', () => {
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
     expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.compiledApproval).toBeTruthy()
   })
 
   test('Deploy app - create (abi)', async () => {
@@ -420,6 +422,7 @@ describe('application-client', () => {
     invariant(call.return)
     expect(call.return.decodeError).toBeUndefined()
     expect(call.return.returnValue).toBe('string_io')
+    expect(call.compiledApproval).toBeTruthy()
   })
 
   test('Delete app with abi', async () => {
