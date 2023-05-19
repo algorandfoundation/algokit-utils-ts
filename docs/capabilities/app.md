@@ -60,6 +60,7 @@ To reference a box in a transaction using AlgoKit Utils, you can specify one of 
   - `name: BoxIdentifier` - The name, per the above type
 - `algosdk.BoxReference` - The in-built algosdk `BoxReference` type, which has two properties:
   - `appIndex: number`
+  - `name: UInt8Array` - The name in binary
 
 If you specify a `BoxIdentifier` directly outside of the `BoxReference` type then the behaviour is to load the box from the current app the transaction that box identifier appears in. To see more about how box references work consult the [official documentation](https://developer.algorand.org/articles/smart-contract-storage-boxes/).
 
