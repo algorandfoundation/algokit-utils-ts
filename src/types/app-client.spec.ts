@@ -73,6 +73,28 @@ describe('application-client', () => {
     expect(app.compiledApproval).toBeTruthy()
   })
 
+  test('Create app with constructor deployTimeParams', async () => {
+    const { algod, testAccount } = localnet.context
+    const client = algokit.getAppClient(
+      {
+        resolveBy: 'id',
+        app: appSpec,
+        sender: testAccount,
+        id: 0,
+        deployTimeParams: {
+          UPDATABLE: 0,
+          DELETABLE: 0,
+          VALUE: 1,
+        },
+      },
+      algod,
+    )
+
+    const app = await client.create()
+
+    expect(app.appId).toBeGreaterThan(0)
+  })
+
   test('Create app with oncomplete overload', async () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
