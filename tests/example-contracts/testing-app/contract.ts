@@ -6,8 +6,8 @@ import { AppSpec } from '../../../src/types/app-spec'
 import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
 
 export const getTestingAppContract = async () => {
-  const appSpecFile = await readFile(path.join(__dirname, 'application.json'))
-  const appSpec = JSON.parse(await appSpecFile.toString('utf-8')) as AppSpec
+  const appSpecFile = await readFile(path.join(__dirname, 'application.json'), 'utf-8')
+  const appSpec = JSON.parse(appSpecFile) as AppSpec
 
   return {
     appSpec,
