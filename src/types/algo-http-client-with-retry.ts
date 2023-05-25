@@ -1,4 +1,4 @@
-import { BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
+import type { BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
 import { Config } from '../'
 import { URLTokenBaseHTTPClient } from './urlTokenBaseHTTPClient'
 

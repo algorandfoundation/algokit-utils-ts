@@ -1,7 +1,7 @@
 import algosdk, { Algodv2, AtomicTransactionComposer, SuggestedParams, Transaction, TransactionSigner } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
-import { PendingTransactionResponse } from './types/algod'
+import { NodeStatusResponse, PendingTransactionResponse } from './types/algod'
 import { AlgoAmount } from './types/amount'
 import { ABIReturn } from './types/app'
 import {
@@ -13,13 +13,14 @@ import {
   TransactionGroupToSend,
   TransactionNote,
 } from './types/transaction'
+import { toNum } from './util'
 
 /** Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
  * @param note The transaction note
  * @returns the transaction note ready for inclusion in a transaction
  *
- *  Case on the value of `data` this either either be:
+ *  Case on the value of `data` this either be:
  *   * `null` | `undefined`: `undefined`
  *   * `string`: The string value
  *   * Uint8Array: passthrough
@@ -182,7 +183,9 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     let confirmations: PendingTransactionResponse[] | undefined = undefined
     if (!sendParams?.skipWaiting) {
       confirmations = await Promise.all(
-        transactionsToSend.map(async (t) => (await algod.pendingTransactionInformation(t.txID()).do()) as PendingTransactionResponse),
+        transactionsToSend.map(async (t) =>
+          PendingTransactionResponse.from_obj_for_encoding(await algod.pendingTransactionInformation(t.txID()).do()),
+        ),
       )
     }
 
@@ -296,7 +299,7 @@ export const sendGroupOfTransactions = async function (groupSend: TransactionGro
  */
 export const waitForConfirmation = async function (
   transactionId: string,
-  maxRoundsToWait: number,
+  maxRoundsToWait: number | bigint,
   algod: Algodv2,
 ): Promise<PendingTransactionResponse> {
   if (maxRoundsToWait < 0) {
@@ -304,22 +307,22 @@ export const waitForConfirmation = async function (
   }
 
   // Get current round
-  const status = await algod.status().do()
+  const status = NodeStatusResponse.from_obj_for_encoding(await algod.status().do())
   if (status === undefined) {
     throw new Error('Unable to get node status')
   }
 
   // Loop for up to `timeout` rounds looking for a confirmed transaction
-  const startRound = status['last-round'] + 1
+  const startRound = BigInt(status.lastRound) + 1n
   let currentRound = startRound
-  while (currentRound < startRound + maxRoundsToWait) {
-    const pendingInfo = (await algod.pendingTransactionInformation(transactionId).do()) as PendingTransactionResponse
+  while (currentRound < startRound + BigInt(maxRoundsToWait)) {
+    const pendingInfo = PendingTransactionResponse.from_obj_for_encoding(await algod.pendingTransactionInformation(transactionId).do())
     if (pendingInfo !== undefined) {
-      const confirmedRound = pendingInfo['confirmed-round']
+      const confirmedRound = pendingInfo.confirmedRound
       if (confirmedRound && confirmedRound > 0) {
         return pendingInfo
       } else {
-        const poolError = pendingInfo['pool-error']
+        const poolError = pendingInfo.poolError
         if (poolError != null && poolError.length > 0) {
           // If there was a pool error, then the transaction has been rejected!
           throw new Error(`Transaction ${transactionId} was rejected; pool error: ${poolError}`)
@@ -327,7 +330,7 @@ export const waitForConfirmation = async function (
       }
     }
 
-    await algod.statusAfterBlock(currentRound).do()
+    await algod.statusAfterBlock(toNum(currentRound)).do()
     currentRound++
   }
 

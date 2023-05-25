@@ -1,5 +1,5 @@
 import algosdk, { Algodv2, Indexer, Kmd } from 'algosdk'
-import { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
+import type { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
 import { AlgoHttpClientWithRetry } from './types/algo-http-client-with-retry'
 import { AlgoClientConfig } from './types/network-client'
 

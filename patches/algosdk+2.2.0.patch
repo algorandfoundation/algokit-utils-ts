@@ -1,0 +1,18 @@
+diff --git a/node_modules/algosdk/package.json b/node_modules/algosdk/package.json
+index 226178e..9128fbf 100644
+--- a/node_modules/algosdk/package.json
++++ b/node_modules/algosdk/package.json
+@@ -8,6 +8,13 @@
+     ".": "dist/browser/algosdk.min.js",
+     "crypto": false
+   },
++  "typesVersions": {
++    "*": {
++      ".": ["dist/types/index.d.ts"],
++      "dist/cjs/*": ["dist/types/*"],
++      "dist/esm/*": ["dist/types/*"]
++    }
++  },
+   "types": "dist/types/index.d.ts",
+   "files": [
+     "dist/",

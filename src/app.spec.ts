@@ -29,6 +29,6 @@ describe('app', () => {
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
     expect(app.confirmation).toBeTruthy()
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
   })
 })

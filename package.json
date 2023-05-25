@@ -26,11 +26,13 @@
     "format": "prettier --write .",
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
-    "generate:code-docs": "typedoc"
+    "generate:code-docs": "typedoc",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "algosdk": "^2.2.0",
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "patch-package": "^7.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.1",

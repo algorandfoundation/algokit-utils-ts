@@ -126,8 +126,8 @@ export async function deployApp(
       appId: result.appId,
       appAddress: result.appAddress,
       createdMetadata: metadata,
-      createdRound: Number(result.confirmation?.['confirmed-round']),
-      updatedRound: Number(result.confirmation?.['confirmed-round']),
+      createdRound: Number(result.confirmation?.confirmedRound),
+      updatedRound: Number(result.confirmation?.confirmedRound),
       ...metadata,
       deleted: false,
       operationPerformed: 'create',
@@ -155,21 +155,21 @@ export async function deployApp(
   )
 
   const existingAppRecord = await getAppById(existingApp.appId, algod)
-  const existingApproval = existingAppRecord.params['approval-program']
-  const existingClear = existingAppRecord.params['clear-state-program']
+  const existingApproval = Buffer.from(existingAppRecord.params.approvalProgram).toString('base64')
+  const existingClear = Buffer.from(existingAppRecord.params.clearStateProgram).toString('base64')
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const existingGlobalSchema = existingAppRecord.params['global-state-schema']!
+  const existingGlobalSchema = existingAppRecord.params.globalStateSchema!
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const existingLocalSchema = existingAppRecord.params['local-state-schema']!
+  const existingLocalSchema = existingAppRecord.params.localStateSchema!
 
-  const newGlobalSchema: ApplicationStateSchema = {
-    'num-byte-slice': appParams.schema.globalByteSlices,
-    'num-uint': appParams.schema.globalInts,
-  }
-  const newLocalSchema: ApplicationStateSchema = {
-    'num-byte-slice': appParams.schema.localByteSlices,
-    'num-uint': appParams.schema.localInts,
-  }
+  const newGlobalSchema = new ApplicationStateSchema({
+    numByteSlice: appParams.schema.globalByteSlices,
+    numUint: appParams.schema.globalInts,
+  })
+  const newLocalSchema = new ApplicationStateSchema({
+    numByteSlice: appParams.schema.localByteSlices,
+    numUint: appParams.schema.localInts,
+  })
   const newApproval = Buffer.from(appParams.approvalProgram).toString('base64')
   const newClear = Buffer.from(appParams.clearStateProgram).toString('base64')
 
@@ -235,7 +235,7 @@ export async function deployApp(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const deleteConfirmation = confirmations![confirmations!.length - 1]
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const newAppIndex = createConfirmation['application-index']!
+    const newAppIndex = createConfirmation.applicationIndex!
 
     Config.getLogger(appParams.suppressLog).warn(
       `Sent transactions ${createTransaction.txID()} to create app with id ${newAppIndex} and ${deleteTransaction.txID()} to delete app with id ${
@@ -255,8 +255,8 @@ export async function deployApp(
       appId: newAppIndex,
       appAddress: getApplicationAddress(newAppIndex),
       createdMetadata: metadata,
-      createdRound: Number(createConfirmation['confirmed-round']),
-      updatedRound: Number(createConfirmation['confirmed-round']),
+      createdRound: Number(createConfirmation.confirmedRound),
+      updatedRound: Number(createConfirmation.confirmedRound),
       ...metadata,
       deleted: false,
       deleteResult: { transaction: deleteTransaction, confirmation: deleteConfirmation },
@@ -303,7 +303,7 @@ export async function deployApp(
       appAddress: existingApp.appAddress,
       createdMetadata: existingApp.createdMetadata,
       createdRound: existingApp.createdRound,
-      updatedRound: Number(result.confirmation?.['confirmed-round']),
+      updatedRound: Number(result.confirmation?.confirmedRound),
       ...metadata,
       deleted: false,
       operationPerformed: 'update',
@@ -397,7 +397,7 @@ export async function deployApp(
  * @returns Whether or not there is a breaking change
  */
 export function isSchemaIsBroken(before: ApplicationStateSchema, after: ApplicationStateSchema) {
-  return before['num-byte-slice'] < after['num-byte-slice'] || before['num-uint'] < after['num-uint']
+  return before.numByteSlice < after.numByteSlice || before.numUint < after.numUint
 }
 
 /**
