@@ -1,5 +1,5 @@
 import { TransactionType } from 'algosdk'
-import type { TealKeyValue } from 'algosdk/dist/types/client/v2/algod/models/types'
+import { TealKeyValue } from './algod'
 
 /** Indexer result for a transaction search, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions */
 export interface TransactionSearchResults {
