@@ -9,7 +9,7 @@ import { AlgoAmount } from './types/amount'
 export async function isLocalNet(algod: Algodv2): Promise<boolean> {
   const params = await algod.getTransactionParams().do()
 
-  return params.genesisID === 'devnet-v1' || params.genesisID === 'sandnet-v1'
+  return params.genesisID === 'devnet-v1' || params.genesisID === 'sandnet-v1' || params.genesisID === 'dockernet-v1'
 }
 
 /**
