@@ -26,7 +26,7 @@ The result of preparing and/or sending multiple transactions using an `AtomicTra
 
 ### confirmations
 
-• `Optional` **confirmations**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)[]
+• `Optional` **confirmations**: `PendingTransactionResponse`[]
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction

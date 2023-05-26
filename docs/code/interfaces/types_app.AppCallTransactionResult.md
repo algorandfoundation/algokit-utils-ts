@@ -26,7 +26,7 @@ Result from calling an app
 
 ### confirmation
 
-• `Optional` **confirmation**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)
+• `Optional` **confirmation**: `PendingTransactionResponse`
 
 The response if the transaction was sent and waited for
 
@@ -42,7 +42,7 @@ ___
 
 ### confirmations
 
-• `Optional` **confirmations**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)[]
+• `Optional` **confirmations**: `PendingTransactionResponse`[]
 
 The responses if the transactions were sent and waited for,
 the index of the confirmation will match the index of the underlying transaction

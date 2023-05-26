@@ -27,7 +27,7 @@ The result of sending a transaction
 
 ### confirmation
 
-• `Optional` **confirmation**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)
+• `Optional` **confirmation**: `PendingTransactionResponse`
 
 The response if the transaction was sent and waited for
 

@@ -18,7 +18,7 @@ Parameters to get and decode a box value as an ABI type.
 
 ### appId
 
-• **appId**: `number`
+• **appId**: `number` \| `bigint`
 
 The ID of the app return box names for
 

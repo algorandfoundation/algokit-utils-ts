@@ -82,7 +82,7 @@ ___
 
 ### global-state
 
-• **global-state**: `TealKeyValue`[]
+• **global-state**: `NodeStatusResponse`[]
 
 [gs] global schema
 

@@ -49,7 +49,7 @@ ___
 
 ### appId
 
-• **appId**: `number`
+• **appId**: `number` \| `bigint`
 
 The id of the app
 

@@ -23,7 +23,7 @@ The result of sending and confirming a transaction
 
 ### confirmation
 
-• **confirmation**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)
+• **confirmation**: `PendingTransactionResponse`
 
 The response from sending and waiting for the transaction
 

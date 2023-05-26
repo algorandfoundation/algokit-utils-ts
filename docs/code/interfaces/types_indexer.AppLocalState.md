@@ -57,7 +57,7 @@ ___
 
 ### key-value
 
-• `Optional` **key-value**: `TealKeyValue`[]
+• `Optional` **key-value**: `NodeStatusResponse`[]
 
 [tkv] storage.
 
