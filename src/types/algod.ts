@@ -7,4 +7,4 @@ export {
   TealValue,
   ApplicationStateSchema,
   NodeStatusResponse,
-} from 'algosdk/dist/esm/client/v2/algod/models/types'
+} from 'algosdk/dist/cjs/client/v2/algod/models/types'
