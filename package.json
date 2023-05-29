@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "algosdk": "^2.3.0",
-    "algosdk2-2": "npm:algosdk@^2.2.0",
+    "algosdk2-2": "npm:algosdk@2.2.0",
     "buffer": "^6.0.3"
   },
   "devDependencies": {
