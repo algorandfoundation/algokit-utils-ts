@@ -458,7 +458,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-client.ts:975](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L975)
+[src/types/app-client.ts:962](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L962)
 
 ___
 
@@ -506,7 +506,7 @@ The ABI method for the given method
 
 #### Defined in
 
-[src/types/app-client.ts:934](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L934)
+[src/types/app-client.ts:921](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L921)
 
 ___
 
@@ -530,7 +530,7 @@ The ABI method params for the given method
 
 #### Defined in
 
-[src/types/app-client.ts:912](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L912)
+[src/types/app-client.ts:899](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L899)
 
 ___
 
@@ -549,7 +549,7 @@ The app reference, or if deployed using the `deploy` method, the app metadata to
 
 #### Defined in
 
-[src/types/app-client.ts:944](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L944)
+[src/types/app-client.ts:931](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L931)
 
 ___
 
