@@ -37,7 +37,7 @@ export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
 /** Information about an Algorand app */
 export interface AppReference {
   /** The id of the app */
-  appId: number
+  appId: number | bigint
   /** The Algorand address of the account associated with the app */
   appAddress: string
 }
@@ -49,7 +49,7 @@ export interface BoxReference {
   /**
    * A unique application id
    */
-  appId: number
+  appId: number | bigint
   /**
    * Name of box to reference
    */
@@ -134,7 +134,7 @@ export interface CreateAppParams extends CreateOrUpdateAppParams {
 /** Parameters that are passed in when updating an app. */
 export interface UpdateAppParams extends CreateOrUpdateAppParams {
   /** The id of the app to update */
-  appId: number
+  appId: number | bigint
 }
 
 /** The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
@@ -153,7 +153,7 @@ export type AppCallType = 'no_op' | 'opt_in' | 'close_out' | 'clear_state' | 'up
 /** Parameters representing a call to an app. */
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
-  appId: number
+  appId: number | bigint
   /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
   callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
   /** The account to make the call from */
@@ -336,7 +336,7 @@ export interface BoxName {
  */
 export interface BoxValueRequestParams {
   /** The ID of the app return box names for */
-  appId: number
+  appId: number | bigint
   /** The name of the box to return either as a string, binary array or `BoxName` */
   boxName: string | Uint8Array | BoxName
   /** The ABI type to decode the value using */

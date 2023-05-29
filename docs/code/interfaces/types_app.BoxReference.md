@@ -17,7 +17,7 @@ A grouping of the app ID and name of the box in an Uint8Array
 
 ### appId
 
-• **appId**: `number`
+• **appId**: `number` \| `bigint`
 
 A unique application id
 

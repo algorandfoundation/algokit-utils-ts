@@ -32,7 +32,7 @@ ___
 
 ### apps
 
-• `Optional` **apps**: (`string` \| `number`)[]
+• `Optional` **apps**: (`string` \| `number` \| `bigint`)[]
 
 Any app IDs to replace predictably
 

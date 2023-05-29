@@ -2,7 +2,7 @@
 // There was an error trying to reference the file from algosdk
 // This is referenced from algo-http-client-with-retry.ts and extended to add retry logic to improve resilience
 // todo: Find out why this can't be referenced from algosdk directly so we don't have to duplicate here
-import { BaseHTTPClient, BaseHTTPClientError, BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
+import type { BaseHTTPClient, BaseHTTPClientError, BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
 import { Buffer } from 'buffer'
 import { fetch } from 'cross-fetch'
 

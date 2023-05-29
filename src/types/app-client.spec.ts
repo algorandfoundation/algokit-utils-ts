@@ -58,7 +58,7 @@ describe('application-client', () => {
 
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -87,7 +87,7 @@ describe('application-client', () => {
     expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -139,7 +139,7 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -171,7 +171,7 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -208,7 +208,7 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation['confirmed-round'])
+    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
   })
 
   test('Deploy app - update (abi)', async () => {
@@ -248,7 +248,7 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation['confirmed-round'])
+    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
     expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
   })
@@ -588,7 +588,7 @@ describe('application-client', () => {
           create_7:"
         `)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        e.led.traces[0].trace = e.led.traces[0].trace!.replace(new RegExp(`${app.appId}(]|,)`, 'g'), '{APP_ID}$1')
+        e.led.traces[0].trace = e.led.traces[0].trace!.replace(new RegExp(`${app.appId}([\\],])`, 'g'), '{APP_ID}$1')
         expect(e.led.traces[0]).toMatchInlineSnapshot(`
           {
             "cost": undefined,
@@ -674,7 +674,7 @@ describe('application-client', () => {
     expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
     expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
     invariant(result.confirmation)
-    expect(result.confirmation['confirmed-round']).toBeGreaterThan(0)
+    expect(result.confirmation.confirmedRound).toBeGreaterThan(0)
   })
 
   test('Retrieve state', async () => {

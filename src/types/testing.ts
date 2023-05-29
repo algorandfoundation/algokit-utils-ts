@@ -78,7 +78,7 @@ export interface LogSnapshotConfig {
   /** Any accounts/addresses to replace the address for predictably */
   accounts?: (string | SendTransactionFrom)[]
   /** Any app IDs to replace predictably */
-  apps?: (string | number)[]
+  apps?: (string | number | bigint)[]
 }
 
 export interface AlgoKitLogCaptureFixture {

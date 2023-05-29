@@ -68,7 +68,7 @@ export interface ResolveAppById {
   /** How the app ID is resolved, either by `'id'` or `'creatorAndName'` */
   resolveBy: 'id'
   /** The id of an existing app to call using this client, or 0 if the app hasn't been created yet */
-  id: number
+  id: number | bigint
   /** The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract) */
   name?: string
 }
@@ -240,7 +240,7 @@ export class ApplicationClient {
   private params: SuggestedParams | undefined
   private existingDeployments: AppLookup | undefined
 
-  private _appId: number
+  private _appId: number | bigint
   private _appAddress: string
   private _creator: string | undefined
   private _appName: string
@@ -258,7 +258,6 @@ export class ApplicationClient {
    * Create a new ApplicationClient instance
    * @param appDetails The details of the app
    * @param algod An algod instance
-   * @param indexer An indexer instance
    */
   constructor(appDetails: AppSpecAppDetails, algod: Algodv2) {
     const { app, sender, params, ...appIdentifier } = appDetails
@@ -495,7 +494,7 @@ export class ApplicationClient {
 
       if (result.confirmation) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this._appId = result.confirmation['application-index']!
+        this._appId = result.confirmation.applicationIndex!
         this._appAddress = getApplicationAddress(this._appId)
       }
 
@@ -717,6 +716,7 @@ export class ApplicationClient {
   /**
    * Returns the value of the given box for the current app.
    * @param name The name of the box to return either as a string, binary array or `BoxName`
+   * @param type
    * @returns The current box value as a byte array
    */
   async getBoxValueFromABIType(name: BoxName | string | Uint8Array, type: ABIType): Promise<ABIValue> {

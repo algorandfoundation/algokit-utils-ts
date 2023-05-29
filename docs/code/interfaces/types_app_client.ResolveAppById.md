@@ -18,7 +18,7 @@ Configuration to resolve app by ID
 
 ### id
 
-• **id**: `number`
+• **id**: `number` \| `bigint`
 
 The id of an existing app to call using this client, or 0 if the app hasn't been created yet
 

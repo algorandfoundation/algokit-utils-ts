@@ -34,7 +34,7 @@ Parameters representing a call to an app.
 
 ### appId
 
-• **appId**: `number`
+• **appId**: `number` \| `bigint`
 
 The id of the app to call
 

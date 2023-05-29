@@ -72,7 +72,7 @@ Create a new ApplicationClient instance
 
 #### Defined in
 
-[src/types/app-client.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L263)
+[src/types/app-client.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L262)
 
 ## Properties
 
@@ -88,7 +88,7 @@ ___
 
 ### \_appId
 
-• `Private` **\_appId**: `number`
+• `Private` **\_appId**: `number` \| `bigint`
 
 #### Defined in
 
@@ -216,7 +216,7 @@ The result of the call
 
 #### Defined in
 
-[src/types/app-client.ts:553](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L553)
+[src/types/app-client.ts:552](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L552)
 
 ___
 
@@ -241,7 +241,7 @@ The result of the call
 
 #### Defined in
 
-[src/types/app-client.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L599)
+[src/types/app-client.ts:598](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L598)
 
 ___
 
@@ -265,7 +265,7 @@ The result of the call
 
 #### Defined in
 
-[src/types/app-client.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L580)
+[src/types/app-client.ts:579](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L579)
 
 ___
 
@@ -289,7 +289,7 @@ The result of the call
 
 #### Defined in
 
-[src/types/app-client.ts:571](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L571)
+[src/types/app-client.ts:570](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L570)
 
 ___
 
@@ -313,13 +313,13 @@ The compiled approval and clear programs
 
 #### Defined in
 
-[src/types/app-client.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L299)
+[src/types/app-client.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L298)
 
 ___
 
 ### create
 
-▸ **create**(`create?`): `Promise`<{ `appAddress`: `string` ; `appId`: `number` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
+▸ **create**(`create?`): `Promise`<{ `appAddress`: `string` ; `appId`: `number` \| `bigint` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: `PendingTransactionResponse` ; `confirmations?`: `PendingTransactionResponse`[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
 
 Creates a smart contract app, returns the details of the created app.
 
@@ -331,13 +331,13 @@ Creates a smart contract app, returns the details of the created app.
 
 #### Returns
 
-`Promise`<{ `appAddress`: `string` ; `appId`: `number` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
+`Promise`<{ `appAddress`: `string` ; `appId`: `number` \| `bigint` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: `PendingTransactionResponse` ; `confirmations?`: `PendingTransactionResponse`[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
 
 The details of the created app, or the transaction to create it if `skipSending` and the compilation result
 
 #### Defined in
 
-[src/types/app-client.ts:461](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L461)
+[src/types/app-client.ts:460](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L460)
 
 ___
 
@@ -361,13 +361,13 @@ The result of the call
 
 #### Defined in
 
-[src/types/app-client.ts:589](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L589)
+[src/types/app-client.ts:588](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L588)
 
 ___
 
 ### deploy
 
-▸ **deploy**(`deploy?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  } \| { `appAddress`: `string` ; `appId`: `number` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"update"`` \| ``"create"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  } \| { `appAddress`: `string` ; `appId`: `number` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  }\>
+▸ **deploy**(`deploy?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  } \| { `appAddress`: `string` ; `appId`: `number` \| `bigint` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"update"`` \| ``"create"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  } \| { `appAddress`: `string` ; `appId`: `number` \| `bigint` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  }\>
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
@@ -385,13 +385,13 @@ To understand the architecture decisions behind this functionality please see ht
 
 #### Returns
 
-`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  } \| { `appAddress`: `string` ; `appId`: `number` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"update"`` \| ``"create"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  } \| { `appAddress`: `string` ; `appId`: `number` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  }\>
+`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  } \| { `appAddress`: `string` ; `appId`: `number` \| `bigint` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"update"`` \| ``"create"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  } \| { `appAddress`: `string` ; `appId`: `number` \| `bigint` ; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `number` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `updatable?`: `boolean` ; `updatedRound`: `number` ; `version`: `string`  }\>
 
 The metadata and transaction result(s) of the deployment, or just the metadata if it didn't need to issue transactions
 
 #### Defined in
 
-[src/types/app-client.ts:353](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L353)
+[src/types/app-client.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L352)
 
 ___
 
@@ -409,7 +409,7 @@ The source maps
 
 #### Defined in
 
-[src/types/app-client.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L320)
+[src/types/app-client.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L319)
 
 ___
 
@@ -460,7 +460,7 @@ The result of the funding
 
 #### Defined in
 
-[src/types/app-client.ts:638](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L638)
+[src/types/app-client.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L637)
 
 ___
 
@@ -545,7 +545,7 @@ The names of the boxes
 
 #### Defined in
 
-[src/types/app-client.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L692)
+[src/types/app-client.ts:691](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L691)
 
 ___
 
@@ -569,7 +569,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/app-client.ts:707](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L707)
+[src/types/app-client.ts:706](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L706)
 
 ___
 
@@ -584,7 +584,7 @@ Returns the value of the given box for the current app.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or `BoxName` |
-| `type` | `ABIType` | - |
+| `type` | `ABIType` |  |
 
 #### Returns
 
@@ -687,7 +687,7 @@ The global state
 
 #### Defined in
 
-[src/types/app-client.ts:664](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L664)
+[src/types/app-client.ts:663](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L663)
 
 ___
 
@@ -711,7 +711,7 @@ The global state
 
 #### Defined in
 
-[src/types/app-client.ts:678](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L678)
+[src/types/app-client.ts:677](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L677)
 
 ___
 
@@ -733,7 +733,7 @@ Import source maps for the app.
 
 #### Defined in
 
-[src/types/app-client.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L337)
+[src/types/app-client.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L336)
 
 ___
 
@@ -757,13 +757,13 @@ The result of the call
 
 #### Defined in
 
-[src/types/app-client.ts:562](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L562)
+[src/types/app-client.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L561)
 
 ___
 
 ### update
 
-▸ **update**(`update?`): `Promise`<{ `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
+▸ **update**(`update?`): `Promise`<{ `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: `PendingTransactionResponse` ; `confirmations?`: `PendingTransactionResponse`[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
 
 Updates the smart contract app.
 
@@ -775,10 +775,10 @@ Updates the smart contract app.
 
 #### Returns
 
-`Promise`<{ `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) ; `confirmations?`: [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
+`Promise`<{ `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation?`: `PendingTransactionResponse` ; `confirmations?`: `PendingTransactionResponse`[] ; `return?`: [`ABIReturn`](../modules/types_app.md#abireturn) ; `transaction`: `Transaction` ; `transactions`: `Transaction`[]  }\>
 
 The transaction send result and the compilation result
 
 #### Defined in
 
-[src/types/app-client.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L513)
+[src/types/app-client.ts:512](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L512)

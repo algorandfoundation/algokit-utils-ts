@@ -35,7 +35,7 @@ Parameters that are passed in when updating an app.
 
 ### appId
 
-• **appId**: `number`
+• **appId**: `number` \| `bigint`
 
 The id of the app to update
 

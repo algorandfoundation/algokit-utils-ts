@@ -21,7 +21,7 @@ import {
   sendAtomicTransactionComposer,
   sendTransaction,
 } from './transaction'
-import { ApplicationResponse, EvalDelta, PendingTransactionResponse, TealValue } from './types/algod'
+import { AccountApplicationResponse, Application, EvalDelta, PendingTransactionResponse, TealValue } from './types/algod'
 import {
   ABIAppCallArgs,
   ABIReturn,
@@ -44,6 +44,7 @@ import {
   UpdateAppParams,
 } from './types/app'
 import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
+import { toNum } from './util'
 
 /**
  * Creates a smart contract app, returns the details of the created app.
@@ -108,7 +109,7 @@ export async function createApp(
     const confirmation = result.confirmations ? result.confirmations[result.confirmations?.length - 1] : undefined
     if (confirmation) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const appId = confirmation['application-index']!
+      const appId = confirmation.applicationIndex!
 
       Config.getLogger(sendParams.suppressLog).debug(`Created app ${appId} from creator ${getSenderAddress(from)}`)
 
@@ -156,7 +157,7 @@ export async function createApp(
     const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
     if (confirmation) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const appId = confirmation['application-index']!
+      const appId = confirmation.applicationIndex!
 
       Config.getLogger(sendParams.suppressLog).debug(`Created app ${appId} from creator ${getSenderAddress(from)}`)
 
@@ -202,7 +203,7 @@ export async function updateApp(
     const before = getAtomicTransactionComposerTransactions(atc)
 
     atc.addMethodCall({
-      appID: appId,
+      appID: toNum(appId),
       onComplete: OnApplicationComplete.UpdateApplicationOC,
       approvalProgram: approvalProgram as Uint8Array,
       clearProgram: clearProgram as Uint8Array,
@@ -230,7 +231,7 @@ export async function updateApp(
     }
   } else {
     const transaction = algosdk.makeApplicationUpdateTxnFromObject({
-      appIndex: appId,
+      appIndex: appId as number,
       approvalProgram: approvalProgram as Uint8Array,
       clearProgram: clearProgram as Uint8Array,
       suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -309,7 +310,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
     const before = getAtomicTransactionComposerTransactions(atc)
 
     atc.addMethodCall({
-      appID: appId,
+      appID: toNum(appId),
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
       onComplete: getAppOnCompleteAction(callType),
@@ -336,7 +337,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
   }
 
   const appCallParams = {
-    appIndex: appId,
+    appIndex: toNum(appId),
     from: getSenderAddress(from),
     suggestedParams: await getTransactionParams(transactionParams, algod),
     ...getAppArgsForTransaction(args),
@@ -417,14 +418,14 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransacti
  * @param algod An algod client instance
  * @returns The current global state
  */
-export async function getAppGlobalState(appId: number, algod: Algodv2) {
+export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) {
   const appInfo = await getAppById(appId, algod)
 
-  if (!appInfo.params || !appInfo.params['global-state']) {
+  if (!appInfo.params || !appInfo.params.globalState) {
     throw new Error("Couldn't find global state")
   }
 
-  return decodeAppState(appInfo.params['global-state'])
+  return decodeAppState(appInfo.params.globalState)
 }
 
 /**
@@ -434,15 +435,17 @@ export async function getAppGlobalState(appId: number, algod: Algodv2) {
  * @param algod An algod client instance
  * @returns The current local state for the given (app, account) combination
  */
-export async function getAppLocalState(appId: number, account: string | SendTransactionFrom, algod: Algodv2) {
+export async function getAppLocalState(appId: number | bigint, account: string | SendTransactionFrom, algod: Algodv2) {
   const accountAddress = typeof account === 'string' ? account : getSenderAddress(account)
-  const appInfo = await algod.accountApplicationInformation(accountAddress, appId).do()
+  const appInfo = AccountApplicationResponse.from_obj_for_encoding(
+    await algod.accountApplicationInformation(accountAddress, toNum(appId)).do(),
+  )
 
-  if (!appInfo['app-local-state'] || !appInfo['app-local-state']['key-value']) {
+  if (!appInfo.appLocalState?.keyValue) {
     throw new Error("Couldn't find local state")
   }
 
-  return decodeAppState(appInfo['app-local-state']['key-value'])
+  return decodeAppState(appInfo.appLocalState.keyValue)
 }
 
 /**
@@ -451,8 +454,8 @@ export async function getAppLocalState(appId: number, account: string | SendTran
  * @param algod An algod client instance
  * @returns The current box names
  */
-export async function getAppBoxNames(appId: number, algod: Algodv2): Promise<BoxName[]> {
-  const boxResult = await algod.getApplicationBoxes(appId).do()
+export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Promise<BoxName[]> {
+  const boxResult = await algod.getApplicationBoxes(toNum(appId)).do()
   return boxResult.boxes.map((b) => {
     return {
       nameRaw: b.name,
@@ -469,9 +472,9 @@ export async function getAppBoxNames(appId: number, algod: Algodv2): Promise<Box
  * @param algod An algod client instance
  * @returns The current box value as a byte array
  */
-export async function getAppBoxValue(appId: number, boxName: string | Uint8Array | BoxName, algod: Algodv2): Promise<Uint8Array> {
+export async function getAppBoxValue(appId: number | bigint, boxName: string | Uint8Array | BoxName, algod: Algodv2): Promise<Uint8Array> {
   const name = typeof boxName === 'string' ? new Uint8Array(Buffer.from(boxName, 'utf-8')) : 'name' in boxName ? boxName.nameRaw : boxName
-  const boxResult = await algod.getApplicationBoxByName(appId, name).do()
+  const boxResult = await algod.getApplicationBoxByName(toNum(appId), name).do()
   return boxResult.value
 }
 
@@ -530,7 +533,7 @@ export function decodeAppState(state: { key: string; value: TealValue | EvalDelt
     let valueRaw: Buffer
     switch (dataTypeFlag) {
       case 1:
-        valueBase64 = 'bytes' in tealValue ? tealValue.bytes : ''
+        valueBase64 = tealValue.bytes ?? ''
         valueRaw = Buffer.from(valueBase64, 'base64')
         stateValues[key] = {
           keyRaw,
@@ -540,15 +543,15 @@ export function decodeAppState(state: { key: string; value: TealValue | EvalDelt
           value: valueRaw.toString('utf-8'),
         }
         break
-      case 2:
-        // eslint-disable-next-line no-case-declarations
-        const value = 'uint' in tealValue ? tealValue.uint : 0
+      case 2: {
+        const value = tealValue.uint ?? 0
         stateValues[key] = {
           keyRaw,
           keyBase64,
           value,
         }
         break
+      }
       default:
         throw new Error(`Received unknown state data type of ${dataTypeFlag}`)
     }
@@ -644,8 +647,8 @@ export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxR
  * @param algod An algod client
  * @returns The data about the app
  */
-export async function getAppById(appId: number, algod: Algodv2) {
-  return (await algod.getApplicationByID(appId).do()) as ApplicationResponse
+export async function getAppById(appId: number | bigint, algod: Algodv2) {
+  return Application.from_obj_for_encoding(await algod.getApplicationByID(toNum(appId)).do())
 }
 
 /**

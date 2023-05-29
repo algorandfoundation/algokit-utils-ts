@@ -1,145 +1,20 @@
-import { EncodedSignedTransaction } from 'algosdk'
+import { modelsv2 } from 'algosdk'
 
-/** The response from the pending transaction API https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2transactionspendingtxid */
-export interface PendingTransactionResponse {
-  /**
-   * The application id if the transaction was found and it created an
-   * application.
-   */
-  'application-index'?: number
-  /**
-   * The number of the asset's unit that were transferred to the close-to address.
-   */
-  'asset-closing-amount'?: number
-  /**
-   * The asset id if the transaction was found and it created an asset.
-   */
-  'asset-index'?: number
-  /**
-   * Rewards in microalgos applied to the close remainder to account.
-   */
-  'close-rewards'?: number
-  /**
-   * Closing amount for the transaction.
-   */
-  'closing-amount'?: number
-  /**
-   * The round where this transaction was confirmed, if present.
-   */
-  'confirmed-round'?: number
-  /**
-   * (gd) Global state key/value changes for the application being executed by this
-   * transaction.
-   */
-  'global-state-delta'?: Record<string, EvalDelta>[]
-  /**
-   * Inner transactions produced by application execution.
-   */
-  'inner-txns'?: PendingTransactionResponse[]
-  /**
-   * (ld) Local state key/value changes for the application being executed by this
-   * transaction.
-   */
-  'local-state-delta'?: Record<string, EvalDelta>[]
-  /**
-   * (lg) Logs for the application being executed by this transaction.
-   */
-  logs?: Uint8Array[]
-  /** Indicates that the transaction was kicked out of this node's transaction pool (and specifies why that happened).
-   * An empty string indicates the transaction wasn't kicked out of this node's txpool due to an error. */
-  'pool-error': string
-  /**
-   * Rewards in µALGOs applied to the receiver account.
-   */
-  'receiver-rewards'?: number
-  /**
-   * Rewards in µALGOs applied to the sender account.
-   */
-  'sender-rewards'?: number
-  /**
-   * The raw signed transaction.
-   */
-  txn: EncodedSignedTransaction
-}
-
-/** Represents a TEAL value delta https://developer.algorand.org/docs/rest-apis/algod/v2/#evaldelta */
-export type EvalDelta =
-  | {
-      /**
-       * Value `1` refers to **bytes**, value `2` refers to **uint**
-       */
-      action: 1
-      /**
-       * Bytes value.
-       */
-      bytes: string
-    }
-  | {
-      /**
-       * Value `1` refers to **bytes**, value `2` refers to **uint**
-       */
-      action: 2
-
-      /**
-       * Uint value.
-       */
-      uint: number | bigint
-    }
-
-/** The response from the application API https://developer.algorand.org/docs/rest-apis/algod/v2/#get-v2applicationsapplication-id */
-export interface ApplicationResponse {
-  id: number
-  params: ApplicationParams
-}
-
-/** Stores the global information associated with an application https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationparams */
-export interface ApplicationParams {
-  /** Address of the account that created the app */
-  creator: string
-  /** Base64 encoded TEAL approval program */
-  'approval-program': string
-  /** Base64 encoded TEAL clear state program */
-  'clear-state-program': string
-  /** The amount of extra program pages available to this app. */
-  'extra-program-pages'?: number
-  /** Current global state values */
-  'global-state'?: { key: string; value: TealValue }[]
-  /** Global state schema */
-  'global-state-schema'?: ApplicationStateSchema
-  /** Local state schema */
-  'local-state-schema'?: ApplicationStateSchema
-}
-
-/**
- * Represents a TEAL value https://developer.algorand.org/docs/rest-apis/algod/v2/#tealvalue
- */
-export type TealValue =
-  | {
-      /**
-       * (tt) value type. Value `1` refers to **bytes**, value `2` refers to **uint**
-       */
-      type: 1
-      /**
-       * (tb) bytes value.
-       */
-      bytes: string
-    }
-  | {
-      /**
-       * (tt) value type. Value `1` refers to **bytes**, value `2` refers to **uint**
-       */
-      type: 2
-
-      /**
-       * (ui) uint value.
-       */
-      uint: number | bigint
-    }
-
-/** Specifies maximums on the number of each type that may be stored https://developer.algorand.org/docs/rest-apis/algod/v2/#applicationstateschema */
-export interface ApplicationStateSchema {
-  /** [nbs] num of byte slices */
-  'num-byte-slice': number
-  /** [nui] num of uints */
-  'num-uint': number
-}
+export const PendingTransactionResponse = modelsv2.PendingTransactionResponse
+export type PendingTransactionResponse = modelsv2.PendingTransactionResponse
+export const EvalDelta = modelsv2.EvalDelta
+export type EvalDelta = modelsv2.EvalDelta
+export const Application = modelsv2.Application
+export type Application = modelsv2.Application
+export const AccountApplicationResponse = modelsv2.AccountApplicationResponse
+export type AccountApplicationResponse = modelsv2.AccountApplicationResponse
+export const ApplicationParams = modelsv2.ApplicationParams
+export type ApplicationParams = modelsv2.ApplicationParams
+export const TealValue = modelsv2.TealValue
+export type TealValue = modelsv2.TealValue
+export const ApplicationStateSchema = modelsv2.ApplicationStateSchema
+export type ApplicationStateSchema = modelsv2.ApplicationStateSchema
+export const NodeStatusResponse = modelsv2.NodeStatusResponse
+export type NodeStatusResponse = modelsv2.NodeStatusResponse
+export const TealKeyValue = modelsv2.TealKeyValue
+export type TealKeyValue = modelsv2.NodeStatusResponse

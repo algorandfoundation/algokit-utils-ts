@@ -27,7 +27,7 @@ The result of sending and confirming one or more transactions, but where there i
 
 ### confirmation
 
-• **confirmation**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)
+• **confirmation**: `PendingTransactionResponse`
 
 The response from sending and waiting for the primary transaction
 
@@ -43,7 +43,7 @@ ___
 
 ### confirmations
 
-• **confirmations**: [`PendingTransactionResponse`](types_algod.PendingTransactionResponse.md)[]
+• **confirmations**: `PendingTransactionResponse`[]
 
 The response from sending and waiting for the transactions
 

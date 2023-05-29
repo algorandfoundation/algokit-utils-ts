@@ -1,5 +1,5 @@
 import { Indexer } from 'algosdk'
-import SearchForTransactions from 'algosdk/dist/types/client/v2/indexer/searchForTransactions'
+import type SearchForTransactions from 'algosdk/dist/types/client/v2/indexer/searchForTransactions'
 import {
   AccountLookupResult,
   ApplicationCreatedLookupResult,
