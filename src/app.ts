@@ -592,7 +592,7 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
   const methodArgs = await Promise.all(
     ('methodArgs' in args ? args.methodArgs : args)?.map(async (a, index) => {
       if (a === undefined) {
-        throw new Error(`Argument as position ${index} does not have a value`)
+        throw new Error(`Argument at position ${index} does not have a value`)
       }
       if (typeof a !== 'object') {
         return a

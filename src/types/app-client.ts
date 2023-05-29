@@ -858,29 +858,16 @@ export class ApplicationClient {
               case 'constant':
                 return defaultValueStrategy.data
               case 'abi-method': {
-                //const atc = new AtomicTransactionComposer()
                 const method = defaultValueStrategy.data as ABIMethodParams
                 const result = await this.callOfType(
                   {
                     method: getABIMethodSignature(method),
                     methodArgs: method.args.map(() => undefined),
                     sender,
-                    sendParams: {
-                      //    atc,
-                      //  skipSending: true,
-                    },
                   },
                   'no_op',
                 )
                 return result.return?.returnValue
-                // const simulateResult = await atc.simulate(this.algod)
-                //
-                // if (simulateResult.simulateResponse.txnGroups[0].failureMessage !== undefined) {
-                //   throw new Error(
-                //     `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: ${simulateResult.simulateResponse.txnGroups[0].failureMessage}`,
-                //   )
-                // }
-                // return simulateResult.methodResults[0].returnValue
               }
               case 'local-state':
               case 'global-state': {
