@@ -85,7 +85,7 @@ def set_box(name: pt.abi.StaticBytes[Literal[4]], value: pt.abi.String) -> pt.Ex
     return app.state.box[name.get()].set(value.get())
 
 
-@app.external(read_only=True)
+@app.external()
 def error() -> pt.Expr:
     return pt.Assert(pt.Int(0), comment="Deliberate error")
 

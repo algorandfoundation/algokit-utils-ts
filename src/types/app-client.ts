@@ -4,6 +4,7 @@ import algosdk, {
   ABIType,
   ABIValue,
   Algodv2,
+  AtomicTransactionComposer,
   getApplicationAddress,
   Indexer,
   OnApplicationComplete,
@@ -47,6 +48,7 @@ import {
 import { AppSpec } from './app-spec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
+import { Algodv2 as Algodv2_2, AtomicTransactionComposer as AtomicTransactionComposer2_2 } from 'algosdk2-2'
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndName = {
@@ -550,7 +552,53 @@ export class ApplicationClient {
    * @returns The result of the call
    */
   async call(call?: AppClientCallParams) {
+    if (
+      // ABI call
+      call?.method &&
+      // We aren't skipping the send
+      !call.sendParams?.skipSending &&
+      // There isn't an ATC passed in
+      !call.sendParams?.atc &&
+      // The method is readonly
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.appSpec.hints[getABIMethodSignature(this.getABIMethod(call.method)!)].read_only
+    ) {
+      const atc = new AtomicTransactionComposer()
+      await this.callOfType({ ...call, sendParams: { ...call.sendParams, atc } }, 'no_op')
+      const result = await this.callSimulateOnAtc(atc, this.algod)
+      if (result.simulateResponse.txnGroups.some((group) => group.failureMessage)) {
+        throw new Error(result.simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage)
+      }
+      const txns = atc.buildGroup()
+      return {
+        transaction: txns[txns.length - 1].txn,
+        confirmation: result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult,
+        confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
+        transactions: txns.map((t) => t.txn),
+        return: result.methodResults?.length ?? 0 > 0 ? result.methodResults[result.methodResults.length - 1] : undefined,
+      }
+    }
+
     return await this.callOfType(call, 'no_op')
+  }
+
+  private async callSimulateOnAtc(atc: AtomicTransactionComposer, algod: Algodv2): ReturnType<AtomicTransactionComposer['simulate']> {
+    try {
+      return await atc.simulate(algod)
+    } catch (e) {
+      /*
+      Temporary work around for a breaking change in algosdk 2.3, if the targeted api returns this error then it is likely
+      running the older version, so we try again using the old sdk version
+       */
+      if (e instanceof Error && e.message.startsWith('Network request error. Received status 400 (Bad Request): msgpack decode')) {
+        const algod2_2 = Object.create(this.algod)
+        algod2_2.simulateRawTransactions = Algodv2_2.prototype.simulateRawTransactions
+        const atc2_2 = Object.create(atc)
+        atc2_2.simulate = AtomicTransactionComposer2_2.prototype.simulate
+        return await atc2_2.simulate(algod2_2)
+      }
+      throw e
+    }
   }
 
   /**

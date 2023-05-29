@@ -28,7 +28,6 @@
             }
         },
         "error()void": {
-            "read_only": true,
             "call_config": {
                 "no_op": "CALL"
             }
