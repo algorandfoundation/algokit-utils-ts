@@ -524,7 +524,7 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.stack.split(' at ')[0].replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
+          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
 
@@ -570,7 +570,7 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "Error: assert failed pc=800. at:428. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
+          "Error: assert failed pc=954. at:518. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
           "
@@ -596,14 +596,14 @@ describe('application-client', () => {
             "messages": [
               "ApprovalProgram",
               "REJECT",
-              "logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
+              "logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
           ",
             ],
             "trace": "pc# |ln# |source                            |scratch |stack
           1   |1   |intcblock 0 1 10 5 1 1            |        |[]
-          9   |2   |bytecblock 0x 0x151f7c75          |        |[]
+          9   |2   |bytecblock 0x151f7c75 0x          |        |[]
           17  |3   |txn NumAppArgs                    |        |[]
           19  |4   |intc_0 // 0                       |        |[1]
           20  |5   |==                                |        |[1, 0]
@@ -632,19 +632,19 @@ describe('application-client', () => {
           92  |28  |pushbytes 0x44d0da0d // 0x44d0... |        |[0x44d0da0d]
           98  |29  |==                                |        |[0x44d0da0d, 0x44d0da0d]
           99  |30  |bnz label7                        |        |[1]
-          246 |115 |txn OnCompletion                  |        |[]
-          248 |116 |intc_0 // 0                       |        |[0]
-          249 |117 |==                                |        |[0, 0]
-          250 |118 |txn ApplicationID                 |        |[1]
-          252 |119 |intc_0 // 0                       |        |[1, {APP_ID}]
-          253 |120 |!=                                |        |[1, {APP_ID}, 0]
-          254 |121 |&&                                |        |[1, 1]
-          255 |122 |assert                            |        |[1]
-          256 |123 |callsub label16                   |        |[]
-          796 |411 |proto 0 0                         |        |[]
-          799 |412 |intc_0 // 0                       |        |[]
-          800 |413 |assert                            |        |[0]
-          800 |413 |!! assert failed pc=800 !!        |        |[0]
+          400 |205 |txn OnCompletion                  |        |[]
+          402 |206 |intc_0 // 0                       |        |[0]
+          403 |207 |==                                |        |[0, 0]
+          404 |208 |txn ApplicationID                 |        |[1]
+          406 |209 |intc_0 // 0                       |        |[1, {APP_ID}]
+          407 |210 |!=                                |        |[1, {APP_ID}, 0]
+          408 |211 |&&                                |        |[1, 1]
+          409 |212 |assert                            |        |[1]
+          410 |213 |callsub label24                   |        |[]
+          950 |501 |proto 0 0                         |        |[]
+          953 |502 |intc_0 // 0                       |        |[]
+          954 |503 |assert                            |        |[0]
+          954 |503 |!! assert failed pc=954 !!        |        |[0]
           ",
           }
         `)
