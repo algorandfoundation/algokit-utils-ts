@@ -1,5 +1,4 @@
 import algosdk, {
-  ABIArgument,
   ABIMethod,
   ABIMethodParams,
   ABIType,
@@ -32,7 +31,9 @@ import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
   ABIAppCallArgs,
+  ABIReturn,
   AppCallArgs,
+  AppCallTransactionResult,
   AppCallType,
   AppCompilationResult,
   AppLookup,
@@ -575,8 +576,8 @@ export class ApplicationClient {
         confirmation: result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult,
         confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
         transactions: txns.map((t) => t.txn),
-        return: result.methodResults?.length ?? 0 > 0 ? result.methodResults[result.methodResults.length - 1] : undefined,
-      }
+        return: result.methodResults?.length ?? 0 > 0 ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
+      } satisfies AppCallTransactionResult
     }
 
     return await this.callOfType(call, 'no_op')
