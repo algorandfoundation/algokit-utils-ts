@@ -1,10 +1,21 @@
 import { describe, test } from '@jest/globals'
-import algosdk, { ABIUintType, Account, Algodv2, Indexer, OnApplicationComplete, TransactionType, getApplicationAddress } from 'algosdk'
+import algosdk, {
+  ABIUintType,
+  Account,
+  Algodv2,
+  Indexer,
+  OnApplicationComplete,
+  TransactionType,
+  getApplicationAddress,
+  TransactionSigner,
+} from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AppSpec } from './app-spec'
+import { ABIAppCallArg } from './app'
+import { ApplicationClient } from './app-client'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
@@ -749,5 +760,58 @@ describe('application-client', () => {
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
     expect(Number(box1AbiValue)).toBe(expectedValue)
+  })
+
+  describe('Call ABI methods with default arguments', () => {
+    test('from const', async () => {
+      await testAbiWithDefaultArgMethod('default_value(string)string', 'defined value', 'defined value', 'default value')
+    })
+    test('from abi method', async () => {
+      await testAbiWithDefaultArgMethod('default_value_from_abi(string)string', 'defined value', 'ABI, defined value', 'ABI, default value')
+    })
+    test('from global state', async () => {
+      const globalInt1 = 456n
+
+      await testAbiWithDefaultArgMethod('default_value_from_global_state(uint64)uint64', 123, 123n, globalInt1, async (client) => {
+        await client.call({ method: 'set_global', methodArgs: [globalInt1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+      })
+    })
+    test('from local state', async () => {
+      const localBytes1 = 'bananas'
+      await testAbiWithDefaultArgMethod(
+        'default_value_from_local_state(string)string',
+        'defined value',
+        'Local state, defined value',
+        `Local state, ${localBytes1}`,
+        async (client) => {
+          await client.optIn({ method: 'opt_in', methodArgs: [] })
+          await client.call({ method: 'set_local', methodArgs: [1, 2, localBytes1, new Uint8Array([1, 2, 3, 4])] })
+        },
+      )
+    })
+
+    async function testAbiWithDefaultArgMethod<TArg extends ABIAppCallArg, TResult>(
+      methodSignature: string,
+      definedValue: TArg,
+      definedValueReturnValue: TResult,
+      defaultValueReturnValue: TResult,
+      setup?: (client: ApplicationClient) => Promise<void>,
+    ) {
+      const { algod, indexer, testAccount } = localnet.context
+      const { client } = await deploy(testAccount, algod, indexer)
+
+      await setup?.(client)
+
+      const definedValueResult = await client.call({
+        method: methodSignature,
+        methodArgs: [definedValue],
+      })
+      expect(definedValueResult.return?.returnValue).toBe(definedValueReturnValue)
+      const defaultValueResult = await client.call({
+        method: methodSignature,
+        methodArgs: [undefined],
+      })
+      expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
+    }
   })
 })
