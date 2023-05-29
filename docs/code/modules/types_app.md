@@ -54,7 +54,7 @@
 
 ### ABIAppCallArg
 
-Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+Ƭ **ABIAppCallArg**: `ABIArgument` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Transaction` \| `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| [`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`
 
 An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult`
 
@@ -72,7 +72,7 @@ App call args for an ABI call
 
 #### Defined in
 
-[src/types/app.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L97)
+[src/types/app.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L103)
 
 ___
 
@@ -84,7 +84,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L207)
+[src/types/app.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L213)
 
 ___
 
@@ -98,7 +98,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L108)
+[src/types/app.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L114)
 
 ___
 
@@ -119,7 +119,7 @@ Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string e
 
 #### Defined in
 
-[src/types/app.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L151)
+[src/types/app.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L157)
 
 ___
 

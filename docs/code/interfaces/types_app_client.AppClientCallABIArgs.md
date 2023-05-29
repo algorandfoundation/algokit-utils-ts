@@ -61,7 +61,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 #### Defined in
 
-[src/types/app-client.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L139)
+[src/types/app-client.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L141)
 
 ___
 
@@ -77,4 +77,4 @@ Omit.methodArgs
 
 #### Defined in
 
-[src/types/app.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L101)
+[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)

@@ -29,7 +29,7 @@ ___
 
 ### default\_arguments
 
-• `Optional` **default\_arguments**: `Record`<`string`, [`DefaultArgument`](types_app_spec.DefaultArgument.md)\>
+• `Optional` **default\_arguments**: `Record`<`string`, [`DefaultArgument`](../modules/types_app_spec.md#defaultargument)\>
 
 #### Defined in
 

@@ -23,6 +23,7 @@ import {
 } from './transaction'
 import { AccountApplicationResponse, Application, EvalDelta, PendingTransactionResponse, TealValue } from './types/algod'
 import {
+  ABIAppCallArg,
   ABIAppCallArgs,
   ABIReturn,
   APP_PAGE_MAX_SIZE,
@@ -589,14 +590,17 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
   const encoder = new TextEncoder()
   const signer = getSenderTransactionSigner(from)
   const methodArgs = await Promise.all(
-    ('methodArgs' in args ? args.methodArgs : args)?.map(async (a) => {
+    ('methodArgs' in args ? args.methodArgs : args)?.map(async (a, index) => {
+      if (a === undefined) {
+        throw new Error(`Argument at position ${index} does not have a value`)
+      }
       if (typeof a !== 'object') {
         return a
       }
       // Handle the various forms of transactions to wrangle them for ATC
       return 'txn' in a
         ? a
-        : 'then' in a
+        : a instanceof Promise
         ? { txn: (await a).transaction, signer }
         : 'transaction' in a
         ? { txn: a.transaction, signer }

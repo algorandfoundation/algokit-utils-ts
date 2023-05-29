@@ -1,10 +1,21 @@
 import { describe, test } from '@jest/globals'
-import algosdk, { ABIUintType, Account, Algodv2, Indexer, OnApplicationComplete, TransactionType, getApplicationAddress } from 'algosdk'
+import algosdk, {
+  ABIUintType,
+  Account,
+  Algodv2,
+  Indexer,
+  OnApplicationComplete,
+  TransactionType,
+  getApplicationAddress,
+  TransactionSigner,
+} from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AppSpec } from './app-spec'
+import { ABIAppCallArg } from './app'
+import { ApplicationClient } from './app-client'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
@@ -524,7 +535,7 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.stack.split(' at ')[0].replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
+          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
 
@@ -570,7 +581,7 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "Error: assert failed pc=800. at:428. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
+          "Error: assert failed pc=954. at:518. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
           "
@@ -596,14 +607,14 @@ describe('application-client', () => {
             "messages": [
               "ApprovalProgram",
               "REJECT",
-              "logic eval error: assert failed pc=800. Details: pc=800, opcodes=proto 0 0
+              "logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
           ",
             ],
             "trace": "pc# |ln# |source                            |scratch |stack
           1   |1   |intcblock 0 1 10 5 1 1            |        |[]
-          9   |2   |bytecblock 0x 0x151f7c75          |        |[]
+          9   |2   |bytecblock 0x151f7c75 0x          |        |[]
           17  |3   |txn NumAppArgs                    |        |[]
           19  |4   |intc_0 // 0                       |        |[1]
           20  |5   |==                                |        |[1, 0]
@@ -632,19 +643,19 @@ describe('application-client', () => {
           92  |28  |pushbytes 0x44d0da0d // 0x44d0... |        |[0x44d0da0d]
           98  |29  |==                                |        |[0x44d0da0d, 0x44d0da0d]
           99  |30  |bnz label7                        |        |[1]
-          246 |115 |txn OnCompletion                  |        |[]
-          248 |116 |intc_0 // 0                       |        |[0]
-          249 |117 |==                                |        |[0, 0]
-          250 |118 |txn ApplicationID                 |        |[1]
-          252 |119 |intc_0 // 0                       |        |[1, {APP_ID}]
-          253 |120 |!=                                |        |[1, {APP_ID}, 0]
-          254 |121 |&&                                |        |[1, 1]
-          255 |122 |assert                            |        |[1]
-          256 |123 |callsub label16                   |        |[]
-          796 |411 |proto 0 0                         |        |[]
-          799 |412 |intc_0 // 0                       |        |[]
-          800 |413 |assert                            |        |[0]
-          800 |413 |!! assert failed pc=800 !!        |        |[0]
+          400 |205 |txn OnCompletion                  |        |[]
+          402 |206 |intc_0 // 0                       |        |[0]
+          403 |207 |==                                |        |[0, 0]
+          404 |208 |txn ApplicationID                 |        |[1]
+          406 |209 |intc_0 // 0                       |        |[1, {APP_ID}]
+          407 |210 |!=                                |        |[1, {APP_ID}, 0]
+          408 |211 |&&                                |        |[1, 1]
+          409 |212 |assert                            |        |[1]
+          410 |213 |callsub label24                   |        |[]
+          950 |501 |proto 0 0                         |        |[]
+          953 |502 |intc_0 // 0                       |        |[]
+          954 |503 |assert                            |        |[0]
+          954 |503 |!! assert failed pc=954 !!        |        |[0]
           ",
           }
         `)
@@ -749,5 +760,58 @@ describe('application-client', () => {
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
     expect(Number(box1AbiValue)).toBe(expectedValue)
+  })
+
+  describe('Call ABI methods with default arguments', () => {
+    test('from const', async () => {
+      await testAbiWithDefaultArgMethod('default_value(string)string', 'defined value', 'defined value', 'default value')
+    })
+    test('from abi method', async () => {
+      await testAbiWithDefaultArgMethod('default_value_from_abi(string)string', 'defined value', 'ABI, defined value', 'ABI, default value')
+    })
+    test('from global state', async () => {
+      const globalInt1 = 456n
+
+      await testAbiWithDefaultArgMethod('default_value_from_global_state(uint64)uint64', 123, 123n, globalInt1, async (client) => {
+        await client.call({ method: 'set_global', methodArgs: [globalInt1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+      })
+    })
+    test('from local state', async () => {
+      const localBytes1 = 'bananas'
+      await testAbiWithDefaultArgMethod(
+        'default_value_from_local_state(string)string',
+        'defined value',
+        'Local state, defined value',
+        `Local state, ${localBytes1}`,
+        async (client) => {
+          await client.optIn({ method: 'opt_in', methodArgs: [] })
+          await client.call({ method: 'set_local', methodArgs: [1, 2, localBytes1, new Uint8Array([1, 2, 3, 4])] })
+        },
+      )
+    })
+
+    async function testAbiWithDefaultArgMethod<TArg extends ABIAppCallArg, TResult>(
+      methodSignature: string,
+      definedValue: TArg,
+      definedValueReturnValue: TResult,
+      defaultValueReturnValue: TResult,
+      setup?: (client: ApplicationClient) => Promise<void>,
+    ) {
+      const { algod, indexer, testAccount } = localnet.context
+      const { client } = await deploy(testAccount, algod, indexer)
+
+      await setup?.(client)
+
+      const definedValueResult = await client.call({
+        method: methodSignature,
+        methodArgs: [definedValue],
+      })
+      expect(definedValueResult.return?.returnValue).toBe(definedValueReturnValue)
+      const defaultValueResult = await client.call({
+        method: methodSignature,
+        methodArgs: [undefined],
+      })
+      expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
+    }
   })
 })

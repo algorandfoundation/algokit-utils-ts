@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[src/types/app-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L205)
+[src/types/app-client.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L207)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L204)
+[src/types/app-client.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L206)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L203)
+[src/types/app-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L205)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L202)
+[src/types/app-client.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L204)

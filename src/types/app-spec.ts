@@ -1,4 +1,4 @@
-import { ABIContractParams } from 'algosdk'
+import { ABIContractParams, ABIMethodParams } from 'algosdk'
 
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
 export interface AppSpec {
@@ -75,18 +75,47 @@ export interface Struct {
   elements: StructElement[]
 }
 
-/** Any default argument specifications for the given parameter */
-export interface DefaultArgument {
-  /** The source of the default argument value:
-   *  * `global-state`: Global state; `data` is the name of the global state variable
-   *  * `local-state`: Local state; `data` is the name of the local state variable
-   *  * `abi-method`: ABI method call; `data` is the method spec of the ABI method to call
-   *  * `constant`: A constant value; `data` is the value to use
-   */
-  source: 'global-state' | 'local-state' | 'abi-method' | 'constant'
-  /** The name or value corresponding to the source */
-  data: string | bigint | number
-}
+/**
+ * Defines a strategy for obtaining a default value for a given ABI arg.
+ */
+export type DefaultArgument =
+  | {
+      /**
+       * The default value should be fetched by invoking an ABI method
+       */
+      source: 'abi-method'
+      data: ABIMethodParams
+    }
+  | {
+      /**
+       * The default value should be fetched from global state
+       */
+      source: 'global-state'
+      /**
+       * The key of the state variable
+       */
+      data: string
+    }
+  | {
+      /**
+       * The default value should be fetched from the local state of the sender user
+       */
+      source: 'local-state'
+      /**
+       * The key of the state variable
+       */
+      data: string
+    }
+  | {
+      /**
+       * The default value is a constant.
+       */
+      source: 'constant'
+      /**
+       * The static default value to use.
+       */
+      data: string | number
+    }
 
 /** AVM data type */
 export type AVMType = 'uint64' | 'bytes'

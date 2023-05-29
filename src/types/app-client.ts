@@ -1,4 +1,5 @@
 import algosdk, {
+  ABIArgument,
   ABIMethod,
   ABIMethodParams,
   ABIType,
@@ -29,6 +30,7 @@ import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
 import {
+  ABIAppCallArg,
   ABIAppCallArgs,
   AppCallArgs,
   AppCallType,
@@ -252,7 +254,6 @@ export class ApplicationClient {
 
   // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
   // todo: support readonly, noop method calls
-  // todo: support different oncomplete for create
   // todo: find create, update, delete, etc. methods from app spec and call them by default
   // todo: intelligent version management when deploying
 
@@ -353,7 +354,7 @@ export class ApplicationClient {
    */
   async deploy(deploy?: AppClientDeployParams) {
     const {
-      sender,
+      sender: deploySender,
       version,
       allowUpdate,
       allowDelete,
@@ -368,7 +369,8 @@ export class ApplicationClient {
     if (this._appId !== 0) {
       throw new Error(`Attempt to deploy app which already has an app id of ${this._appId}`)
     }
-    if (!sender && !this.sender) {
+    const sender = deploySender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to deploy app')
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -405,8 +407,7 @@ export class ApplicationClient {
       await this.getAppReference()
       const result = await deployApp(
         {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from,
+          from: sender,
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
           metadata: {
@@ -424,10 +425,10 @@ export class ApplicationClient {
           transactionParams: this.params,
           ...(sendParams ?? {}),
           existingDeployments: this.existingDeployments,
-          createArgs: this.getCallArgs(createArgs),
+          createArgs: await this.getCallArgs(createArgs, sender),
           createOnCompleteAction: createOnCompleteAction,
-          updateArgs: this.getCallArgs(updateArgs),
-          deleteArgs: this.getCallArgs(deleteArgs),
+          updateArgs: await this.getCallArgs(updateArgs, sender),
+          deleteArgs: await this.getCallArgs(deleteArgs, sender),
           ...deployArgs,
         },
         this.algod,
@@ -460,13 +461,14 @@ export class ApplicationClient {
    * @returns The details of the created app, or the transaction to create it if `skipSending` and the compilation result
    */
   async create(create?: AppClientCreateParams) {
-    const { sender, note, sendParams, deployTimeParams, updatable, deletable, onCompleteAction, ...args } = create ?? {}
+    const { sender: createSender, note, sendParams, deployTimeParams, updatable, deletable, onCompleteAction, ...args } = create ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to create app which already has an app id of ${this._appId}`)
     }
 
-    if (!sender && !this.sender) {
+    const sender = createSender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to create app')
     }
 
@@ -475,8 +477,7 @@ export class ApplicationClient {
     try {
       const result = await createApp(
         {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from: sender ?? this.sender!,
+          from: sender,
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
           schema: {
@@ -486,7 +487,7 @@ export class ApplicationClient {
             localInts: this.appSpec.state.local.num_uints,
           },
           onCompleteAction,
-          args: this.getCallArgs(args),
+          args: await this.getCallArgs(args, sender),
           note: note,
           transactionParams: this.params,
           ...(sendParams ?? {}),
@@ -512,13 +513,13 @@ export class ApplicationClient {
    * @returns The transaction send result and the compilation result
    */
   async update(update?: AppClientUpdateParams) {
-    const { sender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = update ?? {}
+    const { sender: updateSender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = update ?? {}
 
     if (this._appId === 0) {
       throw new Error(`Attempt to update app which doesn't have an app id defined`)
     }
-
-    if (!sender && !this.sender) {
+    const sender = updateSender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to create app')
     }
 
@@ -528,11 +529,10 @@ export class ApplicationClient {
       const result = await updateApp(
         {
           appId: this._appId,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from: sender ?? this.sender!,
+          from: sender,
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
-          args: this.getCallArgs(args),
+          args: await this.getCallArgs(args, sender),
           note: note,
           transactionParams: this.params,
           ...(sendParams ?? {}),
@@ -647,9 +647,10 @@ export class ApplicationClient {
     call: AppClientCallParams = {},
     callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>,
   ) {
-    const { sender, note, sendParams, ...args } = call
+    const { sender: callSender, note, sendParams, ...args } = call
 
-    if (!sender && !this.sender) {
+    const sender = callSender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to call app')
     }
 
@@ -664,8 +665,8 @@ export class ApplicationClient {
           appId: appMetadata.appId,
           callType: callType,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from: sender ?? this.sender!,
-          args: this.getCallArgs(args),
+          from: sender,
+          args: await this.getCallArgs(args, sender),
           note: note,
           transactionParams: this.params,
           ...(sendParams ?? {}),
@@ -824,9 +825,10 @@ export class ApplicationClient {
   /**
    * Returns the arguments for an app call for the given ABI method or raw method specification.
    * @param args The call args specific to this application client
+   * @param sender The sender of this call. Will be used to fetch any default argument values if applicable
    * @returns The call args ready to pass into an app call
    */
-  getCallArgs(args?: AppClientCallArgs): AppCallArgs | undefined {
+  async getCallArgs(args: AppClientCallArgs | undefined, sender: SendTransactionFrom): Promise<AppCallArgs | undefined> {
     if (!args) {
       return undefined
     }
@@ -837,9 +839,52 @@ export class ApplicationClient {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
 
+      const methodSignature = getABIMethodSignature(abiMethod)
+
       return {
         ...args,
         method: abiMethod,
+        methodArgs: await Promise.all(
+          args.methodArgs.map(async (arg, index): Promise<ABIAppCallArg> => {
+            if (arg !== undefined) return arg
+            const argName = abiMethod.args[index].name
+            const defaultValueStrategy = argName && this.appSpec.hints?.[methodSignature]?.default_arguments?.[argName]
+            if (!defaultValueStrategy)
+              throw new Error(
+                `Argument at position ${index} with the name ${argName} is undefined and does not have a default value strategy`,
+              )
+
+            switch (defaultValueStrategy.source) {
+              case 'constant':
+                return defaultValueStrategy.data
+              case 'abi-method': {
+                const method = defaultValueStrategy.data as ABIMethodParams
+                const result = await this.callOfType(
+                  {
+                    method: getABIMethodSignature(method),
+                    methodArgs: method.args.map(() => undefined),
+                    sender,
+                  },
+                  'no_op',
+                )
+                return result.return?.returnValue
+              }
+              case 'local-state':
+              case 'global-state': {
+                const state =
+                  defaultValueStrategy.source === 'global-state' ? await this.getGlobalState() : await this.getLocalState(sender)
+                const key = defaultValueStrategy.data
+                if (key in state) {
+                  return state[key].value
+                } else {
+                  throw new Error(
+                    `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: The key '${key}' could not be found in ${defaultValueStrategy.source}`,
+                  )
+                }
+              }
+            }
+          }),
+        ),
       }
     } else {
       return args as RawAppCallArgs

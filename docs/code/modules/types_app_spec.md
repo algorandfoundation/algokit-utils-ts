@@ -10,7 +10,6 @@
 - [AppSpec](../interfaces/types_app_spec.AppSpec.md)
 - [CallConfig](../interfaces/types_app_spec.CallConfig.md)
 - [DeclaredSchemaValueSpec](../interfaces/types_app_spec.DeclaredSchemaValueSpec.md)
-- [DefaultArgument](../interfaces/types_app_spec.DefaultArgument.md)
 - [Hint](../interfaces/types_app_spec.Hint.md)
 - [ReservedSchemaValueSpec](../interfaces/types_app_spec.ReservedSchemaValueSpec.md)
 - [Schema](../interfaces/types_app_spec.Schema.md)
@@ -23,6 +22,7 @@
 - [ABIType](types_app_spec.md#abitype)
 - [AVMType](types_app_spec.md#avmtype)
 - [CallConfigValue](types_app_spec.md#callconfigvalue)
+- [DefaultArgument](types_app_spec.md#defaultargument)
 - [FieldName](types_app_spec.md#fieldname)
 - [HintSpec](types_app_spec.md#hintspec)
 - [StateSchema](types_app_spec.md#stateschema)
@@ -50,7 +50,7 @@ AVM data type
 
 #### Defined in
 
-[src/types/app-spec.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L92)
+[src/types/app-spec.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L121)
 
 ___
 
@@ -67,6 +67,18 @@ The various call configs:
 #### Defined in
 
 [src/types/app-spec.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L36)
+
+___
+
+### DefaultArgument
+
+Ƭ **DefaultArgument**: { `data`: `ABIMethodParams` ; `source`: ``"abi-method"``  } \| { `data`: `string` ; `source`: ``"global-state"``  } \| { `data`: `string` ; `source`: ``"local-state"``  } \| { `data`: `string` \| `number` ; `source`: ``"constant"``  }
+
+Defines a strategy for obtaining a default value for a given ABI arg.
+
+#### Defined in
+
+[src/types/app-spec.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L81)
 
 ___
 
@@ -109,7 +121,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-[src/types/app-spec.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L141)
+[src/types/app-spec.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L170)
 
 ___
 

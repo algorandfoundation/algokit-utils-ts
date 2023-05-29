@@ -131,3 +131,29 @@ def delete_abi(input: pt.abi.String, *, output: pt.abi.String) -> pt.Expr:
 @app.opt_in
 def opt_in() -> pt.Expr:
     return pt.Approve()
+
+
+@app.external(read_only=True)
+def default_value(
+    arg_with_default: pt.abi.String = "default value", *, output: pt.abi.String  # type: ignore[assignment]
+) -> pt.Expr:
+    return output.set(arg_with_default.get())
+
+
+@app.external(read_only=True)
+def default_value_from_abi(
+    arg_with_default: pt.abi.String = default_value, *, output: pt.abi.String  # type: ignore[assignment]
+) -> pt.Expr:
+    return output.set(pt.Concat(pt.Bytes("ABI, "), arg_with_default.get()))
+
+@app.external(read_only=True)
+def default_value_from_global_state(
+    arg_with_default: pt.abi.Uint64 = BareCallAppState.int1, *, output: pt.abi.Uint64  # type: ignore[assignment]
+) -> pt.Expr:
+    return output.set(arg_with_default.get())
+
+@app.external(read_only=True)
+def default_value_from_local_state(
+    arg_with_default: pt.abi.String = BareCallAppState.local_bytes1, *, output: pt.abi.String  # type: ignore[assignment]
+) -> pt.Expr:
+    return output.set(pt.Concat(pt.Bytes("Local state, "), arg_with_default.get()))
