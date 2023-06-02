@@ -5,6 +5,7 @@ import algosdk, {
   ABIValue,
   Algodv2,
   AtomicTransactionComposer,
+  modelsv2,
   OnApplicationComplete,
   SourceMap,
   Transaction,
@@ -21,9 +22,7 @@ import {
   sendAtomicTransactionComposer,
   sendTransaction,
 } from './transaction'
-import { AccountApplicationResponse, Application, EvalDelta, PendingTransactionResponse, TealValue } from './types/algod'
 import {
-  ABIAppCallArg,
   ABIAppCallArgs,
   ABIReturn,
   APP_PAGE_MAX_SIZE,
@@ -45,7 +44,7 @@ import {
   UpdateAppParams,
 } from './types/app'
 import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
-import { toNum } from './util'
+import { toNumber } from './util'
 
 /**
  * Creates a smart contract app, returns the details of the created app.
@@ -204,7 +203,7 @@ export async function updateApp(
     const before = getAtomicTransactionComposerTransactions(atc)
 
     atc.addMethodCall({
-      appID: toNum(appId),
+      appID: toNumber(appId),
       onComplete: OnApplicationComplete.UpdateApplicationOC,
       approvalProgram: approvalProgram as Uint8Array,
       clearProgram: clearProgram as Uint8Array,
@@ -232,7 +231,7 @@ export async function updateApp(
     }
   } else {
     const transaction = algosdk.makeApplicationUpdateTxnFromObject({
-      appIndex: appId as number,
+      appIndex: toNumber(appId),
       approvalProgram: approvalProgram as Uint8Array,
       clearProgram: clearProgram as Uint8Array,
       suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -311,7 +310,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
     const before = getAtomicTransactionComposerTransactions(atc)
 
     atc.addMethodCall({
-      appID: toNum(appId),
+      appID: toNumber(appId),
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
       onComplete: getAppOnCompleteAction(callType),
@@ -338,7 +337,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
   }
 
   const appCallParams = {
-    appIndex: toNum(appId),
+    appIndex: toNumber(appId),
     from: getSenderAddress(from),
     suggestedParams: await getTransactionParams(transactionParams, algod),
     ...getAppArgsForTransaction(args),
@@ -383,7 +382,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
  * @param confirmation The transaction confirmation from algod
  * @returns The return value for the method call
  */
-export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransactionResponse): ABIReturn | undefined {
+export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.PendingTransactionResponse): ABIReturn | undefined {
   if (!args || !args.method) {
     return undefined
   }
@@ -438,8 +437,8 @@ export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) 
  */
 export async function getAppLocalState(appId: number | bigint, account: string | SendTransactionFrom, algod: Algodv2) {
   const accountAddress = typeof account === 'string' ? account : getSenderAddress(account)
-  const appInfo = AccountApplicationResponse.from_obj_for_encoding(
-    await algod.accountApplicationInformation(accountAddress, toNum(appId)).do(),
+  const appInfo = modelsv2.AccountApplicationResponse.from_obj_for_encoding(
+    await algod.accountApplicationInformation(accountAddress, toNumber(appId)).do(),
   )
 
   if (!appInfo.appLocalState?.keyValue) {
@@ -456,7 +455,7 @@ export async function getAppLocalState(appId: number | bigint, account: string |
  * @returns The current box names
  */
 export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Promise<BoxName[]> {
-  const boxResult = await algod.getApplicationBoxes(toNum(appId)).do()
+  const boxResult = await algod.getApplicationBoxes(toNumber(appId)).do()
   return boxResult.boxes.map((b) => {
     return {
       nameRaw: b.name,
@@ -475,7 +474,7 @@ export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Pr
  */
 export async function getAppBoxValue(appId: number | bigint, boxName: string | Uint8Array | BoxName, algod: Algodv2): Promise<Uint8Array> {
   const name = typeof boxName === 'string' ? new Uint8Array(Buffer.from(boxName, 'utf-8')) : 'name' in boxName ? boxName.nameRaw : boxName
-  const boxResult = await algod.getApplicationBoxByName(toNum(appId), name).do()
+  const boxResult = await algod.getApplicationBoxByName(toNumber(appId), name).do()
   return boxResult.value
 }
 
@@ -519,7 +518,7 @@ export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams
  * @param state A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas`
  * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
  */
-export function decodeAppState(state: { key: string; value: TealValue | EvalDelta }[]): AppState {
+export function decodeAppState(state: { key: string; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
   const stateValues = {} as AppState
 
   // Start with empty set
@@ -652,7 +651,7 @@ export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxR
  * @returns The data about the app
  */
 export async function getAppById(appId: number | bigint, algod: Algodv2) {
-  return Application.from_obj_for_encoding(await algod.getApplicationByID(toNum(appId)).do())
+  return modelsv2.Application.from_obj_for_encoding(await algod.getApplicationByID(toNumber(appId)).do())
 }
 
 /**

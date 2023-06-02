@@ -23,7 +23,7 @@ Round at which the results were computed.
 
 #### Defined in
 
-[src/types/indexer.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L63)
+[src/types/indexer.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L62)
 
 ___
 
@@ -35,4 +35,4 @@ The returned transaction
 
 #### Defined in
 
-[src/types/indexer.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L65)
+[src/types/indexer.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L64)

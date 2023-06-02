@@ -4,7 +4,7 @@
  * Throws an UnsafeConversionError if the conversion would result in an unsafe integer for the Number type
  * @param value
  */
-export const toNum = (value: number | bigint) => {
+export const toNumber = (value: number | bigint) => {
   if (typeof value === 'number') return value
 
   if (value > BigInt(Number.MAX_SAFE_INTEGER)) {

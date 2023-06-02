@@ -1,9 +1,8 @@
-import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
+import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, modelsv2, TransactionType } from 'algosdk'
 import { Config } from '.'
 import { callApp, compileTeal, createApp, getAppById, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
 import { getSenderAddress, sendAtomicTransactionComposer } from './transaction'
-import { ApplicationStateSchema } from './types/algod'
 import {
   ABIReturn,
   APP_DEPLOY_NOTE_DAPP,
@@ -162,11 +161,11 @@ export async function deployApp(
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const existingLocalSchema = existingAppRecord.params.localStateSchema!
 
-  const newGlobalSchema = new ApplicationStateSchema({
+  const newGlobalSchema = new modelsv2.ApplicationStateSchema({
     numByteSlice: appParams.schema.globalByteSlices,
     numUint: appParams.schema.globalInts,
   })
-  const newLocalSchema = new ApplicationStateSchema({
+  const newLocalSchema = new modelsv2.ApplicationStateSchema({
     numByteSlice: appParams.schema.localByteSlices,
     numUint: appParams.schema.localInts,
   })
@@ -396,7 +395,7 @@ export async function deployApp(
  * @param after The new schema
  * @returns Whether or not there is a breaking change
  */
-export function isSchemaIsBroken(before: ApplicationStateSchema, after: ApplicationStateSchema) {
+export function isSchemaIsBroken(before: modelsv2.ApplicationStateSchema, after: modelsv2.ApplicationStateSchema) {
   return before.numByteSlice < after.numByteSlice || before.numUint < after.numUint
 }
 

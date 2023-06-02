@@ -25,7 +25,7 @@ Fields for a payment transaction https://developer.algorand.org/docs/rest-apis/i
 
 #### Defined in
 
-[src/types/indexer.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L256)
+[src/types/indexer.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L255)
 
 ___
 
@@ -37,7 +37,7 @@ Number of MicroAlgos that were sent to the close-remainder-to address when closi
 
 #### Defined in
 
-[src/types/indexer.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L258)
+[src/types/indexer.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L257)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L260)
+[src/types/indexer.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L259)
 
 ___
 
@@ -61,4 +61,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L262)
+[src/types/indexer.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L261)

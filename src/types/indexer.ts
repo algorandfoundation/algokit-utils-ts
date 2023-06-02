@@ -1,5 +1,4 @@
-import { TransactionType } from 'algosdk'
-import { TealKeyValue } from './algod'
+import { modelsv2, TransactionType } from 'algosdk'
 
 /** Indexer result for a transaction search, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions */
 export interface TransactionSearchResults {
@@ -467,7 +466,7 @@ export interface ApplicationParams {
   /** [epp] the amount of extra program pages available to this app. */
   'extra-program-pages'?: number
   /** [gs] global schema */
-  'global-state': TealKeyValue[]
+  'global-state': modelsv2.TealKeyValue[]
   /** [gsch] global schema */
   'global-state-schema'?: StateSchema
   /** [lsch] local schema */
@@ -627,7 +626,7 @@ export interface AppLocalState {
   /** The application which this local state is for. */
   id: number
   /** [tkv] storage. */
-  'key-value'?: TealKeyValue[]
+  'key-value'?: modelsv2.TealKeyValue[]
   /** Round when the account opted into the application. */
   'opted-in-at-round'?: number
   /** [hsch] schema. */

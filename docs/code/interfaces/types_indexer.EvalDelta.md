@@ -24,7 +24,7 @@ Represents a TEAL value delta. https://developer.algorand.org/docs/rest-apis/ind
 
 #### Defined in
 
-[src/types/indexer.ts:436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L436)
+[src/types/indexer.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L435)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L438)
+[src/types/indexer.ts:437](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L437)
 
 ___
 
@@ -48,4 +48,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:440](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L440)
+[src/types/indexer.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L439)

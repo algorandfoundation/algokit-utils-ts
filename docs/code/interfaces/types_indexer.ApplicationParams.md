@@ -34,7 +34,7 @@ Approval programs may reject the transaction.
 
 #### Defined in
 
-[src/types/indexer.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L456)
+[src/types/indexer.ts:455](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L455)
 
 ___
 
@@ -52,7 +52,7 @@ Clear state programs cannot reject the transaction.
 
 #### Defined in
 
-[src/types/indexer.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L466)
+[src/types/indexer.ts:465](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L465)
 
 ___
 
@@ -64,7 +64,7 @@ The address that created this application. This is the address where the paramet
 
 #### Defined in
 
-[src/types/indexer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L446)
+[src/types/indexer.ts:445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L445)
 
 ___
 
@@ -76,19 +76,19 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L468)
+[src/types/indexer.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L467)
 
 ___
 
 ### global-state
 
-• **global-state**: `NodeStatusResponse`[]
+• **global-state**: `TealKeyValue`[]
 
 [gs] global schema
 
 #### Defined in
 
-[src/types/indexer.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L470)
+[src/types/indexer.ts:469](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L469)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L472)
+[src/types/indexer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L471)
 
 ___
 
@@ -112,4 +112,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L474)
+[src/types/indexer.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L473)

@@ -10,7 +10,6 @@
 - [testing](modules/testing.md)
 - [types/account](modules/types_account.md)
 - [types/algo-http-client-with-retry](modules/types_algo_http_client_with_retry.md)
-- [types/algod](modules/types_algod.md)
 - [types/amount](modules/types_amount.md)
 - [types/amount.spec](modules/types_amount_spec.md)
 - [types/app](modules/types_app.md)
