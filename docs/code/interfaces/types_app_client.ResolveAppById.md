@@ -44,7 +44,7 @@ ___
 
 • **resolveBy**: ``"id"``
 
-How the app ID is resolved, either by `'id'` or `'creatorAndName'`
+How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy`
 
 #### Defined in
 
