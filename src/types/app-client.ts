@@ -55,7 +55,7 @@ import { Algodv2 as Algodv2_2, AtomicTransactionComposer as AtomicTransactionCom
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndName = {
-  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'` */
+  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` */
   resolveBy: 'creatorAndName'
   /** The address of the app creator account to resolve the app by */
   creatorAddress: string
@@ -70,7 +70,7 @@ export type ResolveAppByCreatorAndName = {
 
 /** Configuration to resolve app by ID */
 export interface ResolveAppById {
-  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'` */
+  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` */
   resolveBy: 'id'
   /** The id of an existing app to call using this client, or 0 if the app hasn't been created yet */
   id: number | bigint
@@ -378,7 +378,7 @@ export class ApplicationClient {
     const from = sender ?? this.sender!
 
     if (!this._creator) {
-      throw new Error('Attempt to deploy a contract without having specified a creator')
+      throw new Error("Attempt to `deploy` a contract without specifying `resolveBy: 'creatorAndName'` in the constructor")
     }
     if (this._creator !== getSenderAddress(from)) {
       throw new Error(
