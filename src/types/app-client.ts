@@ -84,6 +84,10 @@ export type AppDetails = {
   sender?: SendTransactionFrom
   /** Default suggested params object to use */
   params?: SuggestedParams
+  /** Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get
+   * used in calls to `deploy`, `create` and `update` unless overridden in those calls
+   */
+  deployTimeParams?: TealTemplateParams
 } & (ResolveAppById | ResolveAppByCreatorAndName)
 
 /** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app */
@@ -244,6 +248,7 @@ export class ApplicationClient {
   private sender: SendTransactionFrom | undefined
   private params: SuggestedParams | undefined
   private existingDeployments: AppLookup | undefined
+  private deployTimeParams?: TealTemplateParams
 
   private _appId: number | bigint
   private _appAddress: string
@@ -264,10 +269,11 @@ export class ApplicationClient {
    * @param algod An algod instance
    */
   constructor(appDetails: AppSpecAppDetails, algod: Algodv2) {
-    const { app, sender, params, ...appIdentifier } = appDetails
+    const { app, sender, params, deployTimeParams, ...appIdentifier } = appDetails
     this.algod = algod
     this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
     this._appName = appIdentifier.name ?? this.appSpec.contract.name
+    this.deployTimeParams = deployTimeParams
 
     if (appIdentifier.resolveBy === 'id') {
       if (appIdentifier.id < 0) {
@@ -302,14 +308,17 @@ export class ApplicationClient {
   async compile(compilation?: AppClientCompilationParams) {
     const { deployTimeParams, updatable, deletable } = compilation ?? {}
     const approvalTemplate = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
-    const approval = replaceDeployTimeControlParams(performTemplateSubstitution(approvalTemplate, deployTimeParams), {
-      updatable,
-      deletable,
-    })
+    const approval = replaceDeployTimeControlParams(
+      performTemplateSubstitution(approvalTemplate, deployTimeParams ?? this.deployTimeParams),
+      {
+        updatable,
+        deletable,
+      },
+    )
     const approvalCompiled = await compileTeal(approval, this.algod)
     this._approvalSourceMap = approvalCompiled?.sourceMap
     const clearTemplate = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
-    const clear = performTemplateSubstitution(clearTemplate, deployTimeParams)
+    const clear = performTemplateSubstitution(clearTemplate, deployTimeParams ?? this.deployTimeParams)
     const clearCompiled = await compileTeal(clear, this.algod)
     this._clearSourceMap = clearCompiled?.sourceMap
 
