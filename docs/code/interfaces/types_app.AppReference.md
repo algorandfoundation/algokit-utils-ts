@@ -29,16 +29,16 @@ The Algorand address of the account associated with the app
 
 #### Defined in
 
-[src/types/app.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L41)
+[src/types/app.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L42)
 
 ___
 
 ### appId
 
-• **appId**: `number`
+• **appId**: `number` \| `bigint`
 
 The id of the app
 
 #### Defined in
 
-[src/types/app.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L39)
+[src/types/app.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L40)

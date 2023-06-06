@@ -60,7 +60,7 @@ If the transaction is an `appl` transaction this will be populated see `tx-type`
 
 #### Defined in
 
-[src/types/indexer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L116)
+[src/types/indexer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L115)
 
 ___
 
@@ -72,7 +72,7 @@ If the transaction is an `acfg` transaction this will be populated see `tx-type`
 
 #### Defined in
 
-[src/types/indexer.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L122)
+[src/types/indexer.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L121)
 
 ___
 
@@ -84,7 +84,7 @@ If the transaction is an `afrz` transaction this will be populated see `tx-type`
 
 #### Defined in
 
-[src/types/indexer.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L128)
+[src/types/indexer.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L127)
 
 ___
 
@@ -96,7 +96,7 @@ If the transaction is an `axfer` transaction this will be populated see `tx-type
 
 #### Defined in
 
-[src/types/indexer.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L130)
+[src/types/indexer.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L129)
 
 ___
 
@@ -109,7 +109,7 @@ The backend can use this to ensure that auth addr is equal to the accounts auth 
 
 #### Defined in
 
-[src/types/indexer.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L138)
+[src/types/indexer.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L137)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L173)
+[src/types/indexer.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L172)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L140)
+[src/types/indexer.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L139)
 
 ___
 
@@ -145,7 +145,7 @@ Round when the transaction was confirmed.
 
 #### Defined in
 
-[src/types/indexer.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L92)
+[src/types/indexer.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L91)
 
 ___
 
@@ -158,7 +158,7 @@ specifies the application index (ID) of that application.
 
 #### Defined in
 
-[src/types/indexer.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L120)
+[src/types/indexer.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L119)
 
 ___
 
@@ -171,7 +171,7 @@ specifies the asset index (ID) of that asset.
 
 #### Defined in
 
-[src/types/indexer.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L126)
+[src/types/indexer.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L125)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L84)
+[src/types/indexer.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L83)
 
 ___
 
@@ -195,7 +195,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L88)
+[src/types/indexer.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L87)
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L145)
+[src/types/indexer.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L144)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L147)
+[src/types/indexer.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L146)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L167)
+[src/types/indexer.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L166)
 
 ___
 
@@ -250,7 +250,7 @@ When present indicates that this transaction is part of a transaction group
 
 #### Defined in
 
-[src/types/indexer.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L100)
+[src/types/indexer.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L99)
 
 ___
 
@@ -262,7 +262,7 @@ Transaction ID
 
 #### Defined in
 
-[src/types/indexer.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L80)
+[src/types/indexer.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L79)
 
 ___
 
@@ -274,7 +274,7 @@ Inner transactions produced by application execution.
 
 #### Defined in
 
-[src/types/indexer.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L149)
+[src/types/indexer.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L148)
 
 ___
 
@@ -286,7 +286,7 @@ Offset into the round where this transaction was confirmed.
 
 #### Defined in
 
-[src/types/indexer.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L112)
+[src/types/indexer.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L111)
 
 ___
 
@@ -298,7 +298,7 @@ If the transaction is a `keyreg` transaction this will be populated see `tx-type
 
 #### Defined in
 
-[src/types/indexer.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L132)
+[src/types/indexer.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L131)
 
 ___
 
@@ -310,7 +310,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L90)
+[src/types/indexer.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L89)
 
 ___
 
@@ -329,7 +329,7 @@ While this transaction possesses the lease, no other transaction specifying this
 
 #### Defined in
 
-[src/types/indexer.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L163)
+[src/types/indexer.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L162)
 
 ___
 
@@ -341,7 +341,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L165)
+[src/types/indexer.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L164)
 
 ___
 
@@ -353,7 +353,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L108)
+[src/types/indexer.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L107)
 
 ___
 
@@ -367,7 +367,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L106)
+[src/types/indexer.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L105)
 
 ___
 
@@ -379,7 +379,7 @@ If the transaction is a `pay` transaction this will be populated see `tx-type`
 
 #### Defined in
 
-[src/types/indexer.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L134)
+[src/types/indexer.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L133)
 
 ___
 
@@ -391,7 +391,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L169)
+[src/types/indexer.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L168)
 
 ___
 
@@ -404,7 +404,7 @@ this value and future signatures must be signed with the key represented by this
 
 #### Defined in
 
-[src/types/indexer.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L153)
+[src/types/indexer.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L152)
 
 ___
 
@@ -416,7 +416,7 @@ Time when the block this transaction is in was confirmed.
 
 #### Defined in
 
-[src/types/indexer.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L110)
+[src/types/indexer.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L109)
 
 ___
 
@@ -428,7 +428,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L86)
+[src/types/indexer.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L85)
 
 ___
 
@@ -440,7 +440,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L171)
+[src/types/indexer.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L170)
 
 ___
 
@@ -452,7 +452,7 @@ Signature of the transaction
 
 #### Defined in
 
-[src/types/indexer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L114)
+[src/types/indexer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L113)
 
 ___
 
@@ -464,4 +464,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L82)
+[src/types/indexer.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L81)

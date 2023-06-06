@@ -12,18 +12,19 @@ Configuration to resolve app by ID
 
 - [id](types_app_client.ResolveAppById.md#id)
 - [name](types_app_client.ResolveAppById.md#name)
+- [resolveBy](types_app_client.ResolveAppById.md#resolveby)
 
 ## Properties
 
 ### id
 
-• **id**: `number`
+• **id**: `number` \| `bigint`
 
 The id of an existing app to call using this client, or 0 if the app hasn't been created yet
 
 #### Defined in
 
-[src/types/app-client.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L69)
+[src/types/app-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L76)
 
 ___
 
@@ -35,4 +36,16 @@ The optional name to use to mark the app when deploying `ApplicationClient.deplo
 
 #### Defined in
 
-[src/types/app-client.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L71)
+[src/types/app-client.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L78)
+
+___
+
+### resolveBy
+
+• **resolveBy**: ``"id"``
+
+How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy`
+
+#### Defined in
+
+[src/types/app-client.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L74)

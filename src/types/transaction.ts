@@ -1,6 +1,5 @@
-import { Account, AtomicTransactionComposer, LogicSigAccount, Transaction } from 'algosdk'
+import { Account, AtomicTransactionComposer, LogicSigAccount, Transaction, modelsv2 } from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
-import { PendingTransactionResponse } from './algod'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 
@@ -44,7 +43,7 @@ export interface SendTransactionResult {
   /** The transaction */
   transaction: Transaction
   /** The response if the transaction was sent and waited for */
-  confirmation?: PendingTransactionResponse
+  confirmation?: modelsv2.PendingTransactionResponse
 }
 
 /** The result of preparing and/or sending multiple transactions */
@@ -54,7 +53,7 @@ export interface SendTransactionResults {
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations?: PendingTransactionResponse[]
+  confirmations?: modelsv2.PendingTransactionResponse[]
 }
 
 /** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
@@ -70,15 +69,15 @@ export interface SendAtomicTransactionComposerResults extends SendTransactionRes
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
   /** The response from sending and waiting for the transaction */
-  confirmation: PendingTransactionResponse
+  confirmation: modelsv2.PendingTransactionResponse
 }
 
 /** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
 export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
   /** The response from sending and waiting for the primary transaction */
-  confirmation: PendingTransactionResponse
+  confirmation: modelsv2.PendingTransactionResponse
   /** The response from sending and waiting for the transactions */
-  confirmations: PendingTransactionResponse[]
+  confirmations: modelsv2.PendingTransactionResponse[]
 }
 
 /** Core account abstraction when signing/sending transactions

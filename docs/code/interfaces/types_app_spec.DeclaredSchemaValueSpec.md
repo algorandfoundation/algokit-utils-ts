@@ -10,22 +10,22 @@ Declared schema value specification
 
 ### Properties
 
-- [desc](types_app_spec.DeclaredSchemaValueSpec.md#desc)
+- [descr](types_app_spec.DeclaredSchemaValueSpec.md#descr)
 - [key](types_app_spec.DeclaredSchemaValueSpec.md#key)
 - [static](types_app_spec.DeclaredSchemaValueSpec.md#static)
 - [type](types_app_spec.DeclaredSchemaValueSpec.md#type)
 
 ## Properties
 
-### desc
+### descr
 
-• `Optional` **desc**: `string`
+• `Optional` **descr**: `string`
 
 A description of the variable
 
 #### Defined in
 
-[src/types/app-spec.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L107)
+[src/types/app-spec.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L130)
 
 ___
 
@@ -37,28 +37,28 @@ The name of the key
 
 #### Defined in
 
-[src/types/app-spec.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L105)
+[src/types/app-spec.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L128)
 
 ___
 
 ### static
 
-• **static**: `boolean`
+• `Optional` **static**: `boolean`
 
 Whether or not the value is set statically (at create time only) or dynamically
 
 #### Defined in
 
-[src/types/app-spec.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L109)
+[src/types/app-spec.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L132)
 
 ___
 
 ### type
 
-• **type**: [`AVMType`](../enums/types_app_spec.AVMType.md)
+• **type**: [`AVMType`](../modules/types_app_spec.md#avmtype)
 
 The type of value
 
 #### Defined in
 
-[src/types/app-spec.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L103)
+[src/types/app-spec.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L126)

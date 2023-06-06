@@ -26,7 +26,7 @@ A zero value for asset-id indicates asset creation. A zero value for the params 
 
 #### Defined in
 
-[src/types/indexer.ts:288](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L288)
+[src/types/indexer.ts:287](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L287)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L290)
+[src/types/indexer.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L289)

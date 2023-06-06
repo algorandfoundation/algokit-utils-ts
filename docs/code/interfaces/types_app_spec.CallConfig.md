@@ -10,7 +10,6 @@ Call configuration for a method
 
 ### Properties
 
-- [clear\_state](types_app_spec.CallConfig.md#clear_state)
 - [close\_out](types_app_spec.CallConfig.md#close_out)
 - [delete\_application](types_app_spec.CallConfig.md#delete_application)
 - [no\_op](types_app_spec.CallConfig.md#no_op)
@@ -18,18 +17,6 @@ Call configuration for a method
 - [update\_application](types_app_spec.CallConfig.md#update_application)
 
 ## Properties
-
-### clear\_state
-
-• `Optional` **clear\_state**: [`CallConfigValue`](../modules/types_app_spec.md#callconfigvalue)
-
-Clear state call config
-
-#### Defined in
-
-[src/types/app-spec.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L48)
-
-___
 
 ### close\_out
 
@@ -39,7 +26,7 @@ Close out call config
 
 #### Defined in
 
-[src/types/app-spec.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L46)
+[src/types/app-spec.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L45)
 
 ___
 
@@ -51,7 +38,7 @@ Delete call config
 
 #### Defined in
 
-[src/types/app-spec.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L52)
+[src/types/app-spec.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L49)
 
 ___
 
@@ -63,7 +50,7 @@ NoOp call config
 
 #### Defined in
 
-[src/types/app-spec.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L42)
+[src/types/app-spec.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L41)
 
 ___
 
@@ -75,7 +62,7 @@ Opt-in call config
 
 #### Defined in
 
-[src/types/app-spec.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L44)
+[src/types/app-spec.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L43)
 
 ___
 
@@ -87,4 +74,4 @@ Update call config
 
 #### Defined in
 
-[src/types/app-spec.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L50)
+[src/types/app-spec.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L47)

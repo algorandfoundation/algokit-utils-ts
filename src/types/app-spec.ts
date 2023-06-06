@@ -1,5 +1,4 @@
-import { ABIContractParams } from 'algosdk'
-import { getABIMethodSignature } from '../app'
+import { ABIContractParams, ABIMethodParams } from 'algosdk'
 
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
 export interface AppSpec {
@@ -44,8 +43,6 @@ export interface CallConfig {
   opt_in?: CallConfigValue
   /** Close out call config */
   close_out?: CallConfigValue
-  /** Clear state call config */
-  clear_state?: CallConfigValue
   /** Update call config */
   update_application?: CallConfigValue
   /** Delete call config */
@@ -55,9 +52,9 @@ export interface CallConfig {
 /** Hint information for a given method call to allow client generation */
 export interface Hint {
   /** Any user-defined struct/tuple types used in the method call, keyed by parameter name or `output` for return type */
-  structs: Record<string, Struct>
-  readonly: boolean
-  default_arguments: Record<string, DefaultArgument>
+  structs?: Record<string, Struct>
+  read_only?: boolean
+  default_arguments?: Record<string, DefaultArgument>
   call_config: CallConfig
 }
 
@@ -78,24 +75,50 @@ export interface Struct {
   elements: StructElement[]
 }
 
-/** Any default argument specifications for the given parameter */
-export interface DefaultArgument {
-  /** The source of the default argument value:
-   *  * `global-state`: Global state; `data` is the name of the global state variable
-   *  * `local-state`: Local state; `data` is the name of the local state variable
-   *  * `abi-method`: ABI method call; `data` is the method spec of the ABI method to call
-   *  * `constant`: A constant value; `data` is the value to use
-   */
-  source: 'global-state' | 'local-state' | 'abi-method' | 'constant'
-  /** The name or value corresponding to the source */
-  data: string | bigint | number
-}
+/**
+ * Defines a strategy for obtaining a default value for a given ABI arg.
+ */
+export type DefaultArgument =
+  | {
+      /**
+       * The default value should be fetched by invoking an ABI method
+       */
+      source: 'abi-method'
+      data: ABIMethodParams
+    }
+  | {
+      /**
+       * The default value should be fetched from global state
+       */
+      source: 'global-state'
+      /**
+       * The key of the state variable
+       */
+      data: string
+    }
+  | {
+      /**
+       * The default value should be fetched from the local state of the sender user
+       */
+      source: 'local-state'
+      /**
+       * The key of the state variable
+       */
+      data: string
+    }
+  | {
+      /**
+       * The default value is a constant.
+       */
+      source: 'constant'
+      /**
+       * The static default value to use.
+       */
+      data: string | number
+    }
 
 /** AVM data type */
-export enum AVMType {
-  uint64,
-  bytes,
-}
+export type AVMType = 'uint64' | 'bytes'
 
 /** Declared schema value specification */
 export interface DeclaredSchemaValueSpec {
@@ -104,9 +127,9 @@ export interface DeclaredSchemaValueSpec {
   /** The name of the key */
   key: string
   /** A description of the variable */
-  desc?: string
+  descr?: string
   /** Whether or not the value is set statically (at create time only) or dynamically */
-  static: boolean
+  static?: boolean
 }
 
 /** Reserved schema value specification */
@@ -150,6 +173,3 @@ export type StateSchema = {
   /** Number of byte slots */
   num_byte_slices: number
 }
-
-/** @deprecated Use `algokit.getABIMethodSignature` instead */
-export const getABISignature = getABIMethodSignature

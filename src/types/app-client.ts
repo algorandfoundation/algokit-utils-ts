@@ -4,8 +4,10 @@ import algosdk, {
   ABIType,
   ABIValue,
   Algodv2,
+  AtomicTransactionComposer,
   getApplicationAddress,
   Indexer,
+  OnApplicationComplete,
   SourceMap,
   SuggestedParams,
 } from 'algosdk'
@@ -29,7 +31,11 @@ import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
   ABIAppCallArgs,
+  ABIReturn,
   AppCallArgs,
+  AppCallTransactionResult,
+  AppCallType,
+  AppCompilationResult,
   AppLookup,
   AppMetadata,
   AppReference,
@@ -45,55 +51,62 @@ import {
 import { AppSpec } from './app-spec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
+import { Algodv2 as Algodv2_2, AtomicTransactionComposer as AtomicTransactionComposer2_2 } from 'algosdk2-2'
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndName = {
+  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` */
+  resolveBy: 'creatorAndName'
   /** The address of the app creator account to resolve the app by */
   creatorAddress: string
-  /** The optional name to resolve the app by within the creator account (default: uses the name in the ABI contract) */
+  /** The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) */
   name?: string
-} & (
-  | {
-      /** indexer An indexer instance to search the creator account apps */
-      indexer: Indexer
-    }
-  | {
-      /** Optional cached value of the existing apps for the given creator, `getCreatorAppsByName` */
-      existingDeployments: AppLookup
-    }
-)
+  /** The mechanism to find an existing app instance metadata for the given creator and name; either:
+   *  * An indexer instance to search the creator account apps; or
+   *  * The cached value of the existing apps for the given creator from `getCreatorAppsByName`
+   */
+  findExistingUsing: Indexer | AppLookup
+}
 
 /** Configuration to resolve app by ID */
 export interface ResolveAppById {
+  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` */
+  resolveBy: 'id'
   /** The id of an existing app to call using this client, or 0 if the app hasn't been created yet */
-  id: number
+  id: number | bigint
   /** The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract) */
   name?: string
 }
 
-/** The details of an ARC-0032 app spec specified app */
-export type AppSpecAppDetails = {
+/** The details of an AlgoKit Utils deployed app */
+export type AppDetails = {
+  /** Default sender to use for transactions issued by this application client */
+  sender?: SendTransactionFrom
+  /** Default suggested params object to use */
+  params?: SuggestedParams
+  /** Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get
+   * used in calls to `deploy`, `create` and `update` unless overridden in those calls
+   */
+  deployTimeParams?: TealTemplateParams
+} & (ResolveAppById | ResolveAppByCreatorAndName)
+
+/** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app */
+export type AppSpecAppDetails = AppDetails & {
   /** The ARC-0032 application spec as either:
    *  * Parsed JSON `AppSpec`
    *  * Raw JSON string
    */
   app: AppSpec | string
-  /** Default sender to use for transactions issued by this application client */
-  sender?: SendTransactionFrom
-  /** Default suggested params object to use */
-  params?: SuggestedParams
-} & (ResolveAppById | ResolveAppByCreatorAndName)
+}
 
-/** Parameters to pass into ApplicationClient.deploy */
-export interface AppClientDeployParams {
+/** Core parameters to pass into ApplicationClient.deploy */
+export interface AppClientDeployCoreParams {
   /** The version of the contract, uses "1.0" by default */
   version?: string
   /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
   sender?: SendTransactionFrom
   /** Parameters to control transaction sending */
   sendParams?: Omit<SendTransactionParams, 'skipSending' | 'skipWaiting'>
-  /** Any deploy-time parameters to replace in the TEAL code */
-  deployTimeParams?: TealTemplateParams
   /** Whether or not to allow updates in the contract using the deploy-time updatability control if present in your contract.
    * If this is not specified then it will automatically be determined based on the AppSpec definition
    **/
@@ -106,29 +119,38 @@ export interface AppClientDeployParams {
   onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
   onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
+}
+
+/** Call interface parameters to pass into ApplicationClient.deploy */
+export interface AppClientDeployCallInterfaceParams {
+  /** Any deploy-time parameters to replace in the TEAL code */
+  deployTimeParams?: TealTemplateParams
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppClientCallArgs
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppClientCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
   deleteArgs?: AppClientCallArgs
 }
 
-/** The arguments to pass to an Application Client smart contract call */
-export type AppClientCallArgs =
-  | {
-      /** Raw argument values to pass to the smart contract call */
-      args?: RawAppCallArgs
-    }
-  | {
-      /** If calling an ABI method then either the name of the method, or the ABI signature */
-      method: string
-      /** Either the ABI arguments or an object with the ABI arguments and other parameters like boxes */
-      methodArgs: Omit<ABIAppCallArgs, 'method'> | ABIAppCallArg[]
-    }
+/** Parameters to pass into ApplicationClient.deploy */
+export interface AppClientDeployParams extends AppClientDeployCoreParams, AppClientDeployCallInterfaceParams {}
 
-/** Parameters to construct a ApplicationClient contract call */
-export type AppClientCallParams = AppClientCallArgs & {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AppClientCallRawArgs extends RawAppCallArgs {}
+
+export interface AppClientCallABIArgs extends Omit<ABIAppCallArgs, 'method'> {
+  /** If calling an ABI method then either the name of the method, or the ABI signature */
+  method: string
+}
+
+/** The arguments to pass to an Application Client smart contract call */
+export type AppClientCallArgs = AppClientCallRawArgs | AppClientCallABIArgs
+
+/** Common (core) parameters to construct a ApplicationClient contract call */
+export interface AppClientCallCoreParams {
   /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
   sender?: SendTransactionFrom
   /** The transaction note for the smart contract call */
@@ -136,6 +158,12 @@ export type AppClientCallParams = AppClientCallArgs & {
   /** Parameters to control transaction sending */
   sendParams?: SendTransactionParams
 }
+
+/** Parameters to construct a ApplicationClient contract call */
+export type AppClientCallParams = AppClientCallArgs & AppClientCallCoreParams
+
+/** Parameters to construct a ApplicationClient clear state contract call */
+export type AppClientClearStateParams = AppClientCallRawArgs & AppClientCallCoreParams
 
 export interface AppClientCompilationParams {
   /** Any deploy-time parameters to replace in the TEAL code */
@@ -146,11 +174,17 @@ export interface AppClientCompilationParams {
   deletable?: boolean
 }
 
+/** On-complete action parameter for creating a contract using ApplicationClient */
+export type AppClientCreateOnComplete = {
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+}
+
 /** Parameters for creating a contract using ApplicationClient */
-export type AppClientCreateParams = AppClientCallParams & AppClientCompilationParams
+export type AppClientCreateParams = AppClientCallParams & AppClientCompilationParams & AppClientCreateOnComplete
 
 /** Parameters for updating a contract using ApplicationClient */
-export type AppClientUpdateParams = AppClientCreateParams
+export type AppClientUpdateParams = AppClientCallParams & AppClientCompilationParams
 
 /** Parameters for funding an app account */
 export interface FundAppAccountParams {
@@ -214,8 +248,9 @@ export class ApplicationClient {
   private sender: SendTransactionFrom | undefined
   private params: SuggestedParams | undefined
   private existingDeployments: AppLookup | undefined
+  private deployTimeParams?: TealTemplateParams
 
-  private _appId: number
+  private _appId: number | bigint
   private _appAddress: string
   private _creator: string | undefined
   private _appName: string
@@ -225,7 +260,6 @@ export class ApplicationClient {
 
   // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
   // todo: support readonly, noop method calls
-  // todo: support different oncomplete for create
   // todo: find create, update, delete, etc. methods from app spec and call them by default
   // todo: intelligent version management when deploying
 
@@ -233,15 +267,15 @@ export class ApplicationClient {
    * Create a new ApplicationClient instance
    * @param appDetails The details of the app
    * @param algod An algod instance
-   * @param indexer An indexer instance
    */
   constructor(appDetails: AppSpecAppDetails, algod: Algodv2) {
-    const { app, sender, params, ...appIdentifier } = appDetails
+    const { app, sender, params, deployTimeParams, ...appIdentifier } = appDetails
     this.algod = algod
     this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app
     this._appName = appIdentifier.name ?? this.appSpec.contract.name
+    this.deployTimeParams = deployTimeParams
 
-    if ('id' in appIdentifier) {
+    if (appIdentifier.resolveBy === 'id') {
       if (appIdentifier.id < 0) {
         throw new Error(`Attempt to create application client with invalid app id of ${appIdentifier.id}`)
       }
@@ -249,15 +283,15 @@ export class ApplicationClient {
     } else {
       this._appId = 0
       this._creator = appIdentifier.creatorAddress
-      if ('indexer' in appIdentifier) {
-        this.indexer = appIdentifier.indexer
+      if (appIdentifier.findExistingUsing instanceof Indexer) {
+        this.indexer = appIdentifier.findExistingUsing
       } else {
-        if (appIdentifier.existingDeployments.creator !== this._creator) {
+        if (appIdentifier.findExistingUsing.creator !== this._creator) {
           throw new Error(
-            `Attempt to create application client with invalid existingDeployments against a different creator (${appIdentifier.existingDeployments.creator}) instead of expected creator ${this._creator}`,
+            `Attempt to create application client with invalid existingDeployments against a different creator (${appIdentifier.findExistingUsing.creator}) instead of expected creator ${this._creator}`,
           )
         }
-        this.existingDeployments = appIdentifier.existingDeployments
+        this.existingDeployments = appIdentifier.findExistingUsing
       }
     }
 
@@ -274,14 +308,17 @@ export class ApplicationClient {
   async compile(compilation?: AppClientCompilationParams) {
     const { deployTimeParams, updatable, deletable } = compilation ?? {}
     const approvalTemplate = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
-    const approval = replaceDeployTimeControlParams(performTemplateSubstitution(approvalTemplate, deployTimeParams), {
-      updatable,
-      deletable,
-    })
+    const approval = replaceDeployTimeControlParams(
+      performTemplateSubstitution(approvalTemplate, deployTimeParams ?? this.deployTimeParams),
+      {
+        updatable,
+        deletable,
+      },
+    )
     const approvalCompiled = await compileTeal(approval, this.algod)
     this._approvalSourceMap = approvalCompiled?.sourceMap
     const clearTemplate = Buffer.from(this.appSpec.source.clear, 'base64').toString('utf-8')
-    const clear = performTemplateSubstitution(clearTemplate, deployTimeParams)
+    const clear = performTemplateSubstitution(clearTemplate, deployTimeParams ?? this.deployTimeParams)
     const clearCompiled = await compileTeal(clear, this.algod)
     this._clearSourceMap = clearCompiled?.sourceMap
 
@@ -326,19 +363,31 @@ export class ApplicationClient {
    * @returns The metadata and transaction result(s) of the deployment, or just the metadata if it didn't need to issue transactions
    */
   async deploy(deploy?: AppClientDeployParams) {
-    const { sender, version, allowUpdate, allowDelete, sendParams, createArgs, updateArgs, deleteArgs, ...deployArgs } = deploy ?? {}
+    const {
+      sender: deploySender,
+      version,
+      allowUpdate,
+      allowDelete,
+      sendParams,
+      createArgs,
+      createOnCompleteAction,
+      updateArgs,
+      deleteArgs,
+      ...deployArgs
+    } = deploy ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to deploy app which already has an app id of ${this._appId}`)
     }
-    if (!sender && !this.sender) {
+    const sender = deploySender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to deploy app')
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const from = sender ?? this.sender!
 
     if (!this._creator) {
-      throw new Error('Attempt to deploy a contract without having specified a creator')
+      throw new Error("Attempt to `deploy` a contract without specifying `resolveBy: 'creatorAndName'` in the constructor")
     }
     if (this._creator !== getSenderAddress(from)) {
       throw new Error(
@@ -368,8 +417,7 @@ export class ApplicationClient {
       await this.getAppReference()
       const result = await deployApp(
         {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from,
+          from: sender,
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
           metadata: {
@@ -387,9 +435,10 @@ export class ApplicationClient {
           transactionParams: this.params,
           ...(sendParams ?? {}),
           existingDeployments: this.existingDeployments,
-          createArgs: this.getCallArgs(createArgs),
-          updateArgs: this.getCallArgs(updateArgs),
-          deleteArgs: this.getCallArgs(deleteArgs),
+          createArgs: await this.getCallArgs(createArgs, sender),
+          createOnCompleteAction: createOnCompleteAction,
+          updateArgs: await this.getCallArgs(updateArgs, sender),
+          deleteArgs: await this.getCallArgs(deleteArgs, sender),
           ...deployArgs,
         },
         this.algod,
@@ -410,20 +459,26 @@ export class ApplicationClient {
         apps: { ...this.existingDeployments.apps, [this._appName]: appMetadata },
       }
 
-      return result
+      return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
       throw this.exposeLogicError(e as Error)
     }
   }
 
+  /**
+   * Creates a smart contract app, returns the details of the created app.
+   * @param create The parameters to create the app with
+   * @returns The details of the created app, or the transaction to create it if `skipSending` and the compilation result
+   */
   async create(create?: AppClientCreateParams) {
-    const { sender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = create ?? {}
+    const { sender: createSender, note, sendParams, deployTimeParams, updatable, deletable, onCompleteAction, ...args } = create ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to create app which already has an app id of ${this._appId}`)
     }
 
-    if (!sender && !this.sender) {
+    const sender = createSender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to create app')
     }
 
@@ -432,8 +487,7 @@ export class ApplicationClient {
     try {
       const result = await createApp(
         {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from: sender ?? this.sender!,
+          from: sender,
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
           schema: {
@@ -442,7 +496,8 @@ export class ApplicationClient {
             localByteSlices: this.appSpec.state.local.num_byte_slices,
             localInts: this.appSpec.state.local.num_uints,
           },
-          args: this.getCallArgs(args),
+          onCompleteAction,
+          args: await this.getCallArgs(args, sender),
           note: note,
           transactionParams: this.params,
           ...(sendParams ?? {}),
@@ -452,24 +507,29 @@ export class ApplicationClient {
 
       if (result.confirmation) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this._appId = result.confirmation['application-index']!
+        this._appId = result.confirmation.applicationIndex!
         this._appAddress = getApplicationAddress(this._appId)
       }
 
-      return result
+      return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
       throw this.exposeLogicError(e as Error)
     }
   }
 
+  /**
+   * Updates the smart contract app.
+   * @param update The parameters to update the app with
+   * @returns The transaction send result and the compilation result
+   */
   async update(update?: AppClientUpdateParams) {
-    const { sender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = update ?? {}
+    const { sender: updateSender, note, sendParams, deployTimeParams, updatable, deletable, ...args } = update ?? {}
 
     if (this._appId === 0) {
       throw new Error(`Attempt to update app which doesn't have an app id defined`)
     }
-
-    if (!sender && !this.sender) {
+    const sender = updateSender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to create app')
     }
 
@@ -479,11 +539,10 @@ export class ApplicationClient {
       const result = await updateApp(
         {
           appId: this._appId,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from: sender ?? this.sender!,
+          from: sender,
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
-          args: this.getCallArgs(args),
+          args: await this.getCallArgs(args, sender),
           note: note,
           transactionParams: this.params,
           ...(sendParams ?? {}),
@@ -491,39 +550,117 @@ export class ApplicationClient {
         this.algod,
       )
 
-      this._approvalSourceMap = result.compiledApproval?.sourceMap
-      this._clearSourceMap = result.compiledClear?.sourceMap
-
-      return result
+      return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
       throw this.exposeLogicError(e as Error)
     }
   }
 
+  /**
+   * Issues a no_op (normal) call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async call(call?: AppClientCallParams) {
-    return await this._call(call, 'normal')
+    if (
+      // ABI call
+      call?.method &&
+      // We aren't skipping the send
+      !call.sendParams?.skipSending &&
+      // There isn't an ATC passed in
+      !call.sendParams?.atc &&
+      // The method is readonly
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.appSpec.hints[getABIMethodSignature(this.getABIMethod(call.method)!)].read_only
+    ) {
+      const atc = new AtomicTransactionComposer()
+      await this.callOfType({ ...call, sendParams: { ...call.sendParams, atc } }, 'no_op')
+      const result = await this.callSimulateOnAtc(atc, this.algod)
+      if (result.simulateResponse.txnGroups.some((group) => group.failureMessage)) {
+        throw new Error(result.simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage)
+      }
+      const txns = atc.buildGroup()
+      return {
+        transaction: txns[txns.length - 1].txn,
+        confirmation: result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult,
+        confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
+        transactions: txns.map((t) => t.txn),
+        return: result.methodResults?.length ?? 0 > 0 ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
+      } satisfies AppCallTransactionResult
+    }
+
+    return await this.callOfType(call, 'no_op')
   }
 
+  private async callSimulateOnAtc(atc: AtomicTransactionComposer, algod: Algodv2): ReturnType<AtomicTransactionComposer['simulate']> {
+    try {
+      return await atc.simulate(algod)
+    } catch (e) {
+      /*
+      Temporary work around for a breaking change in algosdk 2.3, if the targeted api returns this error then it is likely
+      running the older version, so we try again using the old sdk version
+       */
+      if (e instanceof Error && e.message.startsWith('Network request error. Received status 400 (Bad Request): msgpack decode')) {
+        const algod2_2 = Object.create(this.algod)
+        algod2_2.simulateRawTransactions = Algodv2_2.prototype.simulateRawTransactions
+        const atc2_2 = Object.create(atc)
+        atc2_2.simulate = AtomicTransactionComposer2_2.prototype.simulate
+        return await atc2_2.simulate(algod2_2)
+      }
+      throw e
+    }
+  }
+
+  /**
+   * Issues a opt_in call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async optIn(call?: AppClientCallParams) {
-    return await this._call(call, 'optin')
+    return await this.callOfType(call, 'opt_in')
   }
 
+  /**
+   * Issues a close_out call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async closeOut(call?: AppClientCallParams) {
-    return await this._call(call, 'closeout')
+    return await this.callOfType(call, 'close_out')
   }
 
-  async clearState(call?: AppClientCallParams) {
-    return await this._call(call, 'clearstate')
+  /**
+   * Issues a clear_state call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
+  async clearState(call?: AppClientClearStateParams) {
+    return await this.callOfType(call, 'clear_state')
   }
 
+  /**
+   * Issues a delete_application call to the app.
+   * @param call The call details.
+   * @returns The result of the call
+   */
   async delete(call?: AppClientCallParams) {
-    return await this._call(call, 'delete')
+    return await this.callOfType(call, 'delete_application')
   }
 
-  private async _call(call: AppClientCallParams | undefined, callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal') {
-    const { sender, note, sendParams, ...args } = call ?? {}
+  /**
+   * Issues a call to the app with the given call type.
+   * @param call The call details.
+   * @param callType The call type
+   * @returns The result of the call
+   */
+  async callOfType(
+    call: AppClientCallParams = {},
+    callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>,
+  ) {
+    const { sender: callSender, note, sendParams, ...args } = call
 
-    if (!sender && !this.sender) {
+    const sender = callSender ?? this.sender
+    if (!sender) {
       throw new Error('No sender provided, unable to call app')
     }
 
@@ -538,8 +675,8 @@ export class ApplicationClient {
           appId: appMetadata.appId,
           callType: callType,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          from: sender ?? this.sender!,
-          args: this.getCallArgs(args),
+          from: sender,
+          args: await this.getCallArgs(args, sender),
           note: note,
           transactionParams: this.params,
           ...(sendParams ?? {}),
@@ -638,6 +775,7 @@ export class ApplicationClient {
   /**
    * Returns the value of the given box for the current app.
    * @param name The name of the box to return either as a string, binary array or `BoxName`
+   * @param type
    * @returns The current box value as a byte array
    */
   async getBoxValueFromABIType(name: BoxName | string | Uint8Array, type: ABIType): Promise<ABIValue> {
@@ -694,40 +832,72 @@ export class ApplicationClient {
     )
   }
 
-  /** @deprecated Use `getBoxValuesFromABIType` instead */
-  async getBoxValuesAsABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
-    return this.getBoxValuesFromABIType(type, filter)
-  }
-
   /**
    * Returns the arguments for an app call for the given ABI method or raw method specification.
    * @param args The call args specific to this application client
+   * @param sender The sender of this call. Will be used to fetch any default argument values if applicable
    * @returns The call args ready to pass into an app call
    */
-  getCallArgs(args?: AppClientCallArgs): AppCallArgs | undefined {
+  async getCallArgs(args: AppClientCallArgs | undefined, sender: SendTransactionFrom): Promise<AppCallArgs | undefined> {
     if (!args) {
       return undefined
     }
 
-    if ('method' in args) {
+    if (args.method) {
       const abiMethod = this.getABIMethodParams(args.method)
       if (!abiMethod) {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
 
-      if (Array.isArray(args.methodArgs)) {
-        return {
-          method: abiMethod,
-          args: args.methodArgs,
-        } as ABIAppCallArgs
-      } else {
-        return {
-          method: abiMethod,
-          ...args.methodArgs,
-        } as ABIAppCallArgs
+      const methodSignature = getABIMethodSignature(abiMethod)
+
+      return {
+        ...args,
+        method: abiMethod,
+        methodArgs: await Promise.all(
+          args.methodArgs.map(async (arg, index): Promise<ABIAppCallArg> => {
+            if (arg !== undefined) return arg
+            const argName = abiMethod.args[index].name
+            const defaultValueStrategy = argName && this.appSpec.hints?.[methodSignature]?.default_arguments?.[argName]
+            if (!defaultValueStrategy)
+              throw new Error(
+                `Argument at position ${index} with the name ${argName} is undefined and does not have a default value strategy`,
+              )
+
+            switch (defaultValueStrategy.source) {
+              case 'constant':
+                return defaultValueStrategy.data
+              case 'abi-method': {
+                const method = defaultValueStrategy.data as ABIMethodParams
+                const result = await this.callOfType(
+                  {
+                    method: getABIMethodSignature(method),
+                    methodArgs: method.args.map(() => undefined),
+                    sender,
+                  },
+                  'no_op',
+                )
+                return result.return?.returnValue
+              }
+              case 'local-state':
+              case 'global-state': {
+                const state =
+                  defaultValueStrategy.source === 'global-state' ? await this.getGlobalState() : await this.getLocalState(sender)
+                const key = defaultValueStrategy.data
+                if (key in state) {
+                  return state[key].value
+                } else {
+                  throw new Error(
+                    `Preparing default value for argument at position ${index} with the name ${argName} resulted in the failure: The key '${key}' could not be found in ${defaultValueStrategy.source}`,
+                  )
+                }
+              }
+            }
+          }),
+        ),
       }
     } else {
-      return args.args
+      return args as RawAppCallArgs
     }
   }
 

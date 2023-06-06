@@ -1,10 +1,21 @@
 import { describe, test } from '@jest/globals'
-import algosdk, { ABIUintType, Account, Algodv2, Indexer, OnApplicationComplete, TransactionType, getApplicationAddress } from 'algosdk'
+import algosdk, {
+  ABIUintType,
+  Account,
+  Algodv2,
+  Indexer,
+  OnApplicationComplete,
+  TransactionType,
+  getApplicationAddress,
+  TransactionSigner,
+} from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AppSpec } from './app-spec'
+import { ABIAppCallArg } from './app'
+import { ApplicationClient } from './app-client'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
@@ -18,10 +29,11 @@ describe('application-client', () => {
   const deploy = async (account: Account, algod: Algodv2, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: account,
         creatorAddress: account.addr,
-        indexer: indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -33,13 +45,13 @@ describe('application-client', () => {
 
   test('Create app', async () => {
     const { algod, indexer, testAccount } = localnet.context
-
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -57,7 +69,58 @@ describe('application-client', () => {
 
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.compiledApproval).toBeTruthy()
+  })
+
+  test('Create app with constructor deployTimeParams', async () => {
+    const { algod, testAccount } = localnet.context
+    const client = algokit.getAppClient(
+      {
+        resolveBy: 'id',
+        app: appSpec,
+        sender: testAccount,
+        id: 0,
+        deployTimeParams: {
+          UPDATABLE: 0,
+          DELETABLE: 0,
+          VALUE: 1,
+        },
+      },
+      algod,
+    )
+
+    const app = await client.create()
+
+    expect(app.appId).toBeGreaterThan(0)
+  })
+
+  test('Create app with oncomplete overload', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const client = algokit.getAppClient(
+      {
+        resolveBy: 'creatorAndName',
+        app: appSpec,
+        sender: testAccount,
+        creatorAddress: testAccount.addr,
+        findExistingUsing: indexer,
+      },
+      algod,
+    )
+
+    const app = await client.create({
+      onCompleteAction: 'opt_in',
+      updatable: true,
+      deletable: true,
+      deployTimeParams: {
+        VALUE: 1,
+      },
+    })
+
+    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.appId).toBeGreaterThan(0)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -65,15 +128,16 @@ describe('application-client', () => {
 
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
 
-    const app = await client.deploy({
+    await client.deploy({
       allowDelete: false,
       allowUpdate: false,
       onSchemaBreak: 'fail',
@@ -89,10 +153,11 @@ describe('application-client', () => {
 
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -107,7 +172,8 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.compiledApproval).toBeTruthy()
   })
 
   test('Deploy app - create (abi)', async () => {
@@ -115,10 +181,11 @@ describe('application-client', () => {
 
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -137,7 +204,7 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.['application-index']).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex).toBe(app.appId)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -145,10 +212,11 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -173,17 +241,18 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation['confirmed-round'])
+    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
   })
 
   test('Deploy app - update (abi)', async () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -212,7 +281,7 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation['confirmed-round'])
+    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
     expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
   })
@@ -221,10 +290,11 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -257,10 +327,11 @@ describe('application-client', () => {
     const { algod, indexer, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
         creatorAddress: testAccount.addr,
-        indexer,
+        findExistingUsing: indexer,
       },
       algod,
     )
@@ -303,6 +374,7 @@ describe('application-client', () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -331,6 +403,7 @@ describe('application-client', () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -357,6 +430,7 @@ describe('application-client', () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -381,12 +455,14 @@ describe('application-client', () => {
     invariant(call.return)
     expect(call.return.decodeError).toBeUndefined()
     expect(call.return.returnValue).toBe('string_io')
+    expect(call.compiledApproval).toBeTruthy()
   })
 
   test('Delete app with abi', async () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(
       {
+        resolveBy: 'id',
         app: appSpec,
         sender: testAccount,
         id: 0,
@@ -417,7 +493,8 @@ describe('application-client', () => {
 
     const call = await client.call({
       method: 'call_abi',
-      methodArgs: { args: ['test'], boxes: [{ appId: 0, name: '1' }] },
+      methodArgs: ['test'],
+      boxes: [{ appId: 0, name: '1' }],
       sendParams: { skipSending: true },
     })
 
@@ -440,14 +517,14 @@ describe('application-client', () => {
 
     const result = await client.call({
       method: 'call_abi_txn',
-      methodArgs: { args: [txn.transaction, 'test'] },
+      methodArgs: [txn.transaction, 'test'],
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, args: [] }, result.confirmations[1])
+    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, methodArgs: [] }, result.confirmations[1])
     expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
   })
 
@@ -461,9 +538,9 @@ describe('application-client', () => {
       const { client, app } = await deploy(testAccount, algod, indexer)
 
       const oldSourceMaps = client.exportSourceMaps()
-      const newClient = algokit.getApplicationClient(
+      const newClient = algokit.getAppClient(
         {
-          creatorAddress: testAccount.addr,
+          resolveBy: 'id',
           id: app.appId,
           sender: testAccount,
           app: appSpec,
@@ -480,7 +557,7 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.stack.split(' at ')[0].replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
+          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
 
@@ -526,25 +603,25 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-                  "Error: assert failed pc=783. at:416. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
-                  intc_0 // 0
-                  assert
-                  "
-              `)
+          "Error: assert failed pc=954. at:518. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
+          intc_0 // 0
+          assert
+          "
+        `)
         expect(e.stack).toMatchInlineSnapshot(`
-                  "// error
-                  error_6:
-                  proto 0 0
-                  intc_0 // 0
-                  // Deliberate error
-                  assert <--- Error
-                  retsub
+          "// error
+          error_6:
+          proto 0 0
+          intc_0 // 0
+          // Deliberate error
+          assert <--- Error
+          retsub
 
-                  // create
-                  create_7:"
-              `)
+          // create
+          create_7:"
+        `)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        e.led.traces[0].trace = e.led.traces[0].trace!.replace(new RegExp(`${app.appId}(]|,)`, 'g'), '{APP_ID}$1')
+        e.led.traces[0].trace = e.led.traces[0].trace!.replace(new RegExp(`${app.appId}([\\],])`, 'g'), '{APP_ID}$1')
         expect(e.led.traces[0]).toMatchInlineSnapshot(`
           {
             "cost": undefined,
@@ -552,14 +629,14 @@ describe('application-client', () => {
             "messages": [
               "ApprovalProgram",
               "REJECT",
-              "logic eval error: assert failed pc=783. Details: pc=783, opcodes=proto 0 0
+              "logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
           intc_0 // 0
           assert
           ",
             ],
             "trace": "pc# |ln# |source                            |scratch |stack
           1   |1   |intcblock 0 1 10 5 1 1            |        |[]
-          9   |2   |bytecblock 0x 0x151f7c75          |        |[]
+          9   |2   |bytecblock 0x151f7c75 0x          |        |[]
           17  |3   |txn NumAppArgs                    |        |[]
           19  |4   |intc_0 // 0                       |        |[1]
           20  |5   |==                                |        |[1, 0]
@@ -588,19 +665,19 @@ describe('application-client', () => {
           92  |28  |pushbytes 0x44d0da0d // 0x44d0... |        |[0x44d0da0d]
           98  |29  |==                                |        |[0x44d0da0d, 0x44d0da0d]
           99  |30  |bnz label7                        |        |[1]
-          246 |115 |txn OnCompletion                  |        |[]
-          248 |116 |intc_0 // 0                       |        |[0]
-          249 |117 |==                                |        |[0, 0]
-          250 |118 |txn ApplicationID                 |        |[1]
-          252 |119 |intc_0 // 0                       |        |[1, {APP_ID}]
-          253 |120 |!=                                |        |[1, {APP_ID}, 0]
-          254 |121 |&&                                |        |[1, 1]
-          255 |122 |assert                            |        |[1]
-          256 |123 |callsub label16                   |        |[]
-          779 |399 |proto 0 0                         |        |[]
-          782 |400 |intc_0 // 0                       |        |[]
-          783 |401 |assert                            |        |[0]
-          783 |401 |!! assert failed pc=783 !!        |        |[0]
+          400 |205 |txn OnCompletion                  |        |[]
+          402 |206 |intc_0 // 0                       |        |[0]
+          403 |207 |==                                |        |[0, 0]
+          404 |208 |txn ApplicationID                 |        |[1]
+          406 |209 |intc_0 // 0                       |        |[1, {APP_ID}]
+          407 |210 |!=                                |        |[1, {APP_ID}, 0]
+          408 |211 |&&                                |        |[1, 1]
+          409 |212 |assert                            |        |[1]
+          410 |213 |callsub label24                   |        |[]
+          950 |501 |proto 0 0                         |        |[]
+          953 |502 |intc_0 // 0                       |        |[]
+          954 |503 |assert                            |        |[0]
+          954 |503 |!! assert failed pc=954 !!        |        |[0]
           ",
           }
         `)
@@ -630,7 +707,7 @@ describe('application-client', () => {
     expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
     expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
     invariant(result.confirmation)
-    expect(result.confirmation['confirmed-round']).toBeGreaterThan(0)
+    expect(result.confirmation.confirmedRound).toBeGreaterThan(0)
   })
 
   test('Retrieve state', async () => {
@@ -673,17 +750,13 @@ describe('application-client', () => {
     await client.fundAppAccount(algokit.algos(1))
     await client.call({
       method: 'set_box',
-      methodArgs: {
-        args: [boxName1, 'value1'],
-        boxes: [boxName1],
-      },
+      methodArgs: [boxName1, 'value1'],
+      boxes: [boxName1],
     })
     await client.call({
       method: 'set_box',
-      methodArgs: {
-        args: [boxName2, 'value2'],
-        boxes: [boxName2],
-      },
+      methodArgs: [boxName2, 'value2'],
+      boxes: [boxName2],
     })
 
     const boxValues = await client.getBoxValues()
@@ -700,10 +773,8 @@ describe('application-client', () => {
     const expectedValue = 1234524352
     await client.call({
       method: 'set_box',
-      methodArgs: {
-        args: [boxName1, new ABIUintType(32).encode(expectedValue)],
-        boxes: [boxName1],
-      },
+      methodArgs: [boxName1, new ABIUintType(32).encode(expectedValue)],
+      boxes: [boxName1],
     })
     const boxes = await client.getBoxValuesFromABIType(new ABIUintType(32), (n) => n.nameBase64 === boxName1Base64)
     const box1AbiValue = await client.getBoxValueFromABIType(boxName1, new ABIUintType(32))
@@ -711,5 +782,58 @@ describe('application-client', () => {
     const [value] = boxes
     expect(Number(value.value)).toBe(expectedValue)
     expect(Number(box1AbiValue)).toBe(expectedValue)
+  })
+
+  describe('Call ABI methods with default arguments', () => {
+    test('from const', async () => {
+      await testAbiWithDefaultArgMethod('default_value(string)string', 'defined value', 'defined value', 'default value')
+    })
+    test('from abi method', async () => {
+      await testAbiWithDefaultArgMethod('default_value_from_abi(string)string', 'defined value', 'ABI, defined value', 'ABI, default value')
+    })
+    test('from global state', async () => {
+      const globalInt1 = 456n
+
+      await testAbiWithDefaultArgMethod('default_value_from_global_state(uint64)uint64', 123, 123n, globalInt1, async (client) => {
+        await client.call({ method: 'set_global', methodArgs: [globalInt1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
+      })
+    })
+    test('from local state', async () => {
+      const localBytes1 = 'bananas'
+      await testAbiWithDefaultArgMethod(
+        'default_value_from_local_state(string)string',
+        'defined value',
+        'Local state, defined value',
+        `Local state, ${localBytes1}`,
+        async (client) => {
+          await client.optIn({ method: 'opt_in', methodArgs: [] })
+          await client.call({ method: 'set_local', methodArgs: [1, 2, localBytes1, new Uint8Array([1, 2, 3, 4])] })
+        },
+      )
+    })
+
+    async function testAbiWithDefaultArgMethod<TArg extends ABIAppCallArg, TResult>(
+      methodSignature: string,
+      definedValue: TArg,
+      definedValueReturnValue: TResult,
+      defaultValueReturnValue: TResult,
+      setup?: (client: ApplicationClient) => Promise<void>,
+    ) {
+      const { algod, indexer, testAccount } = localnet.context
+      const { client } = await deploy(testAccount, algod, indexer)
+
+      await setup?.(client)
+
+      const definedValueResult = await client.call({
+        method: methodSignature,
+        methodArgs: [definedValue],
+      })
+      expect(definedValueResult.return?.returnValue).toBe(definedValueReturnValue)
+      const defaultValueResult = await client.call({
+        method: methodSignature,
+        methodArgs: [undefined],
+      })
+      expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
+    }
   })
 })

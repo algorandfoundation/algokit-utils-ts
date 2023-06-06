@@ -8,7 +8,7 @@ The parameters to deploy an app
 
 ## Hierarchy
 
-- `Omit`<[`CreateAppParams`](types_app.CreateAppParams.md), ``"args"`` \| ``"note"`` \| ``"skipSending"`` \| ``"skipWaiting"`` \| ``"atc"``\>
+- `Omit`<[`CreateAppParams`](types_app.CreateAppParams.md), ``"onCompleteAction"`` \| ``"args"`` \| ``"note"`` \| ``"skipSending"`` \| ``"skipWaiting"`` \| ``"atc"``\>
 
   ↳ **`AppDeploymentParams`**
 
@@ -19,6 +19,7 @@ The parameters to deploy an app
 - [approvalProgram](types_app.AppDeploymentParams.md#approvalprogram)
 - [clearStateProgram](types_app.AppDeploymentParams.md#clearstateprogram)
 - [createArgs](types_app.AppDeploymentParams.md#createargs)
+- [createOnCompleteAction](types_app.AppDeploymentParams.md#createoncompleteaction)
 - [deleteArgs](types_app.AppDeploymentParams.md#deleteargs)
 - [deployTimeParams](types_app.AppDeploymentParams.md#deploytimeparams)
 - [existingDeployments](types_app.AppDeploymentParams.md#existingdeployments)
@@ -48,7 +49,7 @@ Omit.approvalProgram
 
 #### Defined in
 
-[src/types/app.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L112)
+[src/types/app.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L121)
 
 ___
 
@@ -64,7 +65,7 @@ Omit.clearStateProgram
 
 #### Defined in
 
-[src/types/app.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L114)
+[src/types/app.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L123)
 
 ___
 
@@ -76,7 +77,19 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L268)
+[src/types/app.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L296)
+
+___
+
+### createOnCompleteAction
+
+• `Optional` **createOnCompleteAction**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"update_application"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC`
+
+Override the on-completion action for the create call; defaults to NoOp
+
+#### Defined in
+
+[src/types/app.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L298)
 
 ___
 
@@ -88,7 +101,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L272)
+[src/types/app.ts:302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L302)
 
 ___
 
@@ -100,7 +113,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/app.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L260)
+[src/types/app.ts:288](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L288)
 
 ___
 
@@ -112,7 +125,7 @@ Optional cached value of the existing apps for the given creator
 
 #### Defined in
 
-[src/types/app.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L266)
+[src/types/app.ts:294](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L294)
 
 ___
 
@@ -128,7 +141,7 @@ Omit.fee
 
 #### Defined in
 
-[src/types/transaction.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L35)
+[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -144,7 +157,7 @@ Omit.from
 
 #### Defined in
 
-[src/types/app.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L110)
+[src/types/app.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L119)
 
 ___
 
@@ -160,7 +173,7 @@ Omit.maxFee
 
 #### Defined in
 
-[src/types/transaction.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L37)
+[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 
@@ -176,7 +189,7 @@ Omit.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[src/types/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L39)
+[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
 
 ___
 
@@ -188,7 +201,7 @@ The deployment metadata
 
 #### Defined in
 
-[src/types/app.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L258)
+[src/types/app.ts:286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L286)
 
 ___
 
@@ -200,7 +213,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/app.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L262)
+[src/types/app.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L290)
 
 ___
 
@@ -212,7 +225,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/app.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L264)
+[src/types/app.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L292)
 
 ___
 
@@ -228,7 +241,7 @@ Omit.schema
 
 #### Defined in
 
-[src/types/app.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L126)
+[src/types/app.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L135)
 
 ___
 
@@ -244,7 +257,7 @@ Omit.suppressLog
 
 #### Defined in
 
-[src/types/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L33)
+[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -260,7 +273,7 @@ Omit.transactionParams
 
 #### Defined in
 
-[src/types/app.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L116)
+[src/types/app.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L125)
 
 ___
 
@@ -272,4 +285,4 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L270)
+[src/types/app.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L300)

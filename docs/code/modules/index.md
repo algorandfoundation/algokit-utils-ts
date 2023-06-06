@@ -39,12 +39,11 @@
 - [getAppBoxValues](index.md#getappboxvalues)
 - [getAppBoxValuesFromABIType](index.md#getappboxvaluesfromabitype)
 - [getAppById](index.md#getappbyid)
-- [getAppByIndex](index.md#getappbyindex)
 - [getAppClient](index.md#getappclient)
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
 - [getAppGlobalState](index.md#getappglobalstate)
 - [getAppLocalState](index.md#getapplocalstate)
-- [getApplicationClient](index.md#getapplicationclient)
+- [getAppOnCompleteAction](index.md#getapponcompleteaction)
 - [getAtomicTransactionComposerTransactions](index.md#getatomictransactioncomposertransactions)
 - [getBoxReference](index.md#getboxreference)
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
@@ -76,6 +75,7 @@
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
 - [signTransaction](index.md#signtransaction)
+- [stripTealComments](index.md#striptealcomments)
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
 - [transferAlgos](index.md#transferalgos)
@@ -139,7 +139,7 @@ The result of the call
 
 #### Defined in
 
-[src/app.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L259)
+[src/app.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L304)
 
 ___
 
@@ -164,7 +164,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L344)
+[src/transaction.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L347)
 
 ___
 
@@ -189,7 +189,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/app.ts:624](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L624)
+[src/app.ts:664](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L664)
 
 ___
 
@@ -220,7 +220,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L367)
+[src/transaction.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L370)
 
 ___
 
@@ -241,11 +241,11 @@ Creates a smart contract app, returns the details of the created app.
 
 `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
-The details of the created app, or the transaction to create it if `skipSending`
+The details of the created app, or the transaction to create it if `skipSending` and the compilation result
 
 #### Defined in
 
-[src/app.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L53)
+[src/app.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L55)
 
 ___
 
@@ -260,7 +260,7 @@ generic object keyed by the UTF-8 value of the key.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `state` | { `key`: `string` ; `value`: [`EvalDelta`](types_algod.md#evaldelta) \| [`TealValue`](types_algod.md#tealvalue)  }[] | A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas` |
+| `state` | { `key`: `string` ; `value`: `TealValue` \| `EvalDelta`  }[] | A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas` |
 
 #### Returns
 
@@ -270,7 +270,7 @@ An object keyeed by the UTF-8 representation of the key with various parsings of
 
 #### Defined in
 
-[src/app.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L481)
+[src/app.ts:521](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L521)
 
 ___
 
@@ -304,7 +304,7 @@ The app reference of the new/existing app
 
 #### Defined in
 
-[src/app-deploy.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L39)
+[src/app-deploy.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L38)
 
 ___
 
@@ -326,7 +326,7 @@ Encodes a transaction note into a byte array ready to be included in an Algorand
 
 the transaction note ready for inclusion in a transaction
 
- Case on the value of `data` this either either be:
+ Case on the value of `data` this either be:
   * `null` | `undefined`: `undefined`
   * `string`: The string value
   * Uint8Array: passthrough
@@ -415,7 +415,7 @@ The encoded ABI method spec e.g. `method_name(uint64,string)string`
 
 #### Defined in
 
-[src/app.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L640)
+[src/app.ts:680](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L680)
 
 ___
 
@@ -430,7 +430,7 @@ Returns any ABI return values for the given app call arguments and transaction c
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `args?` | [`AppCallArgs`](types_app.md#appcallargs) | The arguments that were used for the call |
-| `confirmation?` | [`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md) | The transaction confirmation from algod |
+| `confirmation?` | `PendingTransactionResponse` | The transaction confirmation from algod |
 
 #### Returns
 
@@ -440,7 +440,7 @@ The return value for the method call
 
 #### Defined in
 
-[src/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L347)
+[src/app.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L385)
 
 ___
 
@@ -738,7 +738,7 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `args` | [`ABIAppCallArgs`](../interfaces/types_app.ABIAppCallArgs.md) | The ABI app call args |
+| `args` | [`ABIAppCallArgs`](types_app.md#abiappcallargs) | The ABI app call args |
 | `from` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The transaction signer |
 
 #### Returns
@@ -749,7 +749,7 @@ The parameters ready to pass into `addMethodCall` within AtomicTransactionCompos
 
 #### Defined in
 
-[src/app.ts:548](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L548)
+[src/app.ts:588](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L588)
 
 ___
 
@@ -773,7 +773,7 @@ The args ready to load into a `Transaction`
 
 #### Defined in
 
-[src/app.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L528)
+[src/app.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L568)
 
 ___
 
@@ -787,7 +787,7 @@ Returns the names of the boxes for the given app.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `appId` | `number` | The ID of the app return box names for |
+| `appId` | `number` \| `bigint` | The ID of the app return box names for |
 | `algod` | `default` | An algod client instance |
 
 #### Returns
@@ -798,7 +798,7 @@ The current box names
 
 #### Defined in
 
-[src/app.ts:417](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L417)
+[src/app.ts:457](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L457)
 
 ___
 
@@ -812,7 +812,7 @@ Returns the value of the given box name for the given app.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `appId` | `number` | The ID of the app return box names for |
+| `appId` | `number` \| `bigint` | The ID of the app return box names for |
 | `boxName` | `string` \| `Uint8Array` \| [`BoxName`](../interfaces/types_app.BoxName.md) | The name of the box to return either as a string, binary array or `BoxName` |
 | `algod` | `default` | An algod client instance |
 
@@ -824,7 +824,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/app.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L435)
+[src/app.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L475)
 
 ___
 
@@ -849,7 +849,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/app.ts:458](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L458)
+[src/app.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L498)
 
 ___
 
@@ -875,7 +875,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L448)
+[src/app.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L488)
 
 ___
 
@@ -900,13 +900,13 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/app.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L470)
+[src/app.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L510)
 
 ___
 
 ### getAppById
 
-▸ **getAppById**(`appId`, `algod`): `Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
+▸ **getAppById**(`appId`, `algod`): `Promise`<`Application`\>
 
 Gets the current data for the given app from algod.
 
@@ -914,43 +914,18 @@ Gets the current data for the given app from algod.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `appId` | `number` | The id of the app |
+| `appId` | `number` \| `bigint` | The id of the app |
 | `algod` | `default` | An algod client |
 
 #### Returns
 
-`Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
+`Promise`<`Application`\>
 
 The data about the app
 
 #### Defined in
 
-[src/app.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L610)
-
-___
-
-### getAppByIndex
-
-▸ **getAppByIndex**(`appId`, `algod`): `Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
-
-**`Deprecated`**
-
-Use `algokit.getAppById` instead.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `appId` | `number` |
-| `algod` | `default` |
-
-#### Returns
-
-`Promise`<[`ApplicationResponse`](../interfaces/types_algod.ApplicationResponse.md)\>
-
-#### Defined in
-
-[src/app.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L610)
+[src/app.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L653)
 
 ___
 
@@ -975,7 +950,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L15)
+[src/app-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L10)
 
 ___
 
@@ -999,7 +974,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[src/app-deploy.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L517)
+[src/app-deploy.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L518)
 
 ___
 
@@ -1013,7 +988,7 @@ Returns the current global state values for the given app ID
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `appId` | `number` | The ID of the app return global state for |
+| `appId` | `number` \| `bigint` | The ID of the app return global state for |
 | `algod` | `default` | An algod client instance |
 
 #### Returns
@@ -1024,7 +999,7 @@ The current global state
 
 #### Defined in
 
-[src/app.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L383)
+[src/app.ts:421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L421)
 
 ___
 
@@ -1038,7 +1013,7 @@ Returns the current global state values for the given app ID and account
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `appId` | `number` | The ID of the app return global state for |
+| `appId` | `number` \| `bigint` | The ID of the app return global state for |
 | `account` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | Either the string address of an account or an account object for the account to get local state for the given app |
 | `algod` | `default` | An algod client instance |
 
@@ -1050,32 +1025,35 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/app.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L400)
+[src/app.ts:438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L438)
 
 ___
 
-### getApplicationClient
+### getAppOnCompleteAction
 
-▸ **getApplicationClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+▸ **getAppOnCompleteAction**(`onCompletionAction?`): `OnApplicationComplete`
 
-**`Deprecated`**
+Returns an `algosdk.OnApplicationComplete` for the given onCompleteAction.
 
-Use `algokit.getAppClient`
+If given `undefined` will return `OnApplicationComplete.NoOpOC`.
+
+If given an `AppCallType` will convert the string enum to the correct underlying `algosdk.OnApplicationComplete`.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `appDetails` | [`AppSpecAppDetails`](types_app_client.md#appspecappdetails) |
-| `algod` | `default` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `onCompletionAction?` | [`AppCallType`](types_app.md#appcalltype) \| `OnApplicationComplete` | The on completion action |
 
 #### Returns
 
-[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+`OnApplicationComplete`
+
+The `algosdk.OnApplicationComplete`
 
 #### Defined in
 
-[src/app-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L15)
+[src/app.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L274)
 
 ___
 
@@ -1099,7 +1077,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L399)
+[src/transaction.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L402)
 
 ___
 
@@ -1123,7 +1101,7 @@ The box reference ready to pass into a `Transaction`
 
 #### Defined in
 
-[src/app.ts:584](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L584)
+[src/app.ts:627](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L627)
 
 ___
 
@@ -1150,7 +1128,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[src/app-deploy.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L410)
+[src/app-deploy.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L411)
 
 ___
 
@@ -1363,7 +1341,7 @@ ___
 
 ### getTransactionParams
 
-▸ **getTransactionParams**(`params`, `algod`): `Promise`<`SuggestedParams`\>
+▸ **getTransactionParams**(`params`, `algod`): `Promise`<`SuggestedParamsWithMinFee` \| { `fee`: `number` ; `firstRound`: `number` ; `flatFee?`: `boolean` ; `genesisHash`: `string` ; `genesisID`: `string` ; `lastRound`: `number`  }\>
 
 Returns suggested transaction parameters from algod unless some are already provided.
 
@@ -1376,13 +1354,13 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Returns
 
-`Promise`<`SuggestedParams`\>
+`Promise`<`SuggestedParamsWithMinFee` \| { `fee`: `number` ; `firstRound`: `number` ; `flatFee?`: `boolean` ; `genesisHash`: `string` ; `genesisID`: `string` ; `lastRound`: `number`  }\>
 
 The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L390)
+[src/transaction.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L393)
 
 ___
 
@@ -1420,8 +1398,8 @@ Returns true is there is a breaking change in the application state schema from 
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `before` | [`ApplicationStateSchema`](../interfaces/types_algod.ApplicationStateSchema.md) | The existing schema |
-| `after` | [`ApplicationStateSchema`](../interfaces/types_algod.ApplicationStateSchema.md) | The new schema |
+| `before` | `ApplicationStateSchema` | The existing schema |
+| `after` | `ApplicationStateSchema` | The new schema |
 
 #### Returns
 
@@ -1431,7 +1409,7 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[src/app-deploy.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L397)
+[src/app-deploy.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L398)
 
 ___
 
@@ -1605,7 +1583,7 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L234)
+[src/transaction.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L235)
 
 ___
 
@@ -1632,7 +1610,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/app-deploy.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L569)
+[src/app-deploy.ts:570](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L570)
 
 ___
 
@@ -1661,7 +1639,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/app-deploy.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L599)
+[src/app-deploy.ts:600](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L600)
 
 ___
 
@@ -1737,7 +1715,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/app-deploy.ts:538](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L538)
+[src/app-deploy.ts:539](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L539)
 
 ___
 
@@ -1813,7 +1791,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L252)
+[src/transaction.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L253)
 
 ___
 
@@ -1867,6 +1845,30 @@ The signed transaction as a `Uint8Array`
 #### Defined in
 
 [src/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L83)
+
+___
+
+### stripTealComments
+
+▸ **stripTealComments**(`tealCode`): `string`
+
+Remove comments from TEAL Code
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tealCode` | `string` | The TEAL logic to compile |
+
+#### Returns
+
+`string`
+
+The TEAL without comments
+
+#### Defined in
+
+[src/app-deploy.ts:623](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L623)
 
 ___
 
@@ -1959,17 +1961,17 @@ Updates a smart contract app.
 
 `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
-The transaction
+The transaction send result and the compilation result
 
 #### Defined in
 
-[src/app.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L175)
+[src/app.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L187)
 
 ___
 
 ### waitForConfirmation
 
-▸ **waitForConfirmation**(`transactionId`, `maxRoundsToWait`, `algod`): `Promise`<[`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)\>
+▸ **waitForConfirmation**(`transactionId`, `maxRoundsToWait`, `algod`): `Promise`<`PendingTransactionResponse`\>
 
 Wait until the transaction is confirmed or rejected, or until `timeout`
 number of rounds have passed.
@@ -1983,15 +1985,15 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `transactionId` | `string` | The transaction ID to wait for |
-| `maxRoundsToWait` | `number` | Maximum number of rounds to wait |
+| `maxRoundsToWait` | `number` \| `bigint` | Maximum number of rounds to wait |
 | `algod` | `default` | An algod client |
 
 #### Returns
 
-`Promise`<[`PendingTransactionResponse`](../interfaces/types_algod.PendingTransactionResponse.md)\>
+`Promise`<`PendingTransactionResponse`\>
 
 Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L297)
+[src/transaction.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L298)

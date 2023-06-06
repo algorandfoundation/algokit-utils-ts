@@ -25,6 +25,7 @@ Parameters that are passed in when creating an app.
 - [maxFee](types_app.CreateAppParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_app.CreateAppParams.md#maxroundstowaitforconfirmation)
 - [note](types_app.CreateAppParams.md#note)
+- [onCompleteAction](types_app.CreateAppParams.md#oncompleteaction)
 - [schema](types_app.CreateAppParams.md#schema)
 - [skipSending](types_app.CreateAppParams.md#skipsending)
 - [skipWaiting](types_app.CreateAppParams.md#skipwaiting)
@@ -45,7 +46,7 @@ CreateOrUpdateAppParams.approvalProgram
 
 #### Defined in
 
-[src/types/app.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L112)
+[src/types/app.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L121)
 
 ___
 
@@ -61,7 +62,7 @@ CreateOrUpdateAppParams.args
 
 #### Defined in
 
-[src/types/app.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L120)
+[src/types/app.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L129)
 
 ___
 
@@ -77,7 +78,7 @@ CreateOrUpdateAppParams.atc
 
 #### Defined in
 
-[src/types/transaction.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L31)
+[src/types/transaction.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L30)
 
 ___
 
@@ -93,7 +94,7 @@ CreateOrUpdateAppParams.clearStateProgram
 
 #### Defined in
 
-[src/types/app.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L114)
+[src/types/app.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L123)
 
 ___
 
@@ -109,7 +110,7 @@ CreateOrUpdateAppParams.fee
 
 #### Defined in
 
-[src/types/transaction.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L35)
+[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -125,7 +126,7 @@ CreateOrUpdateAppParams.from
 
 #### Defined in
 
-[src/types/app.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L110)
+[src/types/app.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L119)
 
 ___
 
@@ -141,7 +142,7 @@ CreateOrUpdateAppParams.maxFee
 
 #### Defined in
 
-[src/types/transaction.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L37)
+[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 
@@ -157,7 +158,7 @@ CreateOrUpdateAppParams.maxRoundsToWaitForConfirmation
 
 #### Defined in
 
-[src/types/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L39)
+[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
 
 ___
 
@@ -173,7 +174,19 @@ CreateOrUpdateAppParams.note
 
 #### Defined in
 
-[src/types/app.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L118)
+[src/types/app.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L127)
+
+___
+
+### onCompleteAction
+
+• `Optional` **onCompleteAction**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"update_application"`` \| ``"delete_application"`` \| `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC`
+
+Override the on-completion action for the create call; defaults to NoOp
+
+#### Defined in
+
+[src/types/app.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L137)
 
 ___
 
@@ -185,7 +198,7 @@ The storage schema to request for the created app
 
 #### Defined in
 
-[src/types/app.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L126)
+[src/types/app.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L135)
 
 ___
 
@@ -202,7 +215,7 @@ CreateOrUpdateAppParams.skipSending
 
 #### Defined in
 
-[src/types/transaction.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L27)
+[src/types/transaction.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L26)
 
 ___
 
@@ -218,7 +231,7 @@ CreateOrUpdateAppParams.skipWaiting
 
 #### Defined in
 
-[src/types/transaction.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L29)
+[src/types/transaction.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L28)
 
 ___
 
@@ -234,7 +247,7 @@ CreateOrUpdateAppParams.suppressLog
 
 #### Defined in
 
-[src/types/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L33)
+[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -250,4 +263,4 @@ CreateOrUpdateAppParams.transactionParams
 
 #### Defined in
 
-[src/types/app.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L116)
+[src/types/app.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L125)

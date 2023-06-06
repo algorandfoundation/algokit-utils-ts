@@ -1,17 +1,16 @@
-import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, TransactionType } from 'algosdk'
+import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, modelsv2, TransactionType } from 'algosdk'
 import { Config } from '.'
 import { callApp, compileTeal, createApp, getAppById, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
 import { getSenderAddress, sendAtomicTransactionComposer } from './transaction'
-import { ApplicationStateSchema } from './types/algod'
 import {
   ABIReturn,
+  APP_DEPLOY_NOTE_DAPP,
   AppCompilationResult,
   AppDeploymentParams,
   AppDeployMetadata,
   AppLookup,
   AppMetadata,
-  APP_DEPLOY_NOTE_DAPP,
   CompiledTeal,
   DELETABLE_TEMPLATE_NAME,
   OnSchemaBreak,
@@ -63,6 +62,7 @@ export async function deployApp(
     createArgs,
     updateArgs,
     deleteArgs,
+    createOnCompleteAction,
     ...appParams
   } = deployment
 
@@ -105,6 +105,7 @@ export async function deployApp(
     const result = await createApp(
       {
         ...appParams,
+        onCompleteAction: createOnCompleteAction,
         args: createArgs,
         note: getAppDeploymentTransactionNote(metadata),
         atc,
@@ -124,8 +125,8 @@ export async function deployApp(
       appId: result.appId,
       appAddress: result.appAddress,
       createdMetadata: metadata,
-      createdRound: Number(result.confirmation?.['confirmed-round']),
-      updatedRound: Number(result.confirmation?.['confirmed-round']),
+      createdRound: Number(result.confirmation?.confirmedRound),
+      updatedRound: Number(result.confirmation?.confirmedRound),
       ...metadata,
       deleted: false,
       operationPerformed: 'create',
@@ -153,21 +154,21 @@ export async function deployApp(
   )
 
   const existingAppRecord = await getAppById(existingApp.appId, algod)
-  const existingApproval = existingAppRecord.params['approval-program']
-  const existingClear = existingAppRecord.params['clear-state-program']
+  const existingApproval = Buffer.from(existingAppRecord.params.approvalProgram).toString('base64')
+  const existingClear = Buffer.from(existingAppRecord.params.clearStateProgram).toString('base64')
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const existingGlobalSchema = existingAppRecord.params['global-state-schema']!
+  const existingGlobalSchema = existingAppRecord.params.globalStateSchema!
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const existingLocalSchema = existingAppRecord.params['local-state-schema']!
+  const existingLocalSchema = existingAppRecord.params.localStateSchema!
 
-  const newGlobalSchema: ApplicationStateSchema = {
-    'num-byte-slice': appParams.schema.globalByteSlices,
-    'num-uint': appParams.schema.globalInts,
-  }
-  const newLocalSchema: ApplicationStateSchema = {
-    'num-byte-slice': appParams.schema.localByteSlices,
-    'num-uint': appParams.schema.localInts,
-  }
+  const newGlobalSchema = new modelsv2.ApplicationStateSchema({
+    numByteSlice: appParams.schema.globalByteSlices,
+    numUint: appParams.schema.globalInts,
+  })
+  const newLocalSchema = new modelsv2.ApplicationStateSchema({
+    numByteSlice: appParams.schema.localByteSlices,
+    numUint: appParams.schema.localInts,
+  })
   const newApproval = Buffer.from(appParams.approvalProgram).toString('base64')
   const newClear = Buffer.from(appParams.clearStateProgram).toString('base64')
 
@@ -204,7 +205,7 @@ export async function deployApp(
     const { transaction: deleteTransaction } = await callApp(
       {
         appId: existingApp.appId,
-        callType: 'delete',
+        callType: 'delete_application',
         from: appParams.from,
         args: deleteArgs,
         transactionParams: appParams.transactionParams,
@@ -233,7 +234,7 @@ export async function deployApp(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const deleteConfirmation = confirmations![confirmations!.length - 1]
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const newAppIndex = createConfirmation['application-index']!
+    const newAppIndex = createConfirmation.applicationIndex!
 
     Config.getLogger(appParams.suppressLog).warn(
       `Sent transactions ${createTransaction.txID()} to create app with id ${newAppIndex} and ${deleteTransaction.txID()} to delete app with id ${
@@ -253,8 +254,8 @@ export async function deployApp(
       appId: newAppIndex,
       appAddress: getApplicationAddress(newAppIndex),
       createdMetadata: metadata,
-      createdRound: Number(createConfirmation['confirmed-round']),
-      updatedRound: Number(createConfirmation['confirmed-round']),
+      createdRound: Number(createConfirmation.confirmedRound),
+      updatedRound: Number(createConfirmation.confirmedRound),
       ...metadata,
       deleted: false,
       deleteResult: { transaction: deleteTransaction, confirmation: deleteConfirmation },
@@ -301,7 +302,7 @@ export async function deployApp(
       appAddress: existingApp.appAddress,
       createdMetadata: existingApp.createdMetadata,
       createdRound: existingApp.createdRound,
-      updatedRound: Number(result.confirmation?.['confirmed-round']),
+      updatedRound: Number(result.confirmation?.confirmedRound),
       ...metadata,
       deleted: false,
       operationPerformed: 'update',
@@ -394,8 +395,8 @@ export async function deployApp(
  * @param after The new schema
  * @returns Whether or not there is a breaking change
  */
-export function isSchemaIsBroken(before: ApplicationStateSchema, after: ApplicationStateSchema) {
-  return before['num-byte-slice'] < after['num-byte-slice'] || before['num-uint'] < after['num-uint']
+export function isSchemaIsBroken(before: modelsv2.ApplicationStateSchema, after: modelsv2.ApplicationStateSchema) {
+  return before.numByteSlice < after.numByteSlice || before.numUint < after.numUint
 }
 
 /**
@@ -602,6 +603,8 @@ export async function performTemplateSubstitutionAndCompile(
   templateParams?: TealTemplateParams,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {
+  tealCode = stripTealComments(tealCode)
+
   tealCode = performTemplateSubstitution(tealCode, templateParams)
 
   if (deploymentMetadata) {
@@ -609,4 +612,24 @@ export async function performTemplateSubstitutionAndCompile(
   }
 
   return await compileTeal(tealCode, algod)
+}
+
+/**
+ * Remove comments from TEAL Code
+ *
+ * @param tealCode The TEAL logic to compile
+ * @returns The TEAL without comments
+ */
+export function stripTealComments(tealCode: string) {
+  // find // outside quotes, i.e. won't pick up "//not a comment"
+  const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
+
+  tealCode = tealCode
+    .split('\n')
+    .map((tealCodeLine) => {
+      return tealCodeLine.split(regex)[0].trim()
+    })
+    .join('\n')
+
+  return tealCode
 }

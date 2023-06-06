@@ -17,13 +17,13 @@ A grouping of the app ID and name of the box in an Uint8Array
 
 ### appId
 
-• **appId**: `number`
+• **appId**: `number` \| `bigint`
 
 A unique application id
 
 #### Defined in
 
-[src/types/app.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L51)
+[src/types/app.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L52)
 
 ___
 
@@ -35,4 +35,4 @@ Name of box to reference
 
 #### Defined in
 
-[src/types/app.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L55)
+[src/types/app.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L56)

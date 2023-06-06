@@ -21,10 +21,10 @@ This [type](../code/modules/types_app.md#appcallargs) is a union of two types: `
 
 ### `ABIAppCallArgs`
 
-[`ABIAppCallArgs`](../code/interfaces/types_app.ABIAppCallArgs.md) allows you to specify an [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
+[`ABIAppCallArgs`](../code/modules/types_app.md#abiappcallargs) allows you to specify an [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
 
 - `method: algosdk.ABIMethodParams | algosdk.ABIMethod` - The ABI method to call
-- `args: ABIAppCallArg[]` - The arguments to pass to the ABI call, which can be one of:
+- `methodArgs: ABIAppCallArg[]` - The arguments to pass to the ABI call, which can be one of:
   - `algosdk.ABIArgument` - Which can be one of:
     - `boolean`
     - `number`
@@ -60,6 +60,7 @@ To reference a box in a transaction using AlgoKit Utils, you can specify one of 
   - `name: BoxIdentifier` - The name, per the above type
 - `algosdk.BoxReference` - The in-built algosdk `BoxReference` type, which has two properties:
   - `appIndex: number`
+  - `name: UInt8Array` - The name in binary
 
 If you specify a `BoxIdentifier` directly outside of the `BoxReference` type then the behaviour is to load the box from the current app the transaction that box identifier appears in. To see more about how box references work consult the [official documentation](https://developer.algorand.org/articles/smart-contract-storage-boxes/).
 
@@ -84,6 +85,7 @@ The payload to configure an app consists of a union of [`SendTransactionParams`]
   - `approvalProgram: Uint8Array | string` - The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array)
   - `clearStateProgram: Uint8Array | string` - The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array)
   - `schema: AppStorageSchema` - The storage schema to request for the created app
+  - `onCompleteAction?: algosdk.OnApplicationComplete` - The on-completion action to specify for the call; defaults to NoOp
 - Optional:
   - `transactionParams: SuggestedParams` - Any [transaction parameters](transaction.md#transaction-params)
   - `note: TransactionNote` - A [transaction note](transaction.md#transaction-notes)
@@ -111,7 +113,7 @@ The payload to configure an app call consists of a union of [`SendTransactionPar
 - Required:
 
   - `appId: number` - The ID of the app to call
-  - `callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'` - The [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for the call where `normal` equates to `NoOp`
+  - `callType: AppCallType | algosdk.OnApplicationComplete` - The [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for the call (either as an `algosdk.OnApplicationComplete` enum or a [string enum](../code/modules/types_app.md#appcalltype))
   - `from: SendTransactionFrom` - The [account](account.md) (with private key loaded) that will send the transaction
 
 - Optional:

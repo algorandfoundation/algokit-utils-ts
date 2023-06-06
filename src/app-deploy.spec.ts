@@ -29,7 +29,7 @@ describe('deploy-app', () => {
     const app = apps.apps[name]
     expect(app.appId).toBe(app1.appId)
     expect(app.appAddress).toBe(app1.appAddress)
-    expect(app.createdRound).toBe(app1.confirmation?.['confirmed-round'])
+    expect(app.createdRound).toBe(app1.confirmation?.confirmedRound)
     expect(app.createdMetadata).toEqual(creationMetadata)
     expect(app.updatedRound).toBe(app.createdRound)
     expect(app.name).toBe(creationMetadata.name)
@@ -65,7 +65,7 @@ describe('deploy-app', () => {
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
     const update1 = await algokit.updateApp({ ...(await getTestingAppCreateParams(testAccount, updateMetadata)), appId: app1.appId }, algod)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delete3 = await algokit.callApp({ appId: app3.appId, callType: 'delete', from: testAccount }, algod)
+    const delete3 = await algokit.callApp({ appId: app3.appId, callType: 'delete_application', from: testAccount }, algod)
     await waitForIndexer()
 
     const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
@@ -75,9 +75,9 @@ describe('deploy-app', () => {
     const app1Data = apps.apps[name]
     expect(app1Data.appId).toBe(app1.appId)
     expect(app1Data.appAddress).toBe(app1.appAddress)
-    expect(app1Data.createdRound).toBe(app1.confirmation?.['confirmed-round'])
+    expect(app1Data.createdRound).toBe(app1.confirmation?.confirmedRound)
     expect(app1Data.createdMetadata).toEqual(creationMetadata)
-    expect(app1Data.updatedRound).toBe(update1.confirmation?.['confirmed-round'])
+    expect(app1Data.updatedRound).toBe(update1.confirmation?.confirmedRound)
     expect(app1Data.name).toBe(updateMetadata.name)
     expect(app1Data.updatable).toBe(updateMetadata.updatable)
     expect(app1Data.deletable).toBe(updateMetadata.deletable)
@@ -103,10 +103,10 @@ describe('deploy-app', () => {
 
     invariant('transaction' in result)
     invariant(result.confirmation)
-    expect(result.appId).toBe(result.confirmation['application-index'])
+    expect(result.appId).toBe(result.confirmation.applicationIndex)
     expect(result.appAddress).toBe(getApplicationAddress(result.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
-    expect(result.createdRound).toBe(result.confirmation['confirmed-round'])
+    expect(result.createdRound).toBe(result.confirmation.confirmedRound)
     expect(result.updatedRound).toBe(result.createdRound)
     expect(result.name).toBe(deployment.metadata.name)
     expect(result.version).toBe(deployment.metadata.version)
@@ -171,7 +171,7 @@ describe('deploy-app', () => {
     expect(result2.appId).toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment1.metadata)
     expect(result2.createdRound).toBe(result1.createdRound)
-    expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
+    expect(result2.updatedRound).toBe(result2.confirmation.confirmedRound)
     expect(result2.name).toBe(deployment2.metadata.name)
     expect(result2.version).toBe(deployment2.metadata.version)
     expect(result2.updatable).toBe(deployment2.metadata.updatable)
@@ -274,8 +274,8 @@ describe('deploy-app', () => {
     invariant(result2.deleteResult)
     expect(result2.appId).not.toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment2.metadata)
-    expect(result2.createdRound).toBe(result2.confirmation['confirmed-round'])
-    expect(result2.updatedRound).toBe(result2.confirmation['confirmed-round'])
+    expect(result2.createdRound).toBe(result2.confirmation.confirmedRound)
+    expect(result2.updatedRound).toBe(result2.confirmation.confirmedRound)
     expect(result2.name).toBe(deployment2.metadata.name)
     expect(result2.version).toBe(deployment2.metadata.version)
     expect(result2.updatable).toBe(deployment2.metadata.updatable)
@@ -458,6 +458,16 @@ describe('deploy-app', () => {
       }),
     ).toMatchSnapshot()
   })
+})
+
+test('Strip comments remove comments without removing commands', async () => {
+  const tealCode =
+    '//comment\nop arg //comment\nop "arg" //comment\nop "//" //comment\nop "  //comment  " //comment\nop "" //" //comment\nop "" //comment\n//\nop 123\nop 123 // something\nop "" // more comments\nop "//" //op "//"\nop "//"'
+  const tealCodeResult = '\nop arg\nop "arg"\nop "//"\nop "  //comment  "\nop "" //"\nop ""\n\nop 123\nop 123\nop ""\nop "//"\nop "//"'
+
+  const result = algokit.stripTealComments(tealCode)
+
+  expect(result).toBe(tealCodeResult)
 })
 
 function getMetadata(overrides?: Partial<AppDeployMetadata>): AppDeployMetadata {

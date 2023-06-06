@@ -4,17 +4,12 @@
 
 ## Table of contents
 
-### Enumerations
-
-- [AVMType](../enums/types_app_spec.AVMType.md)
-
 ### Interfaces
 
 - [AppSources](../interfaces/types_app_spec.AppSources.md)
 - [AppSpec](../interfaces/types_app_spec.AppSpec.md)
 - [CallConfig](../interfaces/types_app_spec.CallConfig.md)
 - [DeclaredSchemaValueSpec](../interfaces/types_app_spec.DeclaredSchemaValueSpec.md)
-- [DefaultArgument](../interfaces/types_app_spec.DefaultArgument.md)
 - [Hint](../interfaces/types_app_spec.Hint.md)
 - [ReservedSchemaValueSpec](../interfaces/types_app_spec.ReservedSchemaValueSpec.md)
 - [Schema](../interfaces/types_app_spec.Schema.md)
@@ -25,15 +20,13 @@
 ### Type Aliases
 
 - [ABIType](types_app_spec.md#abitype)
+- [AVMType](types_app_spec.md#avmtype)
 - [CallConfigValue](types_app_spec.md#callconfigvalue)
+- [DefaultArgument](types_app_spec.md#defaultargument)
 - [FieldName](types_app_spec.md#fieldname)
 - [HintSpec](types_app_spec.md#hintspec)
 - [StateSchema](types_app_spec.md#stateschema)
 - [StructElement](types_app_spec.md#structelement)
-
-### Functions
-
-- [getABISignature](types_app_spec.md#getabisignature)
 
 ## Type Aliases
 
@@ -45,7 +38,19 @@ The string name of an ABI type
 
 #### Defined in
 
-[src/types/app-spec.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L68)
+[src/types/app-spec.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L65)
+
+___
+
+### AVMType
+
+Ƭ **AVMType**: ``"uint64"`` \| ``"bytes"``
+
+AVM data type
+
+#### Defined in
+
+[src/types/app-spec.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L121)
 
 ___
 
@@ -61,7 +66,19 @@ The various call configs:
 
 #### Defined in
 
-[src/types/app-spec.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L37)
+[src/types/app-spec.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L36)
+
+___
+
+### DefaultArgument
+
+Ƭ **DefaultArgument**: { `data`: `ABIMethodParams` ; `source`: ``"abi-method"``  } \| { `data`: `string` ; `source`: ``"global-state"``  } \| { `data`: `string` ; `source`: ``"local-state"``  } \| { `data`: `string` \| `number` ; `source`: ``"constant"``  }
+
+Defines a strategy for obtaining a default value for a given ABI arg.
+
+#### Defined in
+
+[src/types/app-spec.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L81)
 
 ___
 
@@ -73,7 +90,7 @@ The name of a field
 
 #### Defined in
 
-[src/types/app-spec.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L65)
+[src/types/app-spec.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L62)
 
 ___
 
@@ -85,7 +102,7 @@ A lookup of encoded method call spec to hint
 
 #### Defined in
 
-[src/types/app-spec.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L21)
+[src/types/app-spec.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L20)
 
 ___
 
@@ -104,7 +121,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-[src/types/app-spec.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L147)
+[src/types/app-spec.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L170)
 
 ___
 
@@ -116,28 +133,4 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 #### Defined in
 
-[src/types/app-spec.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L71)
-
-## Functions
-
-### getABISignature
-
-▸ **getABISignature**(`method`): `string`
-
-**`Deprecated`**
-
-Use `algokit.getABIMethodSignature` instead
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `method` | `ABIMethodParams` \| `ABIMethod` |
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[src/app.ts:640](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L640)
+[src/types/app-spec.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L68)

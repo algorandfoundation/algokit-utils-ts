@@ -5,6 +5,7 @@ import algosdk, {
   ABIType,
   ABIValue,
   Address,
+  OnApplicationComplete,
   SourceMap,
   SuggestedParams,
   Transaction,
@@ -36,7 +37,7 @@ export const ABI_RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
 /** Information about an Algorand app */
 export interface AppReference {
   /** The id of the app */
-  appId: number
+  appId: number | bigint
   /** The Algorand address of the account associated with the app */
   appAddress: string
 }
@@ -48,7 +49,7 @@ export interface BoxReference {
   /**
    * A unique application id
    */
-  appId: number
+  appId: number | bigint
   /**
    * Name of box to reference
    */
@@ -63,39 +64,47 @@ export interface BoxReference {
  */
 export type BoxIdentifier = string | Uint8Array | SendTransactionFrom
 
-/**
- * App call args with raw values (minus some processing like encoding strings as binary)
- */
-export interface RawAppCallArgs {
-  /** The address of any accounts to load in */
-  accounts?: (string | Address)[]
-  /** Any application arguments to pass through */
-  appArgs?: (Uint8Array | string)[]
+/** Common app call arguments for ABI and non-ABI (raw) calls */
+export interface CoreAppCallArgs {
+  /** The optional lease for the transaction */
+  lease?: string | Uint8Array
   /** Any box references to load */
   boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
+}
+
+/**
+ * App call args with non-ABI (raw) values (minus some processing like encoding strings as binary)
+ */
+export interface RawAppCallArgs extends CoreAppCallArgs {
+  /** Any application arguments to pass through */
+  appArgs?: (Uint8Array | string)[]
+  /** The address of any accounts to load in */
+  accounts?: (string | Address)[]
   /** IDs of any apps to load into the foreignApps array */
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
   assets?: number[]
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
+  /** Property to aid intellisense */
+  method?: undefined
 }
 
 /** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
-export type ABIAppCallArg = ABIArgument | TransactionToSign | Transaction | Promise<SendTransactionResult>
+export type ABIAppCallArg =
+  | ABIArgument
+  | TransactionToSign
+  | Transaction
+  | Promise<SendTransactionResult>
+  | SendTransactionResult
+  | undefined
 
 /**
  * App call args for an ABI call
  */
-export interface ABIAppCallArgs {
+export type ABIAppCallArgs = CoreAppCallArgs & {
   /** The ABI method to call */
   method: ABIMethodParams | ABIMethod
-  /** The ABI args to pass in */
-  args: ABIAppCallArg[]
-  /** The optional lease for the transaction */
-  lease?: string | Uint8Array
-  /** Any box references to load either as the box name (if for the current app) or the reference with app id */
-  boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
+  /** The ABI method args to pass in */
+  methodArgs: ABIAppCallArg[]
 }
 
 /** Arguments to pass to an app call either:
@@ -124,20 +133,35 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
 export interface CreateAppParams extends CreateOrUpdateAppParams {
   /** The storage schema to request for the created app */
   schema: AppStorageSchema
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
 }
 
 /** Parameters that are passed in when updating an app. */
 export interface UpdateAppParams extends CreateOrUpdateAppParams {
   /** The id of the app to update */
-  appId: number
+  appId: number | bigint
 }
+
+/** The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
+ *
+ * Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
+ *
+ * * `no_op`: Normal smart contract call, no special on-complete action
+ * * `opt_in`: Opt-in to smart contract local storage
+ * * `close_out`: Close-out local storage storage
+ * * `clear_state`: Clear local storage state
+ * * `update_application`: Update the smart contract
+ * * `delete_application`: Delete the smart contract
+ */
+export type AppCallType = 'no_op' | 'opt_in' | 'close_out' | 'clear_state' | 'update_application' | 'delete_application'
 
 /** Parameters representing a call to an app. */
 export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
-  appId: number
-  /** The type of call, everything except create (`createApp`) and update (`updateApp`) */
-  callType: 'optin' | 'closeout' | 'clearstate' | 'delete' | 'normal'
+  appId: number | bigint
+  /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
+  callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
   /** The account to make the call from */
   from: SendTransactionFrom
   /** Optional transaction parameters */
@@ -176,11 +200,14 @@ export interface CompiledTeal {
   sourceMap: SourceMap
 }
 
-/** Result from calling an app */
-export interface AppCallTransactionResult extends SendTransactionResults, SendTransactionResult {
+export interface AppCallTransactionResultOfType<T> extends SendTransactionResults, SendTransactionResult {
   /** If an ABI method was called the processed return value */
-  return?: ABIReturn
+  return?: T
 }
+
+/** Result from calling an app */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AppCallTransactionResult extends AppCallTransactionResultOfType<ABIReturn> {}
 
 /** The return value of an ABI method call */
 export type ABIReturn =
@@ -253,7 +280,8 @@ export enum OnSchemaBreak {
 }
 
 /** The parameters to deploy an app */
-export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'note' | 'skipSending' | 'skipWaiting' | 'atc'> {
+export interface AppDeploymentParams
+  extends Omit<CreateAppParams, 'onCompleteAction' | 'args' | 'note' | 'skipSending' | 'skipWaiting' | 'atc'> {
   /** The deployment metadata */
   metadata: AppDeployMetadata
   /** Any deploy-time parameters to replace in the TEAL code */
@@ -266,6 +294,8 @@ export interface AppDeploymentParams extends Omit<CreateAppParams, 'args' | 'not
   existingDeployments?: AppLookup
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppCallArgs
+  /** Override the on-completion action for the create call; defaults to NoOp */
+  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
@@ -312,7 +342,7 @@ export interface BoxName {
  */
 export interface BoxValueRequestParams {
   /** The ID of the app return box names for */
-  appId: number
+  appId: number | bigint
   /** The name of the box to return either as a string, binary array or `BoxName` */
   boxName: string | Uint8Array | BoxName
   /** The ABI type to decode the value using */

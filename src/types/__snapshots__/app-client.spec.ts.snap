@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`application-client Errors Display nice error messages when there is a logic error 4`] = `
-"INFO: Idempotently deploying app "TestingApp" from creator ACCOUNT_1 using 932 bytes of teal code and 4 bytes of teal code
+"INFO: Idempotently deploying app "TestingApp" from creator ACCOUNT_1 using 1208 bytes of teal code and 4 bytes of teal code
 INFO: App TestingApp not found in apps created by ACCOUNT_1; deploying app with version 1.0.
 INFO: Sent transaction ID TXID_1 appl from ACCOUNT_1
 DEBUG: Created app APP_1 from creator ACCOUNT_1

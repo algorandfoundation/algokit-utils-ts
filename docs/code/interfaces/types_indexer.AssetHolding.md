@@ -27,7 +27,7 @@ Describes an asset held by an account. https://developer.algorand.org/docs/rest-
 
 #### Defined in
 
-[src/types/indexer.ts:642](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L642)
+[src/types/indexer.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L641)
 
 ___
 
@@ -39,7 +39,7 @@ Asset ID of the holding.
 
 #### Defined in
 
-[src/types/indexer.ts:646](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L646)
+[src/types/indexer.ts:645](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L645)
 
 ___
 
@@ -51,7 +51,7 @@ Whether or not the asset holding is currently deleted from its account.
 
 #### Defined in
 
-[src/types/indexer.ts:648](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L648)
+[src/types/indexer.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L647)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L652)
+[src/types/indexer.ts:651](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L651)
 
 ___
 
@@ -75,7 +75,7 @@ Round during which the account opted into this asset holding.
 
 #### Defined in
 
-[src/types/indexer.ts:654](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L654)
+[src/types/indexer.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L653)
 
 ___
 
@@ -87,4 +87,4 @@ Round during which the account opted out of this asset holding.
 
 #### Defined in
 
-[src/types/indexer.ts:656](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L656)
+[src/types/indexer.ts:655](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L655)

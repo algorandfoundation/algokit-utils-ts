@@ -1,4 +1,4 @@
-import { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
+import type { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
 
 /** Config for an Algorand SDK client */
 export interface AlgoClientConfig {
