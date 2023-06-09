@@ -57,8 +57,6 @@ describe('application-client', () => {
     )
 
     const app = await client.create({
-      //allowUpdate: true,
-      //allowDelete: true,
       deployTimeParams: {
         // It should strip off the TMPL_
         TMPL_UPDATABLE: 0,
