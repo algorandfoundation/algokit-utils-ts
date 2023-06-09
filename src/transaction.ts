@@ -1,4 +1,12 @@
-import algosdk, { Algodv2, AtomicTransactionComposer, modelsv2, SuggestedParams, Transaction, TransactionSigner } from 'algosdk'
+import algosdk, {
+  Algodv2,
+  AtomicTransactionComposer,
+  modelsv2,
+  SuggestedParams,
+  Transaction,
+  TransactionSigner,
+  TransactionWithSigner,
+} from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
 import { AlgoAmount } from './types/amount'
@@ -11,6 +19,7 @@ import {
   SendTransactionResult,
   TransactionGroupToSend,
   TransactionNote,
+  TransactionToSign,
 } from './types/transaction'
 import { toNumber } from './util'
 
@@ -58,6 +67,39 @@ const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
   }
   cached.cache = cache
   return cached as (val: T) => R
+}
+
+/**
+ * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
+ * AtomicTransactionComposer's addTransaction method.
+ * @param transaction One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the
+ * signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by
+ * one of algokit utils' helpers (signer is obtained from the defaultSender parameter)
+ * @param defaultSender The default sender to be used to obtain a signer where the object provided to the transaction parameter does not
+ * include a signer.
+ * @returns A TransactionWithSigner object.
+ */
+export const getTransactionWithSigner = async (
+  transaction: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
+  defaultSender?: SendTransactionFrom,
+): Promise<TransactionWithSigner> => {
+  if ('txn' in transaction) return transaction
+  if (defaultSender === undefined)
+    throw new Error('Default sender must be provided when passing in a transaction object that does not contain its own signer')
+  return transaction instanceof Promise
+    ? {
+        txn: (await transaction).transaction,
+        signer: getSenderTransactionSigner(defaultSender),
+      }
+    : 'transaction' in transaction
+    ? {
+        txn: transaction.transaction,
+        signer: getSenderTransactionSigner(transaction.signer),
+      }
+    : {
+        txn: transaction,
+        signer: getSenderTransactionSigner(defaultSender),
+      }
 }
 
 /**
