@@ -42,7 +42,7 @@
     "@tsconfig/node16": "^1.0.3",
     "@types/jest": "^29.5.1",
     "@types/uuid": "^9.0.1",
-    "conventional-changelog-conventionalcommits": "^5.0.0",
+    "conventional-changelog-conventionalcommits": "^6.0.0",
     "copyfiles": "^2.4.1",
     "dotenv-cli": "^7.2.1",
     "eslint": "^8.39.0",
