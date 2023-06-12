@@ -56,6 +56,7 @@
 - [getSenderAddress](index.md#getsenderaddress)
 - [getSenderTransactionSigner](index.md#getsendertransactionsigner)
 - [getTransactionParams](index.md#gettransactionparams)
+- [getTransactionWithSigner](index.md#gettransactionwithsigner)
 - [isLocalNet](index.md#islocalnet)
 - [isSchemaIsBroken](index.md#isschemaisbroken)
 - [lookupAccountByAddress](index.md#lookupaccountbyaddress)
@@ -164,7 +165,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L347)
+[src/transaction.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L389)
 
 ___
 
@@ -220,7 +221,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L370)
+[src/transaction.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L412)
 
 ___
 
@@ -335,7 +336,7 @@ the transaction note ready for inclusion in a transaction
 
 #### Defined in
 
-[src/transaction.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L29)
+[src/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L38)
 
 ___
 
@@ -1077,7 +1078,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L402)
+[src/transaction.ts:444](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L444)
 
 ___
 
@@ -1310,7 +1311,7 @@ The public address
 
 #### Defined in
 
-[src/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L50)
+[src/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L59)
 
 ___
 
@@ -1335,7 +1336,7 @@ A transaction signer
 
 #### Defined in
 
-[src/transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L60)
+[src/transaction.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L69)
 
 ___
 
@@ -1360,7 +1361,33 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L393)
+[src/transaction.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L435)
+
+___
+
+### getTransactionWithSigner
+
+▸ **getTransactionWithSigner**(`transaction`, `defaultSender?`): `Promise`<`TransactionWithSigner`\>
+
+Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
+AtomicTransactionComposer's addTransaction method.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `transaction` | `Transaction` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| `TransactionWithSigner` | One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils' helpers (signer is obtained from the defaultSender parameter) |
+| `defaultSender?` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The default sender to be used to obtain a signer where the object provided to the transaction parameter does not include a signer. |
+
+#### Returns
+
+`Promise`<`TransactionWithSigner`\>
+
+A TransactionWithSigner object.
+
+#### Defined in
+
+[src/transaction.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L82)
 
 ___
 
@@ -1583,7 +1610,7 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L235)
+[src/transaction.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L277)
 
 ___
 
@@ -1766,7 +1793,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L147)
+[src/transaction.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L189)
 
 ___
 
@@ -1791,7 +1818,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L253)
+[src/transaction.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L295)
 
 ___
 
@@ -1819,7 +1846,7 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `
 
 #### Defined in
 
-[src/transaction.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L103)
+[src/transaction.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L145)
 
 ___
 
@@ -1844,7 +1871,7 @@ The signed transaction as a `Uint8Array`
 
 #### Defined in
 
-[src/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L83)
+[src/transaction.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L125)
 
 ___
 
@@ -1996,4 +2023,4 @@ Pending transaction information
 
 #### Defined in
 
-[src/transaction.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L298)
+[src/transaction.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L340)
