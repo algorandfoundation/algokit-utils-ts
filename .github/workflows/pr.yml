@@ -19,6 +19,7 @@ jobs:
       pre-test-script: |
         pipx install algokit
         algokit localnet start
+        npx --yes wait-on tcp:4001 -t 30000
   check_docs:
     runs-on: ubuntu-latest
     steps:
