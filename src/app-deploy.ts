@@ -331,6 +331,11 @@ export async function deployApp(
       )
     }
 
+    if (onSchemaBreak === 'append' || onSchemaBreak === OnSchemaBreak.AppendApp) {
+      Config.getLogger(appParams.suppressLog).info('onSchemaBreak=AppendApp, will attempt to create a new app')
+      return await create()
+    }
+
     if (existingApp.deletable) {
       Config.getLogger(appParams.suppressLog).info(
         'App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app',
@@ -355,6 +360,11 @@ export async function deployApp(
           'If you want to try deleting and recreating the app then ' +
           're-run with onUpdate=UpdateApp',
       )
+    }
+
+    if (onUpdate === 'append' || onUpdate === OnUpdate.AppendApp) {
+      Config.getLogger(appParams.suppressLog).info('onUpdate=AppendApp, will attempt to create a new app')
+      return await create()
     }
 
     if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {

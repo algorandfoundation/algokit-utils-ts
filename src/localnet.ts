@@ -11,6 +11,14 @@ export async function isLocalNet(algod: Algodv2): Promise<boolean> {
 
   return params.genesisID === 'devnet-v1' || params.genesisID === 'sandnet-v1' || params.genesisID === 'dockernet-v1'
 }
+export async function isTestNet(algod: Algodv2): Promise<boolean> {
+  const params = await algod.getTransactionParams().do()
+  return params.genesisID === 'testnet-v1'
+}
+export async function isMainNet(algod: Algodv2): Promise<boolean> {
+  const params = await algod.getTransactionParams().do()
+  return params.genesisID === 'mainnet-v1'
+}
 
 /**
  * Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.

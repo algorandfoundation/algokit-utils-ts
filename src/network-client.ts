@@ -159,4 +159,4 @@ export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
   return new Kmd(token as string, server, process?.env?.KMD_PORT ?? '4002')
 }
 
-export { isLocalNet } from './localnet'
+export { isLocalNet, isMainNet, isTestNet } from './localnet'

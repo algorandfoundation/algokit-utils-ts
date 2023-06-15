@@ -269,6 +269,8 @@ export enum OnUpdate {
   UpdateApp,
   /** Delete the app and create a new one in its place */
   ReplaceApp,
+  /** Append the app */
+  AppendApp,
 }
 
 /** What action to perform when deploying an app and a breaking schema change is detected */
@@ -277,6 +279,8 @@ export enum OnSchemaBreak {
   Fail,
   /** Delete the app and create a new one in its place */
   ReplaceApp,
+  /** Append the app */
+  AppendApp,
 }
 
 /** The parameters to deploy an app */
@@ -287,9 +291,9 @@ export interface AppDeploymentParams
   /** Any deploy-time parameters to replace in the TEAL code */
   deployTimeParams?: TealTemplateParams
   /** What action to perform if a schema break is detected */
-  onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
+  onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
-  onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
+  onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate
   /** Optional cached value of the existing apps for the given creator */
   existingDeployments?: AppLookup
   /** Any args to pass to any create transaction that is issued as part of deployment */
