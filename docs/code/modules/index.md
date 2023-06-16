@@ -58,7 +58,9 @@
 - [getTransactionParams](index.md#gettransactionparams)
 - [getTransactionWithSigner](index.md#gettransactionwithsigner)
 - [isLocalNet](index.md#islocalnet)
+- [isMainNet](index.md#ismainnet)
 - [isSchemaIsBroken](index.md#isschemaisbroken)
+- [isTestNet](index.md#istestnet)
 - [lookupAccountByAddress](index.md#lookupaccountbyaddress)
 - [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
 - [lookupTransactionById](index.md#lookuptransactionbyid)
@@ -975,7 +977,7 @@ The transaction note as a utf-8 string
 
 #### Defined in
 
-[src/app-deploy.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L518)
+[src/app-deploy.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L528)
 
 ___
 
@@ -1129,7 +1131,7 @@ A name-based lookup of the app information (id, address)
 
 #### Defined in
 
-[src/app-deploy.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L411)
+[src/app-deploy.ts:421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L421)
 
 ___
 
@@ -1230,7 +1232,7 @@ const defaultDispenserAccount = await getKmdWalletAccount(algod,
 
 #### Defined in
 
-[src/localnet.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L90)
+[src/localnet.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L98)
 
 ___
 
@@ -1253,7 +1255,7 @@ Returns an Algorand account with private key loaded for the default LocalNet dis
 
 #### Defined in
 
-[src/localnet.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L141)
+[src/localnet.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L149)
 
 ___
 
@@ -1287,7 +1289,7 @@ An Algorand account with private key loaded - either one that already existed in
 
 #### Defined in
 
-[src/localnet.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L32)
+[src/localnet.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L40)
 
 ___
 
@@ -1413,6 +1415,26 @@ Returns true if the algod client is pointing to a LocalNet Algorand network
 
 ___
 
+### isMainNet
+
+▸ **isMainNet**(`algod`): `Promise`<`boolean`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `algod` | `default` |
+
+#### Returns
+
+`Promise`<`boolean`\>
+
+#### Defined in
+
+[src/localnet.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L18)
+
+___
+
 ### isSchemaIsBroken
 
 ▸ **isSchemaIsBroken**(`before`, `after`): `boolean`
@@ -1436,7 +1458,27 @@ Whether or not there is a breaking change
 
 #### Defined in
 
-[src/app-deploy.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L398)
+[src/app-deploy.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L408)
+
+___
+
+### isTestNet
+
+▸ **isTestNet**(`algod`): `Promise`<`boolean`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `algod` | `default` |
+
+#### Returns
+
+`Promise`<`boolean`\>
+
+#### Defined in
+
+[src/localnet.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L14)
 
 ___
 
@@ -1637,7 +1679,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/app-deploy.ts:570](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L570)
+[src/app-deploy.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L580)
 
 ___
 
@@ -1666,7 +1708,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/app-deploy.ts:600](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L600)
+[src/app-deploy.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L610)
 
 ___
 
@@ -1742,7 +1784,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/app-deploy.ts:539](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L539)
+[src/app-deploy.ts:549](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L549)
 
 ___
 
@@ -1895,7 +1937,7 @@ The TEAL without comments
 
 #### Defined in
 
-[src/app-deploy.ts:623](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L623)
+[src/app-deploy.ts:633](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L633)
 
 ___
 

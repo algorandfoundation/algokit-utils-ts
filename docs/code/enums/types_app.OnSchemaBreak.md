@@ -10,10 +10,23 @@ What action to perform when deploying an app and a breaking schema change is det
 
 ### Enumeration Members
 
+- [AppendApp](types_app.OnSchemaBreak.md#appendapp)
 - [Fail](types_app.OnSchemaBreak.md#fail)
 - [ReplaceApp](types_app.OnSchemaBreak.md#replaceapp)
 
 ## Enumeration Members
+
+### AppendApp
+
+• **AppendApp** = ``2``
+
+Append the app
+
+#### Defined in
+
+[src/types/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L283)
+
+___
 
 ### Fail
 
@@ -23,7 +36,7 @@ Fail the deployment
 
 #### Defined in
 
-[src/types/app.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L277)
+[src/types/app.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L279)
 
 ___
 
@@ -35,4 +48,4 @@ Delete the app and create a new one in its place
 
 #### Defined in
 
-[src/types/app.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L279)
+[src/types/app.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L281)
