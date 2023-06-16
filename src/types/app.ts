@@ -269,7 +269,7 @@ export enum OnUpdate {
   UpdateApp,
   /** Delete the app and create a new one in its place */
   ReplaceApp,
-  /** Append the app */
+  /** Create a new app */
   AppendApp,
 }
 
