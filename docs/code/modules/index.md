@@ -158,7 +158,7 @@ the estimated rate.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `transaction` | `Transaction` \| `SuggestedParams` | The transaction to cap or suggested params object about to be used to create a transaction |
+| `transaction` | `SuggestedParams` \| `Transaction` | The transaction to cap or suggested params object about to be used to create a transaction |
 | `maxAcceptableFee` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | The maximum acceptable fee to pay |
 
 #### Returns
@@ -206,7 +206,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `Transaction` \| `SuggestedParams` |
+| `T` | extends `SuggestedParams` \| `Transaction` |
 
 #### Parameters
 
@@ -1232,7 +1232,7 @@ const defaultDispenserAccount = await getKmdWalletAccount(algod,
 
 #### Defined in
 
-[src/localnet.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L98)
+[src/localnet.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L90)
 
 ___
 
@@ -1255,7 +1255,7 @@ Returns an Algorand account with private key loaded for the default LocalNet dis
 
 #### Defined in
 
-[src/localnet.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L149)
+[src/localnet.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L141)
 
 ___
 
@@ -1289,7 +1289,7 @@ An Algorand account with private key loaded - either one that already existed in
 
 #### Defined in
 
-[src/localnet.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L40)
+[src/localnet.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L32)
 
 ___
 
@@ -1431,7 +1431,7 @@ ___
 
 #### Defined in
 
-[src/localnet.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L18)
+[src/network-client.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L166)
 
 ___
 
@@ -1478,7 +1478,7 @@ ___
 
 #### Defined in
 
-[src/localnet.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/localnet.ts#L14)
+[src/network-client.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L162)
 
 ___
 

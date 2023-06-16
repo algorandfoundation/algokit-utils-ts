@@ -21,7 +21,7 @@ What action to perform when deploying an app and an update is detected in the TE
 
 • **AppendApp** = ``3``
 
-Append the app
+Create a new app
 
 #### Defined in
 

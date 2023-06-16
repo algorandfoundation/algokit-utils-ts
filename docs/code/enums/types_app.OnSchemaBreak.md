@@ -20,7 +20,7 @@ What action to perform when deploying an app and a breaking schema change is det
 
 • **AppendApp** = ``2``
 
-Append the app
+Create a new app
 
 #### Defined in
 
