@@ -10,11 +10,24 @@ What action to perform when deploying an app and an update is detected in the TE
 
 ### Enumeration Members
 
+- [AppendApp](types_app.OnUpdate.md#appendapp)
 - [Fail](types_app.OnUpdate.md#fail)
 - [ReplaceApp](types_app.OnUpdate.md#replaceapp)
 - [UpdateApp](types_app.OnUpdate.md#updateapp)
 
 ## Enumeration Members
+
+### AppendApp
+
+• **AppendApp** = ``3``
+
+Create a new app
+
+#### Defined in
+
+[src/types/app.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L273)
+
+___
 
 ### Fail
 
