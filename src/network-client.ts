@@ -159,4 +159,13 @@ export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
   return new Kmd(token as string, server, process?.env?.KMD_PORT ?? '4002')
 }
 
+export async function isTestNet(algod: Algodv2): Promise<boolean> {
+  const params = await algod.getTransactionParams().do()
+  return params.genesisID === 'testnet-v1'
+}
+export async function isMainNet(algod: Algodv2): Promise<boolean> {
+  const params = await algod.getTransactionParams().do()
+  return params.genesisID === 'mainnet-v1'
+}
+
 export { isLocalNet } from './localnet'

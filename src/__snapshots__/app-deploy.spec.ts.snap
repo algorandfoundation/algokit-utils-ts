@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`deploy-app Deploy append for schema broken app if onSchemaBreak = AppendApp 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 8966 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and version 1.0.
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"numUint":3,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}},"to":{"global":{"numUint":3,"numByteSlice":3,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}}}]
+INFO: onSchemaBreak=AppendApp, will attempt to create a new app
+INFO: Sent transaction ID TXID_2 appl from ACCOUNT_1
+DEBUG: Created app APP_2 from creator ACCOUNT_1"
+`;
+
+exports[`deploy-app Deploy append for update app if onUpdate = AppendApp 1`] = `
+"INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 8966 bytes of teal code and 39 bytes of teal code
+INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and version 1.0.
+INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
+INFO: onUpdate=AppendApp, will attempt to create a new app
+INFO: Sent transaction ID TXID_2 appl from ACCOUNT_1
+DEBUG: Created app APP_2 from creator ACCOUNT_1"
+`;
+
 exports[`deploy-app Deploy failure for replacement of permanent, updated app 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 8966 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and version 1.0.

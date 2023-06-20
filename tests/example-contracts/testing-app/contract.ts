@@ -1,7 +1,7 @@
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
-import { AppDeployMetadata, APP_DEPLOY_NOTE_DAPP, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
+import { APP_DEPLOY_NOTE_DAPP, AppDeployMetadata, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
 import { AppSpec } from '../../../src/types/app-spec'
 import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
 
@@ -41,8 +41,8 @@ export const getTestingAppDeployParams = async (deployment: {
   from: SendTransactionFrom
   metadata: AppDeployMetadata
   codeInjectionValue?: number
-  onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
-  onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
+  onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
+  onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate
   breakSchema?: boolean
 }) => {
   const contract = await getTestingAppContract()

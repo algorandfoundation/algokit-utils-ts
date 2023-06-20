@@ -458,6 +458,86 @@ describe('deploy-app', () => {
       }),
     ).toMatchSnapshot()
   })
+
+  test('Deploy append for schema broken app if onSchemaBreak = AppendApp', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata()
+    const deployment1 = await getTestingAppDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getTestingAppDeployParams({
+      from: testAccount,
+      metadata: metadata,
+      onSchemaBreak: 'append',
+      breakSchema: true,
+    })
+    const result2 = await algokit.deployApp(deployment2, algod, indexer)
+
+    invariant('transaction' in result1)
+    invariant('transaction' in result2)
+    invariant(result2.confirmation)
+    invariant(result2.operationPerformed === 'create')
+    expect(result2.appId).not.toBe(result1.appId)
+    expect(result2.createdMetadata).toEqual(deployment1.metadata)
+    expect(result2.createdRound).not.toBe(result1.createdRound)
+    expect(result2.name).toBe(deployment2.metadata.name)
+    expect(result2.version).toBe(deployment2.metadata.version)
+    expect(result2.updatable).toBe(deployment2.metadata.updatable)
+    expect(result2.deletable).toBe(deployment2.metadata.deletable)
+    expect(result2.deleted).toBe(false)
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction, result2.transaction],
+        apps: [result1.appId, result2.appId],
+      }),
+    ).toMatchSnapshot()
+  })
+
+  test('Deploy append for update app if onUpdate = AppendApp', async () => {
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
+    const metadata = getMetadata()
+    const deployment1 = await getTestingAppDeployParams({
+      from: testAccount,
+      metadata: metadata,
+    })
+    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    await waitForIndexer()
+    logging.testLogger.clear()
+
+    const deployment2 = await getTestingAppDeployParams({
+      from: testAccount,
+      metadata: { ...metadata, version: '2.0' },
+      codeInjectionValue: 3,
+      onUpdate: 'append',
+    })
+    const result2 = await algokit.deployApp(deployment2, algod, indexer)
+
+    invariant('transaction' in result1)
+    invariant('transaction' in result2)
+    invariant(result2.confirmation)
+    invariant(result2.operationPerformed === 'create')
+    expect(result2.appId).not.toBe(result1.appId)
+    expect(result2.createdMetadata).not.toEqual(deployment1.metadata)
+    expect(result2.createdRound).not.toBe(result1.createdRound)
+    expect(result2.name).toBe(deployment2.metadata.name)
+    expect(result2.version).toBe(deployment2.metadata.version)
+    expect(result2.updatable).toBe(deployment2.metadata.updatable)
+    expect(result2.deletable).toBe(deployment2.metadata.deletable)
+    expect(result2.deleted).toBe(false)
+    expect(
+      logging.testLogger.getLogSnapshot({
+        accounts: [testAccount],
+        transactions: [result1.transaction, result2.transaction],
+        apps: [result1.appId, result2.appId],
+      }),
+    ).toMatchSnapshot()
+  })
 })
 
 test('Strip comments remove comments without removing commands', async () => {
