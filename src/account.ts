@@ -126,7 +126,7 @@ export async function getAccount(
     return account
   }
 
-  throw `Missing environment variable ${envKey} when looking for account ${name}`
+  throw new Error(`Missing environment variable ${envKey} when looking for account ${name}`)
 }
 
 /** Returns an account's address as a byte array
