@@ -11,6 +11,7 @@ import algosdk, {
   SourceMap,
   SuggestedParams,
 } from 'algosdk'
+import { Algodv2 as Algodv2_2, AtomicTransactionComposer as AtomicTransactionComposer2_2 } from 'algosdk2-2'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -51,7 +52,6 @@ import {
 import { AppSpec } from './app-spec'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
-import { Algodv2 as Algodv2_2, AtomicTransactionComposer as AtomicTransactionComposer2_2 } from 'algosdk2-2'
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndName = {
@@ -116,9 +116,9 @@ export interface AppClientDeployCoreParams {
    **/
   allowDelete?: boolean
   /** What action to perform if a schema break is detected */
-  onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak
+  onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
   /** What action to perform if a TEAL update is detected */
-  onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate
+  onUpdate?: 'update' | 'replace' | 'append' | 'fail' | OnUpdate
 }
 
 /** Call interface parameters to pass into ApplicationClient.deploy */
