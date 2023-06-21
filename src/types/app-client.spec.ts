@@ -548,10 +548,7 @@ describe('application-client', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         expect(e.stack.split(' at ')[0].replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
-          intc_0 // 0
-          assert
-
+          "URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0; intc_0 // 0; assert
              "
         `)
       }
@@ -593,12 +590,9 @@ describe('application-client', () => {
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(`
-          "Error: assert failed pc=954. at:518. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
-          intc_0 // 0
-          assert
-          "
-        `)
+        expect(e.toString().replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')).toMatchInlineSnapshot(
+          `"Error: assert failed pc=954. at:518. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0; intc_0 // 0; assert"`,
+        )
         expect(e.stack).toMatchInlineSnapshot(`
           "// error
           error_6:
@@ -620,10 +614,7 @@ describe('application-client', () => {
             "messages": [
               "ApprovalProgram",
               "REJECT",
-              "logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0
-          intc_0 // 0
-          assert
-          ",
+              "logic eval error: assert failed pc=954. Details: pc=954, opcodes=proto 0 0; intc_0 // 0; assert",
             ],
             "trace": "pc# |ln# |source                            |scratch |stack
           1   |1   |intcblock 0 1 10 5 1 1            |        |[]
