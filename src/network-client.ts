@@ -1,7 +1,34 @@
 import algosdk, { Algodv2, Indexer, Kmd } from 'algosdk'
 import type { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
 import { AlgoHttpClientWithRetry } from './types/algo-http-client-with-retry'
-import { AlgoClientConfig } from './types/network-client'
+import { AccountConfig, AlgoClientConfig, AlgoConfig } from './types/network-client'
+
+/** Retrieve configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment not algod-side) */
+export function getConfigFromEnvOrDefaults(): AlgoConfig {
+  if (!process || !process.env) {
+    throw new Error('Attempt to get default algod configuration from a non Node.js context; supply the config instead')
+  }
+  const algodConfig = !process.env.ALGOD_SERVER
+    ? getDefaultLocalNetConfig('algod')
+    : { server: process.env.ALGOD_SERVER, port: process.env.ALGOD_PORT, token: process.env.ALGOD_TOKEN }
+
+  const indexerConfig = !process.env.INDEXER_SERVER
+    ? getDefaultLocalNetConfig('indexer')
+    : {
+        server: process.env.INDEXER_SERVER,
+        port: process.env.INDEXER_PORT,
+        token: process.env.INDEXER_TOKEN,
+      }
+
+  return {
+    algodConfig,
+    indexerConfig,
+    kmdConfig:
+      process && process.env && process.env.ALGOD_SERVER
+        ? { ...algodConfig, port: process?.env?.KMD_PORT ?? '4002' }
+        : getDefaultLocalNetConfig('kmd'),
+  }
+}
 
 /** Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment not algod-side) */
 export function getAlgodConfigFromEnvironment(): AlgoClientConfig {
@@ -46,6 +73,21 @@ export function getAlgoNodeConfig(network: 'testnet' | 'mainnet', config: 'algod
   return {
     server: `https://${network}-${config === 'algod' ? 'api' : 'idx'}.algonode.cloud/`,
     port: 443,
+  }
+}
+
+/** Returns the Account configuration
+ *
+ * @param accountName account name
+ */
+export function getAccountConfig(accountName: string): AccountConfig {
+  if (!process || !process.env) {
+    throw new Error('Attempt to get account with private key from a non Node.js context; not supported!')
+  }
+
+  return {
+    envKey: `${accountName.toUpperCase()}_MNEMONIC`,
+    senderKey: `${accountName.toUpperCase()}_SENDER`,
   }
 }
 

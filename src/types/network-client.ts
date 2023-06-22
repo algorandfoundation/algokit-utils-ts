@@ -9,3 +9,19 @@ export interface AlgoClientConfig {
   /** The token to use for API authentication (or undefined if none needed) - can be a string, or an object with the header key => value */
   token?: string | TokenHeader
 }
+
+/** Config for an algo config */
+export interface AlgoConfig {
+  /** Algo client configuration */
+  algodConfig: AlgoClientConfig
+  /** Indexer client configuration */
+  indexerConfig: AlgoClientConfig
+  /** Kmd configuration */
+  kmdConfig: AlgoClientConfig
+}
+
+/** Config for an account config */
+export interface AccountConfig {
+  envKey: string
+  senderKey: string
+}
