@@ -21,9 +21,7 @@ jobs:
         algokit localnet start
         npx --yes wait-on tcp:4001 -t 30000
       audit-script: |
-        required: false
-        type: string
-        default: npm run audit
+        npm run audit
   check_docs:
     runs-on: ubuntu-latest
     steps:
