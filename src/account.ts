@@ -172,13 +172,13 @@ export async function getAccount(
 
   config = config || getAccountConfig(name)
 
-  if (config.envKey) {
+  if (config.accountMnemonic) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const signer = mnemonicAccount(config.envKey!)
-    if (config.senderKey) {
-      Config.logger.debug(`Using rekeyed account ${signer.addr} for sender ${config.senderKey} for ${name} account`)
+    const signer = mnemonicAccount(config.accountMnemonic!)
+    if (config.senderMnemonic) {
+      Config.logger.debug(`Using rekeyed account ${signer.addr} for sender ${config.senderMnemonic} for ${name} account`)
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return new SigningAccount(signer, config.senderKey!)
+      return new SigningAccount(signer, config.senderMnemonic!)
     } else {
       return signer
     }
@@ -186,11 +186,11 @@ export async function getAccount(
 
   if (await isLocalNet(algod)) {
     const account = await getOrCreateKmdWalletAccount({ name, fundWith }, algod, kmdClient)
-    config.envKey = algosdk.secretKeyToMnemonic(account.sk)
+    config.accountMnemonic = algosdk.secretKeyToMnemonic(account.sk)
     return account
   }
 
-  throw new Error(`Missing environment variable ${config.envKey} when looking for account ${name}`)
+  throw new Error(`Missing environment variable ${config.senderMnemonic} when looking for account ${name}`)
 }
 
 /** Returns an account's address as a byte array

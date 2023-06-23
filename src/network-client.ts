@@ -86,8 +86,8 @@ export function getAccountConfig(accountName: string): AccountConfig {
   }
 
   return {
-    envKey: `${accountName.toUpperCase()}_MNEMONIC`,
-    senderKey: `${accountName.toUpperCase()}_SENDER`,
+    accountMnemonic: process.env[`${accountName.toUpperCase()}_MNEMONIC`] || '',
+    senderMnemonic: process.env[`${accountName.toUpperCase()}_SENDER`] || '',
   }
 }
 

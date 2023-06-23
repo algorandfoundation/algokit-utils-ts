@@ -22,6 +22,6 @@ export interface AlgoConfig {
 
 /** Config for an account config */
 export interface AccountConfig {
-  envKey: string
-  senderKey: string
+  accountMnemonic: string
+  senderMnemonic: string
 }
