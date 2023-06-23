@@ -53,6 +53,9 @@ ___
 
 ▸ **algorandFixture**(`fixtureConfig?`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
+**`Deprecated`**
+
+use algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined, config: AlgoConfig) instead
 Creates a test fixture for automated testing against Algorand.
 By default it tests against an environment variable specified client
  if the standard environment variables are specified, otherwise against
@@ -86,7 +89,45 @@ The fixture
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L37)
+[src/testing/fixtures/algorand-fixture.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L35)
+
+▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
+
+Creates a test fixture for automated testing against Algorand.
+By default it tests against an environment variable specified client
+ if the standard environment variables are specified, otherwise against
+ a default LocalNet instance, but you can pass in an algod, indexer
+ and/or kmd if you want to test against an explicitly defined network.
+
+**`Example`**
+
+```typescript
+const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
+
+beforeEach(algorand.beforeEach, 10_000)
+
+test('My test', async () => {
+    const {algod, indexer, testAccount, ...} = algorand.context
+    // test things...
+})
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `fixtureConfig` | `undefined` \| [`AlgorandFixtureConfig`](../interfaces/types_testing.AlgorandFixtureConfig.md) | The fixture configuration |
+| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The algo configuration |
+
+#### Returns
+
+[`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
+
+The fixture
+
+#### Defined in
+
+[src/testing/fixtures/algorand-fixture.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L59)
 
 ___
 
