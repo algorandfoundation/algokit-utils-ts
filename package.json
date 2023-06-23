@@ -22,7 +22,7 @@
     "lint": "eslint ./src/ --ext .ts",
     "lint:fix": "eslint ./src/ --ext .ts --fix",
     "check-types": "tsc --noEmit",
-    "audit": "npm audit",
+    "audit": "better-npm-audit audit",
     "format": "prettier --write .",
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
@@ -31,6 +31,7 @@
   "dependencies": {
     "algosdk": "^2.3.0",
     "algosdk2-2": "npm:algosdk@2.2.0",
+    "better-npm-audit": "^3.7.3",
     "buffer": "^6.0.3"
   },
   "devDependencies": {
