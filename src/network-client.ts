@@ -76,11 +76,16 @@ export function getAlgoNodeConfig(network: 'testnet' | 'mainnet', config: 'algod
   }
 }
 
-/** Returns the Account configuration
+/** Returns the Account configuration from enviroment variables
  *
  * @param accountName account name
+ *
+ * @example enviroment variables
+ * {accountName}_MNEMONIC
+ * {accountName}_SENDER
+ *
  */
-export function getAccountConfig(accountName: string): AccountConfig {
+export function getAccountConfigFromEnvironment(accountName: string): AccountConfig {
   if (!process || !process.env) {
     throw new Error('Attempt to get account with private key from a non Node.js context; not supported!')
   }
