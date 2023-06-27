@@ -24,6 +24,7 @@ There are a number of ways to produce one of these configuration objects:
     token: 'SECRET_TOKEN'
   }
   ```
+- [`algokit.getConfigFromEnvOrDefaults()`](../code/modules/index.md#getconfigfromenvordefaults) - Loads the Algod client config, the Indexer client config and the Kmd config from well-known environment variables; useful to have code that can work across multiple blockchain environments (including LocalNet), without having to change
 - [`algokit.getAlgodConfigFromEnvironment()`](../code/modules/index.md#getalgodconfigfromenvironment) - Loads an Algod client config from well-known environment variables; useful to have code that can work across multiple blockchain environments (including LocalNet), without having to change
 - [`algokit.getIndexerConfigFromEnvironment()`](../code/modules/index.md#getindexerconfigfromenvironment) - Loads an Indexer client config from well-known environment variables; useful to have code that can work across multiple blockchain environments (including LocalNet), without having to change
 - [`algokit.getAlgoNodeConfig(network, config)`](../code/modules/index.md#getalgo) - Loads an Algod or indexer config against [AlgoNode](https://algonode.io/api/) to either MainNet or TestNet
