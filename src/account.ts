@@ -119,10 +119,9 @@ export async function getAccount(
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
  */
 export async function getAccount(
-  account: { name: string; fundWith?: AlgoAmount } | string,
+  account: { name: string; fundWith?: AlgoAmount; config: AccountConfig },
   algod: Algodv2,
   kmdClient: Kmd | undefined,
-  config: AccountConfig,
 ): Promise<Account | SigningAccount>
 
 /**
@@ -150,27 +149,28 @@ export async function getAccount(
  * @param account The details of the account to get, wither the name identifier (string) or an object with:
  *   * `name`: The name identifier of the account
  *   * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `config` Enviroment settings use getAccountConfigFromEnvironment()
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
- * @param config Enviroment settings use getAccountConfigFromEnvironment()
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
  */
 export async function getAccount(
-  account: { name: string; fundWith?: AlgoAmount } | string,
+  account: { name: string; fundWith?: AlgoAmount; config?: AccountConfig } | string,
   algod: Algodv2,
   kmdClient?: Kmd,
-  config?: AccountConfig,
 ): Promise<Account | SigningAccount> {
   let name: string
   let fundWith: AlgoAmount | undefined = undefined
+  let config: AccountConfig
+
   if (typeof account === 'string') {
     name = account
+    config = getAccountConfigFromEnvironment(name)
   } else {
     name = account.name
     fundWith = account.fundWith
+    config = account.config || getAccountConfigFromEnvironment(name)
   }
-
-  config = config || getAccountConfigFromEnvironment(name)
 
   if (config.accountMnemonic) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
