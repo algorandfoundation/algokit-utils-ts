@@ -498,7 +498,7 @@ The requested account with private key loaded from the environment variables or 
 
 [src/account.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L93)
 
-▸ **getAccount**(`account`, `algod`, `kmdClient`, `config`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+▸ **getAccount**(`account`, `algod`, `kmdClient`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 Returns an Algorand account with private key loaded by convention based on the given name identifier.
 
@@ -519,10 +519,12 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| { `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, wither the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account` | `Object` | The details of the account to get, wither the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account.config` | [`AccountConfig`](../interfaces/types_network_client.AccountConfig.md) | - |
+| `account.fundWith?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
+| `account.name` | `string` | - |
 | `algod` | `default` | An algod client |
 | `kmdClient` | `undefined` \| `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
-| `config` | [`AccountConfig`](../interfaces/types_network_client.AccountConfig.md) | Enviroment settings use getAccountConfigFromEnvironment() |
 
 #### Returns
 
