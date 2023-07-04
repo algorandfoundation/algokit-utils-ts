@@ -10,15 +10,15 @@ Reserved schema value specification
 
 ### Properties
 
-- [desc](types_app_spec.ReservedSchemaValueSpec.md#desc)
+- [descr](types_app_spec.ReservedSchemaValueSpec.md#descr)
 - [max\_keys](types_app_spec.ReservedSchemaValueSpec.md#max_keys)
 - [type](types_app_spec.ReservedSchemaValueSpec.md#type)
 
 ## Properties
 
-### desc
+### descr
 
-• **desc**: `string`
+• **descr**: `string`
 
 The description of the reserved storage space
 

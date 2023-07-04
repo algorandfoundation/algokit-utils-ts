@@ -28,6 +28,9 @@
     "semantic-release": "semantic-release",
     "generate:code-docs": "typedoc"
   },
+  "overrides": {
+    "semver": "7.5.2"
+  },
   "dependencies": {
     "algosdk": "^2.3.0",
     "algosdk2-2": "npm:algosdk@2.2.0",
