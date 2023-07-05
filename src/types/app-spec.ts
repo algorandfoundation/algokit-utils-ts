@@ -137,7 +137,7 @@ export interface ReservedSchemaValueSpec {
   /** The type of value */
   type: AVMType
   /** The description of the reserved storage space */
-  desc: string
+  descr: string
   /** The maximum number of slots to reserve */
   max_keys: number
 }
