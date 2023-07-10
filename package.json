@@ -42,7 +42,7 @@
     "@makerx/eslint-config": "^3.0.0",
     "@makerx/prettier-config": "^2.0.0",
     "@makerx/ts-config": "^1.0.1",
-    "@tsconfig/node16": "^1.0.4",
+    "@tsconfig/node16": "^16.1.0",
     "@types/jest": "^29.5.2",
     "@types/uuid": "^9.0.2",
     "conventional-changelog-conventionalcommits": "^6.0.0",
