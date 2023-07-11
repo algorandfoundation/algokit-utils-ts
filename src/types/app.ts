@@ -70,6 +70,12 @@ export interface CoreAppCallArgs {
   lease?: string | Uint8Array
   /** Any box references to load */
   boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
+  /** The address of any accounts to load in */
+  accounts?: (string | Address)[]
+  /** IDs of any apps to load into the foreignApps array */
+  apps?: number[]
+  /** IDs of any assets to load into the foreignAssets array */
+  assets?: number[]
 }
 
 /**
@@ -78,12 +84,6 @@ export interface CoreAppCallArgs {
 export interface RawAppCallArgs extends CoreAppCallArgs {
   /** Any application arguments to pass through */
   appArgs?: (Uint8Array | string)[]
-  /** The address of any accounts to load in */
-  accounts?: (string | Address)[]
-  /** IDs of any apps to load into the foreignApps array */
-  apps?: number[]
-  /** IDs of any assets to load into the foreignAssets array */
-  assets?: number[]
   /** Property to aid intellisense */
   method?: undefined
 }
