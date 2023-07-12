@@ -498,7 +498,7 @@ The requested account with private key loaded from the environment variables or 
 
 [src/account.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L92)
 
-▸ **getAccount**(`account`, `algod`, `kmdClient`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+▸ **getAccount**(`account`, `algod`, `kmdClient?`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 Returns an Algorand account with private key loaded by convention based on the given name identifier.
 
@@ -523,7 +523,7 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 | `account.config` | [`AccountConfig`](../interfaces/types_account.AccountConfig.md) | - |
 | `account.fundWith?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
 | `algod` | `default` | An algod client |
-| `kmdClient` | `undefined` \| `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
+| `kmdClient?` | `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
 
 #### Returns
 

@@ -119,7 +119,7 @@ export async function getAccount(
 export async function getAccount(
   account: { config: AccountConfig; fundWith?: AlgoAmount },
   algod: Algodv2,
-  kmdClient: Kmd | undefined,
+  kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
 /**
