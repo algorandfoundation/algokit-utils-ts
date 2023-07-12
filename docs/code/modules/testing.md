@@ -53,9 +53,6 @@ ___
 
 ▸ **algorandFixture**(`fixtureConfig?`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
-**`Deprecated`**
-
-use algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined, config: AlgoConfig) instead
 Creates a test fixture for automated testing against Algorand.
 By default it tests against an environment variable specified client
  if the standard environment variables are specified, otherwise against

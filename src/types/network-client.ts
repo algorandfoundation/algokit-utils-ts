@@ -19,9 +19,3 @@ export interface AlgoConfig {
   /** Kmd configuration */
   kmdConfig: AlgoClientConfig
 }
-
-/** Config for an account config */
-export interface AccountConfig {
-  accountMnemonic: string
-  senderMnemonic: string
-}

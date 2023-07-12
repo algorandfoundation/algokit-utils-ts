@@ -109,3 +109,16 @@ export interface TransactionSignerAccount {
   addr: Readonly<string>
   signer: TransactionSigner
 }
+
+/** Config for an account config */
+export interface AccountConfig {
+  /** Mnemonic for an account */
+  accountMnemonic: string
+  /** Address of a rekeyed account */
+  senderAddress?: string
+  /** Account name used to retrieve config */
+  accountName: string
+
+  /** @deprecated Renamed to senderAddress in 2.3.1 */
+  senderMnemonic?: string
+}

@@ -11,6 +11,7 @@
 
 ### Interfaces
 
+- [AccountConfig](../interfaces/types_account.AccountConfig.md)
 - [TransactionSignerAccount](../interfaces/types_account.TransactionSignerAccount.md)
 
 ### Variables

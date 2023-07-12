@@ -455,7 +455,7 @@ ___
 
 **`Deprecated`**
 
-use getAccount(account: { name: string; fundWith?: AlgoAmount } | string, algod: Algodv2, env: AlgoClientConfig, kmdClient?: Kmd) instead
+use getAccount(account: { config: AccountConfig; fundWith?: AlgoAmount }, algod: Algodv2, kmdClient?: Kmd) instead
 
 Returns an Algorand account with private key loaded by convention based on the given name identifier.
 
@@ -484,7 +484,7 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| { `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, wither the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account` | `string` \| { `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
 | `algod` | `default` | An algod client |
 | `kmdClient?` | `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
 
@@ -496,7 +496,7 @@ The requested account with private key loaded from the environment variables or 
 
 #### Defined in
 
-[src/account.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L93)
+[src/account.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L92)
 
 ▸ **getAccount**(`account`, `algod`, `kmdClient`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
@@ -510,7 +510,7 @@ Default
 
 If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
 ```typescript
-const account = await getAccount('ACCOUNT', algod, undefined, getAccountConfigFromEnvironment(accountName))
+const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
 ```
 
 If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
@@ -519,10 +519,9 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `Object` | The details of the account to get, wither the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
-| `account.config` | [`AccountConfig`](../interfaces/types_network_client.AccountConfig.md) | - |
+| `account` | `Object` | The details of the account to get, an object with: * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName) * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account.config` | [`AccountConfig`](../interfaces/types_account.AccountConfig.md) | - |
 | `account.fundWith?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
-| `account.name` | `string` | - |
 | `algod` | `default` | An algod client |
 | `kmdClient` | `undefined` \| `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
 
@@ -534,7 +533,7 @@ The requested account with private key loaded from the environment variables or 
 
 #### Defined in
 
-[src/account.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L121)
+[src/account.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L119)
 
 ___
 
@@ -556,7 +555,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L208)
+[src/account.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L212)
 
 ___
 
@@ -578,20 +577,20 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L200)
+[src/account.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L204)
 
 ___
 
 ### getAccountConfigFromEnvironment
 
-▸ **getAccountConfigFromEnvironment**(`accountName`): [`AccountConfig`](../interfaces/types_network_client.AccountConfig.md)
+▸ **getAccountConfigFromEnvironment**(`accountName`): [`AccountConfig`](../interfaces/types_account.AccountConfig.md)
 
-Returns the Account configuration from enviroment variables
+Returns the Account configuration from environment variables
 
 **`Example`**
 
 ```ts
-enviroment variables
+environment variables
 {accountName}_MNEMONIC
 {accountName}_SENDER
 ```
@@ -604,11 +603,11 @@ enviroment variables
 
 #### Returns
 
-[`AccountConfig`](../interfaces/types_network_client.AccountConfig.md)
+[`AccountConfig`](../interfaces/types_account.AccountConfig.md)
 
 #### Defined in
 
-[src/network-client.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L88)
+[src/account.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L239)
 
 ___
 
@@ -665,7 +664,7 @@ Custom (e.g. default LocalNet, although we recommend loading this into a .env an
 
 #### Defined in
 
-[src/network-client.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L146)
+[src/network-client.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L126)
 
 ___
 
@@ -722,7 +721,7 @@ Custom (e.g. default LocalNet, although we recommend loading this into a .env an
 
 #### Defined in
 
-[src/network-client.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L179)
+[src/network-client.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L159)
 
 ___
 
@@ -762,7 +761,7 @@ Custom (e.g. default LocalNet, although we recommend loading this into a .env an
 
 #### Defined in
 
-[src/network-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L202)
+[src/network-client.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L182)
 
 ___
 
@@ -1243,7 +1242,7 @@ Returns the Algorand configuration to point to the default LocalNet
 
 #### Defined in
 
-[src/network-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L103)
+[src/network-client.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L83)
 
 ___
 
@@ -1269,7 +1268,7 @@ If running on LocalNet then it will return the default dispenser account automat
 
 #### Defined in
 
-[src/account.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L220)
+[src/account.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L224)
 
 ___
 
@@ -1365,7 +1364,7 @@ If this is used via `getAccount`, then you can even use the same code that runs 
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `walletAccount` | `Object` | The wallet details with: * `name`: The name of the wallet to retrieve / create * `fundWith`: The number of Algos to fund the account with it it gets created, if not specified then 1000 Algos will be funded from the dispenser account |
+| `walletAccount` | `Object` | The wallet details with: * `name`: The name of the wallet to retrieve / create * `fundWith`: The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account |
 | `walletAccount.fundWith?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
 | `walletAccount.name` | `string` | - |
 | `algod` | `default` | An algod client |
@@ -1521,7 +1520,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L213)
+[src/network-client.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L193)
 
 ___
 
@@ -1568,7 +1567,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L209)
+[src/network-client.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L189)
 
 ___
 
@@ -1691,7 +1690,7 @@ This is a wrapper around algosdk.mnemonicToSecretKey to provide a more friendly/
 
 #### Defined in
 
-[src/account.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L48)
+[src/account.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L47)
 
 ___
 
@@ -1716,7 +1715,7 @@ A multisig account wrapper
 
 #### Defined in
 
-[src/account.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L17)
+[src/account.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L16)
 
 ___
 
@@ -1816,7 +1815,7 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L58)
+[src/account.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L57)
 
 ___
 
@@ -1841,7 +1840,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L27)
+[src/account.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L26)
 
 ___
 
@@ -2074,7 +2073,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L37)
+[src/account.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L36)
 
 ___
 

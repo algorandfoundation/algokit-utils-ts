@@ -23,7 +23,7 @@ export async function isLocalNet(algod: Algodv2): Promise<boolean> {
  *
  * @param walletAccount The wallet details with:
  *   * `name`: The name of the wallet to retrieve / create
- *   * `fundWith`: The number of Algos to fund the account with it it gets created, if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `fundWith`: The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient A KMD client, if not specified then a default KMD client will be loaded from environment variables
  *
