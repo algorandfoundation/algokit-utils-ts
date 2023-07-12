@@ -11,7 +11,7 @@ import {
 import { AlgoConfig } from '../../types/network-client'
 import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
 
-/** @deprecated use algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined, config: AlgoConfig) instead
+/**
  * Creates a test fixture for automated testing against Algorand.
  * By default it tests against an environment variable specified client
  *  if the standard environment variables are specified, otherwise against

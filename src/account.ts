@@ -1,11 +1,10 @@
 import algosdk, { Account, Algodv2, Kmd, MultisigMetadata, TransactionSigner } from 'algosdk'
 import { Config } from './'
 import { getLocalNetDispenserAccount, getOrCreateKmdWalletAccount } from './localnet'
-import { getAccountConfigFromEnvironment, isLocalNet } from './network-client'
+import { isLocalNet } from './network-client'
 import { getSenderAddress } from './transaction'
-import { DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './types/account'
+import { AccountConfig, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './types/account'
 import { AlgoAmount } from './types/amount'
-import { AccountConfig } from './types/network-client'
 import { SendTransactionFrom } from './types/transaction'
 
 /**
@@ -60,7 +59,7 @@ export function randomAccount(): Account {
   return algosdk.generateAccount()
 }
 
-/**  @deprecated use getAccount(account: { name: string; fundWith?: AlgoAmount } | string, algod: Algodv2, env: AlgoClientConfig, kmdClient?: Kmd) instead
+/**  @deprecated use getAccount(account: { config: AccountConfig; fundWith?: AlgoAmount }, algod: Algodv2, kmdClient?: Kmd) instead
  *
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
@@ -83,9 +82,9 @@ export function randomAccount(): Account {
  *
  * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
  *
- * @param account The details of the account to get, wither the name identifier (string) or an object with:
+ * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `name`: The name identifier of the account
- *   * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
@@ -105,23 +104,22 @@ export async function getAccount(
  *
  * If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
  * ```typescript
- * const account = await getAccount('ACCOUNT', algod, undefined, getAccountConfigFromEnvironment(accountName))
+ * const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
  * ```
  *
  * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
  *
- * @param account The details of the account to get, wither the name identifier (string) or an object with:
- *   * `name`: The name identifier of the account
- *   * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ * @param account The details of the account to get, an object with:
+ *   * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName)
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
- * @param config Enviroment settings use getAccountConfigFromEnvironment()
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
  */
 export async function getAccount(
-  account: { name: string; fundWith?: AlgoAmount; config: AccountConfig },
+  account: { config: AccountConfig; fundWith?: AlgoAmount },
   algod: Algodv2,
-  kmdClient: Kmd | undefined,
+  kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
 /**
@@ -141,21 +139,22 @@ export async function getAccount(
  *
  * If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
  * ```typescript
- * const account = await getAccount('ACCOUNT', algod)
+ * const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
  * ```
  *
  * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
  *
- * @param account The details of the account to get, wither the name identifier (string) or an object with:
- *   * `name`: The name identifier of the account
- *   * `fundWith`: The amount to fund the account with it it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
- *   * `config` Enviroment settings use getAccountConfigFromEnvironment()
+ * @param account The details of the account to get, either the name identifier (string) or an object with:
+ *   * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName) OR
+ *   * `name`: string: The name identifier of the account (deprecated)
+ *   And optionally
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
  */
 export async function getAccount(
-  account: { name: string; fundWith?: AlgoAmount; config?: AccountConfig } | string,
+  account: { name: string; fundWith?: AlgoAmount } | { config: AccountConfig; fundWith?: AlgoAmount } | string,
   algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
@@ -166,19 +165,24 @@ export async function getAccount(
   if (typeof account === 'string') {
     name = account
     config = getAccountConfigFromEnvironment(name)
-  } else {
+  } else if ('name' in account) {
     name = account.name
+    config = getAccountConfigFromEnvironment(name)
     fundWith = account.fundWith
-    config = account.config || getAccountConfigFromEnvironment(name)
+  } else if ('config' in account) {
+    config = account.config
+    name = config.accountName
+    fundWith = account.fundWith
+  } else {
+    throw new Error('Missing name or account config')
   }
 
   if (config.accountMnemonic) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const signer = mnemonicAccount(config.accountMnemonic!)
-    if (config.senderMnemonic) {
-      Config.logger.debug(`Using rekeyed account ${signer.addr} for sender ${config.senderMnemonic} for ${name} account`)
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return new SigningAccount(signer, config.senderMnemonic!)
+    const signer = mnemonicAccount(config.accountMnemonic)
+    const sender = config.senderAddress || config.senderMnemonic
+    if (sender) {
+      Config.logger.debug(`Using rekeyed account ${signer.addr} for sender ${sender} for ${name} account`)
+      return new SigningAccount(signer, sender)
     } else {
       return signer
     }
@@ -190,7 +194,7 @@ export async function getAccount(
     return account
   }
 
-  throw new Error(`Missing environment variable ${config.senderMnemonic} when looking for account ${name}`)
+  throw new Error(`Missing environment variable ${name.toUpperCase()}_MNEMONIC when looking for account ${name}`)
 }
 
 /** Returns an account's address as a byte array
@@ -221,4 +225,25 @@ export async function getDispenserAccount(algod: Algodv2, kmd?: Kmd) {
   // If we are running against LocalNet we can use the default account within it, otherwise use an automation account specified via environment variables and ensure it's populated with ALGOs
   const canFundFromDefaultAccount = await isLocalNet(algod)
   return canFundFromDefaultAccount ? await getLocalNetDispenserAccount(algod, kmd) : await getAccount(DISPENSER_ACCOUNT, algod)
+}
+
+/** Returns the Account configuration from environment variables
+ *
+ * @param accountName account name
+ *
+ * @example environment variables
+ * {accountName}_MNEMONIC
+ * {accountName}_SENDER
+ *
+ */
+export function getAccountConfigFromEnvironment(accountName: string): AccountConfig {
+  if (!process || !process.env) {
+    throw new Error('Attempt to get account with private key from a non Node.js context; not supported!')
+  }
+
+  return {
+    accountMnemonic: process.env[`${accountName.toUpperCase()}_MNEMONIC`] || '',
+    senderAddress: process.env[`${accountName.toUpperCase()}_SENDER`],
+    accountName,
+  }
 }
