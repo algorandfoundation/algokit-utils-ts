@@ -6,6 +6,5 @@
 
 ### Interfaces
 
-- [AccountConfig](../interfaces/types_network_client.AccountConfig.md)
 - [AlgoClientConfig](../interfaces/types_network_client.AlgoClientConfig.md)
 - [AlgoConfig](../interfaces/types_network_client.AlgoConfig.md)

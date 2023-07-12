@@ -1,7 +1,7 @@
 import algosdk, { Algodv2, Indexer, Kmd } from 'algosdk'
 import type { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
 import { AlgoHttpClientWithRetry } from './types/algo-http-client-with-retry'
-import { AccountConfig, AlgoClientConfig, AlgoConfig } from './types/network-client'
+import { AlgoClientConfig, AlgoConfig } from './types/network-client'
 
 /** Retrieve configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment not algod-side) */
 export function getConfigFromEnvOrDefaults(): AlgoConfig {
@@ -73,26 +73,6 @@ export function getAlgoNodeConfig(network: 'testnet' | 'mainnet', config: 'algod
   return {
     server: `https://${network}-${config === 'algod' ? 'api' : 'idx'}.algonode.cloud/`,
     port: 443,
-  }
-}
-
-/** Returns the Account configuration from enviroment variables
- *
- * @param accountName account name
- *
- * @example enviroment variables
- * {accountName}_MNEMONIC
- * {accountName}_SENDER
- *
- */
-export function getAccountConfigFromEnvironment(accountName: string): AccountConfig {
-  if (!process || !process.env) {
-    throw new Error('Attempt to get account with private key from a non Node.js context; not supported!')
-  }
-
-  return {
-    accountMnemonic: process.env[`${accountName.toUpperCase()}_MNEMONIC`] || '',
-    senderMnemonic: process.env[`${accountName.toUpperCase()}_SENDER`] || '',
   }
 }
 
