@@ -3,6 +3,7 @@ import algosdk, {
   ABIMethodParams,
   ABIResult,
   ABIValue,
+  Address,
   Algodv2,
   AtomicTransactionComposer,
   modelsv2,
@@ -570,7 +571,7 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
 
   const encoder = new TextEncoder()
   return {
-    accounts: args?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
+    accounts: args?.accounts?.map(_getAccountAddress),
     appArgs: args?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a)),
     boxes: args.boxes?.map(getBoxReference),
     foreignApps: args?.apps,
@@ -614,6 +615,9 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
     signer: signer,
     boxes: args.boxes?.map(getBoxReference),
     lease: typeof args.lease === 'string' ? encoder.encode(args.lease) : args.lease,
+    appForeignApps: args.apps,
+    appForeignAssets: args.assets,
+    appAccounts: args.accounts?.map(_getAccountAddress),
     methodArgs: methodArgs,
     rekeyTo: undefined,
   }
@@ -641,6 +645,10 @@ export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxR
         ? ref.name
         : algosdk.decodeAddress(getSenderAddress(ref.name)).publicKey,
   } as algosdk.BoxReference
+}
+
+function _getAccountAddress(account: string | Address) {
+  return typeof account === 'string' ? account : algosdk.encodeAddress(account.publicKey)
 }
 
 /**
