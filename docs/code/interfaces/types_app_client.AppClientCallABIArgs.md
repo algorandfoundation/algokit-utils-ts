@@ -112,7 +112,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 #### Defined in
 
-[src/types/app-client.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L146)
+[src/types/app-client.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L145)
 
 ___
 
