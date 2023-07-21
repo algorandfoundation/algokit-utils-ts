@@ -11,7 +11,6 @@ import algosdk, {
   SourceMap,
   SuggestedParams,
 } from 'algosdk'
-import { Algodv2 as Algodv2_2, AtomicTransactionComposer as AtomicTransactionComposer2_2 } from 'algosdk2-2'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -575,7 +574,7 @@ export class ApplicationClient {
     ) {
       const atc = new AtomicTransactionComposer()
       await this.callOfType({ ...call, sendParams: { ...call.sendParams, atc } }, 'no_op')
-      const result = await this.callSimulateOnAtc(atc, this.algod)
+      const result = await atc.simulate(this.algod)
       if (result.simulateResponse.txnGroups.some((group) => group.failureMessage)) {
         throw new Error(result.simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage)
       }
@@ -590,25 +589,6 @@ export class ApplicationClient {
     }
 
     return await this.callOfType(call, 'no_op')
-  }
-
-  private async callSimulateOnAtc(atc: AtomicTransactionComposer, algod: Algodv2): ReturnType<AtomicTransactionComposer['simulate']> {
-    try {
-      return await atc.simulate(algod)
-    } catch (e) {
-      /*
-      Temporary work around for a breaking change in algosdk 2.3, if the targeted api returns this error then it is likely
-      running the older version, so we try again using the old sdk version
-       */
-      if (e instanceof Error && e.message.startsWith('Network request error. Received status 400 (Bad Request): msgpack decode')) {
-        const algod2_2 = Object.create(this.algod)
-        algod2_2.simulateRawTransactions = Algodv2_2.prototype.simulateRawTransactions
-        const atc2_2 = Object.create(atc)
-        atc2_2.simulate = AtomicTransactionComposer2_2.prototype.simulate
-        return await atc2_2.simulate(algod2_2)
-      }
-      throw e
-    }
   }
 
   /**
