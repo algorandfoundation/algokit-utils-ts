@@ -55,6 +55,21 @@ def call_abi_txn(txn: pt.abi.PaymentTransaction, value: pt.abi.String, *, output
         )
     )
 
+@app.external(read_only=True)
+def call_abi_foreign_refs(*, output: pt.abi.String) -> pt.Expr:
+    return output.set(
+        pt.Concat(
+            pt.Bytes("App: "),
+            itoa(pt.Txn.applications[1]),
+            pt.Bytes(", Asset: "),
+            itoa(pt.Txn.assets[0]),
+            pt.Bytes(", Account: "),
+            itoa(pt.GetByte(pt.Txn.accounts[0], pt.Int(0))),
+            pt.Bytes(":"),
+            itoa(pt.GetByte(pt.Txn.accounts[0], pt.Int(1))),
+        )
+    )
+
 
 @app.external()
 def set_global(
