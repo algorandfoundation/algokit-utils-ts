@@ -1,6 +1,5 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { makeBasicAccountTransactionSigner } from 'algosdk'
-import AlgodClient from 'algosdk/dist/types/client/v2/algod/algod'
 import invariant from 'tiny-invariant'
 import * as algokit from './'
 import { algorandFixture } from './testing'
@@ -66,22 +65,14 @@ describe('transaction', () => {
   })
 
   test('waiting transaction', async () => {
-    const algod = new AlgodClient('', 'https://testnet-api.algonode.cloud/', '')
-    const testAccount = algosdk.generateAccount()
-
-    await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: testAccount.addr,
-        amount: algokit.algos(5),
-        note: 'Transfer 5 ALGOs',
-      },
-      algod,
-    )
-
+    const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
     const signedTransaction = await algokit.signTransaction(txn, testAccount)
     await algod.sendRawTransaction(signedTransaction).do()
+
+    // const mock = jest.mock("algosdk") // Put the path to algod in algosdk module or just algosdk
+    // let mockPendingTransactionInfo = mock()
+
     await algokit.waitForConfirmation(txn.txID(), 2 ?? 5, algod)
   })
 
