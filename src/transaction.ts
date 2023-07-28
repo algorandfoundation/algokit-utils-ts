@@ -372,9 +372,12 @@ export const waitForConfirmation = async function (
           }
         }
       }
-    } catch (e) {
-      currentRound++
-      continue
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      if (e.name === 'URLTokenBaseHTTPError') {
+        currentRound++
+        continue
+      }
     }
 
     await algod.statusAfterBlock(toNumber(currentRound)).do()

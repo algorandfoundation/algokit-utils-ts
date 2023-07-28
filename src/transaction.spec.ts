@@ -64,18 +64,6 @@ describe('transaction', () => {
     )
   })
 
-  test('waiting transaction', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn = await getTestTransaction()
-    const signedTransaction = await algokit.signTransaction(txn, testAccount)
-    await algod.sendRawTransaction(signedTransaction).do()
-
-    // const mock = jest.mock("algosdk") // Put the path to algod in algosdk module or just algosdk
-    // let mockPendingTransactionInfo = mock()
-
-    await algokit.waitForConfirmation(txn.txID(), 2 ?? 5, algod)
-  })
-
   test('Transaction cap is ignored if higher than fee', async () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
@@ -293,6 +281,17 @@ describe('transaction', () => {
       algod,
     )
   })
+
+  test('Transaction wait for confirmation http error', async () => {
+    const { algod } = localnet.context
+    const txn = await getTestTransaction()
+    try {
+      await algokit.waitForConfirmation(txn.txID(), 5, algod)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e.message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
+    }
+  })
 })
 
 describe('transaction node encoder', () => {
@@ -345,3 +344,9 @@ describe('transaction node encoder', () => {
     `)
   })
 })
+function throwError(error: {
+  status: number
+  message: string
+}): import('algosdk/dist/types/client/v2/algod/pendingTransactionInformation').default {
+  throw new Error('Function not implemented.')
+}
