@@ -287,9 +287,8 @@ describe('transaction', () => {
     const txn = await getTestTransaction()
     try {
       await algokit.waitForConfirmation(txn.txID(), 5, algod)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      expect(e.message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
+    } catch (e: unknown) {
+      expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
     }
   })
 })
@@ -344,9 +343,3 @@ describe('transaction node encoder', () => {
     `)
   })
 })
-function throwError(error: {
-  status: number
-  message: string
-}): import('algosdk/dist/types/client/v2/algod/pendingTransactionInformation').default {
-  throw new Error('Function not implemented.')
-}

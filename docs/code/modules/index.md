@@ -169,7 +169,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L389)
+[src/transaction.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L397)
 
 ___
 
@@ -225,7 +225,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L412)
+[src/transaction.ts:420](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L420)
 
 ___
 
@@ -1153,7 +1153,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:444](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L444)
+[src/transaction.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L452)
 
 ___
 
@@ -1452,7 +1452,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L435)
+[src/transaction.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L443)
 
 ___
 

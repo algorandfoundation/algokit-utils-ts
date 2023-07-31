@@ -373,8 +373,8 @@ export const waitForConfirmation = async function (
         }
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      if (e.name === 'URLTokenBaseHTTPError') {
+    } catch (e: unknown) {
+      if ((e as Error).name === 'URLTokenBaseHTTPError') {
         currentRound++
         continue
       }
