@@ -356,19 +356,27 @@ export const waitForConfirmation = async function (
   const startRound = BigInt(status.lastRound) + 1n
   let currentRound = startRound
   while (currentRound < startRound + BigInt(maxRoundsToWait)) {
-    const pendingInfo = modelsv2.PendingTransactionResponse.from_obj_for_encoding(
-      await algod.pendingTransactionInformation(transactionId).do(),
-    )
-    if (pendingInfo !== undefined) {
-      const confirmedRound = pendingInfo.confirmedRound
-      if (confirmedRound && confirmedRound > 0) {
-        return pendingInfo
-      } else {
-        const poolError = pendingInfo.poolError
-        if (poolError != null && poolError.length > 0) {
-          // If there was a pool error, then the transaction has been rejected!
-          throw new Error(`Transaction ${transactionId} was rejected; pool error: ${poolError}`)
+    try {
+      const pendingInfo = modelsv2.PendingTransactionResponse.from_obj_for_encoding(
+        await algod.pendingTransactionInformation(transactionId).do(),
+      )
+      if (pendingInfo !== undefined) {
+        const confirmedRound = pendingInfo.confirmedRound
+        if (confirmedRound && confirmedRound > 0) {
+          return pendingInfo
+        } else {
+          const poolError = pendingInfo.poolError
+          if (poolError != null && poolError.length > 0) {
+            // If there was a pool error, then the transaction has been rejected!
+            throw new Error(`Transaction ${transactionId} was rejected; pool error: ${poolError}`)
+          }
         }
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: unknown) {
+      if ((e as Error).name === 'URLTokenBaseHTTPError') {
+        currentRound++
+        continue
       }
     }
 

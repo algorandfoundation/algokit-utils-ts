@@ -281,6 +281,16 @@ describe('transaction', () => {
       algod,
     )
   })
+
+  test('Transaction wait for confirmation http error', async () => {
+    const { algod } = localnet.context
+    const txn = await getTestTransaction()
+    try {
+      await algokit.waitForConfirmation(txn.txID(), 5, algod)
+    } catch (e: unknown) {
+      expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
+    }
+  })
 })
 
 describe('transaction node encoder', () => {
