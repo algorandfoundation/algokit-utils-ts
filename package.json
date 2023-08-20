@@ -29,34 +29,36 @@
     "generate:code-docs": "typedoc"
   },
   "overrides": {
-    "semver": "7.5.2"
+    "semver": "7.5.2",
+    "eslint-plugin-prettier": "5.0.0"
   },
   "dependencies": {
-    "algosdk": "^2.3.0",
-    "buffer": "^6.0.3"
+    "algosdk": "^2.5.0",
+    "buffer": "^6.0.3",
+    "cross-fetch": "^4.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^17.6.5",
-    "@commitlint/config-conventional": "^17.6.5",
-    "@makerx/eslint-config": "^3.0.0",
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@makerx/eslint-config": "^3.1.0",
     "@makerx/prettier-config": "^2.0.0",
     "@makerx/ts-config": "^1.0.1",
-    "@tsconfig/node16": "^1.0.4",
+    "@tsconfig/node16": "^16.1.0",
     "@types/jest": "^29.5.2",
     "@types/uuid": "^9.0.2",
     "conventional-changelog-conventionalcommits": "^6.0.0",
     "copyfiles": "^2.4.1",
-    "dotenv-cli": "^7.2.1",
-    "eslint": "^8.42.0",
+    "dotenv-cli": "^7.3.0",
+    "eslint": "^8.47.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.2",
     "rimraf": "^5.0.1",
-    "semantic-release": "^21.0.3",
+    "semantic-release": "^21.0.9",
     "tiny-invariant": "^1.3.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.8",
-    "typedoc-plugin-markdown": "^3.15.3",
+    "typedoc-plugin-markdown": "^3.15.4",
     "typescript": "^5.1.3",
     "uuid": "^9.0.0",
     "better-npm-audit": "^3.7.3"
