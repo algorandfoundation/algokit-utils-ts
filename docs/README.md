@@ -24,6 +24,22 @@ This library can be installed from NPM using your favourite npm client, e.g.:
 npm install @algorandfoundation/algokit-utils
 ```
 
+## Peer Dependencies
+
+This library requires `algosdk` as a peer dependency. Ensure you have it installed in your project
+
+- If you have `check-peer-dependencies` installed:
+
+```
+npx check-peer-dependencies --install
+```
+
+- Alternatively, simply use:
+
+```
+npm install algosdk
+```
+
 # Usage
 
 To use this library simply include the following at the top of your file:
