@@ -41,6 +41,8 @@
 - [getAppBoxValuesFromABIType](index.md#getappboxvaluesfromabitype)
 - [getAppById](index.md#getappbyid)
 - [getAppClient](index.md#getappclient)
+- [getAppClientByCreatorAndName](index.md#getappclientbycreatorandname)
+- [getAppClientById](index.md#getappclientbyid)
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
 - [getAppGlobalState](index.md#getappglobalstate)
 - [getAppLocalState](index.md#getapplocalstate)
@@ -1026,7 +1028,68 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L10)
+[src/app-client.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L13)
+
+___
+
+### getAppClientByCreatorAndName
+
+▸ **getAppClientByCreatorAndName**(`app`, `creatorAddress`, `findExistingUsing`, `algod`, `sender?`, `params?`, `deployTimeParams?`, `name?`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+Create a new ApplicationClient instance by creator and name
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `app` | `string` \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-0032 application spec as either: * Parsed JSON `AppSpec` * Raw JSON string |
+| `creatorAddress` | `string` | The address of the app creator account to resolve the app by |
+| `findExistingUsing` | `default` \| [`AppLookup`](../interfaces/types_app.AppLookup.md) | The mechanism to find an existing app instance metadata for the given creator and name; either: An indexer instance to search the creator account apps; or * The cached value of the existing apps for the given creator from `getCreatorAppsByName` |
+| `algod` | `default` | An algod instance |
+| `sender?` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | Default sender to use for transactions issued by this application client |
+| `params?` | `SuggestedParams` | Default suggested params object to use |
+| `deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get used in calls to `deploy`, `create` and `update` unless overridden in those calls |
+| `name?` | `string` | The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) |
+
+#### Returns
+
+[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+The application client
+
+#### Defined in
+
+[src/app-client.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L61)
+
+___
+
+### getAppClientById
+
+▸ **getAppClientById**(`app`, `id`, `algod`, `sender?`, `params?`, `deployTimeParams?`, `name?`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+Create a new ApplicationClient instance by id
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `app` | `string` \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-0032 application spec as either: * Parsed JSON `AppSpec` * Raw JSON string |
+| `id` | `number` \| `bigint` | The id of an existing app to call using this client, or 0 if the app hasn't been created yet |
+| `algod` | `default` | An algod instance |
+| `sender?` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | Default sender to use for transactions issued by this application client |
+| `params?` | `SuggestedParams` | Default suggested params object to use |
+| `deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get used in calls to `deploy`, `create` and `update` unless overridden in those calls |
+| `name?` | `string` | The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract) |
+
+#### Returns
+
+[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+The application client
+
+#### Defined in
+
+[src/app-client.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L31)
 
 ___
 
