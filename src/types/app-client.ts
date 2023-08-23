@@ -78,7 +78,7 @@ export interface ResolveAppById {
 }
 
 /** The details of an AlgoKit Utils deployed app */
-export type AppDetails = {
+export type AppDetailsBase = {
   /** Default sender to use for transactions issued by this application client */
   sender?: SendTransactionFrom
   /** Default suggested params object to use */
@@ -87,16 +87,28 @@ export type AppDetails = {
    * used in calls to `deploy`, `create` and `update` unless overridden in those calls
    */
   deployTimeParams?: TealTemplateParams
-} & (ResolveAppById | ResolveAppByCreatorAndName)
+}
+
+/** The details of an AlgoKit Utils deployed app */
+export type AppDetails = AppDetailsBase & (ResolveAppById | ResolveAppByCreatorAndName)
 
 /** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app */
-export type AppSpecAppDetails = AppDetails & {
+export type AppSpecAppDetailsBase = {
   /** The ARC-0032 application spec as either:
    *  * Parsed JSON `AppSpec`
    *  * Raw JSON string
    */
   app: AppSpec | string
 }
+
+/** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by id*/
+export type AppSpecAppDetailsById = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppById
+
+/** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by creator and name*/
+export type AppSpecAppDetailsByCreatorAndName = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByCreatorAndName
+
+/** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app */
+export type AppSpecAppDetails = AppSpecAppDetailsBase & AppDetails
 
 /** Core parameters to pass into ApplicationClient.deploy */
 export interface AppClientDeployCoreParams {
