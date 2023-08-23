@@ -26,19 +26,7 @@ npm install @algorandfoundation/algokit-utils
 
 ## Peer Dependencies
 
-This library requires `algosdk` as a peer dependency. Ensure you have it installed in your project
-
-- If you have `check-peer-dependencies` installed:
-
-```
-npx check-peer-dependencies --install
-```
-
-- Alternatively, simply use:
-
-```
-npm install algosdk
-```
+This library requires `algosdk` as a peer dependency. Ensure you have it installed in your project.
 
 # Usage
 
