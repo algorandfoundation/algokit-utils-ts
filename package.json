@@ -8,16 +8,26 @@
   "engines": {
     "node": ">=16.0"
   },
-  "main": "./index.js",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "files": [
     "**/*"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
-    "build:1-compile": "tsc -p tsconfig.build.json",
-    "build:2-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json",
-    "build:3-copy-readme": "copyfiles README.md dist",
+    "build:1-compile-cjs": "tsc -p tsconfig.cjs.json",
+    "build:2-compile-esm": "tsc -p tsconfig.esm.json",
+    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json",
+    "build:4-copy-readme": "copyfiles README.md dist",
     "test": "dotenv -e .env -- jest --coverage --passWithNoTests",
     "lint": "eslint ./src/ --ext .ts",
     "lint:fix": "eslint ./src/ --ext .ts --fix",

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "moduleResolution": "node"
+  },
+  "exclude": ["src/**/*.spec.ts", "tests/**/*.*"]
+}
