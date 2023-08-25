@@ -1013,6 +1013,20 @@ ___
 
 Create a new ApplicationClient instance
 
+**`Example`**
+
+```ts
+const client = algokit.getAppClientById(
+    {
+      app: {appSpec},
+      sender: {account},
+      id: {id},
+      resolveBy: 'id'
+    },
+    algod,
+  )
+```
+
 #### Parameters
 
 | Name | Type | Description |
@@ -1028,7 +1042,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L10)
+[src/app-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L20)
 
 ___
 
@@ -1067,7 +1081,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L53)
+[src/app-client.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L63)
 
 ___
 
@@ -1105,7 +1119,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L31)
+[src/app-client.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L41)
 
 ___
 

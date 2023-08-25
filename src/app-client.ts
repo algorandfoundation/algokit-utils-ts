@@ -6,6 +6,16 @@ import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetails
  * @param appDetails The details of the app
  * @param algod An algod instance
  * @returns The application client
+ * @example
+ * const client = algokit.getAppClientById(
+ *     {
+ *       app: {appSpec},
+ *       sender: {account},
+ *       id: {id},
+ *       resolveBy: 'id'
+ *     },
+ *     algod,
+ *   )
  */
 export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
   return new ApplicationClient(appDetails, algod)
@@ -29,7 +39,7 @@ export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
  * @returns The application client
  */
 export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algodv2) {
-  return new ApplicationClient(appDetails, algod)
+  return new ApplicationClient({ ...appDetails, resolveBy: 'id' }, algod)
 }
 
 /**
@@ -51,5 +61,5 @@ export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algod
  * @returns The application client
  */
 export function getAppClientByCreatorAndName(appDetails: AppSpecAppDetailsByCreatorAndName, algod: Algodv2) {
-  return new ApplicationClient(appDetails, algod)
+  return new ApplicationClient({ ...appDetails, resolveBy: 'creatorAndName' }, algod)
 }

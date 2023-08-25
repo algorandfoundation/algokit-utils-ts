@@ -53,9 +53,7 @@ import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
-export type ResolveAppByCreatorAndName = {
-  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` */
-  resolveBy: 'creatorAndName'
+export type ResolveAppByCreatorAndNameBase = {
   /** The address of the app creator account to resolve the app by */
   creatorAddress: string
   /** The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) */
@@ -67,14 +65,23 @@ export type ResolveAppByCreatorAndName = {
   findExistingUsing: Indexer | AppLookup
 }
 
-/** Configuration to resolve app by ID */
-export interface ResolveAppById {
+/** Configuration to resolve app by creator and name `getCreatorAppsByName` */
+export type ResolveAppByCreatorAndName = ResolveAppByCreatorAndNameBase & {
   /** How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` */
-  resolveBy: 'id'
+  resolveBy: 'creatorAndName'
+}
+
+/** Configuration to resolve app by ID */
+export interface ResolveAppByIdBase {
   /** The id of an existing app to call using this client, or 0 if the app hasn't been created yet */
   id: number | bigint
   /** The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract) */
   name?: string
+}
+
+export interface ResolveAppById extends ResolveAppByIdBase {
+  /** How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` */
+  resolveBy: 'id'
 }
 
 /** The details of an AlgoKit Utils deployed app */
@@ -102,10 +109,10 @@ export type AppSpecAppDetailsBase = {
 }
 
 /** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by id*/
-export type AppSpecAppDetailsById = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppById
+export type AppSpecAppDetailsById = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByIdBase
 
 /** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by creator and name*/
-export type AppSpecAppDetailsByCreatorAndName = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByCreatorAndName
+export type AppSpecAppDetailsByCreatorAndName = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByCreatorAndNameBase
 
 /** The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app */
 export type AppSpecAppDetails = AppSpecAppDetailsBase & AppDetails
