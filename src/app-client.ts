@@ -5,17 +5,31 @@ import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetails
  * Create a new ApplicationClient instance
  * @param appDetails The details of the app
  * @param algod An algod instance
- * @returns The application client
- * @example
- * const client = algokit.getAppClientById(
+ *
+ * @example Resolve by creator and name
+ * const client = algokit.getAppClient(
  *     {
+ *       resolveBy: 'creatorAndName',
+ *       app: {appSpec},
+ *       sender: {account},
+ *       creatorAddress: {creator},
+ *       findExistingUsing: indexerClient,
+ *     },
+ *     algodClient,
+ *   )
+ *
+ * @example Resolve by id:
+ * const client = algokit.getAppClient(
+ *     {
+ *       resolveBy: 'id',
  *       app: {appSpec},
  *       sender: {account},
  *       id: {id},
- *       resolveBy: 'id'
  *     },
- *     algod,
- *   )
+ *    algodClient,
+ * )
+ *
+ * @returns The application client
  */
 export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
   return new ApplicationClient(appDetails, algod)
@@ -33,7 +47,7 @@ export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
  *       sender: {account},
  *       id: {id},
  *     },
- *     algod,
+ *     algodClient,
  *   )
  *
  * @returns The application client
@@ -53,9 +67,9 @@ export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algod
  *       app: {appSpec},
  *       sender: {account},
  *       creatorAddress: {account.addr},
- *       findExistingUsing: {indexer},
+ *       findExistingUsing: {indexerClient},
  *     },
- *     algod,
+ *     algodClient,
  *   )
  *
  * @returns The application client

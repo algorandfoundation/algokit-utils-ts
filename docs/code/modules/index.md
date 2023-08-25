@@ -1016,15 +1016,32 @@ Create a new ApplicationClient instance
 **`Example`**
 
 ```ts
-const client = algokit.getAppClientById(
+Resolve by creator and name
+const client = algokit.getAppClient(
     {
+      resolveBy: 'creatorAndName',
+      app: {appSpec},
+      sender: {account},
+      creatorAddress: {creator},
+      findExistingUsing: indexerClient,
+    },
+    algodClient,
+  )
+```
+
+**`Example`**
+
+```ts
+Resolve by id:
+const client = algokit.getAppClient(
+    {
+      resolveBy: 'id',
       app: {appSpec},
       sender: {account},
       id: {id},
-      resolveBy: 'id'
     },
-    algod,
-  )
+   algodClient,
+)
 ```
 
 #### Parameters
@@ -1042,7 +1059,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L20)
+[src/app-client.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L34)
 
 ___
 
@@ -1060,9 +1077,9 @@ const client = algokit.getAppClientByCreatorAndName(
       app: {appSpec},
       sender: {account},
       creatorAddress: {account.addr},
-      findExistingUsing: {indexer},
+      findExistingUsing: {indexerClient},
     },
-    algod,
+    algodClient,
   )
 ```
 
@@ -1081,7 +1098,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L63)
+[src/app-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L77)
 
 ___
 
@@ -1100,7 +1117,7 @@ const client = algokit.getAppClientById(
       sender: {account},
       id: {id},
     },
-    algod,
+    algodClient,
   )
 ```
 
@@ -1119,7 +1136,7 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L41)
+[src/app-client.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L55)
 
 ___
 
