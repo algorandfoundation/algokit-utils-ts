@@ -20,6 +20,7 @@
 - [AppSourceMaps](../interfaces/types_app_client.AppSourceMaps.md)
 - [FundAppAccountParams](../interfaces/types_app_client.FundAppAccountParams.md)
 - [ResolveAppById](../interfaces/types_app_client.ResolveAppById.md)
+- [ResolveAppByIdBase](../interfaces/types_app_client.ResolveAppByIdBase.md)
 - [SourceMapExport](../interfaces/types_app_client.SourceMapExport.md)
 
 ### Type Aliases
@@ -31,8 +32,13 @@
 - [AppClientCreateParams](types_app_client.md#appclientcreateparams)
 - [AppClientUpdateParams](types_app_client.md#appclientupdateparams)
 - [AppDetails](types_app_client.md#appdetails)
+- [AppDetailsBase](types_app_client.md#appdetailsbase)
 - [AppSpecAppDetails](types_app_client.md#appspecappdetails)
+- [AppSpecAppDetailsBase](types_app_client.md#appspecappdetailsbase)
+- [AppSpecAppDetailsByCreatorAndName](types_app_client.md#appspecappdetailsbycreatorandname)
+- [AppSpecAppDetailsById](types_app_client.md#appspecappdetailsbyid)
 - [ResolveAppByCreatorAndName](types_app_client.md#resolveappbycreatorandname)
+- [ResolveAppByCreatorAndNameBase](types_app_client.md#resolveappbycreatorandnamebase)
 
 ## Type Aliases
 
@@ -44,7 +50,7 @@ The arguments to pass to an Application Client smart contract call
 
 #### Defined in
 
-[src/types/app-client.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L149)
+[src/types/app-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L168)
 
 ___
 
@@ -56,7 +62,7 @@ Parameters to construct a ApplicationClient contract call
 
 #### Defined in
 
-[src/types/app-client.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L162)
+[src/types/app-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L181)
 
 ___
 
@@ -68,7 +74,7 @@ Parameters to construct a ApplicationClient clear state contract call
 
 #### Defined in
 
-[src/types/app-client.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L165)
+[src/types/app-client.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L184)
 
 ___
 
@@ -86,7 +92,7 @@ On-complete action parameter for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L177)
+[src/types/app-client.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L196)
 
 ___
 
@@ -98,7 +104,7 @@ Parameters for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L183)
+[src/types/app-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L202)
 
 ___
 
@@ -110,37 +116,111 @@ Parameters for updating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L186)
+[src/types/app-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L205)
 
 ___
 
 ### AppDetails
 
-Ƭ **AppDetails**: { `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `params?`: `SuggestedParams` ; `sender?`: [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)  } & [`ResolveAppById`](../interfaces/types_app_client.ResolveAppById.md) \| [`ResolveAppByCreatorAndName`](types_app_client.md#resolveappbycreatorandname)
+Ƭ **AppDetails**: [`AppDetailsBase`](types_app_client.md#appdetailsbase) & [`ResolveAppById`](../interfaces/types_app_client.ResolveAppById.md) \| [`ResolveAppByCreatorAndName`](types_app_client.md#resolveappbycreatorandname)
 
 The details of an AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L81)
+[src/types/app-client.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L100)
+
+___
+
+### AppDetailsBase
+
+Ƭ **AppDetailsBase**: `Object`
+
+The details of an AlgoKit Utils deployed app
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get used in calls to `deploy`, `create` and `update` unless overridden in those calls |
+| `params?` | `SuggestedParams` | Default suggested params object to use |
+| `sender?` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | Default sender to use for transactions issued by this application client |
+
+#### Defined in
+
+[src/types/app-client.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L88)
 
 ___
 
 ### AppSpecAppDetails
 
-Ƭ **AppSpecAppDetails**: [`AppDetails`](types_app_client.md#appdetails) & { `app`: [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) \| `string`  }
+Ƭ **AppSpecAppDetails**: [`AppSpecAppDetailsBase`](types_app_client.md#appspecappdetailsbase) & [`AppDetails`](types_app_client.md#appdetails)
 
 The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L93)
+[src/types/app-client.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L118)
+
+___
+
+### AppSpecAppDetailsBase
+
+Ƭ **AppSpecAppDetailsBase**: `Object`
+
+The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `app` | [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) \| `string` | The ARC-0032 application spec as either: * Parsed JSON `AppSpec` * Raw JSON string |
+
+#### Defined in
+
+[src/types/app-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L103)
+
+___
+
+### AppSpecAppDetailsByCreatorAndName
+
+Ƭ **AppSpecAppDetailsByCreatorAndName**: [`AppSpecAppDetailsBase`](types_app_client.md#appspecappdetailsbase) & [`AppDetailsBase`](types_app_client.md#appdetailsbase) & [`ResolveAppByCreatorAndNameBase`](types_app_client.md#resolveappbycreatorandnamebase)
+
+The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by creator and name
+
+#### Defined in
+
+[src/types/app-client.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L115)
+
+___
+
+### AppSpecAppDetailsById
+
+Ƭ **AppSpecAppDetailsById**: [`AppSpecAppDetailsBase`](types_app_client.md#appspecappdetailsbase) & [`AppDetailsBase`](types_app_client.md#appdetailsbase) & [`ResolveAppByIdBase`](../interfaces/types_app_client.ResolveAppByIdBase.md)
+
+The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by id
+
+#### Defined in
+
+[src/types/app-client.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L112)
 
 ___
 
 ### ResolveAppByCreatorAndName
 
-Ƭ **ResolveAppByCreatorAndName**: `Object`
+Ƭ **ResolveAppByCreatorAndName**: [`ResolveAppByCreatorAndNameBase`](types_app_client.md#resolveappbycreatorandnamebase) & { `resolveBy`: ``"creatorAndName"``  }
+
+Configuration to resolve app by creator and name `getCreatorAppsByName`
+
+#### Defined in
+
+[src/types/app-client.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L69)
+
+___
+
+### ResolveAppByCreatorAndNameBase
+
+Ƭ **ResolveAppByCreatorAndNameBase**: `Object`
 
 Configuration to resolve app by creator and name `getCreatorAppsByName`
 
@@ -151,7 +231,6 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 | `creatorAddress` | `string` | The address of the app creator account to resolve the app by |
 | `findExistingUsing` | `Indexer` \| [`AppLookup`](../interfaces/types_app.AppLookup.md) | The mechanism to find an existing app instance metadata for the given creator and name; either: * An indexer instance to search the creator account apps; or * The cached value of the existing apps for the given creator from `getCreatorAppsByName` |
 | `name?` | `string` | The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) |
-| `resolveBy` | ``"creatorAndName"`` | How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'creatorAndName'` if you want to use `deploy` |
 
 #### Defined in
 

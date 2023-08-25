@@ -6,6 +6,12 @@
 
 Configuration to resolve app by ID
 
+## Hierarchy
+
+- [`ResolveAppByIdBase`](types_app_client.ResolveAppByIdBase.md)
+
+  ↳ **`ResolveAppById`**
+
 ## Table of contents
 
 ### Properties
@@ -22,9 +28,13 @@ Configuration to resolve app by ID
 
 The id of an existing app to call using this client, or 0 if the app hasn't been created yet
 
+#### Inherited from
+
+[ResolveAppByIdBase](types_app_client.ResolveAppByIdBase.md).[id](types_app_client.ResolveAppByIdBase.md#id)
+
 #### Defined in
 
-[src/types/app-client.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L75)
+[src/types/app-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L77)
 
 ___
 
@@ -34,9 +44,13 @@ ___
 
 The optional name to use to mark the app when deploying `ApplicationClient.deploy` (default: uses the name in the ABI contract)
 
+#### Inherited from
+
+[ResolveAppByIdBase](types_app_client.ResolveAppByIdBase.md).[name](types_app_client.ResolveAppByIdBase.md#name)
+
 #### Defined in
 
-[src/types/app-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L77)
+[src/types/app-client.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L79)
 
 ___
 
@@ -48,4 +62,4 @@ How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'cr
 
 #### Defined in
 
-[src/types/app-client.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L73)
+[src/types/app-client.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L84)
