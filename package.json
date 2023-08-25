@@ -21,6 +21,26 @@
     },
     "./package.json": "./package.json"
   },
+  "types": "./dist/types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/types/index.d.ts"
+      ],
+      "types/app": [
+        "dist/types/types/app.d.ts"
+      ],
+      "types/app-client": [
+        "dist/types/types/app-client.d.ts"
+      ],
+      "types/app-spec": [
+        "dist/types/types/app-spec.d.ts"
+      ],
+      "types/transaction": [
+        "dist/types/types/transaction.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
