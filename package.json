@@ -9,13 +9,25 @@
     "node": ">=16.0"
   },
   "type": "module",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./types/index.d.ts",
   "typesVersions": {
     "*": {
-      "*": [
-        "dist/types/*.d.ts"
+      ".": [
+        "types/index.d.ts"
+      ],
+      "types/app": [
+        "types/types/app.d.ts"
+      ],
+      "types/app-client": [
+        "types/types/app-client.d.ts"
+      ],
+      "types/app-spec": [
+        "types/types/app-spec.d.ts"
+      ],
+      "types/transaction": [
+        "types/types/transaction.d.ts"
       ]
     }
   },
@@ -39,7 +51,7 @@
     "build:0-clean": "rimraf dist coverage",
     "build:1-compile-cjs": "tsc -p tsconfig.cjs.json",
     "build:2-compile-esm": "tsc -p tsconfig.esm.json",
-    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --main ./dist/cjs/index.js --types ./dist/types/index.d.ts --custom-sections exports",
+    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --main ./dist/cjs/index.js --types ./dist/types/index.d.ts --custom-sections exports typesVersions",
     "build:4-copy-readme": "copyfiles README.md dist",
     "test": "dotenv -e .env -- jest --coverage --passWithNoTests",
     "lint": "eslint ./src/ --ext .ts",
