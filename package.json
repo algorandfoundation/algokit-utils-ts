@@ -16,9 +16,6 @@
     "*": {
       "*": [
         "dist/types/*.d.ts"
-      ],
-      "types/*": [
-        "dist/types/types/*.d.ts"
       ]
     }
   },
