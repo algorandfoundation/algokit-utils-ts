@@ -41,6 +41,8 @@
 - [getAppBoxValuesFromABIType](index.md#getappboxvaluesfromabitype)
 - [getAppById](index.md#getappbyid)
 - [getAppClient](index.md#getappclient)
+- [getAppClientByCreatorAndName](index.md#getappclientbycreatorandname)
+- [getAppClientById](index.md#getappclientbyid)
 - [getAppDeploymentTransactionNote](index.md#getappdeploymenttransactionnote)
 - [getAppGlobalState](index.md#getappglobalstate)
 - [getAppLocalState](index.md#getapplocalstate)
@@ -1011,6 +1013,37 @@ ___
 
 Create a new ApplicationClient instance
 
+**`Example`**
+
+```ts
+Resolve by creator and name
+const client = algokit.getAppClient(
+    {
+      resolveBy: 'creatorAndName',
+      app: {appSpec},
+      sender: {account},
+      creatorAddress: {creator},
+      findExistingUsing: indexerClient,
+    },
+    algodClient,
+  )
+```
+
+**`Example`**
+
+```ts
+Resolve by id:
+const client = algokit.getAppClient(
+    {
+      resolveBy: 'id',
+      app: {appSpec},
+      sender: {account},
+      id: {id},
+    },
+   algodClient,
+)
+```
+
 #### Parameters
 
 | Name | Type | Description |
@@ -1026,7 +1059,84 @@ The application client
 
 #### Defined in
 
-[src/app-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L10)
+[src/app-client.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L34)
+
+___
+
+### getAppClientByCreatorAndName
+
+▸ **getAppClientByCreatorAndName**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+Create a new ApplicationClient instance by creator and name
+
+**`Example`**
+
+```ts
+const client = algokit.getAppClientByCreatorAndName(
+    {
+      app: {appSpec},
+      sender: {account},
+      creatorAddress: {account.addr},
+      findExistingUsing: {indexerClient},
+    },
+    algodClient,
+  )
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appDetails` | [`AppSpecAppDetailsByCreatorAndName`](types_app_client.md#appspecappdetailsbycreatorandname) | The details of the app by creator and name |
+| `algod` | `default` | An algod instance |
+
+#### Returns
+
+[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+The application client
+
+#### Defined in
+
+[src/app-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L77)
+
+___
+
+### getAppClientById
+
+▸ **getAppClientById**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+Create a new ApplicationClient instance by id
+
+**`Example`**
+
+```ts
+const client = algokit.getAppClientById(
+    {
+      app: {appSpec},
+      sender: {account},
+      id: {id},
+    },
+    algodClient,
+  )
+```
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appDetails` | [`AppSpecAppDetailsById`](types_app_client.md#appspecappdetailsbyid) | The details of the app |
+| `algod` | `default` | An algod instance |
+
+#### Returns
+
+[`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
+
+The application client
+
+#### Defined in
+
+[src/app-client.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L55)
 
 ___
 
