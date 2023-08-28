@@ -534,8 +534,8 @@ describe('application-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const returnValue = algokit.getABIReturn(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       { method: client.getABIMethod('call_abi_foreign_refs')!, methodArgs: [] },
       result.confirmations[0],
     )

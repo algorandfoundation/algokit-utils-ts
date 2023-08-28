@@ -8,16 +8,51 @@
   "engines": {
     "node": ">=16.0"
   },
-  "main": "./index.js",
+  "type": "module",
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "types/index.d.ts"
+      ],
+      "types/app": [
+        "types/types/app.d.ts"
+      ],
+      "types/app-client": [
+        "types/types/app-client.d.ts"
+      ],
+      "types/app-spec": [
+        "types/types/app-spec.d.ts"
+      ],
+      "types/transaction": [
+        "types/types/transaction.d.ts"
+      ]
+    }
+  },
   "files": [
     "**/*"
   ],
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    },
+    "./testing": {
+      "import": "./esm/testing/index.js",
+      "require": "./cjs/testing/index.js"
+    },
+    "./index.d.ts": "./types/index.d.ts",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
-    "build:1-compile": "tsc -p tsconfig.build.json",
-    "build:2-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json",
-    "build:3-copy-readme": "copyfiles README.md dist",
+    "build:1-compile-cjs": "tsc -p tsconfig.cjs.json",
+    "build:2-compile-esm": "tsc -p tsconfig.esm.json",
+    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --main ./cjs/index.js --types ./types/index.d.ts --custom-sections exports typesVersions module",
+    "build:4-copy-readme": "copyfiles README.md dist",
     "test": "dotenv -e .env -- jest --coverage --passWithNoTests",
     "lint": "eslint ./src/ --ext .ts",
     "lint:fix": "eslint ./src/ --ext .ts --fix",
