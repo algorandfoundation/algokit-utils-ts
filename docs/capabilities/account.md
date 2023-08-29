@@ -26,8 +26,9 @@ AlgoKit Utils provides a few helper methods to take one of these `SendTransactio
 
 In order to get the accounts you can use the underlying algosdk methods where relevant, or you can use the following AlgoKit Utils functions (all of which return a type compatible with `SendTransactionFrom`):
 
-- [`algokit.getAccount(name, algod, kmd?)`](../code/modules/index.md#) - Returns an Algorand account with private key loaded by convention based on the given name identifier - either by idempotently creating the account in KMD or from environment variable via `process.env['{NAME}_MNEMONIC']` and (optionally) `process.env['{NAME}_SENDER']` (if account is rekeyed)
+- [`algokit.mnemonicAccountFromEnvironment(account, algod, kmd?)`](../code/modules/index.md#mnemonicaccountfromenvironment) - Returns an Algorand account with private key loaded by convention based on the given name identifier - either by idempotently creating the account in KMD or from environment variable via `process.env['{NAME}_MNEMONIC']` and (optionally) `process.env['{NAME}_SENDER']` (if account is rekeyed)
   - This allows you to have powerful code that will automatically create and fund an account by name locally and when deployed against TestNet/MainNet will automatically resolve from environment variables, without having to have different code
+  - Note: `account` can either be a string name, or an object with `{name: string, fundWith?: AlgoAmount}`, where `fundWith` allows you to control how many ALGOs are seeded into an account created in KMD
 - [`algokit.mnemonicAccount(mnemonicSecret)`](../code/modules/index.md#mnemonicaccount) - Returns an Algorand account (`algosdk.Account`) with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
 - [`algokit.multisigAccount(multisigParams, signingAccounts)`](../code/modules/index.md#multisigaccount) - Returns a multisig account with one or more signing keys loaded.
 - [`algokit.rekeyedAccount(signer, sender)`](../code/modules/index.md#rekeyedaccount) - Returns a `SigningAccount` representing the given rekeyed sender/signer combination

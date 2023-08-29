@@ -19,7 +19,7 @@ export async function isLocalNet(algod: Algodv2): Promise<boolean> {
  *
  * This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh LocalNet.
  *
- * If this is used via `getAccount`, then you can even use the same code that runs on production without changes for local development!
+ * If this is used via `mnemonicAccountFromEnvironment`, then you can even use the same code that runs on production without changes for local development!
  *
  * @param walletAccount The wallet details with:
  *   * `name`: The name of the wallet to retrieve / create

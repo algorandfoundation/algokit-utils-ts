@@ -70,6 +70,7 @@
 - [lookupTransactionById](index.md#lookuptransactionbyid)
 - [microAlgos](index.md#microalgos)
 - [mnemonicAccount](index.md#mnemonicaccount)
+- [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
 - [multisigAccount](index.md#multisigaccount)
 - [performAtomicTransactionComposerDryrun](index.md#performatomictransactioncomposerdryrun)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
@@ -471,7 +472,7 @@ The requested account with private key loaded from the environment variables or 
 
 **`Deprecated`**
 
-use getAccount(account: { config: AccountConfig; fundWith?: AlgoAmount }, algod: Algodv2, kmdClient?: Kmd) instead
+use mnemonicAccountFromEnvironment instead
 
 Returns an Algorand account with private key loaded by convention based on the given name identifier.
 
@@ -502,10 +503,6 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 
 ▸ **getAccount**(`account`, `algod`, `kmdClient?`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
-Returns an Algorand account with private key loaded by convention based on the given name identifier.
-
-Note: This function expects to run in a Node.js environment.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -521,6 +518,13 @@ Note: This function expects to run in a Node.js environment.
 `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
+
+**`Deprecated`**
+
+use mnemonicAccountFromEnvironment instead
+Returns an Algorand account with private key loaded by convention based on the given name identifier.
+
+Note: This function expects to run in a Node.js environment.
 
 **`Example`**
 
@@ -557,7 +561,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L212)
+[src/account.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L271)
 
 ___
 
@@ -579,15 +583,13 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L204)
+[src/account.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L263)
 
 ___
 
 ### getAccountConfigFromEnvironment
 
 ▸ **getAccountConfigFromEnvironment**(`accountName`): [`AccountConfig`](../interfaces/types_account.AccountConfig.md)
-
-Returns the Account configuration from environment variables
 
 #### Parameters
 
@@ -599,6 +601,11 @@ Returns the Account configuration from environment variables
 
 [`AccountConfig`](../interfaces/types_account.AccountConfig.md)
 
+**`Deprecated`**
+
+Use algokit.mnemonicAccountFromEnvironment, which doesn't need this function
+Returns the Account configuration from environment variables
+
 **`Example`**
 
 ```ts
@@ -609,7 +616,7 @@ environment variables
 
 #### Defined in
 
-[src/account.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L239)
+[src/account.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L299)
 
 ___
 
@@ -1378,7 +1385,7 @@ If running on LocalNet then it will return the default dispenser account automat
 
 #### Defined in
 
-[src/account.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L224)
+[src/account.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L283)
 
 ___
 
@@ -1468,7 +1475,7 @@ This is useful to get idempotent accounts from LocalNet without having to specif
 
 This significantly speeds up local dev time and improves experience since you can write code that *just works* first go without manual config in a fresh LocalNet.
 
-If this is used via `getAccount`, then you can even use the same code that runs on production without changes for local development!
+If this is used via `mnemonicAccountFromEnvironment`, then you can even use the same code that runs on production without changes for local development!
 
 #### Parameters
 
@@ -1801,6 +1808,54 @@ This is a wrapper around algosdk.mnemonicToSecretKey to provide a more friendly/
 #### Defined in
 
 [src/account.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L47)
+
+___
+
+### mnemonicAccountFromEnvironment
+
+▸ **mnemonicAccountFromEnvironment**(`account`, `algod`, `kmdClient?`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+
+Returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
+
+Note: This function expects to run in a Node.js environment.
+
+## Convention:
+* **Non-LocalNet:** will load process.env['{NAME}_MNEMONIC'] as a mnemonic secret; **Note: Be careful how the mnemonic is handled**,
+ never commit it into source control and ideally load it via a secret storage service rather than the file system.
+  If process.env['{NAME}_SENDER'] is defined then it will use that for the sender address (i.e. to support rekeyed accounts)
+* **LocalNet:** will load the account from a KMD wallet called {NAME} and if that wallet doesn't exist it will create it and fund the account for you
+
+This allows you to write code that will work seamlessly in production and local development (LocalNet) without manual config locally (including when you reset the LocalNet).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `account` | `string` \| { `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: string: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `algod` | `default` | An algod client |
+| `kmdClient?` | `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
+
+#### Returns
+
+`Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+
+The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
+
+**`Example`**
+
+Default
+
+If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
+```typescript
+const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
+```
+
+If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
+
+#### Defined in
+
+[src/account.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L230)
 
 ___
 
