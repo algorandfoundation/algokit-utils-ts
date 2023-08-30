@@ -212,7 +212,7 @@ export async function getAccount(
  *
  * @example Default
  *
- * If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
+ * If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
  * ```typescript
  * const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
  * ```
@@ -232,8 +232,8 @@ export async function mnemonicAccountFromEnvironment(
   algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
-  const name = typeof account === 'string' ? account : account.name
-  const fundWith = typeof account === 'string' ? undefined : account.fundWith
+  const { name, fundWith } =
+    typeof account === 'string' ? { name: account, fundWith: undefined } : { name: account.name, fundWith: account.fundWith }
 
   // todo: When eventually removing this method, inline it here
   const config = getAccountConfigFromEnvironment(name)
