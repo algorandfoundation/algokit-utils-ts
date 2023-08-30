@@ -232,8 +232,7 @@ export async function mnemonicAccountFromEnvironment(
   algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
-  const { name, fundWith } =
-    typeof account === 'string' ? { name: account, fundWith: undefined } : { name: account.name, fundWith: account.fundWith }
+  const { name, fundWith } = typeof account === 'string' ? { name: account, fundWith: undefined } : account
 
   // todo: When eventually removing this method, inline it here
   const config = getAccountConfigFromEnvironment(name)

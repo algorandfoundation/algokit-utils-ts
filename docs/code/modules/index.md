@@ -561,7 +561,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L271)
+[src/account.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L270)
 
 ___
 
@@ -583,7 +583,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L263)
+[src/account.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L262)
 
 ___
 
@@ -616,7 +616,7 @@ environment variables
 
 #### Defined in
 
-[src/account.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L299)
+[src/account.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L298)
 
 ___
 
@@ -1385,7 +1385,7 @@ If running on LocalNet then it will return the default dispenser account automat
 
 #### Defined in
 
-[src/account.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L283)
+[src/account.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L282)
 
 ___
 
@@ -1845,7 +1845,7 @@ The requested account with private key loaded from the environment variables or 
 
 Default
 
-If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
+If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
 ```typescript
 const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
 ```
