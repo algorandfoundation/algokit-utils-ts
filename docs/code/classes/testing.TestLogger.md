@@ -168,15 +168,6 @@ This helps ensure that the provided configuration items won't appear
 
 https://jestjs.io/docs/snapshot-testing#2-tests-should-be-deterministic
 
-**`Example`**
-
-Jest Example
-```typescript
-const logger = new TestLogger()
-...
-expect(logger.getLogSnapshot()).toMatchSnapshot()
-```
-
 #### Parameters
 
 | Name | Type | Description |
@@ -188,6 +179,15 @@ expect(logger.getLogSnapshot()).toMatchSnapshot()
 `string`
 
 The snapshotted logs.
+
+**`Example`**
+
+Jest Example
+```typescript
+const logger = new TestLogger()
+...
+expect(logger.getLogSnapshot()).toMatchSnapshot()
+```
 
 #### Defined in
 
