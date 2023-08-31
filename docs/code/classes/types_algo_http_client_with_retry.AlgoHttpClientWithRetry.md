@@ -53,7 +53,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L45)
+[src/types/urlTokenBaseHTTPClient.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L48)
 
 ## Properties
 

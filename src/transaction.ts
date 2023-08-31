@@ -240,7 +240,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
             decodeError: r.decodeError,
             returnValue: r.returnValue,
             rawReturnValue: r.rawReturnValue,
-          } as ABIReturn),
+          }) as ABIReturn,
       ),
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
