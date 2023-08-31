@@ -57,7 +57,7 @@ This is the default implementation of BaseHTTPClient.
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L45)
+[src/types/urlTokenBaseHTTPClient.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L48)
 
 ## Properties
 
@@ -67,7 +67,7 @@ This is the default implementation of BaseHTTPClient.
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L41)
+[src/types/urlTokenBaseHTTPClient.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L44)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L45)
+[src/types/urlTokenBaseHTTPClient.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L53)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L42)
+[src/types/urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L45)
 
 ## Methods
 
@@ -114,7 +114,7 @@ BaseHTTPClient.delete
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L176)
+[src/types/urlTokenBaseHTTPClient.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L185)
 
 ___
 
@@ -140,7 +140,7 @@ BaseHTTPClient.get
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L137)
+[src/types/urlTokenBaseHTTPClient.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L146)
 
 ___
 
@@ -165,7 +165,7 @@ A URL string
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L71)
+[src/types/urlTokenBaseHTTPClient.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L80)
 
 ___
 
@@ -192,7 +192,7 @@ BaseHTTPClient.post
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L153)
+[src/types/urlTokenBaseHTTPClient.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L162)
 
 ___
 
@@ -212,7 +212,7 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L97)
+[src/types/urlTokenBaseHTTPClient.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L106)
 
 ___
 
@@ -232,7 +232,7 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L128)
+[src/types/urlTokenBaseHTTPClient.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L137)
 
 ___
 
@@ -252,4 +252,4 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L89)
+[src/types/urlTokenBaseHTTPClient.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L98)
