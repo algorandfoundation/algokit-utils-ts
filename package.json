@@ -6,7 +6,7 @@
   "author": "Algorand Foundation",
   "license": "MIT",
   "engines": {
-    "node": ">=16.0"
+    "node": ">=18.0"
   },
   "type": "module",
   "main": "./cjs/index.js",
