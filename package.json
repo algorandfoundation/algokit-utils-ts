@@ -17,17 +17,20 @@
       ".": [
         "types/index.d.ts"
       ],
-      "types/app": [
-        "types/types/app.d.ts"
+      "*": [
+        "types/index.d.ts"
       ],
-      "types/app-client": [
-        "types/types/app-client.d.ts"
+      "types": [
+        "types/types/index.d.ts"
       ],
-      "types/app-spec": [
-        "types/types/app-spec.d.ts"
+      "types/*": [
+        "types/types/*.d.ts"
       ],
-      "types/transaction": [
-        "types/types/transaction.d.ts"
+      "testing": [
+        "types/testing/index.d.ts"
+      ],
+      "testing/*": [
+        "types/testing/*.d.ts"
       ]
     }
   },
@@ -45,7 +48,8 @@
     },
     "./testing": {
       "import": "./esm/testing/index.js",
-      "require": "./cjs/testing/index.js"
+      "require": "./cjs/testing/index.js",
+      "types": "./types/testing/index.d.ts"
     },
     "./index.d.ts": "./types/index.d.ts",
     "./package.json": "./package.json"
