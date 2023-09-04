@@ -245,25 +245,24 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
+    Config.logger.info('Received error executing Atomic Transaction Composer, for more information enable the debug flag')
     if (Config.debug && typeof e === 'object') {
       e.traces = []
       Config.logger.debug(
-        'Received error executing Atomic Transaction Composer and debug flag enabled; attempting dry run to get more information',
+        'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
       )
-      const dryrun = await performAtomicTransactionComposerDryrun(atc, algod)
-
-      for (const txn of dryrun.txns) {
-        if (txn.appCallRejected()) {
+      const simulate = await performAtomicTransactionComposerSimulate(atc, algod)
+      if (simulate.txnGroups[0].failedAt) {
+        for (const txn of simulate.txnGroups[0].txnResults) {
           e.traces.push({
-            trace: txn.appTrace(),
-            cost: txn.cost,
-            logs: txn.logs,
-            messages: txn.appCallMessages,
+            trace: txn.execTrace,
+            cost: txn.logicSigBudgetConsumed,
+            logs: txn.txnResult.logs,
+            messages: simulate.txnGroups[0].failureMessage,
           })
         }
       }
     }
-
     throw e
   }
 }
@@ -281,6 +280,29 @@ export async function performAtomicTransactionComposerDryrun(atc: AtomicTransact
   })
   const dryrun = await algosdk.createDryrun({ client: algod, txns })
   return new algosdk.DryrunResult(await algod.dryrun(dryrun).do())
+}
+
+/**
+ * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
+ * @param atc The AtomicTransactionComposer with transaction(s) loaded.
+ * @param algod An Algod client to perform the simulation.
+ * @returns The simulation result, which includes various details about how the transactions would be processed.
+ */
+export async function performAtomicTransactionComposerSimulate(atc: AtomicTransactionComposer, algod: Algodv2) {
+  const signedTransactions = await atc.gatherSignatures()
+  const decodedSignedTransactions = signedTransactions.map((t) => algosdk.decodeObj(t) as algosdk.EncodedSignedTransaction)
+
+  const simulateRequest = new modelsv2.SimulateRequest({
+    txnGroups: [
+      new modelsv2.SimulateRequestTransactionGroup({
+        txns: decodedSignedTransactions,
+      }),
+    ],
+  })
+
+  // Perform simulation
+  const simulateResult = await algod.simulateTransactions(simulateRequest).do()
+  return simulateResult
 }
 
 /**
