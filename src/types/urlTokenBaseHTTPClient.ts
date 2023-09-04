@@ -23,7 +23,10 @@ export interface CustomTokenHeader {
 }
 
 class URLTokenBaseHTTPError extends Error implements BaseHTTPClientError {
-  constructor(message: string, public response: BaseHTTPClientResponse) {
+  constructor(
+    message: string,
+    public response: BaseHTTPClientResponse,
+  ) {
     super(message)
     this.name = 'URLTokenBaseHTTPError'
     this.response = response
@@ -42,7 +45,13 @@ export class URLTokenBaseHTTPClient implements BaseHTTPClient {
   private readonly tokenHeader: TokenHeader
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(tokenHeader: TokenHeader, baseServer: string, port?: string | number, private defaultHeaders: Record<string, any> = {}) {
+  constructor(
+    tokenHeader: TokenHeader,
+    baseServer: string,
+    port?: string | number,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private defaultHeaders: Record<string, any> = {},
+  ) {
     // Append a trailing slash so we can use relative paths. Without the trailing
     // slash, the last path segment will be replaced by the relative path. See
     // usage in `addressWithPath`.

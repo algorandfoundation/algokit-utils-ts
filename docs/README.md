@@ -24,12 +24,16 @@ This library can be installed from NPM using your favourite npm client, e.g.:
 npm install @algorandfoundation/algokit-utils
 ```
 
+## Peer Dependencies
+
+This library requires `algosdk` as a peer dependency. Ensure you have it installed in your project.
+
 # Usage
 
 To use this library simply include the following at the top of your file:
 
 ```typescript
-import * as algokit from '@algorandfoudation/algokit-utils'
+import * as algokit from '@algorandfoundation/algokit-utils'
 ```
 
 Then you can use intellisense to auto-complete the various functions that are available by typing `algokit.` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](code/modules/index.md).

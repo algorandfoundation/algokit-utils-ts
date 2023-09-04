@@ -45,6 +45,10 @@ Testing framework agnostic handler method to run before each test to prepare the
 Retrieve the current context.
 Useful with destructuring.
 
+#### Returns
+
+[`AlgorandTestAutomationContext`](types_testing.AlgorandTestAutomationContext.md)
+
 **`Example`**
 
 ```typescript
@@ -52,10 +56,6 @@ test('My test', () => {
     const {algod, indexer, testAccount, ...} = algorand.context
 })
 ```
-
-#### Returns
-
-[`AlgorandTestAutomationContext`](types_testing.AlgorandTestAutomationContext.md)
 
 #### Defined in
 

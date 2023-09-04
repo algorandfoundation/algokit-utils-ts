@@ -24,6 +24,12 @@
 
 Creates a test fixture for capturing AlgoKit logs.
 
+#### Returns
+
+[`AlgoKitLogCaptureFixture`](../interfaces/types_testing.AlgoKitLogCaptureFixture.md)
+
+The fixture
+
 **`Example`**
 
 ```typescript
@@ -36,12 +42,6 @@ test('My test', () => {
     const capturedLogs = logs.testLogger.capturedLogs
 })
 ```
-
-#### Returns
-
-[`AlgoKitLogCaptureFixture`](../interfaces/types_testing.AlgoKitLogCaptureFixture.md)
-
-The fixture
 
 #### Defined in
 
@@ -59,6 +59,18 @@ By default it tests against an environment variable specified client
  a default LocalNet instance, but you can pass in an algod, indexer
  and/or kmd if you want to test against an explicitly defined network.
 
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `fixtureConfig?` | [`AlgorandFixtureConfig`](../interfaces/types_testing.AlgorandFixtureConfig.md) | The fixture configuration |
+
+#### Returns
+
+[`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
+
+The fixture
+
 **`Example`**
 
 ```typescript
@@ -72,18 +84,6 @@ test('My test', async () => {
 })
 ```
 
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `fixtureConfig?` | [`AlgorandFixtureConfig`](../interfaces/types_testing.AlgorandFixtureConfig.md) | The fixture configuration |
-
-#### Returns
-
-[`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
-
-The fixture
-
 #### Defined in
 
 [src/testing/fixtures/algorand-fixture.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L35)
@@ -95,19 +95,6 @@ By default it tests against an environment variable specified client
  if the standard environment variables are specified, otherwise against
  a default LocalNet instance, but you can pass in an algod, indexer
  and/or kmd if you want to test against an explicitly defined network.
-
-**`Example`**
-
-```typescript
-const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
-
-beforeEach(algorand.beforeEach, 10_000)
-
-test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
-    // test things...
-})
-```
 
 #### Parameters
 
@@ -121,6 +108,19 @@ test('My test', async () => {
 [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
 The fixture
+
+**`Example`**
+
+```typescript
+const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
+
+beforeEach(algorand.beforeEach, 10_000)
+
+test('My test', async () => {
+    const {algod, indexer, testAccount, ...} = algorand.context
+    // test things...
+})
+```
 
 #### Defined in
 
@@ -165,12 +165,6 @@ Runs the given indexer call until a 404 error is no longer returned.
 Tried every 200ms up to 20 times.
 Very rudimentary implementation designed for automated testing.
 
-**`Example`**
-
-```typescript
-const transaction = await runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(txnId).do())
-```
-
 #### Type parameters
 
 | Name |
@@ -188,6 +182,12 @@ const transaction = await runWhenIndexerCaughtUp(() => indexer.lookupTransaction
 `Promise`<`T`\>
 
 The result (as a promise), or throws if the indexer didn't catch up in time
+
+**`Example`**
+
+```typescript
+const transaction = await runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(txnId).do())
+```
 
 #### Defined in
 

@@ -3,8 +3,6 @@ name: Pull Request
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - '**/*.md'
 
 permissions:
   contents: read
@@ -13,6 +11,7 @@ jobs:
   pull_request:
     uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
     with:
+      node-version: 18.x
       working-directory: ./
       run-commit-lint: true
       run-build: true

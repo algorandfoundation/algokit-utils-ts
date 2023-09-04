@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/esm",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "declarationDir": "./dist/types"
+  },
+  "exclude": ["src/**/*.spec.ts", "tests/**/*.*"]
+}
