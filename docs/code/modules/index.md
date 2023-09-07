@@ -73,6 +73,7 @@
 - [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
 - [multisigAccount](index.md#multisigaccount)
 - [performAtomicTransactionComposerDryrun](index.md#performatomictransactioncomposerdryrun)
+- [performAtomicTransactionComposerSimulate](index.md#performatomictransactioncomposersimulate)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
 - [performTemplateSubstitutionAndCompile](index.md#performtemplatesubstitutionandcompile)
 - [randomAccount](index.md#randomaccount)
@@ -172,7 +173,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L397)
+[src/transaction.ts:419](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L419)
 
 ___
 
@@ -228,7 +229,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction.ts:420](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L420)
+[src/transaction.ts:442](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L442)
 
 ___
 
@@ -1270,7 +1271,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L452)
+[src/transaction.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L474)
 
 ___
 
@@ -1569,7 +1570,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L443)
+[src/transaction.ts:465](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L465)
 
 ___
 
@@ -1906,7 +1907,32 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L277)
+[src/transaction.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L276)
+
+___
+
+### performAtomicTransactionComposerSimulate
+
+▸ **performAtomicTransactionComposerSimulate**(`atc`, `algod`): `Promise`<`SimulateResponse`\>
+
+Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `atc` | `AtomicTransactionComposer` | The AtomicTransactionComposer with transaction(s) loaded. |
+| `algod` | `default` | An Algod client to perform the simulation. |
+
+#### Returns
+
+`Promise`<`SimulateResponse`\>
+
+The simulation result, which includes various details about how the transactions would be processed.
+
+#### Defined in
+
+[src/transaction.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L291)
 
 ___
 
@@ -2114,7 +2140,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L295)
+[src/transaction.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L317)
 
 ___
 
@@ -2319,4 +2345,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L340)
+[src/transaction.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L362)
