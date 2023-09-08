@@ -1,6 +1,7 @@
 import algosdk, {
   Algodv2,
   AtomicTransactionComposer,
+  EncodedSignedTransaction,
   modelsv2,
   SuggestedParams,
   Transaction,
@@ -289,18 +290,17 @@ export async function performAtomicTransactionComposerDryrun(atc: AtomicTransact
  * @returns The simulation result, which includes various details about how the transactions would be processed.
  */
 export async function performAtomicTransactionComposerSimulate(atc: AtomicTransactionComposer, algod: Algodv2) {
-  const signedTransactions = await atc.gatherSignatures()
-  const decodedSignedTransactions = signedTransactions.map((t) => algosdk.decodeObj(t) as algosdk.EncodedSignedTransaction)
+  const unsignedTransactionsSigners = atc.buildGroup()
+  const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
 
   const simulateRequest = new modelsv2.SimulateRequest({
+    allowEmptySignatures: true,
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({
-        txns: decodedSignedTransactions,
+        txns: decodedSignedTransactions.map((txn) => algosdk.decodeObj(txn)) as EncodedSignedTransaction[],
       }),
     ],
   })
-
-  // Perform simulation
   const simulateResult = await algod.simulateTransactions(simulateRequest).do()
   return simulateResult
 }
