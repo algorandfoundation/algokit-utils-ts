@@ -296,6 +296,12 @@ export async function performAtomicTransactionComposerSimulate(atc: AtomicTransa
 
   const simulateRequest = new modelsv2.SimulateRequest({
     allowEmptySignatures: true,
+    allowMoreLogging: true,
+    execTraceConfig: new modelsv2.SimulateTraceConfig({
+      enable: true,
+      scratchChange: true,
+      stackChange: true,
+    }),
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({
         txns: decodedSignedTransactions.map((txn) => algosdk.decodeObj(txn)) as EncodedSignedTransaction[],
