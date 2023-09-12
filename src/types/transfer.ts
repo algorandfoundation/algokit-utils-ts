@@ -34,9 +34,9 @@ export interface EnsureFundedParams extends SendTransactionParams {
 
 /** Parameters for `transferAsset` call. */
 export interface TransferAssetParams extends SendTransactionParams {
-  /** The account that will send the ALGOs */
+  /** The account that will send the asset */
   from: SendTransactionFrom
-  /** The account / account address that will receive the ALGOs */
+  /** The account / account address that will receive the asset */
   to: SendTransactionFrom | string
   /** The asset id that will be transfered */
   assetId: number
