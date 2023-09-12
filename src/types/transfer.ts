@@ -31,3 +31,21 @@ export interface EnsureFundedParams extends SendTransactionParams {
   /** The (optional) transaction note, default: "Funding account to meet minimum requirement" */
   note?: TransactionNote
 }
+
+/** Parameters for `transferAsset` call. */
+export interface TransferAssetParams extends SendTransactionParams {
+  /** The account that will send the ALGOs */
+  from: SendTransactionFrom
+  /** The account / account address that will receive the ALGOs */
+  to: SendTransactionFrom | string
+  /** The asset id that will be transfered */
+  assetId: number
+  /** The amount to send */
+  amount: number
+  /** Optional transaction parameters */
+  transactionParams?: SuggestedParams
+  /** An address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata. */
+  clawbackFrom?: SendTransactionFrom | string
+  /** The (optional) transaction note */
+  note?: TransactionNote
+}

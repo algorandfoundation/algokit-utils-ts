@@ -1,8 +1,8 @@
-import algosdk, { Account, Algodv2, Kmd, SuggestedParams } from 'algosdk'
+import algosdk, { Algodv2, Kmd } from 'algosdk'
 import { Config, getDispenserAccount, microAlgos } from './'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
-import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote } from './types/transaction'
-import { AlgoTransferParams, EnsureFundedParams } from './types/transfer'
+import { SendTransactionResult } from './types/transaction'
+import { AlgoTransferParams, EnsureFundedParams, TransferAssetParams } from './types/transfer'
 
 /**
  * Transfer ALGOs between two accounts.
@@ -75,25 +75,15 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, 
   return undefined
 }
 
-interface TransferAssetParams extends SendTransactionParams {
-  senderAccount: SendTransactionFrom
-  receiverAccount: Account
-  assetId: number
-  amount: number | bigint
-  transactionParams?: SuggestedParams
-  clawbackFrom?: SendTransactionFrom
-  note?: TransactionNote
-}
-
 export async function transferAsset(
-  { senderAccount, receiverAccount, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams }: TransferAssetParams,
+  { from, to, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams }: TransferAssetParams,
   algod: Algodv2,
 ) {
   const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-    from: getSenderAddress(senderAccount),
-    to: receiverAccount.addr,
+    from: getSenderAddress(from),
+    to: typeof to === 'string' ? to : getSenderAddress(to),
     closeRemainderTo: undefined,
-    revocationTarget: clawbackFrom ? getSenderAddress(clawbackFrom) : undefined,
+    revocationTarget: clawbackFrom ? (typeof clawbackFrom === 'string' ? clawbackFrom : getSenderAddress(clawbackFrom)) : undefined,
     amount: amount,
     note: encodeTransactionNote(note),
     assetIndex: assetId,
@@ -102,24 +92,14 @@ export async function transferAsset(
   })
 
   if (!sendParams.skipSending) {
-    if (sendParams.maxFee === undefined) {
-      sendParams.maxFee = (0.02).algos()
-    }
-
-    const result = await sendTransaction(
+    return await sendTransaction(
       {
-        transaction: transaction,
-        from: senderAccount,
-        sendParams: sendParams,
+        transaction,
+        from,
+        sendParams,
       },
       algod,
     )
-
-    Config.getLogger(sendParams.suppressLog).info(
-      `Successfully transferred ${amount} of asset ${assetId} from ${getSenderAddress(senderAccount)} to ${receiverAccount}.`,
-    )
-
-    return result
   }
 
   return { transaction, confirmation: undefined }
