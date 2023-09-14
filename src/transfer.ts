@@ -82,7 +82,7 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, 
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
  */
 export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2) {
-  const { from, to, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
+  const { from, to, assetID, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
   const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
     to: typeof to === 'string' ? to : getSenderAddress(to),
@@ -90,7 +90,7 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
     revocationTarget: clawbackFrom ? (typeof clawbackFrom === 'string' ? clawbackFrom : getSenderAddress(clawbackFrom)) : undefined,
     amount: amount,
     note: encodeTransactionNote(note),
-    assetIndex: assetId,
+    assetIndex: assetID,
     suggestedParams: await getTransactionParams(transactionParams, algod),
     rekeyTo: undefined,
   })
