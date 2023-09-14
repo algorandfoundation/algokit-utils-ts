@@ -75,10 +75,14 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, 
   return undefined
 }
 
-export async function transferAsset(
-  { from, to, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams }: TransferAssetParams,
-  algod: Algodv2,
-) {
+/**
+ * Transfer asset between two accounts.
+ * @param transfer The transfer definition
+ * @param algod An algod client
+ * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ */
+export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2) {
+  const { from, to, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
   const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
     to: typeof to === 'string' ? to : getSenderAddress(to),

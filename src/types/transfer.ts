@@ -40,7 +40,7 @@ export interface TransferAssetParams extends SendTransactionParams {
   to: SendTransactionFrom | string
   /** The asset id that will be transfered */
   assetId: number
-  /** The amount to send */
+  /** The amount to send as the smallest divisible unit value */
   amount: number
   /** Optional transaction parameters */
   transactionParams?: SuggestedParams
