@@ -10,8 +10,10 @@ import { AlgoTransferParams, EnsureFundedParams, TransferAssetParams } from './t
  * @param algod An algod client
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
  *
- * @example
+ * @example Usage example
+ * ```typescript
  * await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
+ * ```
  */
 export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
   const { from, to, amount, note, transactionParams, ...sendParams } = transfer
@@ -84,10 +86,12 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, 
  * @param algod An algod client
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
  *
- * @example
- *       await algokit.transferAsset( { from, to, assetID, amount }, algod)
+ * @example Usage example
+ * ```typescript
+ * await algokit.transferAsset( { from, to, assetID, amount }, algod)
+ * ```
  */
-export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2) {
+export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2): Promise<SendTransactionResult> {
   const { from, to, assetID, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
   const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
@@ -102,15 +106,10 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
   })
 
   if (!sendParams.skipSending) {
-    return await sendTransaction(
-      {
-        transaction,
-        from,
-        sendParams,
-      },
-      algod,
+    Config.getLogger(sendParams.suppressLog).debug(
+      `Transferring ASA (${assetID}) of amount ${amount} from ${getSenderAddress(from)} to ${to}`,
     )
   }
 
-  return { transaction, confirmation: undefined }
+  return sendTransaction({ transaction, from, sendParams }, algod)
 }

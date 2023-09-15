@@ -107,6 +107,29 @@ describe('transfer', () => {
     }
   }, 10e6)
 
+  test('Transfer ASA, without sending', async () => {
+    const { algod, testAccount, kmd } = localnet.context
+    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const secondAccount = algosdk.generateAccount()
+
+    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
+    await optIn(algod, testAccount, dummyAssetID)
+    const response = await algokit.transferAsset(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        assetID: 1,
+        amount: 5,
+        note: `Transfer asset with wrong id`,
+        skipSending: true,
+      },
+      algod,
+    )
+
+    expect(response.transaction).toBeDefined()
+    expect(response.confirmation).toBeUndefined()
+  }, 10e6)
+
   test('Transfer ASA, asset is transfered to another account', async () => {
     const { algod, testAccount, kmd } = localnet.context
     const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
@@ -133,7 +156,7 @@ describe('transfer', () => {
     expect(testAccountInfo['asset-holding']['amount']).toBe(95)
   }, 10e6)
 
-  test('Transfer ASA, asset is transfered to another account', async () => {
+  test('Transfer ASA, asset is transfered to another account from revocationTarget', async () => {
     const { algod, testAccount, kmd } = localnet.context
     const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
@@ -153,6 +176,9 @@ describe('transfer', () => {
       },
       algod,
     )
+
+    const clawbackFromInfo = await algod.accountAssetInformation(clawbackAccount.addr, dummyAssetID).do()
+    expect(clawbackFromInfo['asset-holding']['amount']).toBe(5)
 
     await algokit.transferAsset(
       {

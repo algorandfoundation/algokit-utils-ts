@@ -372,7 +372,7 @@ undefined if nothing was needed or the transaction send result
 
 #### Defined in
 
-[src/transfer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L46)
+[src/transfer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L48)
 
 ___
 
@@ -2264,13 +2264,14 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 **`Example`**
 
-```ts
+Usage example
+```typescript
 await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
 ```
 
 #### Defined in
 
-[src/transfer.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L16)
+[src/transfer.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L18)
 
 ___
 
@@ -2295,13 +2296,14 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 **`Example`**
 
-```ts
+Usage example
+```typescript
 await algokit.transferAsset( { from, to, assetID, amount }, algod)
 ```
 
 #### Defined in
 
-[src/transfer.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L90)
+[src/transfer.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L94)
 
 ___
 
