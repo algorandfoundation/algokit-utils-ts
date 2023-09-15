@@ -3,7 +3,7 @@ import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from './'
 import { algorandFixture } from './testing'
-import { generateTestAsset } from './testing/asset'
+import { assureFundsAndOptIn, generateTestAsset, optIn } from './testing/asset'
 
 describe('transfer', () => {
   const localnet = algorandFixture()
@@ -42,7 +42,80 @@ describe('transfer', () => {
     const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    const { transaction, confirmation } = await algokit.transferAsset(
+    try {
+      await algokit.transferAsset(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          assetID: dummyAssetID,
+          amount: 5,
+          note: `Transfer 5 assets wit id ${dummyAssetID}`,
+        },
+        algod,
+      )
+    } catch (e: unknown) {
+      expect((e as Error).name).toEqual('URLTokenBaseHTTPError')
+      expect((e as Error).message).toContain('receiver error: must optin')
+    }
+  }, 10e6)
+
+  test('Transfer ASA, sender is not opted in', async () => {
+    const { algod, testAccount, kmd } = localnet.context
+    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const secondAccount = algosdk.generateAccount()
+
+    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
+
+    try {
+      await algokit.transferAsset(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          assetID: dummyAssetID,
+          amount: 5,
+          note: `Transfer 5 assets wit id ${dummyAssetID}`,
+        },
+        algod,
+      )
+    } catch (e: unknown) {
+      expect((e as Error).name).toEqual('URLTokenBaseHTTPError')
+      expect((e as Error).message).toContain('sender error: must optin')
+    }
+  }, 10e6)
+
+  test('Transfer ASA, asset doesnt exist', async () => {
+    const { algod, testAccount, kmd } = localnet.context
+    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const secondAccount = algosdk.generateAccount()
+
+    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
+    await optIn(algod, testAccount, dummyAssetID)
+    try {
+      await algokit.transferAsset(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          assetID: 1,
+          amount: 5,
+          note: `Transfer asset with wrong id`,
+        },
+        algod,
+      )
+    } catch (e: unknown) {
+      expect((e as Error).name).toEqual('URLTokenBaseHTTPError')
+      expect((e as Error).message).toContain('asset 1 missing from')
+    }
+  }, 10e6)
+
+  test('Transfer ASA, asset is transfered to another account', async () => {
+    const { algod, testAccount, kmd } = localnet.context
+    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const secondAccount = algosdk.generateAccount()
+
+    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
+    await optIn(algod, testAccount, dummyAssetID)
+
+    await algokit.transferAsset(
       {
         from: testAccount,
         to: secondAccount.addr,
@@ -53,18 +126,55 @@ describe('transfer', () => {
       algod,
     )
 
-    // TODO: Expect this invocation to throw URLTokenBaseHTTPError and receiver to no be opted in
+    const secondAccountInfo = await algod.accountAssetInformation(secondAccount.addr, dummyAssetID).do()
+    expect(secondAccountInfo['asset-holding']['amount']).toBe(5)
+
+    const testAccountInfo = await algod.accountAssetInformation(testAccount.addr, dummyAssetID).do()
+    expect(testAccountInfo['asset-holding']['amount']).toBe(95)
   }, 10e6)
 
-  // TODO: Implement test for when sender is not opted in to the asset
+  test('Transfer ASA, asset is transfered to another account', async () => {
+    const { algod, testAccount, kmd } = localnet.context
+    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const secondAccount = algosdk.generateAccount()
+    const clawbackAccount = algosdk.generateAccount()
 
-  // TODO: Implement test for malformed sender AND receiver address
+    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
+    await assureFundsAndOptIn(algod, clawbackAccount, dummyAssetID, kmd)
+    await optIn(algod, testAccount, dummyAssetID)
 
-  // TODO: Implement test for happy path, receiver is opted and recievs the assets
+    await algokit.transferAsset(
+      {
+        from: testAccount,
+        to: clawbackAccount.addr,
+        assetID: dummyAssetID,
+        amount: 5,
+        note: `Transfer 5 assets wit id ${dummyAssetID}`,
+      },
+      algod,
+    )
 
-  // TODO: Implement test for clawback, create 3 accounts. 1 creator, 1 clawback target and 1 recipient. Opt in both clawback target account and recipient and transfer some amount to clawback target. Then in actual test perform a transfer from sender to receipient with clawback from specified. Assert that clawback target no longer has the specified amount after Txn and that sender's balance is left unchanged.
+    await algokit.transferAsset(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        assetID: dummyAssetID,
+        amount: 5,
+        note: `Transfer 5 assets wit id ${dummyAssetID}`,
+        clawbackFrom: clawbackAccount,
+      },
+      algod,
+    )
 
-  // TOOD: If asset id is non existent, expect this to throw an error (figure out the exact error type based on algo sdk response)
+    const secondAccountInfo = await algod.accountAssetInformation(secondAccount.addr, dummyAssetID).do()
+    expect(secondAccountInfo['asset-holding']['amount']).toBe(5)
+
+    const clawbackAccountInfo = await algod.accountAssetInformation(clawbackAccount.addr, dummyAssetID).do()
+    expect(clawbackAccountInfo['asset-holding']['amount']).toBe(0)
+
+    const testAccountInfo = await algod.accountAssetInformation(testAccount.addr, dummyAssetID).do()
+    expect(testAccountInfo['asset-holding']['amount']).toBe(95)
+  }, 10e6)
 
   test('ensureFunded is sent and waited for with correct amount for new account', async () => {
     const { algod, kmd, testAccount } = localnet.context

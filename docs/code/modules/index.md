@@ -372,7 +372,7 @@ undefined if nothing was needed or the transaction send result
 
 #### Defined in
 
-[src/transfer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L43)
+[src/transfer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L46)
 
 ___
 
@@ -2262,30 +2262,46 @@ Transfer ALGOs between two accounts.
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Example`**
+
+```ts
+await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
+```
+
 #### Defined in
 
-[src/transfer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L13)
+[src/transfer.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L16)
 
 ___
 
 ### transferAsset
 
-▸ **transferAsset**(`«destructured»`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+▸ **transferAsset**(`transfer`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+
+Transfer asset between two accounts.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | [`TransferAssetParams`](../interfaces/types_transfer.TransferAssetParams.md) |
-| `algod` | `default` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `transfer` | [`TransferAssetParams`](../interfaces/types_transfer.TransferAssetParams.md) | The transfer definition |
+| `algod` | `default` | An algod client |
 
 #### Returns
 
 `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
+The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+
+**`Example`**
+
+```ts
+await algokit.transferAsset( { from, to, assetID, amount }, algod)
+```
+
 #### Defined in
 
-[src/transfer.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L78)
+[src/transfer.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L90)
 
 ___
 

@@ -1,4 +1,6 @@
-import { Account, Algodv2, makeAssetCreateTxnWithSuggestedParamsFromObject } from 'algosdk'
+import { Account, Algodv2, Kmd, makeAssetCreateTxnWithSuggestedParamsFromObject } from 'algosdk'
+import { algos, microAlgos } from '../amount'
+import { ensureFunded, transferAsset } from '../transfer'
 
 export async function generateTestAsset(client: Algodv2, sender: Account, total?: number) {
   total = !total ? Math.floor(Math.random() * 100) + 20 : total
@@ -34,4 +36,29 @@ export async function generateTestAsset(client: Algodv2, sender: Account, total?
   return assetID
 }
 
-// TODO: Place an optin method implementaiton, do not export it in index file, to be moved to a separate file once we start with opt in task feature
+export async function optIn(algod: Algodv2, account: Account, assetID: number) {
+  await transferAsset(
+    {
+      from: account,
+      to: account.addr,
+      assetID: assetID,
+      amount: 0,
+      note: `Opt in asset id ${assetID}`,
+    },
+    algod,
+  )
+}
+
+export async function assureFundsAndOptIn(algod: Algodv2, account: Account, assetID: number, kmd: Kmd) {
+  await ensureFunded(
+    {
+      accountToFund: account,
+      minSpendingBalance: microAlgos(1),
+      minFundingIncrement: algos(1),
+    },
+    algod,
+    kmd,
+  )
+
+  return optIn(algod, account, assetID)
+}

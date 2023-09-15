@@ -35,3 +35,16 @@ The function calls Algod to find the current balance and minimum balance require
 If you want to programmtically send funds then you will often need a "dispenser" account that has a store of ALGOs that can be sent and a private key available for that dispenser account.
 
 There is a standard AlgoKit Utils function to get access to a [dispenser account](./account.md#accounts): [`algokit.getDispenserAccount(algod, kmd?)`](../code/modules/index.md#getdispenseraccount). When running against [LocalNet](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/localnet.md), the dispenser account can be automatically determined using the [Kmd API](https://developer.algorand.org/docs/rest-apis/kmd). When running against other networks like TestNet or MainNet the mnemonic (and optionally sender address if it's been rekeyed) of the dispenser account can be provided via environment variables (`process.env.DISPENSER_MNEMONIC` and optionally `process.env.DISPENSER_SENDER` if rekeyed).
+
+## `transferAssets`
+
+The key function to facilitate asset transfers is `transferAsset(transfer, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes a [`TransferAssetParams`](../code/interfaces/types_indexer.AssetTransferTransactionResult.md):
+
+- All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
+- `from: SendTransactionFrom` - The account that will send the asset
+- `to: string` - The account / account address that will receive the asset
+- `assetID: number` - The asset id that will be transfered
+- `amount: AlgoAmount` - The amount to send as the smallest divisible unit value
+- `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
+- `clawbackFrom: SendTransactionFrom | string` - An optional address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata.
+- `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
