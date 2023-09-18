@@ -24,7 +24,8 @@ INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and versio
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
 WARN: App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail
 INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
-WARN: Deleting existing test app with id APP_1 from ACCOUNT_1 account."
+WARN: Deleting existing test app with id APP_1 from ACCOUNT_1 account.
+INFO: Received error executing Atomic Transaction Composer, for more information enable the debug flag"
 `;
 
 exports[`deploy-app Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail 1`] = `
@@ -72,7 +73,8 @@ INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and versio
 WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"numUint":3,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}},"to":{"global":{"numUint":3,"numByteSlice":3,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}}}]
 INFO: App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail
 INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
-WARN: Deleting existing test app with id APP_1 from ACCOUNT_1 account."
+WARN: Deleting existing test app with id APP_1 from ACCOUNT_1 account.
+INFO: Received error executing Atomic Transaction Composer, for more information enable the debug flag"
 `;
 
 exports[`deploy-app Deploy update to immutable updated app fails 1`] = `

@@ -630,69 +630,11 @@ describe('application-client', () => {
           create_8:"
         `)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        e.led.traces[0].trace = e.led.traces[0].trace!.replace(new RegExp(`${app.appId}([\\],])`, 'g'), '{APP_ID}$1')
-        expect(e.led.traces[0]).toMatchInlineSnapshot(`
-          {
-            "cost": undefined,
-            "logs": undefined,
-            "messages": [
-              "ApprovalProgram",
-              "REJECT",
-              "logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert",
-            ],
-            "trace": "pc#  |ln# |source                            |scratch |stack
-          1    |1   |intcblock 0 1 10 5 1 1            |        |[]
-          9    |2   |bytecblock 0x 0x151f7c75          |        |[]
-          17   |3   |txn NumAppArgs                    |        |[]
-          19   |4   |intc_0 // 0                       |        |[1]
-          20   |5   |==                                |        |[1, 0]
-          21   |6   |bnz label1                        |        |[0]
-          24   |7   |txna ApplicationArgs 0            |        |[]
-          27   |8   |pushbytes 0xf17e80a5 // 0xf17e... |        |[0x44d0da0d]
-          33   |9   |==                                |        |[0x44d0da0d, 0xf17e80a5]
-          34   |10  |bnz label2                        |        |[0]
-          37   |11  |txna ApplicationArgs 0            |        |[]
-          40   |12  |pushbytes 0x0a92a81e // 0x0a92... |        |[0x44d0da0d]
-          46   |13  |==                                |        |[0x44d0da0d, 0x0a92a81e]
-          47   |14  |bnz label3                        |        |[0]
-          50   |15  |txna ApplicationArgs 0            |        |[]
-          53   |16  |pushbytes 0xad75602c // 0xad75... |        |[0x44d0da0d]
-          59   |17  |==                                |        |[0x44d0da0d, 0xad75602c]
-          60   |18  |bnz label4                        |        |[0]
-          63   |19  |txna ApplicationArgs 0            |        |[]
-          66   |20  |pushbytes 0xa4cf8dea // 0xa4cf... |        |[0x44d0da0d]
-          72   |21  |==                                |        |[0x44d0da0d, 0xa4cf8dea]
-          73   |22  |bnz label5                        |        |[0]
-          76   |23  |txna ApplicationArgs 0            |        |[]
-          79   |24  |pushbytes 0xcec2834a // 0xcec2... |        |[0x44d0da0d]
-          85   |25  |==                                |        |[0x44d0da0d, 0xcec2834a]
-          86   |26  |bnz label6                        |        |[0]
-          89   |27  |txna ApplicationArgs 0            |        |[]
-          92   |28  |pushbytes 0xa4b4a230 // 0xa4b4... |        |[0x44d0da0d]
-          98   |29  |==                                |        |[0x44d0da0d, 0xa4b4a230]
-          99   |30  |bnz label7                        |        |[0]
-          102  |31  |txna ApplicationArgs 0            |        |[]
-          105  |32  |pushbytes 0x44d0da0d // 0x44d0... |        |[0x44d0da0d]
-          111  |33  |==                                |        |[0x44d0da0d, 0x44d0da0d]
-          112  |34  |bnz label8                        |        |[1]
-          341  |165 |txn OnCompletion                  |        |[]
-          343  |166 |intc_0 // 0                       |        |[0]
-          344  |167 |==                                |        |[0, 0]
-          345  |168 |txn ApplicationID                 |        |[1]
-          347  |169 |intc_0 // 0                       |        |[1, {APP_ID}]
-          348  |170 |!=                                |        |[1, {APP_ID}, 0]
-          349  |171 |&&                                |        |[1, 1]
-          350  |172 |assert                            |        |[1]
-          351  |173 |callsub label25                   |        |[]
-          1321 |702 |proto 0 0                         |        |[]
-          1324 |703 |callsub label50                   |        |[]
-          881  |450 |proto 0 0                         |        |[]
-          884  |451 |intc_0 // 0                       |        |[]
-          885  |452 |assert                            |        |[0]
-          885  |452 |!! assert failed pc=885 !!        |        |[0]
-          ",
-          }
-        `)
+        const originalData = JSON.stringify(e.led.traces[0], null, 2).replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
+        // const updatedData = originalData.replace(/("pc": 345,[\s\S]*?"uint": )(\d+)/, '{APP_ID}$1')
+        const updatedData = originalData.replace(/("pc": 345[\s\S]+?stack-additions[\s\S]+?uint": )\d+/g, '$1"APP_ID"')
+        // const updatedData = originalData.replace(/("pc": 345,.*?"stack-additions": .*?"uint": )\d+/s, '$1"AppId"')
+        expect(updatedData).toMatchSnapshot()
       }
 
       expect(
