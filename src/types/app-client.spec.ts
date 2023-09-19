@@ -631,9 +631,7 @@ describe('application-client', () => {
         `)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const originalData = JSON.stringify(e.led.traces[0], null, 2).replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
-        // const updatedData = originalData.replace(/("pc": 345,[\s\S]*?"uint": )(\d+)/, '{APP_ID}$1')
         const updatedData = originalData.replace(/("pc": 345[\s\S]+?stack-additions[\s\S]+?uint": )\d+/g, '$1"APP_ID"')
-        // const updatedData = originalData.replace(/("pc": 345,.*?"stack-additions": .*?"uint": )\d+/s, '$1"AppId"')
         expect(updatedData).toMatchSnapshot()
       }
 
