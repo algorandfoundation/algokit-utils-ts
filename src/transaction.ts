@@ -260,7 +260,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
             appBudget: txn.appBudgetConsumed,
             logicSigBudget: txn.logicSigBudgetConsumed,
             logs: txn.txnResult.logs,
-            messages: simulate.txnGroups[0].failureMessage,
+            message: simulate.txnGroups[0].failureMessage,
           })
         }
       }

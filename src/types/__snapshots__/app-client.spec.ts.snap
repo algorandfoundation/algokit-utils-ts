@@ -352,7 +352,7 @@ exports[`application-client Errors Display nice error messages when there is a l
     ]
   },
   "appBudget": 48,
-  "messages": "transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"
+  "message": "transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"
 }"
 `;
 
