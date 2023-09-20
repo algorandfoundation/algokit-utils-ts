@@ -38,7 +38,7 @@ The key function to facilitate asset transfers is `transferAsset(transfer, algod
 - `from: SendTransactionFrom` - The account that will send the asset
 - `to: string` - The account / account address that will receive the asset
 - `assetID: number` - The asset id that will be transfered
-- `amount: AlgoAmount` - The amount to send as the smallest divisible unit value
+- `amount: number` - The amount to send as the smallest divisible unit value
 - `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
 - `clawbackFrom: SendTransactionFrom | string` - An optional address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata.
 - `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
