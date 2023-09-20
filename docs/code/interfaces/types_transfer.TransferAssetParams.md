@@ -35,7 +35,7 @@ Parameters for `transferAsset` call.
 
 ### amount
 
-• **amount**: `number`
+• **amount**: `number` \| `bigint`
 
 The amount to send as the smallest divisible unit value
 

@@ -41,7 +41,7 @@ export interface TransferAssetParams extends SendTransactionParams {
   /** The asset id that will be transfered */
   assetID: number
   /** The amount to send as the smallest divisible unit value */
-  amount: number
+  amount: number | bigint
   /** Optional transaction parameters */
   transactionParams?: SuggestedParams
   /** An address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata. */
