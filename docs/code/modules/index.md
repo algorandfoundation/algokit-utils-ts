@@ -73,6 +73,7 @@
 - [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
 - [multisigAccount](index.md#multisigaccount)
 - [performAtomicTransactionComposerDryrun](index.md#performatomictransactioncomposerdryrun)
+- [performAtomicTransactionComposerSimulate](index.md#performatomictransactioncomposersimulate)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
 - [performTemplateSubstitutionAndCompile](index.md#performtemplatesubstitutionandcompile)
 - [randomAccount](index.md#randomaccount)
@@ -172,7 +173,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L397)
+[src/transaction.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L426)
 
 ___
 
@@ -228,7 +229,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction.ts:420](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L420)
+[src/transaction.ts:449](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L449)
 
 ___
 
@@ -343,7 +344,7 @@ the transaction note ready for inclusion in a transaction
 
 #### Defined in
 
-[src/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L38)
+[src/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L39)
 
 ___
 
@@ -1270,7 +1271,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L452)
+[src/transaction.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L481)
 
 ___
 
@@ -1519,7 +1520,7 @@ The public address
 
 #### Defined in
 
-[src/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L59)
+[src/transaction.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L60)
 
 ___
 
@@ -1544,7 +1545,7 @@ A transaction signer
 
 #### Defined in
 
-[src/transaction.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L69)
+[src/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L70)
 
 ___
 
@@ -1569,7 +1570,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:443](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L443)
+[src/transaction.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L472)
 
 ___
 
@@ -1595,7 +1596,7 @@ A TransactionWithSigner object.
 
 #### Defined in
 
-[src/transaction.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L82)
+[src/transaction.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L83)
 
 ___
 
@@ -1906,7 +1907,32 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L277)
+[src/transaction.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L278)
+
+___
+
+### performAtomicTransactionComposerSimulate
+
+▸ **performAtomicTransactionComposerSimulate**(`atc`, `algod`): `Promise`<`SimulateResponse`\>
+
+Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `atc` | `AtomicTransactionComposer` | The AtomicTransactionComposer with transaction(s) loaded. |
+| `algod` | `default` | An Algod client to perform the simulation. |
+
+#### Returns
+
+`Promise`<`SimulateResponse`\>
+
+The simulation result, which includes various details about how the transactions would be processed.
+
+#### Defined in
+
+[src/transaction.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L293)
 
 ___
 
@@ -2089,7 +2115,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L189)
+[src/transaction.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L190)
 
 ___
 
@@ -2114,7 +2140,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L295)
+[src/transaction.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L324)
 
 ___
 
@@ -2142,7 +2168,7 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `
 
 #### Defined in
 
-[src/transaction.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L145)
+[src/transaction.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L146)
 
 ___
 
@@ -2167,7 +2193,7 @@ The signed transaction as a `Uint8Array`
 
 #### Defined in
 
-[src/transaction.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L125)
+[src/transaction.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L126)
 
 ___
 
@@ -2319,4 +2345,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L340)
+[src/transaction.ts:369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L369)

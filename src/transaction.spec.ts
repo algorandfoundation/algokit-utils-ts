@@ -291,6 +291,37 @@ describe('transaction', () => {
       expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
     }
   })
+
+  test('Transaction fails in debug mode, error is enriched using simulate', async () => {
+    const { algod, testAccount } = localnet.context
+    const txn1 = await getTestTransaction(1)
+    const txn2 = await getTestTransaction(9999999999999) // This will fail due to fee being too high
+
+    try {
+      await algokit.sendGroupOfTransactions(
+        {
+          transactions: [
+            {
+              transaction: txn1,
+              signer: testAccount,
+            },
+            {
+              transaction: txn2,
+              signer: testAccount,
+            },
+          ],
+        },
+        algod,
+      )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e.traces[0].message).toEqual(
+        `transaction ${txn2.txID()}: overspend (account ${
+          testAccount.addr
+        }, data {AccountBaseData:{Status:Offline MicroAlgos:{Raw:9998000} RewardsBase:0 RewardedMicroAlgos:{Raw:0} AuthAddr:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ TotalAppSchema:{_struct:{} NumUint:0 NumByteSlice:0} TotalExtraAppPages:0 TotalAppParams:0 TotalAppLocalStates:0 TotalAssetParams:0 TotalAssets:0 TotalBoxes:0 TotalBoxBytes:0} VotingData:{VoteID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] SelectionID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] StateProofID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] VoteFirstValid:0 VoteLastValid:0 VoteKeyDilution:0}}, tried to spend {9999999999999})`,
+      )
+    }
+  })
 })
 
 describe('transaction node encoder', () => {
