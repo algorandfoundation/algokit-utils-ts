@@ -292,13 +292,10 @@ describe('transaction', () => {
     }
   })
 
-  test('Transaction fails and simulation works', async () => {
-    // algokit.Config({ debug: true })
+  test('Transaction fails in debug mode, error is enriched using simulate', async () => {
     const { algod, testAccount } = localnet.context
-    // const txn1 = await getTestTransaction(1, 'InvalidAddress')
     const txn1 = await getTestTransaction(1)
     const txn2 = await getTestTransaction(9999999999999) // This will fail due to fee being too high
-    // txn1.fee = 0 // Setting to an insufficient fee
 
     try {
       await algokit.sendGroupOfTransactions(
@@ -316,6 +313,7 @@ describe('transaction', () => {
         },
         algod,
       )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       expect(e.traces[0].message).toEqual(
         `transaction ${txn2.txID()}: overspend (account ${
