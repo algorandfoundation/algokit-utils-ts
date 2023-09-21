@@ -88,11 +88,11 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, 
  *
  * @example Usage example
  * ```typescript
- * await algokit.transferAsset( { from, to, assetID, amount }, algod)
+ * await algokit.transferAsset({ from, to, assetId, amount }, algod)
  * ```
  */
 export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, assetID, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
+  const { from, to, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
   const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
     to: typeof to === 'string' ? to : getSenderAddress(to),
@@ -100,14 +100,14 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
     revocationTarget: clawbackFrom ? (typeof clawbackFrom === 'string' ? clawbackFrom : getSenderAddress(clawbackFrom)) : undefined,
     amount: amount,
     note: encodeTransactionNote(note),
-    assetIndex: assetID,
+    assetIndex: assetId,
     suggestedParams: await getTransactionParams(transactionParams, algod),
     rekeyTo: undefined,
   })
 
   if (!sendParams.skipSending) {
     Config.getLogger(sendParams.suppressLog).debug(
-      `Transferring ASA (${assetID}) of amount ${amount} from ${getSenderAddress(from)} to ${to}`,
+      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${to}`,
     )
   }
 

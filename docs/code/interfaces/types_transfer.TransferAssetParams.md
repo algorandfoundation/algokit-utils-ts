@@ -17,7 +17,7 @@ Parameters for `transferAsset` call.
 ### Properties
 
 - [amount](types_transfer.TransferAssetParams.md#amount)
-- [assetID](types_transfer.TransferAssetParams.md#assetid)
+- [assetId](types_transfer.TransferAssetParams.md#assetid)
 - [atc](types_transfer.TransferAssetParams.md#atc)
 - [clawbackFrom](types_transfer.TransferAssetParams.md#clawbackfrom)
 - [fee](types_transfer.TransferAssetParams.md#fee)
@@ -45,9 +45,9 @@ The amount to send as the smallest divisible unit value
 
 ___
 
-### assetID
+### assetId
 
-• **assetID**: `number`
+• **assetId**: `number`
 
 The asset id that will be transfered
 

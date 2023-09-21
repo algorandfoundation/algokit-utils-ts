@@ -3,7 +3,7 @@ import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from './'
 import { algorandFixture } from './testing'
-import { assureFundsAndOptIn, generateTestAsset, optIn } from './testing/asset'
+import { ensureFundsAndOptIn, generateTestAsset, optIn } from './testing/asset'
 
 describe('transfer', () => {
   const localnet = algorandFixture()
@@ -39,7 +39,7 @@ describe('transfer', () => {
 
   test('Transfer ASA, receiver is not opted in', async () => {
     const { algod, testAccount } = localnet.context
-    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
     try {
@@ -47,9 +47,9 @@ describe('transfer', () => {
         {
           from: testAccount,
           to: secondAccount.addr,
-          assetID: dummyAssetID,
+          assetId: dummyAssetId,
           amount: 5,
-          note: `Transfer 5 assets wit id ${dummyAssetID}`,
+          note: `Transfer 5 assets with id ${dummyAssetId}`,
         },
         algod,
       )
@@ -61,19 +61,19 @@ describe('transfer', () => {
 
   test('Transfer ASA, sender is not opted in', async () => {
     const { algod, testAccount, kmd } = localnet.context
-    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
+    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
 
     try {
       await algokit.transferAsset(
         {
           from: testAccount,
           to: secondAccount.addr,
-          assetID: dummyAssetID,
+          assetId: dummyAssetId,
           amount: 5,
-          note: `Transfer 5 assets wit id ${dummyAssetID}`,
+          note: `Transfer 5 assets with id ${dummyAssetId}`,
         },
         algod,
       )
@@ -85,17 +85,17 @@ describe('transfer', () => {
 
   test('Transfer ASA, asset doesnt exist', async () => {
     const { algod, testAccount, kmd } = localnet.context
-    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
-    await optIn(algod, testAccount, dummyAssetID)
+    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
+    await optIn(algod, testAccount, dummyAssetId)
     try {
       await algokit.transferAsset(
         {
           from: testAccount,
           to: secondAccount.addr,
-          assetID: 1,
+          assetId: 1,
           amount: 5,
           note: `Transfer asset with wrong id`,
         },
@@ -109,16 +109,16 @@ describe('transfer', () => {
 
   test('Transfer ASA, without sending', async () => {
     const { algod, testAccount, kmd } = localnet.context
-    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
-    await optIn(algod, testAccount, dummyAssetID)
+    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
+    await optIn(algod, testAccount, dummyAssetId)
     const response = await algokit.transferAsset(
       {
         from: testAccount,
         to: secondAccount.addr,
-        assetID: 1,
+        assetId: 1,
         amount: 5,
         note: `Transfer asset with wrong id`,
         skipSending: true,
@@ -132,73 +132,73 @@ describe('transfer', () => {
 
   test('Transfer ASA, asset is transfered to another account', async () => {
     const { algod, testAccount, kmd } = localnet.context
-    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
-    await optIn(algod, testAccount, dummyAssetID)
+    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
+    await optIn(algod, testAccount, dummyAssetId)
 
     await algokit.transferAsset(
       {
         from: testAccount,
         to: secondAccount.addr,
-        assetID: dummyAssetID,
+        assetId: dummyAssetId,
         amount: 5,
-        note: `Transfer 5 assets wit id ${dummyAssetID}`,
+        note: `Transfer 5 assets with id ${dummyAssetId}`,
       },
       algod,
     )
 
-    const secondAccountInfo = await algod.accountAssetInformation(secondAccount.addr, dummyAssetID).do()
+    const secondAccountInfo = await algod.accountAssetInformation(secondAccount.addr, dummyAssetId).do()
     expect(secondAccountInfo['asset-holding']['amount']).toBe(5)
 
-    const testAccountInfo = await algod.accountAssetInformation(testAccount.addr, dummyAssetID).do()
+    const testAccountInfo = await algod.accountAssetInformation(testAccount.addr, dummyAssetId).do()
     expect(testAccountInfo['asset-holding']['amount']).toBe(95)
   }, 10e6)
 
   test('Transfer ASA, asset is transfered to another account from revocationTarget', async () => {
     const { algod, testAccount, kmd } = localnet.context
-    const dummyAssetID = await generateTestAsset(algod, testAccount, 100)
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
     const clawbackAccount = algosdk.generateAccount()
 
-    await assureFundsAndOptIn(algod, secondAccount, dummyAssetID, kmd)
-    await assureFundsAndOptIn(algod, clawbackAccount, dummyAssetID, kmd)
-    await optIn(algod, testAccount, dummyAssetID)
+    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
+    await ensureFundsAndOptIn(algod, clawbackAccount, dummyAssetId, kmd)
+    await optIn(algod, testAccount, dummyAssetId)
 
     await algokit.transferAsset(
       {
         from: testAccount,
         to: clawbackAccount.addr,
-        assetID: dummyAssetID,
+        assetId: dummyAssetId,
         amount: 5,
-        note: `Transfer 5 assets wit id ${dummyAssetID}`,
+        note: `Transfer 5 assets with id ${dummyAssetId}`,
       },
       algod,
     )
 
-    const clawbackFromInfo = await algod.accountAssetInformation(clawbackAccount.addr, dummyAssetID).do()
+    const clawbackFromInfo = await algod.accountAssetInformation(clawbackAccount.addr, dummyAssetId).do()
     expect(clawbackFromInfo['asset-holding']['amount']).toBe(5)
 
     await algokit.transferAsset(
       {
         from: testAccount,
         to: secondAccount.addr,
-        assetID: dummyAssetID,
+        assetId: dummyAssetId,
         amount: 5,
-        note: `Transfer 5 assets wit id ${dummyAssetID}`,
+        note: `Transfer 5 assets with id ${dummyAssetId}`,
         clawbackFrom: clawbackAccount,
       },
       algod,
     )
 
-    const secondAccountInfo = await algod.accountAssetInformation(secondAccount.addr, dummyAssetID).do()
+    const secondAccountInfo = await algod.accountAssetInformation(secondAccount.addr, dummyAssetId).do()
     expect(secondAccountInfo['asset-holding']['amount']).toBe(5)
 
-    const clawbackAccountInfo = await algod.accountAssetInformation(clawbackAccount.addr, dummyAssetID).do()
+    const clawbackAccountInfo = await algod.accountAssetInformation(clawbackAccount.addr, dummyAssetId).do()
     expect(clawbackAccountInfo['asset-holding']['amount']).toBe(0)
 
-    const testAccountInfo = await algod.accountAssetInformation(testAccount.addr, dummyAssetID).do()
+    const testAccountInfo = await algod.accountAssetInformation(testAccount.addr, dummyAssetId).do()
     expect(testAccountInfo['asset-holding']['amount']).toBe(95)
   }, 10e6)
 

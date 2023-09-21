@@ -2298,7 +2298,7 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 Usage example
 ```typescript
-await algokit.transferAsset( { from, to, assetID, amount }, algod)
+await algokit.transferAsset({ from, to, assetId, amount }, algod)
 ```
 
 #### Defined in

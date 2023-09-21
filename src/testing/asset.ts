@@ -31,25 +31,25 @@ export async function generateTestAsset(client: Algodv2, sender: Account, total?
 
   const ptx = await client.pendingTransactionInformation(txid).do()
 
-  const assetID = ptx['asset-index']
+  const assetId = ptx['asset-index']
 
-  return assetID
+  return assetId
 }
 
-export async function optIn(algod: Algodv2, account: Account, assetID: number) {
+export async function optIn(algod: Algodv2, account: Account, assetId: number) {
   await transferAsset(
     {
       from: account,
       to: account.addr,
-      assetID: assetID,
+      assetId,
       amount: 0,
-      note: `Opt in asset id ${assetID}`,
+      note: `Opt in asset id ${assetId}`,
     },
     algod,
   )
 }
 
-export async function assureFundsAndOptIn(algod: Algodv2, account: Account, assetID: number, kmd: Kmd) {
+export async function ensureFundsAndOptIn(algod: Algodv2, account: Account, assetId: number, kmd: Kmd) {
   await ensureFunded(
     {
       accountToFund: account,
@@ -60,5 +60,5 @@ export async function assureFundsAndOptIn(algod: Algodv2, account: Account, asse
     kmd,
   )
 
-  return optIn(algod, account, assetID)
+  return optIn(algod, account, assetId)
 }
