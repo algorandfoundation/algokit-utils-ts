@@ -2,13 +2,18 @@ import algosdk, { Algodv2, Kmd } from 'algosdk'
 import { Config, getDispenserAccount, microAlgos } from './'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { SendTransactionResult } from './types/transaction'
-import { AlgoTransferParams, EnsureFundedParams } from './types/transfer'
+import { AlgoTransferParams, EnsureFundedParams, TransferAssetParams } from './types/transfer'
 
 /**
  * Transfer ALGOs between two accounts.
  * @param transfer The transfer definition
  * @param algod An algod client
  * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ *
+ * @example Usage example
+ * ```typescript
+ * await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
+ * ```
  */
 export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
   const { from, to, amount, note, transactionParams, ...sendParams } = transfer
@@ -73,4 +78,38 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, 
   }
 
   return undefined
+}
+
+/**
+ * Transfer asset between two accounts.
+ * @param transfer The transfer definition
+ * @param algod An algod client
+ * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ *
+ * @example Usage example
+ * ```typescript
+ * await algokit.transferAsset({ from, to, assetId, amount }, algod)
+ * ```
+ */
+export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2): Promise<SendTransactionResult> {
+  const { from, to, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
+  const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+    from: getSenderAddress(from),
+    to: typeof to === 'string' ? to : getSenderAddress(to),
+    closeRemainderTo: undefined,
+    revocationTarget: clawbackFrom ? (typeof clawbackFrom === 'string' ? clawbackFrom : getSenderAddress(clawbackFrom)) : undefined,
+    amount: amount,
+    note: encodeTransactionNote(note),
+    assetIndex: assetId,
+    suggestedParams: await getTransactionParams(transactionParams, algod),
+    rekeyTo: undefined,
+  })
+
+  if (!sendParams.skipSending) {
+    Config.getLogger(sendParams.suppressLog).debug(
+      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${to}`,
+    )
+  }
+
+  return sendTransaction({ transaction, from, sendParams }, algod)
 }

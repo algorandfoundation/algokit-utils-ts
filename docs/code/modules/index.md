@@ -88,6 +88,7 @@
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
 - [transferAlgos](index.md#transferalgos)
+- [transferAsset](index.md#transferasset)
 - [updateApp](index.md#updateapp)
 - [waitForConfirmation](index.md#waitforconfirmation)
 
@@ -372,7 +373,7 @@ undefined if nothing was needed or the transaction send result
 
 #### Defined in
 
-[src/transfer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L43)
+[src/transfer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L48)
 
 ___
 
@@ -2287,9 +2288,48 @@ Transfer ALGOs between two accounts.
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Example`**
+
+Usage example
+```typescript
+await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
+```
+
 #### Defined in
 
-[src/transfer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L13)
+[src/transfer.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L18)
+
+___
+
+### transferAsset
+
+▸ **transferAsset**(`transfer`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+
+Transfer asset between two accounts.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `transfer` | [`TransferAssetParams`](../interfaces/types_transfer.TransferAssetParams.md) | The transfer definition |
+| `algod` | `default` | An algod client |
+
+#### Returns
+
+`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+
+The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+
+**`Example`**
+
+Usage example
+```typescript
+await algokit.transferAsset({ from, to, assetId, amount }, algod)
+```
+
+#### Defined in
+
+[src/transfer.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L94)
 
 ___
 
