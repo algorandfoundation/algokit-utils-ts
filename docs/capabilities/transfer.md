@@ -17,18 +17,18 @@ The key function to facilitate Algo transfers is `algokit.transferAlgos(transfer
 
 ## `ensureFunded`
 
-The ability to automatically fund an account to have a minimum amount of disposable ALGOs to spend is incredibly useful for automation and deployment scripts. The function to facilitate this is `algokit.ensureFunded(funding, algod, kmd?)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) (or undefined if it didn't need to send a transaction) and takes a [`EnsureFundedParams`](../code/interfaces/types_transfer.EnsureFundedParams.md):
+The `ensureFunded` function automatically funds an account to maintain a minimum amount of disposable ALGOs. This is particularly useful for automation and deployment scripts. The function is defined as `algokit.ensureFunded(funding, algod, kmd?)` and returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) if a transaction was needed and `useDispenserApi` set to `False`, [`SendDispenserTransactionResult`](./transaction.md#senddispensertransactionresult) if a transaction was needed and `useDispenserApi` set to `True`, or `undefined` if no transaction was required. The function takes a [`EnsureFundedParams`](../code/interfaces/types_transfer.EnsureFundedParams.md) object as an argument:
 
 - All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
 - `accountToFund: SendTransactionFrom | string` - The account that is to be funded
-- `fundingSource?: SendTransactionFrom` - The account that is the source of funds, if not specified then it will use the [dispenser](./account.md#dispenser)
-- `minSpendingBalance: AlgoAmount` - The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement)
-- `minFundingIncrement?: AlgoAmount` - When issuing a funding amount, the minimum amount to transfer (avoids many small transfers if this gets called often on an active account)
-- `amount: AlgoAmount` - The [amount](./amount.md) of ALGOs to send
+- `fundingSource?: SendTransactionFrom` - The account that is the source of funds. If not specified, it will use the [dispenser](./account.md#dispenser)
+- `minSpendingBalance: AlgoAmount` - The minimum balance of ALGOs that the account should have available to spend (i.e., on top of the minimum balance requirement)
+- `minFundingIncrement?: AlgoAmount` - When issuing a funding amount, the minimum amount to transfer. This avoids many small transfers if this function gets called often on an active account
 - `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
 - `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
+- `useDispenserApi?: boolean` - Whether to use the dispenser API to fund the account. Defaults to false.
 
-The function calls Algod to find the current balance and minimum balance requirement, gets the difference between those two numbers and checks to see if it's more than the `minSpendingBalance` and if so then it will send the difference, or the `minFundingIncrement` if that is specified.
+The function calls Algod to find the current balance and minimum balance requirement, calculates the difference between those two numbers, and checks to see if it's more than the `minSpendingBalance`. If so, it will send the difference, or the `minFundingIncrement` if that is specified. If the `useDispenserApi` option is set to true, the function will use the dispenser API to fund the account by expecting to load the access token from `ALGOKIT_DISPENSER_ACCESS_TOKEN` env var. Refer to [algokit-cli documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/dispenser.md#ci-access-token) for details on obtaining an access token for AlgoKit TestNet Dispenser API.
 
 ## `transferAsset`
 

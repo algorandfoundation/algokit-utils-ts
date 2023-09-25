@@ -16,6 +16,14 @@ The following parameters are able to be provided, with all of them being optiona
 - **maxFee: AlgoAmount** - The maximum fee that you are happy to pay (default: unbounded) - if this is set it's possible the transaction could get rejected during network congestion
 - **maxRoundsToWaitForConfirmation: number** - The maximum number of rounds to wait for confirmation, only applies if `skipWaiting` is `undefined` or `false`, default: wait up to 5 rounds
 
+## `SendDispenserTransactionResult`
+
+The `SendDispenserTransactionResult` interface is used when the `ensureFunded` method is called with the `useDispenserApi` parameter set to `true`. This interface represents the result of a transaction that uses a dispenser.
+
+This interface consists of a single property:
+
+- `transaction`: This is a string that represents the ID of the transaction that was created when the [AlgoKit Dispenser API](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/dispenser.md) issued a fund. This ID can be used to track the transaction on the Algorand network.
+
 ## `SendTransactionResult`
 
 All AlgoKit Utils functions that prepare and/or send a transaction will generally return a [`SendTransactionResult` interface](../code/interfaces/types_transaction.SendTransactionResult.md) or some superset of that. This provides a consistent mechanism to interpret the results of a transaction send.

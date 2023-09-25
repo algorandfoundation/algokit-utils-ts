@@ -1,6 +1,12 @@
 import { SuggestedParams } from 'algosdk'
 import { AlgoAmount } from './amount'
-import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
+import {
+  SendDispenserTransactionResult,
+  SendTransactionFrom,
+  SendTransactionParams,
+  SendTransactionResult,
+  TransactionNote,
+} from './transaction'
 
 /** Parameters for `transferAlgos` call. */
 export interface AlgoTransferParams extends SendTransactionParams {
@@ -30,6 +36,8 @@ export interface EnsureFundedParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note, default: "Funding account to meet minimum requirement" */
   note?: TransactionNote
+  /** Whether to use the dispenser API to fund the account. Defaults to false. */
+  useDispenserApi?: boolean
 }
 
 /** Parameters for `transferAsset` call. */
@@ -49,3 +57,5 @@ export interface TransferAssetParams extends SendTransactionParams {
   /** The (optional) transaction note */
   note?: TransactionNote
 }
+
+export type EnsureFundedReturnType<T> = T extends { useDispenserApi: true } ? SendDispenserTransactionResult : SendTransactionResult
