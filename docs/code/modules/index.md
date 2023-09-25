@@ -351,29 +351,37 @@ ___
 
 ### ensureFunded
 
-▸ **ensureFunded**(`funding`, `algod`, `kmd?`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+▸ **ensureFunded**<`T`\>(`funding`, `algod`, `kmd?`): `Promise`<[`EnsureFundedReturnType`](types_transfer.md#ensurefundedreturntype)<`T`\> \| `undefined`\>
 
 Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
 
 https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`EnsureFundedParams`](../interfaces/types_transfer.EnsureFundedParams.md) |
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `funding` | [`EnsureFundedParams`](../interfaces/types_transfer.EnsureFundedParams.md) | The funding configuration |
-| `algod` | `default` | An algod client |
-| `kmd?` | `default` | An optional kmd client |
+| `funding` | `T` | The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables. |
+| `algod` | `default` | An instance of the Algodv2 client. |
+| `kmd?` | `default` | An optional instance of the Kmd client. |
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+`Promise`<[`EnsureFundedReturnType`](types_transfer.md#ensurefundedreturntype)<`T`\> \| `undefined`\>
 
-undefined if nothing was needed or the transaction send result
+- `SendTransactionResult` if funds were transferred.
+- `SendDispenserTransactionResult` if `useDispenserApi` is set to true.
+- `undefined` if no funds were needed.
 
 #### Defined in
 
-[src/transfer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L48)
+[src/transfer.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L145)
 
 ___
 
@@ -1639,7 +1647,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L193)
+[src/network-client.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L194)
 
 ___
 
@@ -2297,7 +2305,7 @@ await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
 
 #### Defined in
 
-[src/transfer.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L18)
+[src/transfer.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L112)
 
 ___
 
@@ -2329,7 +2337,7 @@ await algokit.transferAsset({ from, to, assetId, amount }, algod)
 
 #### Defined in
 
-[src/transfer.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L94)
+[src/transfer.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L196)
 
 ___
 
