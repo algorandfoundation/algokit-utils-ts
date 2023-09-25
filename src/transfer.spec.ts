@@ -11,10 +11,10 @@ describe('transfer', () => {
   const localnet = algorandFixture()
   const env = process.env
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetModules()
     process.env = { ...env }
-    localnet.beforeEach()
+    await localnet.beforeEach()
   }, 10_000)
 
   afterEach(() => {

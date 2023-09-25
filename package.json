@@ -70,7 +70,7 @@
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
     "generate:code-docs": "typedoc",
-    "pre-commit": "run-s check-types lint audit format test generate:code-docs"
+    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs"
   },
   "overrides": {
     "semver": "7.5.2",
