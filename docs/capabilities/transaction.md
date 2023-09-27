@@ -23,7 +23,7 @@ All AlgoKit Utils functions that prepare and/or send a transaction will generall
 It consists of two properties:
 
 - `transaction`: An `algosdk.Transaction` object that is either ready to send or represents the transaction that was sent
-- `confirmation` (optional): A [`PendingTransactionResponse`](../code/interfaces/types_algod.PendingTransactionResponse.md) object, which is a type-safe wrapper of the return from the algod pending transaction API noting that it will only be returned if the transaction was able to be confirmed (so won't represent a "pending" transaction)
+- `confirmation` (optional): An `algosdk.modelsv2.PendingTransactionResponse` object, which is a type-safe wrapper of the return from the algod pending transaction API noting that it will only be returned if the transaction was able to be confirmed (so won't represent a "pending" transaction)
 
 A useful pattern to use to access these properties is destructuring, e.g.:
 
@@ -76,7 +76,7 @@ If you want to create an encoded transaction note for adding to a transaction yo
 
 - `null` or `undefined` if there is no note
 - `Uint8Array` which is passed straight through
-- Data that us turned into JSON, any one of:
+- Data that is turned into JSON, any one of:
   - `string`
   - `number`
   - `any[]`
