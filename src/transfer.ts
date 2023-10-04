@@ -33,7 +33,6 @@ async function fundUsingTransfer({
   fundAmount: number
   transactionParams: algosdk.SuggestedParams | undefined
   sendParams: {
-    useDispenserApi?: boolean | undefined
     skipSending?: boolean | undefined
     skipWaiting?: boolean | undefined
     atc?: algosdk.AtomicTransactionComposer | undefined

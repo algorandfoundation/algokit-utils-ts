@@ -368,7 +368,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `funding` | `T` | The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables. |
+| `funding` | `T` | The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. |
 | `algod` | `default` | An instance of the Algodv2 client. |
 | `kmd?` | `default` | An optional instance of the Kmd client. |
 
@@ -376,8 +376,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 `Promise`<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
-- `SendTransactionResult` if funds were transferred.
-- `SendDispenserTransactionResult` if `useDispenserApi` is set to true.
+- `EnsureFundedReturnType` if funds were transferred.
 - `undefined` if no funds were needed.
 
 #### Defined in
