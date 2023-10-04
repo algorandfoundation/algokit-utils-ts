@@ -7,7 +7,7 @@ import { algorandFixture } from './testing'
 describe('account', () => {
   const localnet = algorandFixture()
 
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.beforeEach, 10e6)
 
   test('New account is retrieved and funded', async () => {
     const { algod, kmd } = localnet.context
@@ -16,7 +16,7 @@ describe('account', () => {
 
     const accountInfo = await algod.accountInformation(account.addr).do()
     expect(accountInfo['amount']).toBeGreaterThan(0)
-  }, 10_000)
+  }, 10e6)
 
   test('Same account is subsequently retrieved', async () => {
     const { algod, kmd } = localnet.context
@@ -42,7 +42,7 @@ describe('account', () => {
     expect(account).not.toBe(account2)
     expect(account.addr).toBe(account2.addr)
     expect(account.sk).toEqual(account2.sk)
-  }, 10_000)
+  }, 10e6)
 
   test('Deprecated signature 1 still works', async () => {
     const { algod, kmd } = localnet.context
@@ -51,7 +51,7 @@ describe('account', () => {
 
     const accountInfo = await algod.accountInformation(account.addr).do()
     expect(accountInfo['amount']).toBeGreaterThan(0)
-  }, 10_000)
+  }, 10e6)
 
   test('Deprecated signature 2 still works', async () => {
     const { algod, kmd } = localnet.context
@@ -61,5 +61,5 @@ describe('account', () => {
 
     const accountInfo = await algod.accountInformation(account.addr).do()
     expect(accountInfo['amount']).toBeGreaterThan(0)
-  }, 10_000)
+  }, 10e6)
 })
