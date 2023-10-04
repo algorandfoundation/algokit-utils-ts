@@ -368,7 +368,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `funding` | `T` | The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. |
+| `funding` | `T` | The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables. |
 | `algod` | `default` | An instance of the Algodv2 client. |
 | `kmd?` | `default` | An optional instance of the Kmd client. |
 
@@ -376,12 +376,13 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 `Promise`<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
-- `EnsureFundedReturnType` if funds were transferred.
+- `SendTransactionResult` if funds were transferred.
+- `SendDispenserTransactionResult` if `useDispenserApi` is set to true.
 - `undefined` if no funds were needed.
 
 #### Defined in
 
-[src/transfer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L116)
+[src/transfer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L115)
 
 ___
 
@@ -2341,7 +2342,7 @@ await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
 
 #### Defined in
 
-[src/transfer.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L83)
+[src/transfer.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L82)
 
 ___
 
@@ -2373,7 +2374,7 @@ await algokit.transferAsset({ from, to, assetId, amount }, algod)
 
 #### Defined in
 
-[src/transfer.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L167)
+[src/transfer.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L166)
 
 ___
 
