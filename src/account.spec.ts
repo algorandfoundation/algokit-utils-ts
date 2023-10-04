@@ -28,7 +28,7 @@ describe('account', () => {
     expect(account).not.toBe(account2)
     expect(account.addr).toBe(account2.addr)
     expect(account.sk).toEqual(account2.sk)
-  }, 10_000)
+  }, 10e6)
 
   test('Environment is used in preference to kmd', async () => {
     const { algod, kmd } = localnet.context

@@ -46,12 +46,6 @@ export interface SendTransactionResult {
   confirmation?: modelsv2.PendingTransactionResponse
 }
 
-/** The result of sending a fund transaction from AlgoKit Dispenser API */
-export interface SendDispenserTransactionResult {
-  /** The transaction ID */
-  transaction: string
-}
-
 /** The result of preparing and/or sending multiple transactions */
 export interface SendTransactionResults {
   /** The transactions that have been prepared and/or sent */

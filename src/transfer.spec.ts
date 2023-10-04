@@ -231,22 +231,20 @@ describe('transfer', () => {
     const accountInfo = await algod.accountInformation(secondAccount.addr).do()
 
     invariant(result)
-    const { transaction, confirmation } = result
-    expect(transaction).toBeInstanceOf(algosdk.Transaction)
-    expect(transaction.type).toBe(TransactionType.pay)
-    expect(confirmation?.txn.txn.type).toBe('pay')
+    expect(result.transactionId).toBeDefined()
+    expect(result.amount).toBeDefined()
+    const txnInfo = await algod.pendingTransactionInformation(result.transactionId).do()
 
-    expect(transaction.amount).toBe(100_001)
-    expect(confirmation?.txn.txn.amt).toBe(100_001)
+    expect(txnInfo.txn.txn.type).toBe('pay')
+
+    expect(result.amount).toBe(100_001)
+    expect(txnInfo.txn.txn.amt).toBe(100_001)
     expect(accountInfo['amount']).toBe(100_001)
 
-    expect(algosdk.encodeAddress(transaction.from.publicKey)).toBe(testAccount.addr)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(algosdk.encodeAddress(confirmation!.txn.txn.snd)).toBe(testAccount.addr)
-
-    expect(algosdk.encodeAddress(transaction.to.publicKey)).toBe(secondAccount.addr)
+    expect(algosdk.encodeAddress(txnInfo.txn.txn.snd)).toBe(testAccount.addr)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(algosdk.encodeAddress(confirmation!.txn.txn.rcv!)).toBe(secondAccount.addr)
+    expect(algosdk.encodeAddress(txnInfo.txn.txn.rcv!)).toBe(secondAccount.addr)
   })
 
   test('ensureFunded respects minimum funding increment', async () => {
@@ -284,8 +282,9 @@ describe('transfer', () => {
     )
 
     invariant(result)
-    const { transaction } = result
-    expect(algosdk.encodeAddress(transaction.from.publicKey)).toBe(dispenser.addr)
+    const txnInfo = await algod.pendingTransactionInformation(result.transactionId).do()
+    const resultReceiver = algosdk.encodeAddress(txnInfo.txn.txn.snd)
+    expect(resultReceiver).toBe(dispenser.addr)
     const accountInfo = await algod.accountInformation(secondAccount.addr).do()
     expect(accountInfo['amount']).toBe(1_000_000)
   })
@@ -294,9 +293,10 @@ describe('transfer', () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
 
     // Mock the fetch response
-    fetchMock.mockResponseOnce(JSON.stringify({ txID: 'dummy_tx_id', amount: 1 }))
+    fetchMock.mockResponseOnce(JSON.stringify({ txID: 'dummy_tx_id', amount: 200_000 }))
 
     const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
+    const dispenserClient = algokit.getDispenserApiTestnetClient()
 
     const accountToFund = algosdk.generateAccount()
 
@@ -304,55 +304,15 @@ describe('transfer', () => {
       {
         accountToFund: accountToFund,
         minSpendingBalance: algokit.algos(100),
-        minFundingIncrement: algokit.algos(1),
-        useDispenserApi: true,
+        minFundingIncrement: algokit.algos(0.1),
+        fundingSource: dispenserClient,
       },
       algodClient,
     )
 
     invariant(result)
-    const { transaction } = result
-    expect(transaction).toBeDefined()
-  })
-
-  test('ensureFunded uses dispenser api and fails with invalid access token', async () => {
-    const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-    const accountToFund = algosdk.generateAccount()
-
-    await expect(
-      algokit.ensureFunded(
-        {
-          accountToFund: accountToFund,
-          minSpendingBalance: algokit.algos(100),
-          minFundingIncrement: algokit.algos(1),
-          useDispenserApi: true,
-        },
-        algodClient,
-      ),
-    ).rejects.toThrowErrorMatchingInlineSnapshot('"ALGOKIT_DISPENSER_ACCESS_TOKEN environment variable is not set."')
-  })
-
-  test('ensureFunded uses dispenser api and fails with bad request response', async () => {
-    process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
-
-    // Mock the fetch response
-    fetchMock.mockResponseOnce(JSON.stringify({ code: 'fund_limit_exceeded' }), { status: 400 })
-
-    const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-
-    const accountToFund = algosdk.generateAccount()
-
-    await expect(
-      algokit.ensureFunded(
-        {
-          accountToFund: accountToFund,
-          minSpendingBalance: algokit.algos(100),
-          minFundingIncrement: algokit.algos(1),
-          useDispenserApi: true,
-        },
-        algodClient,
-      ),
-    ).rejects.toThrowErrorMatchingInlineSnapshot('"fund_limit_exceeded"')
+    expect(result.transactionId).toBeDefined()
+    expect(result.amount).toBe(200_000)
   })
 
   test('ensureFunded uses dispenser api and fails with rejected response', async () => {
@@ -362,7 +322,7 @@ describe('transfer', () => {
     fetchMock.mockRejectOnce(new Error('dummy_error'))
 
     const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-
+    const dispenserClient = algokit.getDispenserApiTestnetClient()
     const accountToFund = algosdk.generateAccount()
 
     await expect(
@@ -371,7 +331,7 @@ describe('transfer', () => {
           accountToFund: accountToFund,
           minSpendingBalance: algokit.algos(100),
           minFundingIncrement: algokit.algos(1),
-          useDispenserApi: true,
+          fundingSource: dispenserClient,
         },
         algodClient,
       ),

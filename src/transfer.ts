@@ -3,56 +3,18 @@ import { Config, getDispenserAccount, microAlgos } from './'
 import { isTestNet } from './network-client'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { AlgoAmount } from './types/amount'
-import { SendDispenserTransactionResult, SendTransactionResult, TransactionNote } from './types/transaction'
+import { DispenserApiTestnetClient } from './types/dispenser-client'
+import { SendTransactionResult, TransactionNote } from './types/transaction'
 import { AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
 import { calculateFundAmount } from './util'
 
-const DISPENSER_API_URL = 'https://api.dispenser.algorandfoundation.tools'
-const ALGO_ASSET_ID = 0
-
 async function fundUsingDispenserApi(
+  dispenserClient: DispenserApiTestnetClient,
   addressToFund: string,
   fundAmount: number,
-  suppressLog: boolean,
-): Promise<SendDispenserTransactionResult> {
-  const dispenserApiToken = process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN
-
-  if (!dispenserApiToken) {
-    throw new Error('ALGOKIT_DISPENSER_ACCESS_TOKEN environment variable is not set.')
-  }
-
-  try {
-    const response = await fetch(`${DISPENSER_API_URL}/fund/${ALGO_ASSET_ID}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${dispenserApiToken}`,
-      },
-      body: JSON.stringify({
-        receiver: addressToFund,
-        amount: fundAmount,
-        assetID: ALGO_ASSET_ID,
-      }),
-    })
-
-    if (!response.ok) {
-      const errorResponse = await response.json()
-      let errorMessage = `Error processing AlgoKit Dispenser API request: ${response.status}`
-
-      if ('code' in errorResponse) {
-        errorMessage = errorResponse.code
-      }
-
-      throw new Error(errorMessage)
-    }
-
-    const data = await response.json()
-
-    return { transaction: data.txID }
-  } catch (error) {
-    Config.getLogger(suppressLog).error(`Error funding account ${addressToFund}: ${error}`)
-    throw error
-  }
+): Promise<EnsureFundedReturnType> {
+  const response = await dispenserClient.fund(addressToFund, fundAmount)
+  return { transactionId: response.txId, amount: response.amount }
 }
 
 async function fundUsingTransfer({
@@ -82,10 +44,14 @@ async function fundUsingTransfer({
   }
   note: TransactionNote
   kmd?: Kmd
-}) {
+}): Promise<EnsureFundedReturnType> {
+  if (funding.fundingSource instanceof DispenserApiTestnetClient) {
+    throw new Error('Dispenser API client is not supported in this context.')
+  }
+
   const from = funding.fundingSource ?? (await getDispenserAccount(algod, kmd))
   const amount = microAlgos(Math.max(fundAmount, funding.minFundingIncrement?.microAlgos ?? 0))
-  return transferAlgos(
+  const response = await transferAlgos(
     {
       from,
       to: addressToFund,
@@ -96,6 +62,11 @@ async function fundUsingTransfer({
     },
     algod,
   )
+
+  return {
+    transactionId: response.transaction.txID(),
+    amount: Number(response.transaction.amount),
+  }
 }
 
 /**
@@ -146,7 +117,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
   funding: T,
   algod: Algodv2,
   kmd?: Kmd,
-): Promise<EnsureFundedReturnType<T> | undefined> {
+): Promise<EnsureFundedReturnType | undefined> {
   const { accountToFund, fundingSource, minSpendingBalance, minFundingIncrement, transactionParams, note, ...sendParams } = funding
 
   const addressToFund = typeof accountToFund === 'string' ? accountToFund : getSenderAddress(accountToFund)
@@ -163,8 +134,8 @@ export async function ensureFunded<T extends EnsureFundedParams>(
   )
 
   if (fundAmount !== null) {
-    if ((await isTestNet(algod)) && sendParams.useDispenserApi) {
-      return fundUsingDispenserApi(addressToFund, fundAmount, sendParams.suppressLog ?? false) as Promise<EnsureFundedReturnType<T>>
+    if ((await isTestNet(algod)) && fundingSource instanceof DispenserApiTestnetClient) {
+      return fundUsingDispenserApi(fundingSource, addressToFund, fundAmount) as Promise<EnsureFundedReturnType>
     } else {
       return fundUsingTransfer({
         algod,
@@ -175,7 +146,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
         sendParams,
         note,
         kmd,
-      }) as Promise<EnsureFundedReturnType<T>>
+      }) as Promise<EnsureFundedReturnType>
     }
   }
 
