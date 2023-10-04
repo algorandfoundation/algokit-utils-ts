@@ -29,7 +29,6 @@ Parameters for `ensureFunded` call.
 - [skipWaiting](types_transfer.EnsureFundedParams.md#skipwaiting)
 - [suppressLog](types_transfer.EnsureFundedParams.md#suppresslog)
 - [transactionParams](types_transfer.EnsureFundedParams.md#transactionparams)
-- [useDispenserApi](types_transfer.EnsureFundedParams.md#usedispenserapi)
 
 ## Properties
 
@@ -41,7 +40,7 @@ The account to fund
 
 #### Defined in
 
-[src/types/transfer.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L28)
+[src/types/transfer.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L23)
 
 ___
 
@@ -79,13 +78,13 @@ ___
 
 ### fundingSource
 
-• `Optional` **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+• `Optional` **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom) \| [`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
 
 The account to use as a funding source, will default to using the dispenser account returned by `algokit.getDispenserAccount`
 
 #### Defined in
 
-[src/types/transfer.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L30)
+[src/types/transfer.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L25)
 
 ___
 
@@ -129,7 +128,7 @@ When issuing a funding amount, the minimum amount to transfer (avoids many small
 
 #### Defined in
 
-[src/types/transfer.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L34)
+[src/types/transfer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L29)
 
 ___
 
@@ -141,7 +140,7 @@ The minimum balance of ALGOs that the account should have available to spend (i.
 
 #### Defined in
 
-[src/types/transfer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L32)
+[src/types/transfer.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L27)
 
 ___
 
@@ -153,7 +152,7 @@ The (optional) transaction note, default: "Funding account to meet minimum requi
 
 #### Defined in
 
-[src/types/transfer.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L38)
+[src/types/transfer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L33)
 
 ___
 
@@ -214,16 +213,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/transfer.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L36)
-
-___
-
-### useDispenserApi
-
-• `Optional` **useDispenserApi**: `boolean`
-
-Whether to use the dispenser API to fund the account. Defaults to false.
-
-#### Defined in
-
-[src/types/transfer.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L40)
+[src/types/transfer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L31)

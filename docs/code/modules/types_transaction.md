@@ -10,7 +10,6 @@
 - [ConfirmedTransactionResult](../interfaces/types_transaction.ConfirmedTransactionResult.md)
 - [ConfirmedTransactionResults](../interfaces/types_transaction.ConfirmedTransactionResults.md)
 - [SendAtomicTransactionComposerResults](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)
-- [SendDispenserTransactionResult](../interfaces/types_transaction.SendDispenserTransactionResult.md)
 - [SendTransactionParams](../interfaces/types_transaction.SendTransactionParams.md)
 - [SendTransactionResult](../interfaces/types_transaction.SendTransactionResult.md)
 - [SendTransactionResults](../interfaces/types_transaction.SendTransactionResults.md)
@@ -54,7 +53,7 @@ many types of accounts, including:
 
 #### Defined in
 
-[src/types/transaction.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L99)
+[src/types/transaction.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L93)
 
 ___
 

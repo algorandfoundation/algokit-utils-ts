@@ -41,7 +41,7 @@ The amount to send as the smallest divisible unit value
 
 #### Defined in
 
-[src/types/transfer.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L52)
+[src/types/transfer.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L45)
 
 ___
 
@@ -53,7 +53,7 @@ The asset id that will be transfered
 
 #### Defined in
 
-[src/types/transfer.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L50)
+[src/types/transfer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L43)
 
 ___
 
@@ -81,7 +81,7 @@ An address of a target account from which to perform a clawback operation. Pleas
 
 #### Defined in
 
-[src/types/transfer.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L56)
+[src/types/transfer.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L49)
 
 ___
 
@@ -109,7 +109,7 @@ The account that will send the asset
 
 #### Defined in
 
-[src/types/transfer.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L46)
+[src/types/transfer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L39)
 
 ___
 
@@ -153,7 +153,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/transfer.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L58)
+[src/types/transfer.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L51)
 
 ___
 
@@ -214,7 +214,7 @@ The account / account address that will receive the asset
 
 #### Defined in
 
-[src/types/transfer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L48)
+[src/types/transfer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L41)
 
 ___
 
@@ -226,4 +226,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/transfer.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L54)
+[src/types/transfer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L47)
