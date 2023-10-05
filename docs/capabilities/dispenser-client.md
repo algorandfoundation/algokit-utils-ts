@@ -15,11 +15,11 @@ If both methods are used, the constructor argument takes precedence.
 import * as algokit from '@algorandfoundation/algokit-utils'
 
 // Using constructor argument
-const client = new algokit.getDispenserApiTestnetClient({ authToken: 'your_auth_token' })
+const client = algokit.getDispenserApiTestnetClient({ authToken: 'your_auth_token' })
 
 // Using environment variable
 process.env['ALGOKIT_DISPENSER_ACCESS_TOKEN'] = 'your_auth_token'
-const client = new DispenserApiTestnetClient()
+const client = algokit.getDispenserApiTestnetClient()
 ```
 
 ## Funding an Account
@@ -44,10 +44,10 @@ await client.refund('transaction_id')
 
 ## Getting Current Limit
 
-To get the current limit for an account with Algos from the dispenser API, use the `limit` method. This method requires the account address.
+To get the current limit for an account with Algos from the dispenser API, use the `getLimit` method. This method requires the account address.
 
 ```ts
-const response = await client.limit()
+const response = await client.getLimit()
 ```
 
 The `limit` method returns a `DispenserLimitResponse` object, which contains the current limit amount.

@@ -108,8 +108,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
  * @param algod An instance of the Algodv2 client.
  * @param kmd An optional instance of the Kmd client.
  * @returns
- * - `SendTransactionResult` if funds were transferred.
- * - `SendDispenserTransactionResult` if `useDispenserApi` is set to true.
+ * - `EnsureFundedReturnType` if funds were transferred.
  * - `undefined` if no funds were needed.
  */
 export async function ensureFunded<T extends EnsureFundedParams>(

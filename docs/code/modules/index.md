@@ -376,13 +376,12 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 `Promise`<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
-- `SendTransactionResult` if funds were transferred.
-- `SendDispenserTransactionResult` if `useDispenserApi` is set to true.
+- `EnsureFundedReturnType` if funds were transferred.
 - `undefined` if no funds were needed.
 
 #### Defined in
 
-[src/transfer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L115)
+[src/transfer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L114)
 
 ___
 
@@ -2374,7 +2373,7 @@ await algokit.transferAsset({ from, to, assetId, amount }, algod)
 
 #### Defined in
 
-[src/transfer.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L166)
+[src/transfer.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L165)
 
 ___
 

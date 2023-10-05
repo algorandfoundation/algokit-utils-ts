@@ -29,7 +29,7 @@ limit - Sends a request to the dispenser API to get the funding limit for the Al
 ```typescript
 const client = new DispenserApiTestnetClient({ authToken: 'your_auth_token', requestTimeout: 30 });
 const fundResponse = await client.fund('your_address', 100);
-const limitResponse = await client.limit();
+const limitResponse = await client.getLimit();
 await client.refund('your_transaction_id');
 ```
 
@@ -56,7 +56,7 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 ### Methods
 
 - [fund](types_dispenser_client.DispenserApiTestnetClient.md#fund)
-- [limit](types_dispenser_client.DispenserApiTestnetClient.md#limit)
+- [getLimit](types_dispenser_client.DispenserApiTestnetClient.md#getlimit)
 - [processDispenserRequest](types_dispenser_client.DispenserApiTestnetClient.md#processdispenserrequest)
 - [refund](types_dispenser_client.DispenserApiTestnetClient.md#refund)
 
@@ -155,9 +155,9 @@ DispenserFundResponse: An object containing the transaction ID and funded amount
 
 ___
 
-### limit
+### getLimit
 
-▸ **limit**(): `Promise`<[`DispenserLimitResponse`](../interfaces/types_dispenser_client.DispenserLimitResponse.md)\>
+▸ **getLimit**(): `Promise`<[`DispenserLimitResponse`](../interfaces/types_dispenser_client.DispenserLimitResponse.md)\>
 
 Sends a request to the dispenser API to get the funding limit for the Algo asset.
 

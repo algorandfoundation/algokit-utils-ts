@@ -48,7 +48,7 @@ describe('DispenserApiTestnetClient', () => {
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
     const dispenserClient = new DispenserApiTestnetClient({ authToken: 'dummy_auth_token', requestTimeout: null })
-    const response = await dispenserClient.limit()
+    const response = await dispenserClient.getLimit()
     expect(response.amount).toEqual(amount)
   })
 

@@ -48,7 +48,7 @@ export interface DispenserApiTestnetClientParams {
  * ```typescript
  * const client = new DispenserApiTestnetClient({ authToken: 'your_auth_token', requestTimeout: 30 });
  * const fundResponse = await client.fund('your_address', 100);
- * const limitResponse = await client.limit();
+ * const limitResponse = await client.getLimit();
  * await client.refund('your_transaction_id');
  * ```
  *
@@ -165,7 +165,7 @@ export class DispenserApiTestnetClient {
    *
    * @returns DispenserLimitResponse: An object containing the funding limit amount.
    */
-  async limit(): Promise<DispenserLimitResponse> {
+  async getLimit(): Promise<DispenserLimitResponse> {
     const response = await this.processDispenserRequest(
       this.authToken,
       `fund/${dispenserAssets[DispenserAssetName.Algo].assetId}/limit`,
