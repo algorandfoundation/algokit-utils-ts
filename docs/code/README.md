@@ -17,6 +17,8 @@
 - [types/app-client.spec](modules/types_app_client_spec.md)
 - [types/app-spec](modules/types_app_spec.md)
 - [types/config](modules/types_config.md)
+- [types/dispenser-client](modules/types_dispenser_client.md)
+- [types/dispenser-client.spec](modules/types_dispenser_client_spec.md)
 - [types/indexer](modules/types_indexer.md)
 - [types/logging](modules/types_logging.md)
 - [types/logic-error](modules/types_logic_error.md)

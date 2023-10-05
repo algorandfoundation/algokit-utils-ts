@@ -39,7 +39,7 @@ The amount to send
 
 #### Defined in
 
-[src/types/transfer.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L12)
+[src/types/transfer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L13)
 
 ___
 
@@ -83,7 +83,7 @@ The account that will send the ALGOs
 
 #### Defined in
 
-[src/types/transfer.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L8)
+[src/types/transfer.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L9)
 
 ___
 
@@ -127,7 +127,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/transfer.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L16)
+[src/types/transfer.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L17)
 
 ___
 
@@ -188,7 +188,7 @@ The account / account address that will receive the ALGOs
 
 #### Defined in
 
-[src/types/transfer.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L10)
+[src/types/transfer.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L11)
 
 ___
 
@@ -200,4 +200,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/transfer.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L14)
+[src/types/transfer.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L15)

@@ -1,8 +1,72 @@
 import algosdk, { Algodv2, Kmd } from 'algosdk'
 import { Config, getDispenserAccount, microAlgos } from './'
+import { isTestNet } from './network-client'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
-import { SendTransactionResult } from './types/transaction'
-import { AlgoTransferParams, EnsureFundedParams, TransferAssetParams } from './types/transfer'
+import { AlgoAmount } from './types/amount'
+import { TestNetDispenserApiClient } from './types/dispenser-client'
+import { SendTransactionResult, TransactionNote } from './types/transaction'
+import { AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
+import { calculateFundAmount } from './util'
+
+async function fundUsingDispenserApi(
+  dispenserClient: TestNetDispenserApiClient,
+  addressToFund: string,
+  fundAmount: number,
+): Promise<EnsureFundedReturnType> {
+  const response = await dispenserClient.fund(addressToFund, fundAmount)
+  return { transactionId: response.txId, amount: response.amount }
+}
+
+async function fundUsingTransfer({
+  algod,
+  addressToFund,
+  funding,
+  fundAmount,
+  transactionParams,
+  sendParams,
+  note,
+  kmd,
+}: {
+  algod: Algodv2
+  addressToFund: string
+  funding: EnsureFundedParams
+  fundAmount: number
+  transactionParams: algosdk.SuggestedParams | undefined
+  sendParams: {
+    skipSending?: boolean | undefined
+    skipWaiting?: boolean | undefined
+    atc?: algosdk.AtomicTransactionComposer | undefined
+    suppressLog?: boolean | undefined
+    fee?: AlgoAmount | undefined
+    maxFee?: AlgoAmount | undefined
+    maxRoundsToWaitForConfirmation?: number | undefined
+  }
+  note: TransactionNote
+  kmd?: Kmd
+}): Promise<EnsureFundedReturnType> {
+  if (funding.fundingSource instanceof TestNetDispenserApiClient) {
+    throw new Error('Dispenser API client is not supported in this context.')
+  }
+
+  const from = funding.fundingSource ?? (await getDispenserAccount(algod, kmd))
+  const amount = microAlgos(Math.max(fundAmount, funding.minFundingIncrement?.microAlgos ?? 0))
+  const response = await transferAlgos(
+    {
+      from,
+      to: addressToFund,
+      note: note ?? 'Funding account to meet minimum requirement',
+      amount: amount,
+      transactionParams: transactionParams,
+      ...sendParams,
+    },
+    algod,
+  )
+
+  return {
+    transactionId: response.transaction.txID(),
+    amount: Number(response.transaction.amount),
+  }
+}
 
 /**
  * Transfer ALGOs between two accounts.
@@ -40,12 +104,18 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
  *
  * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
  *
- * @param funding The funding configuration
- * @param algod An algod client
- * @param kmd An optional kmd client
- * @returns undefined if nothing was needed or the transaction send result
+ * @param funding The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables.
+ * @param algod An instance of the Algodv2 client.
+ * @param kmd An optional instance of the Kmd client.
+ * @returns
+ * - `EnsureFundedReturnType` if funds were transferred.
+ * - `undefined` if no funds were needed.
  */
-export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, kmd?: Kmd): Promise<SendTransactionResult | undefined> {
+export async function ensureFunded<T extends EnsureFundedParams>(
+  funding: T,
+  algod: Algodv2,
+  kmd?: Kmd,
+): Promise<EnsureFundedReturnType | undefined> {
   const { accountToFund, fundingSource, minSpendingBalance, minFundingIncrement, transactionParams, note, ...sendParams } = funding
 
   const addressToFund = typeof accountToFund === 'string' ? accountToFund : getSenderAddress(accountToFund)
@@ -55,26 +125,27 @@ export async function ensureFunded(funding: EnsureFundedParams, algod: Algodv2, 
   const minimumBalanceRequirement = microAlgos(Number(accountInfo['min-balance']))
   const currentSpendingBalance = microAlgos(balance - minimumBalanceRequirement.microAlgos)
 
-  if (minSpendingBalance > currentSpendingBalance) {
-    const from = fundingSource ?? (await getDispenserAccount(algod, kmd))
-    const minFundAmount = microAlgos(minSpendingBalance.microAlgos - currentSpendingBalance.microAlgos)
-    const fundAmount = microAlgos(Math.max(minFundAmount.microAlgos, minFundingIncrement?.microAlgos ?? 0))
-    Config.getLogger(sendParams.suppressLog).info(
-      `Funding ${addressToFund} ${fundAmount} from ${getSenderAddress(
-        from,
-      )} to reach minimum spend amount of ${minSpendingBalance} (balance = ${balance}, min_balance_req = ${minimumBalanceRequirement})`,
-    )
-    return await transferAlgos(
-      {
-        from,
-        to: addressToFund,
-        note: note ?? 'Funding account to meet minimum requirement',
-        amount: fundAmount,
+  const fundAmount = calculateFundAmount(
+    minSpendingBalance.microAlgos,
+    currentSpendingBalance.microAlgos,
+    minFundingIncrement?.microAlgos ?? 0,
+  )
+
+  if (fundAmount !== null) {
+    if ((await isTestNet(algod)) && fundingSource instanceof TestNetDispenserApiClient) {
+      return fundUsingDispenserApi(fundingSource, addressToFund, fundAmount) as Promise<EnsureFundedReturnType>
+    } else {
+      return fundUsingTransfer({
+        algod,
+        addressToFund,
+        funding,
+        fundAmount,
         transactionParams,
-        ...sendParams,
-      },
-      algod,
-    )
+        sendParams,
+        note,
+        kmd,
+      }) as Promise<EnsureFundedReturnType>
+    }
   }
 
   return undefined

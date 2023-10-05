@@ -188,11 +188,12 @@ export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
 
 export async function isTestNet(algod: Algodv2): Promise<boolean> {
   const params = await algod.getTransactionParams().do()
-  return params.genesisID === 'testnet-v1'
+  return ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisID)
 }
+
 export async function isMainNet(algod: Algodv2): Promise<boolean> {
   const params = await algod.getTransactionParams().do()
-  return params.genesisID === 'mainnet-v1'
+  return ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID)
 }
 
 export { isLocalNet } from './localnet'
