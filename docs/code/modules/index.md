@@ -53,6 +53,7 @@
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
 - [getDefaultLocalNetConfig](index.md#getdefaultlocalnetconfig)
 - [getDispenserAccount](index.md#getdispenseraccount)
+- [getDispenserApiTestnetClient](index.md#getdispenserapitestnetclient)
 - [getIndexerConfigFromEnvironment](index.md#getindexerconfigfromenvironment)
 - [getKmdWalletAccount](index.md#getkmdwalletaccount)
 - [getLocalNetDispenserAccount](index.md#getlocalnetdispenseraccount)
@@ -102,7 +103,7 @@ The AlgoKit config. To update it use the configure method.
 
 #### Defined in
 
-[src/index.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/index.ts#L15)
+[src/index.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/index.ts#L16)
 
 ## Functions
 
@@ -351,29 +352,36 @@ ___
 
 ### ensureFunded
 
-▸ **ensureFunded**(`funding`, `algod`, `kmd?`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+▸ **ensureFunded**<`T`\>(`funding`, `algod`, `kmd?`): `Promise`<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
 Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
 
 https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`EnsureFundedParams`](../interfaces/types_transfer.EnsureFundedParams.md) |
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `funding` | [`EnsureFundedParams`](../interfaces/types_transfer.EnsureFundedParams.md) | The funding configuration |
-| `algod` | `default` | An algod client |
-| `kmd?` | `default` | An optional kmd client |
+| `funding` | `T` | The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables. |
+| `algod` | `default` | An instance of the Algodv2 client. |
+| `kmd?` | `default` | An optional instance of the Kmd client. |
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) \| `undefined`\>
+`Promise`<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
-undefined if nothing was needed or the transaction send result
+- `EnsureFundedReturnType` if funds were transferred.
+- `undefined` if no funds were needed.
 
 #### Defined in
 
-[src/transfer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L48)
+[src/transfer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L114)
 
 ___
 
@@ -1391,6 +1399,42 @@ If running on LocalNet then it will return the default dispenser account automat
 
 ___
 
+### getDispenserApiTestnetClient
+
+▸ **getDispenserApiTestnetClient**(`params?`): [`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
+
+Create a new DispenserApiTestnetClient instance.
+Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `params` | ``null`` \| [`DispenserApiTestnetClientParams`](../interfaces/types_dispenser_client.DispenserApiTestnetClientParams.md) | `null` | An object containing parameters for the DispenserApiTestnetClient class. Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`. |
+
+#### Returns
+
+[`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
+
+An instance of the DispenserApiTestnetClient class.
+
+**`Example`**
+
+```ts
+const client = algokit.getDispenserApiTestnetClient(
+    {
+      authToken: 'your_auth_token',
+      requestTimeout: 15,
+    }
+)
+```
+
+#### Defined in
+
+[src/dispenser-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L19)
+
+___
+
 ### getIndexerConfigFromEnvironment
 
 ▸ **getIndexerConfigFromEnvironment**(): [`AlgoClientConfig`](../interfaces/types_network_client.AlgoClientConfig.md)
@@ -1639,7 +1683,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L193)
+[src/network-client.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L194)
 
 ___
 
@@ -2297,7 +2341,7 @@ await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
 
 #### Defined in
 
-[src/transfer.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L18)
+[src/transfer.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L82)
 
 ___
 
@@ -2329,7 +2373,7 @@ await algokit.transferAsset({ from, to, assetId, amount }, algod)
 
 #### Defined in
 
-[src/transfer.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L94)
+[src/transfer.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L165)
 
 ___
 
