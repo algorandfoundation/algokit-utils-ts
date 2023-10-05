@@ -1,13 +1,15 @@
-import algosdk, { Account, Algodv2, LogicSigAccount } from 'algosdk'
-import { PendingTransactionResponse } from 'algosdk/dist/types/client/v2/algod/models/types'
-import { Config } from '.'
-import { waitForConfirmation } from './transaction'
+import algosdk, { Account, Algodv2 } from 'algosdk'
+import { Config, sendGroupOfTransactions } from '.'
 import { transferAsset } from './transfer'
-import { TransactionToSign } from './types/transaction'
+import { TransactionGroupToSend, TransactionToSign } from './types/transaction'
 
 const MaxTxGroupSize = 16
 
-export async function optIn(algod: Algodv2, account: Account, assetId: number) {
+export async function optIn(client: Algodv2, account: Account, assetId: number) {
+  const accountInfo = await client.accountInformation(account.addr).do()
+  if (accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
+    throw new Error(`Account ${account.addr} have already opt-in to asset ${assetId}`)
+  }
   await transferAsset(
     {
       from: account,
@@ -16,7 +18,7 @@ export async function optIn(algod: Algodv2, account: Account, assetId: number) {
       amount: 0,
       note: `Opt in asset id ${assetId}`,
     },
-    algod,
+    client,
   )
 }
 
@@ -25,31 +27,32 @@ function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
     yield arr.slice(i, i + n)
   }
 }
-
-export const sendGroupOfTransactions = async function (client: Algodv2, transactions: TransactionToSign[], skipWaiting = false) {
-  const transactionsToSend = transactions.map((t) => t.transaction)
-  const signedTransactions = algosdk.assignGroupID(transactionsToSend).map((groupedTransaction, index) => {
-    const signer = transactions[index].signer
-    const lsig = signer as LogicSigAccount
-    return 'sk' in signer ? groupedTransaction.signTxn(signer.sk) : algosdk.signLogicSigTransactionObject(groupedTransaction, lsig).blob
-  })
-  const { txId } = (await client.sendRawTransaction(signedTransactions).do()) as { txId: string }
-
-  let confirmation: PendingTransactionResponse | undefined = undefined
-  if (!skipWaiting) {
-    confirmation = await waitForConfirmation(txId, 5, client)
+async function checkAssetBalance(account: Account, assetId: number, client: Algodv2) {
+  const accountInfo = await client.accountInformation(account.addr).do()
+  if (!accountInfo.assets || !accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
+    throw new Error(`Account ${account.addr} does not have asset ${assetId}`)
   }
-
-  return { txId, confirmation }
+  const accountAssetInfo = await client.accountAssetInformation(account.addr, assetId).do()
+  if (accountAssetInfo['asset-holding']['amount'] != 0) {
+    throw new Error(`asset ${assetId} is not with zero balance`)
+  }
 }
 
-export async function OptOut(client: Algodv2, optoutAccount: Account, assetIds: number[]) {
-  const assets = await Promise.all(assetIds.map((aid) => client.getAssetByID(aid).do()))
+export async function OptOut(client: Algodv2, optoutAccount: Account, assetIds: number[]): Promise<Record<number, string>> {
+  const result: Record<number, string> = {}
+
+  // Verify assets
+  const verifiedAssetIds: number[] = []
+  for (const assetId of assetIds) {
+    await checkAssetBalance(optoutAccount, assetId, client)
+    verifiedAssetIds.push(assetId)
+  }
+  const assets = await Promise.all(verifiedAssetIds.map((aid) => client.getAssetByID(aid).do()))
   const suggestedParams = await client.getTransactionParams().do()
 
-  for (const assetGroup of chunks(assets, Math.floor(MaxTxGroupSize / 2))) {
+  for (const assetGroup of chunks(assets, MaxTxGroupSize)) {
     try {
-      const txnGrp: TransactionToSign[] = assetGroup.flatMap((asset) => [
+      const transactionToSign: TransactionToSign[] = assetGroup.flatMap((asset) => [
         {
           transaction: algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
             assetIndex: asset.index,
@@ -64,15 +67,24 @@ export async function OptOut(client: Algodv2, optoutAccount: Account, assetIds: 
           signer: optoutAccount,
         },
       ])
-      const { txId, confirmation } = await sendGroupOfTransactions(client, txnGrp)
+      const txnGrp: TransactionGroupToSend = {
+        transactions: transactionToSign,
+        signer: optoutAccount,
+      }
+      const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, client)
+
+      assetGroup.forEach((asset) => {
+        result[asset.index] = sendGroupOfTransactionsResult.groupId
+      })
 
       Config.logger.info(
-        `Successfully opted out of assets ${assetGroup.map((asset) => asset.index).join(', ')} with transaction ${txId} round ${
-          confirmation ? confirmation.confirmedRound : 'unknown'
-        }.`,
+        `Successfully opted out of assets ${assetGroup.map((asset) => asset.index).join(', ')} with transaction ${
+          sendGroupOfTransactionsResult.txIds
+        } round ${sendGroupOfTransactionsResult.confirmations}.`,
       )
     } catch (e) {
-      Config.logger.warn('Received error trying to', e)
+      throw new Error(`Received error trying to opt out ${e}`)
     }
   }
+  return result
 }
