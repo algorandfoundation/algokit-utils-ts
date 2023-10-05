@@ -10,6 +10,6 @@
 
 ### Interfaces
 
-- [TestNetDispenserApiClientParams](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md)
 - [DispenserFundResponse](../interfaces/types_dispenser_client.DispenserFundResponse.md)
 - [DispenserLimitResponse](../interfaces/types_dispenser_client.DispenserLimitResponse.md)
+- [TestNetDispenserApiClientParams](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md)

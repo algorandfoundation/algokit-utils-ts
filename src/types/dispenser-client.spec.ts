@@ -1,12 +1,12 @@
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock'
+jest.mock('cross-fetch')
+import crossFetch from 'cross-fetch'
 import { TestNetDispenserApiClient } from './dispenser-client'
-enableFetchMocks()
 
 describe('TestNetDispenserApiClient', () => {
   const env = process.env
 
   beforeEach(async () => {
-    jest.resetModules()
+    jest.resetAllMocks()
     process.env = { ...env }
   })
 
@@ -15,7 +15,10 @@ describe('TestNetDispenserApiClient', () => {
   })
   it('should fund account with algos with auth token', async () => {
     const mockResponse = { txID: 'dummy_tx_id', amount: 1 }
-    fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
+    jest.mocked(crossFetch).mockResolvedValueOnce({
+      json: () => Promise.resolve(mockResponse),
+      ok: true,
+    } as Response)
 
     const dispenserClient = new TestNetDispenserApiClient({ authToken: 'dummy_auth_token', requestTimeout: null })
     const address = 'dummy_address'
@@ -27,7 +30,11 @@ describe('TestNetDispenserApiClient', () => {
   })
 
   it('should register refund with auth token', async () => {
-    fetchMock.mockResponseOnce(JSON.stringify({}))
+    const fetchMock = jest.mocked(crossFetch)
+    fetchMock.mockResolvedValueOnce({
+      json: () => Promise.resolve({}),
+      ok: true,
+    } as Response)
 
     const dispenserClient = new TestNetDispenserApiClient({ authToken: 'dummy_auth_token', requestTimeout: null })
     const refundTxnId = 'dummy_txn_id'
@@ -45,7 +52,11 @@ describe('TestNetDispenserApiClient', () => {
   it('should get limit with auth token', async () => {
     const amount = 10000000
     const mockResponse = { amount: amount }
-    fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
+    const fetchMock = jest.mocked(crossFetch)
+    fetchMock.mockResolvedValueOnce({
+      json: () => Promise.resolve(mockResponse),
+      ok: true,
+    } as Response)
 
     const dispenserClient = new TestNetDispenserApiClient({ authToken: 'dummy_auth_token', requestTimeout: null })
     const response = await dispenserClient.getLimit()

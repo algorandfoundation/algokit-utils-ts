@@ -1,11 +1,9 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock'
 import invariant from 'tiny-invariant'
 import * as algokit from './'
 import { algorandFixture } from './testing'
 import { ensureFundsAndOptIn, generateTestAsset, optIn } from './testing/asset'
-enableFetchMocks()
 
 describe('transfer', () => {
   const localnet = algorandFixture()
@@ -292,11 +290,13 @@ describe('transfer', () => {
   test('ensureFunded uses dispenser api with access token sucessfully', async () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
 
-    // Mock the fetch response
-    fetchMock.mockResponseOnce(JSON.stringify({ txID: 'dummy_tx_id', amount: 200_000 }))
-
     const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
     const dispenserClient = algokit.getTestNetDispenserApiClient()
+    Object.assign(dispenserClient, {
+      fund: jest.fn().mockImplementation(() => {
+        return Promise.resolve({ txId: 'dummy_tx_id', amount: 200_000 })
+      }),
+    })
 
     const accountToFund = algosdk.generateAccount()
 
@@ -318,11 +318,13 @@ describe('transfer', () => {
   test('ensureFunded uses dispenser api and fails with rejected response', async () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
 
-    // Mock the fetch response
-    fetchMock.mockRejectOnce(new Error('dummy_error'))
-
     const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
     const dispenserClient = algokit.getTestNetDispenserApiClient()
+    Object.assign(dispenserClient, {
+      fund: jest.fn().mockImplementation(() => {
+        return Promise.reject(new Error('dummy_error'))
+      }),
+    })
     const accountToFund = algosdk.generateAccount()
 
     await expect(

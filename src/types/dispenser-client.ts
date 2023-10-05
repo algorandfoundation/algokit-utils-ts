@@ -1,4 +1,4 @@
-import { fetch } from 'cross-fetch'
+import fetch from 'cross-fetch'
 
 const baseUrl = 'https://api.dispenser.algorandfoundation.tools'
 const dispenserRequestTimeout = 15

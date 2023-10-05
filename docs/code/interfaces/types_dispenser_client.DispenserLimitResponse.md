@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[src/types/dispenser-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L23)
+[src/types/dispenser-client.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L25)
