@@ -53,7 +53,7 @@
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
 - [getDefaultLocalNetConfig](index.md#getdefaultlocalnetconfig)
 - [getDispenserAccount](index.md#getdispenseraccount)
-- [getDispenserApiTestnetClient](index.md#getdispenserapitestnetclient)
+- [getTestNetDispenserApiClient](index.md#getdispenserapitestnetclient)
 - [getIndexerConfigFromEnvironment](index.md#getindexerconfigfromenvironment)
 - [getKmdWalletAccount](index.md#getkmdwalletaccount)
 - [getLocalNetDispenserAccount](index.md#getlocalnetdispenseraccount)
@@ -1399,29 +1399,29 @@ If running on LocalNet then it will return the default dispenser account automat
 
 ___
 
-### getDispenserApiTestnetClient
+### getTestNetDispenserApiClient
 
-▸ **getDispenserApiTestnetClient**(`params?`): [`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
+▸ **getTestNetDispenserApiClient**(`params?`): [`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
 
-Create a new DispenserApiTestnetClient instance.
+Create a new TestNetDispenserApiClient instance.
 Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
 
 #### Parameters
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `params` | ``null`` \| [`DispenserApiTestnetClientParams`](../interfaces/types_dispenser_client.DispenserApiTestnetClientParams.md) | `null` | An object containing parameters for the DispenserApiTestnetClient class. Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`. |
+| `params` | ``null`` \| [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) | `null` | An object containing parameters for the TestNetDispenserApiClient class. Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`. |
 
 #### Returns
 
-[`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
+[`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
 
-An instance of the DispenserApiTestnetClient class.
+An instance of the TestNetDispenserApiClient class.
 
 **`Example`**
 
 ```ts
-const client = algokit.getDispenserApiTestnetClient(
+const client = algokit.getTestNetDispenserApiClient(
     {
       authToken: 'your_auth_token',
       requestTimeout: 15,

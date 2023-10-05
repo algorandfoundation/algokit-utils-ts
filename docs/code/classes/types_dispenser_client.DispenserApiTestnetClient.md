@@ -1,10 +1,10 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/dispenser-client](../modules/types_dispenser_client.md) / DispenserApiTestnetClient
+[@algorandfoundation/algokit-utils](../README.md) / [types/dispenser-client](../modules/types_dispenser_client.md) / TestNetDispenserApiClient
 
-# Class: DispenserApiTestnetClient
+# Class: TestNetDispenserApiClient
 
-[types/dispenser-client](../modules/types_dispenser_client.md).DispenserApiTestnetClient
+[types/dispenser-client](../modules/types_dispenser_client.md).TestNetDispenserApiClient
 
-`DispenserApiTestnetClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
+`TestNetDispenserApiClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
 It allows you to fund an address with Algos, refund a transaction, and get the funding limit for the Algo asset.
 
 The class requires an authentication token and a request timeout to be initialized. The authentication token can be provided
@@ -27,7 +27,7 @@ limit - Sends a request to the dispenser API to get the funding limit for the Al
 **`Example`**
 
 ```typescript
-const client = new DispenserApiTestnetClient({ authToken: 'your_auth_token', requestTimeout: 30 });
+const client = new TestNetDispenserApiClient({ authToken: 'your_auth_token', requestTimeout: 30 });
 const fundResponse = await client.fund('your_address', 100);
 const limitResponse = await client.getLimit();
 await client.refund('your_transaction_id');
@@ -41,36 +41,36 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 ### Constructors
 
-- [constructor](types_dispenser_client.DispenserApiTestnetClient.md#constructor)
+- [constructor](types_dispenser_client.TestNetDispenserApiClient.md#constructor)
 
 ### Properties
 
-- [\_authToken](types_dispenser_client.DispenserApiTestnetClient.md#_authtoken)
-- [\_requestTimeout](types_dispenser_client.DispenserApiTestnetClient.md#_requesttimeout)
+- [\_authToken](types_dispenser_client.TestNetDispenserApiClient.md#_authtoken)
+- [\_requestTimeout](types_dispenser_client.TestNetDispenserApiClient.md#_requesttimeout)
 
 ### Accessors
 
-- [authToken](types_dispenser_client.DispenserApiTestnetClient.md#authtoken)
-- [requestTimeout](types_dispenser_client.DispenserApiTestnetClient.md#requesttimeout)
+- [authToken](types_dispenser_client.TestNetDispenserApiClient.md#authtoken)
+- [requestTimeout](types_dispenser_client.TestNetDispenserApiClient.md#requesttimeout)
 
 ### Methods
 
-- [fund](types_dispenser_client.DispenserApiTestnetClient.md#fund)
-- [getLimit](types_dispenser_client.DispenserApiTestnetClient.md#getlimit)
-- [processDispenserRequest](types_dispenser_client.DispenserApiTestnetClient.md#processdispenserrequest)
-- [refund](types_dispenser_client.DispenserApiTestnetClient.md#refund)
+- [fund](types_dispenser_client.TestNetDispenserApiClient.md#fund)
+- [getLimit](types_dispenser_client.TestNetDispenserApiClient.md#getlimit)
+- [processDispenserRequest](types_dispenser_client.TestNetDispenserApiClient.md#processdispenserrequest)
+- [refund](types_dispenser_client.TestNetDispenserApiClient.md#refund)
 
 ## Constructors
 
 ### constructor
 
-• **new DispenserApiTestnetClient**(`params`)
+• **new TestNetDispenserApiClient**(`params`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `params` | ``null`` \| [`DispenserApiTestnetClientParams`](../interfaces/types_dispenser_client.DispenserApiTestnetClientParams.md) |
+| `params` | ``null`` \| [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) |
 
 #### Defined in
 

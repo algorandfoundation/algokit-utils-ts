@@ -296,7 +296,7 @@ describe('transfer', () => {
     fetchMock.mockResponseOnce(JSON.stringify({ txID: 'dummy_tx_id', amount: 200_000 }))
 
     const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-    const dispenserClient = algokit.getDispenserApiTestnetClient()
+    const dispenserClient = algokit.getTestNetDispenserApiClient()
 
     const accountToFund = algosdk.generateAccount()
 
@@ -322,7 +322,7 @@ describe('transfer', () => {
     fetchMock.mockRejectOnce(new Error('dummy_error'))
 
     const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-    const dispenserClient = algokit.getDispenserApiTestnetClient()
+    const dispenserClient = algokit.getTestNetDispenserApiClient()
     const accountToFund = algosdk.generateAccount()
 
     await expect(

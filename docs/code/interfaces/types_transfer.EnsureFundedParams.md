@@ -78,7 +78,7 @@ ___
 
 ### fundingSource
 
-• `Optional` **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom) \| [`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
+• `Optional` **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom) \| [`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
 
 The account to use as a funding source, will default to using the dispenser account returned by `algokit.getDispenserAccount`
 

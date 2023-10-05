@@ -1,8 +1,8 @@
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock'
-import { DispenserApiTestnetClient } from './dispenser-client'
+import { TestNetDispenserApiClient } from './dispenser-client'
 enableFetchMocks()
 
-describe('DispenserApiTestnetClient', () => {
+describe('TestNetDispenserApiClient', () => {
   const env = process.env
 
   beforeEach(async () => {
@@ -17,7 +17,7 @@ describe('DispenserApiTestnetClient', () => {
     const mockResponse = { txID: 'dummy_tx_id', amount: 1 }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
-    const dispenserClient = new DispenserApiTestnetClient({ authToken: 'dummy_auth_token', requestTimeout: null })
+    const dispenserClient = new TestNetDispenserApiClient({ authToken: 'dummy_auth_token', requestTimeout: null })
     const address = 'dummy_address'
     const amount = 1
 
@@ -29,7 +29,7 @@ describe('DispenserApiTestnetClient', () => {
   it('should register refund with auth token', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({}))
 
-    const dispenserClient = new DispenserApiTestnetClient({ authToken: 'dummy_auth_token', requestTimeout: null })
+    const dispenserClient = new TestNetDispenserApiClient({ authToken: 'dummy_auth_token', requestTimeout: null })
     const refundTxnId = 'dummy_txn_id'
 
     await dispenserClient.refund(refundTxnId)
@@ -47,24 +47,24 @@ describe('DispenserApiTestnetClient', () => {
     const mockResponse = { amount: amount }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 
-    const dispenserClient = new DispenserApiTestnetClient({ authToken: 'dummy_auth_token', requestTimeout: null })
+    const dispenserClient = new TestNetDispenserApiClient({ authToken: 'dummy_auth_token', requestTimeout: null })
     const response = await dispenserClient.getLimit()
     expect(response.amount).toEqual(amount)
   })
 
   it('should throw error when no auth token provided', () => {
-    expect(() => new DispenserApiTestnetClient(null)).toThrow()
+    expect(() => new TestNetDispenserApiClient(null)).toThrow()
   })
 
   it('should init with environment variable', () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
-    const client = new DispenserApiTestnetClient(null)
+    const client = new TestNetDispenserApiClient(null)
     expect(client.authToken).toEqual('dummy_token')
   })
 
   it('should init with argument over environment variable', () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
-    const client = new DispenserApiTestnetClient({ authToken: 'test_value_2', requestTimeout: null })
+    const client = new TestNetDispenserApiClient({ authToken: 'test_value_2', requestTimeout: null })
     expect(client.authToken).toEqual('test_value_2')
   })
 })

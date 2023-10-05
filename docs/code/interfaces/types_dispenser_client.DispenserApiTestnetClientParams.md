@@ -1,15 +1,15 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/dispenser-client](../modules/types_dispenser_client.md) / DispenserApiTestnetClientParams
+[@algorandfoundation/algokit-utils](../README.md) / [types/dispenser-client](../modules/types_dispenser_client.md) / TestNetDispenserApiClientParams
 
-# Interface: DispenserApiTestnetClientParams
+# Interface: TestNetDispenserApiClientParams
 
-[types/dispenser-client](../modules/types_dispenser_client.md).DispenserApiTestnetClientParams
+[types/dispenser-client](../modules/types_dispenser_client.md).TestNetDispenserApiClientParams
 
 ## Table of contents
 
 ### Properties
 
-- [authToken](types_dispenser_client.DispenserApiTestnetClientParams.md#authtoken)
-- [requestTimeout](types_dispenser_client.DispenserApiTestnetClientParams.md#requesttimeout)
+- [authToken](types_dispenser_client.TestNetDispenserApiClientParams.md#authtoken)
+- [requestTimeout](types_dispenser_client.TestNetDispenserApiClientParams.md#requesttimeout)
 
 ## Properties
 
