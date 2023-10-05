@@ -15,11 +15,11 @@ If both methods are used, the constructor argument takes precedence.
 import * as algokit from '@algorandfoundation/algokit-utils'
 
 // Using constructor argument
-const client = algokit.getDispenserApiTestnetClient({ authToken: 'your_auth_token' })
+const client = algokit.getTestNetDispenserApiClient({ authToken: 'your_auth_token' })
 
 // Using environment variable
 process.env['ALGOKIT_DISPENSER_ACCESS_TOKEN'] = 'your_auth_token'
-const client = algokit.getDispenserApiTestnetClient()
+const client = algokit.getTestNetDispenserApiClient()
 ```
 
 ## Funding an Account

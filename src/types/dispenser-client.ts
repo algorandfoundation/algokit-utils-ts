@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch'
+
 const baseUrl = 'https://api.dispenser.algorandfoundation.tools'
 const dispenserRequestTimeout = 15
 const dispenserAccessTokenKey = 'ALGOKIT_DISPENSER_ACCESS_TOKEN'
@@ -23,13 +25,13 @@ export interface DispenserLimitResponse {
   amount: number
 }
 
-export interface DispenserApiTestnetClientParams {
+export interface TestNetDispenserApiClientParams {
   authToken: string
   requestTimeout: number | null
 }
 
 /**
- * `DispenserApiTestnetClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
+ * `TestNetDispenserApiClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
  * It allows you to fund an address with Algos, refund a transaction, and get the funding limit for the Algo asset.
  *
  * The class requires an authentication token and a request timeout to be initialized. The authentication token can be provided
@@ -46,7 +48,7 @@ export interface DispenserApiTestnetClientParams {
  *
  * @example
  * ```typescript
- * const client = new DispenserApiTestnetClient({ authToken: 'your_auth_token', requestTimeout: 30 });
+ * const client = new TestNetDispenserApiClient({ authToken: 'your_auth_token', requestTimeout: 30 });
  * const fundResponse = await client.fund('your_address', 100);
  * const limitResponse = await client.getLimit();
  * await client.refund('your_transaction_id');
@@ -54,11 +56,11 @@ export interface DispenserApiTestnetClientParams {
  *
  * @throws {Error} If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the authToken parameter were provided.
  */
-export class DispenserApiTestnetClient {
+export class TestNetDispenserApiClient {
   private _authToken: string
   private _requestTimeout: number
 
-  constructor(params: DispenserApiTestnetClientParams | null) {
+  constructor(params: TestNetDispenserApiClientParams | null) {
     const authTokenFromEnv = process.env[dispenserAccessTokenKey]
 
     if (params?.authToken) {

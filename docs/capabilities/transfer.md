@@ -21,13 +21,13 @@ The `ensureFunded` function automatically funds an account to maintain a minimum
 
 - All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
 - `accountToFund: SendTransactionFrom | string` - The account that is to be funded
-- `fundingSource?: SendTransactionFrom | DispenserApiTestnetClient` - The account that is the source of funds or a dispenser API client. If not specified, it will use the [dispenser](./account.md#dispenser)
+- `fundingSource?: SendTransactionFrom | TestNetDispenserApiClient` - The account that is the source of funds or a dispenser API client. If not specified, it will use the [dispenser](./account.md#dispenser)
 - `minSpendingBalance: AlgoAmount` - The minimum balance of ALGOs that the account should have available to spend (i.e., on top of the minimum balance requirement)
 - `minFundingIncrement?: AlgoAmount` - When issuing a funding amount, the minimum amount to transfer. This avoids many small transfers if this function gets called often on an active account
 - `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
 - `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
 
-The function calls Algod to find the current balance and minimum balance requirement, calculates the difference between those two numbers, and checks to see if it's more than the `minSpendingBalance`. If so, it will send the difference, or the `minFundingIncrement` if that is specified. If the `fundingSource` is an instance of `DispenserApiTestnetClient`, the function will use the dispenser API to fund the account. Refer to [algokit-cli documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/dispenser.md#ci-access-token) for details on obtaining an access token for AlgoKit TestNet Dispenser API.
+The function calls Algod to find the current balance and minimum balance requirement, calculates the difference between those two numbers, and checks to see if it's more than the `minSpendingBalance`. If so, it will send the difference, or the `minFundingIncrement` if that is specified. If the `fundingSource` is an instance of `TestNetDispenserApiClient`, the function will use the dispenser API to fund the account. Refer to [algokit-cli documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/dispenser.md#ci-access-token) for details on obtaining an access token for AlgoKit TestNet Dispenser API.
 
 ## `transferAsset`
 

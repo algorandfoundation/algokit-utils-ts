@@ -53,13 +53,13 @@
 - [getCreatorAppsByName](index.md#getcreatorappsbyname)
 - [getDefaultLocalNetConfig](index.md#getdefaultlocalnetconfig)
 - [getDispenserAccount](index.md#getdispenseraccount)
-- [getDispenserApiTestnetClient](index.md#getdispenserapitestnetclient)
 - [getIndexerConfigFromEnvironment](index.md#getindexerconfigfromenvironment)
 - [getKmdWalletAccount](index.md#getkmdwalletaccount)
 - [getLocalNetDispenserAccount](index.md#getlocalnetdispenseraccount)
 - [getOrCreateKmdWalletAccount](index.md#getorcreatekmdwalletaccount)
 - [getSenderAddress](index.md#getsenderaddress)
 - [getSenderTransactionSigner](index.md#getsendertransactionsigner)
+- [getTestNetDispenserApiClient](index.md#gettestnetdispenserapiclient)
 - [getTransactionParams](index.md#gettransactionparams)
 - [getTransactionWithSigner](index.md#gettransactionwithsigner)
 - [isLocalNet](index.md#islocalnet)
@@ -1399,42 +1399,6 @@ If running on LocalNet then it will return the default dispenser account automat
 
 ___
 
-### getDispenserApiTestnetClient
-
-▸ **getDispenserApiTestnetClient**(`params?`): [`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
-
-Create a new DispenserApiTestnetClient instance.
-Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `params` | ``null`` \| [`DispenserApiTestnetClientParams`](../interfaces/types_dispenser_client.DispenserApiTestnetClientParams.md) | `null` | An object containing parameters for the DispenserApiTestnetClient class. Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`. |
-
-#### Returns
-
-[`DispenserApiTestnetClient`](../classes/types_dispenser_client.DispenserApiTestnetClient.md)
-
-An instance of the DispenserApiTestnetClient class.
-
-**`Example`**
-
-```ts
-const client = algokit.getDispenserApiTestnetClient(
-    {
-      authToken: 'your_auth_token',
-      requestTimeout: 15,
-    }
-)
-```
-
-#### Defined in
-
-[src/dispenser-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L19)
-
-___
-
 ### getIndexerConfigFromEnvironment
 
 ▸ **getIndexerConfigFromEnvironment**(): [`AlgoClientConfig`](../interfaces/types_network_client.AlgoClientConfig.md)
@@ -1591,6 +1555,42 @@ A transaction signer
 #### Defined in
 
 [src/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L70)
+
+___
+
+### getTestNetDispenserApiClient
+
+▸ **getTestNetDispenserApiClient**(`params?`): [`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
+
+Create a new TestNetDispenserApiClient instance.
+Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `params` | ``null`` \| [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) | `null` | An object containing parameters for the TestNetDispenserApiClient class. Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`. |
+
+#### Returns
+
+[`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
+
+An instance of the TestNetDispenserApiClient class.
+
+**`Example`**
+
+```ts
+const client = algokit.getTestNetDispenserApiClient(
+    {
+      authToken: 'your_auth_token',
+      requestTimeout: 15,
+    }
+)
+```
+
+#### Defined in
+
+[src/dispenser-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/dispenser-client.ts#L19)
 
 ___
 

@@ -1,10 +1,10 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/dispenser-client](../modules/types_dispenser_client.md) / DispenserApiTestnetClient
+[@algorandfoundation/algokit-utils](../README.md) / [types/dispenser-client](../modules/types_dispenser_client.md) / TestNetDispenserApiClient
 
-# Class: DispenserApiTestnetClient
+# Class: TestNetDispenserApiClient
 
-[types/dispenser-client](../modules/types_dispenser_client.md).DispenserApiTestnetClient
+[types/dispenser-client](../modules/types_dispenser_client.md).TestNetDispenserApiClient
 
-`DispenserApiTestnetClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
+`TestNetDispenserApiClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
 It allows you to fund an address with Algos, refund a transaction, and get the funding limit for the Algo asset.
 
 The class requires an authentication token and a request timeout to be initialized. The authentication token can be provided
@@ -27,7 +27,7 @@ limit - Sends a request to the dispenser API to get the funding limit for the Al
 **`Example`**
 
 ```typescript
-const client = new DispenserApiTestnetClient({ authToken: 'your_auth_token', requestTimeout: 30 });
+const client = new TestNetDispenserApiClient({ authToken: 'your_auth_token', requestTimeout: 30 });
 const fundResponse = await client.fund('your_address', 100);
 const limitResponse = await client.getLimit();
 await client.refund('your_transaction_id');
@@ -41,40 +41,40 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 ### Constructors
 
-- [constructor](types_dispenser_client.DispenserApiTestnetClient.md#constructor)
+- [constructor](types_dispenser_client.TestNetDispenserApiClient.md#constructor)
 
 ### Properties
 
-- [\_authToken](types_dispenser_client.DispenserApiTestnetClient.md#_authtoken)
-- [\_requestTimeout](types_dispenser_client.DispenserApiTestnetClient.md#_requesttimeout)
+- [\_authToken](types_dispenser_client.TestNetDispenserApiClient.md#_authtoken)
+- [\_requestTimeout](types_dispenser_client.TestNetDispenserApiClient.md#_requesttimeout)
 
 ### Accessors
 
-- [authToken](types_dispenser_client.DispenserApiTestnetClient.md#authtoken)
-- [requestTimeout](types_dispenser_client.DispenserApiTestnetClient.md#requesttimeout)
+- [authToken](types_dispenser_client.TestNetDispenserApiClient.md#authtoken)
+- [requestTimeout](types_dispenser_client.TestNetDispenserApiClient.md#requesttimeout)
 
 ### Methods
 
-- [fund](types_dispenser_client.DispenserApiTestnetClient.md#fund)
-- [getLimit](types_dispenser_client.DispenserApiTestnetClient.md#getlimit)
-- [processDispenserRequest](types_dispenser_client.DispenserApiTestnetClient.md#processdispenserrequest)
-- [refund](types_dispenser_client.DispenserApiTestnetClient.md#refund)
+- [fund](types_dispenser_client.TestNetDispenserApiClient.md#fund)
+- [getLimit](types_dispenser_client.TestNetDispenserApiClient.md#getlimit)
+- [processDispenserRequest](types_dispenser_client.TestNetDispenserApiClient.md#processdispenserrequest)
+- [refund](types_dispenser_client.TestNetDispenserApiClient.md#refund)
 
 ## Constructors
 
 ### constructor
 
-• **new DispenserApiTestnetClient**(`params`)
+• **new TestNetDispenserApiClient**(`params`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `params` | ``null`` \| [`DispenserApiTestnetClientParams`](../interfaces/types_dispenser_client.DispenserApiTestnetClientParams.md) |
+| `params` | ``null`` \| [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) |
 
 #### Defined in
 
-[src/types/dispenser-client.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L61)
+[src/types/dispenser-client.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L63)
 
 ## Properties
 
@@ -84,7 +84,7 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 #### Defined in
 
-[src/types/dispenser-client.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L58)
+[src/types/dispenser-client.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L60)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/types/dispenser-client.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L59)
+[src/types/dispenser-client.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L61)
 
 ## Accessors
 
@@ -110,7 +110,7 @@ The authentication token used for API requests.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L77)
+[src/types/dispenser-client.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L79)
 
 ___
 
@@ -126,7 +126,7 @@ The timeout for API requests, in seconds.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L81)
+[src/types/dispenser-client.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L83)
 
 ## Methods
 
@@ -151,7 +151,7 @@ DispenserFundResponse: An object containing the transaction ID and funded amount
 
 #### Defined in
 
-[src/types/dispenser-client.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L142)
+[src/types/dispenser-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L144)
 
 ___
 
@@ -169,7 +169,7 @@ DispenserLimitResponse: An object containing the funding limit amount.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L168)
+[src/types/dispenser-client.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L170)
 
 ___
 
@@ -196,7 +196,7 @@ The API response.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L95)
+[src/types/dispenser-client.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L97)
 
 ___
 
@@ -218,4 +218,4 @@ Sends a refund request to the dispenser API for the specified refundTxnId.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L159)
+[src/types/dispenser-client.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L161)

@@ -3,13 +3,13 @@ import { Config, getDispenserAccount, microAlgos } from './'
 import { isTestNet } from './network-client'
 import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { AlgoAmount } from './types/amount'
-import { DispenserApiTestnetClient } from './types/dispenser-client'
+import { TestNetDispenserApiClient } from './types/dispenser-client'
 import { SendTransactionResult, TransactionNote } from './types/transaction'
 import { AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
 import { calculateFundAmount } from './util'
 
 async function fundUsingDispenserApi(
-  dispenserClient: DispenserApiTestnetClient,
+  dispenserClient: TestNetDispenserApiClient,
   addressToFund: string,
   fundAmount: number,
 ): Promise<EnsureFundedReturnType> {
@@ -44,7 +44,7 @@ async function fundUsingTransfer({
   note: TransactionNote
   kmd?: Kmd
 }): Promise<EnsureFundedReturnType> {
-  if (funding.fundingSource instanceof DispenserApiTestnetClient) {
+  if (funding.fundingSource instanceof TestNetDispenserApiClient) {
     throw new Error('Dispenser API client is not supported in this context.')
   }
 
@@ -132,7 +132,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
   )
 
   if (fundAmount !== null) {
-    if ((await isTestNet(algod)) && fundingSource instanceof DispenserApiTestnetClient) {
+    if ((await isTestNet(algod)) && fundingSource instanceof TestNetDispenserApiClient) {
       return fundUsingDispenserApi(fundingSource, addressToFund, fundAmount) as Promise<EnsureFundedReturnType>
     } else {
       return fundUsingTransfer({
