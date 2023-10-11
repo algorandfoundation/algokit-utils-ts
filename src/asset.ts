@@ -27,27 +27,38 @@ function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
     yield arr.slice(i, i + n)
   }
 }
-async function checkAssetBalance(account: Account, assetId: number, client: Algodv2) {
-  const accountInfo = await client.accountInformation(account.addr).do()
-  if (!accountInfo.assets || !accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
-    throw new Error(`Account ${account.addr} does not have asset ${assetId}`)
-  }
-  const accountAssetInfo = await client.accountAssetInformation(account.addr, assetId).do()
-  if (accountAssetInfo['asset-holding']['amount'] != 0) {
-    throw new Error(`asset ${assetId} is not with zero balance`)
+async function ensureAssetBalance(account: Account, assetIds: number[], client: Algodv2) {
+  const assetPromises = assetIds.map(async (assetId) => {
+    try {
+      const accountAssetInfo = await client.accountAssetInformation(account.addr, assetId).do()
+      if (accountAssetInfo['asset-holding']['amount'] !== 0) {
+        Config.logger.error(`asset ${assetId} is not with zero balance`)
+        return assetId
+      }
+    } catch (e) {
+      Config.logger.error(`Account ${account.addr} does not have asset ${assetId}`)
+      return assetId
+    }
+    return null
+  })
+
+  const invalidAssets = (await Promise.all(assetPromises)).filter((assetId) => assetId !== null)
+  if (invalidAssets.length > 0) {
+    throw new Error(
+      `Assets ${invalidAssets.join(
+        ', ',
+      )} cannot be opted out. Ensure that they are valid and that the account has previously opted into them.`,
+    )
   }
 }
 
-export async function OptOut(client: Algodv2, optoutAccount: Account, assetIds: number[]): Promise<Record<number, string>> {
+export async function optOut(client: Algodv2, optoutAccount: Account, assetIds: number[]): Promise<Record<number, string>> {
   const result: Record<number, string> = {}
 
   // Verify assets
-  const verifiedAssetIds: number[] = []
-  for (const assetId of assetIds) {
-    await checkAssetBalance(optoutAccount, assetId, client)
-    verifiedAssetIds.push(assetId)
-  }
-  const assets = await Promise.all(verifiedAssetIds.map((aid) => client.getAssetByID(aid).do()))
+  await ensureAssetBalance(optoutAccount, assetIds, client)
+
+  const assets = await Promise.all(assetIds.map((aid) => client.getAssetByID(aid).do()))
   const suggestedParams = await client.getTransactionParams().do()
 
   for (const assetGroup of chunks(assets, MaxTxGroupSize)) {
@@ -72,16 +83,14 @@ export async function OptOut(client: Algodv2, optoutAccount: Account, assetIds: 
         signer: optoutAccount,
       }
       const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, client)
+      assetGroup.map((asset, index) => {
+        result[asset.index] = sendGroupOfTransactionsResult.txIds[index]
 
-      assetGroup.forEach((asset) => {
-        result[asset.index] = sendGroupOfTransactionsResult.groupId
+        Config.logger.info(
+          `Successfully opted out of asset ${asset.index} with transaction ID ${sendGroupOfTransactionsResult.txIds[index]},
+          grouped under ${sendGroupOfTransactionsResult.groupId} round ${sendGroupOfTransactionsResult.confirmations}.`,
+        )
       })
-
-      Config.logger.info(
-        `Successfully opted out of assets ${assetGroup.map((asset) => asset.index).join(', ')} with transaction ${
-          sendGroupOfTransactionsResult.txIds
-        } round ${sendGroupOfTransactionsResult.confirmations}.`,
-      )
     } catch (e) {
       throw new Error(`Received error trying to opt out ${e}`)
     }
