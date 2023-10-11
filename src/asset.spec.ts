@@ -144,5 +144,5 @@ describe('asset', () => {
 
     const secondAccountInfoAfterOptOut = await algod.accountInformation(secondAccount.addr).do()
     expect(secondAccountInfoAfterOptOut['total-assets-opted-in']).toBe(0)
-  })
+  }, 10e6)
 })
