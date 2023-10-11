@@ -32,11 +32,11 @@ async function ensureAssetBalance(account: Account, assetIds: number[], client: 
     try {
       const accountAssetInfo = await client.accountAssetInformation(account.addr, assetId).do()
       if (accountAssetInfo['asset-holding']['amount'] !== 0) {
-        Config.logger.error(`asset ${assetId} is not with zero balance`)
+        Config.logger.debug(`asset ${assetId} is not with zero balance`)
         return assetId
       }
     } catch (e) {
-      Config.logger.error(`Account ${account.addr} does not have asset ${assetId}`)
+      Config.logger.debug(`Account ${account.addr} does not have asset ${assetId}`)
       return assetId
     }
     return null
