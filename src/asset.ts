@@ -6,9 +6,13 @@ import { TransactionGroupToSend, TransactionToSign } from './types/transaction'
 const MaxTxGroupSize = 16
 
 export async function optIn(client: Algodv2, account: Account, assetId: number) {
-  const accountInfo = await client.accountInformation(account.addr).do()
-  if (accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
-    throw new Error(`Account ${account.addr} have already opt-in to asset ${assetId}`)
+  try {
+    const accountInfo = await client.accountInformation(account.addr).do()
+    if (accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
+      throw new Error(`Account ${account.addr} have already opt-in to asset ${assetId}`)
+    }
+  } catch {
+    throw new Error(`Account address supplied does not exist`)
   }
   await transferAsset(
     {
@@ -23,9 +27,7 @@ export async function optIn(client: Algodv2, account: Account, assetId: number) 
 }
 
 function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
-  for (let i = 0; i < arr.length; i += n) {
-    yield arr.slice(i, i + n)
-  }
+  for (let i = 0; i < arr.length; i += n) yield arr.slice(i, i + n)
 }
 async function ensureAssetBalance(account: Account, assetIds: number[], client: Algodv2) {
   const assetPromises = assetIds.map(async (assetId) => {

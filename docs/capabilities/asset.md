@@ -10,8 +10,7 @@ The `optIn` function facilitates the opt-in process for an account to a specific
 
 ## `optOut`
 
-An account can o
-pt out of an asset at any time. This means that the account will no longer hold the asset, and the account will no longer be able to receive the asset. The account also recovers the Minimum Balance Requirement for the asset (0.1A)
+An account can opt out of an asset at any time. This means that the account will no longer hold the asset, and the account will no longer be able to receive the asset. The account also recovers the Minimum Balance Requirement for the asset (0.1A)
 The `optOut` function manages the opt-out process, permitting the account to discontinue holding a group of assets.
 
 > **Note**:It's essential to note that an account can only opt-out of an asset if its balance of that asset is zero.
