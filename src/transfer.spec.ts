@@ -66,7 +66,7 @@ describe('transfer', () => {
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     try {
       await algokit.transferAsset(
@@ -91,7 +91,7 @@ describe('transfer', () => {
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     try {
       await algokit.transferAsset(
@@ -116,7 +116,7 @@ describe('transfer', () => {
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     const response = await algokit.transferAsset(
       {
@@ -140,7 +140,7 @@ describe('transfer', () => {
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     await algokit.transferAsset(
       {
@@ -167,10 +167,10 @@ describe('transfer', () => {
     const clawbackAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     await ensureFunds(algod, clawbackAccount, kmd)
-    await optIn(algod, clawbackAccount, dummyAssetId)
+    await optIn(algod, clawbackAccount, [dummyAssetId])
 
     await algokit.transferAsset(
       {
