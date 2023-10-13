@@ -60,10 +60,19 @@ async function ensureAssetBalance(account: Account, assetIds: number[], client: 
   }
 }
 
-export async function optIn(client: Algodv2, optInAccount: Account, assetIds: number[]) {
+/**
+ * Opt in to a list of assets on the Algorand blockchain.
+ *
+ * @param client - An instance of the Algodv2 class from the `algosdk` library.
+ * @param account - An instance of the Account class from the `algosdk` library representing the account that wants to opt in to the assets.
+ * @param assetIds - An array of asset IDs that the account wants to opt in to.
+ * @returns A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
+ * @throws If there is an error during the opt-in process.
+ */
+export async function optIn(client: Algodv2, account: Account, assetIds: number[]) {
   const result: Record<number, string> = {}
-  await ensureAccountIsValid(client, optInAccount)
-  await ensureAssetFirstOptIn(client, optInAccount, assetIds)
+  await ensureAccountIsValid(client, account)
+  await ensureAssetFirstOptIn(client, account, assetIds)
 
   const assets = await Promise.all(assetIds.map((aid) => client.getAssetByID(aid).do()))
   const suggestedParams = await client.getTransactionParams().do()
@@ -73,8 +82,8 @@ export async function optIn(client: Algodv2, optInAccount: Account, assetIds: nu
       const transactionToSign: TransactionToSign[] = assetGroup.flatMap((asset) => [
         {
           transaction: algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-            from: optInAccount.addr,
-            to: optInAccount.addr,
+            from: account.addr,
+            to: account.addr,
             assetIndex: asset.index,
             amount: 0,
             rekeyTo: undefined,
@@ -82,12 +91,12 @@ export async function optIn(client: Algodv2, optInAccount: Account, assetIds: nu
             closeRemainderTo: undefined,
             suggestedParams,
           }),
-          signer: optInAccount,
+          signer: account,
         },
       ])
       const txnGrp: TransactionGroupToSend = {
         transactions: transactionToSign,
-        signer: optInAccount,
+        signer: account,
       }
       const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, client)
       assetGroup.map((asset, index) => {
@@ -105,11 +114,19 @@ export async function optIn(client: Algodv2, optInAccount: Account, assetIds: nu
   return result
 }
 
-export async function optOut(client: Algodv2, optoutAccount: Account, assetIds: number[]): Promise<Record<number, string>> {
+/**
+ * Opt out of multiple assets in Algorand blockchain.
+ *
+ * @param {Algodv2} client - An instance of the Algodv2 client used to interact with the Algorand blockchain.
+ * @param {Account} account - The Algorand account that wants to opt out of the assets.
+ * @param {number[]} assetIds - An array of asset IDs representing the assets to opt out of.
+ * @returns {Promise<Record<number, string>>} - A record object containing asset IDs as keys and their corresponding transaction IDs as values.
+ */
+export async function optOut(client: Algodv2, account: Account, assetIds: number[]): Promise<Record<number, string>> {
   const result: Record<number, string> = {}
 
   // Verify assets
-  await ensureAssetBalance(optoutAccount, assetIds, client)
+  await ensureAssetBalance(account, assetIds, client)
 
   const assets = await Promise.all(assetIds.map((aid) => client.getAssetByID(aid).do()))
   const suggestedParams = await client.getTransactionParams().do()
@@ -121,19 +138,19 @@ export async function optOut(client: Algodv2, optoutAccount: Account, assetIds: 
           transaction: algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
             assetIndex: asset.index,
             amount: 0,
-            from: optoutAccount.addr,
-            to: optoutAccount.addr,
+            from: account.addr,
+            to: account.addr,
             rekeyTo: undefined,
             revocationTarget: undefined,
             suggestedParams,
             closeRemainderTo: asset.params.creator,
           }),
-          signer: optoutAccount,
+          signer: account,
         },
       ])
       const txnGrp: TransactionGroupToSend = {
         transactions: transactionToSign,
-        signer: optoutAccount,
+        signer: account,
       }
       const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, client)
       assetGroup.map((asset, index) => {
