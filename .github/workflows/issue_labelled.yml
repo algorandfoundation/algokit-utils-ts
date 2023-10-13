@@ -1,4 +1,4 @@
-name: Create Zendesk ticket when an issue is labelled with makerx 
+name: Create Zendesk ticket when an issue is labelled with makerx
 on:
   issues:
     types: [labeled]
