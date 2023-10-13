@@ -6,7 +6,7 @@ To see some usage examples check out the [automated tests](../../src/asset.spec.
 ## `optIn`
 
 Before an account can receive a specific asset, it must `opt-in` to receive it. An opt-in transaction places an asset holding of 0 into the account and increases its minimum balance by 100,000 microAlgos.
-The `optIn` function facilitates the opt-in process for an account to a specific asset, allowing the account to receive and hold that particular asset.
+The `optIn` function facilitates the opt-in process for an account to multiple assets, allowing the account to receive and hold those assets.
 
 ## `optOut`
 
