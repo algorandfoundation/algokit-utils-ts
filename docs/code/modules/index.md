@@ -73,6 +73,8 @@
 - [mnemonicAccount](index.md#mnemonicaccount)
 - [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
 - [multisigAccount](index.md#multisigaccount)
+- [optIn](index.md#optin)
+- [optOut](index.md#optout)
 - [performAtomicTransactionComposerDryrun](index.md#performatomictransactioncomposerdryrun)
 - [performAtomicTransactionComposerSimulate](index.md#performatomictransactioncomposersimulate)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
@@ -103,7 +105,7 @@ The AlgoKit config. To update it use the configure method.
 
 #### Defined in
 
-[src/index.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/index.ts#L16)
+[src/index.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/index.ts#L17)
 
 ## Functions
 
@@ -1927,6 +1929,62 @@ A multisig account wrapper
 #### Defined in
 
 [src/account.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account.ts#L16)
+
+___
+
+### optIn
+
+▸ **optIn**(`client`, `account`, `assetIds`): `Promise`<`Record`<`number`, `string`\>\>
+
+Opt in to a list of assets on the Algorand blockchain.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `client` | `default` | An instance of the Algodv2 class from the `algosdk` library. |
+| `account` | `default` | An instance of the Account class from the `algosdk` library representing the account that wants to opt in to the assets. |
+| `assetIds` | `number`[] | An array of asset IDs that the account wants to opt in to. |
+
+#### Returns
+
+`Promise`<`Record`<`number`, `string`\>\>
+
+A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
+
+**`Throws`**
+
+If there is an error during the opt-in process.
+
+#### Defined in
+
+[src/asset.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L72)
+
+___
+
+### optOut
+
+▸ **optOut**(`client`, `account`, `assetIds`): `Promise`<`Record`<`number`, `string`\>\>
+
+Opt out of multiple assets in Algorand blockchain.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `client` | `default` | An instance of the Algodv2 client used to interact with the Algorand blockchain. |
+| `account` | `default` | The Algorand account that wants to opt out of the assets. |
+| `assetIds` | `number`[] | An array of asset IDs representing the assets to opt out of. |
+
+#### Returns
+
+`Promise`<`Record`<`number`, `string`\>\>
+
+- A record object containing asset IDs as keys and their corresponding transaction IDs as values.
+
+#### Defined in
+
+[src/asset.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L125)
 
 ___
 
