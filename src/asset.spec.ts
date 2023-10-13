@@ -11,36 +11,62 @@ describe('asset', () => {
   const localnet = algorandFixture()
   beforeEach(localnet.beforeEach, 100_000)
 
-  test('OptIn of an asset to an account succeed', async () => {
+  test('OptIn an asset to an account succeed', async () => {
     const { algod, testAccount, kmd } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 1)
+    const dummyAssetIds = [dummyAssetId]
     const secondAccount = algosdk.generateAccount()
 
     const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
     expect(secondAccountInfo['total-assets-opted-in']).toBe(0)
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, dummyAssetIds)
 
     const testAccountInfoAfterOptIn = await algod.accountInformation(secondAccount.addr).do()
     expect(testAccountInfoAfterOptIn['total-assets-opted-in']).toBe(1)
   })
 
-  test('OptIn of an asset to an account second attempt failed ', async () => {
+  test('OptIn assets to an account second attempt failed ', async () => {
     const { algod, testAccount, kmd } = localnet.context
-    const dummyAssetId = await generateTestAsset(algod, testAccount, 1)
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 0)
+    const dummyAssetId2 = await generateTestAsset(algod, testAccount, 0)
+    const dummyAssetIds = [dummyAssetId, dummyAssetId2]
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, dummyAssetIds)
 
     const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
-    expect(secondAccountInfo['total-assets-opted-in']).toBe(1)
+    expect(secondAccountInfo['total-assets-opted-in']).toBe(2)
 
-    await expect(optIn(algod, secondAccount, dummyAssetId)).rejects.toThrow(
-      `Account ${secondAccount.addr} has already opted-in to asset ${dummyAssetId}`,
+    // await optIn(algod, secondAccount, dummyAssetIds)
+    await expect(optIn(algod, secondAccount, [dummyAssetId])).rejects.toThrow(
+      `Assets ${dummyAssetId} cannot be opted in. Ensure that they are valid and that the account has not previously opted into them.`,
     )
-  })
+  }, 10e6)
+
+  test('OptIn two batches of asset to an account succeed', async () => {
+    const { algod, testAccount, kmd } = localnet.context
+    const dummyAssetIds: number[] = []
+    const secondAccount = algosdk.generateAccount()
+    for (let i = 0; i < 20; i++) {
+      const dummyAssetId = await generateTestAsset(algod, testAccount, 0)
+      dummyAssetIds.push(dummyAssetId)
+    }
+    await ensureFunded(
+      {
+        accountToFund: secondAccount,
+        minSpendingBalance: microAlgos(1),
+        minFundingIncrement: algos(3),
+      },
+      algod,
+      kmd,
+    )
+    await optIn(algod, secondAccount, dummyAssetIds)
+    const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
+    expect(secondAccountInfo['total-assets-opted-in']).toBe(20)
+  }, 10e6)
 
   test('OptOut of an asset to an account succeed', async () => {
     const { algod, testAccount, kmd } = localnet.context
@@ -50,10 +76,7 @@ describe('asset', () => {
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
-
-    await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId2)
+    await optIn(algod, secondAccount, dummyAssetIds)
 
     const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
     expect(secondAccountInfo['total-assets-opted-in']).toBe(2)
@@ -71,7 +94,7 @@ describe('asset', () => {
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
     expect(secondAccountInfo['total-assets-opted-in']).toBe(1)
@@ -92,10 +115,8 @@ describe('asset', () => {
     const secondAccount = algosdk.generateAccount()
 
     await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId)
+    await optIn(algod, secondAccount, dummyAssetIds)
 
-    await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, dummyAssetId2)
     const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
     expect(secondAccountInfo['total-assets-opted-in']).toBe(2)
 
@@ -118,25 +139,24 @@ describe('asset', () => {
     expect(secondAccountInfoAfterFailedOptOut['total-assets-opted-in']).toBe(2)
   })
 
-  test('OptOut of an two batches of asset to an account succeed', async () => {
+  test('OptOut of two batches of asset to an account succeed', async () => {
     const { algod, testAccount, kmd } = localnet.context
     const dummyAssetIds: number[] = []
     const secondAccount = algosdk.generateAccount()
     for (let i = 0; i < 20; i++) {
       const dummyAssetId = await generateTestAsset(algod, testAccount, 0)
       dummyAssetIds.push(dummyAssetId)
-      await ensureFunded(
-        {
-          accountToFund: secondAccount,
-          minSpendingBalance: microAlgos(1),
-          minFundingIncrement: algos(3),
-        },
-        algod,
-        kmd,
-      )
-      await optIn(algod, secondAccount, dummyAssetId)
     }
-
+    await ensureFunded(
+      {
+        accountToFund: secondAccount,
+        minSpendingBalance: microAlgos(1),
+        minFundingIncrement: algos(3),
+      },
+      algod,
+      kmd,
+    )
+    await optIn(algod, secondAccount, dummyAssetIds)
     const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
     expect(secondAccountInfo['total-assets-opted-in']).toBe(20)
 
