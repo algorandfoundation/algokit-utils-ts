@@ -38,7 +38,7 @@ describe('asset', () => {
     expect(secondAccountInfo['total-assets-opted-in']).toBe(1)
 
     await expect(optIn(algod, secondAccount, dummyAssetId)).rejects.toThrow(
-      `Account ${secondAccount.addr} have already opt-in to asset ${dummyAssetId}`,
+      `Account ${secondAccount.addr} has already opted-in to asset ${dummyAssetId}`,
     )
   })
 

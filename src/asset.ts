@@ -6,14 +6,17 @@ import { TransactionGroupToSend, TransactionToSign } from './types/transaction'
 const MaxTxGroupSize = 16
 
 export async function optIn(client: Algodv2, account: Account, assetId: number) {
+  let accountInfo
   try {
-    const accountInfo = await client.accountInformation(account.addr).do()
-    if (accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
-      throw new Error(`Account ${account.addr} have already opt-in to asset ${assetId}`)
-    }
-  } catch {
-    throw new Error(`Account address supplied does not exist`)
+    accountInfo = await client.accountInformation(account.addr).do()
+  } catch (error) {
+    throw new Error(`Account address ${account.addr} does not exist`)
   }
+
+  if (accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
+    throw new Error(`Account ${account.addr} has already opted-in to asset ${assetId}`)
+  }
+
   await transferAsset(
     {
       from: account,
