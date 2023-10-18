@@ -65,50 +65,6 @@ async function ensureAssetBalanceConditions(
   }
 }
 
-async function ensureAssetFirstOptIn(client: algosdk.Algodv2, account: algosdk.Account, assetIds: number[]) {
-  const accountInfo = await client.accountInformation(account.addr).do()
-  const assetPromises = assetIds.map(async (assetId) => {
-    if (accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
-      Config.logger.debug(`Account ${account.addr} has already opted-in to asset ${assetId}`)
-      return assetId
-    }
-    return null
-  })
-  const invalidAssetsForOptIn = (await Promise.all(assetPromises)).filter((assetId) => assetId !== null)
-  if (invalidAssetsForOptIn.length > 0) {
-    throw new Error(
-      `Assets ${invalidAssetsForOptIn.join(
-        ', ',
-      )} cannot be opted in. Ensure that they are valid and that the account has not previously opted into them.`,
-    )
-  }
-}
-
-async function ensureAssetBalance(account: Account, assetIds: number[], client: Algodv2) {
-  const assetPromises = assetIds.map(async (assetId) => {
-    try {
-      const accountAssetInfo = await client.accountAssetInformation(account.addr, assetId).do()
-      if (accountAssetInfo['asset-holding']['amount'] !== 0) {
-        Config.logger.debug(`asset ${assetId} is not with zero balance`)
-        return assetId
-      }
-    } catch (e) {
-      Config.logger.debug(`Account ${account.addr} does not have asset ${assetId}`)
-      return assetId
-    }
-    return null
-  })
-
-  const invalidAssets = (await Promise.all(assetPromises)).filter((assetId) => assetId !== null)
-  if (invalidAssets.length > 0) {
-    throw new Error(
-      `Assets ${invalidAssets.join(
-        ', ',
-      )} cannot be opted out. Ensure that they are valid and that the account has previously opted into them.`,
-    )
-  }
-}
-
 /**
  * Opt in to a list of assets on the Algorand blockchain.
  *
