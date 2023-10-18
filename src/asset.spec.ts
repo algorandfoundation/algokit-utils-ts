@@ -100,7 +100,7 @@ describe('asset', () => {
     expect(secondAccountInfo['total-assets-opted-in']).toBe(1)
 
     await expect(optOut(algod, secondAccount, dummyAssetIds)).rejects.toThrow(
-      'Assets 1234567, -132 cannot be opted out. Ensure that they are valid and that the account has previously opted into them.',
+      'Assets 1234567, -132 cannot be opted out. Ensure that they are valid and that the account has previously opted into them and holds zero balance.',
     )
 
     const secondAccountInfoAfterFailedOptOut = await algod.accountInformation(secondAccount.addr).do()
@@ -132,7 +132,7 @@ describe('asset', () => {
     )
 
     await expect(optOut(algod, secondAccount, dummyAssetIds)).rejects.toThrow(
-      `Assets ${dummyAssetId} cannot be opted out. Ensure that they are valid and that the account has previously opted into them.`,
+      `Assets ${dummyAssetId} cannot be opted out. Ensure that they are valid and that the account has previously opted into them and holds zero balance.`,
     )
 
     const secondAccountInfoAfterFailedOptOut = await algod.accountInformation(secondAccount.addr).do()
