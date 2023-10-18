@@ -1958,7 +1958,7 @@ If there is an error during the opt-in process.
 
 #### Defined in
 
-[src/asset.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L72)
+[src/asset.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L121)
 
 ___
 
@@ -1984,7 +1984,7 @@ Opt out of multiple assets in Algorand blockchain.
 
 #### Defined in
 
-[src/asset.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L125)
+[src/asset.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L174)
 
 ___
 
