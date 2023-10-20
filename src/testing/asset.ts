@@ -1,6 +1,6 @@
 import { Account, Algodv2, Kmd, makeAssetCreateTxnWithSuggestedParamsFromObject } from 'algosdk'
 import { algos, microAlgos } from '../amount'
-import { ensureFunded, transferAsset } from '../transfer'
+import { ensureFunded } from '../transfer'
 
 export async function generateTestAsset(client: Algodv2, sender: Account, total?: number) {
   total = !total ? Math.floor(Math.random() * 100) + 20 : total
@@ -36,20 +36,7 @@ export async function generateTestAsset(client: Algodv2, sender: Account, total?
   return assetId
 }
 
-export async function optIn(algod: Algodv2, account: Account, assetId: number) {
-  await transferAsset(
-    {
-      from: account,
-      to: account.addr,
-      assetId,
-      amount: 0,
-      note: `Opt in asset id ${assetId}`,
-    },
-    algod,
-  )
-}
-
-export async function ensureFundsAndOptIn(algod: Algodv2, account: Account, assetId: number, kmd: Kmd) {
+export async function ensureFunds(algod: Algodv2, account: Account, kmd: Kmd) {
   await ensureFunded(
     {
       accountToFund: account,
@@ -59,6 +46,4 @@ export async function ensureFundsAndOptIn(algod: Algodv2, account: Account, asse
     algod,
     kmd,
   )
-
-  return optIn(algod, account, assetId)
 }

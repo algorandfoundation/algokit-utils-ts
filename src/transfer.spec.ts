@@ -2,8 +2,9 @@ import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from './'
+import { optIn } from './asset'
 import { algorandFixture } from './testing'
-import { ensureFundsAndOptIn, generateTestAsset, optIn } from './testing/asset'
+import { ensureFunds, generateTestAsset } from './testing/asset'
 
 describe('transfer', () => {
   const localnet = algorandFixture()
@@ -75,7 +76,8 @@ describe('transfer', () => {
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
+    await ensureFunds(algod, secondAccount, kmd)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     try {
       await algokit.transferAsset(
@@ -99,8 +101,9 @@ describe('transfer', () => {
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
-    await optIn(algod, testAccount, dummyAssetId)
+    await ensureFunds(algod, secondAccount, kmd)
+    await optIn(algod, secondAccount, [dummyAssetId])
+
     try {
       await algokit.transferAsset(
         {
@@ -123,8 +126,9 @@ describe('transfer', () => {
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
-    await optIn(algod, testAccount, dummyAssetId)
+    await ensureFunds(algod, secondAccount, kmd)
+    await optIn(algod, secondAccount, [dummyAssetId])
+
     const response = await algokit.transferAsset(
       {
         from: testAccount,
@@ -146,8 +150,8 @@ describe('transfer', () => {
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
 
-    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
-    await optIn(algod, testAccount, dummyAssetId)
+    await ensureFunds(algod, secondAccount, kmd)
+    await optIn(algod, secondAccount, [dummyAssetId])
 
     await algokit.transferAsset(
       {
@@ -173,9 +177,11 @@ describe('transfer', () => {
     const secondAccount = algosdk.generateAccount()
     const clawbackAccount = algosdk.generateAccount()
 
-    await ensureFundsAndOptIn(algod, secondAccount, dummyAssetId, kmd)
-    await ensureFundsAndOptIn(algod, clawbackAccount, dummyAssetId, kmd)
-    await optIn(algod, testAccount, dummyAssetId)
+    await ensureFunds(algod, secondAccount, kmd)
+    await optIn(algod, secondAccount, [dummyAssetId])
+
+    await ensureFunds(algod, clawbackAccount, kmd)
+    await optIn(algod, clawbackAccount, [dummyAssetId])
 
     await algokit.transferAsset(
       {
