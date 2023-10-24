@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[src/types/dispenser-client.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L29)
+[src/types/dispenser-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L27)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[src/types/dispenser-client.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L30)
+[src/types/dispenser-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L28)

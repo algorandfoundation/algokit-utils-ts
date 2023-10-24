@@ -4,7 +4,6 @@
 // todo: Find out why this can't be referenced from algosdk directly so we don't have to duplicate here
 import type { BaseHTTPClient, BaseHTTPClientError, BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
 import { Buffer } from 'buffer'
-import { fetch } from 'cross-fetch'
 
 export interface AlgodTokenHeader {
   'X-Algo-API-Token': string

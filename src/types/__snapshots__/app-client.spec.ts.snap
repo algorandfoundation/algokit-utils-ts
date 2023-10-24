@@ -3,6 +3,7 @@
 exports[`application-client Errors Display nice error messages when there is a logic error 3`] = `
 "{
   "trace": {
+    "approval-program-hash": "z5KBLQgSUnDuq0IhQC+7mpGev/ofvetqzAQavr0hGSo=",
     "approval-program-trace": [
       {
         "pc": 1
