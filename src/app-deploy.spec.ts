@@ -550,6 +550,21 @@ test('Strip comments remove comments without removing commands', async () => {
   expect(result).toBe(tealCodeResult)
 })
 
+test('Can substitute template variable with multiple underscores', async () => {
+  const test_teal = `
+  int TMPL_SOME_VALUE
+  return
+  `
+  const test_params = {
+    SOME_VALUE: 123,
+  }
+  const substituted = algokit.performTemplateSubstitution(test_teal, test_params)
+  expect(substituted).toBe(`
+  int 123
+  return
+  `)
+})
+
 function getMetadata(overrides?: Partial<AppDeployMetadata>): AppDeployMetadata {
   return {
     name: 'test',
