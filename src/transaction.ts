@@ -24,6 +24,8 @@ import {
 } from './types/transaction'
 import { toNumber } from './util'
 
+export const MAX_TRANSACTION_GROUP_SIZE = 16
+
 /** Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
  * @param note The transaction note

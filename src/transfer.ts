@@ -133,9 +133,9 @@ export async function ensureFunded<T extends EnsureFundedParams>(
 
   if (fundAmount !== null) {
     if ((await isTestNet(algod)) && fundingSource instanceof TestNetDispenserApiClient) {
-      return fundUsingDispenserApi(fundingSource, addressToFund, fundAmount) as Promise<EnsureFundedReturnType>
+      return await fundUsingDispenserApi(fundingSource, addressToFund, fundAmount)
     } else {
-      return fundUsingTransfer({
+      return await fundUsingTransfer({
         algod,
         addressToFund,
         funding,
@@ -144,7 +144,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
         sendParams,
         note,
         kmd,
-      }) as Promise<EnsureFundedReturnType>
+      })
     }
   }
 
@@ -178,7 +178,9 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
 
   if (!sendParams.skipSending) {
     Config.getLogger(sendParams.suppressLog).debug(
-      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${to}`,
+      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${
+        typeof to === 'string' ? to : getSenderAddress(to)
+      }`,
     )
   }
 
