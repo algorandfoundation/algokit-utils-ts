@@ -15,6 +15,7 @@ import { Buffer } from 'buffer'
 import { Config } from './'
 import {
   controlFees,
+  encodeLease,
   encodeTransactionNote,
   getAtomicTransactionComposerTransactions,
   getSenderAddress,
@@ -576,7 +577,7 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
     boxes: args.boxes?.map(getBoxReference),
     foreignApps: args?.apps,
     foreignAssets: args?.assets,
-    lease: typeof args?.lease === 'string' ? encoder.encode(args?.lease) : args?.lease,
+    lease: encodeLease(args?.lease),
   }
 }
 
@@ -614,7 +615,7 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
     sender: getSenderAddress(from),
     signer: signer,
     boxes: args.boxes?.map(getBoxReference),
-    lease: typeof args.lease === 'string' ? encoder.encode(args.lease) : args.lease,
+    lease: encodeLease(args.lease),
     appForeignApps: args.apps,
     appForeignAssets: args.assets,
     appAccounts: args.accounts?.map(_getAccountAddress),

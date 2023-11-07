@@ -48,7 +48,91 @@ describe('transfer', () => {
     expect(accountInfo['amount']).toBe(5_000_000)
   })
 
+  test('Transfer Algo respects string lease', async () => {
+    const { algod, testAccount } = localnet.context
+    const secondAccount = algosdk.generateAccount()
+
+    await algokit.transferAlgos(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        amount: algokit.algos(1),
+        lease: 'test',
+      },
+      algod,
+    )
+
+    await expect(
+      algokit.transferAlgos(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          amount: algokit.algos(1),
+          lease: 'test',
+        },
+        algod,
+      ),
+    ).rejects.toThrow(/overlapping lease/)
+  })
+
+  test('Transfer Algo respects byte array lease', async () => {
+    const { algod, testAccount } = localnet.context
+    const secondAccount = algosdk.generateAccount()
+
+    await algokit.transferAlgos(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        amount: algokit.algos(1),
+        lease: new Uint8Array([1, 2, 3, 4]),
+      },
+      algod,
+    )
+
+    await expect(
+      algokit.transferAlgos(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          amount: algokit.algos(1),
+          lease: new Uint8Array([1, 2, 3, 4]),
+        },
+        algod,
+      ),
+    ).rejects.toThrow(/overlapping lease/)
+  })
+
   test('Transfer ASA, receiver is not opted in', async () => {
+    const { algod, testAccount, generateAccount } = localnet.context
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    await algokit.assetOptIn({ account: secondAccount, assetId: dummyAssetId }, algod)
+    await algokit.transferAsset(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        assetId: dummyAssetId,
+        amount: 1,
+        lease: 'test',
+      },
+      algod,
+    )
+
+    await expect(
+      algokit.transferAsset(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          assetId: dummyAssetId,
+          amount: 1,
+          lease: 'test',
+        },
+        algod,
+      ),
+    ).rejects.toThrow(/overlapping lease/)
+  }, 10e6)
+
+  test('Transfer ASA respects lease', async () => {
     const { algod, testAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
