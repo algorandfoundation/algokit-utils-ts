@@ -1,5 +1,14 @@
 import { describe, test } from '@jest/globals'
-import algosdk, { ABIUintType, Account, Algodv2, Indexer, OnApplicationComplete, TransactionType, getApplicationAddress } from 'algosdk'
+import algosdk, {
+  ABIUintType,
+  Account,
+  Algodv2,
+  Indexer,
+  OnApplicationComplete,
+  TransactionSigner,
+  TransactionType,
+  getApplicationAddress,
+} from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
@@ -517,6 +526,34 @@ describe('application-client', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, methodArgs: [] }, result.confirmations[1])
     expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
+  })
+
+  test('Sign all transactions in group with abi call with transaction arg', async () => {
+    const { algod, indexer, testAccount } = localnet.context
+    const txn = await algokit.transferAlgos(
+      {
+        from: testAccount,
+        to: testAccount.addr,
+        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
+        skipSending: true,
+      },
+      algod,
+    )
+    const { client } = await deploy(testAccount, algod, indexer)
+
+    let indexes: number[] = []
+    const signer: TransactionSigner = (group, indxs) => {
+      indexes = indxs
+      return algokit.getSenderTransactionSigner(testAccount)(group, indexes)
+    }
+
+    await client.call({
+      method: 'call_abi_txn',
+      methodArgs: [txn.transaction, 'test'],
+      sender: { addr: testAccount.addr, signer },
+    })
+
+    expect(indexes).toEqual([0, 1])
   })
 
   test('Construct transaction with abi encoding including foreign references not in signature', async () => {
