@@ -339,3 +339,43 @@ describe('transfer', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot('"dummy_error"')
   })
 })
+
+describe('rekey', () => {
+  const localnet = algorandFixture()
+  const env = process.env
+
+  beforeEach(async () => {
+    jest.resetModules()
+    process.env = { ...env }
+    await localnet.beforeEach()
+  }, 10_000)
+
+  afterEach(() => {
+    process.env = env
+  })
+
+  test('Rekey works', async () => {
+    const { algod, testAccount } = localnet.context
+    const secondAccount = algosdk.generateAccount()
+    const rekeyedAccount = algokit.rekeyedAccount(secondAccount, testAccount.addr)
+
+    await algokit.rekeyAccount(
+      {
+        from: testAccount,
+        rekeyTo: secondAccount,
+        note: 'Rekey',
+      },
+      algod,
+    )
+
+    // This will throw if the rekey wasn't successful
+    await algokit.transferAlgos(
+      {
+        amount: (1).microAlgos(),
+        from: rekeyedAccount,
+        to: testAccount.addr,
+      },
+      algod,
+    )
+  })
+})

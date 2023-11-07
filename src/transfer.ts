@@ -5,7 +5,7 @@ import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTran
 import { AlgoAmount } from './types/amount'
 import { TestNetDispenserApiClient } from './types/dispenser-client'
 import { SendTransactionResult, TransactionNote } from './types/transaction'
-import { AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
+import { AlgoRekeyParams, AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
 import { calculateFundAmount } from './util'
 
 async function fundUsingDispenserApi(
@@ -181,6 +181,42 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
       `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${
         typeof to === 'string' ? to : getSenderAddress(to)
       }`,
+    )
+  }
+
+  return sendTransaction({ transaction, from, sendParams }, algod)
+}
+
+/**
+ * Rekey an account to a new address.
+ *
+ * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+ *
+ * @param rekey The rekey definition
+ * @param algod An algod client
+ * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ *
+ * @example Usage example
+ * ```typescript
+ * await algokit.rekeyAccount({ from, rekeyTo }, algod)
+ * ```
+ */
+export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Promise<SendTransactionResult> {
+  const { from, rekeyTo, note, transactionParams, ...sendParams } = rekey
+
+  const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    from: getSenderAddress(from),
+    to: getSenderAddress(from),
+    rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : getSenderAddress(rekeyTo),
+    amount: 0,
+    note: encodeTransactionNote(note),
+    suggestedParams: await getTransactionParams(transactionParams, algod),
+    closeRemainderTo: undefined,
+  })
+
+  if (!sendParams.skipSending) {
+    Config.getLogger(sendParams.suppressLog).debug(
+      `Rekeying ${getSenderAddress(from)} to ${typeof rekeyTo === 'string' ? rekeyTo : getSenderAddress(rekeyTo)}`,
     )
   }
 

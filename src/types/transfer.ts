@@ -17,6 +17,18 @@ export interface AlgoTransferParams extends SendTransactionParams {
   note?: TransactionNote
 }
 
+/** Parameters for `rekeyAccount` call. */
+export interface AlgoRekeyParams extends SendTransactionParams {
+  /** The account that will be rekeyed */
+  from: SendTransactionFrom
+  /** The account / account address that will have the private key that is authorised to transact on behalf of the from account from now on */
+  rekeyTo: SendTransactionFrom | string
+  /** Optional transaction parameters */
+  transactionParams?: SuggestedParams
+  /** The (optional) transaction note */
+  note?: TransactionNote
+}
+
 /** Parameters for `ensureFunded` call. */
 export interface EnsureFundedParams extends SendTransactionParams {
   /** The account to fund */
