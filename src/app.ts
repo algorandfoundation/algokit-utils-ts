@@ -152,7 +152,7 @@ export async function createApp(
       from: getSenderAddress(from),
       note: encodeTransactionNote(note),
       ...getAppArgsForTransaction(args),
-      rekeyTo: undefined,
+      rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
     })
 
     const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
@@ -239,7 +239,7 @@ export async function updateApp(
       from: getSenderAddress(from),
       note: encodeTransactionNote(note),
       ...getAppArgsForTransaction(args),
-      rekeyTo: undefined,
+      rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
     })
 
     const result = await sendTransaction({ transaction, from, sendParams }, algod)
@@ -343,7 +343,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
     suggestedParams: await getTransactionParams(transactionParams, algod),
     ...getAppArgsForTransaction(args),
     note: encodeTransactionNote(note),
-    rekeyTo: undefined,
+    rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
   }
 
   let transaction: Transaction
@@ -619,7 +619,7 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
     appForeignAssets: args.assets,
     appAccounts: args.accounts?.map(_getAccountAddress),
     methodArgs: methodArgs,
-    rekeyTo: undefined,
+    rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
   }
 }
 

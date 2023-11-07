@@ -399,6 +399,43 @@ describe('application-client', () => {
     expect(call.return.returnValue).toBe('Hello, test')
   })
 
+  test('Call app with rekey', async () => {
+    const { algod, testAccount } = localnet.context
+    const rekeyTo = algokit.randomAccount()
+    const client = algokit.getAppClient(
+      {
+        resolveBy: 'id',
+        app: appSpec,
+        sender: testAccount,
+        id: 0,
+      },
+      algod,
+    )
+    await client.create({
+      deployTimeParams: {
+        UPDATABLE: 0,
+        DELETABLE: 0,
+        VALUE: 1,
+      },
+    })
+    await client.optIn({
+      method: 'opt_in',
+      methodArgs: [],
+      rekeyTo,
+    })
+
+    // If the rekey didn't work this will throw
+    const rekeyedAccount = algokit.rekeyedAccount(rekeyTo, testAccount.addr)
+    await algokit.transferAlgos(
+      {
+        amount: (0).algos(),
+        from: rekeyedAccount,
+        to: testAccount,
+      },
+      algod,
+    )
+  })
+
   test('Create app with abi', async () => {
     const { algod, testAccount } = localnet.context
     const client = algokit.getAppClient(

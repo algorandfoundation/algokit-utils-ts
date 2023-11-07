@@ -76,6 +76,11 @@ export interface CoreAppCallArgs {
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
   assets?: number[]
+  /** Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
+   *
+   * **Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+   */
+  rekeyTo?: SendTransactionFrom | string
 }
 
 /**
