@@ -41,7 +41,7 @@ The id of the app to update
 
 #### Defined in
 
-[src/types/app.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L143)
+[src/types/app.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L148)
 
 ___
 
@@ -57,7 +57,7 @@ CreateOrUpdateAppParams.approvalProgram
 
 #### Defined in
 
-[src/types/app.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L121)
+[src/types/app.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L126)
 
 ___
 
@@ -73,7 +73,7 @@ CreateOrUpdateAppParams.args
 
 #### Defined in
 
-[src/types/app.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L129)
+[src/types/app.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L134)
 
 ___
 
@@ -105,7 +105,7 @@ CreateOrUpdateAppParams.clearStateProgram
 
 #### Defined in
 
-[src/types/app.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L123)
+[src/types/app.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L128)
 
 ___
 
@@ -137,7 +137,7 @@ CreateOrUpdateAppParams.from
 
 #### Defined in
 
-[src/types/app.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L119)
+[src/types/app.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L124)
 
 ___
 
@@ -185,7 +185,7 @@ CreateOrUpdateAppParams.note
 
 #### Defined in
 
-[src/types/app.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L127)
+[src/types/app.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L132)
 
 ___
 
@@ -250,4 +250,4 @@ CreateOrUpdateAppParams.transactionParams
 
 #### Defined in
 
-[src/types/app.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L125)
+[src/types/app.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L130)

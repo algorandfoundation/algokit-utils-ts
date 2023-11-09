@@ -25,6 +25,7 @@ App call args with non-ABI (raw) values (minus some processing like encoding str
 - [boxes](types_app.RawAppCallArgs.md#boxes)
 - [lease](types_app.RawAppCallArgs.md#lease)
 - [method](types_app.RawAppCallArgs.md#method)
+- [rekeyTo](types_app.RawAppCallArgs.md#rekeyto)
 
 ## Properties
 
@@ -52,7 +53,7 @@ Any application arguments to pass through
 
 #### Defined in
 
-[src/types/app.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L86)
+[src/types/app.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L91)
 
 ___
 
@@ -128,4 +129,22 @@ Property to aid intellisense
 
 #### Defined in
 
-[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)
+[src/types/app.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L93)
+
+___
+
+### rekeyTo
+
+• `Optional` **rekeyTo**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+
+Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
+
+**Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+
+#### Inherited from
+
+[CoreAppCallArgs](types_app.CoreAppCallArgs.md).[rekeyTo](types_app.CoreAppCallArgs.md#rekeyto)
+
+#### Defined in
+
+[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)

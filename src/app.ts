@@ -588,7 +588,6 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
  * @returns The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
  */
 export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
-  const encoder = new TextEncoder()
   const signer = getSenderTransactionSigner(from)
   const methodArgs = await Promise.all(
     ('methodArgs' in args ? args.methodArgs : args)?.map(async (a, index) => {

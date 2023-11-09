@@ -63,7 +63,7 @@ export function encodeTransactionNote(note?: TransactionNote): Uint8Array | unde
  * @example algokit.encodeLease(new Uint8Array([1, 2, 3]))
  */
 export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined {
-  if (lease == null || typeof lease === 'undefined') {
+  if (lease === null || typeof lease === 'undefined') {
     return undefined
   } else if (typeof lease === 'object' && lease.constructor === Uint8Array) {
     if (lease.length === 0 || lease.length > 32) {

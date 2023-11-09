@@ -21,6 +21,7 @@ Common app call arguments for ABI and non-ABI (raw) calls
 - [assets](types_app.CoreAppCallArgs.md#assets)
 - [boxes](types_app.CoreAppCallArgs.md#boxes)
 - [lease](types_app.CoreAppCallArgs.md#lease)
+- [rekeyTo](types_app.CoreAppCallArgs.md#rekeyto)
 
 ## Properties
 
@@ -81,3 +82,17 @@ The optional lease for the transaction
 #### Defined in
 
 [src/types/app.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L70)
+
+___
+
+### rekeyTo
+
+• `Optional` **rekeyTo**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+
+Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
+
+**Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+
+#### Defined in
+
+[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)

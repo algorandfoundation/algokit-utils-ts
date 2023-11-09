@@ -20,6 +20,7 @@ Parameters for `ensureFunded` call.
 - [atc](types_transfer.EnsureFundedParams.md#atc)
 - [fee](types_transfer.EnsureFundedParams.md#fee)
 - [fundingSource](types_transfer.EnsureFundedParams.md#fundingsource)
+- [lease](types_transfer.EnsureFundedParams.md#lease)
 - [maxFee](types_transfer.EnsureFundedParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transfer.EnsureFundedParams.md#maxroundstowaitforconfirmation)
 - [minFundingIncrement](types_transfer.EnsureFundedParams.md#minfundingincrement)
@@ -40,7 +41,7 @@ The account to fund
 
 #### Defined in
 
-[src/types/transfer.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L23)
+[src/types/transfer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L39)
 
 ___
 
@@ -84,7 +85,19 @@ The account to use as a funding source, will default to using the dispenser acco
 
 #### Defined in
 
-[src/types/transfer.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L25)
+[src/types/transfer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L41)
+
+___
+
+### lease
+
+• `Optional` **lease**: `string` \| `Uint8Array`
+
+An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply
+
+#### Defined in
+
+[src/types/transfer.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L51)
 
 ___
 
@@ -128,7 +141,7 @@ When issuing a funding amount, the minimum amount to transfer (avoids many small
 
 #### Defined in
 
-[src/types/transfer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L29)
+[src/types/transfer.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L45)
 
 ___
 
@@ -140,7 +153,7 @@ The minimum balance of ALGOs that the account should have available to spend (i.
 
 #### Defined in
 
-[src/types/transfer.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L27)
+[src/types/transfer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L43)
 
 ___
 
@@ -152,7 +165,7 @@ The (optional) transaction note, default: "Funding account to meet minimum requi
 
 #### Defined in
 
-[src/types/transfer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L33)
+[src/types/transfer.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L49)
 
 ___
 
@@ -213,4 +226,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/transfer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L31)
+[src/types/transfer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L47)
