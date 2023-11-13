@@ -2,9 +2,8 @@ import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from './'
-import { optIn } from './asset'
 import { algorandFixture } from './testing'
-import { ensureFunds, generateTestAsset } from './testing/asset'
+import { generateTestAsset } from './testing/_asset'
 
 describe('transfer', () => {
   const localnet = algorandFixture()
@@ -49,7 +48,91 @@ describe('transfer', () => {
     expect(accountInfo['amount']).toBe(5_000_000)
   })
 
+  test('Transfer Algo respects string lease', async () => {
+    const { algod, testAccount } = localnet.context
+    const secondAccount = algosdk.generateAccount()
+
+    await algokit.transferAlgos(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        amount: algokit.algos(1),
+        lease: 'test',
+      },
+      algod,
+    )
+
+    await expect(
+      algokit.transferAlgos(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          amount: algokit.algos(1),
+          lease: 'test',
+        },
+        algod,
+      ),
+    ).rejects.toThrow(/overlapping lease/)
+  })
+
+  test('Transfer Algo respects byte array lease', async () => {
+    const { algod, testAccount } = localnet.context
+    const secondAccount = algosdk.generateAccount()
+
+    await algokit.transferAlgos(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        amount: algokit.algos(1),
+        lease: new Uint8Array([1, 2, 3, 4]),
+      },
+      algod,
+    )
+
+    await expect(
+      algokit.transferAlgos(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          amount: algokit.algos(1),
+          lease: new Uint8Array([1, 2, 3, 4]),
+        },
+        algod,
+      ),
+    ).rejects.toThrow(/overlapping lease/)
+  })
+
   test('Transfer ASA, receiver is not opted in', async () => {
+    const { algod, testAccount, generateAccount } = localnet.context
+    const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    await algokit.assetOptIn({ account: secondAccount, assetId: dummyAssetId }, algod)
+    await algokit.transferAsset(
+      {
+        from: testAccount,
+        to: secondAccount.addr,
+        assetId: dummyAssetId,
+        amount: 1,
+        lease: 'test',
+      },
+      algod,
+    )
+
+    await expect(
+      algokit.transferAsset(
+        {
+          from: testAccount,
+          to: secondAccount.addr,
+          assetId: dummyAssetId,
+          amount: 1,
+          lease: 'test',
+        },
+        algod,
+      ),
+    ).rejects.toThrow(/overlapping lease/)
+  }, 10e6)
+
+  test('Transfer ASA respects lease', async () => {
     const { algod, testAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
     const secondAccount = algosdk.generateAccount()
@@ -72,12 +155,11 @@ describe('transfer', () => {
   }, 10e6)
 
   test('Transfer ASA, sender is not opted in', async () => {
-    const { algod, testAccount, kmd } = localnet.context
+    const { algod, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
-    const secondAccount = algosdk.generateAccount()
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, [dummyAssetId])
+    await algokit.assetOptIn({ account: secondAccount, assetId: dummyAssetId }, algod)
 
     try {
       await algokit.transferAsset(
@@ -97,12 +179,11 @@ describe('transfer', () => {
   }, 10e6)
 
   test('Transfer ASA, asset doesnt exist', async () => {
-    const { algod, testAccount, kmd } = localnet.context
+    const { algod, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
-    const secondAccount = algosdk.generateAccount()
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, [dummyAssetId])
+    await algokit.assetOptIn({ account: secondAccount, assetId: dummyAssetId }, algod)
 
     try {
       await algokit.transferAsset(
@@ -122,12 +203,11 @@ describe('transfer', () => {
   }, 10e6)
 
   test('Transfer ASA, without sending', async () => {
-    const { algod, testAccount, kmd } = localnet.context
+    const { algod, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
-    const secondAccount = algosdk.generateAccount()
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, [dummyAssetId])
+    await algokit.assetOptIn({ account: secondAccount, assetId: dummyAssetId }, algod)
 
     const response = await algokit.transferAsset(
       {
@@ -146,12 +226,11 @@ describe('transfer', () => {
   }, 10e6)
 
   test('Transfer ASA, asset is transfered to another account', async () => {
-    const { algod, testAccount, kmd } = localnet.context
+    const { algod, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
-    const secondAccount = algosdk.generateAccount()
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, [dummyAssetId])
+    await algokit.assetOptIn({ account: secondAccount, assetId: dummyAssetId }, algod)
 
     await algokit.transferAsset(
       {
@@ -172,16 +251,14 @@ describe('transfer', () => {
   }, 10e6)
 
   test('Transfer ASA, asset is transfered to another account from revocationTarget', async () => {
-    const { algod, testAccount, kmd } = localnet.context
+    const { algod, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algod, testAccount, 100)
-    const secondAccount = algosdk.generateAccount()
-    const clawbackAccount = algosdk.generateAccount()
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const clawbackAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await ensureFunds(algod, secondAccount, kmd)
-    await optIn(algod, secondAccount, [dummyAssetId])
+    await algokit.assetOptIn({ account: secondAccount, assetId: dummyAssetId }, algod)
 
-    await ensureFunds(algod, clawbackAccount, kmd)
-    await optIn(algod, clawbackAccount, [dummyAssetId])
+    await algokit.assetOptIn({ account: clawbackAccount, assetId: dummyAssetId }, algod)
 
     await algokit.transferAsset(
       {
@@ -221,7 +298,7 @@ describe('transfer', () => {
 
   test('ensureFunded is sent and waited for with correct amount for new account', async () => {
     const { algod, kmd, testAccount } = localnet.context
-    const secondAccount = algosdk.generateAccount()
+    const secondAccount = algokit.randomAccount()
 
     const result = await algokit.ensureFunded(
       {
@@ -252,8 +329,8 @@ describe('transfer', () => {
   })
 
   test('ensureFunded respects minimum funding increment', async () => {
-    const { algod, testAccount, kmd } = localnet.context
-    const secondAccount = algosdk.generateAccount()
+    const { algod, testAccount, kmd, generateAccount } = localnet.context
+    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
     await algokit.ensureFunded(
       {
@@ -272,7 +349,7 @@ describe('transfer', () => {
 
   test('ensureFunded uses dispenser account by default', async () => {
     const { algod, kmd } = localnet.context
-    const secondAccount = algosdk.generateAccount()
+    const secondAccount = algokit.randomAccount()
     const dispenser = await algokit.getDispenserAccount(algod, kmd)
 
     const result = await algokit.ensureFunded(
@@ -344,5 +421,45 @@ describe('transfer', () => {
         algodClient,
       ),
     ).rejects.toThrowErrorMatchingInlineSnapshot('"dummy_error"')
+  })
+})
+
+describe('rekey', () => {
+  const localnet = algorandFixture()
+  const env = process.env
+
+  beforeEach(async () => {
+    jest.resetModules()
+    process.env = { ...env }
+    await localnet.beforeEach()
+  }, 10_000)
+
+  afterEach(() => {
+    process.env = env
+  })
+
+  test('Rekey works', async () => {
+    const { algod, testAccount } = localnet.context
+    const secondAccount = algosdk.generateAccount()
+    const rekeyedAccount = algokit.rekeyedAccount(secondAccount, testAccount.addr)
+
+    await algokit.rekeyAccount(
+      {
+        from: testAccount,
+        rekeyTo: secondAccount,
+        note: 'Rekey',
+      },
+      algod,
+    )
+
+    // This will throw if the rekey wasn't successful
+    await algokit.transferAlgos(
+      {
+        amount: (1).microAlgos(),
+        from: rekeyedAccount,
+        to: testAccount.addr,
+      },
+      algod,
+    )
   })
 })

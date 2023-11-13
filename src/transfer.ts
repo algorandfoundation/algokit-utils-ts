@@ -1,11 +1,11 @@
 import algosdk, { Algodv2, Kmd } from 'algosdk'
 import { Config, getDispenserAccount, microAlgos } from './'
 import { isTestNet } from './network-client'
-import { encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
+import { encodeLease, encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
 import { AlgoAmount } from './types/amount'
 import { TestNetDispenserApiClient } from './types/dispenser-client'
 import { SendTransactionResult, TransactionNote } from './types/transaction'
-import { AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
+import { AlgoRekeyParams, AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
 import { calculateFundAmount } from './util'
 
 async function fundUsingDispenserApi(
@@ -57,6 +57,7 @@ async function fundUsingTransfer({
       note: note ?? 'Funding account to meet minimum requirement',
       amount: amount,
       transactionParams: transactionParams,
+      lease: funding.lease,
       ...sendParams,
     },
     algod,
@@ -80,7 +81,7 @@ async function fundUsingTransfer({
  * ```
  */
 export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, amount, note, transactionParams, ...sendParams } = transfer
+  const { from, to, amount, note, transactionParams, lease, ...sendParams } = transfer
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
@@ -91,6 +92,11 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
     closeRemainderTo: undefined,
     rekeyTo: undefined,
   })
+
+  const encodedLease = encodeLease(lease)
+  if (encodedLease) {
+    transaction.addLease(encodedLease)
+  }
 
   if (!sendParams.skipSending) {
     Config.getLogger(sendParams.suppressLog).debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
@@ -133,9 +139,9 @@ export async function ensureFunded<T extends EnsureFundedParams>(
 
   if (fundAmount !== null) {
     if ((await isTestNet(algod)) && fundingSource instanceof TestNetDispenserApiClient) {
-      return fundUsingDispenserApi(fundingSource, addressToFund, fundAmount) as Promise<EnsureFundedReturnType>
+      return await fundUsingDispenserApi(fundingSource, addressToFund, fundAmount)
     } else {
-      return fundUsingTransfer({
+      return await fundUsingTransfer({
         algod,
         addressToFund,
         funding,
@@ -144,7 +150,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
         sendParams,
         note,
         kmd,
-      }) as Promise<EnsureFundedReturnType>
+      })
     }
   }
 
@@ -163,7 +169,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
  * ```
  */
 export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, assetId, amount, transactionParams, clawbackFrom, note, ...sendParams } = transfer
+  const { from, to, assetId, amount, transactionParams, clawbackFrom, note, lease, ...sendParams } = transfer
   const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
     to: typeof to === 'string' ? to : getSenderAddress(to),
@@ -176,9 +182,57 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
     rekeyTo: undefined,
   })
 
+  const encodedLease = encodeLease(lease)
+  if (encodedLease) {
+    transaction.addLease(encodedLease)
+  }
+
   if (!sendParams.skipSending) {
     Config.getLogger(sendParams.suppressLog).debug(
-      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${to}`,
+      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${
+        typeof to === 'string' ? to : getSenderAddress(to)
+      }`,
+    )
+  }
+
+  return sendTransaction({ transaction, from, sendParams }, algod)
+}
+
+/**
+ * Rekey an account to a new address.
+ *
+ * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+ *
+ * @param rekey The rekey definition
+ * @param algod An algod client
+ * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ *
+ * @example Usage example
+ * ```typescript
+ * await algokit.rekeyAccount({ from, rekeyTo }, algod)
+ * ```
+ */
+export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Promise<SendTransactionResult> {
+  const { from, rekeyTo, note, transactionParams, lease, ...sendParams } = rekey
+
+  const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+    from: getSenderAddress(from),
+    to: getSenderAddress(from),
+    rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : getSenderAddress(rekeyTo),
+    amount: 0,
+    note: encodeTransactionNote(note),
+    suggestedParams: await getTransactionParams(transactionParams, algod),
+    closeRemainderTo: undefined,
+  })
+
+  const encodedLease = encodeLease(lease)
+  if (encodedLease) {
+    transaction.addLease(encodedLease)
+  }
+
+  if (!sendParams.skipSending) {
+    Config.getLogger(sendParams.suppressLog).debug(
+      `Rekeying ${getSenderAddress(from)} to ${typeof rekeyTo === 'string' ? rekeyTo : getSenderAddress(rekeyTo)}`,
     )
   }
 

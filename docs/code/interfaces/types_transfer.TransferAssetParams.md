@@ -22,6 +22,7 @@ Parameters for `transferAsset` call.
 - [clawbackFrom](types_transfer.TransferAssetParams.md#clawbackfrom)
 - [fee](types_transfer.TransferAssetParams.md#fee)
 - [from](types_transfer.TransferAssetParams.md#from)
+- [lease](types_transfer.TransferAssetParams.md#lease)
 - [maxFee](types_transfer.TransferAssetParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transfer.TransferAssetParams.md#maxroundstowaitforconfirmation)
 - [note](types_transfer.TransferAssetParams.md#note)
@@ -41,7 +42,7 @@ The amount to send as the smallest divisible unit value
 
 #### Defined in
 
-[src/types/transfer.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L45)
+[src/types/transfer.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L63)
 
 ___
 
@@ -53,7 +54,7 @@ The asset id that will be transfered
 
 #### Defined in
 
-[src/types/transfer.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L43)
+[src/types/transfer.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L61)
 
 ___
 
@@ -81,7 +82,7 @@ An address of a target account from which to perform a clawback operation. Pleas
 
 #### Defined in
 
-[src/types/transfer.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L49)
+[src/types/transfer.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L67)
 
 ___
 
@@ -109,7 +110,19 @@ The account that will send the asset
 
 #### Defined in
 
-[src/types/transfer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L39)
+[src/types/transfer.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L57)
+
+___
+
+### lease
+
+• `Optional` **lease**: `string` \| `Uint8Array`
+
+An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply
+
+#### Defined in
+
+[src/types/transfer.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L71)
 
 ___
 
@@ -153,7 +166,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/transfer.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L51)
+[src/types/transfer.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L69)
 
 ___
 
@@ -214,7 +227,7 @@ The account / account address that will receive the asset
 
 #### Defined in
 
-[src/types/transfer.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L41)
+[src/types/transfer.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L59)
 
 ___
 
@@ -226,4 +239,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/transfer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L47)
+[src/types/transfer.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L65)

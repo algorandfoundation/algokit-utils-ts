@@ -15,6 +15,7 @@ import { Buffer } from 'buffer'
 import { Config } from './'
 import {
   controlFees,
+  encodeLease,
   encodeTransactionNote,
   getAtomicTransactionComposerTransactions,
   getSenderAddress,
@@ -152,7 +153,7 @@ export async function createApp(
       from: getSenderAddress(from),
       note: encodeTransactionNote(note),
       ...getAppArgsForTransaction(args),
-      rekeyTo: undefined,
+      rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
     })
 
     const { confirmation } = await sendTransaction({ transaction, from, sendParams }, algod)
@@ -239,7 +240,7 @@ export async function updateApp(
       from: getSenderAddress(from),
       note: encodeTransactionNote(note),
       ...getAppArgsForTransaction(args),
-      rekeyTo: undefined,
+      rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
     })
 
     const result = await sendTransaction({ transaction, from, sendParams }, algod)
@@ -343,7 +344,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
     suggestedParams: await getTransactionParams(transactionParams, algod),
     ...getAppArgsForTransaction(args),
     note: encodeTransactionNote(note),
-    rekeyTo: undefined,
+    rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
   }
 
   let transaction: Transaction
@@ -576,7 +577,7 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
     boxes: args.boxes?.map(getBoxReference),
     foreignApps: args?.apps,
     foreignAssets: args?.assets,
-    lease: typeof args?.lease === 'string' ? encoder.encode(args?.lease) : args?.lease,
+    lease: encodeLease(args?.lease),
   }
 }
 
@@ -587,7 +588,6 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
  * @returns The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
  */
 export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTransactionFrom) {
-  const encoder = new TextEncoder()
   const signer = getSenderTransactionSigner(from)
   const methodArgs = await Promise.all(
     ('methodArgs' in args ? args.methodArgs : args)?.map(async (a, index) => {
@@ -614,12 +614,12 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
     sender: getSenderAddress(from),
     signer: signer,
     boxes: args.boxes?.map(getBoxReference),
-    lease: typeof args.lease === 'string' ? encoder.encode(args.lease) : args.lease,
+    lease: encodeLease(args.lease),
     appForeignApps: args.apps,
     appForeignAssets: args.assets,
     appAccounts: args.accounts?.map(_getAccountAddress),
     methodArgs: methodArgs,
-    rekeyTo: undefined,
+    rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
   }
 }
 

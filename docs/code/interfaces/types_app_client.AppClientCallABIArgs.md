@@ -21,6 +21,7 @@
 - [lease](types_app_client.AppClientCallABIArgs.md#lease)
 - [method](types_app_client.AppClientCallABIArgs.md#method)
 - [methodArgs](types_app_client.AppClientCallABIArgs.md#methodargs)
+- [rekeyTo](types_app_client.AppClientCallABIArgs.md#rekeyto)
 
 ## Properties
 
@@ -128,4 +129,22 @@ Omit.methodArgs
 
 #### Defined in
 
-[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)
+[src/types/app.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L112)
+
+___
+
+### rekeyTo
+
+• `Optional` **rekeyTo**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+
+Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
+
+**Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+
+#### Inherited from
+
+Omit.rekeyTo
+
+#### Defined in
+
+[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)

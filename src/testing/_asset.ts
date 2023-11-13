@@ -1,6 +1,4 @@
-import { Account, Algodv2, Kmd, makeAssetCreateTxnWithSuggestedParamsFromObject } from 'algosdk'
-import { algos, microAlgos } from '../amount'
-import { ensureFunded } from '../transfer'
+import { Account, Algodv2, makeAssetCreateTxnWithSuggestedParamsFromObject } from 'algosdk'
 
 export async function generateTestAsset(client: Algodv2, sender: Account, total?: number) {
   total = !total ? Math.floor(Math.random() * 100) + 20 : total
@@ -34,16 +32,4 @@ export async function generateTestAsset(client: Algodv2, sender: Account, total?
   const assetId = ptx['asset-index']
 
   return assetId
-}
-
-export async function ensureFunds(algod: Algodv2, account: Account, kmd: Kmd) {
-  await ensureFunded(
-    {
-      accountToFund: account,
-      minSpendingBalance: microAlgos(1),
-      minFundingIncrement: algos(1),
-    },
-    algod,
-    kmd,
-  )
 }

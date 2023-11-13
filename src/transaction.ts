@@ -24,6 +24,8 @@ import {
 } from './types/transaction'
 import { toNumber } from './util'
 
+export const MAX_TRANSACTION_GROUP_SIZE = 16
+
 /** Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
  * @param note The transaction note
@@ -49,6 +51,42 @@ export function encodeTransactionNote(note?: TransactionNote): Uint8Array | unde
     const n = typeof note === 'string' ? note : JSON.stringify(note)
     const encoder = new TextEncoder()
     return encoder.encode(n)
+  }
+}
+
+/** Encodes a transaction lease into a 32-byte array ready to be included in an Algorand transaction.
+ *
+ * @param lease The transaction lease as a string or binary array or null/undefined if there is no lease
+ * @returns the transaction lease ready for inclusion in a transaction or `undefined` if there is no lease
+ * @throws if the length of the data is > 32 bytes or empty
+ * @example algokit.encodeLease('UNIQUE_ID')
+ * @example algokit.encodeLease(new Uint8Array([1, 2, 3]))
+ */
+export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined {
+  if (lease === null || typeof lease === 'undefined') {
+    return undefined
+  } else if (typeof lease === 'object' && lease.constructor === Uint8Array) {
+    if (lease.length === 0 || lease.length > 32) {
+      throw new Error(
+        `Received invalid lease; expected something with length between 1 and 32, but received bytes with length ${lease.length}`,
+      )
+    }
+    if (lease.length === 32) return lease
+    const lease32 = new Uint8Array(32)
+    lease32.set(lease, 0)
+    return lease32
+  } else if (typeof lease === 'string') {
+    if (lease.length === 0 || lease.length > 32) {
+      throw new Error(
+        `Received invalid lease; expected something with length between 1 and 32, but received '${lease}' with length ${lease.length}`,
+      )
+    }
+    const encoder = new TextEncoder()
+    const lease32 = new Uint8Array(32)
+    lease32.set(encoder.encode(lease), 0)
+    return lease32
+  } else {
+    throw new Error(`Unknown lease type received of ${typeof lease}`)
   }
 }
 

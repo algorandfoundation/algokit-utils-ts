@@ -1,48 +1,35 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/transfer](../modules/types_transfer.md) / AlgoTransferParams
+[@algorandfoundation/algokit-utils](../README.md) / [types/transfer](../modules/types_transfer.md) / AlgoRekeyParams
 
-# Interface: AlgoTransferParams
+# Interface: AlgoRekeyParams
 
-[types/transfer](../modules/types_transfer.md).AlgoTransferParams
+[types/transfer](../modules/types_transfer.md).AlgoRekeyParams
 
-Parameters for `transferAlgos` call.
+Parameters for `rekeyAccount` call.
 
 ## Hierarchy
 
 - [`SendTransactionParams`](types_transaction.SendTransactionParams.md)
 
-  ↳ **`AlgoTransferParams`**
+  ↳ **`AlgoRekeyParams`**
 
 ## Table of contents
 
 ### Properties
 
-- [amount](types_transfer.AlgoTransferParams.md#amount)
-- [atc](types_transfer.AlgoTransferParams.md#atc)
-- [fee](types_transfer.AlgoTransferParams.md#fee)
-- [from](types_transfer.AlgoTransferParams.md#from)
-- [lease](types_transfer.AlgoTransferParams.md#lease)
-- [maxFee](types_transfer.AlgoTransferParams.md#maxfee)
-- [maxRoundsToWaitForConfirmation](types_transfer.AlgoTransferParams.md#maxroundstowaitforconfirmation)
-- [note](types_transfer.AlgoTransferParams.md#note)
-- [skipSending](types_transfer.AlgoTransferParams.md#skipsending)
-- [skipWaiting](types_transfer.AlgoTransferParams.md#skipwaiting)
-- [suppressLog](types_transfer.AlgoTransferParams.md#suppresslog)
-- [to](types_transfer.AlgoTransferParams.md#to)
-- [transactionParams](types_transfer.AlgoTransferParams.md#transactionparams)
+- [atc](types_transfer.AlgoRekeyParams.md#atc)
+- [fee](types_transfer.AlgoRekeyParams.md#fee)
+- [from](types_transfer.AlgoRekeyParams.md#from)
+- [lease](types_transfer.AlgoRekeyParams.md#lease)
+- [maxFee](types_transfer.AlgoRekeyParams.md#maxfee)
+- [maxRoundsToWaitForConfirmation](types_transfer.AlgoRekeyParams.md#maxroundstowaitforconfirmation)
+- [note](types_transfer.AlgoRekeyParams.md#note)
+- [rekeyTo](types_transfer.AlgoRekeyParams.md#rekeyto)
+- [skipSending](types_transfer.AlgoRekeyParams.md#skipsending)
+- [skipWaiting](types_transfer.AlgoRekeyParams.md#skipwaiting)
+- [suppressLog](types_transfer.AlgoRekeyParams.md#suppresslog)
+- [transactionParams](types_transfer.AlgoRekeyParams.md#transactionparams)
 
 ## Properties
-
-### amount
-
-• **amount**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
-
-The amount to send
-
-#### Defined in
-
-[src/types/transfer.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L13)
-
-___
 
 ### atc
 
@@ -80,11 +67,11 @@ ___
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account that will send the ALGOs
+The account that will be rekeyed
 
 #### Defined in
 
-[src/types/transfer.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L9)
+[src/types/transfer.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L25)
 
 ___
 
@@ -96,7 +83,7 @@ An (optional) [transaction lease](https://developer.algorand.org/articles/leased
 
 #### Defined in
 
-[src/types/transfer.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L19)
+[src/types/transfer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L33)
 
 ___
 
@@ -140,7 +127,19 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/transfer.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L17)
+[src/types/transfer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L31)
+
+___
+
+### rekeyTo
+
+• **rekeyTo**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
+
+The account / account address that will have the private key that is authorised to transact on behalf of the from account from now on
+
+#### Defined in
+
+[src/types/transfer.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L27)
 
 ___
 
@@ -193,18 +192,6 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 ___
 
-### to
-
-• **to**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
-
-The account / account address that will receive the ALGOs
-
-#### Defined in
-
-[src/types/transfer.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L11)
-
-___
-
 ### transactionParams
 
 • `Optional` **transactionParams**: `SuggestedParams`
@@ -213,4 +200,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/transfer.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L15)
+[src/types/transfer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L29)

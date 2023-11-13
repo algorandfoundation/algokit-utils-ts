@@ -15,6 +15,22 @@ export interface AlgoTransferParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
+  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  lease?: string | Uint8Array
+}
+
+/** Parameters for `rekeyAccount` call. */
+export interface AlgoRekeyParams extends SendTransactionParams {
+  /** The account that will be rekeyed */
+  from: SendTransactionFrom
+  /** The account / account address that will have the private key that is authorised to transact on behalf of the from account from now on */
+  rekeyTo: SendTransactionFrom | string
+  /** Optional transaction parameters */
+  transactionParams?: SuggestedParams
+  /** The (optional) transaction note */
+  note?: TransactionNote
+  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  lease?: string | Uint8Array
 }
 
 /** Parameters for `ensureFunded` call. */
@@ -31,6 +47,8 @@ export interface EnsureFundedParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note, default: "Funding account to meet minimum requirement" */
   note?: TransactionNote
+  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  lease?: string | Uint8Array
 }
 
 /** Parameters for `transferAsset` call. */
@@ -49,6 +67,8 @@ export interface TransferAssetParams extends SendTransactionParams {
   clawbackFrom?: SendTransactionFrom | string
   /** The (optional) transaction note */
   note?: TransactionNote
+  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  lease?: string | Uint8Array
 }
 
 export interface EnsureFundedReturnType {
