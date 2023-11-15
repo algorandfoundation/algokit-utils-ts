@@ -1,4 +1,4 @@
-import algosdk, { Algodv2 } from 'algosdk'
+import algosdk from 'algosdk'
 import {
   Config,
   MAX_TRANSACTION_GROUP_SIZE,
@@ -11,6 +11,7 @@ import {
 } from '.'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams } from './types/asset'
 import { SendTransactionFrom, SendTransactionResult, TransactionGroupToSend, TransactionToSign } from './types/transaction'
+import Algodv2 = algosdk.Algodv2
 
 enum ValidationType {
   OptIn,

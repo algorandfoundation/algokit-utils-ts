@@ -1,13 +1,4 @@
-import algosdk, {
-  Algodv2,
-  AtomicTransactionComposer,
-  EncodedSignedTransaction,
-  modelsv2,
-  SuggestedParams,
-  Transaction,
-  TransactionSigner,
-  TransactionWithSigner,
-} from 'algosdk'
+import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
 import { AlgoAmount } from './types/amount'
@@ -23,6 +14,14 @@ import {
   TransactionToSign,
 } from './types/transaction'
 import { toNumber } from './util'
+import Algodv2 = algosdk.Algodv2
+import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
+import EncodedSignedTransaction = algosdk.EncodedSignedTransaction
+import modelsv2 = algosdk.modelsv2
+import SuggestedParams = algosdk.SuggestedParams
+import Transaction = algosdk.Transaction
+import TransactionSigner = algosdk.TransactionSigner
+import TransactionWithSigner = algosdk.TransactionWithSigner
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 

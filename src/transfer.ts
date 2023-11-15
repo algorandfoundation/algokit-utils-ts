@@ -1,4 +1,4 @@
-import algosdk, { Algodv2, Kmd } from 'algosdk'
+import algosdk from 'algosdk'
 import { Config, getDispenserAccount, microAlgos } from './'
 import { isTestNet } from './network-client'
 import { encodeLease, encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
@@ -7,6 +7,8 @@ import { TestNetDispenserApiClient } from './types/dispenser-client'
 import { SendTransactionResult, TransactionNote } from './types/transaction'
 import { AlgoRekeyParams, AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
 import { calculateFundAmount } from './util'
+import Algodv2 = algosdk.Algodv2
+import Kmd = algosdk.Kmd
 
 async function fundUsingDispenserApi(
   dispenserClient: TestNetDispenserApiClient,

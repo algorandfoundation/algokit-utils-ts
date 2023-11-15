@@ -1,4 +1,4 @@
-import algosdk, { Account, Algodv2, Kmd, MultisigMetadata, TransactionSigner } from 'algosdk'
+import algosdk from 'algosdk'
 import { Config } from './'
 import { getLocalNetDispenserAccount, getOrCreateKmdWalletAccount } from './localnet'
 import { isLocalNet } from './network-client'
@@ -6,6 +6,11 @@ import { getSenderAddress } from './transaction'
 import { AccountConfig, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './types/account'
 import { AlgoAmount } from './types/amount'
 import { SendTransactionFrom } from './types/transaction'
+import Account = algosdk.Account
+import Algodv2 = algosdk.Algodv2
+import Kmd = algosdk.Kmd
+import MultisigMetadata = algosdk.MultisigMetadata
+import TransactionSigner = algosdk.TransactionSigner
 
 /**
  * Returns an account wrapper that supports partial or full multisig signing.

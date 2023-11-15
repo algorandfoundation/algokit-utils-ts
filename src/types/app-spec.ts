@@ -1,4 +1,6 @@
-import { ABIContractParams, ABIMethodParams } from 'algosdk'
+import algosdk from 'algosdk'
+import ABIContractParams = algosdk.ABIContractParams
+import ABIMethodParams = algosdk.ABIMethodParams
 
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
 export interface AppSpec {

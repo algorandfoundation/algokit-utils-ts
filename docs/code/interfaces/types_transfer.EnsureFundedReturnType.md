@@ -21,7 +21,7 @@ The response if the transaction was sent and waited for
 
 #### Defined in
 
-[src/types/transfer.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L78)
+[src/types/transfer.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L79)
 
 ___
 
@@ -33,4 +33,4 @@ The transaction
 
 #### Defined in
 
-[src/types/transfer.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L76)
+[src/types/transfer.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L77)

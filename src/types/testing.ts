@@ -1,9 +1,14 @@
-import { Account, Algodv2, Indexer, Kmd, Transaction } from 'algosdk'
+import algosdk from 'algosdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
 import { SendTransactionFrom } from '../types/transaction'
 import { TransactionLookupResult } from './indexer'
+import Account = algosdk.Account
+import Algodv2 = algosdk.Algodv2
+import Indexer = algosdk.Indexer
+import Kmd = algosdk.Kmd
+import Transaction = algosdk.Transaction
 
 /**
  * Test automation context.

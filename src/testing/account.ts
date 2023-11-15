@@ -1,8 +1,11 @@
-import algosdk, { Account, Algodv2, Kmd } from 'algosdk'
+import algosdk from 'algosdk'
 import { Config } from '../'
 import { getDispenserAccount } from '../account'
 import { transferAlgos } from '../transfer'
 import { GetTestAccountParams } from '../types/testing'
+import Account = algosdk.Account
+import Algodv2 = algosdk.Algodv2
+import Kmd = algosdk.Kmd
 
 /**
  * Creates an ephemeral Algorand account for the purposes of testing.

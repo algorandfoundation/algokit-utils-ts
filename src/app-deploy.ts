@@ -1,4 +1,4 @@
-import { Algodv2, AtomicTransactionComposer, getApplicationAddress, Indexer, modelsv2, TransactionType } from 'algosdk'
+import algosdk from 'algosdk'
 import { Config } from '.'
 import { callApp, compileTeal, createApp, getAppById, updateApp } from './app'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
@@ -7,8 +7,8 @@ import {
   ABIReturn,
   APP_DEPLOY_NOTE_DAPP,
   AppCompilationResult,
-  AppDeploymentParams,
   AppDeployMetadata,
+  AppDeploymentParams,
   AppLookup,
   AppMetadata,
   CompiledTeal,
@@ -19,6 +19,12 @@ import {
   UPDATABLE_TEMPLATE_NAME,
 } from './types/app'
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
+import Algodv2 = algosdk.Algodv2
+import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
+import getApplicationAddress = algosdk.getApplicationAddress
+import Indexer = algosdk.Indexer
+import modelsv2 = algosdk.modelsv2
+import TransactionType = algosdk.TransactionType
 
 /**
  * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.

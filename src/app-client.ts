@@ -1,5 +1,6 @@
-import { Algodv2 } from 'algosdk'
+import algosdk from 'algosdk'
 import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetailsById, ApplicationClient } from './types/app-client'
+import Algodv2 = algosdk.Algodv2
 
 /**
  * Create a new ApplicationClient instance
