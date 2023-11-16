@@ -8,10 +8,10 @@
     "no-restricted-syntax": [
       "error",
       {
-        // Algosdk v2.x.x doesn't export a compliant ES module and when using utils-ts in an ESM project
-        // the CJS module will be loaded, which may not fuly support all named exports.
+        // Algosdk v2.x.x exports a malformed ES module and when using utils-ts in an ESM project
+        // the CJS module may be loaded, which may not fuly support all named exports.
         // The easiest solution for now, is to only use the default export.
-        "message": "Only use the default export in 'algosdk'. See rule for details",
+        "message": "Only use the default export in 'algosdk'. See rule comment for details",
         "selector": "ImportDeclaration[source.value=\"algosdk\"] ImportSpecifier"
       }
     ]
