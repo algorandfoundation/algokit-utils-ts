@@ -44,7 +44,7 @@ This is the default implementation of BaseHTTPClient.
 
 ### constructor
 
-• **new URLTokenBaseHTTPClient**(`tokenHeader`, `baseServer`, `port?`, `defaultHeaders?`)
+• **new URLTokenBaseHTTPClient**(`tokenHeader`, `baseServer`, `port?`, `defaultHeaders?`): [`URLTokenBaseHTTPClient`](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md)
 
 #### Parameters
 
@@ -54,6 +54,10 @@ This is the default implementation of BaseHTTPClient.
 | `baseServer` | `string` |
 | `port?` | `string` \| `number` |
 | `defaultHeaders` | `Record`<`string`, `any`\> |
+
+#### Returns
+
+[`URLTokenBaseHTTPClient`](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md)
 
 #### Defined in
 
@@ -146,7 +150,7 @@ ___
 
 ### getURL
 
-▸ `Private` **getURL**(`relativePath`, `query?`): `string`
+▸ **getURL**(`relativePath`, `query?`): `string`
 
 Compute the URL for a path relative to the instance's address
 
@@ -198,7 +202,7 @@ ___
 
 ### checkHttpError
 
-▸ `Static` `Private` **checkHttpError**(`res`): `Promise`<`void`\>
+▸ **checkHttpError**(`res`): `Promise`<`void`\>
 
 #### Parameters
 
@@ -218,7 +222,7 @@ ___
 
 ### formatFetchResponse
 
-▸ `Static` `Private` **formatFetchResponse**(`res`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **formatFetchResponse**(`res`): `Promise`<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
@@ -238,7 +242,7 @@ ___
 
 ### formatFetchResponseHeaders
 
-▸ `Static` `Private` **formatFetchResponseHeaders**(`headers`): `Record`<`string`, `string`\>
+▸ **formatFetchResponseHeaders**(`headers`): `Record`<`string`, `string`\>
 
 #### Parameters
 

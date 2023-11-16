@@ -34,7 +34,7 @@ Account wrapper that supports partial or full multisig signing.
 
 ### constructor
 
-• **new MultisigAccount**(`multisigParams`, `signingAccounts`)
+• **new MultisigAccount**(`multisigParams`, `signingAccounts`): [`MultisigAccount`](types_account.MultisigAccount.md)
 
 #### Parameters
 
@@ -42,6 +42,10 @@ Account wrapper that supports partial or full multisig signing.
 | :------ | :------ |
 | `multisigParams` | `MultisigMetadata` |
 | `signingAccounts` | (`default` \| [`SigningAccount`](types_account.SigningAccount.md))[] |
+
+#### Returns
+
+[`MultisigAccount`](types_account.MultisigAccount.md)
 
 #### Defined in
 
