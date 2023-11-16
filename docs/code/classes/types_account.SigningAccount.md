@@ -33,7 +33,7 @@ Account wrapper that supports a rekeyed account
 
 ### constructor
 
-• **new SigningAccount**(`account`, `sender`)
+• **new SigningAccount**(`account`, `sender`): [`SigningAccount`](types_account.SigningAccount.md)
 
 #### Parameters
 
@@ -41,6 +41,10 @@ Account wrapper that supports a rekeyed account
 | :------ | :------ |
 | `account` | `default` |
 | `sender` | `undefined` \| `string` |
+
+#### Returns
+
+[`SigningAccount`](types_account.SigningAccount.md)
 
 #### Defined in
 
