@@ -82,7 +82,7 @@
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
-    "algosdk": "^2.5.0"
+    "algosdk": "^2.7.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
