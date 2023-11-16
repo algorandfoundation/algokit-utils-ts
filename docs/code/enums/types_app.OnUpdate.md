@@ -25,7 +25,7 @@ Create a new app
 
 #### Defined in
 
-[src/types/app.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L278)
+[src/types/app.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L277)
 
 ___
 
@@ -37,7 +37,7 @@ Fail the deployment
 
 #### Defined in
 
-[src/types/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L272)
+[src/types/app.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L271)
 
 ___
 
@@ -49,7 +49,7 @@ Delete the app and create a new one in its place
 
 #### Defined in
 
-[src/types/app.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L276)
+[src/types/app.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L275)
 
 ___
 
@@ -61,4 +61,4 @@ Update the app
 
 #### Defined in
 
-[src/types/app.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L274)
+[src/types/app.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L273)

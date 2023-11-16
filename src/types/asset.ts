@@ -1,6 +1,7 @@
-import { SuggestedParams } from 'algosdk'
+import algosdk from 'algosdk'
 import { AlgoAmount } from './amount'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
+import SuggestedParams = algosdk.SuggestedParams
 
 /** Parameters for `assetOptIn` call. */
 export interface AssetOptInParams extends SendTransactionParams {

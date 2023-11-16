@@ -1,4 +1,8 @@
-import algosdk, { Account, MultisigMetadata, Transaction, TransactionSigner } from 'algosdk'
+import algosdk from 'algosdk'
+import Account = algosdk.Account
+import MultisigMetadata = algosdk.MultisigMetadata
+import Transaction = algosdk.Transaction
+import TransactionSigner = algosdk.TransactionSigner
 
 /**
  * The account name identifier used for fund dispensing in test environments

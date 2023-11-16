@@ -153,7 +153,7 @@ The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L17)
+[src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L20)
 
 ___
 

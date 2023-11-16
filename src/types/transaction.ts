@@ -1,7 +1,12 @@
-import { Account, AtomicTransactionComposer, LogicSigAccount, Transaction, modelsv2 } from 'algosdk'
+import algosdk from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
+import Account = algosdk.Account
+import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
+import LogicSigAccount = algosdk.LogicSigAccount
+import Transaction = algosdk.Transaction
+import modelsv2 = algosdk.modelsv2
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

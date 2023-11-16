@@ -1,16 +1,4 @@
-import algosdk, {
-  ABIMethod,
-  ABIMethodParams,
-  ABIResult,
-  ABIValue,
-  Address,
-  Algodv2,
-  AtomicTransactionComposer,
-  modelsv2,
-  OnApplicationComplete,
-  SourceMap,
-  Transaction,
-} from 'algosdk'
+import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
 import {
@@ -47,6 +35,17 @@ import {
 } from './types/app'
 import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
 import { toNumber } from './util'
+import ABIMethod = algosdk.ABIMethod
+import ABIMethodParams = algosdk.ABIMethodParams
+import ABIResult = algosdk.ABIResult
+import ABIValue = algosdk.ABIValue
+import Address = algosdk.Address
+import Algodv2 = algosdk.Algodv2
+import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
+import modelsv2 = algosdk.modelsv2
+import OnApplicationComplete = algosdk.OnApplicationComplete
+import SourceMap = algosdk.SourceMap
+import Transaction = algosdk.Transaction
 
 /**
  * Creates a smart contract app, returns the details of the created app.

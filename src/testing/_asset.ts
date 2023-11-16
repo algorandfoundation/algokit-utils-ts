@@ -1,4 +1,7 @@
-import { Account, Algodv2, makeAssetCreateTxnWithSuggestedParamsFromObject } from 'algosdk'
+import algosdk from 'algosdk'
+import Account = algosdk.Account
+import Algodv2 = algosdk.Algodv2
+import makeAssetCreateTxnWithSuggestedParamsFromObject = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject
 
 export async function generateTestAsset(client: Algodv2, sender: Account, total?: number) {
   total = !total ? Math.floor(Math.random() * 100) + 20 : total

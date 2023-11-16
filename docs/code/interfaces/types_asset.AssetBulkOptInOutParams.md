@@ -28,7 +28,7 @@ The account to opt in/out for
 
 #### Defined in
 
-[src/types/asset.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L30)
+[src/types/asset.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L31)
 
 ___
 
@@ -40,7 +40,7 @@ The IDs of the assets to opt in for / out of
 
 #### Defined in
 
-[src/types/asset.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L32)
+[src/types/asset.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L33)
 
 ___
 
@@ -52,7 +52,7 @@ The maximum fee that you are happy to pay per transaction (default: unbounded) -
 
 #### Defined in
 
-[src/types/asset.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L40)
+[src/types/asset.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L41)
 
 ___
 
@@ -64,7 +64,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/asset.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L38)
+[src/types/asset.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L39)
 
 ___
 
@@ -76,7 +76,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/asset.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L42)
+[src/types/asset.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L43)
 
 ___
 
@@ -88,7 +88,7 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/asset.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L36)
+[src/types/asset.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L37)
 
 ___
 
@@ -100,4 +100,4 @@ Whether or not to validate the opt-in/out is valid before issuing transactions; 
 
 #### Defined in
 
-[src/types/asset.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L34)
+[src/types/asset.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L35)

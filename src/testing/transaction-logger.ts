@@ -1,5 +1,8 @@
-import { Algodv2, decodeSignedTransaction, Indexer } from 'algosdk'
+import algosdk from 'algosdk'
 import { runWhenIndexerCaughtUp } from './'
+import Algodv2 = algosdk.Algodv2
+import decodeSignedTransaction = algosdk.decodeSignedTransaction
+import Indexer = algosdk.Indexer
 
 /**
  * Allows you to keep track of Algorand transaction IDs by wrapping an `Algodv2` in a proxy.
