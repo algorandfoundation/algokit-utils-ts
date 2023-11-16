@@ -1,9 +1,12 @@
-import algosdk, { Account, Algodv2, Kmd } from 'algosdk'
+import algosdk from 'algosdk'
 import { Config } from './'
 import { getDispenserAccount, mnemonicAccount } from './account'
 import { getAlgoKmdClient } from './network-client'
 import { transferAlgos } from './transfer'
 import { AlgoAmount } from './types/amount'
+import Account = algosdk.Account
+import Algodv2 = algosdk.Algodv2
+import Kmd = algosdk.Kmd
 
 /** Returns true if the algod client is pointing to a LocalNet Algorand network */
 export async function isLocalNet(algod: Algodv2): Promise<boolean> {

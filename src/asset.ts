@@ -1,8 +1,17 @@
-import algosdk, { Account, Algodv2 } from 'algosdk'
-import { Config, sendGroupOfTransactions } from '.'
-import { TransactionGroupToSend, TransactionToSign } from './types/transaction'
-
-const MaxTxGroupSize = 16
+import algosdk from 'algosdk'
+import {
+  Config,
+  MAX_TRANSACTION_GROUP_SIZE,
+  encodeLease,
+  encodeTransactionNote,
+  getSenderAddress,
+  getTransactionParams,
+  sendGroupOfTransactions,
+  sendTransaction,
+} from '.'
+import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams } from './types/asset'
+import { SendTransactionFrom, SendTransactionResult, TransactionGroupToSend, TransactionToSign } from './types/transaction'
+import Algodv2 = algosdk.Algodv2
 
 enum ValidationType {
   OptIn,
@@ -13,36 +22,29 @@ function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
   for (let i = 0; i < arr.length; i += n) yield arr.slice(i, i + n)
 }
 
-async function ensureAccountIsValid(client: algosdk.Algodv2, account: algosdk.Account) {
-  try {
-    await client.accountInformation(account.addr).do()
-  } catch (error) {
-    throw new Error(`Account address ${account.addr} does not exist`)
-  }
-}
-
 async function ensureAssetBalanceConditions(
-  client: algosdk.Algodv2,
-  account: algosdk.Account,
+  account: SendTransactionFrom,
   assetIds: number[],
   validationType: ValidationType,
+  algod: algosdk.Algodv2,
 ) {
-  const accountInfo = await client.accountInformation(account.addr).do()
+  const accountAddress = getSenderAddress(account)
+  const accountInfo = await algod.accountInformation(accountAddress).do()
   const assetPromises = assetIds.map(async (assetId) => {
     if (validationType === ValidationType.OptIn) {
       if (accountInfo.assets.find((a: Record<string, number>) => a['asset-id'] === assetId)) {
-        Config.logger.debug(`Account ${account.addr} has already opted-in to asset ${assetId}`)
+        Config.logger.debug(`Account ${accountAddress} has already opted-in to asset ${assetId}`)
         return assetId
       }
     } else if (validationType === ValidationType.OptOut) {
       try {
-        const accountAssetInfo = await client.accountAssetInformation(account.addr, assetId).do()
+        const accountAssetInfo = await algod.accountAssetInformation(accountAddress, assetId).do()
         if (accountAssetInfo['asset-holding']['amount'] !== 0) {
           Config.logger.debug(`Asset ${assetId} is not with zero balance`)
           return assetId
         }
       } catch (e) {
-        Config.logger.debug(`Account ${account.addr} does not have asset ${assetId}`)
+        Config.logger.debug(`Account ${accountAddress} does not have asset ${assetId}`)
         return assetId
       }
     }
@@ -51,65 +53,168 @@ async function ensureAssetBalanceConditions(
 
   const invalidAssets = (await Promise.all(assetPromises)).filter((assetId) => assetId !== null)
   if (invalidAssets.length > 0) {
-    let errorMsg = ''
+    let errorMessage = ''
     if (validationType === ValidationType.OptIn) {
-      errorMsg = `Assets ${invalidAssets.join(
+      errorMessage = `Asset${invalidAssets.length === 1 ? '' : 's'} ${invalidAssets.join(
         ', ',
       )} cannot be opted in. Ensure that they are valid and that the account has not previously opted into them.`
     } else if (validationType === ValidationType.OptOut) {
-      errorMsg = `Assets ${invalidAssets.join(
+      errorMessage = `Asset${invalidAssets.length === 1 ? '' : 's'} ${invalidAssets.join(
         ', ',
       )} cannot be opted out. Ensure that they are valid and that the account has previously opted into them and holds zero balance.`
     }
-    throw new Error(errorMsg)
+    throw new Error(errorMessage)
   }
+}
+
+/**
+ * Opt-in an account to an asset.
+ * @param optIn The opt-in definition
+ * @param algod An algod client
+ * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ *
+ * @example Usage example
+ * ```typescript
+ * await algokit.assetOptIn({ account, assetId }, algod)
+ * ```
+ */
+export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promise<SendTransactionResult> {
+  const { account, assetId, note, transactionParams, lease, ...sendParams } = optIn
+
+  const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+    from: getSenderAddress(account),
+    to: getSenderAddress(account),
+    assetIndex: assetId,
+    amount: 0,
+    rekeyTo: undefined,
+    revocationTarget: undefined,
+    closeRemainderTo: undefined,
+    suggestedParams: await getTransactionParams(transactionParams, algod),
+    note: encodeTransactionNote(note),
+  })
+
+  const encodedLease = encodeLease(lease)
+  if (encodedLease) {
+    transaction.addLease(encodedLease)
+  }
+
+  if (!sendParams.skipSending) {
+    Config.getLogger(sendParams.suppressLog).debug(`Opted-in ${getSenderAddress(account)} to asset ${assetId}`)
+  }
+
+  return sendTransaction({ transaction, from: account, sendParams }, algod)
+}
+
+/**
+ * Opt-out an account from an asset.
+ * @param optOut The opt-in definition
+ * @param algod An algod client
+ * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ *
+ * @example Usage example
+ * ```typescript
+ * await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
+ * ```
+ */
+export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Promise<SendTransactionResult> {
+  const {
+    account,
+    assetId,
+    note,
+    transactionParams,
+    lease,
+    assetCreatorAddress: _assetCreatorAddress,
+    ensureZeroBalance,
+    ...sendParams
+  } = optOut
+
+  if (ensureZeroBalance === undefined || ensureZeroBalance) {
+    await ensureAssetBalanceConditions(account, [assetId], ValidationType.OptOut, algod)
+  }
+
+  const assetCreatorAddress = _assetCreatorAddress ?? (await algod.getAssetByID(assetId).do()).params.creator
+
+  const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+    from: getSenderAddress(account),
+    to: getSenderAddress(account),
+    assetIndex: assetId,
+    amount: 0,
+    rekeyTo: undefined,
+    revocationTarget: undefined,
+    closeRemainderTo: assetCreatorAddress,
+    suggestedParams: await getTransactionParams(transactionParams, algod),
+    note: encodeTransactionNote(note),
+  })
+
+  const encodedLease = encodeLease(lease)
+  if (encodedLease) {
+    transaction.addLease(encodedLease)
+  }
+
+  if (!sendParams.skipSending) {
+    Config.getLogger(sendParams.suppressLog).debug(`Opted-out ${getSenderAddress(account)} from asset ${assetId}`)
+  }
+
+  return sendTransaction({ transaction, from: account, sendParams }, algod)
 }
 
 /**
  * Opt in to a list of assets on the Algorand blockchain.
  *
- * @param client - An instance of the Algodv2 class from the `algosdk` library.
- * @param account - An instance of the Account class from the `algosdk` library representing the account that wants to opt in to the assets.
- * @param assetIds - An array of asset IDs that the account wants to opt in to.
+ * @param optIn - The bulk opt-in request.
+ * @param algod - An instance of the Algodv2 class from the `algosdk` library.
  * @returns A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
  * @throws If there is an error during the opt-in process.
+ * @example algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
  */
-export async function optIn(client: Algodv2, account: Account, assetIds: number[]) {
+export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algodv2) {
+  const { account, assetIds, validateBalances, transactionParams, note, maxFee, suppressLog } = optIn
   const result: Record<number, string> = {}
-  await ensureAccountIsValid(client, account)
-  await ensureAssetBalanceConditions(client, account, assetIds, ValidationType.OptIn)
 
-  const assets = await Promise.all(assetIds.map((aid) => client.getAssetByID(aid).do()))
-  const suggestedParams = await client.getTransactionParams().do()
+  if (validateBalances === undefined || validateBalances) {
+    await ensureAssetBalanceConditions(account, assetIds, ValidationType.OptIn, algod)
+  }
 
-  for (const assetGroup of chunks(assets, MaxTxGroupSize)) {
+  const suggestedParams = await getTransactionParams(transactionParams, algod)
+
+  for (const assetGroup of chunks(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
     try {
-      const transactionToSign: TransactionToSign[] = assetGroup.flatMap((asset) => [
-        {
-          transaction: algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-            from: account.addr,
-            to: account.addr,
-            assetIndex: asset.index,
-            amount: 0,
-            rekeyTo: undefined,
-            revocationTarget: undefined,
-            closeRemainderTo: undefined,
-            suggestedParams,
-          }),
+      const transactionsToSign: TransactionToSign[] = await Promise.all(
+        assetGroup.map(async (assetId) => ({
+          transaction: (
+            await assetOptIn(
+              {
+                account,
+                assetId,
+                transactionParams: suggestedParams,
+                note,
+                maxFee,
+                skipSending: true,
+                suppressLog: true,
+              },
+              algod,
+            )
+          ).transaction,
           signer: account,
-        },
-      ])
+        })),
+      )
       const txnGrp: TransactionGroupToSend = {
-        transactions: transactionToSign,
+        transactions: transactionsToSign,
         signer: account,
+        sendParams: {
+          suppressLog: true,
+        },
       }
-      const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, client)
-      assetGroup.map((asset, index) => {
-        result[asset.index] = sendGroupOfTransactionsResult.txIds[index]
+      const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, algod)
+      assetGroup.map((assetId, index) => {
+        result[assetId] = sendGroupOfTransactionsResult.txIds[index]
 
-        Config.logger.info(
-          `Successfully opted in of asset ${asset.index} with transaction ID ${sendGroupOfTransactionsResult.txIds[index]},
-          grouped under ${sendGroupOfTransactionsResult.groupId} round ${sendGroupOfTransactionsResult.confirmations}.`,
+        Config.getLogger(suppressLog).info(
+          `Successfully opted in ${getSenderAddress(account)} for asset ${assetId} with transaction ID ${
+            sendGroupOfTransactionsResult.txIds[index]
+          },
+          grouped under ${sendGroupOfTransactionsResult.groupId} round ${sendGroupOfTransactionsResult.confirmations?.[0]
+            ?.confirmedRound}.`,
         )
       })
     } catch (e) {
@@ -122,49 +227,63 @@ export async function optIn(client: Algodv2, account: Account, assetIds: number[
 /**
  * Opt out of multiple assets in Algorand blockchain.
  *
- * @param {Algodv2} client - An instance of the Algodv2 client used to interact with the Algorand blockchain.
- * @param {Account} account - The Algorand account that wants to opt out of the assets.
- * @param {number[]} assetIds - An array of asset IDs representing the assets to opt out of.
- * @returns {Promise<Record<number, string>>} - A record object containing asset IDs as keys and their corresponding transaction IDs as values.
+ * @param optOut The bulk opt-out request.
+ * @param algod - An instance of the Algodv2 client used to interact with the Algorand blockchain.
+ * @returns A record object containing asset IDs as keys and their corresponding transaction IDs as values.
+ * @throws If there is an error during the opt-out process.
+ * @example algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
  */
-export async function optOut(client: Algodv2, account: Account, assetIds: number[]): Promise<Record<number, string>> {
+export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
+  const { account, validateBalances, transactionParams, note, assetIds, maxFee, suppressLog } = optOut
   const result: Record<number, string> = {}
 
-  // Verify assets
-  await ensureAccountIsValid(client, account)
-  await ensureAssetBalanceConditions(client, account, assetIds, ValidationType.OptOut)
+  if (validateBalances === undefined || validateBalances) {
+    await ensureAssetBalanceConditions(account, assetIds, ValidationType.OptOut, algod)
+  }
 
-  const assets = await Promise.all(assetIds.map((aid) => client.getAssetByID(aid).do()))
-  const suggestedParams = await client.getTransactionParams().do()
+  const suggestedParams = await getTransactionParams(transactionParams, algod)
 
-  for (const assetGroup of chunks(assets, MaxTxGroupSize)) {
+  const assetDetails = await Promise.all(assetIds.map((assetId) => algod.getAssetByID(assetId).do()))
+
+  for (const assetGroup of chunks(assetDetails, MAX_TRANSACTION_GROUP_SIZE)) {
     try {
-      const transactionToSign: TransactionToSign[] = assetGroup.flatMap((asset) => [
-        {
-          transaction: algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-            assetIndex: asset.index,
-            amount: 0,
-            from: account.addr,
-            to: account.addr,
-            rekeyTo: undefined,
-            revocationTarget: undefined,
-            suggestedParams,
-            closeRemainderTo: asset.params.creator,
-          }),
+      const transactionToSign: TransactionToSign[] = await Promise.all(
+        assetGroup.map(async (asset) => ({
+          transaction: (
+            await assetOptOut(
+              {
+                account,
+                assetId: asset.index,
+                assetCreatorAddress: asset.params.creator,
+                transactionParams: suggestedParams,
+                note,
+                maxFee,
+                skipSending: true,
+                suppressLog: true,
+              },
+              algod,
+            )
+          ).transaction,
           signer: account,
-        },
-      ])
+        })),
+      )
       const txnGrp: TransactionGroupToSend = {
         transactions: transactionToSign,
         signer: account,
+        sendParams: {
+          suppressLog: true,
+        },
       }
-      const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, client)
+      const sendGroupOfTransactionsResult = await sendGroupOfTransactions(txnGrp, algod)
       assetGroup.map((asset, index) => {
         result[asset.index] = sendGroupOfTransactionsResult.txIds[index]
 
-        Config.logger.info(
-          `Successfully opted out of asset ${asset.index} with transaction ID ${sendGroupOfTransactionsResult.txIds[index]},
-          grouped under ${sendGroupOfTransactionsResult.groupId} round ${sendGroupOfTransactionsResult.confirmations}.`,
+        Config.getLogger(suppressLog).info(
+          `Successfully opted out ${getSenderAddress(account)} from asset ${asset.index} with transaction ID ${
+            sendGroupOfTransactionsResult.txIds[index]
+          },
+          grouped under ${sendGroupOfTransactionsResult.groupId} round ${sendGroupOfTransactionsResult.confirmations?.[0]
+            ?.confirmedRound}.`,
         )
       })
     } catch (e) {

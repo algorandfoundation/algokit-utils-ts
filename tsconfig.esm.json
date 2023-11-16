@@ -7,5 +7,9 @@
     "moduleResolution": "node",
     "declarationDir": "./dist/types"
   },
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  },
   "exclude": ["src/**/*.spec.ts", "tests/**/*.*", "src/testing/asset.ts"]
 }

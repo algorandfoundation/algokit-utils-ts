@@ -64,7 +64,7 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 ### constructor
 
-• **new TestNetDispenserApiClient**(`params`)
+• **new TestNetDispenserApiClient**(`params`): [`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md)
 
 #### Parameters
 
@@ -72,9 +72,13 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 | :------ | :------ |
 | `params` | ``null`` \| [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) |
 
+#### Returns
+
+[`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md)
+
 #### Defined in
 
-[src/types/dispenser-client.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L63)
+[src/types/dispenser-client.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L61)
 
 ## Properties
 
@@ -84,7 +88,7 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 #### Defined in
 
-[src/types/dispenser-client.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L60)
+[src/types/dispenser-client.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L58)
 
 ___
 
@@ -94,7 +98,7 @@ ___
 
 #### Defined in
 
-[src/types/dispenser-client.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L61)
+[src/types/dispenser-client.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L59)
 
 ## Accessors
 
@@ -110,7 +114,7 @@ The authentication token used for API requests.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L79)
+[src/types/dispenser-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L77)
 
 ___
 
@@ -126,7 +130,7 @@ The timeout for API requests, in seconds.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L83)
+[src/types/dispenser-client.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L81)
 
 ## Methods
 
@@ -151,7 +155,7 @@ DispenserFundResponse: An object containing the transaction ID and funded amount
 
 #### Defined in
 
-[src/types/dispenser-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L144)
+[src/types/dispenser-client.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L142)
 
 ___
 
@@ -169,13 +173,13 @@ DispenserLimitResponse: An object containing the funding limit amount.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L170)
+[src/types/dispenser-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L168)
 
 ___
 
 ### processDispenserRequest
 
-▸ `Private` **processDispenserRequest**(`authToken`, `urlSuffix`, `body?`, `method?`): `Promise`<`Response`\>
+▸ **processDispenserRequest**(`authToken`, `urlSuffix`, `body?`, `method?`): `Promise`<`Response`\>
 
 Processes a dispenser API request.
 
@@ -196,7 +200,7 @@ The API response.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L97)
+[src/types/dispenser-client.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L95)
 
 ___
 
@@ -218,4 +222,4 @@ Sends a refund request to the dispenser API for the specified refundTxnId.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L161)
+[src/types/dispenser-client.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L159)

@@ -36,7 +36,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 ### constructor
 
-• **new AlgoHttpClientWithRetry**(`tokenHeader`, `baseServer`, `port?`, `defaultHeaders?`)
+• **new AlgoHttpClientWithRetry**(`tokenHeader`, `baseServer`, `port?`, `defaultHeaders?`): [`AlgoHttpClientWithRetry`](types_algo_http_client_with_retry.AlgoHttpClientWithRetry.md)
 
 #### Parameters
 
@@ -47,13 +47,17 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 | `port?` | `string` \| `number` |
 | `defaultHeaders` | `Record`<`string`, `any`\> |
 
+#### Returns
+
+[`AlgoHttpClientWithRetry`](types_algo_http_client_with_retry.AlgoHttpClientWithRetry.md)
+
 #### Inherited from
 
 [URLTokenBaseHTTPClient](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md).[constructor](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md#constructor)
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L48)
+[src/types/urlTokenBaseHTTPClient.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L47)
 
 ## Properties
 
@@ -99,7 +103,7 @@ ___
 
 ### callWithRetry
 
-▸ `Private` **callWithRetry**(`func`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **callWithRetry**(`func`): `Promise`<`BaseHTTPClientResponse`\>
 
 #### Parameters
 

@@ -1,7 +1,10 @@
-import algosdk, { Algodv2, Indexer, Kmd } from 'algosdk'
+import algosdk from 'algosdk'
 import type { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
 import { AlgoHttpClientWithRetry } from './types/algo-http-client-with-retry'
 import { AlgoClientConfig, AlgoConfig } from './types/network-client'
+import Algodv2 = algosdk.Algodv2
+import Indexer = algosdk.Indexer
+import Kmd = algosdk.Kmd
 
 /** Retrieve configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment not algod-side) */
 export function getConfigFromEnvOrDefaults(): AlgoConfig {

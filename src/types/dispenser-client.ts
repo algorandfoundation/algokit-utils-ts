@@ -1,5 +1,3 @@
-import fetch from 'cross-fetch'
-
 const baseUrl = 'https://api.dispenser.algorandfoundation.tools'
 const dispenserRequestTimeout = 15
 const dispenserAccessTokenKey = 'ALGOKIT_DISPENSER_ACCESS_TOKEN'

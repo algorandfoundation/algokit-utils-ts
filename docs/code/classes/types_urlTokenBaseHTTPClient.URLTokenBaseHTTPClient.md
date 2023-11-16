@@ -44,7 +44,7 @@ This is the default implementation of BaseHTTPClient.
 
 ### constructor
 
-• **new URLTokenBaseHTTPClient**(`tokenHeader`, `baseServer`, `port?`, `defaultHeaders?`)
+• **new URLTokenBaseHTTPClient**(`tokenHeader`, `baseServer`, `port?`, `defaultHeaders?`): [`URLTokenBaseHTTPClient`](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md)
 
 #### Parameters
 
@@ -55,9 +55,13 @@ This is the default implementation of BaseHTTPClient.
 | `port?` | `string` \| `number` |
 | `defaultHeaders` | `Record`<`string`, `any`\> |
 
+#### Returns
+
+[`URLTokenBaseHTTPClient`](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md)
+
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L48)
+[src/types/urlTokenBaseHTTPClient.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L47)
 
 ## Properties
 
@@ -67,7 +71,7 @@ This is the default implementation of BaseHTTPClient.
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L44)
+[src/types/urlTokenBaseHTTPClient.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L43)
 
 ___
 
@@ -77,7 +81,7 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L53)
+[src/types/urlTokenBaseHTTPClient.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L52)
 
 ___
 
@@ -87,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L45)
+[src/types/urlTokenBaseHTTPClient.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L44)
 
 ## Methods
 
@@ -114,7 +118,7 @@ BaseHTTPClient.delete
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L185)
+[src/types/urlTokenBaseHTTPClient.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L184)
 
 ___
 
@@ -140,13 +144,13 @@ BaseHTTPClient.get
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L146)
+[src/types/urlTokenBaseHTTPClient.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L145)
 
 ___
 
 ### getURL
 
-▸ `Private` **getURL**(`relativePath`, `query?`): `string`
+▸ **getURL**(`relativePath`, `query?`): `string`
 
 Compute the URL for a path relative to the instance's address
 
@@ -165,7 +169,7 @@ A URL string
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L80)
+[src/types/urlTokenBaseHTTPClient.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L79)
 
 ___
 
@@ -192,13 +196,13 @@ BaseHTTPClient.post
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L162)
+[src/types/urlTokenBaseHTTPClient.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L161)
 
 ___
 
 ### checkHttpError
 
-▸ `Static` `Private` **checkHttpError**(`res`): `Promise`<`void`\>
+▸ **checkHttpError**(`res`): `Promise`<`void`\>
 
 #### Parameters
 
@@ -212,13 +216,13 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L106)
+[src/types/urlTokenBaseHTTPClient.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L105)
 
 ___
 
 ### formatFetchResponse
 
-▸ `Static` `Private` **formatFetchResponse**(`res`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **formatFetchResponse**(`res`): `Promise`<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
@@ -232,13 +236,13 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L137)
+[src/types/urlTokenBaseHTTPClient.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L136)
 
 ___
 
 ### formatFetchResponseHeaders
 
-▸ `Static` `Private` **formatFetchResponseHeaders**(`headers`): `Record`<`string`, `string`\>
+▸ **formatFetchResponseHeaders**(`headers`): `Record`<`string`, `string`\>
 
 #### Parameters
 
@@ -252,4 +256,4 @@ ___
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L98)
+[src/types/urlTokenBaseHTTPClient.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L97)

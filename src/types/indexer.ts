@@ -1,4 +1,6 @@
-import { modelsv2, TransactionType } from 'algosdk'
+import algosdk from 'algosdk'
+import modelsv2 = algosdk.modelsv2
+import TransactionType = algosdk.TransactionType
 
 /** Indexer result for a transaction search, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions */
 export interface TransactionSearchResults {

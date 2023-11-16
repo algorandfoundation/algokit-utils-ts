@@ -31,4 +31,33 @@ describe('app', () => {
     expect(app.confirmation).toBeTruthy()
     expect(app.confirmation?.applicationIndex).toBe(app.appId)
   })
+
+  test('createApp with rekey performs rekey', async () => {
+    const { algod, testAccount } = localnet.context
+    const rekeyTo = algokit.randomAccount()
+    const contract = await getTestingAppContract()
+    await algokit.createApp(
+      {
+        approvalProgram: contract.approvalProgram.replace('TMPL_UPDATABLE', '0').replace('TMPL_DELETABLE', '0').replace('TMPL_VALUE', '1'),
+        clearStateProgram: contract.clearStateProgram,
+        schema: contract.stateSchema,
+        from: testAccount,
+        args: {
+          rekeyTo: rekeyTo,
+        },
+      },
+      algod,
+    )
+
+    // If the rekey didn't work this will throw
+    const rekeyedAccount = algokit.rekeyedAccount(rekeyTo, testAccount.addr)
+    await algokit.transferAlgos(
+      {
+        amount: (0).algos(),
+        from: rekeyedAccount,
+        to: testAccount,
+      },
+      algod,
+    )
+  })
 })

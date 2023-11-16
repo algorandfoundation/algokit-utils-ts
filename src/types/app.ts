@@ -1,15 +1,4 @@
-import algosdk, {
-  ABIArgument,
-  ABIMethod,
-  ABIMethodParams,
-  ABIType,
-  ABIValue,
-  Address,
-  OnApplicationComplete,
-  SourceMap,
-  SuggestedParams,
-  Transaction,
-} from 'algosdk'
+import algosdk from 'algosdk'
 import {
   SendTransactionFrom,
   SendTransactionParams,
@@ -18,6 +7,16 @@ import {
   TransactionNote,
   TransactionToSign,
 } from './transaction'
+import ABIArgument = algosdk.ABIArgument
+import ABIMethod = algosdk.ABIMethod
+import ABIMethodParams = algosdk.ABIMethodParams
+import ABIType = algosdk.ABIType
+import ABIValue = algosdk.ABIValue
+import Address = algosdk.Address
+import OnApplicationComplete = algosdk.OnApplicationComplete
+import SourceMap = algosdk.SourceMap
+import SuggestedParams = algosdk.SuggestedParams
+import Transaction = algosdk.Transaction
 
 /** The name of the TEAL template variable for deploy-time immutability control */
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
@@ -76,6 +75,11 @@ export interface CoreAppCallArgs {
   apps?: number[]
   /** IDs of any assets to load into the foreignAssets array */
   assets?: number[]
+  /** Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
+   *
+   * **Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+   */
+  rekeyTo?: SendTransactionFrom | string
 }
 
 /**
