@@ -2,8 +2,30 @@ import { describe, expect, test } from '@jest/globals'
 import { envResetFixture } from '../tests/fixtures/env-fixture'
 import * as algokit from './'
 
-describe('network-clients', () => {
+// Don't spam algonode all the time, remove the `skip` to run these manually
+describe.skip('network-clients', () => {
   envResetFixture()
+
+  describe('Retry', () => {
+    test('Retries indexer calls', async () => {
+      const indexer = await algokit.getAlgoIndexerClient(algokit.getAlgoNodeConfig('testnet', 'indexer'))
+
+      await Promise.all(
+        new Array(70).fill(0).map(async (_) => {
+          await indexer.lookupAccountByID('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
+        }),
+      )
+    })
+    test('Retries algod calls', async () => {
+      const algod = await algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
+
+      await Promise.all(
+        new Array(150).fill(0).map(async (_) => {
+          await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
+        }),
+      )
+    })
+  })
 
   describe('Config', () => {
     test('Gets algod config from environment', () => {

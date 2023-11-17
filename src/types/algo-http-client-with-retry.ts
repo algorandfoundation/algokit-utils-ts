@@ -35,7 +35,11 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         }
         // Only retry for one of the hardcoded conditions
         if (
-          !(AlgoHttpClientWithRetry.RETRY_ERROR_CODES.includes(err.code) || AlgoHttpClientWithRetry.RETRY_STATUS_CODES.includes(err.status))
+          !(
+            AlgoHttpClientWithRetry.RETRY_ERROR_CODES.includes(err.code) ||
+            AlgoHttpClientWithRetry.RETRY_STATUS_CODES.includes(Number(err.status)) ||
+            ('response' in err && AlgoHttpClientWithRetry.RETRY_STATUS_CODES.includes(Number(err.response.status)))
+          )
         ) {
           throw err
         }
