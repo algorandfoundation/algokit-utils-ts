@@ -2,29 +2,55 @@ import { describe, expect, test } from '@jest/globals'
 import { envResetFixture } from '../tests/fixtures/env-fixture'
 import * as algokit from './'
 
-// Don't spam algonode all the time, remove the `skip` to run these manually
-describe.skip('network-clients', () => {
+describe('network-clients', () => {
   envResetFixture()
 
-  describe('Retry', () => {
+  // Don't spam algonode all the time, remove the `skip` to run these manually
+  describe.skip('Retry', () => {
+    /*
+	    *https://nodely.io/api/*
+	    The API requests are rate limited per source IP address with request shaping.
+	    A burst of 90 rps is allowed and all responses are delayed artificially to make sure that (if called sequentially) they will not exceed the quota.
+	    Queries exceeding the 90rps in burst or sustained 60rps will get HTTP 429 error.
+	    */
+    // Create a mock logger to track the number of retries
+    const myLogger = {
+      error: jest.fn(),
+      warn: jest.fn(),
+      info: jest.fn(),
+      debug: jest.fn(),
+      verbose: jest.fn(),
+    }
+    algokit.Config.configure({ logger: myLogger })
+    afterEach(() => {
+      jest.clearAllMocks()
+    })
     test('Retries indexer calls', async () => {
       const indexer = await algokit.getAlgoIndexerClient(algokit.getAlgoNodeConfig('testnet', 'indexer'))
 
-      await Promise.all(
-        new Array(70).fill(0).map(async (_) => {
-          await indexer.lookupAccountByID('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
+      const response = await Promise.all(
+        new Array(150).fill(0).map(async (_) => {
+          return await indexer.lookupAccountByID('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
         }),
       )
-    })
+      expect(response.length).toBe(150)
+      expect(myLogger.warn).toHaveBeenCalledWith(
+        'algosdk request failed 1 times. Retrying in 0ms: URLTokenBaseHTTPError: Network request error. Received status 429 (Too Many Requests)',
+      )
+    }, 10_000)
     test('Retries algod calls', async () => {
       const algod = await algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
 
-      await Promise.all(
+      const response = await Promise.all(
         new Array(150).fill(0).map(async (_) => {
-          await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
+          return await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA').do()
         }),
       )
-    })
+      expect(response.length).toBe(150)
+      expect(myLogger.warn).toHaveBeenCalledWith(
+        'algosdk request failed 1 times. Retrying in 0ms: URLTokenBaseHTTPError: Network request error. Received status 429 (Too Many Requests)',
+      )
+    }, 10_000)
   })
 
   describe('Config', () => {
