@@ -60,7 +60,7 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 
 ### constructor
 
-• **new ApplicationClient**(`appDetails`, `algod`): [`ApplicationClient`](types_app_client.ApplicationClient.md)
+• **new ApplicationClient**(`appDetails`, `algod`)
 
 Create a new ApplicationClient instance
 
@@ -70,10 +70,6 @@ Create a new ApplicationClient instance
 | :------ | :------ | :------ |
 | `appDetails` | [`AppSpecAppDetails`](../modules/types_app_client.md#appspecappdetails) | The details of the app |
 | `algod` | `default` | An algod instance |
-
-#### Returns
-
-[`ApplicationClient`](types_app_client.ApplicationClient.md)
 
 #### Defined in
 

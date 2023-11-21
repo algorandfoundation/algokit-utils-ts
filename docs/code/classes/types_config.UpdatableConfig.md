@@ -35,11 +35,7 @@ Updatable AlgoKit config
 
 ### constructor
 
-• **new UpdatableConfig**(): [`UpdatableConfig`](types_config.UpdatableConfig.md)
-
-#### Returns
-
-[`UpdatableConfig`](types_config.UpdatableConfig.md)
+• **new UpdatableConfig**()
 
 #### Defined in
 

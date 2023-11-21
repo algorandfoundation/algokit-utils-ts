@@ -64,17 +64,13 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 ### constructor
 
-• **new TestNetDispenserApiClient**(`params`): [`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md)
+• **new TestNetDispenserApiClient**(`params`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `params` | ``null`` \| [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) |
-
-#### Returns
-
-[`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md)
 
 #### Defined in
 
@@ -179,7 +175,7 @@ ___
 
 ### processDispenserRequest
 
-▸ **processDispenserRequest**(`authToken`, `urlSuffix`, `body?`, `method?`): `Promise`<`Response`\>
+▸ `Private` **processDispenserRequest**(`authToken`, `urlSuffix`, `body?`, `method?`): `Promise`<`Response`\>
 
 Processes a dispenser API request.
 
