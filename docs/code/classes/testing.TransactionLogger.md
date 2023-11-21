@@ -32,7 +32,11 @@ Useful for automated tests.
 
 ### constructor
 
-• **new TransactionLogger**()
+• **new TransactionLogger**(): [`TransactionLogger`](testing.TransactionLogger.md)
+
+#### Returns
+
+[`TransactionLogger`](testing.TransactionLogger.md)
 
 ## Properties
 
