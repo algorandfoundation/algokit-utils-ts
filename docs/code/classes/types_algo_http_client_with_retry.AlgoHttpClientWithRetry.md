@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L67)
+[src/types/algo-http-client-with-retry.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L71)
 
 ___
 
@@ -170,7 +170,7 @@ ___
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L54)
+[src/types/algo-http-client-with-retry.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L58)
 
 ___
 
@@ -197,4 +197,4 @@ ___
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L58)
+[src/types/algo-http-client-with-retry.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L62)

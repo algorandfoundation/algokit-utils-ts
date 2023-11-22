@@ -593,6 +593,29 @@ describe('application-client', () => {
     expect(indexes).toEqual([0, 1])
   })
 
+  test('Sign transaction in group with different signer if provided', async () => {
+    const { algod, indexer, testAccount, generateAccount } = localnet.context
+    const signer = await generateAccount({ initialFunds: (1).algos() })
+    const transaction = (
+      await algokit.transferAlgos(
+        {
+          from: signer,
+          to: signer.addr,
+          amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
+          skipSending: true,
+        },
+        algod,
+      )
+    ).transaction
+    const { client } = await deploy(testAccount, algod, indexer)
+
+    await client.call({
+      method: 'call_abi_txn',
+      methodArgs: [{ transaction, signer }, 'test'],
+      sender: testAccount,
+    })
+  })
+
   test('Construct transaction with abi encoding including foreign references not in signature', async () => {
     const { algod, indexer, testAccount } = localnet.context
     const { client } = await deploy(testAccount, algod, indexer)

@@ -4,6 +4,7 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/*.spec.ts'],
+  testTimeout: 10000,
   setupFiles: ['<rootDir>/tests/setup.ts'],
   moduleDirectories: ['node_modules', 'src'],
   transform: {

@@ -162,7 +162,7 @@ ___
 ▸ **runWhenIndexerCaughtUp**<`T`\>(`run`): `Promise`<`T`\>
 
 Runs the given indexer call until a 404 error is no longer returned.
-Tried every 200ms up to 20 times.
+Tried every 200ms up to 100 times.
 Very rudimentary implementation designed for automated testing.
 
 #### Type parameters
