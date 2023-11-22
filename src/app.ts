@@ -602,7 +602,7 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
         : a instanceof Promise
         ? { txn: (await a).transaction, signer }
         : 'transaction' in a
-        ? { txn: a.transaction, signer }
+        ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
         : 'txID' in a
         ? { txn: a, signer }
         : a
