@@ -16,7 +16,7 @@ jobs:
       run-commit-lint: true
       run-build: true
       pre-test-script: |
-        pipx install algokit
+        pipx install https://github.com/algorandfoundation/algokit-cli/releases/download/v1.7.0-beta.1/algokit-1.7.0b1-py3-none-any.whl
         algokit localnet start
         npx --yes wait-on tcp:4001 -t 30000
       audit-script: |
