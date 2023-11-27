@@ -338,6 +338,7 @@ export async function performAtomicTransactionComposerSimulate(atc: AtomicTransa
       enable: true,
       scratchChange: true,
       stackChange: true,
+      stateChange: true,
     }),
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({

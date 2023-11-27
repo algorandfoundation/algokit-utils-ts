@@ -1,5 +1,6 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
+import { Config } from '..'
 import {
   callApp,
   compileTeal,
@@ -13,6 +14,7 @@ import {
   updateApp,
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
+import { PersistSourceMapInput, persistSourcemaps } from '../debug-utils'
 import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
@@ -338,6 +340,18 @@ export class ApplicationClient {
     const clear = performTemplateSubstitution(clearTemplate, deployTimeParams ?? this.deployTimeParams)
     const clearCompiled = await compileTeal(clear, this.algod)
     this._clearSourceMap = clearCompiled?.sourceMap
+
+    if (Config.debug && Config.projectRoot) {
+      persistSourcemaps({
+        sources: [
+          new PersistSourceMapInput(approvalCompiled.teal, this._appName, 'approval.teal'),
+          new PersistSourceMapInput(clearCompiled.teal, this._appName, 'clear.teal'),
+        ],
+        projectRoot: Config.projectRoot,
+        client: this.algod,
+        withSources: true,
+      })
+    }
 
     return { approvalCompiled, clearCompiled }
   }

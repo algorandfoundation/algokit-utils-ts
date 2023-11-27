@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`debug utils tests build teal sourcemaps 1`] = `
+AVMDebuggerSourceMap {
+  "txnGroupSources": [
+    AVMDebuggerSourceMapEntry {
+      "location": "dummy",
+      "programHash": "EC1P8unO+zjVbdF8XZOs1rp+uaGNk7vXtZ/IYsN/sug=",
+    },
+    AVMDebuggerSourceMapEntry {
+      "location": "dummy",
+      "programHash": "EC1P8unO+zjVbdF8XZOs1rp+uaGNk7vXtZ/IYsN/sug=",
+    },
+  ],
+}
+`;
+
+exports[`debug utils tests build teal sourcemaps without sources 1`] = `
+AVMDebuggerSourceMap {
+  "txnGroupSources": [
+    AVMDebuggerSourceMapEntry {
+      "location": "dummy",
+      "programHash": "EC1P8unO+zjVbdF8XZOs1rp+uaGNk7vXtZ/IYsN/sug=",
+    },
+    AVMDebuggerSourceMapEntry {
+      "location": "dummy",
+      "programHash": "EC1P8unO+zjVbdF8XZOs1rp+uaGNk7vXtZ/IYsN/sug=",
+    },
+  ],
+}
+`;
