@@ -44,7 +44,7 @@
 
 #### Defined in
 
-src/types/debug-utils.ts:69
+[src/types/debug-utils.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L66)
 
 ## Properties
 
@@ -54,7 +54,7 @@ src/types/debug-utils.ts:69
 
 #### Defined in
 
-src/types/debug-utils.ts:67
+[src/types/debug-utils.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L64)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-src/types/debug-utils.ts:66
+[src/types/debug-utils.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L63)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-src/types/debug-utils.ts:65
+[src/types/debug-utils.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L62)
 
 ## Accessors
 
@@ -88,7 +88,7 @@ src/types/debug-utils.ts:65
 
 #### Defined in
 
-src/types/debug-utils.ts:75
+[src/types/debug-utils.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L72)
 
 • `set` **fileName**(`value`): `void`
 
@@ -104,7 +104,7 @@ src/types/debug-utils.ts:75
 
 #### Defined in
 
-src/types/debug-utils.ts:79
+[src/types/debug-utils.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L76)
 
 ## Methods
 
@@ -124,4 +124,4 @@ src/types/debug-utils.ts:79
 
 #### Defined in
 
-src/types/debug-utils.ts:83
+[src/types/debug-utils.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L80)

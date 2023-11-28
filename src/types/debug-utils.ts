@@ -12,27 +12,24 @@ export const TEAL_FILE_EXT = '.teal'
 export const TEAL_SOURCEMAP_EXT = '.teal.tok.map'
 
 export interface ErrnoException extends Error {
-  errno?: number | undefined
-  code?: string | undefined
-  path?: string | undefined
-  syscall?: string | undefined
+  errno?: number
+  code?: string
+  path?: string
+  syscall?: string
 }
 
 export interface AVMDebuggerSourceMapDict {
-  'txn-group-sources': {
+  'txn-group-sources': Array<{
     'sourcemap-location': string
     hash: string
-  }[]
+  }>
 }
 
 export class AVMDebuggerSourceMapEntry {
-  location: string
-  programHash: string
-
-  constructor(location: string, programHash: string) {
-    this.location = location
-    this.programHash = programHash
-  }
+  constructor(
+    public location: string,
+    public programHash: string,
+  ) {}
 
   equals(other: AVMDebuggerSourceMapEntry): boolean {
     return this.location === other.location && this.programHash === other.programHash
