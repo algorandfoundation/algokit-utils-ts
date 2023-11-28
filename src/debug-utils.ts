@@ -1,164 +1,28 @@
 import algosdk from 'algosdk'
-import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as path from 'path'
+import { Config } from '.'
 import { performAtomicTransactionComposerSimulate } from './transaction'
+import {
+  AVMDebuggerSourceMap,
+  DEBUG_TRACES_DIR,
+  PersistSourceMapInput,
+  TRACES_FILE_EXT,
+  buildAVMSourcemap,
+  isNode,
+  upsertDebugSourcemaps,
+} from './types/debug-utils'
 
-const algokitDir = '.algokit'
-const sourcesDir = 'sources'
-const sourcesFile = 'sources.avm.json'
-const tracesFileExt = '.trace.avm.json'
-const debugTracesDir = 'debug_traces'
-const tealFileExt = '.teal'
-const tealSourcemapExt = '.teal.tok.map'
-
-interface AVMDebuggerSourceMapDict {
-  'txn-group-sources': {
-    'sourcemap-location': string
-    hash: string
-  }[]
-}
-
-class AVMDebuggerSourceMapEntry {
-  location: string
-  programHash: string
-
-  constructor(location: string, programHash: string) {
-    this.location = location
-    this.programHash = programHash
-  }
-
-  equals(other: AVMDebuggerSourceMapEntry): boolean {
-    return this.location === other.location && this.programHash === other.programHash
-  }
-
-  toString(): string {
-    return JSON.stringify({ 'sourcemap-location': this.location, hash: this.programHash })
-  }
-}
-
-class AVMDebuggerSourceMap {
-  txnGroupSources: AVMDebuggerSourceMapEntry[]
-
-  constructor(txnGroupSources: AVMDebuggerSourceMapEntry[]) {
-    this.txnGroupSources = txnGroupSources
-  }
-
-  static fromDict(data: AVMDebuggerSourceMapDict): AVMDebuggerSourceMap {
-    return new AVMDebuggerSourceMap(
-      data['txn-group-sources'].map((item) => new AVMDebuggerSourceMapEntry(item['sourcemap-location'], item['hash'])),
-    )
-  }
-
-  toDict(): AVMDebuggerSourceMapDict {
-    return { 'txn-group-sources': this.txnGroupSources.map((item) => JSON.parse(item.toString())) }
-  }
-}
-
-class PersistSourceMapInput {
-  teal: string
-  appName: string
-  private _fileName: string
-
-  constructor(teal: string, appName: string, fileName: string) {
-    this.teal = teal
-    this.appName = appName
-    this._fileName = this.stripTealExtension(fileName)
-  }
-
-  get fileName(): string {
-    return this._fileName
-  }
-
-  set fileName(value: string) {
-    this._fileName = this.stripTealExtension(value)
-  }
-
-  private stripTealExtension(fileName: string): string {
-    return fileName.endsWith('.teal') ? fileName.replace('.teal', '') : fileName
-  }
-}
-
-async function loadOrCreateSources(projectRoot: string): Promise<AVMDebuggerSourceMap> {
-  const sourcesPath = path.join(projectRoot, algokitDir, sourcesDir, sourcesFile)
-  try {
-    const data = JSON.parse(await fs.promises.readFile(sourcesPath, 'utf8'))
-    return AVMDebuggerSourceMap.fromDict(data)
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return new AVMDebuggerSourceMap([])
-    } else {
-      throw error
-    }
-  }
-}
-
-async function upsertDebugSourcemaps(sourcemaps: AVMDebuggerSourceMapEntry[], projectRoot: string): Promise<void> {
-  const sourcesPath = path.join(projectRoot, algokitDir, sourcesDir, sourcesFile)
-  const sources = await loadOrCreateSources(sourcesPath)
-
-  for (const sourcemap of sourcemaps) {
-    const sourceFilePath = path.resolve(sourcemap.location)
-    try {
-      await fs.promises.access(sourceFilePath)
-      const index = sources.txnGroupSources.findIndex((item) => item.equals(sourcemap))
-      if (index === -1) {
-        sources.txnGroupSources.push(sourcemap)
-      } else {
-        sources.txnGroupSources[index] = sourcemap
-      }
-    } catch (error: any) {
-      if (error.code === 'ENOENT') {
-        const index = sources.txnGroupSources.findIndex((item) => item.equals(sourcemap))
-        if (index !== -1) {
-          sources.txnGroupSources.splice(index, 1)
-        }
-      } else {
-        throw error
-      }
-    }
-  }
-
-  await fs.promises.writeFile(sourcesPath, JSON.stringify(sources.toDict()), 'utf8')
-}
-
-async function writeToFile(filePath: string, content: string): Promise<void> {
-  await fs.promises.mkdir(path.dirname(filePath), { recursive: true })
-  await fs.promises.writeFile(filePath, content, 'utf8')
-}
-
-async function buildAVMSourcemap({
-  tealContent,
-  appName,
-  fileName,
-  outputPath,
-  client,
-  withSources = true,
-}: {
-  tealContent: string
-  appName: string
-  fileName: string
-  outputPath: string
-  client: algosdk.Algodv2
-  withSources?: boolean
-}): Promise<AVMDebuggerSourceMapEntry> {
-  const result = await client.compile(tealContent).sourcemap(true).do()
-  const programHash = crypto.createHash('SHA-512/256').update(Buffer.from(result.result, 'base64')).digest('base64')
-  const sourceMap = result.sourcemap
-  sourceMap.sources = withSources ? [`${fileName}${tealFileExt}`] : []
-
-  const outputDirPath = path.join(outputPath, algokitDir, sourcesDir, appName)
-  const sourceMapOutputPath = path.join(outputDirPath, `${fileName}${tealSourcemapExt}`)
-  const tealOutputPath = path.join(outputDirPath, `${fileName}${tealFileExt}`)
-  await writeToFile(sourceMapOutputPath, JSON.stringify(sourceMap))
-
-  if (withSources) {
-    await writeToFile(tealOutputPath, tealContent)
-  }
-
-  return new AVMDebuggerSourceMapEntry(sourceMapOutputPath, programHash)
-}
-
+/**
+ * This function persists the source maps for the given sources.
+ *
+ * @param sources An array of objects, each containing the teal content, app name, and file name.
+ * @param projectRoot The root directory of the project.
+ * @param client An Algod client to perform the compilation.
+ * @param withSources A boolean indicating whether to include the source files in the output.
+ *
+ * @returns A promise that resolves when the source maps have been persisted.
+ */
 async function persistSourcemaps({
   sources,
   projectRoot,
@@ -170,29 +34,50 @@ async function persistSourcemaps({
   client: algosdk.Algodv2
   withSources?: boolean
 }): Promise<void> {
-  const sourcemaps = await Promise.all(
-    sources.map((source) =>
-      buildAVMSourcemap({
-        tealContent: source.teal,
-        appName: source.appName,
-        fileName: source.fileName,
-        outputPath: projectRoot,
-        client: client,
-        withSources: withSources,
-      }),
-    ),
-  )
+  if (!isNode()) {
+    throw new Error('Sourcemaps can only be persisted in Node.js environment.')
+  }
 
-  await upsertDebugSourcemaps(sourcemaps, projectRoot)
+  try {
+    const sourcemaps = await Promise.all(
+      sources.map((source) =>
+        buildAVMSourcemap({
+          tealContent: source.teal,
+          appName: source.appName,
+          fileName: source.fileName,
+          outputPath: projectRoot,
+          client: client,
+          withSources: withSources,
+        }),
+      ),
+    )
+
+    await upsertDebugSourcemaps(sourcemaps, projectRoot)
+  } catch (error) {
+    const err = error instanceof Error ? error : new Error(String(error))
+    Config.getLogger().error(`Failed to persist avm sourcemaps: ${err.stack ?? err.message ?? err}.`)
+  }
 }
 
 /**
- * Simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object,
+ * This function simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object,
  * and persists the simulation response to an AVM Debugger compliant JSON file.
  *
  * @param atc The AtomicTransactionComposer with transaction(s) loaded.
  * @param algod An Algod client to perform the simulation.
+ * @param projectRoot The root directory of the project.
+ * @param bufferSizeMb The buffer size in megabytes.
+ *
  * @returns The simulation result, which includes various details about how the transactions would be processed.
+ *
+ * @example
+ * const atc = new AtomicTransactionComposer();
+ * const algod = new algosdk.Algodv2(token, server, port);
+ * const projectRoot = '/path/to/project';
+ * const bufferSizeMb = 10;
+ *
+ * const result = await simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb });
+ * console.log(result);
  */
 async function simulateAndPersistResponse({
   atc,
@@ -205,6 +90,10 @@ async function simulateAndPersistResponse({
   algod: algosdk.Algodv2
   bufferSizeMb: number
 }) {
+  if (!isNode()) {
+    throw new Error('Sourcemaps can only be persisted in Node.js environment.')
+  }
+
   try {
     const simulateResult = await performAtomicTransactionComposerSimulate(atc, algod)
     const txnGroups = simulateResult.txnGroups
@@ -220,11 +109,13 @@ async function simulateAndPersistResponse({
       .join('_')
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '')
-    const outputRootDir = path.join(projectRoot, debugTracesDir)
-    const outputFileName = `${timestamp}_lr${simulateResult.lastRound}_${txnTypesStr}${tracesFileExt}`
+    const outputRootDir = path.join(projectRoot, DEBUG_TRACES_DIR)
+    const outputFileName = `${timestamp}_lr${simulateResult.lastRound}_${txnTypesStr}${TRACES_FILE_EXT}`
     const outputFilePath = path.join(outputRootDir, outputFileName)
 
-    await fs.promises.writeFile(outputFilePath, JSON.stringify(simulateResult, null, 2))
+    if (!fs.existsSync(path.dirname(outputFilePath))) {
+      await fs.promises.mkdir(path.dirname(outputFilePath), { recursive: true })
+    }
 
     // cleanup old files if buffer size is exceeded
     let totalSize = (
@@ -257,8 +148,8 @@ async function simulateAndPersistResponse({
 
     await fs.promises.writeFile(outputFilePath, JSON.stringify(simulateResult, null, 2))
   } catch (error) {
-    console.error('Error in simulateAndPersistResponse:', error)
-    // Handle error appropriately
+    const err = error instanceof Error ? error : new Error(String(error))
+    Config.getLogger().error(`Failed to simulate and persist avm traces: ${err.stack ?? err.message ?? err}.`)
   }
 }
 
