@@ -41,7 +41,7 @@ export interface SendTransactionParams {
   maxFee?: AlgoAmount
   /** The maximum number of rounds to wait for confirmation, only applies if `skipWaiting` is `undefined` or `false`, default: wait up to 5 rounds */
   maxRoundsToWaitForConfirmation?: number
-  /** Whether to use simulate to automatically pack app call resource into the txn objects */
+  /** Whether to use simulate to automatically pack app call resources into the txn objects. Defaults to true when there are app calls in the group.  */
   packResources?: boolean
 }
 
