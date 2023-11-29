@@ -24,6 +24,8 @@ import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
+export const MAX_REFERENCES = 8
+export const MAX_ACCOUNT_REFERENCES = 4
 
 /** Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
@@ -278,13 +280,15 @@ export async function packResources(algod: algosdk.Algodv2, atc: algosdk.AtomicT
     })
 
     const accounts = group[i].txn.appAccounts?.length || 0
-    if (accounts > 4) throw Error(`Account reference limit of 4 exceeded in transaction ${i}`)
+    if (accounts > MAX_ACCOUNT_REFERENCES) throw Error(`Account reference limit of ${MAX_ACCOUNT_REFERENCES} exceeded in transaction ${i}`)
 
     const assets = group[i].txn.appForeignAssets?.length || 0
     const apps = group[i].txn.appForeignApps?.length || 0
     const boxes = group[i].txn.boxes?.length || 0
 
-    if (accounts + assets + apps + boxes > 8) throw Error(`Resource reference limit of 8 exceeded in transaction ${i}`)
+    if (accounts + assets + apps + boxes > MAX_REFERENCES) {
+      throw Error(`Resource reference limit of ${MAX_REFERENCES} exceeded in transaction ${i}`)
+    }
   })
 
   const findTxnBelowRefLimit = (
@@ -293,17 +297,17 @@ export async function packResources(algod: algosdk.Algodv2, atc: algosdk.AtomicT
   ) => {
     const txnIndex = txns.findIndex((t) => {
       const accounts = t.txn.appAccounts?.length || 0
-      if (type === 'account') return accounts < 4
+      if (type === 'account') return accounts < MAX_ACCOUNT_REFERENCES
 
       const assets = t.txn.appForeignAssets?.length || 0
       const apps = t.txn.appForeignApps?.length || 0
       const boxes = t.txn.boxes?.length || 0
 
       if (type === 'assetHolding' || type === 'appLocal') {
-        return accounts + assets + apps + boxes < 7 && accounts < 4
+        return accounts + assets + apps + boxes < MAX_REFERENCES - 1 && accounts < MAX_ACCOUNT_REFERENCES
       }
 
-      return accounts + assets + apps + boxes < 8
+      return accounts + assets + apps + boxes < MAX_REFERENCES
     })
 
     if (txnIndex === -1) {
