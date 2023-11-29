@@ -39,7 +39,7 @@ async function persistSourcemaps({
   }
 
   try {
-    const sourcemaps = await Promise.all(
+    const sourceMaps = await Promise.all(
       sources.map((source) =>
         buildAVMSourcemap({
           tealContent: source.teal,
@@ -52,10 +52,10 @@ async function persistSourcemaps({
       ),
     )
 
-    await upsertDebugSourcemaps(sourcemaps, projectRoot)
+    await upsertDebugSourcemaps(sourceMaps, projectRoot)
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error))
-    Config.getLogger().error(`Failed to persist avm sourcemaps: ${err.stack ?? err.message ?? err}.`)
+    Config.getLogger().error(`Failed to persist avm sourceMaps: ${err.stack ?? err.message ?? err}.`)
   }
 }
 

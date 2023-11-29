@@ -23,7 +23,7 @@ describe('debug utils tests', () => {
   beforeAll(localnet.beforeEach)
 
   test(
-    'build teal sourcemaps',
+    'build teal sourceMaps',
     async () => {
       const { algod } = localnet.context
       const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'cwd'))
@@ -53,6 +53,7 @@ int 1
       expect(await fileExists(path.join(appOutputPath, 'clear.teal'))).toBeTruthy()
       expect(await fileExists(path.join(appOutputPath, 'clear.teal.tok.map'))).toBeTruthy()
 
+      // Remove location from sourcemap to make snapshot deterministic
       const result = AVMDebuggerSourceMap.fromDict(JSON.parse(await fs.readFile(sourcemapFilePath, 'utf8')))
       for (const item of result.txnGroupSources) {
         item.location = 'dummy'
@@ -71,7 +72,7 @@ int 1
   )
 
   test(
-    'build teal sourcemaps without sources',
+    'build teal sourceMaps without sources',
     async () => {
       const { algod } = localnet.context
       const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'cwd'))

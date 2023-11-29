@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`debug utils tests build teal sourcemaps 1`] = `
+exports[`debug utils tests build teal sourceMaps 1`] = `
 AVMDebuggerSourceMap {
   "txnGroupSources": [
     AVMDebuggerSourceMapEntry {
@@ -15,7 +15,7 @@ AVMDebuggerSourceMap {
 }
 `;
 
-exports[`debug utils tests build teal sourcemaps without sources 1`] = `
+exports[`debug utils tests build teal sourceMaps without sources 1`] = `
 AVMDebuggerSourceMap {
   "txnGroupSources": [
     AVMDebuggerSourceMapEntry {

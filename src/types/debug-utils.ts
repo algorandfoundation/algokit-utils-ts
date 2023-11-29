@@ -78,7 +78,10 @@ export class PersistSourceMapInput {
   }
 
   private stripTealExtension(fileName: string): string {
-    return fileName.endsWith('.teal') ? fileName.replace('.teal', '') : fileName
+    if (fileName.endsWith('.teal')) {
+      return fileName.slice(0, -5)
+    }
+    return fileName
   }
 }
 
@@ -97,11 +100,11 @@ export async function loadOrCreateSources(sourcesPath: string): Promise<AVMDebug
   }
 }
 
-export async function upsertDebugSourcemaps(sourcemaps: AVMDebuggerSourceMapEntry[], projectRoot: string): Promise<void> {
+export async function upsertDebugSourcemaps(sourceMaps: AVMDebuggerSourceMapEntry[], projectRoot: string): Promise<void> {
   const sourcesPath = path.join(projectRoot, ALGOKIT_DIR, SOURCES_DIR, SOURCES_FILE)
   const sources = await loadOrCreateSources(sourcesPath)
 
-  for (const sourcemap of sourcemaps) {
+  for (const sourcemap of sourceMaps) {
     const sourceFilePath = path.resolve(sourcemap.location)
     try {
       await fs.promises.access(sourceFilePath)
