@@ -217,6 +217,160 @@ export const sendTransaction = async function (
 }
 
 /**
+ * Get all of the unamed resources used by the group in the given ATC
+ *
+ * @param algod The algod client to use for the simulation
+ * @param atc The ATC containing the txn group
+ * @returns The unnamed resources accessed by the group and by each transaction in the group
+ */
+export async function getUnnamedResourcesAccessed(algod: algosdk.Algodv2, atc: algosdk.AtomicTransactionComposer) {
+  const simReq = new algosdk.modelsv2.SimulateRequest({
+    txnGroups: [],
+    allowUnnamedResources: true,
+  })
+
+  const result = await atc.simulate(algod, simReq)
+
+  const groupResponse = result.simulateResponse.txnGroups[0]
+
+  if (groupResponse.failureMessage) {
+    throw Error(`Error during resource packing simulation in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
+  }
+
+  return {
+    group: groupResponse.unnamedResourcesAccessed,
+    txns: groupResponse.txnResults.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (t: any) => t.unnamedResourcesAccessed,
+    ) as algosdk.modelsv2.SimulateUnnamedResourcesAccessed[],
+  }
+}
+
+/**
+ * Take an existing ATC and return a new ATC with packed resources
+ *
+ * @param algod The algod client to use for the simulation
+ * @param atc The ATC containing the txn group
+ * @returns A new ATC with the resources packed into the transactions
+ */
+export async function packResources(algod: algosdk.Algodv2, atc: algosdk.AtomicTransactionComposer) {
+  const unnamedResourcesAccessed = await getUnnamedResourcesAccessed(algod, atc)
+  const group = atc.buildGroup()
+
+  unnamedResourcesAccessed.txns.forEach((r, i) => {
+    if (r === undefined) return
+
+    if (r.boxes || r.extraBoxRefs) throw Error('Unexpected boxes at the transaction level')
+    if (r.appLocals) throw Error('Unexpected app local at the transaction level')
+    if (r.assetHoldings) throw Error('Unexpected asset holding at the transaction level')
+
+    // Do accounts first because the account limit is 4
+    r.accounts?.forEach((a) => {
+      group[i].txn.appAccounts?.push(algosdk.decodeAddress(a))
+    })
+
+    r.apps?.forEach((a) => {
+      group[i].txn.appForeignApps?.push(Number(a))
+    })
+
+    r.assets?.forEach((a) => {
+      group[i].txn.appForeignAssets?.push(Number(a))
+    })
+
+    const accounts = group[i].txn.appAccounts?.length || 0
+    if (accounts > 4) throw Error(`Account reference limit of 4 exceeded in transaction ${i}`)
+
+    const assets = group[i].txn.appForeignAssets?.length || 0
+    const apps = group[i].txn.appForeignApps?.length || 0
+    const boxes = group[i].txn.boxes?.length || 0
+
+    if (accounts + assets + apps + boxes > 8) throw Error(`Resource reference limit of 8 exceeded in transaction ${i}`)
+  })
+
+  const findTxnBelowRefLimit = (
+    txns: algosdk.TransactionWithSigner[],
+    type: 'account' | 'assetHolding' | 'appLocal' | 'other' = 'other',
+  ) => {
+    const txnIndex = txns.findIndex((t) => {
+      const accounts = t.txn.appAccounts?.length || 0
+      if (type === 'account') return accounts < 4
+
+      const assets = t.txn.appForeignAssets?.length || 0
+      const apps = t.txn.appForeignApps?.length || 0
+      const boxes = t.txn.boxes?.length || 0
+
+      if (type === 'assetHolding' || type === 'appLocal') {
+        return accounts + assets + apps + boxes < 7 && accounts < 4
+      }
+
+      return accounts + assets + apps + boxes < 8
+    })
+
+    if (txnIndex === -1) {
+      throw Error('No more transactions below reference limit. Add another app call to the group.')
+    }
+
+    return txnIndex
+  }
+
+  const g = unnamedResourcesAccessed.group
+
+  if (g) {
+    // Do cross-reference resources first because they are the most restrictive in terms
+    // of which transactions can be used
+    g.appLocals?.forEach((a) => {
+      const txnIndex = findTxnBelowRefLimit(group, 'appLocal')
+      group[txnIndex].txn.appForeignApps?.push(Number(a.app))
+      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+    })
+
+    g.assetHoldings?.forEach((a) => {
+      const txnIndex = findTxnBelowRefLimit(group, 'assetHolding')
+      group[txnIndex].txn.appForeignAssets?.push(Number(a.asset))
+      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+    })
+
+    // Do accounts next because the account limit is 4
+    g.accounts?.forEach((a) => {
+      const txnIndex = findTxnBelowRefLimit(group, 'account')
+      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a))
+    })
+
+    g.boxes?.forEach((b) => {
+      const txnIndex = findTxnBelowRefLimit(group)
+      group[txnIndex].txn.boxes?.push({ appIndex: Number(b.app), name: b.name })
+    })
+
+    g.assets?.forEach((a) => {
+      const txnIndex = findTxnBelowRefLimit(group)
+      group[txnIndex].txn.appForeignAssets?.push(Number(a))
+    })
+
+    g.apps?.forEach((a) => {
+      const txnIndex = findTxnBelowRefLimit(group)
+      group[txnIndex].txn.appForeignApps?.push(Number(a))
+    })
+
+    if (g.extraBoxRefs) {
+      for (let i = 0; i < g.extraBoxRefs; i += 1) {
+        const txnIndex = findTxnBelowRefLimit(group)
+        group[txnIndex].txn.boxes?.push({ appIndex: 0, name: new Uint8Array(0) })
+      }
+    }
+  }
+
+  const newAtc = new algosdk.AtomicTransactionComposer()
+
+  group.forEach((t) => {
+    // eslint-disable-next-line no-param-reassign
+    t.txn.group = undefined
+    newAtc.addTransaction(t)
+  })
+
+  return newAtc
+}
+
+/**
  * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
  * @param atcSend The parameters controlling the send, including:
  *  * `atc` The `AtomicTransactionComposer`
@@ -225,7 +379,22 @@ export const sendTransaction = async function (
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: Algodv2) {
-  const { atc, sendParams } = atcSend
+  const { atc: givenAtc, sendParams } = atcSend
+
+  let atc: AtomicTransactionComposer
+
+  const hasAppCalls = () =>
+    givenAtc
+      .buildGroup()
+      .map((t) => t.txn.type)
+      .includes(algosdk.TransactionType.appl)
+
+  // If packResources is true OR if packResources is undefined and there are app calls, then pack resources
+  if (sendParams?.packResources || (sendParams?.packResources === undefined && hasAppCalls())) {
+    atc = await packResources(algod, givenAtc)
+  } else {
+    atc = givenAtc
+  }
 
   const transactionsWithSigner = atc.buildGroup()
 

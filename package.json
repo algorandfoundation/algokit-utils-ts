@@ -93,7 +93,7 @@
     "@tsconfig/node16": "^16.1.0",
     "@types/jest": "^29.5.2",
     "@types/uuid": "^9.0.2",
-    "algosdk": "^2.5.0",
+    "algosdk": "^2.7.0",
     "better-npm-audit": "^3.7.3",
     "conventional-changelog-conventionalcommits": "6.1.0",
     "cpy-cli": "^5.0.0",
