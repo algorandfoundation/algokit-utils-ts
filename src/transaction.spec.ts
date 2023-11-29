@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, test } from '@jest/globals'
 import algosdk, { makeBasicAccountTransactionSigner } from 'algosdk'
 import invariant from 'tiny-invariant'
+import externalARC32 from '../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
+import v8ARC32 from '../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
+import v9ARC32 from '../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
+
 import * as algokit from './'
 import { algorandFixture } from './testing'
+import { ApplicationClient } from './types/app-client'
 import { Arc2TransactionNote } from './types/transaction'
-
 describe('transaction', () => {
   const localnet = algorandFixture()
   beforeEach(localnet.beforeEach, 10_000)
@@ -376,5 +381,305 @@ describe('transaction node encoder', () => {
         99,
       ]
     `)
+  })
+})
+
+const tests = (version: 8 | 9) => () => {
+  const fixture = algorandFixture()
+
+  let appClient: ApplicationClient
+  let externalClient: ApplicationClient
+
+  beforeEach(fixture.beforeEach)
+
+  beforeAll(async () => {
+    await fixture.beforeEach()
+    const { algod, testAccount } = fixture.context
+
+    if (version === 8) {
+      appClient = new ApplicationClient(
+        {
+          app: JSON.stringify(v8ARC32),
+          sender: testAccount,
+          resolveBy: 'id',
+          id: 0,
+        },
+        algod,
+      )
+    } else {
+      appClient = new ApplicationClient(
+        {
+          app: JSON.stringify(v9ARC32),
+          sender: testAccount,
+          resolveBy: 'id',
+          id: 0,
+        },
+        algod,
+      )
+    }
+
+    await appClient.create({ method: 'createApplication', methodArgs: [] })
+
+    await appClient.fundAppAccount(algokit.microAlgos(2305800))
+
+    await appClient.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
+
+    externalClient = new ApplicationClient(
+      {
+        app: JSON.stringify(externalARC32),
+        sender: testAccount,
+        resolveBy: 'id',
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        id: (await appClient.getGlobalState()).externalAppID!.value as bigint,
+      },
+      algod,
+    )
+  })
+
+  let alice: algosdk.Account
+
+  describe('accounts', () => {
+    test('addressBalance: invalid Account reference', async () => {
+      const { testAccount } = fixture.context
+      alice = testAccount
+      await expect(
+        appClient.call({ method: 'addressBalance', methodArgs: [testAccount.addr], sendParams: { packResources: false } }),
+      ).rejects.toThrow('invalid Account reference')
+    })
+
+    test('addressBalance', async () => {
+      await appClient.call({ method: 'addressBalance', methodArgs: [alice.addr], sendParams: { packResources: true } })
+    })
+  })
+
+  describe('boxes', () => {
+    test('smallBox: invalid Box reference', async () => {
+      await expect(appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { packResources: false } })).rejects.toThrow(
+        'invalid Box reference',
+      )
+    })
+
+    test('smallBox', async () => {
+      await appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { packResources: true } })
+    })
+
+    test('mediumBox', async () => {
+      await appClient.call({ method: 'mediumBox', methodArgs: [], sendParams: { packResources: true } })
+    })
+  })
+
+  describe('apps', () => {
+    test('externalAppCall: unavailable App', async () => {
+      await expect(
+        appClient.call({ method: 'externalAppCall', methodArgs: [], sendParams: { packResources: false, fee: algokit.microAlgos(2_000) } }),
+      ).rejects.toThrow('unavailable App')
+    })
+
+    test('externalAppCall', async () => {
+      await appClient.call({
+        method: 'externalAppCall',
+        methodArgs: [],
+        sendParams: { packResources: true, fee: algokit.microAlgos(2_000) },
+      })
+    })
+  })
+
+  describe('assets', () => {
+    test('assetTotal: unavailable Asset', async () => {
+      const { testAccount } = fixture.context
+      alice = testAccount
+      await expect(appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { packResources: false } })).rejects.toThrow(
+        'unavailable Asset',
+      )
+    })
+
+    test('assetTotal', async () => {
+      await appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { packResources: true } })
+    })
+  })
+
+  describe('cross-product references', () => {
+    const hasAssetErrorMsg = version === 8 ? 'invalid Account reference' : 'unavailable Account'
+
+    test(`hasAsset: ${hasAssetErrorMsg}`, async () => {
+      const { testAccount } = fixture.context
+      alice = testAccount
+      await expect(
+        appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { packResources: false } }),
+      ).rejects.toThrow(hasAssetErrorMsg)
+    })
+
+    test('hasAsset', async () => {
+      const { testAccount } = fixture.context
+      await appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { packResources: true } })
+    })
+
+    test(`externalLocal: ${hasAssetErrorMsg}`, async () => {
+      const { testAccount } = fixture.context
+      alice = testAccount
+      await expect(
+        appClient.call({ method: 'externalLocal', methodArgs: [testAccount.addr], sendParams: { packResources: false } }),
+      ).rejects.toThrow(hasAssetErrorMsg)
+    })
+
+    test('externalLocal', async () => {
+      const { testAccount } = fixture.context
+      await externalClient.optIn({ method: 'optInToApplication', methodArgs: [], sender: testAccount })
+
+      await appClient.call({
+        method: 'externalLocal',
+        methodArgs: [testAccount.addr],
+        sendParams: { packResources: true },
+        sender: testAccount,
+      })
+    })
+  })
+}
+
+describe('Resource Packer: AVM8', tests(8))
+describe('Resource Packer: AVM9', tests(9))
+describe('Resource Packer: Mixed', () => {
+  const fixture = algorandFixture()
+
+  let v9Client: ApplicationClient
+
+  let v8Client: ApplicationClient
+
+  beforeEach(fixture.beforeEach)
+
+  beforeAll(async () => {
+    await fixture.beforeEach()
+    const { algod, testAccount } = fixture.context
+
+    v9Client = new ApplicationClient(
+      {
+        app: JSON.stringify(v9ARC32),
+        sender: testAccount,
+        resolveBy: 'id',
+        id: 0,
+      },
+      algod,
+    )
+
+    v8Client = new ApplicationClient(
+      {
+        app: JSON.stringify(v8ARC32),
+        sender: testAccount,
+        resolveBy: 'id',
+        id: 0,
+      },
+      algod,
+    )
+
+    await v9Client.create({ method: 'createApplication', methodArgs: [] })
+    await v8Client.create({ method: 'createApplication', methodArgs: [] })
+  })
+
+  test('same account', async () => {
+    const { algod, testAccount } = fixture.context
+    const acct = algosdk.generateAccount()
+    const atc = new algosdk.AtomicTransactionComposer()
+
+    const v8ID = Number((await v8Client.getAppReference()).appId)
+    const v9ID = Number((await v9Client.getAppReference()).appId)
+    const suggestedParams = await algod.getTransactionParams().do()
+
+    atc.addMethodCall({
+      appID: v8ID,
+      sender: testAccount.addr,
+      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+      method: v8Client.getABIMethod('addressBalance')!,
+      methodArgs: [acct.addr],
+      suggestedParams,
+    })
+
+    atc.addMethodCall({
+      appID: v9ID,
+      sender: testAccount.addr,
+      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+      method: v9Client.getABIMethod('addressBalance')!,
+      methodArgs: [acct.addr],
+      suggestedParams,
+    })
+
+    const packedAtc = await algokit.packResources(fixture.context.algod, atc)
+
+    const v8CallAccts = packedAtc.buildGroup()[0].txn.appAccounts
+    const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    expect(v8CallAccts!.length + v9CallAccts!.length).toBe(1)
+    await packedAtc.execute(algod, 3)
+  })
+
+  test('app account', async () => {
+    const { algod, testAccount } = fixture.context
+
+    await v8Client.fundAppAccount(algokit.microAlgos(300000))
+    await v8Client.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
+
+    const externalAppID = (await v8Client.getGlobalState()).externalAppID!.value as bigint
+
+    const atc = new algosdk.AtomicTransactionComposer()
+    const v8ID = Number((await v8Client.getAppReference()).appId)
+    const v9ID = Number((await v9Client.getAppReference()).appId)
+    const suggestedParams = await algod.getTransactionParams().do()
+
+    atc.addMethodCall({
+      appID: v8ID,
+      sender: testAccount.addr,
+      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+      method: v8Client.getABIMethod('externalAppCall')!,
+      methodArgs: [],
+      suggestedParams: { ...suggestedParams, fee: 2_000 },
+    })
+
+    atc.addMethodCall({
+      appID: v9ID,
+      sender: testAccount.addr,
+      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+      method: v9Client.getABIMethod('addressBalance')!,
+      methodArgs: [algosdk.getApplicationAddress(externalAppID)],
+      suggestedParams,
+    })
+
+    const packedAtc = await algokit.packResources(fixture.context.algod, atc)
+
+    const v8CallApps = packedAtc.buildGroup()[0].txn.appForeignApps
+    const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts
+
+    expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
+    await packedAtc.execute(algod, 3)
+  })
+})
+
+describe('Resource Packer: meta', () => {
+  const fixture = algorandFixture()
+
+  let externalClient: ApplicationClient
+
+  beforeEach(fixture.beforeEach)
+
+  beforeAll(async () => {
+    await fixture.beforeEach()
+    const { testAccount, algod } = fixture.context
+
+    externalClient = new ApplicationClient(
+      {
+        app: JSON.stringify(externalARC32),
+        sender: testAccount,
+        resolveBy: 'id',
+        id: 0,
+      },
+      algod,
+    )
+
+    await externalClient.create({ method: 'createApplication', methodArgs: [] })
+  })
+
+  test('error during simulate', async () => {
+    await expect(externalClient.call({ method: 'error', methodArgs: [] })).rejects.toThrow(
+      'Error during resource packing simulation in transaction 0',
+    )
   })
 })
