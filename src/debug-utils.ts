@@ -56,6 +56,7 @@ async function persistSourcemaps({
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error))
     Config.getLogger().error(`Failed to persist avm sourceMaps: ${err.stack ?? err.message ?? err}.`)
+    throw err
   }
 }
 
@@ -95,7 +96,8 @@ async function simulateAndPersistResponse({
   }
 
   try {
-    const simulateResult = await performAtomicTransactionComposerSimulate(atc, algod)
+    const atcToSimulate = atc.clone()
+    const simulateResult = await performAtomicTransactionComposerSimulate(atcToSimulate, algod)
     const txnGroups = simulateResult.txnGroups
 
     const txnTypesCount = txnGroups.reduce((acc: Record<string, number>, txnGroup) => {
@@ -147,9 +149,12 @@ async function simulateAndPersistResponse({
     }
 
     await fs.promises.writeFile(outputFilePath, JSON.stringify(simulateResult, null, 2))
+
+    return simulateResult
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error))
     Config.getLogger().error(`Failed to simulate and persist avm traces: ${err.stack ?? err.message ?? err}.`)
+    throw err
   }
 }
 

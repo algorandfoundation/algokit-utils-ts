@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L136)
+[src/types/debug-utils.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L139)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L169)
+[src/types/debug-utils.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L172)
 
 ___
 
@@ -161,19 +161,19 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L85)
+[src/types/debug-utils.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L88)
 
 ___
 
 ### upsertDebugSourcemaps
 
-▸ **upsertDebugSourcemaps**(`sourcemaps`, `projectRoot`): `Promise`<`void`\>
+▸ **upsertDebugSourcemaps**(`sourceMaps`, `projectRoot`): `Promise`<`void`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `sourcemaps` | [`AVMDebuggerSourceMapEntry`](../classes/types_debug_utils.AVMDebuggerSourceMapEntry.md)[] |
+| `sourceMaps` | [`AVMDebuggerSourceMapEntry`](../classes/types_debug_utils.AVMDebuggerSourceMapEntry.md)[] |
 | `projectRoot` | `string` |
 
 #### Returns
@@ -182,7 +182,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L100)
+[src/types/debug-utils.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L103)
 
 ___
 
@@ -203,4 +203,4 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L131)
+[src/types/debug-utils.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L134)

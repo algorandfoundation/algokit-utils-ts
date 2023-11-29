@@ -1,6 +1,7 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
+import { simulateAndPersistResponse } from './debug-utils'
 import { AlgoAmount } from './types/amount'
 import { ABIReturn } from './types/app'
 import {
@@ -246,6 +247,15 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
   }
 
   try {
+    if (Config.debug && Config.projectRoot && Config.traceAll) {
+      // Dump the traces to a file for use with AVM debugger
+      await simulateAndPersistResponse({
+        atc,
+        projectRoot: Config.projectRoot,
+        algod,
+        bufferSizeMb: Config.traceBufferSizeMb,
+      })
+    }
     const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
 
     if (transactionsToSend.length > 1) {
@@ -289,8 +299,22 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       Config.logger.debug(
         'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
       )
-      const simulate = await performAtomicTransactionComposerSimulate(atc, algod)
-      if (simulate.txnGroups[0].failedAt) {
+      let simulate = undefined
+      if (Config.debug && Config.projectRoot && !Config.traceAll) {
+        // Dump the traces to a file for use with AVM debugger
+        // Checks for false on traceAll because it should have been already
+        // executed above
+        simulate = await simulateAndPersistResponse({
+          atc,
+          projectRoot: Config.projectRoot,
+          algod,
+          bufferSizeMb: Config.traceBufferSizeMb,
+        })
+      } else {
+        simulate = await performAtomicTransactionComposerSimulate(atc, algod)
+      }
+
+      if (simulate && simulate.txnGroups[0].failedAt) {
         for (const txn of simulate.txnGroups[0].txnResults) {
           e.traces.push({
             trace: txn.execTrace?.get_obj_for_encoding(),
