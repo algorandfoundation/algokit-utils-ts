@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/types/debug-utils.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L29)
+[src/types/debug-utils.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L26)
 
 ## Properties
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/types/debug-utils.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L30)
+[src/types/debug-utils.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L27)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L31)
+[src/types/debug-utils.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L28)
 
 ## Methods
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L34)
+[src/types/debug-utils.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L31)
 
 ___
 
@@ -93,4 +93,4 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L38)
+[src/types/debug-utils.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L35)

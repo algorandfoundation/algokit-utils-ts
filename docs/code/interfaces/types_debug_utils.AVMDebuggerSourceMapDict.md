@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[src/types/debug-utils.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L22)
+[src/types/debug-utils.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L19)

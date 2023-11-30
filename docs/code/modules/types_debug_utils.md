@@ -14,6 +14,8 @@
 
 - [AVMDebuggerSourceMapDict](../interfaces/types_debug_utils.AVMDebuggerSourceMapDict.md)
 - [ErrnoException](../interfaces/types_debug_utils.ErrnoException.md)
+- [PersistSourcemapsParams](../interfaces/types_debug_utils.PersistSourcemapsParams.md)
+- [SimulateAndPersistResponseParams](../interfaces/types_debug_utils.SimulateAndPersistResponseParams.md)
 
 ### Variables
 
@@ -25,14 +27,6 @@
 - [TEAL\_SOURCEMAP\_EXT](types_debug_utils.md#teal_sourcemap_ext)
 - [TRACES\_FILE\_EXT](types_debug_utils.md#traces_file_ext)
 
-### Functions
-
-- [buildAVMSourcemap](types_debug_utils.md#buildavmsourcemap)
-- [isNode](types_debug_utils.md#isnode)
-- [loadOrCreateSources](types_debug_utils.md#loadorcreatesources)
-- [upsertDebugSourcemaps](types_debug_utils.md#upsertdebugsourcemaps)
-- [writeToFile](types_debug_utils.md#writetofile)
-
 ## Variables
 
 ### ALGOKIT\_DIR
@@ -41,7 +35,7 @@
 
 #### Defined in
 
-[src/types/debug-utils.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L6)
+[src/types/debug-utils.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L3)
 
 ___
 
@@ -51,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L10)
+[src/types/debug-utils.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L7)
 
 ___
 
@@ -61,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L7)
+[src/types/debug-utils.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L4)
 
 ___
 
@@ -71,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L8)
+[src/types/debug-utils.ts:5](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L5)
 
 ___
 
@@ -81,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L11)
+[src/types/debug-utils.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L8)
 
 ___
 
@@ -91,7 +85,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L12)
+[src/types/debug-utils.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L9)
 
 ___
 
@@ -101,106 +95,4 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L9)
-
-## Functions
-
-### buildAVMSourcemap
-
-▸ **buildAVMSourcemap**(`«destructured»`): `Promise`<[`AVMDebuggerSourceMapEntry`](../classes/types_debug_utils.AVMDebuggerSourceMapEntry.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | `Object` |
-| › `appName` | `string` |
-| › `client` | `default` |
-| › `fileName` | `string` |
-| › `outputPath` | `string` |
-| › `tealContent` | `string` |
-| › `withSources?` | `boolean` |
-
-#### Returns
-
-`Promise`<[`AVMDebuggerSourceMapEntry`](../classes/types_debug_utils.AVMDebuggerSourceMapEntry.md)\>
-
-#### Defined in
-
-[src/types/debug-utils.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L139)
-
-___
-
-### isNode
-
-▸ **isNode**(): `boolean`
-
-#### Returns
-
-`boolean`
-
-#### Defined in
-
-[src/types/debug-utils.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L172)
-
-___
-
-### loadOrCreateSources
-
-▸ **loadOrCreateSources**(`sourcesPath`): `Promise`<[`AVMDebuggerSourceMap`](../classes/types_debug_utils.AVMDebuggerSourceMap.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `sourcesPath` | `string` |
-
-#### Returns
-
-`Promise`<[`AVMDebuggerSourceMap`](../classes/types_debug_utils.AVMDebuggerSourceMap.md)\>
-
-#### Defined in
-
-[src/types/debug-utils.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L88)
-
-___
-
-### upsertDebugSourcemaps
-
-▸ **upsertDebugSourcemaps**(`sourceMaps`, `projectRoot`): `Promise`<`void`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `sourceMaps` | [`AVMDebuggerSourceMapEntry`](../classes/types_debug_utils.AVMDebuggerSourceMapEntry.md)[] |
-| `projectRoot` | `string` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[src/types/debug-utils.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L103)
-
-___
-
-### writeToFile
-
-▸ **writeToFile**(`filePath`, `content`): `Promise`<`void`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `filePath` | `string` |
-| `content` | `string` |
-
-#### Returns
-
-`Promise`<`void`\>
-
-#### Defined in
-
-[src/types/debug-utils.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L134)
+[src/types/debug-utils.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L6)
