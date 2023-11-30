@@ -14,7 +14,7 @@ import {
   updateApp,
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
-import { PersistSourceMapInput, persistSourcemaps } from '../debug-utils'
+import { PersistSourceMapInput, persistSourceMaps } from '../debug-utils'
 import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
@@ -342,7 +342,7 @@ export class ApplicationClient {
     this._clearSourceMap = clearCompiled?.sourceMap
 
     if (Config.debug && Config.projectRoot) {
-      persistSourcemaps({
+      persistSourceMaps({
         sources: [
           new PersistSourceMapInput(approvalCompiled.teal, this._appName, 'approval.teal'),
           new PersistSourceMapInput(clearCompiled.teal, this._appName, 'clear.teal'),

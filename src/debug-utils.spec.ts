@@ -4,7 +4,7 @@ import * as fsSync from 'fs'
 import * as fs from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
-import { AVMDebuggerSourceMap, PersistSourceMapInput, persistSourcemaps, simulateAndPersistResponse } from './debug-utils'
+import { AVMDebuggerSourceMap, PersistSourceMapInput, persistSourceMaps, simulateAndPersistResponse } from './debug-utils'
 import { algorandFixture } from './testing'
 
 async function fileExists(filePath: string): Promise<boolean> {
@@ -41,7 +41,7 @@ int 1
         new PersistSourceMapInput(clear, 'cool_app', 'clear'),
       ]
 
-      await persistSourcemaps({ sources: sources, projectRoot: cwd, client: algod })
+      await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod })
 
       const rootPath = path.join(cwd, '.algokit', 'sources')
       const sourcemapFilePath = path.join(rootPath, 'sources.avm.json')
@@ -62,7 +62,7 @@ int 1
       expect(result).toMatchSnapshot()
 
       // check for updates in case of multiple runs
-      await persistSourcemaps({ sources: sources, projectRoot: cwd, client: algod })
+      await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod })
       const resultAfterUpdate = AVMDebuggerSourceMap.fromDict(JSON.parse(await fs.readFile(sourcemapFilePath, 'utf8')))
       for (const item of resultAfterUpdate.txnGroupSources) {
         expect(item.location).not.toBe('dummy')
@@ -90,7 +90,7 @@ int 1
         new PersistSourceMapInput(clear, 'cool_app', 'clear'),
       ]
 
-      await persistSourcemaps({ sources: sources, projectRoot: cwd, client: algod, withSources: false })
+      await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod, withSources: false })
 
       const rootPath = path.join(cwd, '.algokit', 'sources')
       const sourcemapFilePath = path.join(rootPath, 'sources.avm.json')

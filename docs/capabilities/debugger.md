@@ -27,5 +27,5 @@ config.configure({ debug: true })
 
 Debugging utilities can be used to simplify gathering artifacts to be used with [AVM Debugger](link to vscode extension) in non algokit compliant projects. The following methods are provided:
 
-- `persistSourcemaps`: This method persists the sourcemaps for the given sources as AVM Debugger compliant artifacts.
+- `persistSourceMaps`: This method persists the sourcemaps for the given sources as AVM Debugger compliant artifacts.
 - `simulateAndPersistResponse`: This method simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object, and persists the simulation response to an AVM Debugger compliant JSON file.

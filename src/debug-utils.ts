@@ -11,7 +11,7 @@ import {
   DEBUG_TRACES_DIR,
   ErrnoException,
   PersistSourceMapInput,
-  PersistSourcemapsParams,
+  PersistSourceMapsParams,
   SOURCES_DIR,
   SOURCES_FILE,
   SimulateAndPersistResponseParams,
@@ -122,7 +122,7 @@ function isNode(): boolean {
  *
  * @returns A promise that resolves when the source maps have been persisted.
  */
-async function persistSourcemaps({ sources, projectRoot, client, withSources }: PersistSourcemapsParams): Promise<void> {
+async function persistSourceMaps({ sources, projectRoot, client, withSources }: PersistSourceMapsParams): Promise<void> {
   if (!isNode()) {
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
   }
@@ -237,4 +237,11 @@ async function simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeM
   }
 }
 
-export { AVMDebuggerSourceMap, PersistSourceMapInput, persistSourcemaps, simulateAndPersistResponse }
+export {
+  AVMDebuggerSourceMap,
+  PersistSourceMapInput,
+  PersistSourceMapsParams,
+  SimulateAndPersistResponseParams,
+  persistSourceMaps,
+  simulateAndPersistResponse,
+}

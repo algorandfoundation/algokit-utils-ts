@@ -82,7 +82,7 @@ export class PersistSourceMapInput {
   }
 }
 
-export interface PersistSourcemapsParams {
+export interface PersistSourceMapsParams {
   sources: PersistSourceMapInput[]
   projectRoot: string
   client: algosdk.Algodv2
