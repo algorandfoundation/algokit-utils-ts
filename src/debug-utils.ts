@@ -5,24 +5,30 @@ import * as path from 'path'
 import { Config } from '.'
 import { performAtomicTransactionComposerSimulate } from './transaction'
 import {
-  ALGOKIT_DIR,
   AVMDebuggerSourceMap,
   AVMDebuggerSourceMapEntry,
-  DEBUG_TRACES_DIR,
-  ErrnoException,
-  PersistSourceMapInput,
   PersistSourceMapsParams,
-  SOURCES_DIR,
-  SOURCES_FILE,
   SimulateAndPersistResponseParams,
-  TEAL_FILE_EXT,
-  TEAL_SOURCEMAP_EXT,
-  TRACES_FILE_EXT,
 } from './types/debug-utils'
+
+const ALGOKIT_DIR = '.algokit'
+const SOURCES_DIR = 'sources'
+const SOURCES_FILE = 'sources.avm.json'
+const TRACES_FILE_EXT = '.trace.avm.json'
+const DEBUG_TRACES_DIR = 'debug_traces'
+const TEAL_FILE_EXT = '.teal'
+const TEAL_SOURCEMAP_EXT = '.teal.tok.map'
+
+interface ErrnoException extends Error {
+  errno?: number
+  code?: string
+  path?: string
+  syscall?: string
+}
 
 // === Internal methods ===
 
-export async function loadOrCreateSources(sourcesPath: string): Promise<AVMDebuggerSourceMap> {
+async function loadOrCreateSources(sourcesPath: string): Promise<AVMDebuggerSourceMap> {
   try {
     const data = JSON.parse(await fs.promises.readFile(sourcesPath, 'utf8'))
     return AVMDebuggerSourceMap.fromDict(data)
@@ -37,7 +43,7 @@ export async function loadOrCreateSources(sourcesPath: string): Promise<AVMDebug
   }
 }
 
-export async function upsertDebugSourcemaps(sourceMaps: AVMDebuggerSourceMapEntry[], projectRoot: string): Promise<void> {
+async function upsertDebugSourcemaps(sourceMaps: AVMDebuggerSourceMapEntry[], projectRoot: string): Promise<void> {
   const sourcesPath = path.join(projectRoot, ALGOKIT_DIR, SOURCES_DIR, SOURCES_FILE)
   const sources = await loadOrCreateSources(sourcesPath)
 
@@ -68,12 +74,12 @@ export async function upsertDebugSourcemaps(sourceMaps: AVMDebuggerSourceMapEntr
   await fs.promises.writeFile(sourcesPath, JSON.stringify(sources.toDict()), 'utf8')
 }
 
-export async function writeToFile(filePath: string, content: string): Promise<void> {
+async function writeToFile(filePath: string, content: string): Promise<void> {
   await fs.promises.mkdir(path.dirname(filePath), { recursive: true })
   await fs.promises.writeFile(filePath, content, 'utf8')
 }
 
-export async function buildAVMSourcemap({
+async function buildAVMSourcemap({
   tealContent,
   appName,
   fileName,
@@ -122,7 +128,7 @@ function isNode(): boolean {
  *
  * @returns A promise that resolves when the source maps have been persisted.
  */
-async function persistSourceMaps({ sources, projectRoot, client, withSources }: PersistSourceMapsParams): Promise<void> {
+export async function persistSourceMaps({ sources, projectRoot, client, withSources }: PersistSourceMapsParams): Promise<void> {
   if (!isNode()) {
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
   }
@@ -169,7 +175,7 @@ async function persistSourceMaps({ sources, projectRoot, client, withSources }: 
  * const result = await simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb });
  * console.log(result);
  */
-async function simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb }: SimulateAndPersistResponseParams) {
+export async function simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb }: SimulateAndPersistResponseParams) {
   if (!isNode()) {
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
   }
@@ -235,13 +241,4 @@ async function simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeM
     Config.getLogger().error(`Failed to simulate and persist avm traces: ${err.stack ?? err.message ?? err}.`)
     throw err
   }
-}
-
-export {
-  AVMDebuggerSourceMap,
-  PersistSourceMapInput,
-  PersistSourceMapsParams,
-  SimulateAndPersistResponseParams,
-  persistSourceMaps,
-  simulateAndPersistResponse,
 }

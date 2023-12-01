@@ -14,7 +14,7 @@ import {
   updateApp,
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
-import { PersistSourceMapInput, persistSourceMaps } from '../debug-utils'
+import { persistSourceMaps } from '../debug-utils'
 import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
@@ -39,6 +39,7 @@ import {
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
 import { AppSpec } from './app-spec'
+import { PersistSourceMapInput } from './debug-utils'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import ABIMethod = algosdk.ABIMethod

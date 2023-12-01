@@ -44,7 +44,7 @@
 
 #### Defined in
 
-[src/types/debug-utils.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L63)
+[src/types/debug-utils.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L48)
 
 ## Properties
 
@@ -54,7 +54,7 @@
 
 #### Defined in
 
-[src/types/debug-utils.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L61)
+[src/types/debug-utils.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L46)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L60)
+[src/types/debug-utils.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L45)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L59)
+[src/types/debug-utils.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L44)
 
 ## Accessors
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L69)
+[src/types/debug-utils.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L54)
 
 • `set` **fileName**(`value`): `void`
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L73)
+[src/types/debug-utils.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L58)
 
 ## Methods
 
@@ -124,4 +124,4 @@ ___
 
 #### Defined in
 
-[src/types/debug-utils.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L77)
+[src/types/debug-utils.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debug-utils.ts#L62)

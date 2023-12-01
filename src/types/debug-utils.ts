@@ -1,20 +1,5 @@
 import algosdk from 'algosdk'
 
-export const ALGOKIT_DIR = '.algokit'
-export const SOURCES_DIR = 'sources'
-export const SOURCES_FILE = 'sources.avm.json'
-export const TRACES_FILE_EXT = '.trace.avm.json'
-export const DEBUG_TRACES_DIR = 'debug_traces'
-export const TEAL_FILE_EXT = '.teal'
-export const TEAL_SOURCEMAP_EXT = '.teal.tok.map'
-
-export interface ErrnoException extends Error {
-  errno?: number
-  code?: string
-  path?: string
-  syscall?: string
-}
-
 export interface AVMDebuggerSourceMapDict {
   'txn-group-sources': Array<{
     'sourcemap-location': string

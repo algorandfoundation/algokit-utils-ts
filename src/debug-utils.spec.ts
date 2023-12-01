@@ -4,8 +4,9 @@ import * as fsSync from 'fs'
 import * as fs from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
-import { AVMDebuggerSourceMap, PersistSourceMapInput, persistSourceMaps, simulateAndPersistResponse } from './debug-utils'
+import { persistSourceMaps, simulateAndPersistResponse } from './debug-utils'
 import { algorandFixture } from './testing'
+import { AVMDebuggerSourceMap, PersistSourceMapInput } from './types/debug-utils'
 
 async function fileExists(filePath: string): Promise<boolean> {
   try {
