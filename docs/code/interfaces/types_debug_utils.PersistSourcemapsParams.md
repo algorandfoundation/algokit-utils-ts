@@ -1,17 +1,17 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/debug-utils](../modules/types_debug_utils.md) / PersistSourcemapsParams
+[@algorandfoundation/algokit-utils](../README.md) / [types/debug-utils](../modules/types_debug_utils.md) / PersistSourceMapsParams
 
-# Interface: PersistSourcemapsParams
+# Interface: PersistSourceMapsParams
 
-[types/debug-utils](../modules/types_debug_utils.md).PersistSourcemapsParams
+[types/debug-utils](../modules/types_debug_utils.md).PersistSourceMapsParams
 
 ## Table of contents
 
 ### Properties
 
-- [client](types_debug_utils.PersistSourcemapsParams.md#client)
-- [projectRoot](types_debug_utils.PersistSourcemapsParams.md#projectroot)
-- [sources](types_debug_utils.PersistSourcemapsParams.md#sources)
-- [withSources](types_debug_utils.PersistSourcemapsParams.md#withsources)
+- [client](types_debug_utils.PersistSourceMapsParams.md#client)
+- [projectRoot](types_debug_utils.PersistSourceMapsParams.md#projectroot)
+- [sources](types_debug_utils.PersistSourceMapsParams.md#sources)
+- [withSources](types_debug_utils.PersistSourceMapsParams.md#withsources)
 
 ## Properties
 

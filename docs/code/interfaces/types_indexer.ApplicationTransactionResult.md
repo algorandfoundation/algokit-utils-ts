@@ -8,7 +8,7 @@ Fields for an application transaction https://developer.algorand.org/docs/rest-a
 
 ## Hierarchy
 
-- `Omit`<[`ApplicationParams`](types_indexer.ApplicationParams.md), ``"creator"`` \| ``"global-state"``\>
+- `Omit`\<[`ApplicationParams`](types_indexer.ApplicationParams.md), ``"creator"`` \| ``"global-state"``\>
 
   ↳ **`ApplicationTransactionResult`**
 

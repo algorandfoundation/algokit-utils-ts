@@ -14,7 +14,7 @@
 
 ### txn-group-sources
 
-• **txn-group-sources**: { `hash`: `string` ; `sourcemap-location`: `string`  }[]
+• **txn-group-sources**: \{ `hash`: `string` ; `sourcemap-location`: `string`  }[]
 
 #### Defined in
 

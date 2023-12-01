@@ -8,7 +8,7 @@ The parameters to deploy an app
 
 ## Hierarchy
 
-- `Omit`<[`CreateAppParams`](types_app.CreateAppParams.md), ``"onCompleteAction"`` \| ``"args"`` \| ``"note"`` \| ``"skipSending"`` \| ``"skipWaiting"`` \| ``"atc"``\>
+- `Omit`\<[`CreateAppParams`](types_app.CreateAppParams.md), ``"onCompleteAction"`` \| ``"args"`` \| ``"note"`` \| ``"skipSending"`` \| ``"skipWaiting"`` \| ``"atc"``\>
 
   ↳ **`AppDeploymentParams`**
 

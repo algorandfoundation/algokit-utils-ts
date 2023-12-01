@@ -14,7 +14,7 @@
 
 - [AVMDebuggerSourceMapDict](../interfaces/types_debug_utils.AVMDebuggerSourceMapDict.md)
 - [ErrnoException](../interfaces/types_debug_utils.ErrnoException.md)
-- [PersistSourcemapsParams](../interfaces/types_debug_utils.PersistSourcemapsParams.md)
+- [PersistSourceMapsParams](../interfaces/types_debug_utils.PersistSourceMapsParams.md)
 - [SimulateAndPersistResponseParams](../interfaces/types_debug_utils.SimulateAndPersistResponseParams.md)
 
 ### Variables

@@ -17,7 +17,7 @@ A lookup of name -> Algorand app for a creator
 
 ### apps
 
-• **apps**: `Readonly`<{ `[name: string]`: [`AppMetadata`](types_app.AppMetadata.md);  }\>
+• **apps**: `Readonly`\<\{ `[name: string]`: [`AppMetadata`](types_app.AppMetadata.md);  }\>
 
 #### Defined in
 

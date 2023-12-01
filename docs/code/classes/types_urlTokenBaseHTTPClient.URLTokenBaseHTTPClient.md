@@ -53,7 +53,7 @@ This is the default implementation of BaseHTTPClient.
 | `tokenHeader` | [`TokenHeader`](../modules/types_urlTokenBaseHTTPClient.md#tokenheader) |
 | `baseServer` | `string` |
 | `port?` | `string` \| `number` |
-| `defaultHeaders` | `Record`<`string`, `any`\> |
+| `defaultHeaders` | `Record`\<`string`, `any`\> |
 
 #### Returns
 
@@ -77,7 +77,7 @@ ___
 
 ### defaultHeaders
 
-• `Private` **defaultHeaders**: `Record`<`string`, `any`\> = `{}`
+• `Private` **defaultHeaders**: `Record`\<`string`, `any`\> = `{}`
 
 #### Defined in
 
@@ -97,7 +97,7 @@ ___
 
 ### delete
 
-▸ **delete**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **delete**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
@@ -105,12 +105,12 @@ ___
 | :------ | :------ |
 | `relativePath` | `string` |
 | `data` | `Uint8Array` |
-| `query?` | `Query`<`string`\> |
-| `requestHeaders` | `Record`<`string`, `string`\> |
+| `query?` | `Query`\<`string`\> |
+| `requestHeaders` | `Record`\<`string`, `string`\> |
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Implementation of
 
@@ -124,19 +124,19 @@ ___
 
 ### get
 
-▸ **get**(`relativePath`, `query?`, `requestHeaders?`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **get**(`relativePath`, `query?`, `requestHeaders?`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `relativePath` | `string` |
-| `query?` | `Query`<`string`\> |
-| `requestHeaders` | `Record`<`string`, `string`\> |
+| `query?` | `Query`\<`string`\> |
+| `requestHeaders` | `Record`\<`string`, `string`\> |
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Implementation of
 
@@ -159,7 +159,7 @@ Compute the URL for a path relative to the instance's address
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `relativePath` | `string` | A path string |
-| `query?` | `Query`<`string`\> | An optional key-value object of query parameters to add to the URL. If the relativePath already has query parameters on it, the additional parameters defined here will be added to the URL without modifying those (unless a key collision occurs). |
+| `query?` | `Query`\<`string`\> | An optional key-value object of query parameters to add to the URL. If the relativePath already has query parameters on it, the additional parameters defined here will be added to the URL without modifying those (unless a key collision occurs). |
 
 #### Returns
 
@@ -175,7 +175,7 @@ ___
 
 ### post
 
-▸ **post**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **post**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
@@ -183,12 +183,12 @@ ___
 | :------ | :------ |
 | `relativePath` | `string` |
 | `data` | `Uint8Array` |
-| `query?` | `Query`<`string`\> |
-| `requestHeaders` | `Record`<`string`, `string`\> |
+| `query?` | `Query`\<`string`\> |
+| `requestHeaders` | `Record`\<`string`, `string`\> |
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Implementation of
 
@@ -202,7 +202,7 @@ ___
 
 ### checkHttpError
 
-▸ **checkHttpError**(`res`): `Promise`<`void`\>
+▸ **checkHttpError**(`res`): `Promise`\<`void`\>
 
 #### Parameters
 
@@ -212,7 +212,7 @@ ___
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 #### Defined in
 
@@ -222,7 +222,7 @@ ___
 
 ### formatFetchResponse
 
-▸ **formatFetchResponse**(`res`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **formatFetchResponse**(`res`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
@@ -232,7 +232,7 @@ ___
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Defined in
 
@@ -242,7 +242,7 @@ ___
 
 ### formatFetchResponseHeaders
 
-▸ **formatFetchResponseHeaders**(`headers`): `Record`<`string`, `string`\>
+▸ **formatFetchResponseHeaders**(`headers`): `Record`\<`string`, `string`\>
 
 #### Parameters
 
@@ -252,7 +252,7 @@ ___
 
 #### Returns
 
-`Record`<`string`, `string`\>
+`Record`\<`string`, `string`\>
 
 #### Defined in
 

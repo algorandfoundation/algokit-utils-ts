@@ -88,7 +88,7 @@ On-complete action parameter for creating a contract using ApplicationClient
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `onCompleteAction?` | `Exclude`<[`AppCallType`](types_app.md#appcalltype), ``"clear_state"``\> \| `Exclude`<`OnApplicationComplete`, `OnApplicationComplete.ClearStateOC`\> | Override the on-completion action for the create call; defaults to NoOp |
+| `onCompleteAction?` | `Exclude`\<[`AppCallType`](types_app.md#appcalltype), ``"clear_state"``\> \| `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.ClearStateOC`\> | Override the on-completion action for the create call; defaults to NoOp |
 
 #### Defined in
 
@@ -208,7 +208,7 @@ ___
 
 ### ResolveAppByCreatorAndName
 
-Ƭ **ResolveAppByCreatorAndName**: [`ResolveAppByCreatorAndNameBase`](types_app_client.md#resolveappbycreatorandnamebase) & { `resolveBy`: ``"creatorAndName"``  }
+Ƭ **ResolveAppByCreatorAndName**: [`ResolveAppByCreatorAndNameBase`](types_app_client.md#resolveappbycreatorandnamebase) & \{ `resolveBy`: ``"creatorAndName"``  }
 
 Configuration to resolve app by creator and name `getCreatorAppsByName`
 

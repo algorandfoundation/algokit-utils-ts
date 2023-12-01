@@ -6,7 +6,7 @@
 
 ## Hierarchy
 
-- `Omit`<[`ABIAppCallArgs`](../modules/types_app.md#abiappcallargs), ``"method"``\>
+- `Omit`\<[`ABIAppCallArgs`](../modules/types_app.md#abiappcallargs), ``"method"``\>
 
   ↳ **`AppClientCallABIArgs`**
 

@@ -45,7 +45,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 | `tokenHeader` | [`TokenHeader`](../modules/types_urlTokenBaseHTTPClient.md#tokenheader) |
 | `baseServer` | `string` |
 | `port?` | `string` \| `number` |
-| `defaultHeaders` | `Record`<`string`, `any`\> |
+| `defaultHeaders` | `Record`\<`string`, `any`\> |
 
 #### Returns
 
@@ -103,17 +103,17 @@ ___
 
 ### callWithRetry
 
-▸ **callWithRetry**(`func`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **callWithRetry**(`func`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `func` | () => `Promise`<`BaseHTTPClientResponse`\> |
+| `func` | () => `Promise`\<`BaseHTTPClientResponse`\> |
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Defined in
 
@@ -123,7 +123,7 @@ ___
 
 ### delete
 
-▸ **delete**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **delete**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
@@ -131,12 +131,12 @@ ___
 | :------ | :------ |
 | `relativePath` | `string` |
 | `data` | `Uint8Array` |
-| `query?` | `Query`<`string`\> |
-| `requestHeaders` | `Record`<`string`, `string`\> |
+| `query?` | `Query`\<`string`\> |
+| `requestHeaders` | `Record`\<`string`, `string`\> |
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Overrides
 
@@ -150,19 +150,19 @@ ___
 
 ### get
 
-▸ **get**(`relativePath`, `query?`, `requestHeaders?`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **get**(`relativePath`, `query?`, `requestHeaders?`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `relativePath` | `string` |
-| `query?` | `Query`<`string`\> |
-| `requestHeaders` | `Record`<`string`, `string`\> |
+| `query?` | `Query`\<`string`\> |
+| `requestHeaders` | `Record`\<`string`, `string`\> |
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Overrides
 
@@ -176,7 +176,7 @@ ___
 
 ### post
 
-▸ **post**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`<`BaseHTTPClientResponse`\>
+▸ **post**(`relativePath`, `data`, `query?`, `requestHeaders?`): `Promise`\<`BaseHTTPClientResponse`\>
 
 #### Parameters
 
@@ -184,12 +184,12 @@ ___
 | :------ | :------ |
 | `relativePath` | `string` |
 | `data` | `Uint8Array` |
-| `query?` | `Query`<`string`\> |
-| `requestHeaders` | `Record`<`string`, `string`\> |
+| `query?` | `Query`\<`string`\> |
+| `requestHeaders` | `Record`\<`string`, `string`\> |
 
 #### Returns
 
-`Promise`<`BaseHTTPClientResponse`\>
+`Promise`\<`BaseHTTPClientResponse`\>
 
 #### Overrides
 

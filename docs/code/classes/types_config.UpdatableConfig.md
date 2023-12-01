@@ -8,7 +8,7 @@ Updatable AlgoKit config
 
 ## Implements
 
-- `Readonly`<[`Config`](../interfaces/types_config.Config.md)\>
+- `Readonly`\<[`Config`](../interfaces/types_config.Config.md)\>
 
 ## Table of contents
 
@@ -180,7 +180,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `newConfig` | `Partial`<[`Config`](../interfaces/types_config.Config.md)\> | Partial or complete config to replace |
+| `newConfig` | `Partial`\<[`Config`](../interfaces/types_config.Config.md)\> | Partial or complete config to replace |
 
 #### Returns
 
