@@ -166,7 +166,7 @@ export async function persistSourceMaps({ sources, projectRoot, client, withSour
 
 /**
  * This function simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object,
- * and persists the simulation response to an AVM Debugger compliant JSON file.
+ * and persists the simulation response to an AlgoKit AVM Debugger compliant JSON file.
  *
  * @param atc The AtomicTransactionComposer with transaction(s) loaded.
  * @param algod An Algod client to perform the simulation.
