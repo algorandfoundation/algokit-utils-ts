@@ -2,7 +2,7 @@ import algosdk from 'algosdk'
 import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as path from 'path'
-import { Config } from '.'
+import { Config, compileTeal } from '.'
 import { performAtomicTransactionComposerSimulate } from './transaction'
 import { CompiledTeal } from './types/app'
 import {
@@ -81,7 +81,7 @@ async function writeToFile(filePath: string, content: string): Promise<void> {
 }
 
 async function buildAVMSourcemap({
-  tealContent,
+  rawTeal,
   compiledTeal,
   appName,
   fileName,
@@ -89,7 +89,7 @@ async function buildAVMSourcemap({
   client,
   withSources = true,
 }: {
-  tealContent?: string
+  rawTeal?: string
   compiledTeal?: CompiledTeal
   appName: string
   fileName: string
@@ -97,13 +97,14 @@ async function buildAVMSourcemap({
   client: algosdk.Algodv2
   withSources?: boolean
 }): Promise<AVMDebuggerSourceMapEntry> {
-  if (!tealContent && !compiledTeal) {
-    throw new Error('Either tealContent or compileResult must be provided.')
+  if (!rawTeal && !compiledTeal) {
+    throw new Error('Either rawTeal or compiledTeal must be provided.')
   }
 
-  const result = tealContent ? await client.compile(tealContent).sourcemap(true).do() : compiledTeal
-  const programHash = crypto.createHash('SHA-512/256').update(Buffer.from(result.result, 'base64')).digest('base64')
-  const sourceMap = result.sourcemap
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const result = rawTeal ? await compileTeal(rawTeal, client) : compiledTeal!
+  const programHash = crypto.createHash('SHA-512/256').update(Buffer.from(result.compiled, 'base64')).digest('base64')
+  const sourceMap = result.sourceMap
   sourceMap.sources = withSources ? [`${fileName}${TEAL_FILE_EXT}`] : []
 
   const outputDirPath = path.join(outputPath, ALGOKIT_DIR, SOURCES_DIR, appName)
@@ -111,8 +112,8 @@ async function buildAVMSourcemap({
   const tealOutputPath = path.join(outputDirPath, `${fileName}${TEAL_FILE_EXT}`)
   await writeToFile(sourceMapOutputPath, JSON.stringify(sourceMap))
 
-  if (withSources && tealContent) {
-    await writeToFile(tealOutputPath, tealContent)
+  if (withSources && result) {
+    await writeToFile(tealOutputPath, result.teal)
   }
 
   return new AVMDebuggerSourceMapEntry(sourceMapOutputPath, programHash)
@@ -144,7 +145,7 @@ export async function persistSourceMaps({ sources, projectRoot, client, withSour
     const sourceMaps = await Promise.all(
       sources.map((source) =>
         buildAVMSourcemap({
-          tealContent: source.rawTeal,
+          rawTeal: source.rawTeal,
           compiledTeal: source.compiledTeal,
           appName: source.appName,
           fileName: source.fileName,
