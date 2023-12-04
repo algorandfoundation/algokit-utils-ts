@@ -1,7 +1,7 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from './'
-import { simulateAndPersistResponse } from './debug-utils'
+import { simulateAndPersistResponse } from './debugging'
 import { AlgoAmount } from './types/amount'
 import { ABIReturn } from './types/app'
 import {

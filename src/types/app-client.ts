@@ -14,7 +14,7 @@ import {
   updateApp,
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
-import { persistSourceMaps } from '../debug-utils'
+import { persistSourceMaps } from '../debugging'
 import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
@@ -39,7 +39,7 @@ import {
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
 import { AppSpec } from './app-spec'
-import { PersistSourceMapInput } from './debug-utils'
+import { PersistSourceMapInput } from './debugging'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import ABIMethod = algosdk.ABIMethod
@@ -345,8 +345,8 @@ export class ApplicationClient {
     if (Config.debug && Config.projectRoot) {
       persistSourceMaps({
         sources: [
-          new PersistSourceMapInput(approvalCompiled.teal, this._appName, 'approval.teal'),
-          new PersistSourceMapInput(clearCompiled.teal, this._appName, 'clear.teal'),
+          PersistSourceMapInput.fromCompiledTeal(approvalCompiled, this._appName, 'approval.teal'),
+          PersistSourceMapInput.fromCompiledTeal(clearCompiled, this._appName, 'clear.teal'),
         ],
         projectRoot: Config.projectRoot,
         client: this.algod,

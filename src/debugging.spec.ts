@@ -4,9 +4,10 @@ import * as fsSync from 'fs'
 import * as fs from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
-import { persistSourceMaps, simulateAndPersistResponse } from './debug-utils'
+import { compileTeal } from './app'
+import { persistSourceMaps, simulateAndPersistResponse } from './debugging'
 import { algorandFixture } from './testing'
-import { AVMDebuggerSourceMap, PersistSourceMapInput } from './types/debug-utils'
+import { AVMDebuggerSourceMap, PersistSourceMapInput } from './types/debugging'
 
 async function fileExists(filePath: string): Promise<boolean> {
   try {
@@ -38,8 +39,8 @@ int 1
 int 1
 `
       const sources = [
-        new PersistSourceMapInput(approval, 'cool_app', 'approval.teal'),
-        new PersistSourceMapInput(clear, 'cool_app', 'clear'),
+        PersistSourceMapInput.fromRawTeal(approval, 'cool_app', 'approval.teal'),
+        PersistSourceMapInput.fromRawTeal(clear, 'cool_app', 'clear'),
       ]
 
       await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod })
@@ -86,9 +87,11 @@ int 1
 #pragma version 9
 int 1
 `
+      const approvalCompiled = await compileTeal(approval, algod)
+      const clearCompiled = await compileTeal(clear, algod)
       const sources = [
-        new PersistSourceMapInput(approval, 'cool_app', 'approval.teal'),
-        new PersistSourceMapInput(clear, 'cool_app', 'clear'),
+        PersistSourceMapInput.fromCompiledTeal(approvalCompiled, 'cool_app', 'approval.teal'),
+        PersistSourceMapInput.fromCompiledTeal(clearCompiled, 'cool_app', 'clear'),
       ]
 
       await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod, withSources: false })

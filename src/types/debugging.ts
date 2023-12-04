@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import { CompiledTeal } from './app'
 
 export interface AVMDebuggerSourceMapDict {
   'txn-group-sources': Array<{
@@ -40,25 +41,52 @@ export class AVMDebuggerSourceMap {
   }
 }
 
+/**
+ * Class representing a debugger source maps input for persistence.
+ *
+ * Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should be provided.
+ */
 export class PersistSourceMapInput {
-  teal: string
   appName: string
+  compiledTeal?: CompiledTeal
   private _fileName: string
+  private _rawTeal?: string
 
-  constructor(teal: string, appName: string, fileName: string) {
-    this.teal = teal
+  private constructor(appName: string, fileName: string, rawTeal?: string, compiledTeal?: CompiledTeal) {
+    this.compiledTeal = compiledTeal
     this.appName = appName
+    this._rawTeal = rawTeal
     this._fileName = this.stripTealExtension(fileName)
+  }
+
+  static fromRawTeal(rawTeal: string, appName: string, fileName: string): PersistSourceMapInput {
+    return new PersistSourceMapInput(appName, fileName, rawTeal)
+  }
+
+  static fromCompiledTeal(compiledTeal: CompiledTeal, appName: string, fileName: string): PersistSourceMapInput {
+    return new PersistSourceMapInput(appName, fileName, undefined, compiledTeal)
+  }
+
+  get rawTeal(): string {
+    if (this._rawTeal) {
+      return this._rawTeal
+    } else if (this.compiledTeal) {
+      return this.compiledTeal.teal
+    } else {
+      throw new Error('No teal content found')
+    }
   }
 
   get fileName(): string {
     return this._fileName
   }
 
-  set fileName(value: string) {
-    this._fileName = this.stripTealExtension(value)
-  }
-
+  /**
+   * Strips the '.teal' extension from a filename, if present.
+   *
+   * @param fileName - The filename to strip the extension from.
+   * @returns The filename without the '.teal' extension.
+   */
   private stripTealExtension(fileName: string): string {
     if (fileName.endsWith('.teal')) {
       return fileName.slice(0, -5)

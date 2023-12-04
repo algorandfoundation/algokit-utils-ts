@@ -54,7 +54,7 @@ ___
 
 ### onSchemaBreak
 
-• `Optional` **onSchemaBreak**: ``"replace"`` \| [`OnSchemaBreak`](../enums/types_app.OnSchemaBreak.md) \| ``"fail"`` \| ``"append"``
+• `Optional` **onSchemaBreak**: [`OnSchemaBreak`](../enums/types_app.OnSchemaBreak.md) \| ``"replace"`` \| ``"fail"`` \| ``"append"``
 
 What action to perform if a schema break is detected
 
