@@ -204,18 +204,28 @@ export const sendTransaction = async function (
     return { transaction }
   }
 
-  const signedTransaction = await signTransaction(transaction, from)
+  let txnToSend = transaction
+
+  // Pack resources if the transaction is an appcall and packResources wasn't explicitly set to false
+  if (txnToSend.type === algosdk.TransactionType.appl && sendParams?.packResources !== false) {
+    const newAtc = new AtomicTransactionComposer()
+    newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
+    const packed = await packResources(algod, newAtc)
+    txnToSend = packed.buildGroup()[0].txn
+  }
+
+  const signedTransaction = await signTransaction(txnToSend, from)
 
   await algod.sendRawTransaction(signedTransaction).do()
 
-  Config.getLogger(suppressLog).info(`Sent transaction ID ${transaction.txID()} ${transaction.type} from ${getSenderAddress(from)}`)
+  Config.getLogger(suppressLog).info(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
 
   let confirmation: modelsv2.PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
-    confirmation = await waitForConfirmation(transaction.txID(), maxRoundsToWaitForConfirmation ?? 5, algod)
+    confirmation = await waitForConfirmation(txnToSend.txID(), maxRoundsToWaitForConfirmation ?? 5, algod)
   }
 
-  return { transaction, confirmation }
+  return { transaction: txnToSend, confirmation }
 }
 
 /**
