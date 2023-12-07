@@ -534,6 +534,54 @@ const tests = (version: 8 | 9) => () => {
       })
     })
   })
+
+  describe('sendTransaction', () => {
+    test('addressBalance: invalid Account reference', async () => {
+      const { testAccount, algod } = fixture.context
+      alice = testAccount
+
+      const atc = new algosdk.AtomicTransactionComposer()
+
+      atc.addMethodCall({
+        appID: Number((await appClient.getAppReference()).appId),
+        sender: testAccount.addr,
+        signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+        method: appClient.getABIMethod('addressBalance')!,
+        methodArgs: [algosdk.generateAccount().addr],
+        suggestedParams: await fixture.context.algod.getTransactionParams().do(),
+      })
+
+      const txn = atc.buildGroup()[0]
+
+      txn.txn.group = undefined
+
+      await expect(
+        algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { packResources: false } }, algod),
+      ).rejects.toThrow('invalid Account reference')
+    })
+
+    test('addressBalance', async () => {
+      const { testAccount, algod } = fixture.context
+      alice = testAccount
+
+      const atc = new algosdk.AtomicTransactionComposer()
+
+      atc.addMethodCall({
+        appID: Number((await appClient.getAppReference()).appId),
+        sender: testAccount.addr,
+        signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+        method: appClient.getABIMethod('addressBalance')!,
+        methodArgs: [algosdk.generateAccount().addr],
+        suggestedParams: await fixture.context.algod.getTransactionParams().do(),
+      })
+
+      const txn = atc.buildGroup()[0]
+
+      txn.txn.group = undefined
+
+      await algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { packResources: true } }, algod)
+    })
+  })
 }
 
 describe('Resource Packer: AVM8', tests(8))
