@@ -341,6 +341,7 @@ describe('application-client', () => {
         VALUE: 1,
       },
       allowDelete: true,
+      sendParams: { packResources: false },
     })
     const app = await client.deploy({
       version: '1.0',
@@ -356,6 +357,7 @@ describe('application-client', () => {
         method: 'delete_abi',
         methodArgs: ['arg2_io'],
       },
+      sendParams: { packResources: false },
     })
 
     invariant(app.operationPerformed === 'replace')
@@ -664,6 +666,7 @@ describe('application-client', () => {
         await newClient.call({
           method: 'error',
           methodArgs: [],
+          sendParams: { packResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -680,6 +683,7 @@ describe('application-client', () => {
         await newClient.call({
           method: 'error',
           methodArgs: [],
+          sendParams: { packResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -707,6 +711,7 @@ describe('application-client', () => {
         await client.call({
           method: 'error',
           methodArgs: [],
+          sendParams: { packResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
