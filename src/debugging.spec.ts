@@ -143,8 +143,8 @@ int 1
 
       const filePath = path.join(debugTracesPath, files[0])
       const content = JSON.parse(await fs.readFile(filePath, 'utf8'))
-      expect(content.txnGroups[0].txnResults[0].txnResult.txn.txn.type).toBe('pay')
-      expect(content).toHaveProperty('lastRound')
+      expect(content['txn-groups'][0]['txn-results'][0]['txn-result'].txn.txn.type).toBe('pay')
+      expect(content).toHaveProperty('last-round')
 
       while (fsSync.existsSync(filePath)) {
         const tmpAtc = atc.clone()

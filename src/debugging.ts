@@ -242,7 +242,7 @@ export async function simulateAndPersistResponse({ atc, projectRoot, algod, buff
       }
     }
 
-    await fs.promises.writeFile(outputFilePath, JSON.stringify(simulateResult, null, 2))
+    await fs.promises.writeFile(outputFilePath, JSON.stringify(simulateResult.get_obj_for_encoding(), null, 2))
 
     return simulateResult
   } catch (error) {
