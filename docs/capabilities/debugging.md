@@ -40,3 +40,19 @@ Config.configure({
   projectRoot: '/path/to/project/root', // if ignored, will try to find the project root automatically
 })
 ```
+
+### Trace filename format
+
+The trace files are named in a specific format to provide useful information about the transactions they contain. The format is as follows:
+
+```ts
+;`${timestamp}_lr${lastRound}_${transactionTypes}.trace.avm.json`
+```
+
+Where:
+
+- `timestamp`: The time when the trace file was created, in ISO 8601 format, with colons and periods removed.
+- `lastRound`: The last round when the simulation was performed.
+- `transactionTypes`: A string representing the types and counts of transactions in the atomic group. Each transaction type is represented as `${count}#${type}`, and different transaction types are separated by underscores.
+
+For example, a trace file might be named `20220301T123456Z_lr1000_2#pay_1#axfer.trace.avm.json`, indicating that the trace file was created at `2022-03-01T12:34:56Z`, the last round was `1000`, and the atomic group contained 2 payment transactions and 1 asset transfer transaction.
