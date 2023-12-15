@@ -259,7 +259,8 @@ export async function getUnnamedResourcesAccessed(algod: algosdk.Algodv2, atc: a
 }
 
 /**
- * Take an existing ATC and return a new ATC with packed resources
+ * Take an existing Atomic Transaction Composer and return a new one with the required
+ *  app call resources packed into it
  *
  * @param algod The algod client to use for the simulation
  * @param atc The ATC containing the txn group
@@ -269,7 +270,7 @@ export async function getUnnamedResourcesAccessed(algod: algosdk.Algodv2, atc: a
  *
  * This entire function will eventually be implemented in simulate upstream in algod. The simulate endpoint will return
  * an array of refference arrays for each transaction, so this eventually will eventually just call simulate and set the
- * reference arraysm in the transactions to the reference arrays returned by simulate.
+ * reference arrays in the transactions to the reference arrays returned by simulate.
  *
  * See https://github.com/algorand/go-algorand/pull/5684
  *
