@@ -471,7 +471,11 @@ const tests = (version: 8 | 9) => () => {
   describe('apps', () => {
     test('externalAppCall: unavailable App', async () => {
       await expect(
-        appClient.call({ method: 'externalAppCall', methodArgs: [], sendParams: { packAppCallResources: false, fee: algokit.microAlgos(2_000) } }),
+        appClient.call({
+          method: 'externalAppCall',
+          methodArgs: [],
+          sendParams: { packAppCallResources: false, fee: algokit.microAlgos(2_000) },
+        }),
       ).rejects.toThrow('unavailable App')
     })
 
@@ -650,7 +654,7 @@ describe('Resource Packer: Mixed', () => {
       suggestedParams,
     })
 
-    const packedAtc = await algokit.packAppCallResources(fixture.context.algod, atc)
+    const packedAtc = await algokit.packAppCallResources(atc, fixture.context.algod)
 
     const v8CallAccts = packedAtc.buildGroup()[0].txn.appAccounts
     const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts
@@ -691,7 +695,7 @@ describe('Resource Packer: Mixed', () => {
       suggestedParams,
     })
 
-    const packedAtc = await algokit.packAppCallResources(fixture.context.algod, atc)
+    const packedAtc = await algokit.packAppCallResources(atc, fixture.context.algod)
 
     const v8CallApps = packedAtc.buildGroup()[0].txn.appForeignApps
     const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts

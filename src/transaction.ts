@@ -4,14 +4,14 @@ import { Config } from './'
 import { AlgoAmount } from './types/amount'
 import { ABIReturn } from './types/app'
 import {
-    AtomicTransactionComposerToSend,
-    SendAtomicTransactionComposerResults,
-    SendTransactionFrom,
-    SendTransactionParams,
-    SendTransactionResult,
-    TransactionGroupToSend,
-    TransactionNote,
-    TransactionToSign,
+  AtomicTransactionComposerToSend,
+  SendAtomicTransactionComposerResults,
+  SendTransactionFrom,
+  SendTransactionParams,
+  SendTransactionResult,
+  TransactionGroupToSend,
+  TransactionNote,
+  TransactionToSign,
 } from './types/transaction'
 import { toNumber } from './util'
 import Algodv2 = algosdk.Algodv2
@@ -51,7 +51,7 @@ export function encodeTransactionNote(note?: TransactionNote): Uint8Array | unde
   } else {
     const n = typeof note === 'string' ? note : JSON.stringify(note)
     const encoder = new TextEncoder()
-    return encoder.encode(n)
+    return exncoder.encode(n)
   }
 }
 
@@ -210,7 +210,7 @@ export const sendTransaction = async function (
   if (txnToSend.type === algosdk.TransactionType.appl && sendParams?.packAppCallResources !== false) {
     const newAtc = new AtomicTransactionComposer()
     newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
-    const packed = await packAppCallResources(algod, newAtc)
+    const packed = await packAppCallResources(newAtc, algod)
     txnToSend = packed.buildGroup()[0].txn
   }
 
@@ -235,7 +235,7 @@ export const sendTransaction = async function (
  * @param atc The ATC containing the txn group
  * @returns The unnamed resources accessed by the group and by each transaction in the group
  */
-export async function getUnnamedResourcesAccessed(algod: algosdk.Algodv2, atc: algosdk.AtomicTransactionComposer) {
+export async function getUnnamedResourcesAccessed(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
   const simReq = new algosdk.modelsv2.SimulateRequest({
     txnGroups: [],
     allowUnnamedResources: true,
@@ -275,8 +275,8 @@ export async function getUnnamedResourcesAccessed(algod: algosdk.Algodv2, atc: a
  * See https://github.com/algorand/go-algorand/pull/5684
  *
  */
-export async function packAppCallResources(algod: algosdk.Algodv2, atc: algosdk.AtomicTransactionComposer) {
-  const unnamedResourcesAccessed = await getUnnamedResourcesAccessed(algod, atc)
+export async function packAppCallResources(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
+  const unnamedResourcesAccessed = await getUnnamedResourcesAccessed(atc, algod)
   const group = atc.buildGroup()
 
   unnamedResourcesAccessed.txns.forEach((r, i) => {
@@ -300,7 +300,8 @@ export async function packAppCallResources(algod: algosdk.Algodv2, atc: algosdk.
     })
 
     const accounts = group[i].txn.appAccounts?.length || 0
-    if (accounts > MAX_APP_CALL_ACCOUNT_REFERENCES) throw Error(`Account reference limit of ${MAX_APP_CALL_ACCOUNT_REFERENCES} exceeded in transaction ${i}`)
+    if (accounts > MAX_APP_CALL_ACCOUNT_REFERENCES)
+      throw Error(`Account reference limit of ${MAX_APP_CALL_ACCOUNT_REFERENCES} exceeded in transaction ${i}`)
 
     const assets = group[i].txn.appForeignAssets?.length || 0
     const apps = group[i].txn.appForeignApps?.length || 0
@@ -415,7 +416,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
   // If packAppCallResources is true OR if packAppCallResources is undefined and there are app calls, then pack resources
   if (sendParams?.packAppCallResources || (sendParams?.packAppCallResources === undefined && hasAppCalls())) {
-    atc = await packAppCallResources(algod, givenAtc)
+    atc = await packAppCallResources(givenAtc, algod)
   } else {
     atc = givenAtc
   }
