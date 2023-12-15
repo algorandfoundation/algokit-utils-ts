@@ -35,11 +35,11 @@ ___
 
 ### generateAccount
 
-• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`<`default`\>
+• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`default`\>
 
 #### Type declaration
 
-▸ (`params`): `Promise`<`default`\>
+▸ (`params`): `Promise`\<`default`\>
 
 Generate and fund an additional ephemerally created account
 
@@ -51,7 +51,7 @@ Generate and fund an additional ephemerally created account
 
 ##### Returns
 
-`Promise`<`default`\>
+`Promise`\<`default`\>
 
 #### Defined in
 
@@ -109,17 +109,17 @@ ___
 
 ### waitForIndexer
 
-• **waitForIndexer**: () => `Promise`<`void`\>
+• **waitForIndexer**: () => `Promise`\<`void`\>
 
 #### Type declaration
 
-▸ (): `Promise`<`void`\>
+▸ (): `Promise`\<`void`\>
 
 Wait for the indexer to catch up with all transactions logged by `transactionLogger`
 
 ##### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 #### Defined in
 
@@ -129,11 +129,11 @@ ___
 
 ### waitForIndexerTransaction
 
-• **waitForIndexerTransaction**: (`transactionId`: `string`) => `Promise`<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
+• **waitForIndexerTransaction**: (`transactionId`: `string`) => `Promise`\<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
 
 #### Type declaration
 
-▸ (`transactionId`): `Promise`<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
+▸ (`transactionId`): `Promise`\<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
 
 Wait for the indexer to catch up with the given transaction ID
 
@@ -145,7 +145,7 @@ Wait for the indexer to catch up with the given transaction ID
 
 ##### Returns
 
-`Promise`<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
+`Promise`\<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
 
 #### Defined in
 

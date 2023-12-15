@@ -8,7 +8,7 @@ Indexer result for a transaction, https://developer.algorand.org/docs/rest-apis/
 
 ## Hierarchy
 
-- `Record`<`string`, `any`\>
+- `Record`\<`string`, `any`\>
 
   ↳ **`TransactionResult`**
 
@@ -227,7 +227,7 @@ ___
 
 ### global-state-delta
 
-• `Optional` **global-state-delta**: `Record`<`string`, [`EvalDelta`](types_indexer.EvalDelta.md)\>[]
+• `Optional` **global-state-delta**: `Record`\<`string`, [`EvalDelta`](types_indexer.EvalDelta.md)\>[]
 
 [gd] Global state key/value changes for the application being executed by this transaction.
 
@@ -335,7 +335,7 @@ ___
 
 ### local-state-delta
 
-• `Optional` **local-state-delta**: `Record`<`string`, [`EvalDelta`](types_indexer.EvalDelta.md)\>[]
+• `Optional` **local-state-delta**: `Record`\<`string`, [`EvalDelta`](types_indexer.EvalDelta.md)\>[]
 
 [ld] Local state key/value changes for the application being executed by this transaction.
 

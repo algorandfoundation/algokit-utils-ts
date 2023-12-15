@@ -18,7 +18,8 @@ import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, 
  *  a default LocalNet instance, but you can pass in an algod, indexer
  *  and/or kmd if you want to test against an explicitly defined network.
  *
- * @example ```typescript
+ * @example
+ * ```typescript
  * const algorand = algorandFixture()
  *
  * beforeEach(algorand.beforeEach, 10_000)
@@ -41,7 +42,8 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig): Algorand
  *  a default LocalNet instance, but you can pass in an algod, indexer
  *  and/or kmd if you want to test against an explicitly defined network.
  *
- * @example ```typescript
+ * @example
+ * ```typescript
  * const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
  *
  * beforeEach(algorand.beforeEach, 10_000)
@@ -65,7 +67,8 @@ export function algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined
  *  a default LocalNet instance, but you can pass in an algod, indexer
  *  and/or kmd if you want to test against an explicitly defined network.
  *
- * @example ```typescript
+ * @example
+ * ```typescript
  * const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
  *
  * beforeEach(algorand.beforeEach, 10_000)

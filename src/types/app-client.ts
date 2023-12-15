@@ -1,5 +1,6 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
+import { Config } from '..'
 import {
   callApp,
   compileTeal,
@@ -13,6 +14,7 @@ import {
   updateApp,
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
+import { persistSourceMaps } from '../debugging'
 import { getSenderAddress } from '../transaction'
 import { transferAlgos } from '../transfer'
 import { AlgoAmount } from './amount'
@@ -37,6 +39,7 @@ import {
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
 import { AppSpec } from './app-spec'
+import { PersistSourceMapInput } from './debugging'
 import { LogicError } from './logic-error'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import ABIMethod = algosdk.ABIMethod
@@ -338,6 +341,18 @@ export class ApplicationClient {
     const clear = performTemplateSubstitution(clearTemplate, deployTimeParams ?? this.deployTimeParams)
     const clearCompiled = await compileTeal(clear, this.algod)
     this._clearSourceMap = clearCompiled?.sourceMap
+
+    if (Config.debug && Config.projectRoot) {
+      persistSourceMaps({
+        sources: [
+          PersistSourceMapInput.fromCompiledTeal(approvalCompiled, this._appName, 'approval.teal'),
+          PersistSourceMapInput.fromCompiledTeal(clearCompiled, this._appName, 'clear.teal'),
+        ],
+        projectRoot: Config.projectRoot,
+        client: this.algod,
+        withSources: true,
+      })
+    }
 
     return { approvalCompiled, clearCompiled }
   }

@@ -5,6 +5,7 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   testMatch: ['**/*.spec.ts'],
   testTimeout: 10000,
+  bail: 1,
   setupFiles: ['<rootDir>/tests/setup.ts'],
   moduleDirectories: ['node_modules', 'src'],
   transform: {
