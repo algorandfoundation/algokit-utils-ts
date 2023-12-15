@@ -235,7 +235,7 @@ export const sendTransaction = async function (
  * @param atc The ATC containing the txn group
  * @returns The unnamed resources accessed by the group and by each transaction in the group
  */
-export async function getUnnamedResourcesAccessed(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
+async function getUnnamedResourcesAccessed(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
   const simReq = new algosdk.modelsv2.SimulateRequest({
     txnGroups: [],
     allowUnnamedResources: true,
