@@ -51,7 +51,7 @@ export function encodeTransactionNote(note?: TransactionNote): Uint8Array | unde
   } else {
     const n = typeof note === 'string' ? note : JSON.stringify(note)
     const encoder = new TextEncoder()
-    return exncoder.encode(n)
+    return encoder.encode(n)
   }
 }
 
