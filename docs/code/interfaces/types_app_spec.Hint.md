@@ -29,7 +29,7 @@ ___
 
 ### default\_arguments
 
-• `Optional` **default\_arguments**: `Record`<`string`, [`DefaultArgument`](../modules/types_app_spec.md#defaultargument)\>
+• `Optional` **default\_arguments**: `Record`\<`string`, [`DefaultArgument`](../modules/types_app_spec.md#defaultargument)\>
 
 #### Defined in
 
@@ -49,7 +49,7 @@ ___
 
 ### structs
 
-• `Optional` **structs**: `Record`<`string`, [`Struct`](types_app_spec.Struct.md)\>
+• `Optional` **structs**: `Record`\<`string`, [`Struct`](types_app_spec.Struct.md)\>
 
 Any user-defined struct/tuple types used in the method call, keyed by parameter name or `output` for return type
 

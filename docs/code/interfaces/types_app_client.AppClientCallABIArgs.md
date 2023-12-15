@@ -6,7 +6,7 @@
 
 ## Hierarchy
 
-- `Omit`<[`ABIAppCallArgs`](../modules/types_app.md#abiappcallargs), ``"method"``\>
+- `Omit`\<[`ABIAppCallArgs`](../modules/types_app.md#abiappcallargs), ``"method"``\>
 
   ↳ **`AppClientCallABIArgs`**
 
@@ -113,7 +113,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 #### Defined in
 
-[src/types/app-client.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L163)
+[src/types/app-client.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L166)
 
 ___
 

@@ -2,7 +2,8 @@
  * Runs the given indexer call until a 404 error is no longer returned.
  * Tried every 200ms up to 100 times.
  * Very rudimentary implementation designed for automated testing.
- * @example ```typescript
+ * @example
+ * ```typescript
  * const transaction = await runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(txnId).do())
  * ```
  * @param run The code to run

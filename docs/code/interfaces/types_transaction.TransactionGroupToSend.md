@@ -19,7 +19,7 @@ https://developer.algorand.org/docs/get-details/atomic_transfers/
 
 ### sendParams
 
-• `Optional` **sendParams**: `Omit`<[`SendTransactionParams`](types_transaction.SendTransactionParams.md), ``"fee"`` \| ``"maxFee"`` \| ``"skipSending"`` \| ``"atc"``\>
+• `Optional` **sendParams**: `Omit`\<[`SendTransactionParams`](types_transaction.SendTransactionParams.md), ``"fee"`` \| ``"maxFee"`` \| ``"skipSending"`` \| ``"atc"``\>
 
 Any parameters to control the semantics of the send to the network
 
@@ -43,7 +43,7 @@ ___
 
 ### transactions
 
-• **transactions**: (`Transaction` \| [`TransactionToSign`](types_transaction.TransactionToSign.md) \| `Promise`<[`SendTransactionResult`](types_transaction.SendTransactionResult.md)\>)[]
+• **transactions**: (`Transaction` \| [`TransactionToSign`](types_transaction.TransactionToSign.md) \| `Promise`\<[`SendTransactionResult`](types_transaction.SendTransactionResult.md)\>)[]
 
 The list of transactions to send, which can either be a raw transaction (in which case `signer` is required),
   the async result of an AlgoKit utils method that returns a `SendTransactionResult` (saves unwrapping the promise, be sure to pass `skipSending: true`, `signer` is also required)

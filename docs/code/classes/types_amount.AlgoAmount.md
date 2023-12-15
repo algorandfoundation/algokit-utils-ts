@@ -38,7 +38,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and num
 
 | Name | Type |
 | :------ | :------ |
-| `amount` | { `algos`: `number`  } \| { `microAlgos`: `number`  } |
+| `amount` | \{ `algos`: `number`  } \| \{ `microAlgos`: `number`  } |
 
 #### Returns
 

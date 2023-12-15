@@ -1,3 +1,5 @@
+import { existsSync } from 'fs'
+import { dirname, resolve } from 'path'
 import { consoleLogger, Logger, nullLogger } from './logging'
 
 /** The AlgoKit configuration type */
@@ -6,6 +8,14 @@ export interface Config {
   logger: Logger
   /** Whether or not debug mode is enabled */
   debug: boolean
+  /** The path to the project root directory */
+  projectRoot: string | null
+  /** Indicates whether to trace all operations */
+  traceAll: boolean
+  /** The size of the trace buffer in megabytes */
+  traceBufferSizeMb: number
+  /** The maximum depth to search for a specific file */
+  maxSearchDepth: number
 }
 
 /** Updatable AlgoKit config */
@@ -18,6 +28,22 @@ export class UpdatableConfig implements Readonly<Config> {
 
   get debug() {
     return this.config.debug
+  }
+
+  get projectRoot() {
+    return this.config.projectRoot
+  }
+
+  get traceAll() {
+    return this.config.traceAll
+  }
+
+  get traceBufferSizeMb() {
+    return this.config.traceBufferSizeMb
+  }
+
+  get maxSearchDepth() {
+    return this.config.maxSearchDepth
   }
 
   /**
@@ -51,6 +77,25 @@ export class UpdatableConfig implements Readonly<Config> {
     this.config = {
       logger: consoleLogger,
       debug: false,
+      projectRoot: null,
+      traceAll: false,
+      traceBufferSizeMb: 256,
+      maxSearchDepth: 10,
+    }
+    this.configureProjectRoot()
+  }
+
+  /**
+   * Configures the project root by searching for a specific file within a depth limit.
+   */
+  private configureProjectRoot() {
+    let currentPath = resolve(__dirname)
+    for (let i = 0; i < this.config.maxSearchDepth; i++) {
+      if (existsSync(`${currentPath}/.algokit.toml`)) {
+        this.config.projectRoot = currentPath
+        break
+      }
+      currentPath = dirname(currentPath)
     }
   }
 

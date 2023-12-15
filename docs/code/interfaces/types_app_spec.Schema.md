@@ -17,7 +17,7 @@ The storage schema definition
 
 ### declared
 
-• **declared**: `Record`<`string`, [`DeclaredSchemaValueSpec`](types_app_spec.DeclaredSchemaValueSpec.md)\>
+• **declared**: `Record`\<`string`, [`DeclaredSchemaValueSpec`](types_app_spec.DeclaredSchemaValueSpec.md)\>
 
 Declared storage schema
 
@@ -29,7 +29,7 @@ ___
 
 ### reserved
 
-• **reserved**: `Record`<`string`, [`ReservedSchemaValueSpec`](types_app_spec.ReservedSchemaValueSpec.md)\>
+• **reserved**: `Record`\<`string`, [`ReservedSchemaValueSpec`](types_app_spec.ReservedSchemaValueSpec.md)\>
 
 Reserved storage schema
 
