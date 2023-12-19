@@ -87,7 +87,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
 
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
-    to: typeof to === 'string' ? to : getSenderAddress(to),
+    to: getSenderAddress(to),
     amount: amount.microAlgos,
     note: encodeTransactionNote(note),
     suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -101,7 +101,9 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
   }
 
   if (!sendParams.skipSending) {
-    Config.getLogger(sendParams.suppressLog).debug(`Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${to}`)
+    Config.getLogger(sendParams.suppressLog).debug(
+      `Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${getSenderAddress(to)}`,
+    )
   }
 
   return sendTransaction({ transaction, from, sendParams }, algod)
@@ -174,9 +176,9 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
   const { from, to, assetId, amount, transactionParams, clawbackFrom, note, lease, ...sendParams } = transfer
   const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
-    to: typeof to === 'string' ? to : getSenderAddress(to),
+    to: getSenderAddress(to),
     closeRemainderTo: undefined,
-    revocationTarget: clawbackFrom ? (typeof clawbackFrom === 'string' ? clawbackFrom : getSenderAddress(clawbackFrom)) : undefined,
+    revocationTarget: clawbackFrom ? getSenderAddress(clawbackFrom) : undefined,
     amount: amount,
     note: encodeTransactionNote(note),
     assetIndex: assetId,
@@ -191,9 +193,7 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
 
   if (!sendParams.skipSending) {
     Config.getLogger(sendParams.suppressLog).debug(
-      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${
-        typeof to === 'string' ? to : getSenderAddress(to)
-      }`,
+      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${getSenderAddress(to)}`,
     )
   }
 
@@ -220,7 +220,7 @@ export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Prom
   const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
     from: getSenderAddress(from),
     to: getSenderAddress(from),
-    rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : getSenderAddress(rekeyTo),
+    rekeyTo: getSenderAddress(rekeyTo),
     amount: 0,
     note: encodeTransactionNote(note),
     suggestedParams: await getTransactionParams(transactionParams, algod),
@@ -233,9 +233,7 @@ export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Prom
   }
 
   if (!sendParams.skipSending) {
-    Config.getLogger(sendParams.suppressLog).debug(
-      `Rekeying ${getSenderAddress(from)} to ${typeof rekeyTo === 'string' ? rekeyTo : getSenderAddress(rekeyTo)}`,
-    )
+    Config.getLogger(sendParams.suppressLog).debug(`Rekeying ${getSenderAddress(from)} to ${getSenderAddress(rekeyTo)}`)
   }
 
   return sendTransaction({ transaction, from, sendParams }, algod)

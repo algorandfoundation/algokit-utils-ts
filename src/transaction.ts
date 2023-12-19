@@ -95,8 +95,8 @@ export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined
  * @param sender A transaction sender
  * @returns The public address
  */
-export const getSenderAddress = function (sender: SendTransactionFrom) {
-  return 'addr' in sender ? sender.addr : sender.address()
+export const getSenderAddress = function (sender: string | SendTransactionFrom) {
+  return typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr : sender.address()
 }
 
 const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
