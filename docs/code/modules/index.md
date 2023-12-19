@@ -570,7 +570,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 #### Defined in
 
-[src/transfer.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L122)
+[src/transfer.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L124)
 
 ___
 
@@ -1689,7 +1689,7 @@ Returns the public address of the given transaction sender.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | A transaction sender |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | A transaction sender |
 
 #### Returns
 
@@ -2572,7 +2572,7 @@ await algokit.transferAsset({ from, to, assetId, amount }, algod)
 
 #### Defined in
 
-[src/transfer.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L173)
+[src/transfer.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L175)
 
 ___
 

@@ -9,10 +9,21 @@ const config: Config.InitialOptions = {
   setupFiles: ['<rootDir>/tests/setup.ts'],
   moduleDirectories: ['node_modules', 'src'],
   transform: {
-    '<regex_match_files>': [
+    '^.+\\.ts?$': [
       'ts-jest',
       {
         tsconfig: 'tsconfig.test.json',
+        diagnostics: {
+          ignoreCodes: [1343],
+        },
+        astTransformers: {
+          before: [
+            {
+              path: 'ts-jest-mock-import-meta',
+              options: { metaObjectReplacement: { url: 'unreachable' } },
+            },
+          ],
+        },
       },
     ],
   },
