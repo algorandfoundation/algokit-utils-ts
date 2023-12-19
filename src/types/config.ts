@@ -1,6 +1,12 @@
 import { existsSync } from 'fs'
 import { dirname, resolve } from 'path'
-import { consoleLogger, Logger, nullLogger } from './logging'
+import { fileURLToPath } from 'url'
+import { Logger, consoleLogger, nullLogger } from './logging'
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore: Unreachable code error
+// eslint-disable-next-line no-restricted-syntax
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
 
 /** The AlgoKit configuration type */
 export interface Config {
@@ -89,7 +95,7 @@ export class UpdatableConfig implements Readonly<Config> {
    * Configures the project root by searching for a specific file within a depth limit.
    */
   private configureProjectRoot() {
-    let currentPath = resolve(__dirname)
+    let currentPath = resolve(_dirname)
     for (let i = 0; i < this.config.maxSearchDepth; i++) {
       if (existsSync(`${currentPath}/.algokit.toml`)) {
         this.config.projectRoot = currentPath

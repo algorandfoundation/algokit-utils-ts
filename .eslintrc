@@ -13,6 +13,14 @@
         // The easiest solution for now, is to only use the default export.
         "message": "Only use the default export in 'algosdk'. See rule comment for details",
         "selector": "ImportDeclaration[source.value=\"algosdk\"] ImportSpecifier"
+      },
+      {
+        "message": "__dirname cannot be used in ESM modules. Use a shim instead.",
+        "selector": "Identifier[name=\"__dirname\"]"
+      },
+      {
+        "message": "__filename cannot be used in ESM modules. Use a shim instead.",
+        "selector": "Identifier[name=\"__filename\"]"
       }
     ]
   },
