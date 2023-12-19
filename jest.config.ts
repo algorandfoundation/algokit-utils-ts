@@ -20,7 +20,7 @@ const config: Config.InitialOptions = {
           before: [
             {
               path: 'ts-jest-mock-import-meta',
-              options: { metaObjectReplacement: { url: 'ignore' } },
+              options: { metaObjectReplacement: { url: 'unreachable' } },
             },
           ],
         },

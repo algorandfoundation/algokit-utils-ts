@@ -59,7 +59,7 @@
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
-    "build:1-compile-cjs": "tsc -p tsconfig.cjs.json",
+    "build:1-compile-cjs": "tsc -p tsconfig.cjs.json && replace-in-files --string '(import.meta.url)' --replacement '(\"unreachable\")' ./dist/cjs/**/*.js",
     "build:2-compile-esm": "tsc -p tsconfig.esm.json && tsc-alias -p tsconfig.esm.json && cpy package.esm.json dist/esm --rename=package.json",
     "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --main ./cjs/index.js --types ./types/index.d.ts --custom-sections exports typesVersions module",
     "build:4-copy-readme": "cpy README.md dist",
@@ -102,6 +102,7 @@
     "jest-fetch-mock": "^3.0.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.2",
+    "replace-in-files-cli": "^2.2.0",
     "rimraf": "^5.0.1",
     "semantic-release": "^21.0.9",
     "tiny-invariant": "^1.3.1",
