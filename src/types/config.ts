@@ -3,11 +3,6 @@ import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { Logger, consoleLogger, nullLogger } from './logging'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore: Unreachable code error
-// eslint-disable-next-line no-restricted-syntax
-const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
-
 /** The AlgoKit configuration type */
 export interface Config {
   /** Logger */
@@ -93,8 +88,19 @@ export class UpdatableConfig implements Readonly<Config> {
 
   /**
    * Configures the project root by searching for a specific file within a depth limit.
+   * This is only supported in a Node environment.
    */
   private configureProjectRoot() {
+    // fileURLToPath and dirname is only available in Node, hence the check
+    const _dirname =
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: Unreachable code error
+      // eslint-disable-next-line no-restricted-syntax
+      typeof __dirname !== 'undefined' ? __dirname : fileURLToPath && dirname ? dirname(fileURLToPath(import.meta.url)) : undefined
+    if (!_dirname) {
+      return
+    }
+
     let currentPath = resolve(_dirname)
     for (let i = 0; i < this.config.maxSearchDepth; i++) {
       if (existsSync(`${currentPath}/.algokit.toml`)) {
