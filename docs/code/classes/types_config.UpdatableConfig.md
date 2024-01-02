@@ -188,7 +188,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-[src/types/config.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L131)
+[src/types/config.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L127)
 
 ___
 
