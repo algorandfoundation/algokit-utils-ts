@@ -341,7 +341,7 @@ describe('application-client', () => {
         VALUE: 1,
       },
       allowDelete: true,
-      sendParams: { packAppCallResources: false },
+      sendParams: { populateAppCallResources: false },
     })
     const app = await client.deploy({
       version: '1.0',
@@ -357,7 +357,7 @@ describe('application-client', () => {
         method: 'delete_abi',
         methodArgs: ['arg2_io'],
       },
-      sendParams: { packAppCallResources: false },
+      sendParams: { populateAppCallResources: false },
     })
 
     invariant(app.operationPerformed === 'replace')
@@ -666,7 +666,7 @@ describe('application-client', () => {
         await newClient.call({
           method: 'error',
           methodArgs: [],
-          sendParams: { packAppCallResources: false },
+          sendParams: { populateAppCallResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -683,7 +683,7 @@ describe('application-client', () => {
         await newClient.call({
           method: 'error',
           methodArgs: [],
-          sendParams: { packAppCallResources: false },
+          sendParams: { populateAppCallResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -711,7 +711,7 @@ describe('application-client', () => {
         await client.call({
           method: 'error',
           methodArgs: [],
-          sendParams: { packAppCallResources: false },
+          sendParams: { populateAppCallResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

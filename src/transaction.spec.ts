@@ -443,28 +443,28 @@ const tests = (version: 8 | 9) => () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
-        appClient.call({ method: 'addressBalance', methodArgs: [testAccount.addr], sendParams: { packAppCallResources: false } }),
+        appClient.call({ method: 'addressBalance', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: false } }),
       ).rejects.toThrow('invalid Account reference')
     })
 
     test('addressBalance', async () => {
-      await appClient.call({ method: 'addressBalance', methodArgs: [alice.addr], sendParams: { packAppCallResources: true } })
+      await appClient.call({ method: 'addressBalance', methodArgs: [alice.addr], sendParams: { populateAppCallResources: true } })
     })
   })
 
   describe('boxes', () => {
     test('smallBox: invalid Box reference', async () => {
-      await expect(appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { packAppCallResources: false } })).rejects.toThrow(
+      await expect(appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { populateAppCallResources: false } })).rejects.toThrow(
         'invalid Box reference',
       )
     })
 
     test('smallBox', async () => {
-      await appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { packAppCallResources: true } })
+      await appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { populateAppCallResources: true } })
     })
 
     test('mediumBox', async () => {
-      await appClient.call({ method: 'mediumBox', methodArgs: [], sendParams: { packAppCallResources: true } })
+      await appClient.call({ method: 'mediumBox', methodArgs: [], sendParams: { populateAppCallResources: true } })
     })
   })
 
@@ -474,7 +474,7 @@ const tests = (version: 8 | 9) => () => {
         appClient.call({
           method: 'externalAppCall',
           methodArgs: [],
-          sendParams: { packAppCallResources: false, fee: algokit.microAlgos(2_000) },
+          sendParams: { populateAppCallResources: false, fee: algokit.microAlgos(2_000) },
         }),
       ).rejects.toThrow('unavailable App')
     })
@@ -483,7 +483,7 @@ const tests = (version: 8 | 9) => () => {
       await appClient.call({
         method: 'externalAppCall',
         methodArgs: [],
-        sendParams: { packAppCallResources: true, fee: algokit.microAlgos(2_000) },
+        sendParams: { populateAppCallResources: true, fee: algokit.microAlgos(2_000) },
       })
     })
   })
@@ -492,13 +492,13 @@ const tests = (version: 8 | 9) => () => {
     test('assetTotal: unavailable Asset', async () => {
       const { testAccount } = fixture.context
       alice = testAccount
-      await expect(appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { packAppCallResources: false } })).rejects.toThrow(
-        'unavailable Asset',
-      )
+      await expect(
+        appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { populateAppCallResources: false } }),
+      ).rejects.toThrow('unavailable Asset')
     })
 
     test('assetTotal', async () => {
-      await appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { packAppCallResources: true } })
+      await appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { populateAppCallResources: true } })
     })
   })
 
@@ -509,20 +509,20 @@ const tests = (version: 8 | 9) => () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
-        appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { packAppCallResources: false } }),
+        appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: false } }),
       ).rejects.toThrow(hasAssetErrorMsg)
     })
 
     test('hasAsset', async () => {
       const { testAccount } = fixture.context
-      await appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { packAppCallResources: true } })
+      await appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: true } })
     })
 
     test(`externalLocal: ${hasAssetErrorMsg}`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
-        appClient.call({ method: 'externalLocal', methodArgs: [testAccount.addr], sendParams: { packAppCallResources: false } }),
+        appClient.call({ method: 'externalLocal', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: false } }),
       ).rejects.toThrow(hasAssetErrorMsg)
     })
 
@@ -533,7 +533,7 @@ const tests = (version: 8 | 9) => () => {
       await appClient.call({
         method: 'externalLocal',
         methodArgs: [testAccount.addr],
-        sendParams: { packAppCallResources: true },
+        sendParams: { populateAppCallResources: true },
         sender: testAccount,
       })
     })
@@ -560,7 +560,7 @@ const tests = (version: 8 | 9) => () => {
       txn.txn.group = undefined
 
       await expect(
-        algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { packAppCallResources: false } }, algod),
+        algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { populateAppCallResources: false } }, algod),
       ).rejects.toThrow('invalid Account reference')
     })
 
@@ -583,7 +583,7 @@ const tests = (version: 8 | 9) => () => {
 
       txn.txn.group = undefined
 
-      await algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { packAppCallResources: true } }, algod)
+      await algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { populateAppCallResources: true } }, algod)
     })
   })
 }
@@ -654,7 +654,7 @@ describe('Resource Packer: Mixed', () => {
       suggestedParams,
     })
 
-    const packedAtc = await algokit.packAppCallResources(atc, fixture.context.algod)
+    const packedAtc = await algokit.populateAppCallResources(atc, fixture.context.algod)
 
     const v8CallAccts = packedAtc.buildGroup()[0].txn.appAccounts
     const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts
@@ -695,7 +695,7 @@ describe('Resource Packer: Mixed', () => {
       suggestedParams,
     })
 
-    const packedAtc = await algokit.packAppCallResources(atc, fixture.context.algod)
+    const packedAtc = await algokit.populateAppCallResources(atc, fixture.context.algod)
 
     const v8CallApps = packedAtc.buildGroup()[0].txn.appForeignApps
     const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts

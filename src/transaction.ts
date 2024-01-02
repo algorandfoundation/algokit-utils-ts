@@ -206,11 +206,11 @@ export const sendTransaction = async function (
 
   let txnToSend = transaction
 
-  // Pack resources if the transaction is an appcall and packAppCallResources wasn't explicitly set to false
-  if (txnToSend.type === algosdk.TransactionType.appl && sendParams?.packAppCallResources !== false) {
+  // Populate  resources if the transaction is an appcall and populateAppCallResources wasn't explicitly set to false
+  if (txnToSend.type === algosdk.TransactionType.appl && sendParams?.populateAppCallResources !== false) {
     const newAtc = new AtomicTransactionComposer()
     newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
-    const packed = await packAppCallResources(newAtc, algod)
+    const packed = await populateAppCallResources(newAtc, algod)
     txnToSend = packed.buildGroup()[0].txn
   }
 
@@ -275,7 +275,7 @@ async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransaction
  * See https://github.com/algorand/go-algorand/pull/5684
  *
  */
-export async function packAppCallResources(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
+export async function populateAppCallResources(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
   const unnamedResourcesAccessed = await getUnnamedAppCallResourcesAccessed(atc, algod)
   const group = atc.buildGroup()
 
@@ -414,9 +414,9 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       .map((t) => t.txn.type)
       .includes(algosdk.TransactionType.appl)
 
-  // If packAppCallResources is true OR if packAppCallResources is undefined and there are app calls, then pack resources
-  if (sendParams?.packAppCallResources || (sendParams?.packAppCallResources === undefined && hasAppCalls())) {
-    atc = await packAppCallResources(givenAtc, algod)
+  // If populateAppCallResources is true OR if populateAppCallResources is undefined and there are app calls, then populate resources
+  if (sendParams?.populateAppCallResources || (sendParams?.populateAppCallResources === undefined && hasAppCalls())) {
+    atc = await populateAppCallResources(givenAtc, algod)
   } else {
     atc = givenAtc
   }
