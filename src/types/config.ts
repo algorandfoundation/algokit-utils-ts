@@ -1,7 +1,18 @@
-import { existsSync } from 'fs'
-import { dirname, resolve } from 'path'
-import { fileURLToPath } from 'url'
+import { isNode } from '../util'
 import { Logger, consoleLogger, nullLogger } from './logging'
+
+let fs: typeof import('fs')
+let path: typeof import('path')
+let url: typeof import('url')
+
+async function loadNodeModules() {
+  if (!isNode()) {
+    throw new Error('This module can only be used in Node.js environment.')
+  }
+  fs = await import('fs')
+  path = await import('path')
+  url = await import('url')
+}
 
 /** The AlgoKit configuration type */
 export interface Config {
@@ -83,31 +94,40 @@ export class UpdatableConfig implements Readonly<Config> {
       traceBufferSizeMb: 256,
       maxSearchDepth: 10,
     }
-    this.configureProjectRoot()
+
+    if (isNode()) {
+      this.configureProjectRoot()
+    }
   }
 
   /**
    * Configures the project root by searching for a specific file within a depth limit.
    * This is only supported in a Node environment.
    */
-  private configureProjectRoot() {
+  private async configureProjectRoot() {
+    await loadNodeModules()
+
     // fileURLToPath and dirname is only available in Node, hence the check
+    const { fileURLToPath } = url
+    const { dirname } = path
+
     const _dirname =
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore: Unreachable code error
       // eslint-disable-next-line no-restricted-syntax
-      typeof __dirname !== 'undefined' ? __dirname : fileURLToPath && dirname ? dirname(fileURLToPath(import.meta.url)) : undefined
+      typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
+
     if (!_dirname) {
       return
     }
 
-    let currentPath = resolve(_dirname)
+    let currentPath = path.resolve(_dirname)
     for (let i = 0; i < this.config.maxSearchDepth; i++) {
-      if (existsSync(`${currentPath}/.algokit.toml`)) {
+      if (fs.existsSync(`${currentPath}/.algokit.toml`)) {
         this.config.projectRoot = currentPath
         break
       }
-      currentPath = dirname(currentPath)
+      currentPath = path.dirname(currentPath)
     }
   }
 

@@ -40,3 +40,12 @@ export const calculateFundAmount = (
     return null
   }
 }
+
+/**
+ * Checks if the current environment is Node.js
+ *
+ * @returns A boolean indicating whether the current environment is Node.js
+ */
+export const isNode = () => {
+  return typeof process !== 'undefined' && process.versions != null && process.versions.node != null
+}

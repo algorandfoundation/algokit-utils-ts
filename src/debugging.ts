@@ -1,7 +1,5 @@
 import algosdk from 'algosdk'
 import * as crypto from 'crypto'
-import * as fs from 'fs'
-import * as path from 'path'
 import { Config, compileTeal } from '.'
 import { performAtomicTransactionComposerSimulate } from './transaction'
 import { CompiledTeal } from './types/app'
@@ -11,6 +9,7 @@ import {
   PersistSourceMapsParams,
   SimulateAndPersistResponseParams,
 } from './types/debugging'
+import { isNode } from './util'
 
 const ALGOKIT_DIR = '.algokit'
 const SOURCES_DIR = 'sources'
@@ -25,6 +24,17 @@ interface ErrnoException extends Error {
   code?: string
   path?: string
   syscall?: string
+}
+
+let fs: typeof import('fs')
+let path: typeof import('path')
+
+async function loadNodeModules() {
+  if (typeof window !== 'undefined') {
+    throw new Error('This module can only be used in Node.js environment.')
+  }
+  fs = await import('fs')
+  path = await import('path')
 }
 
 // === Internal methods ===
@@ -119,11 +129,6 @@ async function buildAVMSourcemap({
   return new AVMDebuggerSourceMapEntry(sourceMapOutputPath, programHash)
 }
 
-// simple function checking whether this is running in node or browser environment
-function isNode(): boolean {
-  return typeof window === 'undefined'
-}
-
 // === Public facing methods ===
 
 /**
@@ -139,6 +144,8 @@ function isNode(): boolean {
 export async function persistSourceMaps({ sources, projectRoot, client, withSources }: PersistSourceMapsParams): Promise<void> {
   if (!isNode()) {
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
+  } else {
+    await loadNodeModules()
   }
 
   try {
@@ -187,6 +194,8 @@ export async function persistSourceMaps({ sources, projectRoot, client, withSour
 export async function simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb }: SimulateAndPersistResponseParams) {
   if (!isNode()) {
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
+  } else {
+    await loadNodeModules()
   }
 
   try {
