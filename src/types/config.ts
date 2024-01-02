@@ -1,6 +1,4 @@
-import { existsSync } from 'fs'
-import { dirname, resolve } from 'path'
-import { fileURLToPath } from 'url'
+import { isNode } from '../util'
 import { Logger, consoleLogger, nullLogger } from './logging'
 
 /** The AlgoKit configuration type */
@@ -83,31 +81,42 @@ export class UpdatableConfig implements Readonly<Config> {
       traceBufferSizeMb: 256,
       maxSearchDepth: 10,
     }
-    this.configureProjectRoot()
+
+    if (isNode()) {
+      this.configureProjectRoot()
+    }
   }
 
   /**
    * Configures the project root by searching for a specific file within a depth limit.
    * This is only supported in a Node environment.
    */
-  private configureProjectRoot() {
-    // fileURLToPath and dirname is only available in Node, hence the check
+  private async configureProjectRoot() {
+    if (!isNode()) {
+      throw new Error('`configureProjectRoot` can only be called in Node.js environment.')
+    }
+
+    const fs = await import('fs')
+    const path = await import('path')
+    const url = await import('url')
+
     const _dirname =
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore: Unreachable code error
       // eslint-disable-next-line no-restricted-syntax
-      typeof __dirname !== 'undefined' ? __dirname : fileURLToPath && dirname ? dirname(fileURLToPath(import.meta.url)) : undefined
+      typeof __dirname !== 'undefined' ? __dirname : path.dirname(url.fileURLToPath(import.meta.url))
+
     if (!_dirname) {
       return
     }
 
-    let currentPath = resolve(_dirname)
+    let currentPath = path.resolve(_dirname)
     for (let i = 0; i < this.config.maxSearchDepth; i++) {
-      if (existsSync(`${currentPath}/.algokit.toml`)) {
+      if (fs.existsSync(`${currentPath}/.algokit.toml`)) {
         this.config.projectRoot = currentPath
         break
       }
-      currentPath = dirname(currentPath)
+      currentPath = path.dirname(currentPath)
     }
   }
 

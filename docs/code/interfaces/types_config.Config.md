@@ -27,7 +27,7 @@ Whether or not debug mode is enabled
 
 #### Defined in
 
-[src/types/config.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L11)
+[src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
 
 ___
 
@@ -39,7 +39,7 @@ Logger
 
 #### Defined in
 
-[src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
+[src/types/config.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L7)
 
 ___
 
@@ -51,7 +51,7 @@ The maximum depth to search for a specific file
 
 #### Defined in
 
-[src/types/config.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L19)
+[src/types/config.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L17)
 
 ___
 
@@ -63,7 +63,7 @@ The path to the project root directory
 
 #### Defined in
 
-[src/types/config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L13)
+[src/types/config.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L11)
 
 ___
 
@@ -75,7 +75,7 @@ Indicates whether to trace all operations
 
 #### Defined in
 
-[src/types/config.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L15)
+[src/types/config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L13)
 
 ___
 
@@ -87,4 +87,4 @@ The size of the trace buffer in megabytes
 
 #### Defined in
 
-[src/types/config.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L17)
+[src/types/config.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L15)
