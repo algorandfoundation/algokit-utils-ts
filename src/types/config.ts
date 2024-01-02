@@ -1,19 +1,6 @@
 import { isNode } from '../util'
 import { Logger, consoleLogger, nullLogger } from './logging'
 
-let fs: typeof import('fs')
-let path: typeof import('path')
-let url: typeof import('url')
-
-async function loadNodeModules() {
-  if (!isNode()) {
-    throw new Error('This module can only be used in Node.js environment.')
-  }
-  fs = await import('fs')
-  path = await import('path')
-  url = await import('url')
-}
-
 /** The AlgoKit configuration type */
 export interface Config {
   /** Logger */
@@ -105,7 +92,13 @@ export class UpdatableConfig implements Readonly<Config> {
    * This is only supported in a Node environment.
    */
   private async configureProjectRoot() {
-    await loadNodeModules()
+    if (!isNode()) {
+      throw new Error('`configureProjectRoot` can only be called in Node.js environment.')
+    }
+
+    const fs = await import('fs')
+    const path = await import('path')
+    const url = await import('url')
 
     // fileURLToPath and dirname is only available in Node, hence the check
     const { fileURLToPath } = url
