@@ -246,7 +246,7 @@ async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransaction
   const groupResponse = result.simulateResponse.txnGroups[0]
 
   if (groupResponse.failureMessage) {
-    throw Error(`Error during resource packing simulation in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
+    throw Error(`Error during resource population simulation in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
   }
 
   return {

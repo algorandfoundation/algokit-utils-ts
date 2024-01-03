@@ -731,7 +731,7 @@ describe('Resource Packer: meta', () => {
 
   test('error during simulate', async () => {
     await expect(externalClient.call({ method: 'error', methodArgs: [] })).rejects.toThrow(
-      'Error during resource packing simulation in transaction 0',
+      'Error during resource population simulation in transaction 0',
     )
   })
 })
