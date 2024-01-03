@@ -1,7 +1,5 @@
 import algosdk from 'algosdk'
 import * as crypto from 'crypto'
-import * as fs from 'fs'
-import * as path from 'path'
 import { Config, compileTeal } from '.'
 import { performAtomicTransactionComposerSimulate } from './transaction'
 import { CompiledTeal } from './types/app'
@@ -11,6 +9,7 @@ import {
   PersistSourceMapsParams,
   SimulateAndPersistResponseParams,
 } from './types/debugging'
+import { isNode } from './util'
 
 const ALGOKIT_DIR = '.algokit'
 const SOURCES_DIR = 'sources'
@@ -31,6 +30,7 @@ interface ErrnoException extends Error {
 
 async function loadOrCreateSources(sourcesPath: string): Promise<AVMDebuggerSourceMap> {
   try {
+    const fs = await import('fs')
     const data = JSON.parse(await fs.promises.readFile(sourcesPath, 'utf8'))
     return AVMDebuggerSourceMap.fromDict(data)
   } catch (error: unknown) {
@@ -45,6 +45,9 @@ async function loadOrCreateSources(sourcesPath: string): Promise<AVMDebuggerSour
 }
 
 async function upsertDebugSourcemaps(sourceMaps: AVMDebuggerSourceMapEntry[], projectRoot: string): Promise<void> {
+  const path = await import('path')
+  const fs = await import('fs')
+
   const sourcesPath = path.join(projectRoot, ALGOKIT_DIR, SOURCES_DIR, SOURCES_FILE)
   const sources = await loadOrCreateSources(sourcesPath)
 
@@ -76,6 +79,9 @@ async function upsertDebugSourcemaps(sourceMaps: AVMDebuggerSourceMapEntry[], pr
 }
 
 async function writeToFile(filePath: string, content: string): Promise<void> {
+  const path = await import('path')
+  const fs = await import('fs')
+
   await fs.promises.mkdir(path.dirname(filePath), { recursive: true })
   await fs.promises.writeFile(filePath, content, 'utf8')
 }
@@ -100,6 +106,7 @@ async function buildAVMSourcemap({
   if (!rawTeal && !compiledTeal) {
     throw new Error('Either rawTeal or compiledTeal must be provided.')
   }
+  const path = await import('path')
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const result = rawTeal ? await compileTeal(rawTeal, client) : compiledTeal!
@@ -117,11 +124,6 @@ async function buildAVMSourcemap({
   }
 
   return new AVMDebuggerSourceMapEntry(sourceMapOutputPath, programHash)
-}
-
-// simple function checking whether this is running in node or browser environment
-function isNode(): boolean {
-  return typeof window === 'undefined'
 }
 
 // === Public facing methods ===
@@ -189,6 +191,9 @@ export async function simulateAndPersistResponse({ atc, projectRoot, algod, buff
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
   }
 
+  const fs = await import('fs')
+  const path = await import('path')
+
   try {
     const atcToSimulate = atc.clone()
     const simulateResult = await performAtomicTransactionComposerSimulate(atcToSimulate, algod)
@@ -209,8 +214,16 @@ export async function simulateAndPersistResponse({ atc, projectRoot, algod, buff
     const outputFileName = `${timestamp}_lr${simulateResult.lastRound}_${txnTypesStr}${TRACES_FILE_EXT}`
     const outputFilePath = path.join(outputRootDir, outputFileName)
 
-    if (!fs.existsSync(path.dirname(outputFilePath))) {
-      await fs.promises.mkdir(path.dirname(outputFilePath), { recursive: true })
+    try {
+      await fs.promises.access(path.dirname(outputFilePath))
+    } catch (error: unknown) {
+      const err = error as ErrnoException
+
+      if (err.code === 'ENOENT') {
+        await fs.promises.mkdir(path.dirname(outputFilePath), { recursive: true })
+      } else {
+        throw err
+      }
     }
 
     // cleanup old files if buffer size is exceeded
