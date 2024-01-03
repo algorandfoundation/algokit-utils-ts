@@ -299,8 +299,6 @@ describe('deploy-app', () => {
       metadata: metadata,
     })) as AppDeploymentParams
 
-    deployment1.populateAppCallResources = false
-
     const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
@@ -311,8 +309,6 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'replace',
     })) as AppDeploymentParams
-
-    deployment2.populateAppCallResources = false
 
     await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 
@@ -377,8 +373,6 @@ describe('deploy-app', () => {
       metadata: metadata,
     })) as AppDeploymentParams
 
-    deployment1.populateAppCallResources = false
-
     const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
@@ -389,8 +383,6 @@ describe('deploy-app', () => {
       breakSchema: true,
       onSchemaBreak: 'replace',
     })) as AppDeploymentParams
-
-    deployment2.populateAppCallResources = false
 
     await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 

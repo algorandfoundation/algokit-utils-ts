@@ -666,7 +666,6 @@ describe('application-client', () => {
         await newClient.call({
           method: 'error',
           methodArgs: [],
-          sendParams: { populateAppCallResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -683,7 +682,6 @@ describe('application-client', () => {
         await newClient.call({
           method: 'error',
           methodArgs: [],
-          sendParams: { populateAppCallResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -711,7 +709,6 @@ describe('application-client', () => {
         await client.call({
           method: 'error',
           methodArgs: [],
-          sendParams: { populateAppCallResources: false },
         })
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
