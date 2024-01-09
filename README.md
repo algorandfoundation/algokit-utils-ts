@@ -22,7 +22,7 @@ This library follows the [Guiding Principles of AlgoKit](https://github.com/algo
 
 ## NextJS compatibility
 
-`algokit-utils-ts` has a set of `node` specific utilities used for simplifying aggregation of artifacts for [AlgoKit VSCode Debugger Extension](https://github.com/algorandfoundation/algokit-avm-vscode-debugger). Which causes next based projects to fail on `fs` module not found. To fix this issue, you can add the following to your `next.config.js` file:
+`algokit-utils-ts` has a set of `node` specific utilities used for simplifying aggregation of artifacts for [AlgoKit VSCode Debugger Extension](https://github.com/algorandfoundation/algokit-avm-vscode-debugger). Which causes Next.js based projects to fail on `fs` module not found. To fix this issue, you can add the following to your `next.config.js` file:
 
 ```js
   webpack: (config, { isServer }) => {
@@ -40,7 +40,7 @@ The root cause is due to the fact that, unlike many frameworks, Next.js allows y
 - getStaticProps
 - getStaticPaths
 
-The Module not found: can't resolve 'xyz' error happens when you try to use server only code outside of these methods. Despite `algokit-utils` lazy loading the node specific code dynamically, next js does not seem to correctly identify whether dynamic import is specific to server or client side. Hence the above fix disables the fallback for `fs` module so it ignores polyfilling it on client side.
+The Module not found: can't resolve 'xyz' error happens when you try to use server only code outside of these methods. Despite `algokit-utils` lazy loading the node specific code dynamically, Next.js does not seem to correctly identify whether a dynamic import is specific to server or client side. Hence the above fix disables the fallback for `fs` module so it ignores polyfilling it on client side.
 
 Future iterations of `algokit-utils` will remove the node specific code by integrating with `rollup` to create more optimized browser compatible bundles.
 
