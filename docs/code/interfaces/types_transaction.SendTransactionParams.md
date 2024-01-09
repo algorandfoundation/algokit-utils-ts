@@ -30,6 +30,7 @@ The sending configuration for a transaction
 - [fee](types_transaction.SendTransactionParams.md#fee)
 - [maxFee](types_transaction.SendTransactionParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transaction.SendTransactionParams.md#maxroundstowaitforconfirmation)
+- [populateAppCallResources](types_transaction.SendTransactionParams.md#populateappcallresources)
 - [skipSending](types_transaction.SendTransactionParams.md#skipsending)
 - [skipWaiting](types_transaction.SendTransactionParams.md#skipwaiting)
 - [suppressLog](types_transaction.SendTransactionParams.md#suppresslog)
@@ -44,7 +45,7 @@ An optional `AtomicTransactionComposer` to add the transaction to, if specified 
 
 #### Defined in
 
-[src/types/transaction.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L35)
+[src/types/transaction.ts:35](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L35)
 
 ___
 
@@ -56,7 +57,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L39)
+[src/types/transaction.ts:39](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L39)
 
 ___
 
@@ -68,7 +69,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L41)
+[src/types/transaction.ts:41](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L41)
 
 ___
 
@@ -80,7 +81,19 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L43)
+[src/types/transaction.ts:43](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L43)
+
+___
+
+### populateAppCallResources
+
+• `Optional` **populateAppCallResources**: `boolean`
+
+Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.
+
+#### Defined in
+
+[src/types/transaction.ts:45](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
@@ -93,7 +106,7 @@ and instead just return the raw transaction, e.g. so you can add it to a group o
 
 #### Defined in
 
-[src/types/transaction.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L31)
+[src/types/transaction.ts:31](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L31)
 
 ___
 
@@ -105,7 +118,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[src/types/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L33)
+[src/types/transaction.ts:33](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L33)
 
 ___
 
@@ -117,4 +130,4 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L37)
+[src/types/transaction.ts:37](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L37)

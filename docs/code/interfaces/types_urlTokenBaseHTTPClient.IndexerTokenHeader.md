@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L13)
+[src/types/urlTokenBaseHTTPClient.ts:13](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L13)

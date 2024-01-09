@@ -26,7 +26,7 @@ The full error description
 
 #### Defined in
 
-[src/types/logic-error.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L16)
+[src/types/logic-error.ts:16](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L16)
 
 ___
 
@@ -38,7 +38,7 @@ The error message
 
 #### Defined in
 
-[src/types/logic-error.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L14)
+[src/types/logic-error.ts:14](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L14)
 
 ___
 
@@ -50,7 +50,7 @@ The program counter where the error was
 
 #### Defined in
 
-[src/types/logic-error.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L12)
+[src/types/logic-error.ts:12](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L12)
 
 ___
 
@@ -62,7 +62,7 @@ Any trace information included in the error
 
 #### Defined in
 
-[src/types/logic-error.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L18)
+[src/types/logic-error.ts:18](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L18)
 
 ___
 
@@ -74,4 +74,4 @@ The ID of the transaction with the logic error
 
 #### Defined in
 
-[src/types/logic-error.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L10)
+[src/types/logic-error.ts:10](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L10)

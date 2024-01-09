@@ -34,7 +34,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Defined in
 
-[src/types/testing.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L73)
+[src/types/testing.ts:73](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/testing.ts#L73)
 
 ## Accessors
 
@@ -59,4 +59,4 @@ test('My test', () => {
 
 #### Defined in
 
-[src/types/testing.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L68)
+[src/types/testing.ts:68](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/testing.ts#L68)

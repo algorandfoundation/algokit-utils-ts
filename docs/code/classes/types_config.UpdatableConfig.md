@@ -43,7 +43,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L50)
+[src/types/config.ts:50](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L50)
 
 ## Properties
 
@@ -53,7 +53,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L13)
+[src/types/config.ts:13](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L13)
 
 ## Accessors
 
@@ -71,7 +71,7 @@ Readonly.debug
 
 #### Defined in
 
-[src/types/config.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L19)
+[src/types/config.ts:19](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L19)
 
 ___
 
@@ -89,7 +89,7 @@ Readonly.logger
 
 #### Defined in
 
-[src/types/config.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L15)
+[src/types/config.ts:15](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L15)
 
 ## Methods
 
@@ -111,7 +111,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-[src/types/config.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L61)
+[src/types/config.ts:61](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L61)
 
 ___
 
@@ -135,7 +135,7 @@ The requested logger
 
 #### Defined in
 
-[src/types/config.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L28)
+[src/types/config.ts:28](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L28)
 
 ___
 
@@ -157,4 +157,4 @@ Temporarily run with debug set to true.
 
 #### Defined in
 
-[src/types/config.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L40)
+[src/types/config.ts:40](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L40)

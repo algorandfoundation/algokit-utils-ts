@@ -33,7 +33,7 @@ ARC-0002 compatible transaction note components https://github.com/algorandfound
 
 #### Defined in
 
-[src/types/transaction.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L15)
+[src/types/transaction.ts:15](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L15)
 
 ___
 
@@ -53,7 +53,7 @@ many types of accounts, including:
 
 #### Defined in
 
-[src/types/transaction.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L98)
+[src/types/transaction.ts:100](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L100)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L11)
+[src/types/transaction.ts:11](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L11)
 
 ___
 
@@ -73,4 +73,4 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L13)
+[src/types/transaction.ts:13](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/transaction.ts#L13)

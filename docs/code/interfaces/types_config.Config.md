@@ -23,7 +23,7 @@ Whether or not debug mode is enabled
 
 #### Defined in
 
-[src/types/config.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L8)
+[src/types/config.ts:8](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L8)
 
 ___
 
@@ -35,4 +35,4 @@ Logger
 
 #### Defined in
 
-[src/types/config.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L6)
+[src/types/config.ts:6](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L6)
