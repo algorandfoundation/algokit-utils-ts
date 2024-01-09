@@ -392,6 +392,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     newAtc.addTransaction(t)
   })
 
+  newAtc['methodCalls'] = atc['methodCalls']
   return newAtc
 }
 
