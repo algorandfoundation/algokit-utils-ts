@@ -318,6 +318,8 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     type: 'account' | 'assetHolding' | 'appLocal' | 'other' = 'other',
   ) => {
     const txnIndex = txns.findIndex((t) => {
+      if (t.txn.type !== algosdk.TransactionType.appl) return false
+
       const accounts = t.txn.appAccounts?.length || 0
       if (type === 'account') return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES
 
