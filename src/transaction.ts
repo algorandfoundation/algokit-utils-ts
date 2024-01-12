@@ -416,32 +416,31 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       .map((t) => t.txn.type)
       .includes(algosdk.TransactionType.appl)
 
-  // If populateAppCallResources is true OR if populateAppCallResources is undefined and there are app calls, then populate resources
-  if (sendParams?.populateAppCallResources || (sendParams?.populateAppCallResources === undefined && hasAppCalls())) {
-    atc = await populateAppCallResources(givenAtc, algod)
-  } else {
-    atc = givenAtc
-  }
-
-  const transactionsWithSigner = atc.buildGroup()
-
-  const transactionsToSend = transactionsWithSigner.map((t) => {
-    return t.txn
-  })
-  let groupId: string | undefined = undefined
-  if (transactionsToSend.length > 1) {
-    groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
-    Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
-      transactionsToSend,
-    })
-
-    Config.getLogger(sendParams?.suppressLog).debug(
-      `Transaction IDs (${groupId})`,
-      transactionsToSend.map((t) => t.txID()),
-    )
-  }
-
+  atc = givenAtc
   try {
+    // If populateAppCallResources is true OR if populateAppCallResources is undefined and there are app calls, then populate resources
+    if (sendParams?.populateAppCallResources || (sendParams?.populateAppCallResources === undefined && hasAppCalls())) {
+      atc = await populateAppCallResources(givenAtc, algod)
+    }
+
+    const transactionsWithSigner = atc.buildGroup()
+
+    const transactionsToSend = transactionsWithSigner.map((t) => {
+      return t.txn
+    })
+    let groupId: string | undefined = undefined
+    if (transactionsToSend.length > 1) {
+      groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
+      Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
+        transactionsToSend,
+      })
+
+      Config.getLogger(sendParams?.suppressLog).debug(
+        `Transaction IDs (${groupId})`,
+        transactionsToSend.map((t) => t.txID()),
+      )
+    }
+
     if (Config.debug && Config.projectRoot && Config.traceAll) {
       // Dump the traces to a file for use with AlgoKit AVM debugger
       await simulateAndPersistResponse({
