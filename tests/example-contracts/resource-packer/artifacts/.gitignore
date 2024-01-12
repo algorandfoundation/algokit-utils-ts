@@ -1,0 +1,3 @@
+*.teal
+*.json
+!*.arc32.json
