@@ -734,4 +734,19 @@ describe('Resource Packer: meta', () => {
       'Error during resource population simulation in transaction 0',
     )
   })
+
+  test('box with txn arg', async () => {
+    const { testAccount, algod } = fixture.context
+
+    const payment = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+      from: testAccount.addr,
+      to: testAccount.addr,
+      suggestedParams: await algod.getTransactionParams().do(),
+      amount: 0,
+    })
+
+    await externalClient.fundAppAccount(algokit.microAlgos(106100))
+
+    await externalClient.call({ method: 'boxWithPayment', methodArgs: [{ transaction: payment, signer: testAccount }] })
+  })
 })
