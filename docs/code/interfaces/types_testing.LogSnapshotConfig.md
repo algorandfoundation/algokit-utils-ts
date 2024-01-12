@@ -26,7 +26,11 @@ Any accounts/addresses to replace the address for predictably
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/testing.ts:84](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/testing.ts#L84)
+=======
+[src/types/testing.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L85)
+>>>>>>> origin/main
 
 ___
 
@@ -38,7 +42,11 @@ Any app IDs to replace predictably
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/testing.ts:86](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/testing.ts#L86)
+=======
+[src/types/testing.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L87)
+>>>>>>> origin/main
 
 ___
 
@@ -50,4 +58,8 @@ Any transaction IDs or transactions to replace the ID for predictably
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/testing.ts:82](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/testing.ts#L82)
+=======
+[src/types/testing.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L83)
+>>>>>>> origin/main

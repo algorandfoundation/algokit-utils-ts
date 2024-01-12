@@ -8,7 +8,7 @@ Account information at a given round https://developer.algorand.org/docs/rest-ap
 
 ## Hierarchy
 
-- `Record`<`string`, `any`\>
+- `Record`\<`string`, `any`\>
 
   ↳ **`AccountResult`**
 

@@ -8,7 +8,7 @@ Result from calling an app
 
 ## Hierarchy
 
-- [`AppCallTransactionResultOfType`](types_app.AppCallTransactionResultOfType.md)<[`ABIReturn`](../modules/types_app.md#abireturn)\>
+- [`AppCallTransactionResultOfType`](types_app.AppCallTransactionResultOfType.md)\<[`ABIReturn`](../modules/types_app.md#abireturn)\>
 
   ↳ **`AppCallTransactionResult`**
 

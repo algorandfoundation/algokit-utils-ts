@@ -18,6 +18,7 @@
 - [types/app-spec](modules/types_app_spec.md)
 - [types/asset](modules/types_asset.md)
 - [types/config](modules/types_config.md)
+- [types/debugging](modules/types_debugging.md)
 - [types/dispenser-client](modules/types_dispenser_client.md)
 - [types/dispenser-client.spec](modules/types_dispenser_client_spec.md)
 - [types/indexer](modules/types_indexer.md)

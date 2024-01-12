@@ -5,7 +5,8 @@ import { TestLogger } from '../test-logger'
 /**
  * Creates a test fixture for capturing AlgoKit logs.
  *
- * @example ```typescript
+ * @example
+ * ```typescript
  * const logs = algoKitLogCaptureFixture()
  *
  * beforeEach(logs.beforeEach)

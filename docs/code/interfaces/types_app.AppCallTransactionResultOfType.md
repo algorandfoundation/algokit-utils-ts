@@ -1,6 +1,6 @@
 [@algorandfoundation/algokit-utils](../README.md) / [types/app](../modules/types_app.md) / AppCallTransactionResultOfType
 
-# Interface: AppCallTransactionResultOfType<T\>
+# Interface: AppCallTransactionResultOfType\<T\>
 
 [types/app](../modules/types_app.md).AppCallTransactionResultOfType
 

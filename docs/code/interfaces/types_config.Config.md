@@ -12,6 +12,10 @@ The AlgoKit configuration type
 
 - [debug](types_config.Config.md#debug)
 - [logger](types_config.Config.md#logger)
+- [maxSearchDepth](types_config.Config.md#maxsearchdepth)
+- [projectRoot](types_config.Config.md#projectroot)
+- [traceAll](types_config.Config.md#traceall)
+- [traceBufferSizeMb](types_config.Config.md#tracebuffersizemb)
 
 ## Properties
 
@@ -23,7 +27,11 @@ Whether or not debug mode is enabled
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/config.ts:8](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L8)
+=======
+[src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
+>>>>>>> origin/main
 
 ___
 
@@ -35,4 +43,56 @@ Logger
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/config.ts:6](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L6)
+=======
+[src/types/config.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L7)
+
+___
+
+### maxSearchDepth
+
+• **maxSearchDepth**: `number`
+
+The maximum depth to search for a specific file
+
+#### Defined in
+
+[src/types/config.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L17)
+
+___
+
+### projectRoot
+
+• **projectRoot**: ``null`` \| `string`
+
+The path to the project root directory
+
+#### Defined in
+
+[src/types/config.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L11)
+
+___
+
+### traceAll
+
+• **traceAll**: `boolean`
+
+Indicates whether to trace all operations
+
+#### Defined in
+
+[src/types/config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L13)
+
+___
+
+### traceBufferSizeMb
+
+• **traceBufferSizeMb**: `number`
+
+The size of the trace buffer in megabytes
+
+#### Defined in
+
+[src/types/config.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L15)
+>>>>>>> origin/main

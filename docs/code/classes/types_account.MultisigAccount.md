@@ -111,13 +111,13 @@ ___
 
 ### params
 
-• `get` **params**(): `Readonly`<`MultisigMetadata`\>
+• `get` **params**(): `Readonly`\<`MultisigMetadata`\>
 
 The parameters for the multisig account
 
 #### Returns
 
-`Readonly`<`MultisigMetadata`\>
+`Readonly`\<`MultisigMetadata`\>
 
 #### Defined in
 

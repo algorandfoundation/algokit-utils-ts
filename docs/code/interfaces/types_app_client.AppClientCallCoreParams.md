@@ -24,7 +24,11 @@ The transaction note for the smart contract call
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:174](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L174)
+=======
+[src/types/app-client.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L177)
+>>>>>>> origin/main
 
 ___
 
@@ -36,7 +40,11 @@ Parameters to control transaction sending
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:176](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L176)
+=======
+[src/types/app-client.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L179)
+>>>>>>> origin/main
 
 ___
 
@@ -48,4 +56,8 @@ The optional sender to send the transaction from, will use the application clien
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:172](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L172)
+=======
+[src/types/app-client.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L175)
+>>>>>>> origin/main

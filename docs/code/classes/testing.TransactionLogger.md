@@ -130,7 +130,7 @@ ___
 
 ### waitForIndexer
 
-▸ **waitForIndexer**(`indexer`): `Promise`<`void`\>
+▸ **waitForIndexer**(`indexer`): `Promise`\<`void`\>
 
 Wait until all logged transactions IDs appear in the given `Indexer`.
 
@@ -142,7 +142,7 @@ Wait until all logged transactions IDs appear in the given `Indexer`.
 
 #### Returns
 
-`Promise`<`void`\>
+`Promise`\<`void`\>
 
 #### Defined in
 

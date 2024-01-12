@@ -34,7 +34,11 @@ The id of an existing app to call using this client, or 0 if the app hasn't been
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:76](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L76)
+=======
+[src/types/app-client.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L79)
+>>>>>>> origin/main
 
 ___
 
@@ -50,7 +54,11 @@ The optional name to use to mark the app when deploying `ApplicationClient.deplo
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:78](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L78)
+=======
+[src/types/app-client.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L81)
+>>>>>>> origin/main
 
 ___
 
@@ -62,4 +70,8 @@ How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'cr
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:83](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L83)
+=======
+[src/types/app-client.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L86)
+>>>>>>> origin/main

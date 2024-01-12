@@ -72,7 +72,7 @@ ___
 
 ### DefaultArgument
 
-Ƭ **DefaultArgument**: { `data`: `ABIMethodParams` ; `source`: ``"abi-method"``  } \| { `data`: `string` ; `source`: ``"global-state"``  } \| { `data`: `string` ; `source`: ``"local-state"``  } \| { `data`: `string` \| `number` ; `source`: ``"constant"``  }
+Ƭ **DefaultArgument**: \{ `data`: `ABIMethodParams` ; `source`: ``"abi-method"``  } \| \{ `data`: `string` ; `source`: ``"global-state"``  } \| \{ `data`: `string` ; `source`: ``"local-state"``  } \| \{ `data`: `string` \| `number` ; `source`: ``"constant"``  }
 
 Defines a strategy for obtaining a default value for a given ABI arg.
 
@@ -96,7 +96,7 @@ ___
 
 ### HintSpec
 
-Ƭ **HintSpec**: `Record`<`string`, [`Hint`](../interfaces/types_app_spec.Hint.md)\>
+Ƭ **HintSpec**: `Record`\<`string`, [`Hint`](../interfaces/types_app_spec.Hint.md)\>
 
 A lookup of encoded method call spec to hint
 

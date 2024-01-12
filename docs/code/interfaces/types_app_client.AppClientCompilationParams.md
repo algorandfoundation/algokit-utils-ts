@@ -20,7 +20,11 @@
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:191](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L191)
+=======
+[src/types/app-client.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L194)
+>>>>>>> origin/main
 
 ___
 
@@ -32,7 +36,11 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:187](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L187)
+=======
+[src/types/app-client.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L190)
+>>>>>>> origin/main
 
 ___
 
@@ -42,4 +50,8 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:189](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L189)
+=======
+[src/types/app-client.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L192)
+>>>>>>> origin/main

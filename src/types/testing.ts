@@ -59,7 +59,8 @@ export interface AlgorandFixture {
   /**
    * Retrieve the current context.
    * Useful with destructuring.
-   * @example ```typescript
+   * @example
+   * ```typescript
    * test('My test', () => {
    *     const {algod, indexer, testAccount, ...} = algorand.context
    * })

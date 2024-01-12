@@ -1,4 +1,5 @@
-import { consoleLogger, Logger, nullLogger } from './logging'
+import { isNode } from '../util'
+import { Logger, consoleLogger, nullLogger } from './logging'
 
 /** The AlgoKit configuration type */
 export interface Config {
@@ -6,6 +7,14 @@ export interface Config {
   logger: Logger
   /** Whether or not debug mode is enabled */
   debug: boolean
+  /** The path to the project root directory */
+  projectRoot: string | null
+  /** Indicates whether to trace all operations */
+  traceAll: boolean
+  /** The size of the trace buffer in megabytes */
+  traceBufferSizeMb: number
+  /** The maximum depth to search for a specific file */
+  maxSearchDepth: number
 }
 
 /** Updatable AlgoKit config */
@@ -18,6 +27,22 @@ export class UpdatableConfig implements Readonly<Config> {
 
   get debug() {
     return this.config.debug
+  }
+
+  get projectRoot() {
+    return this.config.projectRoot
+  }
+
+  get traceAll() {
+    return this.config.traceAll
+  }
+
+  get traceBufferSizeMb() {
+    return this.config.traceBufferSizeMb
+  }
+
+  get maxSearchDepth() {
+    return this.config.maxSearchDepth
   }
 
   /**
@@ -51,6 +76,47 @@ export class UpdatableConfig implements Readonly<Config> {
     this.config = {
       logger: consoleLogger,
       debug: false,
+      projectRoot: null,
+      traceAll: false,
+      traceBufferSizeMb: 256,
+      maxSearchDepth: 10,
+    }
+
+    if (isNode()) {
+      this.configureProjectRoot()
+    }
+  }
+
+  /**
+   * Configures the project root by searching for a specific file within a depth limit.
+   * This is only supported in a Node environment.
+   */
+  private async configureProjectRoot() {
+    if (!isNode()) {
+      throw new Error('`configureProjectRoot` can only be called in Node.js environment.')
+    }
+
+    const fs = await import('fs')
+    const path = await import('path')
+    const url = await import('url')
+
+    const _dirname =
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore: Unreachable code error
+      // eslint-disable-next-line no-restricted-syntax
+      typeof __dirname !== 'undefined' ? __dirname : path.dirname(url.fileURLToPath(import.meta.url))
+
+    if (!_dirname) {
+      return
+    }
+
+    let currentPath = path.resolve(_dirname)
+    for (let i = 0; i < this.config.maxSearchDepth; i++) {
+      if (fs.existsSync(`${currentPath}/.algokit.toml`)) {
+        this.config.projectRoot = currentPath
+        break
+      }
+      currentPath = path.dirname(currentPath)
     }
   }
 

@@ -136,13 +136,13 @@ ___
 
 ### sk
 
-• `get` **sk**(): `Readonly`<`Uint8Array`\>
+• `get` **sk**(): `Readonly`\<`Uint8Array`\>
 
 Secret key belonging to the signer
 
 #### Returns
 
-`Readonly`<`Uint8Array`\>
+`Readonly`\<`Uint8Array`\>
 
 #### Implementation of
 

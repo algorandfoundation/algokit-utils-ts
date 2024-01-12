@@ -143,7 +143,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:26](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L26)
+=======
+[src/transaction.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L27)
+>>>>>>> origin/main
 
 ## Functions
 
@@ -171,7 +175,7 @@ ___
 
 ### assetBulkOptIn
 
-▸ **assetBulkOptIn**(`optIn`, `algod`): `Promise`<`Record`<`number`, `string`\>\>
+▸ **assetBulkOptIn**(`optIn`, `algod`): `Promise`\<`Record`\<`number`, `string`\>\>
 
 Opt in to a list of assets on the Algorand blockchain.
 
@@ -184,7 +188,7 @@ Opt in to a list of assets on the Algorand blockchain.
 
 #### Returns
 
-`Promise`<`Record`<`number`, `string`\>\>
+`Promise`\<`Record`\<`number`, `string`\>\>
 
 A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
 
@@ -206,7 +210,7 @@ ___
 
 ### assetBulkOptOut
 
-▸ **assetBulkOptOut**(`optOut`, `algod`): `Promise`<`Record`<`number`, `string`\>\>
+▸ **assetBulkOptOut**(`optOut`, `algod`): `Promise`\<`Record`\<`number`, `string`\>\>
 
 Opt out of multiple assets in Algorand blockchain.
 
@@ -219,7 +223,7 @@ Opt out of multiple assets in Algorand blockchain.
 
 #### Returns
 
-`Promise`<`Record`<`number`, `string`\>\>
+`Promise`\<`Record`\<`number`, `string`\>\>
 
 A record object containing asset IDs as keys and their corresponding transaction IDs as values.
 
@@ -241,7 +245,7 @@ ___
 
 ### assetOptIn
 
-▸ **assetOptIn**(`optIn`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+▸ **assetOptIn**(`optIn`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 Opt-in an account to an asset.
 
@@ -254,13 +258,12 @@ Opt-in an account to an asset.
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
 **`Example`**
 
-Usage example
 ```typescript
 await algokit.assetOptIn({ account, assetId }, algod)
 ```
@@ -273,7 +276,7 @@ ___
 
 ### assetOptOut
 
-▸ **assetOptOut**(`optOut`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+▸ **assetOptOut**(`optOut`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 Opt-out an account from an asset.
 
@@ -286,13 +289,12 @@ Opt-out an account from an asset.
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
 **`Example`**
 
-Usage example
 ```typescript
 await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 ```
@@ -305,7 +307,7 @@ ___
 
 ### callApp
 
-▸ **callApp**(`call`, `algod`): `Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+▸ **callApp**(`call`, `algod`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 Issues a call to a given app.
 
@@ -318,7 +320,7 @@ Issues a call to a given app.
 
 #### Returns
 
-`Promise`<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 
@@ -349,13 +351,17 @@ the estimated rate.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:658](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L658)
+=======
+[src/transaction.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L488)
+>>>>>>> origin/main
 
 ___
 
 ### compileTeal
 
-▸ **compileTeal**(`tealCode`, `algod`): `Promise`<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
+▸ **compileTeal**(`tealCode`, `algod`): `Promise`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
 
 Compiles the given TEAL using algod and returns the result, including source map.
 
@@ -368,7 +374,7 @@ Compiles the given TEAL using algod and returns the result, including source map
 
 #### Returns
 
-`Promise`<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
+`Promise`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
 
 The information about the compiled file
 
@@ -380,7 +386,7 @@ ___
 
 ### controlFees
 
-▸ **controlFees**<`T`\>(`transaction`, `feeControl`): `T`
+▸ **controlFees**\<`T`\>(`transaction`, `feeControl`): `T`
 
 Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
@@ -405,13 +411,17 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:681](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L681)
+=======
+[src/transaction.ts:511](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L511)
+>>>>>>> origin/main
 
 ___
 
 ### createApp
 
-▸ **createApp**(`create`, `algod`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+▸ **createApp**(`create`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 Creates a smart contract app, returns the details of the created app.
 
@@ -424,7 +434,7 @@ Creates a smart contract app, returns the details of the created app.
 
 #### Returns
 
-`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 The details of the created app, or the transaction to create it if `skipSending` and the compilation result
 
@@ -445,7 +455,7 @@ generic object keyed by the UTF-8 value of the key.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `state` | { `key`: `string` ; `value`: `TealValue` \| `EvalDelta`  }[] | A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas` |
+| `state` | \{ `key`: `string` ; `value`: `TealValue` \| `EvalDelta`  }[] | A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas` |
 
 #### Returns
 
@@ -461,7 +471,7 @@ ___
 
 ### deployApp
 
-▸ **deployApp**(`deployment`, `algod`, `indexer?`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](types_app.md#abireturn) ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+▸ **deployApp**(`deployment`, `algod`, `indexer?`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `operationPerformed`: ``"create"`` \| ``"update"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](types_app.md#abireturn) ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `operationPerformed`: ``"nothing"``  }\>
 
 Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
 
@@ -483,7 +493,7 @@ To understand the architecture decisions behind this functionality please see ht
 
 #### Returns
 
-`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"create"`` \| ``"update"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](types_app.md#abireturn) ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & { `operationPerformed`: ``"nothing"``  }\>
+`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `operationPerformed`: ``"create"`` \| ``"update"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](types_app.md#abireturn) ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `operationPerformed`: ``"nothing"``  }\>
 
 The app reference of the new/existing app
 
@@ -529,7 +539,11 @@ algokit.encodeLease(new Uint8Array([1, 2, 3]))
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:66](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L66)
+=======
+[src/transaction.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L65)
+>>>>>>> origin/main
 
 ___
 
@@ -560,13 +574,17 @@ the transaction note ready for inclusion in a transaction
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:42](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L42)
+=======
+[src/transaction.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L41)
+>>>>>>> origin/main
 
 ___
 
 ### ensureFunded
 
-▸ **ensureFunded**<`T`\>(`funding`, `algod`, `kmd?`): `Promise`<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
+▸ **ensureFunded**\<`T`\>(`funding`, `algod`, `kmd?`): `Promise`\<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
 Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
 
@@ -588,20 +606,24 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 #### Returns
 
-`Promise`<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
+`Promise`\<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
 - `EnsureFundedReturnType` if funds were transferred.
 - `undefined` if no funds were needed.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transfer.ts:122](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transfer.ts#L122)
+=======
+[src/transfer.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L124)
+>>>>>>> origin/main
 
 ___
 
 ### executePaginatedRequest
 
-▸ **executePaginatedRequest**<`TResult`, `TRequest`\>(`extractItems`, `buildRequest`): `Promise`<`TResult`[]\>
+▸ **executePaginatedRequest**\<`TResult`, `TRequest`\>(`extractItems`, `buildRequest`): `Promise`\<`TResult`[]\>
 
 #### Type parameters
 
@@ -619,7 +641,7 @@ ___
 
 #### Returns
 
-`Promise`<`TResult`[]\>
+`Promise`\<`TResult`[]\>
 
 #### Defined in
 
@@ -678,19 +700,19 @@ ___
 
 ### getAccount
 
-▸ **getAccount**(`account`, `algod`, `kmdClient?`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+▸ **getAccount**(`account`, `algod`, `kmdClient?`): `Promise`\<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| { `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account` | `string` \| \{ `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
 | `algod` | `default` | An algod client |
 | `kmdClient?` | `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
 
 #### Returns
 
-`Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+`Promise`\<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
 
@@ -712,8 +734,6 @@ This allows you to write code that will work seamlessly in production and local 
 
 **`Example`**
 
-Default
-
 If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
 ```typescript
 const account = await getAccount('ACCOUNT', algod)
@@ -725,7 +745,7 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 
 [src/account.ts:97](https://github.com/joe-p/algokit-utils-ts/blob/main/src/account.ts#L97)
 
-▸ **getAccount**(`account`, `algod`, `kmdClient?`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+▸ **getAccount**(`account`, `algod`, `kmdClient?`): `Promise`\<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 #### Parameters
 
@@ -739,7 +759,7 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 
 #### Returns
 
-`Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+`Promise`\<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
 
@@ -751,8 +771,6 @@ Returns an Algorand account with private key loaded by convention based on the g
 Note: This function expects to run in a Node.js environment.
 
 **`Example`**
-
-Default
 
 If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
 ```typescript
@@ -862,9 +880,7 @@ Returns an algod SDK client that automatically retries on idempotent calls
 
 **`Example`**
 
-Default (load from environment variables)
-
- ```typescript
+```typescript
  // Uses process.env.ALGOD_SERVER, process.env.ALGOD_PORT and process.env.ALGOD_TOKEN
  // Automatically detects if you are using PureStake to switch in the right header name for ALGOD_TOKEN
  const algod = getAlgoClient()
@@ -873,7 +889,6 @@ Default (load from environment variables)
 
 **`Example`**
 
-AlgoNode (testnet)
 ```typescript
  const algod = getAlgoClient(getAlgoNodeConfig('testnet', 'algod'))
  await algod.healthCheck().do()
@@ -881,7 +896,6 @@ AlgoNode (testnet)
 
 **`Example`**
 
-AlgoNode (mainnet)
 ```typescript
  const algod = getAlgoClient(getAlgoNodeConfig('mainnet', 'algod'))
  await algod.healthCheck().do()
@@ -889,7 +903,6 @@ AlgoNode (mainnet)
 
 **`Example`**
 
-Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const algod = getAlgoClient({server: 'http://localhost', port: '4001', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  await algod.healthCheck().do()
@@ -919,9 +932,7 @@ Returns an indexer SDK client that automatically retries on idempotent calls
 
 **`Example`**
 
-Default (load from environment variables)
-
- ```typescript
+```typescript
  // Uses process.env.INDEXER_SERVER, process.env.INDEXER_PORT and process.env.INDEXER_TOKEN
  // Automatically detects if you are using PureStake to switch in the right header name for INDEXER_TOKEN
  const indexer = getAlgoIndexerClient()
@@ -930,7 +941,6 @@ Default (load from environment variables)
 
 **`Example`**
 
-AlgoNode (testnet)
 ```typescript
  const indexer = getAlgoIndexerClient(getAlgoNodeConfig('testnet', 'indexer'))
  await indexer.makeHealthCheck().do()
@@ -938,7 +948,6 @@ AlgoNode (testnet)
 
 **`Example`**
 
-AlgoNode (mainnet)
 ```typescript
  const indexer = getAlgoIndexerClient(getAlgoNodeConfig('mainnet', 'indexer'))
  await indexer.makeHealthCheck().do()
@@ -946,7 +955,6 @@ AlgoNode (mainnet)
 
 **`Example`**
 
-Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  await indexer.makeHealthCheck().do()
@@ -978,16 +986,13 @@ KMD client allows you to export private keys, which is useful to get the default
 
 **`Example`**
 
-Default (load from environment variables)
-
- ```typescript
+```typescript
  // Uses process.env.ALGOD_SERVER, process.env.KMD_PORT (or if not specified: port 4002) and process.env.ALGOD_TOKEN
  const kmd = getAlgoKmdClient()
  ```
 
 **`Example`**
 
-Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
 ```typescript
  const kmd = getAlgoKmdClient({server: 'http://localhost', port: '4002', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
 ```
@@ -1039,7 +1044,7 @@ ___
 
 ### getAppArgsForABICall
 
-▸ **getAppArgsForABICall**(`args`, `from`): `Promise`<{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
 
@@ -1052,7 +1057,7 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 
 #### Returns
 
-`Promise`<{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
 
@@ -1064,7 +1069,7 @@ ___
 
 ### getAppArgsForTransaction
 
-▸ **getAppArgsForTransaction**(`args?`): `undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
+▸ **getAppArgsForTransaction**(`args?`): `undefined` \| \{ `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
 
 Returns the app args ready to load onto an app `Transaction` object
 
@@ -1076,7 +1081,7 @@ Returns the app args ready to load onto an app `Transaction` object
 
 #### Returns
 
-`undefined` \| { `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
+`undefined` \| \{ `accounts`: `undefined` \| `string`[] ; `appArgs`: `undefined` \| `Uint8Array`[] ; `boxes`: `undefined` \| `BoxReference`[] ; `foreignApps`: `undefined` \| `number`[] = args.apps; `foreignAssets`: `undefined` \| `number`[] = args.assets; `lease`: `undefined` \| `Uint8Array`  }
 
 The args ready to load into a `Transaction`
 
@@ -1088,7 +1093,7 @@ ___
 
 ### getAppBoxNames
 
-▸ **getAppBoxNames**(`appId`, `algod`): `Promise`<[`BoxName`](../interfaces/types_app.BoxName.md)[]\>
+▸ **getAppBoxNames**(`appId`, `algod`): `Promise`\<[`BoxName`](../interfaces/types_app.BoxName.md)[]\>
 
 Returns the names of the boxes for the given app.
 
@@ -1101,7 +1106,7 @@ Returns the names of the boxes for the given app.
 
 #### Returns
 
-`Promise`<[`BoxName`](../interfaces/types_app.BoxName.md)[]\>
+`Promise`\<[`BoxName`](../interfaces/types_app.BoxName.md)[]\>
 
 The current box names
 
@@ -1113,7 +1118,7 @@ ___
 
 ### getAppBoxValue
 
-▸ **getAppBoxValue**(`appId`, `boxName`, `algod`): `Promise`<`Uint8Array`\>
+▸ **getAppBoxValue**(`appId`, `boxName`, `algod`): `Promise`\<`Uint8Array`\>
 
 Returns the value of the given box name for the given app.
 
@@ -1127,7 +1132,7 @@ Returns the value of the given box name for the given app.
 
 #### Returns
 
-`Promise`<`Uint8Array`\>
+`Promise`\<`Uint8Array`\>
 
 The current box value as a byte array
 
@@ -1139,7 +1144,7 @@ ___
 
 ### getAppBoxValueFromABIType
 
-▸ **getAppBoxValueFromABIType**(`request`, `algod`): `Promise`<`ABIValue`\>
+▸ **getAppBoxValueFromABIType**(`request`, `algod`): `Promise`\<`ABIValue`\>
 
 Returns the value of the given box name for the given app decoded based on the given ABI type.
 
@@ -1152,7 +1157,7 @@ Returns the value of the given box name for the given app decoded based on the g
 
 #### Returns
 
-`Promise`<`ABIValue`\>
+`Promise`\<`ABIValue`\>
 
 The current box value as an ABI value
 
@@ -1164,7 +1169,7 @@ ___
 
 ### getAppBoxValues
 
-▸ **getAppBoxValues**(`appId`, `boxNames`, `algod`): `Promise`<`Uint8Array`[]\>
+▸ **getAppBoxValues**(`appId`, `boxNames`, `algod`): `Promise`\<`Uint8Array`[]\>
 
 Returns the value of the given box names for the given app.
 
@@ -1178,7 +1183,7 @@ Returns the value of the given box names for the given app.
 
 #### Returns
 
-`Promise`<`Uint8Array`[]\>
+`Promise`\<`Uint8Array`[]\>
 
 The current box values as a byte array in the same order as the passed in box names
 
@@ -1190,7 +1195,7 @@ ___
 
 ### getAppBoxValuesFromABIType
 
-▸ **getAppBoxValuesFromABIType**(`request`, `algod`): `Promise`<`ABIValue`[]\>
+▸ **getAppBoxValuesFromABIType**(`request`, `algod`): `Promise`\<`ABIValue`[]\>
 
 Returns the value of the given box names for the given app decoded based on the given ABI type.
 
@@ -1203,7 +1208,7 @@ Returns the value of the given box names for the given app decoded based on the 
 
 #### Returns
 
-`Promise`<`ABIValue`[]\>
+`Promise`\<`ABIValue`[]\>
 
 The current box values as an ABI value in the same order as the passed in box names
 
@@ -1215,7 +1220,7 @@ ___
 
 ### getAppById
 
-▸ **getAppById**(`appId`, `algod`): `Promise`<`Application`\>
+▸ **getAppById**(`appId`, `algod`): `Promise`\<`Application`\>
 
 Gets the current data for the given app from algod.
 
@@ -1228,7 +1233,7 @@ Gets the current data for the given app from algod.
 
 #### Returns
 
-`Promise`<`Application`\>
+`Promise`\<`Application`\>
 
 The data about the app
 
@@ -1397,7 +1402,7 @@ ___
 
 ### getAppGlobalState
 
-▸ **getAppGlobalState**(`appId`, `algod`): `Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+▸ **getAppGlobalState**(`appId`, `algod`): `Promise`\<[`AppState`](../interfaces/types_app.AppState.md)\>
 
 Returns the current global state values for the given app ID
 
@@ -1410,7 +1415,7 @@ Returns the current global state values for the given app ID
 
 #### Returns
 
-`Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+`Promise`\<[`AppState`](../interfaces/types_app.AppState.md)\>
 
 The current global state
 
@@ -1422,7 +1427,7 @@ ___
 
 ### getAppLocalState
 
-▸ **getAppLocalState**(`appId`, `account`, `algod`): `Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+▸ **getAppLocalState**(`appId`, `account`, `algod`): `Promise`\<[`AppState`](../interfaces/types_app.AppState.md)\>
 
 Returns the current global state values for the given app ID and account
 
@@ -1436,7 +1441,7 @@ Returns the current global state values for the given app ID and account
 
 #### Returns
 
-`Promise`<[`AppState`](../interfaces/types_app.AppState.md)\>
+`Promise`\<[`AppState`](../interfaces/types_app.AppState.md)\>
 
 The current local state for the given (app, account) combination
 
@@ -1494,7 +1499,11 @@ The array of transactions with signers
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:713](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L713)
+=======
+[src/transaction.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L543)
+>>>>>>> origin/main
 
 ___
 
@@ -1540,7 +1549,7 @@ ___
 
 ### getCreatorAppsByName
 
-▸ **getCreatorAppsByName**(`creatorAccount`, `indexer`): `Promise`<[`AppLookup`](../interfaces/types_app.AppLookup.md)\>
+▸ **getCreatorAppsByName**(`creatorAccount`, `indexer`): `Promise`\<[`AppLookup`](../interfaces/types_app.AppLookup.md)\>
 
 Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have an `AppDeployNote` in the transaction note of the creation transaction.
 
@@ -1555,7 +1564,7 @@ Returns a lookup of name => app metadata (id, address, ...metadata) for all apps
 
 #### Returns
 
-`Promise`<[`AppLookup`](../interfaces/types_app.AppLookup.md)\>
+`Promise`\<[`AppLookup`](../interfaces/types_app.AppLookup.md)\>
 
 A name-based lookup of the app information (id, address)
 
@@ -1589,7 +1598,7 @@ ___
 
 ### getDispenserAccount
 
-▸ **getDispenserAccount**(`algod`, `kmd?`): `Promise`<`default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+▸ **getDispenserAccount**(`algod`, `kmd?`): `Promise`\<`default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 Returns an account (with private key loaded) that can act as a dispenser
 
@@ -1605,7 +1614,7 @@ If running on LocalNet then it will return the default dispenser account automat
 
 #### Returns
 
-`Promise`<`default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+`Promise`\<`default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 #### Defined in
 
@@ -1631,7 +1640,7 @@ ___
 
 ### getKmdWalletAccount
 
-▸ **getKmdWalletAccount**(`walletAccount`, `algod`, `kmdClient?`): `Promise`<`Account` \| `undefined`\>
+▸ **getKmdWalletAccount**(`walletAccount`, `algod`, `kmdClient?`): `Promise`\<`Account` \| `undefined`\>
 
 Returns an Algorand account with private key loaded from the given KMD wallet (identified by name).
 
@@ -1641,17 +1650,15 @@ Returns an Algorand account with private key loaded from the given KMD wallet (i
 | :------ | :------ | :------ |
 | `walletAccount` | `Object` | The details of the wallet, with: * `name`: The name of the wallet to retrieve an account from * `predicate`: An optional filter to use to find the account (otherwise it will return a random account from the wallet) |
 | `walletAccount.name` | `string` | - |
-| `walletAccount.predicate?` | (`account`: `Record`<`string`, `any`\>) => `boolean` | - |
+| `walletAccount.predicate?` | (`account`: `Record`\<`string`, `any`\>) => `boolean` | - |
 | `algod` | `default` | An algod client |
 | `kmdClient?` | `default` | A KMD client, if not specified then a default KMD client will be loaded from environment variables |
 
 #### Returns
 
-`Promise`<`Account` \| `undefined`\>
+`Promise`\<`Account` \| `undefined`\>
 
 **`Example`**
-
-Get default funded account in a LocalNet
 
 ```typescript
 const defaultDispenserAccount = await getKmdWalletAccount(algod,
@@ -1668,7 +1675,7 @@ ___
 
 ### getLocalNetDispenserAccount
 
-▸ **getLocalNetDispenserAccount**(`algod`, `kmd?`): `Promise`<`Account`\>
+▸ **getLocalNetDispenserAccount**(`algod`, `kmd?`): `Promise`\<`Account`\>
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts)
 
@@ -1681,7 +1688,7 @@ Returns an Algorand account with private key loaded for the default LocalNet dis
 
 #### Returns
 
-`Promise`<`Account`\>
+`Promise`\<`Account`\>
 
 #### Defined in
 
@@ -1691,7 +1698,7 @@ ___
 
 ### getOrCreateKmdWalletAccount
 
-▸ **getOrCreateKmdWalletAccount**(`walletAccount`, `algod`, `kmdClient?`): `Promise`<`Account`\>
+▸ **getOrCreateKmdWalletAccount**(`walletAccount`, `algod`, `kmdClient?`): `Promise`\<`Account`\>
 
 Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
 
@@ -1713,7 +1720,7 @@ If this is used via `mnemonicAccountFromEnvironment`, then you can even use the 
 
 #### Returns
 
-`Promise`<`Account`\>
+`Promise`\<`Account`\>
 
 An Algorand account with private key loaded - either one that already existed in the given KMD wallet, or a new one that is funded for you
 
@@ -1733,7 +1740,7 @@ Returns the public address of the given transaction sender.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | A transaction sender |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | A transaction sender |
 
 #### Returns
 
@@ -1743,7 +1750,11 @@ The public address
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:99](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L99)
+=======
+[src/transaction.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L98)
+>>>>>>> origin/main
 
 ___
 
@@ -1768,7 +1779,11 @@ A transaction signer
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:109](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L109)
+=======
+[src/transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L108)
+>>>>>>> origin/main
 
 ___
 
@@ -1810,7 +1825,7 @@ ___
 
 ### getTransactionParams
 
-▸ **getTransactionParams**(`params`, `algod`): `Promise`<`SuggestedParamsWithMinFee` \| { `fee`: `number` ; `firstRound`: `number` ; `flatFee?`: `boolean` ; `genesisHash`: `string` ; `genesisID`: `string` ; `lastRound`: `number`  }\>
+▸ **getTransactionParams**(`params`, `algod`): `Promise`\<`SuggestedParamsWithMinFee` \| \{ `fee`: `number` ; `firstRound`: `number` ; `flatFee?`: `boolean` ; `genesisHash`: `string` ; `genesisID`: `string` ; `lastRound`: `number`  }\>
 
 Returns suggested transaction parameters from algod unless some are already provided.
 
@@ -1823,19 +1838,23 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Returns
 
-`Promise`<`SuggestedParamsWithMinFee` \| { `fee`: `number` ; `firstRound`: `number` ; `flatFee?`: `boolean` ; `genesisHash`: `string` ; `genesisID`: `string` ; `lastRound`: `number`  }\>
+`Promise`\<`SuggestedParamsWithMinFee` \| \{ `fee`: `number` ; `firstRound`: `number` ; `flatFee?`: `boolean` ; `genesisHash`: `string` ; `genesisID`: `string` ; `lastRound`: `number`  }\>
 
 The suggested transaction parameters
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:704](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L704)
+=======
+[src/transaction.ts:534](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L534)
+>>>>>>> origin/main
 
 ___
 
 ### getTransactionWithSigner
 
-▸ **getTransactionWithSigner**(`transaction`, `defaultSender?`): `Promise`<`TransactionWithSigner`\>
+▸ **getTransactionWithSigner**(`transaction`, `defaultSender?`): `Promise`\<`TransactionWithSigner`\>
 
 Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
 AtomicTransactionComposer's addTransaction method.
@@ -1844,24 +1863,28 @@ AtomicTransactionComposer's addTransaction method.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `transaction` | `Transaction` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| `TransactionWithSigner` | One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils' helpers (signer is obtained from the defaultSender parameter) |
+| `transaction` | `Transaction` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| `TransactionWithSigner` | One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils' helpers (signer is obtained from the defaultSender parameter) |
 | `defaultSender?` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The default sender to be used to obtain a signer where the object provided to the transaction parameter does not include a signer. |
 
 #### Returns
 
-`Promise`<`TransactionWithSigner`\>
+`Promise`\<`TransactionWithSigner`\>
 
 A TransactionWithSigner object.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:122](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L122)
+=======
+[src/transaction.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L121)
+>>>>>>> origin/main
 
 ___
 
 ### isLocalNet
 
-▸ **isLocalNet**(`algod`): `Promise`<`boolean`\>
+▸ **isLocalNet**(`algod`): `Promise`\<`boolean`\>
 
 Returns true if the algod client is pointing to a LocalNet Algorand network
 
@@ -1873,7 +1896,7 @@ Returns true if the algod client is pointing to a LocalNet Algorand network
 
 #### Returns
 
-`Promise`<`boolean`\>
+`Promise`\<`boolean`\>
 
 #### Defined in
 
@@ -1883,7 +1906,7 @@ ___
 
 ### isMainNet
 
-▸ **isMainNet**(`algod`): `Promise`<`boolean`\>
+▸ **isMainNet**(`algod`): `Promise`\<`boolean`\>
 
 #### Parameters
 
@@ -1893,7 +1916,7 @@ ___
 
 #### Returns
 
-`Promise`<`boolean`\>
+`Promise`\<`boolean`\>
 
 #### Defined in
 
@@ -1930,7 +1953,7 @@ ___
 
 ### isTestNet
 
-▸ **isTestNet**(`algod`): `Promise`<`boolean`\>
+▸ **isTestNet**(`algod`): `Promise`\<`boolean`\>
 
 #### Parameters
 
@@ -1940,7 +1963,7 @@ ___
 
 #### Returns
 
-`Promise`<`boolean`\>
+`Promise`\<`boolean`\>
 
 #### Defined in
 
@@ -1950,7 +1973,7 @@ ___
 
 ### lookupAccountByAddress
 
-▸ **lookupAccountByAddress**(`accountAddress`, `indexer`): `Promise`<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
+▸ **lookupAccountByAddress**(`accountAddress`, `indexer`): `Promise`\<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
 
 Looks up an account by address using Indexer.
 
@@ -1963,7 +1986,7 @@ Looks up an account by address using Indexer.
 
 #### Returns
 
-`Promise`<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
+`Promise`\<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
 
 The result of the look-up
 
@@ -1975,7 +1998,7 @@ ___
 
 ### lookupAccountCreatedApplicationByAddress
 
-▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
+▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
 
 Looks up applications that were created by the given address.
 
@@ -1990,7 +2013,7 @@ Looks up applications that were created by the given address.
 
 #### Returns
 
-`Promise`<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
+`Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
 
 The list of application results
 
@@ -2002,7 +2025,7 @@ ___
 
 ### lookupTransactionById
 
-▸ **lookupTransactionById**(`transactionId`, `indexer`): `Promise`<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
+▸ **lookupTransactionById**(`transactionId`, `indexer`): `Promise`\<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
 
 Looks up a transaction by ID using Indexer.
 
@@ -2015,7 +2038,7 @@ Looks up a transaction by ID using Indexer.
 
 #### Returns
 
-`Promise`<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
+`Promise`\<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
 
 The result of the look-up
 
@@ -2073,7 +2096,7 @@ ___
 
 ### mnemonicAccountFromEnvironment
 
-▸ **mnemonicAccountFromEnvironment**(`account`, `algod`, `kmdClient?`): `Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+▸ **mnemonicAccountFromEnvironment**(`account`, `algod`, `kmdClient?`): `Promise`\<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 Returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
 
@@ -2091,19 +2114,17 @@ This allows you to write code that will work seamlessly in production and local 
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| { `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: string: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account` | `string` \| \{ `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: string: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
 | `algod` | `default` | An algod client |
 | `kmdClient?` | `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
 
 #### Returns
 
-`Promise`<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
+`Promise`\<`Account` \| [`SigningAccount`](../classes/types_account.SigningAccount.md)\>
 
 The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
 
 **`Example`**
-
-Default
 
 If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
 ```typescript
@@ -2146,7 +2167,7 @@ ___
 
 ### performAtomicTransactionComposerDryrun
 
-▸ **performAtomicTransactionComposerDryrun**(`atc`, `algod`): `Promise`<`DryrunResult`\>
+▸ **performAtomicTransactionComposerDryrun**(`atc`, `algod`): `Promise`\<`DryrunResult`\>
 
 Performs a dry run of the transactions loaded into the given AtomicTransactionComposer`
 @param atc The AtomicTransactionComposer` with transaction(s) loaded
@@ -2160,19 +2181,23 @@ Performs a dry run of the transactions loaded into the given AtomicTransactionCo
 
 #### Returns
 
-`Promise`<`DryrunResult`\>
+`Promise`\<`DryrunResult`\>
 
 The dryrun result
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:510](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L510)
+=======
+[src/transaction.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L339)
+>>>>>>> origin/main
 
 ___
 
 ### performAtomicTransactionComposerSimulate
 
-▸ **performAtomicTransactionComposerSimulate**(`atc`, `algod`): `Promise`<`SimulateResponse`\>
+▸ **performAtomicTransactionComposerSimulate**(`atc`, `algod`): `Promise`\<`SimulateResponse`\>
 
 Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
 
@@ -2185,13 +2210,17 @@ Performs a simulation of the transactions loaded into the given AtomicTransactio
 
 #### Returns
 
-`Promise`<`SimulateResponse`\>
+`Promise`\<`SimulateResponse`\>
 
 The simulation result, which includes various details about how the transactions would be processed.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:525](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L525)
+=======
+[src/transaction.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L354)
+>>>>>>> origin/main
 
 ___
 
@@ -2224,7 +2253,7 @@ ___
 
 ### performTemplateSubstitutionAndCompile
 
-▸ **performTemplateSubstitutionAndCompile**(`tealCode`, `algod`, `templateParams?`, `deploymentMetadata?`): `Promise`<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
+▸ **performTemplateSubstitutionAndCompile**(`tealCode`, `algod`, `templateParams?`, `deploymentMetadata?`): `Promise`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
 
 Performs template substitution of a teal file and compiles it, returning the compiled result.
 
@@ -2241,7 +2270,7 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 #### Returns
 
-`Promise`<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
+`Promise`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
 
 The information about the compiled code
 
@@ -2297,7 +2326,7 @@ ___
 
 ### rekeyAccount
 
-▸ **rekeyAccount**(`rekey`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+▸ **rekeyAccount**(`rekey`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 Rekey an account to a new address.
 
@@ -2312,13 +2341,12 @@ Rekey an account to a new address.
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
 **`Example`**
 
-Usage example
 ```typescript
 await algokit.rekeyAccount({ from, rekeyTo }, algod)
 ```
@@ -2389,7 +2417,7 @@ ___
 
 ### searchTransactions
 
-▸ **searchTransactions**(`indexer`, `searchCriteria`, `paginationLimit?`): `Promise`<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
+▸ **searchTransactions**(`indexer`, `searchCriteria`, `paginationLimit?`): `Promise`\<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
 
 Allows transactions to be searched for the given criteria.
 
@@ -2403,7 +2431,7 @@ Allows transactions to be searched for the given criteria.
 
 #### Returns
 
-`Promise`<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
+`Promise`\<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
 
 The search results
 
@@ -2415,7 +2443,7 @@ ___
 
 ### sendAtomicTransactionComposer
 
-▸ **sendAtomicTransactionComposer**(`atcSend`, `algod`): `Promise`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
+▸ **sendAtomicTransactionComposer**(`atcSend`, `algod`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
 
 Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
 
@@ -2428,19 +2456,23 @@ Signs and sends transactions that have been collected by an `AtomicTransactionCo
 
 #### Returns
 
-`Promise`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
+`Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
 
 An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:407](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L407)
+=======
+[src/transaction.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L228)
+>>>>>>> origin/main
 
 ___
 
 ### sendGroupOfTransactions
 
-▸ **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`<`Omit`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md), ``"returns"``\>\>
+▸ **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`\<`Omit`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md), ``"returns"``\>\>
 
 Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
 
@@ -2453,19 +2485,23 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Returns
 
-`Promise`<`Omit`<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md), ``"returns"``\>\>
+`Promise`\<`Omit`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md), ``"returns"``\>\>
 
 An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:556](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L556)
+=======
+[src/transaction.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L386)
+>>>>>>> origin/main
 
 ___
 
 ### sendTransaction
 
-▸ **sendTransaction**(`send`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+▸ **sendTransaction**(`send`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
 
@@ -2481,19 +2517,23 @@ Prepares a transaction for sending and then (if instructed) signs and sends the 
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `undefined`) confirmation (`confirmation`)
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:185](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L185)
+=======
+[src/transaction.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L184)
+>>>>>>> origin/main
 
 ___
 
 ### signTransaction
 
-▸ **signTransaction**(`transaction`, `signer`): `Promise`<`Uint8Array`\>
+▸ **signTransaction**(`transaction`, `signer`): `Promise`\<`Uint8Array`\>
 
 Signs a single transaction by the given signer.
 
@@ -2506,13 +2546,17 @@ Signs a single transaction by the given signer.
 
 #### Returns
 
-`Promise`<`Uint8Array`\>
+`Promise`\<`Uint8Array`\>
 
 The signed transaction as a `Uint8Array`
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:165](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L165)
+=======
+[src/transaction.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L164)
+>>>>>>> origin/main
 
 ___
 
@@ -2589,7 +2633,7 @@ ___
 
 ### transferAlgos
 
-▸ **transferAlgos**(`transfer`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+▸ **transferAlgos**(`transfer`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 Transfer ALGOs between two accounts.
 
@@ -2602,13 +2646,12 @@ Transfer ALGOs between two accounts.
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
 **`Example`**
 
-Usage example
 ```typescript
 await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
 ```
@@ -2621,7 +2664,7 @@ ___
 
 ### transferAsset
 
-▸ **transferAsset**(`transfer`, `algod`): `Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+▸ **transferAsset**(`transfer`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 Transfer asset between two accounts.
 
@@ -2634,26 +2677,29 @@ Transfer asset between two accounts.
 
 #### Returns
 
-`Promise`<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
 **`Example`**
 
-Usage example
 ```typescript
 await algokit.transferAsset({ from, to, assetId, amount }, algod)
 ```
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transfer.ts:173](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transfer.ts#L173)
+=======
+[src/transfer.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer.ts#L175)
+>>>>>>> origin/main
 
 ___
 
 ### updateApp
 
-▸ **updateApp**(`update`, `algod`): `Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+▸ **updateApp**(`update`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 Updates a smart contract app.
 
@@ -2666,7 +2712,7 @@ Updates a smart contract app.
 
 #### Returns
 
-`Promise`<`Partial`<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The transaction send result and the compilation result
 
@@ -2678,7 +2724,7 @@ ___
 
 ### waitForConfirmation
 
-▸ **waitForConfirmation**(`transactionId`, `maxRoundsToWait`, `algod`): `Promise`<`PendingTransactionResponse`\>
+▸ **waitForConfirmation**(`transactionId`, `maxRoundsToWait`, `algod`): `Promise`\<`PendingTransactionResponse`\>
 
 Wait until the transaction is confirmed or rejected, or until `timeout`
 number of rounds have passed.
@@ -2693,7 +2739,7 @@ number of rounds have passed.
 
 #### Returns
 
-`Promise`<`PendingTransactionResponse`\>
+`Promise`\<`PendingTransactionResponse`\>
 
 Pending transaction information
 
@@ -2703,4 +2749,8 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/transaction.ts:601](https://github.com/joe-p/algokit-utils-ts/blob/main/src/transaction.ts#L601)
+=======
+[src/transaction.ts:431](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L431)
+>>>>>>> origin/main

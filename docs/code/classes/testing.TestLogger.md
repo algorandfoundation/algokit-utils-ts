@@ -186,7 +186,6 @@ The snapshotted logs.
 
 **`Example`**
 
-Jest Example
 ```typescript
 const logger = new TestLogger()
 ...
