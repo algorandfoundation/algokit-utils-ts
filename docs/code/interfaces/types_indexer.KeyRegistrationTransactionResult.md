@@ -28,7 +28,7 @@ Fields for a `keyreg` transaction https://developer.algorand.org/docs/rest-apis/
 
 #### Defined in
 
-[src/types/indexer.ts:323](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/indexer.ts#L323)
+[src/types/indexer.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L323)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:328](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/indexer.ts#L328)
+[src/types/indexer.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L328)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:333](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/indexer.ts#L333)
+[src/types/indexer.ts:333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L333)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:335](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/indexer.ts#L335)
+[src/types/indexer.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L335)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:337](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/indexer.ts#L337)
+[src/types/indexer.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L337)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:339](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/indexer.ts#L339)
+[src/types/indexer.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L339)
 
 ___
 
@@ -106,4 +106,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:344](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/indexer.ts#L344)
+[src/types/indexer.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L344)

@@ -56,7 +56,7 @@ Create a new test logger that wraps the given logger if provided.
 
 #### Defined in
 
-[src/testing/test-logger.ts:16](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L16)
+[src/testing/test-logger.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L16)
 
 ## Properties
 
@@ -66,7 +66,7 @@ Create a new test logger that wraps the given logger if provided.
 
 #### Defined in
 
-[src/testing/test-logger.ts:10](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L10)
+[src/testing/test-logger.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L10)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/testing/test-logger.ts:9](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L9)
+[src/testing/test-logger.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L9)
 
 ## Accessors
 
@@ -92,7 +92,7 @@ Returns all logs captured thus far.
 
 #### Defined in
 
-[src/testing/test-logger.ts:22](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L22)
+[src/testing/test-logger.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L22)
 
 ## Methods
 
@@ -108,7 +108,7 @@ Clears all logs captured so far.
 
 #### Defined in
 
-[src/testing/test-logger.ts:27](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L27)
+[src/testing/test-logger.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L27)
 
 ___
 
@@ -133,7 +133,7 @@ Logger.debug
 
 #### Defined in
 
-[src/testing/test-logger.ts:77](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L77)
+[src/testing/test-logger.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L77)
 
 ___
 
@@ -158,7 +158,7 @@ Logger.error
 
 #### Defined in
 
-[src/testing/test-logger.ts:61](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L61)
+[src/testing/test-logger.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L61)
 
 ___
 
@@ -194,7 +194,7 @@ expect(logger.getLogSnapshot()).toMatchSnapshot()
 
 #### Defined in
 
-[src/testing/test-logger.ts:47](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L47)
+[src/testing/test-logger.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L47)
 
 ___
 
@@ -219,7 +219,7 @@ Logger.info
 
 #### Defined in
 
-[src/testing/test-logger.ts:69](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L69)
+[src/testing/test-logger.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L69)
 
 ___
 
@@ -244,7 +244,7 @@ Logger.verbose
 
 #### Defined in
 
-[src/testing/test-logger.ts:73](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L73)
+[src/testing/test-logger.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L73)
 
 ___
 
@@ -269,4 +269,4 @@ Logger.warn
 
 #### Defined in
 
-[src/testing/test-logger.ts:65](https://github.com/joe-p/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L65)
+[src/testing/test-logger.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L65)

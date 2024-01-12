@@ -61,7 +61,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:54](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L54)
+[src/types/logic-error.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L54)
 
 ## Properties
 
@@ -71,7 +71,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:42](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L42)
+[src/types/logic-error.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L42)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:44](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
+[src/types/logic-error.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:43](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L43)
+[src/types/logic-error.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L43)
 
 ___
 
@@ -133,7 +133,7 @@ Error.stack
 
 #### Defined in
 
-[src/types/logic-error.ts:46](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L46)
+[src/types/logic-error.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L46)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:45](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L45)
+[src/types/logic-error.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L45)
 
 ___
 
@@ -243,4 +243,4 @@ The logic error details if any, or undefined
 
 #### Defined in
 
-[src/types/logic-error.ts:28](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/logic-error.ts#L28)
+[src/types/logic-error.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L28)

@@ -35,11 +35,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:134](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L134)
-=======
 [src/types/app-client.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L137)
->>>>>>> origin/main
 
 ___
 
@@ -52,11 +48,7 @@ If this is not specified then it will automatically be determined based on the A
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:130](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L130)
-=======
 [src/types/app-client.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L133)
->>>>>>> origin/main
 
 ___
 
@@ -68,11 +60,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:136](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L136)
-=======
 [src/types/app-client.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L139)
->>>>>>> origin/main
 
 ___
 
@@ -84,11 +72,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:138](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L138)
-=======
 [src/types/app-client.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L141)
->>>>>>> origin/main
 
 ___
 
@@ -100,11 +84,7 @@ Parameters to control transaction sending
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:126](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L126)
-=======
 [src/types/app-client.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L129)
->>>>>>> origin/main
 
 ___
 
@@ -116,11 +96,7 @@ The optional sender to send the transaction from, will use the application clien
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:124](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L124)
-=======
 [src/types/app-client.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L127)
->>>>>>> origin/main
 
 ___
 
@@ -132,8 +108,4 @@ The version of the contract, uses "1.0" by default
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:122](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app-client.ts#L122)
-=======
 [src/types/app-client.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L125)
->>>>>>> origin/main

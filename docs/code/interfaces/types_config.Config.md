@@ -27,11 +27,7 @@ Whether or not debug mode is enabled
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:8](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L8)
-=======
 [src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
->>>>>>> origin/main
 
 ___
 
@@ -43,9 +39,6 @@ Logger
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:6](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L6)
-=======
 [src/types/config.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L7)
 
 ___
@@ -95,4 +88,3 @@ The size of the trace buffer in megabytes
 #### Defined in
 
 [src/types/config.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L15)
->>>>>>> origin/main

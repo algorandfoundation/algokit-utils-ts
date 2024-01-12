@@ -60,7 +60,7 @@ An argument for an ABI method, either a primitive value, or a transaction with o
 
 #### Defined in
 
-[src/types/app.ts:96](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L96)
+[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
 
 ___
 
@@ -72,7 +72,7 @@ App call args for an ABI call
 
 #### Defined in
 
-[src/types/app.ts:107](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L107)
+[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)
 
 ___
 
@@ -84,7 +84,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:217](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L217)
+[src/types/app.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L217)
 
 ___
 
@@ -98,7 +98,7 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:118](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L118)
+[src/types/app.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L118)
 
 ___
 
@@ -119,7 +119,7 @@ Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string e
 
 #### Defined in
 
-[src/types/app.ts:161](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L161)
+[src/types/app.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L161)
 
 ___
 
@@ -134,7 +134,7 @@ Something that identifies a box name - either a:
 
 #### Defined in
 
-[src/types/app.ts:64](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L64)
+[src/types/app.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L64)
 
 ## Variables
 
@@ -146,7 +146,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:34](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L34)
+[src/types/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L34)
 
 ___
 
@@ -158,7 +158,7 @@ The app create/update ARC-2 transaction note prefix
 
 #### Defined in
 
-[src/types/app.ts:28](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L28)
+[src/types/app.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L28)
 
 ___
 
@@ -170,7 +170,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:31](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L31)
+[src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
 
 ___
 
@@ -182,7 +182,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:25](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L25)
+[src/types/app.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L25)
 
 ___
 
@@ -194,4 +194,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:22](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/app.ts#L22)
+[src/types/app.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L22)

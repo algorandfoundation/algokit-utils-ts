@@ -48,11 +48,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:50](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L50)
-=======
 [src/types/config.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L75)
->>>>>>> origin/main
 
 ## Properties
 
@@ -62,11 +58,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:13](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L13)
-=======
 [src/types/config.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L22)
->>>>>>> origin/main
 
 ## Accessors
 
@@ -84,11 +76,7 @@ Readonly.debug
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:19](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L19)
-=======
 [src/types/config.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L28)
->>>>>>> origin/main
 
 ___
 
@@ -106,9 +94,6 @@ Readonly.logger
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:15](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L15)
-=======
 [src/types/config.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L24)
 
 ___
@@ -182,7 +167,6 @@ Readonly.traceBufferSizeMb
 #### Defined in
 
 [src/types/config.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L40)
->>>>>>> origin/main
 
 ## Methods
 
@@ -204,9 +188,6 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:61](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L61)
-=======
 [src/types/config.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L127)
 
 ___
@@ -225,7 +206,6 @@ This is only supported in a Node environment.
 #### Defined in
 
 [src/types/config.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L94)
->>>>>>> origin/main
 
 ___
 
@@ -249,11 +229,7 @@ The requested logger
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:28](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L28)
-=======
 [src/types/config.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L53)
->>>>>>> origin/main
 
 ___
 
@@ -275,8 +251,4 @@ Temporarily run with debug set to true.
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/config.ts:40](https://github.com/joe-p/algokit-utils-ts/blob/main/src/types/config.ts#L40)
-=======
 [src/types/config.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L65)
->>>>>>> origin/main
