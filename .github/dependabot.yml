@@ -6,8 +6,10 @@ updates:
       interval: 'weekly'
     commit-message:
       prefix: 'chore(deps)'
-    target-branch: 'main'
-groups:
-  - package-ecosystem: 'npm'
-    directory: '/'
-    update-types: ['version-update:semver-minor', 'version-update:semver-patch']
+    groups:
+      all:
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
+          - 'patch'
