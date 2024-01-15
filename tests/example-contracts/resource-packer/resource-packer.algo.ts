@@ -4,6 +4,8 @@ import { Contract } from '@algorandfoundation/tealscript'
 class ExternalApp extends Contract {
   localKey = LocalStateKey<bytes>()
 
+  boxKey = BoxKey<bytes>()
+
   optInToApplication(): void {
     this.localKey(this.txn.sender).value = 'foo'
   }
@@ -12,6 +14,10 @@ class ExternalApp extends Contract {
 
   error(): void {
     throw Error()
+  }
+
+  boxWithPayment(_payment: PayTxn): void {
+    this.boxKey.value = 'foo'
   }
 }
 
