@@ -85,6 +85,7 @@
 - [performAtomicTransactionComposerSimulate](index.md#performatomictransactioncomposersimulate)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
 - [performTemplateSubstitutionAndCompile](index.md#performtemplatesubstitutionandcompile)
+- [persistSourceMaps](index.md#persistsourcemaps)
 - [populateAppCallResources](index.md#populateappcallresources)
 - [randomAccount](index.md#randomaccount)
 - [rekeyAccount](index.md#rekeyaccount)
@@ -95,6 +96,7 @@
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
 - [signTransaction](index.md#signtransaction)
+- [simulateAndPersistResponse](index.md#simulateandpersistresponse)
 - [stripTealComments](index.md#striptealcomments)
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
@@ -113,7 +115,7 @@ The AlgoKit config. To update it use the configure method.
 
 #### Defined in
 
-[src/index.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/index.ts#L17)
+[src/index.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/index.ts#L18)
 
 ___
 
@@ -2228,6 +2230,30 @@ The information about the compiled code
 
 ___
 
+### persistSourceMaps
+
+▸ **persistSourceMaps**(`«destructured»`): `Promise`\<`void`\>
+
+This function persists the source maps for the given sources.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `«destructured»` | [`PersistSourceMapsParams`](../interfaces/types_debugging.PersistSourceMapsParams.md) |
+
+#### Returns
+
+`Promise`\<`void`\>
+
+A promise that resolves when the source maps have been persisted.
+
+#### Defined in
+
+[src/debugging.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L141)
+
+___
+
 ### populateAppCallResources
 
 ▸ **populateAppCallResources**(`atc`, `algod`): `Promise`\<`AtomicTransactionComposer`\>
@@ -2489,6 +2515,43 @@ The signed transaction as a `Uint8Array`
 #### Defined in
 
 [src/transaction.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L166)
+
+___
+
+### simulateAndPersistResponse
+
+▸ **simulateAndPersistResponse**(`«destructured»`): `Promise`\<`SimulateResponse`\>
+
+This function simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object,
+and persists the simulation response to an AlgoKit AVM Debugger compliant JSON file.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `«destructured»` | [`SimulateAndPersistResponseParams`](../interfaces/types_debugging.SimulateAndPersistResponseParams.md) |
+
+#### Returns
+
+`Promise`\<`SimulateResponse`\>
+
+The simulation result, which includes various details about how the transactions would be processed.
+
+**`Example`**
+
+```ts
+const atc = new AtomicTransactionComposer();
+const algod = new algosdk.Algodv2(token, server, port);
+const projectRoot = '/path/to/project';
+const bufferSizeMb = 10;
+
+const result = await simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb });
+console.log(result);
+```
+
+#### Defined in
+
+[src/debugging.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L189)
 
 ___
 
