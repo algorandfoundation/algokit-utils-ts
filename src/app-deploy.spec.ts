@@ -4,7 +4,7 @@ import invariant from 'tiny-invariant'
 import * as algokit from '.'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
-import { AppDeployMetadata } from './types/app'
+import { AppDeployMetadata, AppDeploymentParams } from './types/app'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()
@@ -294,20 +294,21 @@ describe('deploy-app', () => {
     algokit.Config.configure({ debug: false }) // Remove noise from snapshot
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
-    const deployment1 = await getTestingAppDeployParams({
+    const deployment1 = (await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
-    })
+    })) as AppDeploymentParams
+
     const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getTestingAppDeployParams({
+    const deployment2 = (await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'replace',
-    })
+    })) as AppDeploymentParams
 
     await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 
@@ -367,20 +368,22 @@ describe('deploy-app', () => {
     algokit.Config.configure({ debug: false }) // Remove noise from snapshot
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
-    const deployment1 = await getTestingAppDeployParams({
+    const deployment1 = (await getTestingAppDeployParams({
       from: testAccount,
       metadata: metadata,
-    })
+    })) as AppDeploymentParams
+
     const result1 = await algokit.deployApp(deployment1, algod, indexer)
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const deployment2 = await getTestingAppDeployParams({
+    const deployment2 = (await getTestingAppDeployParams({
       from: testAccount,
       metadata: { ...metadata, version: '2.0' },
       breakSchema: true,
       onSchemaBreak: 'replace',
-    })
+    })) as AppDeploymentParams
+
     await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 
     invariant('transaction' in result1)

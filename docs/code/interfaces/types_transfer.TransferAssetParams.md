@@ -26,6 +26,7 @@ Parameters for `transferAsset` call.
 - [maxFee](types_transfer.TransferAssetParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transfer.TransferAssetParams.md#maxroundstowaitforconfirmation)
 - [note](types_transfer.TransferAssetParams.md#note)
+- [populateAppCallResources](types_transfer.TransferAssetParams.md#populateappcallresources)
 - [skipSending](types_transfer.TransferAssetParams.md#skipsending)
 - [skipWaiting](types_transfer.TransferAssetParams.md#skipwaiting)
 - [suppressLog](types_transfer.TransferAssetParams.md#suppresslog)
@@ -167,6 +168,22 @@ The (optional) transaction note
 #### Defined in
 
 [src/types/transfer.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L70)
+
+___
+
+### populateAppCallResources
+
+• `Optional` **populateAppCallResources**: `boolean`
+
+Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[populateAppCallResources](types_transaction.SendTransactionParams.md#populateappcallresources)
+
+#### Defined in
+
+[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
 
 ___
 
