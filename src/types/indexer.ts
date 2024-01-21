@@ -372,14 +372,14 @@ export interface ApplicationResult {
 /** Validation signature associated with some data. Only one of the signatures should be provided. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignature */
 export interface TransactionSignature {
   /** Logicsig signature */
-  logicsig: LogicTransactionSignature
+  logicsig?: LogicTransactionSignature
   /** Multisig signature */
-  multisig: MultisigTransactionSignature
+  multisig?: MultisigTransactionSignature
   /** [sig] Standard ed25519 signature.
    *
    * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
    */
-  sig: string
+  sig?: string
 }
 
 /** [lsig] Programatic transaction signature.
