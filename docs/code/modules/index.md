@@ -1747,7 +1747,7 @@ A transaction signer
 
 #### Defined in
 
-[src/transaction.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L110)
+[src/transaction.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L152)
 
 ___
 
@@ -1937,7 +1937,7 @@ Looks up an account by address using Indexer.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `accountAddress` | `string` | - |
+| `accountAddress` | `string` | The address of the account to look up |
 | `indexer` | `default` | An indexer client |
 
 #### Returns
