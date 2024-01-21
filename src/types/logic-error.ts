@@ -21,7 +21,7 @@ export interface LogicErrorDetails {
 /** Wraps key functionality around processing logic errors */
 export class LogicError extends Error {
   /** Takes an error message and parses out the details of any logic errors in there.
-   * @param errorMessage The error message to parse
+   * @param error The error message to parse
    * @returns The logic error details if any, or undefined
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

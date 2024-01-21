@@ -23,7 +23,7 @@ export async function lookupTransactionById(transactionId: string, indexer: Inde
 
 /**
  * Looks up an account by address using Indexer.
- * @param transactionId The address of the account to look up
+ * @param accountAddress The address of the account to look up
  * @param indexer An indexer client
  * @returns The result of the look-up
  */
