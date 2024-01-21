@@ -18,7 +18,7 @@ Validation signature associated with some data. Only one of the signatures shoul
 
 ### logicsig
 
-• **logicsig**: [`LogicTransactionSignature`](types_indexer.LogicTransactionSignature.md)
+• `Optional` **logicsig**: [`LogicTransactionSignature`](types_indexer.LogicTransactionSignature.md)
 
 Logicsig signature
 
@@ -30,7 +30,7 @@ ___
 
 ### multisig
 
-• **multisig**: [`MultisigTransactionSignature`](types_indexer.MultisigTransactionSignature.md)
+• `Optional` **multisig**: [`MultisigTransactionSignature`](types_indexer.MultisigTransactionSignature.md)
 
 Multisig signature
 
@@ -42,7 +42,7 @@ ___
 
 ### sig
 
-• **sig**: `string`
+• `Optional` **sig**: `string`
 
 [sig] Standard ed25519 signature.
 
