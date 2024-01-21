@@ -66,7 +66,7 @@ ___
 
 ### asset-config-transaction
 
-• **asset-config-transaction**: [`AssetConfigTransactionResult`](types_indexer.AssetConfigTransactionResult.md)
+• `Optional` **asset-config-transaction**: [`AssetConfigTransactionResult`](types_indexer.AssetConfigTransactionResult.md)
 
 If the transaction is an `acfg` transaction this will be populated see `tx-type`
 
