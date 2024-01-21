@@ -588,9 +588,10 @@ const tests = (version: 8 | 9) => () => {
   })
 }
 
-describe('Resource Packer: AVM8', tests(8))
-describe('Resource Packer: AVM9', tests(9))
-describe('Resource Packer: Mixed', () => {
+// Temporarily skip these tests until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
+describe.skip('Resource Packer: AVM8', tests(8))
+describe.skip('Resource Packer: AVM9', tests(9))
+describe.skip('Resource Packer: Mixed', () => {
   const fixture = algorandFixture()
 
   let v9Client: ApplicationClient
@@ -636,10 +637,21 @@ describe('Resource Packer: Mixed', () => {
     const v9ID = Number((await v9Client.getAppReference()).appId)
     const suggestedParams = await algod.getTransactionParams().do()
 
+    const rekeyedTo = algosdk.generateAccount()
+    const rekeyTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+      from: testAccount.addr,
+      to: testAccount.addr,
+      amount: 0,
+      rekeyTo: rekeyedTo.addr,
+      suggestedParams: await algod.getTransactionParams().do(),
+    })
+
+    await algokit.sendTransaction({ transaction: rekeyTxn, from: testAccount }, algod)
+
     atc.addMethodCall({
       appID: v8ID,
       sender: testAccount.addr,
-      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+      signer: algosdk.makeBasicAccountTransactionSigner(rekeyedTo),
       method: v8Client.getABIMethod('addressBalance')!,
       methodArgs: [acct.addr],
       suggestedParams,
@@ -648,7 +660,7 @@ describe('Resource Packer: Mixed', () => {
     atc.addMethodCall({
       appID: v9ID,
       sender: testAccount.addr,
-      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+      signer: algosdk.makeBasicAccountTransactionSigner(rekeyedTo),
       method: v9Client.getABIMethod('addressBalance')!,
       methodArgs: [acct.addr],
       suggestedParams,
@@ -704,8 +716,7 @@ describe('Resource Packer: Mixed', () => {
     await packedAtc.execute(algod, 3)
   })
 })
-
-describe('Resource Packer: meta', () => {
+describe.skip('Resource Packer: meta', () => {
   const fixture = algorandFixture()
 
   let externalClient: ApplicationClient

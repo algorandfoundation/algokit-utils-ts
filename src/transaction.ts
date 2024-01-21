@@ -208,7 +208,9 @@ export const sendTransaction = async function (
   let txnToSend = transaction
 
   // Populate  resources if the transaction is an appcall and populateAppCallResources wasn't explicitly set to false
-  if (txnToSend.type === algosdk.TransactionType.appl && sendParams?.populateAppCallResources !== false) {
+  // NOTE: Temporary false by default until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
+  //   if (txnToSend.type === algosdk.TransactionType.appl && sendParams?.populateAppCallResources !== false) {
+  if (txnToSend.type === algosdk.TransactionType.appl && sendParams?.populateAppCallResources === true) {
     const newAtc = new AtomicTransactionComposer()
     newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
     const packed = await populateAppCallResources(newAtc, algod)
