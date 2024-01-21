@@ -2232,15 +2232,15 @@ ___
 
 ### persistSourceMaps
 
-▸ **persistSourceMaps**(`«destructured»`): `Promise`\<`void`\>
+▸ **persistSourceMaps**(`param0`): `Promise`\<`void`\>
 
 This function persists the source maps for the given sources.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | [`PersistSourceMapsParams`](../interfaces/types_debugging.PersistSourceMapsParams.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `param0` | [`PersistSourceMapsParams`](../interfaces/types_debugging.PersistSourceMapsParams.md) | The parameters to define the persistence |
 
 #### Returns
 
@@ -2250,7 +2250,7 @@ A promise that resolves when the source maps have been persisted.
 
 #### Defined in
 
-[src/debugging.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L141)
+[src/debugging.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L138)
 
 ___
 
@@ -2520,16 +2520,16 @@ ___
 
 ### simulateAndPersistResponse
 
-▸ **simulateAndPersistResponse**(`«destructured»`): `Promise`\<`SimulateResponse`\>
+▸ **simulateAndPersistResponse**(`param0`): `Promise`\<`SimulateResponse`\>
 
 This function simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object,
 and persists the simulation response to an AlgoKit AVM Debugger compliant JSON file.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `«destructured»` | [`SimulateAndPersistResponseParams`](../interfaces/types_debugging.SimulateAndPersistResponseParams.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `param0` | [`SimulateAndPersistResponseParams`](../interfaces/types_debugging.SimulateAndPersistResponseParams.md) | The parameters to control the simulation and persistence. |
 
 #### Returns
 
@@ -2551,7 +2551,7 @@ console.log(result);
 
 #### Defined in
 
-[src/debugging.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L189)
+[src/debugging.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging.ts#L183)
 
 ___
 

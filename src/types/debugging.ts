@@ -1,6 +1,9 @@
 import algosdk from 'algosdk'
 import { CompiledTeal } from './app'
 
+/**
+ * AVM debugger source map format.
+ */
 export interface AVMDebuggerSourceMapDict {
   'txn-group-sources': Array<{
     'sourcemap-location': string
@@ -8,7 +11,15 @@ export interface AVMDebuggerSourceMapDict {
   }>
 }
 
+/**
+ * AVM debugger source map entry class.
+ */
 export class AVMDebuggerSourceMapEntry {
+  /**
+   * Create an AVM debugger source map entry.
+   * @param location The location of the file the source map is for.
+   * @param programHash The hash of the TEAL binary.
+   */
   constructor(
     public location: string,
     public programHash: string,
@@ -23,20 +34,36 @@ export class AVMDebuggerSourceMapEntry {
   }
 }
 
+/**
+ * AVM debugger source map class.
+ */
 export class AVMDebuggerSourceMap {
   txnGroupSources: AVMDebuggerSourceMapEntry[]
 
+  /**
+   *
+   * @param txnGroupSources
+   */
   constructor(txnGroupSources: AVMDebuggerSourceMapEntry[]) {
     this.txnGroupSources = txnGroupSources
   }
 
-  static fromDict(data: AVMDebuggerSourceMapDict): AVMDebuggerSourceMap {
+  /**
+   * Creates a source map from a dictionary of source map data.
+   * @param data The data
+   * @returns The source map
+   */
+  public static fromDict(data: AVMDebuggerSourceMapDict): AVMDebuggerSourceMap {
     return new AVMDebuggerSourceMap(
       data['txn-group-sources'].map((item) => new AVMDebuggerSourceMapEntry(item['sourcemap-location'], item['hash'])),
     )
   }
 
-  toDict(): AVMDebuggerSourceMapDict {
+  /**
+   * Converts the source map to a dictionary that can be passed around and then parsed back using `AVMDebuggerSourceMap.fromDict`.
+   * @returns The dictionary
+   */
+  public toDict(): AVMDebuggerSourceMapDict {
     return { 'txn-group-sources': this.txnGroupSources.map((item) => JSON.parse(item.toString())) }
   }
 }
@@ -59,15 +86,30 @@ export class PersistSourceMapInput {
     this._fileName = this.stripTealExtension(fileName)
   }
 
-  static fromRawTeal(rawTeal: string, appName: string, fileName: string): PersistSourceMapInput {
+  /**
+   * Returns debugger source maps input from raw TEAL code.
+   * @param rawTeal The raw TEAL code
+   * @param appName The name of the app
+   * @param fileName The name of the file to persist to
+   * @returns The persist source map input
+   */
+  public static fromRawTeal(rawTeal: string, appName: string, fileName: string): PersistSourceMapInput {
     return new PersistSourceMapInput(appName, fileName, rawTeal)
   }
 
-  static fromCompiledTeal(compiledTeal: CompiledTeal, appName: string, fileName: string): PersistSourceMapInput {
+  /**
+   * Returns debugger source maps input from compiled TEAL code.
+   * @param compiledTeal The compiled TEAL code
+   * @param appName The name of the app
+   * @param fileName The name of the file to persist to
+   * @returns The persist source map input
+   */
+  public static fromCompiledTeal(compiledTeal: CompiledTeal, appName: string, fileName: string): PersistSourceMapInput {
     return new PersistSourceMapInput(appName, fileName, undefined, compiledTeal)
   }
 
-  get rawTeal(): string {
+  /** Get the underlying raw teal */
+  public get rawTeal(): string {
     if (this._rawTeal) {
       return this._rawTeal
     } else if (this.compiledTeal) {
@@ -77,7 +119,8 @@ export class PersistSourceMapInput {
     }
   }
 
-  get fileName(): string {
+  /** Get the file name */
+  public get fileName(): string {
     return this._fileName
   }
 
@@ -95,16 +138,28 @@ export class PersistSourceMapInput {
   }
 }
 
+/** Parameters to a call that persists source maps */
 export interface PersistSourceMapsParams {
+  /** An array of PersistSourceMapInput objects. Each object can either contain rawTeal, in which case the function will execute a compile to obtain byte code, or it can accept an object of type CompiledTeal provided by algokit, which is used for source codes that have already been compiled and contain the traces. */
   sources: PersistSourceMapInput[]
+  /** The root directory of the project. */
   projectRoot: string
+  /** An Algodv2 client to perform the compilation. */
   client: algosdk.Algodv2
+  /** A boolean indicating whether to include the source files in the output. */
   withSources?: boolean
 }
 
+/**
+ * Parameters to a call that simulates a transaction and persists the response.
+ */
 export interface SimulateAndPersistResponseParams {
-  atc: algosdk.AtomicTransactionComposer
-  projectRoot: string
+  /** algod An Algodv2 client to perform the simulation. */
   algod: algosdk.Algodv2
+  /** The AtomicTransactionComposer with transaction(s) loaded. */
+  atc: algosdk.AtomicTransactionComposer
+  /** projectRoot The root directory of the project. */
+  projectRoot: string
+  /** bufferSizeMb The buffer size in megabytes. */
   bufferSizeMb: number
 }
