@@ -120,7 +120,7 @@ export interface TransactionResult extends Record<string, any> {
    */
   'created-application-index'?: number
   /** If the transaction is an `acfg` transaction this will be populated see `tx-type` */
-  'asset-config-transaction': AssetConfigTransactionResult
+  'asset-config-transaction'?: AssetConfigTransactionResult
   /** If the transaction is an `acfg` transaction that resulted in an asset creation then this
    * specifies the asset index (ID) of that asset.
    */
