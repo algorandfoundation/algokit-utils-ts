@@ -410,7 +410,7 @@ export interface LogicTransactionSignature {
 /** [msig] structure holding multiple subsignatures. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisig */
 export interface MultisigTransactionSignature {
   /** [subsig] Holds pairs of public key and signatures. */
-  subsignature: MultisigTransactionSubSignature
+  subsignature: MultisigTransactionSubSignature[]
   /** [thr] The threshold of signatures required for the multisig */
   threshold: number
   /** [v] The version of the multisig */

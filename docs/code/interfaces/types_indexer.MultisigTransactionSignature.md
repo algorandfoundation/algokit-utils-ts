@@ -18,7 +18,7 @@
 
 ### subsignature
 
-• **subsignature**: [`MultisigTransactionSubSignature`](types_indexer.MultisigTransactionSubSignature.md)
+• **subsignature**: [`MultisigTransactionSubSignature`](types_indexer.MultisigTransactionSubSignature.md)[]
 
 [subsig] Holds pairs of public key and signatures.
 

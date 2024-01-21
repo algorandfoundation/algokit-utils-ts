@@ -240,9 +240,15 @@ async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransaction
   const simReq = new algosdk.modelsv2.SimulateRequest({
     txnGroups: [],
     allowUnnamedResources: true,
+    allowEmptySignatures: true,
   })
 
-  const result = await atc.simulate(algod, simReq)
+  const emptySignerAtc = atc.clone()
+  emptySignerAtc['transactions'].forEach((t: algosdk.TransactionWithSigner) => {
+    t.signer = algosdk.makeEmptyTransactionSigner()
+  })
+
+  const result = await emptySignerAtc.simulate(algod, simReq)
 
   const groupResponse = result.simulateResponse.txnGroups[0]
 
