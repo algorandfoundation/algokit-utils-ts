@@ -288,7 +288,7 @@ export interface AssetConfigTransactionResult {
   /** [xaid] ID of the asset being configured or empty if creating. */
   'asset-id': number
   /** [apar] the parameters for the asset. */
-  params: AssetParams
+  params?: AssetParams
 }
 
 /** Fields for an asset freeze transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetfreeze */

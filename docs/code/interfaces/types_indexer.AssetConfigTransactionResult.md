@@ -32,7 +32,7 @@ ___
 
 ### params
 
-• **params**: [`AssetParams`](types_indexer.AssetParams.md)
+• `Optional` **params**: [`AssetParams`](types_indexer.AssetParams.md)
 
 [apar] the parameters for the asset.
 
