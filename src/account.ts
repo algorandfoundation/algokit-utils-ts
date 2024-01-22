@@ -42,6 +42,17 @@ export function transactionSignerAccount(signer: TransactionSigner, sender: stri
   return { addr: sender, signer }
 }
 
+/**
+ * Returns an account with associated sender address, but no ability to sign transactions.
+ * This is handy when you are constructing transactions for manual external signing (e.g. KMS, etc.)
+ *  and used in conjunction with `skipSending: true` on various AlgoKit Utils transaction functions.
+ * @param sender The address of sender account
+ * @returns The SigningAccount wrapper
+ */
+export function addressOnlyAccount(sender: string): TransactionSignerAccount {
+  return { addr: sender, signer: algosdk.makeEmptyTransactionSigner() }
+}
+
 /** Returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
  *
  * This is a wrapper around algosdk.mnemonicToSecretKey to provide a more friendly/obvious name.
