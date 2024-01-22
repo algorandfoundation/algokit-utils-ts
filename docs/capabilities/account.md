@@ -14,6 +14,8 @@ Any AlgoKit Utils function that needs to sign/send a transaction will take a [`S
 
 The use of in-built algosdk types like `Account`, `LogicSigAccount` and `TransactionSigner` is aligned to the [Modularity](../README.md#core-principles) principle. Allowing you to co-exist non AlgoKit Utils code with AlgoKit Utils functions.
 
+If the method only needs to sign the transaction and not construct it then it will also take a raw `TransactionSigner` object without the address, e.g. `algokit.signTransaction` and `algokit.sendTransaction`.
+
 ## Using `SendTransactionFrom`
 
 AlgoKit Utils provides a few helper methods to take one of these `SendTransactionFrom` objects:

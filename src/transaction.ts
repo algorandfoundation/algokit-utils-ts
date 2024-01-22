@@ -149,8 +149,10 @@ export const getTransactionWithSigner = async (
  * @param sender A transaction sender
  * @returns A transaction signer
  */
-export const getSenderTransactionSigner = memoize(function (sender: SendTransactionFrom): TransactionSigner {
-  return 'signer' in sender
+export const getSenderTransactionSigner = memoize(function (sender: SendTransactionFrom | TransactionSigner): TransactionSigner {
+  return typeof sender === 'function'
+    ? sender
+    : 'signer' in sender
     ? sender.signer
     : 'lsig' in sender
     ? algosdk.makeLogicSigAccountTransactionSigner(sender)
@@ -163,14 +165,14 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
  * @param signer The signer to sign
  * @returns The signed transaction as a `Uint8Array`
  */
-export const signTransaction = async (transaction: Transaction, signer: SendTransactionFrom) => {
+export const signTransaction = async (transaction: Transaction, signer: SendTransactionFrom | TransactionSigner) => {
   return 'sk' in signer
     ? transaction.signTxn(signer.sk)
     : 'lsig' in signer
     ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
     : 'sign' in signer
     ? signer.sign(transaction)
-    : (await signer.signer([transaction], [0]))[0]
+    : (await (typeof signer === 'function' ? signer : signer.signer)([transaction], [0]))[0]
 }
 
 /** Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
@@ -186,7 +188,7 @@ export const signTransaction = async (transaction: Transaction, signer: SendTran
 export const sendTransaction = async function (
   send: {
     transaction: Transaction
-    from: SendTransactionFrom
+    from: SendTransactionFrom | TransactionSigner
     sendParams?: SendTransactionParams
   },
   algod: Algodv2,
@@ -221,7 +223,9 @@ export const sendTransaction = async function (
 
   await algod.sendRawTransaction(signedTransaction).do()
 
-  Config.getLogger(suppressLog).info(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
+  Config.getLogger(suppressLog).info(
+    `Sent transaction ID ${txnToSend.txID()} ${txnToSend.type}${typeof from !== 'function' ? ` from ${getSenderAddress(from)}` : ''}`,
+  )
 
   let confirmation: modelsv2.PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
