@@ -41,7 +41,7 @@ export interface SendTransactionParams {
   maxFee?: AlgoAmount
   /** The maximum number of rounds to wait for confirmation, only applies if `skipWaiting` is `undefined` or `false`, default: wait up to 5 rounds */
   maxRoundsToWaitForConfirmation?: number
-  /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.  */
+  /** **WARNING**: Not recommended for production use due to https://github.com/algorand/go-algorand/issues/5914. Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.  */
   populateAppCallResources?: boolean
 }
 

@@ -195,7 +195,7 @@ ___
 
 • `Optional` **populateAppCallResources**: `boolean`
 
-Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.
+**WARNING**: Not recommended for production use due to https://github.com/algorand/go-algorand/issues/5914. Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.
 
 #### Inherited from
 
