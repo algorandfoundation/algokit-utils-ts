@@ -676,7 +676,7 @@ describe('application-client', () => {
             .replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
             .trim(),
         ).toMatchInlineSnapshot(
-          `"Error: Error during resource population simulation in transaction 0: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
+          `"URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
         )
       }
 
@@ -723,7 +723,7 @@ describe('application-client', () => {
             .replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
             .trim(),
         ).toMatchInlineSnapshot(
-          `"Error: assert failed pc=885. at:469. Error during resource population simulation in transaction 0: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
+          `"Error: assert failed pc=885. at:469. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
         )
         expect(e.stack).toMatchInlineSnapshot(`
           "// error

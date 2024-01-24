@@ -420,16 +420,18 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
   let atc: AtomicTransactionComposer
 
-  const hasAppCalls = () =>
-    givenAtc
-      .buildGroup()
-      .map((t) => t.txn.type)
-      .includes(algosdk.TransactionType.appl)
+  // const hasAppCalls = () =>
+  //   givenAtc
+  //     .buildGroup()
+  //     .map((t) => t.txn.type)
+  //     .includes(algosdk.TransactionType.appl)
 
   atc = givenAtc
   try {
     // If populateAppCallResources is true OR if populateAppCallResources is undefined and there are app calls, then populate resources
-    if (sendParams?.populateAppCallResources || (sendParams?.populateAppCallResources === undefined && hasAppCalls())) {
+    // NOTE: Temporary false by default until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
+    // if (sendParams?.populateAppCallResources || (sendParams?.populateAppCallResources === undefined && hasAppCalls())) {
+    if (sendParams?.populateAppCallResources) {
       atc = await populateAppCallResources(givenAtc, algod)
     }
 
