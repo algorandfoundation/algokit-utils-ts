@@ -349,7 +349,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L692)
+[src/transaction.ts:694](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L694)
 
 ___
 
@@ -405,7 +405,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L715)
+[src/transaction.ts:717](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L717)
 
 ___
 
@@ -1477,7 +1477,7 @@ The array of transactions with signers
 
 #### Defined in
 
-[src/transaction.ts:747](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L747)
+[src/transaction.ts:749](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L749)
 
 ___
 
@@ -1810,7 +1810,7 @@ The suggested transaction parameters
 
 #### Defined in
 
-[src/transaction.ts:738](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L738)
+[src/transaction.ts:740](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L740)
 
 ___
 
@@ -2145,7 +2145,7 @@ The dryrun result
 
 #### Defined in
 
-[src/transaction.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L543)
+[src/transaction.ts:545](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L545)
 
 ___
 
@@ -2170,7 +2170,7 @@ The simulation result, which includes various details about how the transactions
 
 #### Defined in
 
-[src/transaction.ts:558](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L558)
+[src/transaction.ts:560](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L560)
 
 ___
 
@@ -2461,7 +2461,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction.ts:590](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L590)
+[src/transaction.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L592)
 
 ___
 
@@ -2740,4 +2740,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction.ts:635](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L635)
+[src/transaction.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction.ts#L637)
