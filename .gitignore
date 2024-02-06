@@ -43,7 +43,7 @@ node_modules/
 .pnp.*
 
 # Compiled code
-dist/
+dist*/
 build/
 
 # Coverage report
