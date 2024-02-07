@@ -2,14 +2,14 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { makeBasicAccountTransactionSigner } from 'algosdk'
 import invariant from 'tiny-invariant'
-import externalARC32 from '../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
-import v8ARC32 from '../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
-import v9ARC32 from '../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
+import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
+import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
+import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
 
-import * as algokit from './'
-import { algorandFixture } from './testing'
-import { ApplicationClient } from './types/app-client'
-import { Arc2TransactionNote } from './types/transaction'
+import * as algokit from '..'
+import { algorandFixture } from '../testing'
+import { ApplicationClient } from '../types/app-client'
+import { Arc2TransactionNote } from '../types/transaction'
 describe('transaction', () => {
   const localnet = algorandFixture()
   beforeEach(localnet.beforeEach, 10_000)

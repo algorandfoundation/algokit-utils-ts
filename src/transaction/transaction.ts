@@ -1,9 +1,9 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
-import { Config } from './'
-import { simulateAndPersistResponse } from './debugging'
-import { AlgoAmount } from './types/amount'
-import { ABIReturn } from './types/app'
+import { Config } from '../config'
+import { simulateAndPersistResponse } from '../debugging/simulate-and-persist-response'
+import { AlgoAmount } from '../types/amount'
+import { ABIReturn } from '../types/app'
 import {
   AtomicTransactionComposerToSend,
   SendAtomicTransactionComposerResults,
@@ -13,11 +13,11 @@ import {
   TransactionGroupToSend,
   TransactionNote,
   TransactionToSign,
-} from './types/transaction'
-import { toNumber } from './util'
+} from '../types/transaction'
+import { toNumber } from '../util'
+import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import EncodedSignedTransaction = algosdk.EncodedSignedTransaction
 import modelsv2 = algosdk.modelsv2
 import SuggestedParams = algosdk.SuggestedParams
 import Transaction = algosdk.Transaction
@@ -133,14 +133,14 @@ export const getTransactionWithSigner = async (
         signer: getSenderTransactionSigner(defaultSender),
       }
     : 'transaction' in transaction
-    ? {
-        txn: transaction.transaction,
-        signer: getSenderTransactionSigner(transaction.signer),
-      }
-    : {
-        txn: transaction,
-        signer: getSenderTransactionSigner(defaultSender),
-      }
+      ? {
+          txn: transaction.transaction,
+          signer: getSenderTransactionSigner(transaction.signer),
+        }
+      : {
+          txn: transaction,
+          signer: getSenderTransactionSigner(defaultSender),
+        }
 }
 
 /**
@@ -153,8 +153,8 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
   return 'signer' in sender
     ? sender.signer
     : 'lsig' in sender
-    ? algosdk.makeLogicSigAccountTransactionSigner(sender)
-    : algosdk.makeBasicAccountTransactionSigner(sender)
+      ? algosdk.makeLogicSigAccountTransactionSigner(sender)
+      : algosdk.makeBasicAccountTransactionSigner(sender)
 })
 
 /**
@@ -167,10 +167,10 @@ export const signTransaction = async (transaction: Transaction, signer: SendTran
   return 'sk' in signer
     ? transaction.signTxn(signer.sk)
     : 'lsig' in signer
-    ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
-    : 'sign' in signer
-    ? signer.sign(transaction)
-    : (await signer.signer([transaction], [0]))[0]
+      ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
+      : 'sign' in signer
+        ? signer.sign(transaction)
+        : (await signer.signer([transaction], [0]))[0]
 }
 
 /** Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
@@ -549,35 +549,6 @@ export async function performAtomicTransactionComposerDryrun(atc: AtomicTransact
   })
   const dryrun = await algosdk.createDryrun({ client: algod, txns })
   return new algosdk.DryrunResult(await algod.dryrun(dryrun).do())
-}
-
-/**
- * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
- * @param atc The AtomicTransactionComposer with transaction(s) loaded.
- * @param algod An Algod client to perform the simulation.
- * @returns The simulation result, which includes various details about how the transactions would be processed.
- */
-export async function performAtomicTransactionComposerSimulate(atc: AtomicTransactionComposer, algod: Algodv2) {
-  const unsignedTransactionsSigners = atc.buildGroup()
-  const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
-
-  const simulateRequest = new modelsv2.SimulateRequest({
-    allowEmptySignatures: true,
-    allowMoreLogging: true,
-    execTraceConfig: new modelsv2.SimulateTraceConfig({
-      enable: true,
-      scratchChange: true,
-      stackChange: true,
-      stateChange: true,
-    }),
-    txnGroups: [
-      new modelsv2.SimulateRequestTransactionGroup({
-        txns: decodedSignedTransactions.map((txn) => algosdk.decodeObj(txn)) as EncodedSignedTransaction[],
-      }),
-    ],
-  })
-  const simulateResult = await algod.simulateTransactions(simulateRequest).do()
-  return simulateResult
 }
 
 /**

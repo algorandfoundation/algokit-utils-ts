@@ -1,5 +1,5 @@
 import algosdk from 'algosdk'
-import { runWhenIndexerCaughtUp } from './'
+import { runWhenIndexerCaughtUp } from './indexer'
 import Algodv2 = algosdk.Algodv2
 import decodeSignedTransaction = algosdk.decodeSignedTransaction
 import Indexer = algosdk.Indexer

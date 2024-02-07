@@ -1,12 +1,15 @@
 import algosdk from 'algosdk'
-import { Config, getDispenserAccount, microAlgos } from './'
-import { isTestNet } from './network-client'
-import { encodeLease, encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from './transaction'
-import { AlgoAmount } from './types/amount'
-import { TestNetDispenserApiClient } from './types/dispenser-client'
-import { SendTransactionResult, TransactionNote } from './types/transaction'
-import { AlgoRekeyParams, AlgoTransferParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from './types/transfer'
-import { calculateFundAmount } from './util'
+import { getDispenserAccount } from '../account/get-dispenser-account'
+import { microAlgos } from '../amount'
+import { Config } from '../config'
+import { isTestNet } from '../network-client'
+import { encodeLease, encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from '../transaction/transaction'
+import { AlgoAmount } from '../types/amount'
+import { TestNetDispenserApiClient } from '../types/dispenser-client'
+import { SendTransactionResult, TransactionNote } from '../types/transaction'
+import { AlgoRekeyParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from '../types/transfer'
+import { calculateFundAmount } from '../util'
+import { transferAlgos } from './transfer-algos'
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
@@ -69,44 +72,6 @@ async function fundUsingTransfer({
     transactionId: response.transaction.txID(),
     amount: Number(response.transaction.amount),
   }
-}
-
-/**
- * Transfer ALGOs between two accounts.
- * @param transfer The transfer definition
- * @param algod An algod client
- * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
- *
- * @example Usage example
- * ```typescript
- * await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
- * ```
- */
-export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, amount, note, transactionParams, lease, ...sendParams } = transfer
-
-  const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-    from: getSenderAddress(from),
-    to: getSenderAddress(to),
-    amount: amount.microAlgos,
-    note: encodeTransactionNote(note),
-    suggestedParams: await getTransactionParams(transactionParams, algod),
-    closeRemainderTo: undefined,
-    rekeyTo: undefined,
-  })
-
-  const encodedLease = encodeLease(lease)
-  if (encodedLease) {
-    transaction.addLease(encodedLease)
-  }
-
-  if (!sendParams.skipSending) {
-    Config.getLogger(sendParams.suppressLog).debug(
-      `Transferring ${amount.microAlgos}µALGOs from ${getSenderAddress(from)} to ${getSenderAddress(to)}`,
-    )
-  }
-
-  return sendTransaction({ transaction, from, sendParams }, algod)
 }
 
 /**

@@ -1,6 +1,6 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
-import { Config } from './'
+import { Config } from './config'
 import {
   controlFees,
   encodeLease,
@@ -11,7 +11,7 @@ import {
   getTransactionParams,
   sendAtomicTransactionComposer,
   sendTransaction,
-} from './transaction'
+} from './transaction/transaction'
 import {
   ABIAppCallArgs,
   ABIReturn,
@@ -600,12 +600,12 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
       return 'txn' in a
         ? a
         : a instanceof Promise
-        ? { txn: (await a).transaction, signer }
-        : 'transaction' in a
-        ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
-        : 'txID' in a
-        ? { txn: a, signer }
-        : a
+          ? { txn: (await a).transaction, signer }
+          : 'transaction' in a
+            ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
+            : 'txID' in a
+              ? { txn: a, signer }
+              : a
     }),
   )
   return {
@@ -641,8 +641,8 @@ export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxR
       typeof ref.name === 'string'
         ? encoder.encode(ref.name)
         : 'length' in ref.name
-        ? ref.name
-        : algosdk.decodeAddress(getSenderAddress(ref.name)).publicKey,
+          ? ref.name
+          : algosdk.decodeAddress(getSenderAddress(ref.name)).publicKey,
   } as algosdk.BoxReference
 }
 

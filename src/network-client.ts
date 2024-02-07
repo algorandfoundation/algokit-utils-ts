@@ -198,5 +198,3 @@ export async function isMainNet(algod: Algodv2): Promise<boolean> {
   const params = await algod.getTransactionParams().do()
   return ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID)
 }
-
-export { isLocalNet } from './localnet'

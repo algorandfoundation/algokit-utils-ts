@@ -1,5 +1,5 @@
 import type { BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
-import { Config } from '../'
+import { Config } from '../config'
 import { URLTokenBaseHTTPClient } from './urlTokenBaseHTTPClient'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */
