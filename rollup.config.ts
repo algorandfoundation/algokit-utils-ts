@@ -25,13 +25,13 @@ const config: RollupOptions = {
     moduleSideEffects: false,
     propertyReadSideEffects: false,
   },
-  // no deps, normally external might be all your deps: [...Object.keys(pkg.dependencies ?? {}), ...Object.keys(pkg.peerDependencies ?? {})], import pkg from './package.json'
   plugins: [
     typescript({
       tsconfig: 'tsconfig.build.json',
-      sourceMap: true,
     }),
-    nodeResolve(),
+    nodeResolve({
+      preferBuiltins: true,
+    }),
   ],
   external: ['algosdk'],
 }
