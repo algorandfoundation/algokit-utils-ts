@@ -1,18 +1,12 @@
 import { readFile } from 'fs/promises'
-import path, { dirname } from 'path'
-import { fileURLToPath } from 'url'
+import path from 'path'
 import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
 import { APP_DEPLOY_NOTE_DAPP, AppDeployMetadata, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
 import { AppSpec } from '../../../src/types/app-spec'
 import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore: Unreachable code error
-// eslint-disable-next-line no-restricted-syntax
-const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
-
 export const getTestingAppContract = async () => {
-  const appSpecFile = await readFile(path.join(_dirname, 'application.json'), 'utf-8')
+  const appSpecFile = await readFile(path.join(__dirname, 'application.json'), 'utf-8')
   const appSpec = JSON.parse(appSpecFile) as AppSpec
 
   return {
