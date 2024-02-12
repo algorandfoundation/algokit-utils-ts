@@ -1,7 +1,7 @@
 import nodeResolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import MagicString from 'magic-string'
-import type { Plugin } from 'rollup'
+import type { LogLevel, LogOrStringHandler, Plugin, RollupLog } from 'rollup'
 import { RollupOptions } from 'rollup'
 import pkg from './package.json' with { type: 'json' }
 
@@ -64,6 +64,13 @@ const config: RollupOptions = {
     normaliseEsmOutput(),
   ],
   external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
+  onLog(level: LogLevel, log: RollupLog, handler: LogOrStringHandler) {
+    if (log.code === 'CIRCULAR_DEPENDENCY') {
+      handler('error', log)
+    } else {
+      handler(level, log)
+    }
+  },
 }
 
 export default config
