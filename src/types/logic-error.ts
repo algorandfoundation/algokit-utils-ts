@@ -1,6 +1,6 @@
 import type algosdk from 'algosdk'
 
-const LOGIC_ERROR = /transaction ([A-Z0-9]+): logic eval error: (.*). Details: pc=([0-9]+), opcodes=.*/
+const LOGIC_ERROR = /transaction ([A-Z0-9]+): logic eval error: (.*). Details: .*pc=([0-9]+).*/
 
 /**
  * Details about a smart contract logic error

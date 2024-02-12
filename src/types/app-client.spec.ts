@@ -676,7 +676,7 @@ describe('application-client', () => {
             .replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
             .trim(),
         ).toMatchInlineSnapshot(
-          `"URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
+          `"URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: app=${app.appId}, pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
         )
       }
 
@@ -723,7 +723,7 @@ describe('application-client', () => {
             .replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
             .trim(),
         ).toMatchInlineSnapshot(
-          `"Error: assert failed pc=885. at:469. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
+          `"Error: assert failed pc=885. at:469. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: app=${app.appId}, pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
         )
         expect(e.stack).toMatchInlineSnapshot(`
           "// error
@@ -738,7 +738,9 @@ describe('application-client', () => {
           create_8:"
         `)
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const originalData = JSON.stringify(e.led.traces[0], null, 2).replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
+        const originalData = JSON.stringify(e.led.traces[0], null, 2)
+          .replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
+          .replace(/app=[0-9]+/, 'app={APP_ID}')
         const updatedData = originalData.replace(/("pc": 345[\s\S]+?stack-additions[\s\S]+?uint": )\d+/g, '$1"APP_ID"')
         expect(updatedData).toMatchSnapshot()
       }
