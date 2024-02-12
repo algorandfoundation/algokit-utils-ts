@@ -4,10 +4,11 @@ import * as fsSync from 'fs'
 import * as fs from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
-import { compileTeal } from './app'
-import { persistSourceMaps, simulateAndPersistResponse } from './debugging'
-import { algorandFixture } from './testing'
-import { AVMDebuggerSourceMap, PersistSourceMapInput } from './types/debugging'
+import { compileTeal } from '../app'
+import { algorandFixture } from '../testing'
+import { AVMDebuggerSourceMap, PersistSourceMapInput } from '../types/debugging'
+import { persistSourceMaps } from './debugging'
+import { simulateAndPersistResponse } from './simulate-and-persist-response'
 
 async function fileExists(filePath: string): Promise<boolean> {
   try {

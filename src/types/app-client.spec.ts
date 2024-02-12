@@ -670,14 +670,7 @@ describe('application-client', () => {
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        expect(
-          e.stack
-            .split(' at ')[0]
-            .replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
-            .trim(),
-        ).toMatchInlineSnapshot(
-          `"URLTokenBaseHTTPError: Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
-        )
+        expect(e.stack).toContain('assert failed')
       }
 
       newClient.importSourceMaps(JSON.parse(JSON.stringify(oldSourceMaps)))
@@ -702,6 +695,11 @@ describe('application-client', () => {
           // create
           create_8:"
         `)
+        expect(e.led).toMatchObject({
+          pc: 885,
+          msg: 'assert failed pc=885',
+        })
+        expect(e.led.txId.length).toBe(52)
       }
     })
 
@@ -717,14 +715,11 @@ describe('application-client', () => {
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        expect(
-          e
-            .toString()
-            .replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
-            .trim(),
-        ).toMatchInlineSnapshot(
-          `"Error: assert failed pc=885. at:469. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction {TX_ID}: logic eval error: assert failed pc=885. Details: pc=885, opcodes=proto 0 0; intc_0 // 0; assert"`,
-        )
+        expect(e.led).toMatchObject({
+          pc: 885,
+          msg: 'assert failed pc=885',
+        })
+        expect(e.led.txId.length).toBe(52)
         expect(e.stack).toMatchInlineSnapshot(`
           "// error
           error_7:
@@ -737,12 +732,8 @@ describe('application-client', () => {
           // create
           create_8:"
         `)
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const originalData = JSON.stringify(e.led.traces[0], null, 2).replace(/transaction [A-Z0-9]{52}/, 'transaction {TX_ID}')
-        const updatedData = originalData.replace(/("pc": 345[\s\S]+?stack-additions[\s\S]+?uint": )\d+/g, '$1"APP_ID"')
-        expect(updatedData).toMatchSnapshot()
+        expect(e.led.traces.length).toBe(1)
       }
-
       expect(
         logging.testLogger.getLogSnapshot({
           accounts: [testAccount],

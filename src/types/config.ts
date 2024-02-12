@@ -98,13 +98,7 @@ export class UpdatableConfig implements Readonly<Config> {
 
     const fs = await import('fs')
     const path = await import('path')
-    const url = await import('url')
-
-    const _dirname =
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore: Unreachable code error
-      // eslint-disable-next-line no-restricted-syntax
-      typeof __dirname !== 'undefined' ? __dirname : path.dirname(url.fileURLToPath(import.meta.url))
+    const _dirname = __dirname
 
     if (!_dirname) {
       return

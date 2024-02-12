@@ -1,8 +1,8 @@
 import algosdk from 'algosdk'
-import { Config } from '.'
 import { callApp, compileTeal, createApp, getAppById, updateApp } from './app'
+import { Config } from './config'
 import { lookupAccountCreatedApplicationByAddress, searchTransactions } from './indexer-lookup'
-import { getSenderAddress, sendAtomicTransactionComposer } from './transaction'
+import { getSenderAddress, sendAtomicTransactionComposer } from './transaction/transaction'
 import {
   ABIReturn,
   APP_DEPLOY_NOTE_DAPP,
@@ -593,8 +593,8 @@ export function performTemplateSubstitution(tealCode: string, templateParams?: T
         typeof value === 'string'
           ? `0x${Buffer.from(value, 'utf-8').toString('hex')}`
           : ArrayBuffer.isView(value)
-          ? `0x${Buffer.from(value).toString('hex')}`
-          : value.toString(),
+            ? `0x${Buffer.from(value).toString('hex')}`
+            : value.toString(),
       )
     }
   }

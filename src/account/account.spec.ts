@@ -1,8 +1,8 @@
 import { test } from '@jest/globals'
 import algosdk from 'algosdk'
 import { v4 as uuid } from 'uuid'
-import * as algokit from './'
-import { algorandFixture } from './testing'
+import * as algokit from '..'
+import { algorandFixture } from '../testing'
 
 describe('account', () => {
   const localnet = algorandFixture()

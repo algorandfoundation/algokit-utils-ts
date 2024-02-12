@@ -1,6 +1,6 @@
 import algosdk from 'algosdk'
+import { Config } from './config'
 import {
-  Config,
   MAX_TRANSACTION_GROUP_SIZE,
   encodeLease,
   encodeTransactionNote,
@@ -8,7 +8,7 @@ import {
   getTransactionParams,
   sendGroupOfTransactions,
   sendTransaction,
-} from '.'
+} from './transaction'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams } from './types/asset'
 import { SendTransactionFrom, SendTransactionResult, TransactionGroupToSend, TransactionToSign } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
@@ -213,8 +213,9 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
           `Successfully opted in ${getSenderAddress(account)} for asset ${assetId} with transaction ID ${
             sendGroupOfTransactionsResult.txIds[index]
           },
-          grouped under ${sendGroupOfTransactionsResult.groupId} round ${sendGroupOfTransactionsResult.confirmations?.[0]
-            ?.confirmedRound}.`,
+          grouped under ${sendGroupOfTransactionsResult.groupId} round ${
+            sendGroupOfTransactionsResult.confirmations?.[0]?.confirmedRound
+          }.`,
         )
       })
     } catch (e) {
@@ -282,8 +283,9 @@ export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: Al
           `Successfully opted out ${getSenderAddress(account)} from asset ${asset.index} with transaction ID ${
             sendGroupOfTransactionsResult.txIds[index]
           },
-          grouped under ${sendGroupOfTransactionsResult.groupId} round ${sendGroupOfTransactionsResult.confirmations?.[0]
-            ?.confirmedRound}.`,
+          grouped under ${sendGroupOfTransactionsResult.groupId} round ${
+            sendGroupOfTransactionsResult.confirmations?.[0]?.confirmedRound
+          }.`,
         )
       })
     } catch (e) {

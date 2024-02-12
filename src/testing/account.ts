@@ -1,7 +1,6 @@
 import algosdk from 'algosdk'
-import { Config } from '../'
-import { getDispenserAccount } from '../account'
-import { transferAlgos } from '../transfer'
+import { Config, getDispenserAccount } from '../'
+import { transferAlgos } from '../transfer/transfer-algos'
 import { GetTestAccountParams } from '../types/testing'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
