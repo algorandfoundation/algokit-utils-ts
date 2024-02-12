@@ -8,60 +8,37 @@
   "engines": {
     "node": ">=18.0"
   },
-  "type": "module",
-  "main": "./cjs/index.js",
-  "module": "./esm/index.js",
-  "types": "./types/index.d.ts",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "types/index.d.ts"
-      ],
-      "*": [
-        "types/index.d.ts"
-      ],
-      "types": [
-        "types/types/index.d.ts"
-      ],
-      "types/*": [
-        "types/types/*.d.ts"
-      ],
-      "testing": [
-        "types/testing/index.d.ts"
-      ],
-      "testing/*": [
-        "types/testing/*.d.ts"
-      ]
-    }
-  },
+  "type": "commonjs",
+  "main": "index.js",
+  "module": "index.mjs",
+  "types": "index.d.ts",
   "files": [
     "**/*"
   ],
   "exports": {
     ".": {
-      "import": "./esm/index.js",
-      "require": "./cjs/index.js",
-      "types": "./types/index.d.ts"
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "require": "./index.js"
     },
     "./types/*": {
-      "import": "./esm/types/*.js",
-      "require": "./cjs/types/*.js",
-      "types": "./types/types/*.d.ts"
+      "types": "./types/*.d.ts",
+      "import": "./types/*.mjs",
+      "require": "./types/*.js"
     },
     "./testing": {
-      "import": "./esm/testing/index.js",
-      "require": "./cjs/testing/index.js",
-      "types": "./types/testing/index.d.ts"
+      "types": "./testing/index.d.ts",
+      "import": "./testing/index.mjs",
+      "require": "./testing/index.js"
     },
-    "./index.d.ts": "./types/index.d.ts",
+    "./index.d.ts": "./index.d.ts",
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
-    "build:1-compile-cjs": "tsc -p tsconfig.cjs.json && replace-in-files --string '(import.meta.url)' --replacement '(\"unreachable\")' ./dist/cjs/**/*.js",
-    "build:2-compile-esm": "tsc -p tsconfig.esm.json && tsc-alias -p tsconfig.esm.json && cpy package.esm.json dist/esm --rename=package.json",
-    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --main ./cjs/index.js --types ./types/index.d.ts --custom-sections exports typesVersions module",
+    "build:1-compile": "rollup -c --configPlugin typescript",
+    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --custom-sections module main type types exports",
     "build:4-copy-readme": "cpy README.md dist",
     "test": "dotenv -e .env -- jest --coverage --passWithNoTests",
     "lint": "eslint ./src/ --ext .ts",
@@ -91,7 +68,9 @@
     "@makerx/eslint-config": "^3.1.0",
     "@makerx/prettier-config": "^2.0.0",
     "@makerx/ts-config": "^1.0.1",
-    "@tsconfig/node16": "^16.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@tsconfig/node18": "^18.2.2",
     "@types/jest": "^29.5.2",
     "@types/uuid": "^9.0.2",
     "algosdk": "^2.7.0",
@@ -101,16 +80,16 @@
     "dotenv-cli": "^7.3.0",
     "eslint": "^8.47.0",
     "jest-fetch-mock": "^3.0.3",
+    "magic-string": "^0.30.7",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.2",
     "replace-in-files-cli": "^2.2.0",
     "rimraf": "^5.0.1",
+    "rollup": "^4.9.6",
     "semantic-release": "^21.0.9",
     "tiny-invariant": "^1.3.1",
     "ts-jest": "^29.1.0",
-    "ts-jest-mock-import-meta": "^1.1.0",
     "ts-node": "^10.9.1",
-    "tsc-alias": "^1.8.8",
     "typedoc": "^0.25.4",
     "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "^5.1.6",

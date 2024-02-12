@@ -1,4 +1,3 @@
-import { getTestAccount, runWhenIndexerCaughtUp, TransactionLogger } from '../'
 import {
   algos,
   Config,
@@ -10,6 +9,9 @@ import {
 } from '../../'
 import { AlgoConfig } from '../../types/network-client'
 import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
+import { getTestAccount } from '../account'
+import { runWhenIndexerCaughtUp } from '../indexer'
+import { TransactionLogger } from '../transaction-logger'
 
 /**
  * Creates a test fixture for automated testing against Algorand.

@@ -1,6 +1,6 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
-import { Config } from './'
+import { Config } from './config'
 import {
   controlFees,
   encodeLease,
@@ -11,7 +11,7 @@ import {
   getTransactionParams,
   sendAtomicTransactionComposer,
   sendTransaction,
-} from './transaction'
+} from './transaction/transaction'
 import {
   ABIAppCallArgs,
   ABIReturn,

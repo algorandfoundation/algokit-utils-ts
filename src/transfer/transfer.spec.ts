@@ -1,9 +1,9 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
-import * as algokit from './'
-import { algorandFixture } from './testing'
-import { generateTestAsset } from './testing/_asset'
+import * as algokit from '..'
+import { algorandFixture } from '../testing'
+import { generateTestAsset } from '../testing/_asset'
 
 describe('transfer', () => {
   const localnet = algorandFixture()

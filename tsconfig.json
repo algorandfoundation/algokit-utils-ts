@@ -1,10 +1,17 @@
 {
   "extends": "@makerx/ts-config",
   "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2020",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "types": ["node", "jest"],
     "outDir": "dist",
     "declaration": true,
+    "importHelpers": true,
+    "isolatedModules": true,
     "resolveJsonModule": true,
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "rollup.config.ts"],
   "exclude": ["**/*.algo.ts"],
 }

@@ -1,6 +1,5 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
-import { Config } from '..'
 import {
   callApp,
   compileTeal,
@@ -14,9 +13,10 @@ import {
   updateApp,
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
-import { persistSourceMaps } from '../debugging'
-import { getSenderAddress } from '../transaction'
-import { transferAlgos } from '../transfer'
+import { Config } from '../config'
+import { persistSourceMaps } from '../debugging/debugging'
+import { getSenderAddress } from '../transaction/transaction'
+import { transferAlgos } from '../transfer/transfer-algos'
 import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
