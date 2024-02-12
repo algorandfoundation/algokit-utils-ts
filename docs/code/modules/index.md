@@ -237,7 +237,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L236)
+[src/asset.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L237)
 
 ___
 

@@ -593,8 +593,8 @@ export function performTemplateSubstitution(tealCode: string, templateParams?: T
         typeof value === 'string'
           ? `0x${Buffer.from(value, 'utf-8').toString('hex')}`
           : ArrayBuffer.isView(value)
-          ? `0x${Buffer.from(value).toString('hex')}`
-          : value.toString(),
+            ? `0x${Buffer.from(value).toString('hex')}`
+            : value.toString(),
       )
     }
   }
