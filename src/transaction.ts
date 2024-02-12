@@ -133,14 +133,14 @@ export const getTransactionWithSigner = async (
         signer: getSenderTransactionSigner(defaultSender),
       }
     : 'transaction' in transaction
-    ? {
-        txn: transaction.transaction,
-        signer: getSenderTransactionSigner(transaction.signer),
-      }
-    : {
-        txn: transaction,
-        signer: getSenderTransactionSigner(defaultSender),
-      }
+      ? {
+          txn: transaction.transaction,
+          signer: getSenderTransactionSigner(transaction.signer),
+        }
+      : {
+          txn: transaction,
+          signer: getSenderTransactionSigner(defaultSender),
+        }
 }
 
 /**
@@ -153,8 +153,8 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
   return 'signer' in sender
     ? sender.signer
     : 'lsig' in sender
-    ? algosdk.makeLogicSigAccountTransactionSigner(sender)
-    : algosdk.makeBasicAccountTransactionSigner(sender)
+      ? algosdk.makeLogicSigAccountTransactionSigner(sender)
+      : algosdk.makeBasicAccountTransactionSigner(sender)
 })
 
 /**
@@ -167,10 +167,10 @@ export const signTransaction = async (transaction: Transaction, signer: SendTran
   return 'sk' in signer
     ? transaction.signTxn(signer.sk)
     : 'lsig' in signer
-    ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
-    : 'sign' in signer
-    ? signer.sign(transaction)
-    : (await signer.signer([transaction], [0]))[0]
+      ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
+      : 'sign' in signer
+        ? signer.sign(transaction)
+        : (await signer.signer([transaction], [0]))[0]
 }
 
 /** Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
