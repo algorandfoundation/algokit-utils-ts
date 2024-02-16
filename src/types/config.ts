@@ -15,11 +15,24 @@ export interface Config {
   traceBufferSizeMb: number
   /** The maximum depth to search for a specific file */
   maxSearchDepth: number
+  /**
+   * **WARNING**: This is not production-ready due incompatability with rekeyed
+   * accounts and simulate. This will eventually be enabled by default once
+   * [this issue](https://github.com/algorand/go-algorand/issues/5914) is closed.
+   *
+   * Whether to enable populateAppCallResources in sendParams by default.
+   * Default value is false.
+   */
+  populateAppCallResources: boolean
 }
 
 /** Updatable AlgoKit config */
 export class UpdatableConfig implements Readonly<Config> {
   private config: Config
+
+  get populateAppCallResources() {
+    return this.config.populateAppCallResources
+  }
 
   get logger() {
     return this.config.logger
@@ -80,6 +93,7 @@ export class UpdatableConfig implements Readonly<Config> {
       traceAll: false,
       traceBufferSizeMb: 256,
       maxSearchDepth: 10,
+      populateAppCallResources: false,
     }
 
     if (isNode()) {
