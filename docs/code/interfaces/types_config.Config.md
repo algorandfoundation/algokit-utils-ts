@@ -13,6 +13,7 @@ The AlgoKit configuration type
 - [debug](types_config.Config.md#debug)
 - [logger](types_config.Config.md#logger)
 - [maxSearchDepth](types_config.Config.md#maxsearchdepth)
+- [populateAppCallResources](types_config.Config.md#populateappcallresources)
 - [projectRoot](types_config.Config.md#projectroot)
 - [traceAll](types_config.Config.md#traceall)
 - [traceBufferSizeMb](types_config.Config.md#tracebuffersizemb)
@@ -52,6 +53,23 @@ The maximum depth to search for a specific file
 #### Defined in
 
 [src/types/config.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L17)
+
+___
+
+### populateAppCallResources
+
+• **populateAppCallResources**: `boolean`
+
+**WARNING**: This is not production-ready due incompatability with rekeyed
+accounts and simulate. This will eventually be enabled by default once
+[this issue](https://github.com/algorand/go-algorand/issues/5914) is closed.
+
+Whether to enable populateAppCallResources in sendParams by default.
+Default value is false.
+
+#### Defined in
+
+[src/types/config.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L26)
 
 ___
 

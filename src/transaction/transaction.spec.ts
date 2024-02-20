@@ -393,6 +393,7 @@ const tests = (version: 8 | 9) => () => {
   beforeEach(fixture.beforeEach)
 
   beforeAll(async () => {
+    algokit.Config.configure({ populateAppCallResources: true })
     await fixture.beforeEach()
     const { algod, testAccount } = fixture.context
 
@@ -436,6 +437,10 @@ const tests = (version: 8 | 9) => () => {
     )
   })
 
+  afterAll(() => {
+    algokit.Config.configure({ populateAppCallResources: false })
+  })
+
   let alice: algosdk.Account
 
   describe('accounts', () => {
@@ -448,7 +453,7 @@ const tests = (version: 8 | 9) => () => {
     })
 
     test('addressBalance', async () => {
-      await appClient.call({ method: 'addressBalance', methodArgs: [alice.addr], sendParams: { populateAppCallResources: true } })
+      await appClient.call({ method: 'addressBalance', methodArgs: [alice.addr] })
     })
   })
 
@@ -460,11 +465,11 @@ const tests = (version: 8 | 9) => () => {
     })
 
     test('smallBox', async () => {
-      await appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { populateAppCallResources: true } })
+      await appClient.call({ method: 'smallBox', methodArgs: [] })
     })
 
     test('mediumBox', async () => {
-      await appClient.call({ method: 'mediumBox', methodArgs: [], sendParams: { populateAppCallResources: true } })
+      await appClient.call({ method: 'mediumBox', methodArgs: [] })
     })
   })
 
@@ -483,7 +488,7 @@ const tests = (version: 8 | 9) => () => {
       await appClient.call({
         method: 'externalAppCall',
         methodArgs: [],
-        sendParams: { populateAppCallResources: true, fee: algokit.microAlgos(2_000) },
+        sendParams: { fee: algokit.microAlgos(2_000) },
       })
     })
   })
@@ -498,7 +503,7 @@ const tests = (version: 8 | 9) => () => {
     })
 
     test('assetTotal', async () => {
-      await appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { populateAppCallResources: true } })
+      await appClient.call({ method: 'assetTotal', methodArgs: [] })
     })
   })
 
@@ -515,7 +520,7 @@ const tests = (version: 8 | 9) => () => {
 
     test('hasAsset', async () => {
       const { testAccount } = fixture.context
-      await appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: true } })
+      await appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr] })
     })
 
     test(`externalLocal: ${hasAssetErrorMsg}`, async () => {
@@ -533,7 +538,6 @@ const tests = (version: 8 | 9) => () => {
       await appClient.call({
         method: 'externalLocal',
         methodArgs: [testAccount.addr],
-        sendParams: { populateAppCallResources: true },
         sender: testAccount,
       })
     })
@@ -583,7 +587,7 @@ const tests = (version: 8 | 9) => () => {
 
       txn.txn.group = undefined
 
-      await algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { populateAppCallResources: true } }, algod)
+      await algokit.sendTransaction({ transaction: txn.txn, from: testAccount }, algod)
     })
   })
 }
@@ -601,6 +605,8 @@ describe.skip('Resource Packer: Mixed', () => {
   beforeEach(fixture.beforeEach)
 
   beforeAll(async () => {
+    algokit.Config.configure({ populateAppCallResources: true })
+
     await fixture.beforeEach()
     const { algod, testAccount } = fixture.context
 
@@ -626,6 +632,10 @@ describe.skip('Resource Packer: Mixed', () => {
 
     await v9Client.create({ method: 'createApplication', methodArgs: [] })
     await v8Client.create({ method: 'createApplication', methodArgs: [] })
+  })
+
+  afterAll(() => {
+    algokit.Config.configure({ populateAppCallResources: false })
   })
 
   test('same account', async () => {
