@@ -25,6 +25,7 @@ Updatable AlgoKit config
 - [debug](types_config.UpdatableConfig.md#debug)
 - [logger](types_config.UpdatableConfig.md#logger)
 - [maxSearchDepth](types_config.UpdatableConfig.md#maxsearchdepth)
+- [populateAppCallResources](types_config.UpdatableConfig.md#populateappcallresources)
 - [projectRoot](types_config.UpdatableConfig.md#projectroot)
 - [traceAll](types_config.UpdatableConfig.md#traceall)
 - [traceBufferSizeMb](types_config.UpdatableConfig.md#tracebuffersizemb)
@@ -48,7 +49,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L75)
+[src/types/config.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L88)
 
 ## Properties
 
@@ -58,7 +59,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L22)
+[src/types/config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L31)
 
 ## Accessors
 
@@ -76,7 +77,7 @@ Readonly.debug
 
 #### Defined in
 
-[src/types/config.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L28)
+[src/types/config.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L41)
 
 ___
 
@@ -94,7 +95,7 @@ Readonly.logger
 
 #### Defined in
 
-[src/types/config.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L24)
+[src/types/config.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L37)
 
 ___
 
@@ -112,7 +113,25 @@ Readonly.maxSearchDepth
 
 #### Defined in
 
-[src/types/config.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L44)
+[src/types/config.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L57)
+
+___
+
+### populateAppCallResources
+
+• `get` **populateAppCallResources**(): `boolean`
+
+#### Returns
+
+`boolean`
+
+#### Implementation of
+
+Readonly.populateAppCallResources
+
+#### Defined in
+
+[src/types/config.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L33)
 
 ___
 
@@ -130,7 +149,7 @@ Readonly.projectRoot
 
 #### Defined in
 
-[src/types/config.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L32)
+[src/types/config.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L45)
 
 ___
 
@@ -148,7 +167,7 @@ Readonly.traceAll
 
 #### Defined in
 
-[src/types/config.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L36)
+[src/types/config.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L49)
 
 ___
 
@@ -166,7 +185,7 @@ Readonly.traceBufferSizeMb
 
 #### Defined in
 
-[src/types/config.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L40)
+[src/types/config.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L53)
 
 ## Methods
 
@@ -188,7 +207,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-[src/types/config.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L121)
+[src/types/config.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L135)
 
 ___
 
@@ -205,7 +224,7 @@ This is only supported in a Node environment.
 
 #### Defined in
 
-[src/types/config.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L94)
+[src/types/config.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L108)
 
 ___
 
@@ -229,7 +248,7 @@ The requested logger
 
 #### Defined in
 
-[src/types/config.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L53)
+[src/types/config.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L66)
 
 ___
 
@@ -251,4 +270,4 @@ Temporarily run with debug set to true.
 
 #### Defined in
 
-[src/types/config.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L65)
+[src/types/config.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L78)
