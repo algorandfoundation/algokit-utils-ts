@@ -1,5 +1,5 @@
 {
-  "1096460": {
+  "1096519": {
     "active": true,
     "notes": "Ignored since the vulnerability is when hosting a server, but this is via semantic release which only uses it as a client",
     "expiry": 1711814399000
