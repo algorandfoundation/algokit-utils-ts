@@ -4,6 +4,19 @@
 
 ## Table of contents
 
+### Type Aliases
+
+- [AppCallParams](index.md#appcallparams)
+- [AssetConfigParams](index.md#assetconfigparams)
+- [AssetCreateParams](index.md#assetcreateparams)
+- [AssetDestroyParams](index.md#assetdestroyparams)
+- [AssetFreezeParams](index.md#assetfreezeparams)
+- [AssetTransferParams](index.md#assettransferparams)
+- [CommonTxnParams](index.md#commontxnparams)
+- [KeyRegParams](index.md#keyregparams)
+- [MethodCallParams](index.md#methodcallparams)
+- [PayTxnParams](index.md#paytxnparams)
+
 ### Variables
 
 - [Config](index.md#config)
@@ -104,6 +117,121 @@
 - [transferAsset](index.md#transferasset)
 - [updateApp](index.md#updateapp)
 - [waitForConfirmation](index.md#waitforconfirmation)
+
+## Type Aliases
+
+### AppCallParams
+
+Ƭ **AppCallParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `accountReferences?`: `string`[] ; `appID?`: `number` ; `appReferences?`: `number`[] ; `approvalProgram?`: `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `number`[] ; `boxReferences?`: `algosdk.BoxReference`[] ; `clearProgram?`: `Uint8Array` ; `extraPages?`: `number` ; `onComplete?`: `algosdk.OnApplicationComplete` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalUints`: `number` ; `localByteSlices`: `number` ; `localUints`: `number`  }  }
+
+#### Defined in
+
+[src/composer.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L81)
+
+___
+
+### AssetConfigParams
+
+Ƭ **AssetConfigParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `assetID`: `number` ; `clawback?`: `string` ; `freeze?`: `string` ; `manager?`: `string` ; `reserve?`: `string`  }
+
+#### Defined in
+
+[src/composer.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L45)
+
+___
+
+### AssetCreateParams
+
+Ƭ **AssetCreateParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `assetName?`: `string` ; `clawback?`: `string` ; `decimals?`: `number` ; `defaultFrozen?`: `boolean` ; `freeze?`: `string` ; `manager?`: `string` ; `metadataHash?`: `Uint8Array` ; `reserve?`: `string` ; `total`: `number` ; `unitName?`: `string` ; `url?`: `string`  }
+
+#### Defined in
+
+[src/composer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L31)
+
+___
+
+### AssetDestroyParams
+
+Ƭ **AssetDestroyParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `assetID`: `number`  }
+
+#### Defined in
+
+[src/composer.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L59)
+
+___
+
+### AssetFreezeParams
+
+Ƭ **AssetFreezeParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `account`: `string` ; `assetID`: `number` ; `frozen`: `boolean`  }
+
+#### Defined in
+
+[src/composer.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L53)
+
+___
+
+### AssetTransferParams
+
+Ƭ **AssetTransferParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `amount`: `number` ; `assetID`: `number` ; `clawbackTarget?`: `string` ; `closeAssetTo?`: `string` ; `to`: `string`  }
+
+#### Defined in
+
+[src/composer.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L73)
+
+___
+
+### CommonTxnParams
+
+Ƭ **CommonTxnParams**: `Object`
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `extraFee?` | `number` | The fee to pay IN ADDITION to the suggested fee. Useful for covering inner tranasction fees |
+| `firstValidRound?` | `number` | Set the first round this transaction is valid. If left undefined, the value from algod will be used. Only set this when you intentionally want this to be some time in the future |
+| `flatFee?` | `number` | The tranasction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction |
+| `lastValidRound?` | `number` | The last round this transaction is valid. It is recommended to use validityWindow instead |
+| `lease?` | `Uint8Array` | - |
+| `note?` | `Uint8Array` | - |
+| `rekeyTo?` | `string` | - |
+| `sender` | `string` | - |
+| `signer?` | `algosdk.TransactionSigner` | - |
+| `validityWindow?` | `number` | How many rounds the transaction should be valid for |
+
+#### Defined in
+
+[src/composer.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L4)
+
+___
+
+### KeyRegParams
+
+Ƭ **KeyRegParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `nonParticipation`: `boolean` ; `selectionKey?`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `number` ; `voteKey?`: `Uint8Array` ; `voteKeyDilution`: `number` ; `voteLast`: `number`  }
+
+#### Defined in
+
+[src/composer.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L63)
+
+___
+
+### MethodCallParams
+
+Ƭ **MethodCallParams**: [`CommonTxnParams`](index.md#commontxnparams) & `Omit`\<[`AppCallParams`](index.md#appcallparams), ``"args"``\> & \{ `appID`: `number` ; `args?`: (`algosdk.ABIValue` \| `Txn`)[] ; `method`: `algosdk.ABIMethod`  }
+
+#### Defined in
+
+[src/composer.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L100)
+
+___
+
+### PayTxnParams
+
+Ƭ **PayTxnParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `amount`: `number` ; `to`: `string`  }
+
+#### Defined in
+
+[src/composer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L26)
 
 ## Variables
 
