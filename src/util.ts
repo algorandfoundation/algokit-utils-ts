@@ -1,3 +1,5 @@
+import { ABIValue } from 'algosdk'
+
 /**
  * Converts a value which might be a number or a bigint into a number to be used with apis that don't support bigint.
  *
@@ -48,4 +50,16 @@ export const calculateFundAmount = (
  */
 export const isNode = () => {
   return typeof process !== 'undefined' && process.versions != null && process.versions.node != null
+}
+
+/**
+ * Checks if the value of x is a valid ABIValue
+ * @param x A value to check
+ *
+ * @returns true if x is a valid ABIValue else false
+ */
+export function isAbiValue(x: unknown): x is ABIValue {
+  if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
+
+  return ['boolean', 'number', 'bigint', 'string', 'Uint8Array'].includes(typeof x)
 }
