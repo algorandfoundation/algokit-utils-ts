@@ -237,7 +237,7 @@ export default class AlgokitComposer {
       throw Error('Cannot set both flatFee and extraFee')
     }
 
-    if (params.flatFee) {
+    if (params.flatFee !== undefined) {
       txn.fee = params.flatFee
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
