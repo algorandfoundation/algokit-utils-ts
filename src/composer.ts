@@ -7,9 +7,9 @@ export type CommonTxnParams = {
   rekeyTo?: string
   note?: Uint8Array
   lease?: Uint8Array
-  /** The tranasction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
+  /** The transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
   flatFee?: number
-  /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner tranasction fees */
+  /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees */
   extraFee?: number
   /** How many rounds the transaction should be valid for */
   validityWindow?: number
