@@ -258,9 +258,20 @@ export default class AlgokitComposer {
     /** When a methodCall is encountered, we need to offset the arg index because one method call might have multiple txns */
     let argOffset = 0
 
+    const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
+      if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
+
+      return ['boolean', 'number', 'bigint', 'string', 'Uint8Array'].includes(typeof x)
+    }
+
     params.args?.forEach((arg, i) => {
+      if (isAbiValue(arg)) {
+        methodArgs.push(arg)
+        return
+      }
+
       if (Object.values(algosdk.ABITransactionType).includes(params.method.args[i + argOffset].type as algosdk.ABITransactionType)) {
-        const txnType = (arg as Txn).type
+        const txnType = arg.type
 
         if (txnType === 'methodCall') {
           // Don't modify the real txnWithSigners because that will happen once we build the top-level ATC
@@ -269,7 +280,7 @@ export default class AlgokitComposer {
           // Don't modify the real methodCalls because we aren't going to have the real txnWithSigners until we build the top-level ATC
           const tempMap = new Map<number, algosdk.ABIMethod>()
 
-          this.buildMethodCall(arg as MethodCallParams, suggestedParams, tempTxnWithSigners, tempMap, methodCallOffset)
+          this.buildMethodCall(arg, suggestedParams, tempTxnWithSigners, tempMap, methodCallOffset)
           methodArgs.push(...tempTxnWithSigners)
           argOffset += tempTxnWithSigners.length - 1
 
@@ -285,28 +296,28 @@ export default class AlgokitComposer {
         let txn: algosdk.Transaction
 
         if (txnType === 'appCall') {
-          txn = this.buildAppCall(arg as AppCallParams, suggestedParams)
+          txn = this.buildAppCall(arg, suggestedParams)
         } else if (txnType === 'pay') {
-          txn = this.buildPayment(arg as PayTxnParams, suggestedParams)
+          txn = this.buildPayment(arg, suggestedParams)
         } else if (txnType === 'assetCreate') {
-          txn = this.buildAssetCreate(arg as AssetCreateParams, suggestedParams)
+          txn = this.buildAssetCreate(arg, suggestedParams)
         } else if (txnType === 'assetConfig') {
-          txn = this.buildAssetConfig(arg as AssetConfigParams, suggestedParams)
+          txn = this.buildAssetConfig(arg, suggestedParams)
         } else if (txnType === 'assetDestroy') {
-          txn = this.buildAssetDestroy(arg as AssetDestroyParams, suggestedParams)
+          txn = this.buildAssetDestroy(arg, suggestedParams)
         } else if (txnType === 'assetFreeze') {
-          txn = this.buildAssetFreeze(arg as AssetFreezeParams, suggestedParams)
+          txn = this.buildAssetFreeze(arg, suggestedParams)
         } else if (txnType === 'assetTransfer') {
-          txn = this.buildAssetTransfer(arg as AssetTransferParams, suggestedParams)
+          txn = this.buildAssetTransfer(arg, suggestedParams)
         } else if (txnType === 'keyReg') {
-          txn = this.buildKeyReg(arg as KeyRegParams, suggestedParams)
+          txn = this.buildKeyReg(arg, suggestedParams)
         } else throw Error(`Unsupported method arg transaction type: ${txnType}`)
 
         methodArgs.push({ txn, signer: params.signer || this.getSigner(params.sender) })
         return
       }
 
-      methodArgs.push(arg as algosdk.ABIValue)
+      throw Error(`Unsupported method arg: ${arg}`)
     })
 
     const methodAtc = new algosdk.AtomicTransactionComposer()
