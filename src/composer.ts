@@ -125,7 +125,7 @@ export default class AlgokitComposer {
   algod: algosdk.Algodv2
   getSuggestedParams: () => Promise<algosdk.SuggestedParams>
   getSigner: (address: string) => algosdk.TransactionSigner
-  defaultValidityWindow: number = 10
+  defaultValidityWindow = 10
 
   txns: Txn[] = []
 
@@ -260,35 +260,41 @@ export default class AlgokitComposer {
       }
 
       if (Object.values(algosdk.ABITransactionType).includes(params.method.args[i + argOffset].type as algosdk.ABITransactionType)) {
-        const txnType = arg.type
-
-        if (txnType === 'methodCall') {
-          const tempTxnWithSigners = this.buildMethodCall(arg, suggestedParams)
-          methodArgs.push(...tempTxnWithSigners)
-          argOffset += tempTxnWithSigners.length - 1
-
-          return
-        }
-
         let txn: algosdk.Transaction
-
-        if (txnType === 'appCall') {
-          txn = this.buildAppCall(arg, suggestedParams)
-        } else if (txnType === 'pay') {
-          txn = this.buildPayment(arg, suggestedParams)
-        } else if (txnType === 'assetCreate') {
-          txn = this.buildAssetCreate(arg, suggestedParams)
-        } else if (txnType === 'assetConfig') {
-          txn = this.buildAssetConfig(arg, suggestedParams)
-        } else if (txnType === 'assetDestroy') {
-          txn = this.buildAssetDestroy(arg, suggestedParams)
-        } else if (txnType === 'assetFreeze') {
-          txn = this.buildAssetFreeze(arg, suggestedParams)
-        } else if (txnType === 'assetTransfer') {
-          txn = this.buildAssetTransfer(arg, suggestedParams)
-        } else if (txnType === 'keyReg') {
-          txn = this.buildKeyReg(arg, suggestedParams)
-        } else throw Error(`Unsupported method arg transaction type: ${txnType}`)
+        switch (arg.type) {
+          case 'methodCall': {
+            const tempTxnWithSigners = this.buildMethodCall(arg, suggestedParams)
+            methodArgs.push(...tempTxnWithSigners)
+            argOffset += tempTxnWithSigners.length - 1
+            return
+          }
+          case 'appCall':
+            txn = this.buildAppCall(arg, suggestedParams)
+            break
+          case 'pay':
+            txn = this.buildPayment(arg, suggestedParams)
+            break
+          case 'assetCreate':
+            txn = this.buildAssetCreate(arg, suggestedParams)
+            break
+          case 'assetConfig':
+            txn = this.buildAssetConfig(arg, suggestedParams)
+            break
+          case 'assetDestroy':
+            txn = this.buildAssetDestroy(arg, suggestedParams)
+            break
+          case 'assetFreeze':
+            txn = this.buildAssetFreeze(arg, suggestedParams)
+            break
+          case 'assetTransfer':
+            txn = this.buildAssetTransfer(arg, suggestedParams)
+            break
+          case 'keyReg':
+            txn = this.buildKeyReg(arg, suggestedParams)
+            break
+          default:
+            throw Error(`Unsupported method arg transaction type: ${arg.type}`)
+        }
 
         methodArgs.push({ txn, signer: params.signer || this.getSigner(params.sender) })
         return
@@ -474,32 +480,41 @@ export default class AlgokitComposer {
 
     const signer = txn.signer ?? this.getSigner(txn.sender)
 
-    if (txn.type === 'pay') {
-      const payment = this.buildPayment(txn, suggestedParams)
-      return [{ txn: payment, signer }]
-    } else if (txn.type === 'assetCreate') {
-      const assetCreate = this.buildAssetCreate(txn, suggestedParams)
-      return [{ txn: assetCreate, signer }]
-    } else if (txn.type === 'appCall') {
-      const appCall = this.buildAppCall(txn, suggestedParams)
-      return [{ txn: appCall, signer }]
-    } else if (txn.type === 'assetConfig') {
-      const assetConfig = this.buildAssetConfig(txn, suggestedParams)
-      return [{ txn: assetConfig, signer }]
-    } else if (txn.type === 'assetDestroy') {
-      const assetDestroy = this.buildAssetDestroy(txn, suggestedParams)
-      return [{ txn: assetDestroy, signer }]
-    } else if (txn.type === 'assetFreeze') {
-      const assetFreeze = this.buildAssetFreeze(txn, suggestedParams)
-      return [{ txn: assetFreeze, signer }]
-    } else if (txn.type === 'assetTransfer') {
-      const assetTransfer = this.buildAssetTransfer(txn, suggestedParams)
-      return [{ txn: assetTransfer, signer }]
-    } else if (txn.type === 'keyReg') {
-      const keyReg = this.buildKeyReg(txn, suggestedParams)
-      return [{ txn: keyReg, signer }]
-    } else {
-      throw Error(`Unsupported txn type`)
+    switch (txn.type) {
+      case 'pay': {
+        const payment = this.buildPayment(txn, suggestedParams)
+        return [{ txn: payment, signer }]
+      }
+      case 'assetCreate': {
+        const assetCreate = this.buildAssetCreate(txn, suggestedParams)
+        return [{ txn: assetCreate, signer }]
+      }
+      case 'appCall': {
+        const appCall = this.buildAppCall(txn, suggestedParams)
+        return [{ txn: appCall, signer }]
+      }
+      case 'assetConfig': {
+        const assetConfig = this.buildAssetConfig(txn, suggestedParams)
+        return [{ txn: assetConfig, signer }]
+      }
+      case 'assetDestroy': {
+        const assetDestroy = this.buildAssetDestroy(txn, suggestedParams)
+        return [{ txn: assetDestroy, signer }]
+      }
+      case 'assetFreeze': {
+        const assetFreeze = this.buildAssetFreeze(txn, suggestedParams)
+        return [{ txn: assetFreeze, signer }]
+      }
+      case 'assetTransfer': {
+        const assetTransfer = this.buildAssetTransfer(txn, suggestedParams)
+        return [{ txn: assetTransfer, signer }]
+      }
+      case 'keyReg': {
+        const keyReg = this.buildKeyReg(txn, suggestedParams)
+        return [{ txn: keyReg, signer }]
+      }
+      default:
+        throw Error(`Unsupported txn type`)
     }
   }
 
