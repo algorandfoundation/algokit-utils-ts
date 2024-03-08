@@ -199,18 +199,18 @@ export default class AlgokitComposer {
     return this
   }
 
-  private buildAtc(atc: algosdk.AtomicTransactionComposer, txnWithSigners: algosdk.TransactionWithSigner[]) {
+  private buildAtc(atc: algosdk.AtomicTransactionComposer): algosdk.TransactionWithSigner[] {
     const group = atc.buildGroup()
 
-    group.forEach((ts) => {
+    const txnWithSigners = group.map((ts) => {
       ts.txn.group = undefined
-      txnWithSigners.push(ts)
+      return ts
     })
 
     const method = atc['methodCalls'].get(group.length - 1)
     if (method) this.txnMethodMap.set(txnWithSigners.at(-1)!.txn.txID(), method)
 
-    return this
+    return txnWithSigners
   }
 
   private commonTxnBuildStep(params: CommonTxnParams, txn: algosdk.Transaction, suggestedParams: algosdk.SuggestedParams) {
@@ -242,11 +242,7 @@ export default class AlgokitComposer {
     return txn
   }
 
-  private buildMethodCall(
-    params: MethodCallParams,
-    suggestedParams: algosdk.SuggestedParams,
-    txnWithSigners: algosdk.TransactionWithSigner[],
-  ) {
+  private buildMethodCall(params: MethodCallParams, suggestedParams: algosdk.SuggestedParams): algosdk.TransactionWithSigner[] {
     const methodArgs: algosdk.ABIArgument[] = []
     /** When a methodCall is encountered, we need to offset the arg index because one method call might have multiple txns */
     let argOffset = 0
@@ -267,10 +263,7 @@ export default class AlgokitComposer {
         const txnType = arg.type
 
         if (txnType === 'methodCall') {
-          // Don't modify the real txnWithSigners because that will happen once we build the top-level ATC
-          const tempTxnWithSigners: algosdk.TransactionWithSigner[] = []
-
-          this.buildMethodCall(arg, suggestedParams, tempTxnWithSigners)
+          const tempTxnWithSigners = this.buildMethodCall(arg, suggestedParams)
           methodArgs.push(...tempTxnWithSigners)
           argOffset += tempTxnWithSigners.length - 1
 
@@ -313,7 +306,7 @@ export default class AlgokitComposer {
       methodArgs: methodArgs,
     })
 
-    this.buildAtc(methodAtc, txnWithSigners)
+    return this.buildAtc(methodAtc)
   }
 
   private buildPayment(params: PayTxnParams, suggestedParams: algosdk.SuggestedParams) {
@@ -466,48 +459,47 @@ export default class AlgokitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  async buildTxn(txn: Txn, txnWithSigners: algosdk.TransactionWithSigner[], suggestedParams: algosdk.SuggestedParams) {
+  private buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): algosdk.TransactionWithSigner[] {
     if (txn.type === 'txnWithSigner') {
-      txnWithSigners.push(txn)
-      return
+      return [txn]
     }
 
     if (txn.type === 'atc') {
-      this.buildAtc(txn.atc, txnWithSigners)
-      return
+      return this.buildAtc(txn.atc)
     }
 
     if (txn.type === 'methodCall') {
-      this.buildMethodCall(txn, suggestedParams, txnWithSigners)
-      return
+      return this.buildMethodCall(txn, suggestedParams)
     }
 
     const signer = txn.signer ?? this.getSigner(txn.sender)
 
     if (txn.type === 'pay') {
       const payment = this.buildPayment(txn, suggestedParams)
-      txnWithSigners.push({ txn: payment, signer })
+      return [{ txn: payment, signer }]
     } else if (txn.type === 'assetCreate') {
       const assetCreate = this.buildAssetCreate(txn, suggestedParams)
-      txnWithSigners.push({ txn: assetCreate, signer })
+      return [{ txn: assetCreate, signer }]
     } else if (txn.type === 'appCall') {
       const appCall = this.buildAppCall(txn, suggestedParams)
-      txnWithSigners.push({ txn: appCall, signer })
+      return [{ txn: appCall, signer }]
     } else if (txn.type === 'assetConfig') {
       const assetConfig = this.buildAssetConfig(txn, suggestedParams)
-      txnWithSigners.push({ txn: assetConfig, signer })
+      return [{ txn: assetConfig, signer }]
     } else if (txn.type === 'assetDestroy') {
       const assetDestroy = this.buildAssetDestroy(txn, suggestedParams)
-      txnWithSigners.push({ txn: assetDestroy, signer })
+      return [{ txn: assetDestroy, signer }]
     } else if (txn.type === 'assetFreeze') {
       const assetFreeze = this.buildAssetFreeze(txn, suggestedParams)
-      txnWithSigners.push({ txn: assetFreeze, signer })
+      return [{ txn: assetFreeze, signer }]
     } else if (txn.type === 'assetTransfer') {
       const assetTransfer = this.buildAssetTransfer(txn, suggestedParams)
-      txnWithSigners.push({ txn: assetTransfer, signer })
+      return [{ txn: assetTransfer, signer }]
     } else if (txn.type === 'keyReg') {
       const keyReg = this.buildKeyReg(txn, suggestedParams)
-      txnWithSigners.push({ txn: keyReg, signer })
+      return [{ txn: keyReg, signer }]
+    } else {
+      throw Error(`Unsupported txn type`)
     }
   }
 
@@ -517,7 +509,7 @@ export default class AlgokitComposer {
     const txnWithSigners: algosdk.TransactionWithSigner[] = []
 
     this.txns.forEach((txn) => {
-      this.buildTxn(txn, txnWithSigners, suggestedParams)
+      txnWithSigners.push(...this.buildTxn(txn, suggestedParams))
     })
 
     txnWithSigners.forEach((ts) => {
