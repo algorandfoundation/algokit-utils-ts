@@ -118,6 +118,9 @@ type Txn =
   | (MethodCallParams & { type: 'methodCall' })
 
 export default class AlgokitComposer {
+  /** Map of txid to ABI method */
+  private txnMethodMap: Map<string, algosdk.ABIMethod> = new Map()
+
   atc: algosdk.AtomicTransactionComposer
   algod: algosdk.Algodv2
   getSuggestedParams: () => Promise<algosdk.SuggestedParams>
@@ -196,24 +199,16 @@ export default class AlgokitComposer {
     return this
   }
 
-  private buildAtc(
-    atc: algosdk.AtomicTransactionComposer,
-    txnWithSigners: algosdk.TransactionWithSigner[],
-    methodCalls: Map<number, algosdk.ABIMethod>,
-  ) {
-    const currentLength = txnWithSigners.length
+  private buildAtc(atc: algosdk.AtomicTransactionComposer, txnWithSigners: algosdk.TransactionWithSigner[]) {
     const group = atc.buildGroup()
-
-    const atcMethodCalls = atc['methodCalls'] as Map<number, algosdk.ABIMethod>
-
-    atcMethodCalls.forEach((method, idx) => {
-      methodCalls.set(currentLength + idx, method)
-    })
 
     group.forEach((ts) => {
       ts.txn.group = undefined
       txnWithSigners.push(ts)
     })
+
+    const method = atc['methodCalls'].get(group.length - 1)
+    if (method) this.txnMethodMap.set(txnWithSigners.at(-1)!.txn.txID(), method)
 
     return this
   }
@@ -251,8 +246,6 @@ export default class AlgokitComposer {
     params: MethodCallParams,
     suggestedParams: algosdk.SuggestedParams,
     txnWithSigners: algosdk.TransactionWithSigner[],
-    methodCalls: Map<number, algosdk.ABIMethod>,
-    methodCallOffset: number = 0,
   ) {
     const methodArgs: algosdk.ABIArgument[] = []
     /** When a methodCall is encountered, we need to offset the arg index because one method call might have multiple txns */
@@ -277,18 +270,9 @@ export default class AlgokitComposer {
           // Don't modify the real txnWithSigners because that will happen once we build the top-level ATC
           const tempTxnWithSigners: algosdk.TransactionWithSigner[] = []
 
-          // Don't modify the real methodCalls because we aren't going to have the real txnWithSigners until we build the top-level ATC
-          const tempMap = new Map<number, algosdk.ABIMethod>()
-
-          this.buildMethodCall(arg, suggestedParams, tempTxnWithSigners, tempMap, methodCallOffset)
+          this.buildMethodCall(arg, suggestedParams, tempTxnWithSigners)
           methodArgs.push(...tempTxnWithSigners)
           argOffset += tempTxnWithSigners.length - 1
-
-          tempMap.forEach((method, idx) => {
-            methodCalls.set(methodCallOffset + idx, method)
-          })
-
-          methodCallOffset += tempTxnWithSigners.length
 
           return
         }
@@ -329,7 +313,7 @@ export default class AlgokitComposer {
       methodArgs: methodArgs,
     })
 
-    this.buildAtc(methodAtc, txnWithSigners, methodCalls)
+    this.buildAtc(methodAtc, txnWithSigners)
   }
 
   private buildPayment(params: PayTxnParams, suggestedParams: algosdk.SuggestedParams) {
@@ -482,24 +466,19 @@ export default class AlgokitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  async buildTxn(
-    txn: Txn,
-    txnWithSigners: algosdk.TransactionWithSigner[],
-    methodCalls: Map<number, algosdk.ABIMethod>,
-    suggestedParams: algosdk.SuggestedParams,
-  ) {
+  async buildTxn(txn: Txn, txnWithSigners: algosdk.TransactionWithSigner[], suggestedParams: algosdk.SuggestedParams) {
     if (txn.type === 'txnWithSigner') {
       txnWithSigners.push(txn)
       return
     }
 
     if (txn.type === 'atc') {
-      this.buildAtc(txn.atc, txnWithSigners, methodCalls)
+      this.buildAtc(txn.atc, txnWithSigners)
       return
     }
 
     if (txn.type === 'methodCall') {
-      this.buildMethodCall(txn, suggestedParams, txnWithSigners, methodCalls)
+      this.buildMethodCall(txn, suggestedParams, txnWithSigners)
       return
     }
 
@@ -536,21 +515,27 @@ export default class AlgokitComposer {
     const suggestedParams = await this.getSuggestedParams()
 
     const txnWithSigners: algosdk.TransactionWithSigner[] = []
-    const methodCalls = new Map<number, algosdk.ABIMethod>()
 
     this.txns.forEach((txn) => {
-      this.buildTxn(txn, txnWithSigners, methodCalls, suggestedParams)
+      this.buildTxn(txn, txnWithSigners, suggestedParams)
     })
 
     txnWithSigners.forEach((ts) => {
       this.atc.addTransaction(ts)
     })
 
-    const builtGroup = this.atc.buildGroup()
+    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    this.txnMethodMap.forEach((method, txid) => {
+      const idx = txnWithSigners.findIndex((ts) => {
+        return ts.txn.txID() === txid
+      })
+
+      methodCalls.set(idx, method)
+    })
 
     this.atc['methodCalls'] = methodCalls
 
-    return builtGroup
+    return this.atc.buildGroup()
   }
 
   async execute(params?: { maxRoundsToWaitForConfirmation?: number }) {
