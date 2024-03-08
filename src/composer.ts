@@ -517,12 +517,10 @@ export default class AlgokitComposer {
     })
 
     const methodCalls = new Map<number, algosdk.ABIMethod>()
-    this.txnMethodMap.forEach((method, txid) => {
-      const idx = txnWithSigners.findIndex((ts) => {
-        return ts.txn.txID() === txid
-      })
 
-      methodCalls.set(idx, method)
+    txnWithSigners.forEach((ts, idx) => {
+      const method = this.txnMethodMap.get(ts.txn.txID())
+      if (method) methodCalls.set(idx, method)
     })
 
     this.atc['methodCalls'] = methodCalls
