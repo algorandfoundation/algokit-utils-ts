@@ -4,6 +4,7 @@ import MagicString from 'magic-string'
 import type { LogLevel, LogOrStringHandler, Plugin, RollupLog } from 'rollup'
 import { RollupOptions } from 'rollup'
 import pkg from './package.json' with { type: 'json' }
+import { multiInput } from './rollup-multi-plugin'
 
 const normaliseEsmOutput = (): Plugin => {
   const CJSFilenameRegex = /__filename/g
@@ -32,7 +33,7 @@ const normaliseEsmOutput = (): Plugin => {
 }
 
 const config: RollupOptions = {
-  input: ['src/index.ts', 'src/testing/index.ts'],
+  input: ['src/index.ts', 'src/testing/index.ts', 'src/types/*.ts', '!src/types/*.spec.ts'],
   output: [
     {
       dir: 'dist',
@@ -62,6 +63,7 @@ const config: RollupOptions = {
       preferBuiltins: true,
     }),
     normaliseEsmOutput(),
+    multiInput(),
   ],
   external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
   onLog(level: LogLevel, log: RollupLog, handler: LogOrStringHandler) {
