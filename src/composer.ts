@@ -2,10 +2,15 @@ import algosdk from 'algosdk'
 import { sendAtomicTransactionComposer } from './transaction/transaction'
 
 export type CommonTxnParams = {
+  /** The address sending the transaction */
   sender: string
+  /** The function used to sign transactions */
   signer?: algosdk.TransactionSigner
+  /** Change the signing key of the sender to the given address */
   rekeyTo?: string
+  /** Note to attach to the transaction*/
   note?: Uint8Array
+  /** Prevent multiple transactions with the same lease being included within the validity window */
   lease?: Uint8Array
   /** The transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
   flatFee?: number
@@ -26,39 +31,61 @@ export type CommonTxnParams = {
 }
 
 export type PayTxnParams = CommonTxnParams & {
+  /** That account that will receive the ALGO */
   to: string
+  /** Amount, in microALGO, to send */
   amount: number
 }
 
 export type AssetCreateParams = CommonTxnParams & {
+  /** The total amount of the smallest divisible unit to create */
   total: number
+  /** The amount of decimal places the asset should have */
   decimals?: number
+  /** Whether the asset is frozen by default in the creator address */
   defaultFrozen?: boolean
+  /** The address that can change the manager, reserve, clawback, and freeze addresses */
   manager?: string
+  /** The address that holds the uncirculated supply */
   reserve?: string
+  /** The address that can freeze the asset in any account */
   freeze?: string
+  /** The address that can clawback the asset from any account */
   clawback?: string
+  /** The short ticker name for the asset */
   unitName?: string
+  /** The full name of the asset */
   assetName?: string
+  /** The metadata URL for the asset */
   url?: string
+  /** Hash of the metadata contained in the metadata URL */
   metadataHash?: Uint8Array
 }
 
 export type AssetConfigParams = CommonTxnParams & {
+  /** ID of the asset */
   assetID: number
+  /** The address that can change the manager, reserve, clawback, and freeze addresses */
   manager?: string
+  /** The address that holds the uncirculated supply */
   reserve?: string
+  /** The address that can freeze the asset in any account */
   freeze?: string
+  /** The address that can clawback the asset from any account */
   clawback?: string
 }
 
 export type AssetFreezeParams = CommonTxnParams & {
+  /** The ID of the asset */
   assetID: number
+  /** The account to freeze or unfreeze */
   account: string
+  /** Whether the assets in the account should be frozen */
   frozen: boolean
 }
 
 export type AssetDestroyParams = CommonTxnParams & {
+  /** ID of the asset */
   assetID: number
 }
 
@@ -73,36 +100,59 @@ export type KeyRegParams = CommonTxnParams & {
 }
 
 export type AssetTransferParams = CommonTxnParams & {
+  /** ID of the asset */
   assetID: number
+  /** Amount of the asset to transfer (smallest divisible unit) */
   amount: number
+  /** The account to send the asset to */
   to: string
+  /** The account to take the asset from */
   clawbackTarget?: string
+  /** The account to close the asset to */
   closeAssetTo?: string
 }
 
 export type AppCallParams = CommonTxnParams & {
+  /** The [OnComplete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) */
   onComplete?: algosdk.OnApplicationComplete
+  /** ID of the application */
   appID?: number
+  /** The program to execute for all OnCompletes other than ClearState */
   approvalProgram?: Uint8Array
+  /** The program to execute for ClearState OnComplete */
   clearProgram?: Uint8Array
+  /** The state schema for the app. This is immutable. */
   schema?: {
+    /** The number of integers saved in global state */
     globalUints: number
+    /** The number of byte slices saved in global state */
     globalByteSlices: number
+    /** The number of integers saved in local state */
     localUints: number
+    /** The number of byte slices saved in local state */
     localByteSlices: number
   }
+  /** Application arguments */
   args?: Uint8Array[]
+  /** Account references */
   accountReferences?: string[]
+  /** App references */
   appReferences?: number[]
+  /** Asset references */
   assetReferences?: number[]
+  /** Number of extra pages required for the programs */
   extraPages?: number
+  /** Box references */
   boxReferences?: algosdk.BoxReference[]
 }
 
 export type MethodCallParams = CommonTxnParams &
   Omit<AppCallParams, 'args'> & {
+    /** ID of the application */
     appID: number
+    /** The ABI method to call */
     method: algosdk.ABIMethod
+    /** Arguments to the ABI method */
     args?: (algosdk.ABIValue | Txn)[]
   }
 
@@ -123,13 +173,23 @@ export default class AlgokitComposer {
   /** Map of txid to ABI method */
   private txnMethodMap: Map<string, algosdk.ABIMethod> = new Map()
 
-  atc: algosdk.AtomicTransactionComposer
-  algod: algosdk.Algodv2
-  getSuggestedParams: () => Promise<algosdk.SuggestedParams>
-  getSigner: (address: string) => algosdk.TransactionSigner
-  defaultValidityWindow = 10
+  /** Transactions that have not yet been composed */
+  private txns: Txn[] = []
 
-  txns: Txn[] = []
+  /** The underlying AtomicTransactionComposer */
+  atc: algosdk.AtomicTransactionComposer
+
+  /** The algod client used by the composer for suggestedParams */
+  algod: algosdk.Algodv2
+
+  /** An async function that will return suggestedParams */
+  getSuggestedParams: () => Promise<algosdk.SuggestedParams>
+
+  /** A function that takes in an address and return a signer function for that address */
+  getSigner: (address: string) => algosdk.TransactionSigner
+
+  /** The default transaction validity window */
+  defaultValidityWindow = 10
 
   constructor(
     algod: algosdk.Algodv2,
