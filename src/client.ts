@@ -46,39 +46,69 @@ export default class AlgokitClient {
     )
   }
 
-  sendPayment(params: PayTxnParams) {
-    return this.newGroup().addPayment(params).execute()
+  /**
+   * Methods for sending a transaction
+   */
+  send = {
+    payment: (params: PayTxnParams) => {
+      return this.newGroup().addPayment(params).execute()
+    },
+    assetCreate: (params: AssetCreateParams) => {
+      return this.newGroup().addAssetCreate(params).execute()
+    },
+    assetConfig: (params: AssetConfigParams) => {
+      return this.newGroup().addAssetConfig(params).execute()
+    },
+    assetFreeze: (params: AssetFreezeParams) => {
+      return this.newGroup().addAssetFreeze(params).execute()
+    },
+    assetDestroy: (params: AssetDestroyParams) => {
+      return this.newGroup().addAssetDestroy(params).execute()
+    },
+    assetTransfer: (params: AssetTransferParams) => {
+      return this.newGroup().addAssetTransfer(params).execute()
+    },
+    appCall: (params: AppCallParams) => {
+      return this.newGroup().addAppCall(params).execute()
+    },
+    keyReg: (params: KeyRegParams) => {
+      return this.newGroup().addKeyReg(params).execute()
+    },
+    methodCall: (params: MethodCallParams) => {
+      return this.newGroup().addMethodCall(params).execute()
+    },
   }
 
-  sendAssetCreate(params: AssetCreateParams) {
-    return this.newGroup().addAssetCreate(params).execute()
-  }
-
-  sendAssetConfig(params: AssetConfigParams) {
-    return this.newGroup().addAssetConfig(params).execute()
-  }
-
-  sendAssetFreeze(params: AssetFreezeParams) {
-    return this.newGroup().addAssetFreeze(params).execute()
-  }
-
-  sendAssetDestroy(params: AssetDestroyParams) {
-    return this.newGroup().addAssetDestroy(params).execute()
-  }
-
-  sendAssetTransfer(params: AssetTransferParams) {
-    return this.newGroup().addAssetTransfer(params).execute()
-  }
-
-  sendAppCall(params: AppCallParams) {
-    return this.newGroup().addAppCall(params).execute()
-  }
-
-  sendKeyReg(params: KeyRegParams) {
-    return this.newGroup().addKeyReg(params).execute()
-  }
-
-  sendMethodCall(params: MethodCallParams) {
-    return this.newGroup().addMethodCall(params).execute()
+  /**
+   * Methods for building transactions
+   */
+  transactions = {
+    payment: async (params: PayTxnParams) => {
+      return (await this.newGroup().addPayment(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    assetCreate: async (params: AssetCreateParams) => {
+      return (await this.newGroup().addAssetCreate(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    assetConfig: async (params: AssetConfigParams) => {
+      return (await this.newGroup().addAssetConfig(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    assetFreeze: async (params: AssetFreezeParams) => {
+      return (await this.newGroup().addAssetFreeze(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    assetDestroy: async (params: AssetDestroyParams) => {
+      return (await this.newGroup().addAssetDestroy(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    assetTransfer: async (params: AssetTransferParams) => {
+      return (await this.newGroup().addAssetTransfer(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    appCall: async (params: AppCallParams) => {
+      return (await this.newGroup().addAppCall(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    keyReg: async (params: KeyRegParams) => {
+      return (await this.newGroup().addKeyReg(params).buildGroup()).map((ts) => ts.txn)[0]
+    },
+    methodCall: async (params: MethodCallParams) => {
+      return (await this.newGroup().addMethodCall(params).buildGroup()).map((ts) => ts.txn)
+    },
   }
 }

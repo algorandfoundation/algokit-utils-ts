@@ -41,7 +41,7 @@ describe('client', () => {
   test('sendPayment', async () => {
     const alicePreBalance = (await client.algod.accountInformation(alice.addr).do()).amount
     const bobPreBalance = (await client.algod.accountInformation(bob.addr).do()).amount
-    await client.sendPayment({ sender: alice.addr, to: bob.addr, amount: 1 })
+    await client.send.payment({ sender: alice.addr, to: bob.addr, amount: 1 })
     const alicePostBalance = (await client.algod.accountInformation(alice.addr).do()).amount
     const bobPostBalance = (await client.algod.accountInformation(bob.addr).do()).amount
 
@@ -50,7 +50,7 @@ describe('client', () => {
   })
 
   test('sendAssetCreate', async () => {
-    const createResult = await client.sendAssetCreate({ sender: alice.addr, total: 100 })
+    const createResult = await client.send.assetCreate({ sender: alice.addr, total: 100 })
 
     const assetIndex = Number(createResult.confirmations![0].assetIndex)
 
