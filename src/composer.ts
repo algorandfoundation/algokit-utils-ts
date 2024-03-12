@@ -112,6 +112,11 @@ export type AssetTransferParams = CommonTxnParams & {
   closeAssetTo?: string
 }
 
+export type AssetOptInParams = CommonTxnParams & {
+  /** ID of the asset */
+  assetID: number
+}
+
 export type AppCallParams = CommonTxnParams & {
   /** The [OnComplete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) */
   onComplete?: algosdk.OnApplicationComplete
@@ -163,6 +168,7 @@ type Txn =
   | (AssetFreezeParams & { type: 'assetFreeze' })
   | (AssetDestroyParams & { type: 'assetDestroy' })
   | (AssetTransferParams & { type: 'assetTransfer' })
+  | (AssetOptInParams & { type: 'assetOptIn' })
   | (AppCallParams & { type: 'appCall' })
   | (KeyRegParams & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
@@ -235,6 +241,12 @@ export default class AlgokitComposer {
 
   addAssetTransfer(params: AssetTransferParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetTransfer' })
+
+    return this
+  }
+
+  addAssetOptIn(params: AssetOptInParams): AlgokitComposer {
+    this.txns.push({ ...params, type: 'assetOptIn' })
 
     return this
   }
@@ -339,6 +351,9 @@ export default class AlgokitComposer {
             break
           case 'pay':
             txn = this.buildPayment(arg, suggestedParams)
+            break
+          case 'assetOptIn':
+            txn = this.buildAssetTransfer({ ...arg, to: arg.sender, amount: 0 }, suggestedParams)
             break
           case 'assetCreate':
             txn = this.buildAssetCreate(arg, suggestedParams)
@@ -573,6 +588,10 @@ export default class AlgokitComposer {
       }
       case 'assetTransfer': {
         const assetTransfer = this.buildAssetTransfer(txn, suggestedParams)
+        return [{ txn: assetTransfer, signer }]
+      }
+      case 'assetOptIn': {
+        const assetTransfer = this.buildAssetTransfer({ ...txn, to: txn.sender, amount: 0 }, suggestedParams)
         return [{ txn: assetTransfer, signer }]
       }
       case 'keyReg': {

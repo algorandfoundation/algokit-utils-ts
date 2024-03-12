@@ -189,4 +189,16 @@ describe('client', () => {
     expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(alice.addr)
     expect(doubleNestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appID))
   })
+
+  test('assetOptIn', async () => {
+    const { algod, testAccount } = fixture.context
+    const assetID = Number((await client.send.assetCreate({ sender: alice.addr, total: 1 })).confirmations![0].assetIndex)
+
+    await client.send.assetOptIn({
+      sender: testAccount.addr,
+      assetID: assetID,
+      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
+    })
+    expect(await algod.accountAssetInformation(testAccount.addr, assetID).do()).toBeDefined()
+  })
 })

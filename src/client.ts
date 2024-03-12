@@ -5,6 +5,7 @@ import AlgokitComposer, {
   AssetCreateParams,
   AssetDestroyParams,
   AssetFreezeParams,
+  AssetOptInParams,
   AssetTransferParams,
   KeyRegParams,
   MethodCallParams,
@@ -77,6 +78,9 @@ export default class AlgokitClient {
     methodCall: (params: MethodCallParams) => {
       return this.newGroup().addMethodCall(params).execute()
     },
+    assetOptIn: (params: AssetOptInParams) => {
+      return this.newGroup().addAssetOptIn(params).execute()
+    },
   }
 
   /**
@@ -109,6 +113,9 @@ export default class AlgokitClient {
     },
     methodCall: async (params: MethodCallParams) => {
       return (await this.newGroup().addMethodCall(params).buildGroup()).map((ts) => ts.txn)
+    },
+    assetOptIn: async (params: AssetOptInParams) => {
+      return (await this.newGroup().addAssetOptIn(params).buildGroup()).map((ts) => ts.txn)[0]
     },
   }
 }
