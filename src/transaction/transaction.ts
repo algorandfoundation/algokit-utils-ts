@@ -359,12 +359,18 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       const txnIndex = findTxnBelowRefLimit(group, 'appLocal')
       group[txnIndex].txn.appForeignApps?.push(Number(a.app))
       group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+
+      // Remove the account from the accounts list if we're adding it here
+      g.accounts = g.accounts?.filter((acc) => acc !== a.account)
     })
 
     g.assetHoldings?.forEach((a) => {
       const txnIndex = findTxnBelowRefLimit(group, 'assetHolding')
       group[txnIndex].txn.appForeignAssets?.push(Number(a.asset))
       group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+
+      // Remove the account from the accounts list if we're adding it here
+      g.accounts = g.accounts?.filter((acc) => acc !== a.account)
     })
 
     // Do accounts next because the account limit is 4
