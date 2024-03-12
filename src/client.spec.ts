@@ -156,9 +156,6 @@ describe('client', () => {
 
     expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appID))
-
-    console.debug('nestedTxnArgRes return value[0]:', nestedTxnArgRes.returns?.[0].returnValue?.valueOf())
-    console.debug('nestedTxnArgRes return value[1]:', nestedTxnArgRes.returns?.[1].returnValue?.valueOf())
   })
 
   test('method with two method call args that each have a txn arg', async () => {
