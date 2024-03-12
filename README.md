@@ -42,8 +42,6 @@ The root cause is due to the fact that, unlike many frameworks, Next.js allows y
 
 The Module not found: can't resolve 'xyz' error happens when you try to use server only code outside of these methods. Despite `algokit-utils` lazy loading the node specific code dynamically, Next.js does not seem to correctly identify whether a dynamic import is specific to server or client side. Hence the above fix disables the fallback for `fs` module so it ignores polyfilling it on client side.
 
-Future iterations of `algokit-utils` will remove the node specific code by integrating with `rollup` to create more optimized browser compatible bundles.
-
 ## Contributing
 
 This is an open source project managed by the Algorand Foundation. See the [AlgoKit contributing page](https://github.com/algorandfoundation/algokit-cli/blob/main/CONTRIBUTING.md) to learn about making improvements.
