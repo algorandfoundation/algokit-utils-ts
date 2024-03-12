@@ -11,6 +11,7 @@ concurrency: release
 
 permissions:
   contents: write
+  issues: read
 
 jobs:
   ci:
