@@ -11,6 +11,8 @@ export type CommonTxnParams = {
   flatFee?: number
   /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees */
   extraFee?: number
+  /** Throw an error if the fee for the transaction is more than this amount */
+  maxFee?: number
   /** How many rounds the transaction should be valid for */
   validityWindow?: number
   /**
@@ -237,6 +239,10 @@ export default class AlgokitComposer {
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
       if (params.extraFee) txn.fee += params.extraFee
+    }
+
+    if (params.maxFee !== undefined && txn.fee > params.maxFee) {
+      throw Error(`Transaction fee ${txn.fee} is greater than maxFee ${params.maxFee}`)
     }
 
     return txn
