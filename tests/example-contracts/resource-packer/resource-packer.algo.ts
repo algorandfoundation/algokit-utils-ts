@@ -25,9 +25,9 @@ class ExternalApp extends Contract {
 class ResourcePackerv8 extends Contract {
   programVersion = 8
 
-  externalAppID = GlobalStateKey<Application>()
+  externalAppID = GlobalStateKey<AppID>()
 
-  asa = GlobalStateKey<Asset>()
+  asa = GlobalStateKey<AssetID>()
 
   smallBoxKey = BoxKey<bytes>({ key: 's' })
 
@@ -52,7 +52,7 @@ class ResourcePackerv8 extends Contract {
   }
 
   addressBalance(addr: Address): void {
-    log(itob(addr.hasBalance))
+    log(rawBytes(addr.isInLedger))
   }
 
   smallBox(): void {
@@ -75,11 +75,11 @@ class ResourcePackerv8 extends Contract {
   }
 
   hasAsset(addr: Address): void {
-    assert(!addr.hasAsset(this.asa.value))
+    assert(!addr.isOptedInToAsset(this.asa.value))
   }
 
   externalLocal(addr: Address): void {
-    log(addr.state(this.externalAppID.value, 'localKey'))
+    log(this.externalAppID.value.localState(addr, 'localKey') as bytes)
   }
 }
 
@@ -87,9 +87,9 @@ class ResourcePackerv8 extends Contract {
 class ResourcePackerv9 extends Contract {
   programVersion = 9
 
-  externalAppID = GlobalStateKey<Application>()
+  externalAppID = GlobalStateKey<AppID>()
 
-  asa = GlobalStateKey<Asset>()
+  asa = GlobalStateKey<AssetID>()
 
   smallBoxKey = BoxKey<bytes>({ key: 's' })
 
@@ -114,7 +114,7 @@ class ResourcePackerv9 extends Contract {
   }
 
   addressBalance(addr: Address): void {
-    log(itob(addr.hasBalance))
+    log(rawBytes(addr.isInLedger))
   }
 
   smallBox(): void {
@@ -137,10 +137,10 @@ class ResourcePackerv9 extends Contract {
   }
 
   hasAsset(addr: Address): void {
-    assert(!addr.hasAsset(this.asa.value))
+    assert(!addr.isOptedInToAsset(this.asa.value))
   }
 
   externalLocal(addr: Address): void {
-    log(addr.state(this.externalAppID.value, 'localKey'))
+    log(this.externalAppID.value.localState(addr, 'localKey') as bytes)
   }
 }

@@ -592,10 +592,9 @@ const tests = (version: 8 | 9) => () => {
   })
 }
 
-// Temporarily skip these tests until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
-describe.skip('Resource Packer: AVM8', tests(8))
-describe.skip('Resource Packer: AVM9', tests(9))
-describe.skip('Resource Packer: Mixed', () => {
+describe('Resource Packer: AVM8', tests(8))
+describe('Resource Packer: AVM9', tests(9))
+describe('Resource Packer: Mixed', () => {
   const fixture = algorandFixture()
 
   let v9Client: ApplicationClient
@@ -638,7 +637,8 @@ describe.skip('Resource Packer: Mixed', () => {
     algokit.Config.configure({ populateAppCallResources: false })
   })
 
-  test('same account', async () => {
+  // Temporarily skip this until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
+  test.skip('same account', async () => {
     const { algod, testAccount } = fixture.context
     const acct = algosdk.generateAccount()
     const atc = new algosdk.AtomicTransactionComposer()
@@ -726,7 +726,7 @@ describe.skip('Resource Packer: Mixed', () => {
     await packedAtc.execute(algod, 3)
   })
 })
-describe.skip('Resource Packer: meta', () => {
+describe('Resource Packer: meta', () => {
   const fixture = algorandFixture()
 
   let externalClient: ApplicationClient
@@ -736,6 +736,7 @@ describe.skip('Resource Packer: meta', () => {
   beforeAll(async () => {
     await fixture.beforeEach()
     const { testAccount, algod } = fixture.context
+    algokit.Config.configure({ populateAppCallResources: true })
 
     externalClient = new ApplicationClient(
       {
@@ -748,6 +749,10 @@ describe.skip('Resource Packer: meta', () => {
     )
 
     await externalClient.create({ method: 'createApplication', methodArgs: [] })
+  })
+
+  afterAll(() => {
+    algokit.Config.configure({ populateAppCallResources: false })
   })
 
   test('error during simulate', async () => {
