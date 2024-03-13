@@ -360,8 +360,9 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       group[txnIndex].txn.appForeignApps?.push(Number(a.app))
       group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
 
-      // Remove the account from the accounts list if we're adding it here
+      // Remove resources from the group if we're adding them here
       g.accounts = g.accounts?.filter((acc) => acc !== a.account)
+      g.apps = g.apps?.filter((app) => BigInt(app) !== BigInt(a.app))
     })
 
     g.assetHoldings?.forEach((a) => {
@@ -369,8 +370,9 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       group[txnIndex].txn.appForeignAssets?.push(Number(a.asset))
       group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
 
-      // Remove the account from the accounts list if we're adding it here
+      // Remove resources from the group if we're adding them here
       g.accounts = g.accounts?.filter((acc) => acc !== a.account)
+      g.assets = g.assets?.filter((asset) => BigInt(asset) !== BigInt(a.asset))
     })
 
     // Do accounts next because the account limit is 4
