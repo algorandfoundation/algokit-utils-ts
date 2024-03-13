@@ -31,7 +31,7 @@ ___
 
 ### signature
 
-• **signature**: `string`
+• `Optional` **signature**: `string`
 
 [s] The signature
 
