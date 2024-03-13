@@ -421,7 +421,7 @@ const tests = (version: 8 | 9) => () => {
 
     await appClient.create({ method: 'createApplication', methodArgs: [] })
 
-    await appClient.fundAppAccount(algokit.microAlgos(2305800))
+    await appClient.fundAppAccount(algokit.microAlgos(2334300))
 
     await appClient.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
 
@@ -689,7 +689,7 @@ describe('Resource Packer: Mixed', () => {
   test('app account', async () => {
     const { algod, testAccount } = fixture.context
 
-    await v8Client.fundAppAccount(algokit.microAlgos(300000))
+    await v8Client.fundAppAccount(algokit.microAlgos(328500))
     await v8Client.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
 
     const externalAppID = (await v8Client.getGlobalState()).externalAppID!.value as bigint
@@ -774,5 +774,18 @@ describe('Resource Packer: meta', () => {
     await externalClient.fundAppAccount(algokit.microAlgos(106100))
 
     await externalClient.call({ method: 'boxWithPayment', methodArgs: [{ transaction: payment, signer: testAccount }] })
+  })
+
+  test('sender asset holding', async () => {
+    await externalClient.fundAppAccount(algokit.microAlgos(200_000))
+
+    await externalClient.call({
+      method: 'createAsset',
+      methodArgs: [],
+      sendParams: { fee: algokit.microAlgos(2_000) },
+    })
+    const res = await externalClient.call({ method: 'senderAssetBalance', methodArgs: [] })
+
+    expect(res.transaction.appAccounts?.length || 0).toBe(0)
   })
 })

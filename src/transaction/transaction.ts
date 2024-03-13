@@ -333,6 +333,51 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       | number,
     type: 'account' | 'assetHolding' | 'appLocal' | 'app' | 'box' | 'asset',
   ): void => {
+    // If this is a asset holding or app local, first try to find a transaction that already has the account available
+    if (type === 'assetHolding' || type === 'appLocal') {
+      const { account } = reference as algosdk.modelsv2.ApplicationLocalReference | algosdk.modelsv2.AssetHoldingReference
+
+      const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
+        if (t.txn.type !== algosdk.TransactionType.appl) return false
+
+        const accounts = t.txn.appAccounts?.length || 0
+        const assets = t.txn.appForeignAssets?.length || 0
+        const apps = t.txn.appForeignApps?.length || 0
+        const boxes = t.txn.boxes?.length || 0
+
+        return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
+      }
+
+      const txnIndex = txns.findIndex((t) => {
+        if (!isApplBelowLimit(t)) return false
+
+        // check if there is space in the accounts array
+        if ((t.txn.appAccounts?.length || 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
+
+        return (
+          // account is in the foreign accounts array
+          t.txn.appAccounts?.map((a) => algosdk.encodeAddress(a.publicKey)).includes(account) ||
+          // account is available as an app account
+          t.txn.appForeignApps?.map((a) => algosdk.getApplicationAddress(a)).includes(account) ||
+          // account is available since it's in one of the fields
+          Object.values(t.txn)
+            .map((f) => JSON.stringify(f))
+            .includes(JSON.stringify(algosdk.decodeAddress(account)))
+        )
+      })
+
+      if (txnIndex > -1) {
+        if (type === 'assetHolding') {
+          const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
+          txns[txnIndex].txn.appForeignAssets?.push(Number(asset))
+        } else {
+          const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
+          txns[txnIndex].txn.appForeignApps?.push(Number(app))
+        }
+        return
+      }
+    }
+
     const txnIndex = txns.findIndex((t) => {
       if (t.txn.type !== algosdk.TransactionType.appl) return false
 

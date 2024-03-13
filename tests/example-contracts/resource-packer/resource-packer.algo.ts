@@ -6,6 +6,8 @@ class ExternalApp extends Contract {
 
   boxKey = BoxKey<bytes>()
 
+  asa = GlobalStateKey<AssetID>()
+
   optInToApplication(): void {
     this.localKey(this.txn.sender).value = 'foo'
   }
@@ -18,6 +20,16 @@ class ExternalApp extends Contract {
 
   boxWithPayment(_payment: PayTxn): void {
     this.boxKey.value = 'foo'
+  }
+
+  createAsset(): void {
+    this.asa.value = sendAssetCreation({
+      configAssetTotal: 1,
+    })
+  }
+
+  senderAssetBalance(): void {
+    assert(!this.txn.sender.isOptedInToAsset(this.asa.value))
   }
 }
 
