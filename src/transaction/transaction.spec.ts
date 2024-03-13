@@ -421,7 +421,7 @@ const tests = (version: 8 | 9) => () => {
 
     await appClient.create({ method: 'createApplication', methodArgs: [] })
 
-    await appClient.fundAppAccount(algokit.microAlgos(2305800))
+    await appClient.fundAppAccount(algokit.microAlgos(2334300))
 
     await appClient.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
 
@@ -592,10 +592,9 @@ const tests = (version: 8 | 9) => () => {
   })
 }
 
-// Temporarily skip these tests until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
-describe.skip('Resource Packer: AVM8', tests(8))
-describe.skip('Resource Packer: AVM9', tests(9))
-describe.skip('Resource Packer: Mixed', () => {
+describe('Resource Packer: AVM8', tests(8))
+describe('Resource Packer: AVM9', tests(9))
+describe('Resource Packer: Mixed', () => {
   const fixture = algorandFixture()
 
   let v9Client: ApplicationClient
@@ -638,7 +637,8 @@ describe.skip('Resource Packer: Mixed', () => {
     algokit.Config.configure({ populateAppCallResources: false })
   })
 
-  test('same account', async () => {
+  // Temporarily skip this until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
+  test.skip('same account', async () => {
     const { algod, testAccount } = fixture.context
     const acct = algosdk.generateAccount()
     const atc = new algosdk.AtomicTransactionComposer()
@@ -689,7 +689,7 @@ describe.skip('Resource Packer: Mixed', () => {
   test('app account', async () => {
     const { algod, testAccount } = fixture.context
 
-    await v8Client.fundAppAccount(algokit.microAlgos(300000))
+    await v8Client.fundAppAccount(algokit.microAlgos(328500))
     await v8Client.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
 
     const externalAppID = (await v8Client.getGlobalState()).externalAppID!.value as bigint
@@ -726,7 +726,7 @@ describe.skip('Resource Packer: Mixed', () => {
     await packedAtc.execute(algod, 3)
   })
 })
-describe.skip('Resource Packer: meta', () => {
+describe('Resource Packer: meta', () => {
   const fixture = algorandFixture()
 
   let externalClient: ApplicationClient
@@ -736,6 +736,7 @@ describe.skip('Resource Packer: meta', () => {
   beforeAll(async () => {
     await fixture.beforeEach()
     const { testAccount, algod } = fixture.context
+    algokit.Config.configure({ populateAppCallResources: true })
 
     externalClient = new ApplicationClient(
       {
@@ -748,6 +749,10 @@ describe.skip('Resource Packer: meta', () => {
     )
 
     await externalClient.create({ method: 'createApplication', methodArgs: [] })
+  })
+
+  afterAll(() => {
+    algokit.Config.configure({ populateAppCallResources: false })
   })
 
   test('error during simulate', async () => {
@@ -769,5 +774,18 @@ describe.skip('Resource Packer: meta', () => {
     await externalClient.fundAppAccount(algokit.microAlgos(106100))
 
     await externalClient.call({ method: 'boxWithPayment', methodArgs: [{ transaction: payment, signer: testAccount }] })
+  })
+
+  test('sender asset holding', async () => {
+    await externalClient.fundAppAccount(algokit.microAlgos(200_000))
+
+    await externalClient.call({
+      method: 'createAsset',
+      methodArgs: [],
+      sendParams: { fee: algokit.microAlgos(2_000) },
+    })
+    const res = await externalClient.call({ method: 'senderAssetBalance', methodArgs: [] })
+
+    expect(res.transaction.appAccounts?.length || 0).toBe(0)
   })
 })

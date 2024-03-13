@@ -6,6 +6,8 @@ class ExternalApp extends Contract {
 
   boxKey = BoxKey<bytes>()
 
+  asa = GlobalStateKey<AssetID>()
+
   optInToApplication(): void {
     this.localKey(this.txn.sender).value = 'foo'
   }
@@ -19,15 +21,25 @@ class ExternalApp extends Contract {
   boxWithPayment(_payment: PayTxn): void {
     this.boxKey.value = 'foo'
   }
+
+  createAsset(): void {
+    this.asa.value = sendAssetCreation({
+      configAssetTotal: 1,
+    })
+  }
+
+  senderAssetBalance(): void {
+    assert(!this.txn.sender.isOptedInToAsset(this.asa.value))
+  }
 }
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 class ResourcePackerv8 extends Contract {
   programVersion = 8
 
-  externalAppID = GlobalStateKey<Application>()
+  externalAppID = GlobalStateKey<AppID>()
 
-  asa = GlobalStateKey<Asset>()
+  asa = GlobalStateKey<AssetID>()
 
   smallBoxKey = BoxKey<bytes>({ key: 's' })
 
@@ -52,7 +64,7 @@ class ResourcePackerv8 extends Contract {
   }
 
   addressBalance(addr: Address): void {
-    log(itob(addr.hasBalance))
+    log(rawBytes(addr.isInLedger))
   }
 
   smallBox(): void {
@@ -75,11 +87,11 @@ class ResourcePackerv8 extends Contract {
   }
 
   hasAsset(addr: Address): void {
-    assert(!addr.hasAsset(this.asa.value))
+    assert(!addr.isOptedInToAsset(this.asa.value))
   }
 
   externalLocal(addr: Address): void {
-    log(addr.state(this.externalAppID.value, 'localKey'))
+    log(this.externalAppID.value.localState(addr, 'localKey') as bytes)
   }
 }
 
@@ -87,9 +99,9 @@ class ResourcePackerv8 extends Contract {
 class ResourcePackerv9 extends Contract {
   programVersion = 9
 
-  externalAppID = GlobalStateKey<Application>()
+  externalAppID = GlobalStateKey<AppID>()
 
-  asa = GlobalStateKey<Asset>()
+  asa = GlobalStateKey<AssetID>()
 
   smallBoxKey = BoxKey<bytes>({ key: 's' })
 
@@ -114,7 +126,7 @@ class ResourcePackerv9 extends Contract {
   }
 
   addressBalance(addr: Address): void {
-    log(itob(addr.hasBalance))
+    log(rawBytes(addr.isInLedger))
   }
 
   smallBox(): void {
@@ -137,10 +149,10 @@ class ResourcePackerv9 extends Contract {
   }
 
   hasAsset(addr: Address): void {
-    assert(!addr.hasAsset(this.asa.value))
+    assert(!addr.isOptedInToAsset(this.asa.value))
   }
 
   externalLocal(addr: Address): void {
-    log(addr.state(this.externalAppID.value, 'localKey'))
+    log(this.externalAppID.value.localState(addr, 'localKey') as bytes)
   }
 }
