@@ -428,7 +428,7 @@ export interface MultisigTransactionSubSignature {
    *
    * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
    */
-  signature: string
+  signature?: string
 }
 
 /** Represents a TEAL value delta. https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta */
