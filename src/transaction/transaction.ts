@@ -322,10 +322,17 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     }
   })
 
-  const findTxnBelowRefLimit = (
+  const populateGroupResource = (
     txns: algosdk.TransactionWithSigner[],
-    type: 'account' | 'assetHolding' | 'appLocal' | 'other' = 'other',
-  ) => {
+    reference:
+      | string
+      | algosdk.modelsv2.BoxReference
+      | algosdk.modelsv2.ApplicationLocalReference
+      | algosdk.modelsv2.AssetHoldingReference
+      | bigint
+      | number,
+    type: 'account' | 'assetHolding' | 'appLocal' | 'app' | 'box' | 'asset',
+  ): void => {
     const txnIndex = txns.findIndex((t) => {
       if (t.txn.type !== algosdk.TransactionType.appl) return false
 
@@ -347,7 +354,24 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       throw Error('No more transactions below reference limit. Add another app call to the group.')
     }
 
-    return txnIndex
+    if (type === 'account') {
+      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(reference as string))
+    } else if (type === 'app') {
+      txns[txnIndex].txn.appForeignApps?.push(Number(reference))
+    } else if (type === 'box') {
+      const { app, name } = reference as algosdk.modelsv2.BoxReference
+      txns[txnIndex].txn.boxes?.push({ appIndex: Number(app), name: name })
+    } else if (type === 'assetHolding') {
+      const { asset, account } = reference as algosdk.modelsv2.AssetHoldingReference
+      txns[txnIndex].txn.appForeignAssets?.push(Number(asset))
+      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+    } else if (type === 'appLocal') {
+      const { app, account } = reference as algosdk.modelsv2.ApplicationLocalReference
+      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+      txns[txnIndex].txn.appForeignApps?.push(Number(app))
+    } else if (type === 'asset') {
+      txns[txnIndex].txn.appForeignAssets?.push(Number(reference))
+    }
   }
 
   const g = unnamedResourcesAccessed.group
@@ -356,9 +380,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     // Do cross-reference resources first because they are the most restrictive in terms
     // of which transactions can be used
     g.appLocals?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group, 'appLocal')
-      group[txnIndex].txn.appForeignApps?.push(Number(a.app))
-      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+      populateGroupResource(group, a, 'appLocal')
 
       // Remove resources from the group if we're adding them here
       g.accounts = g.accounts?.filter((acc) => acc !== a.account)
@@ -366,9 +388,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     })
 
     g.assetHoldings?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group, 'assetHolding')
-      group[txnIndex].txn.appForeignAssets?.push(Number(a.asset))
-      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+      populateGroupResource(group, a, 'assetHolding')
 
       // Remove resources from the group if we're adding them here
       g.accounts = g.accounts?.filter((acc) => acc !== a.account)
@@ -377,29 +397,25 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 
     // Do accounts next because the account limit is 4
     g.accounts?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group, 'account')
-      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a))
+      populateGroupResource(group, a, 'account')
     })
 
     g.boxes?.forEach((b) => {
-      const txnIndex = findTxnBelowRefLimit(group)
-      group[txnIndex].txn.boxes?.push({ appIndex: Number(b.app), name: b.name })
+      populateGroupResource(group, b, 'box')
     })
 
     g.assets?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group)
-      group[txnIndex].txn.appForeignAssets?.push(Number(a))
+      populateGroupResource(group, a, 'asset')
     })
 
     g.apps?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group)
-      group[txnIndex].txn.appForeignApps?.push(Number(a))
+      populateGroupResource(group, a, 'app')
     })
 
     if (g.extraBoxRefs) {
       for (let i = 0; i < g.extraBoxRefs; i += 1) {
-        const txnIndex = findTxnBelowRefLimit(group)
-        group[txnIndex].txn.boxes?.push({ appIndex: 0, name: new Uint8Array(0) })
+        const ref = new algosdk.modelsv2.BoxReference({ app: 0, name: new Uint8Array(0) })
+        populateGroupResource(group, ref, 'box')
       }
     }
   }
