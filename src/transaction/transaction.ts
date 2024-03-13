@@ -348,11 +348,8 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
         return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
       }
 
-      const txnIndex = txns.findIndex((t) => {
+      let txnIndex = txns.findIndex((t) => {
         if (!isApplBelowLimit(t)) return false
-
-        // check if there is space in the accounts array
-        if ((t.txn.appAccounts?.length || 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
 
         return (
           // account is in the foreign accounts array
@@ -374,6 +371,30 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
           const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
           txns[txnIndex].txn.appForeignApps?.push(Number(app))
         }
+        return
+      }
+
+      // Now try to find a txn that already has that app or asset available
+      txnIndex = txns.findIndex((t) => {
+        if (!isApplBelowLimit(t)) return false
+
+        // check if there is space in the accounts array
+        if ((t.txn.appAccounts?.length || 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
+
+        if (type === 'assetHolding') {
+          const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
+          return t.txn.appForeignAssets?.includes(Number(asset))
+        } else {
+          const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
+          return t.txn.appForeignApps?.includes(Number(app)) || t.txn.appIndex === Number(app)
+        }
+      })
+
+      if (txnIndex > -1) {
+        const { account } = reference as algosdk.modelsv2.AssetHoldingReference | algosdk.modelsv2.ApplicationLocalReference
+
+        txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+
         return
       }
     }
