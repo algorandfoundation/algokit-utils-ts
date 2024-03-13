@@ -13,14 +13,19 @@ import AlgokitComposer, {
 } from './composer'
 
 export default class AlgokitClient {
+  /** The algosdk algod client */
   algod: algosdk.Algodv2
 
+  /** A map of address to transaction signer functions */
   signers: { [address: string]: algosdk.TransactionSigner } = {}
 
+  /** The amount of time a suggested params response will be cached for */
   cachedSuggestedParamsTimeout: number = 3000 // three seconds
 
+  /** The last suggested params response */
   cachedSuggestedParams?: { params: algosdk.SuggestedParams; time: number }
 
+  /** The default signer to use if no signer is provided or found in `signers` */
   defaultSigner?: algosdk.TransactionSigner
 
   constructor({ algodClient, defaultSigner }: { algodClient: algosdk.Algodv2; defaultSigner?: algosdk.TransactionSigner }) {
@@ -28,6 +33,7 @@ export default class AlgokitClient {
     this.defaultSigner = defaultSigner
   }
 
+  /** Get suggested params (either cached or from algod) */
   async getSuggestedParams() {
     if (this.cachedSuggestedParams && Date.now() - this.cachedSuggestedParams.time < this.cachedSuggestedParamsTimeout) {
       return this.cachedSuggestedParams.params
@@ -39,6 +45,7 @@ export default class AlgokitClient {
     return params
   }
 
+  /** Start a new `AlgokitComposer` transaction group */
   newGroup() {
     return new AlgokitComposer(
       this.algod,

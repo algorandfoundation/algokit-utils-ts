@@ -603,6 +603,7 @@ export default class AlgokitComposer {
     }
   }
 
+  /** Compose all of the transactions in a single atomic transaction group */
   async buildGroup() {
     const suggestedParams = await this.getSuggestedParams()
 
@@ -628,7 +629,11 @@ export default class AlgokitComposer {
     return this.atc.buildGroup()
   }
 
-  async execute(params?: { maxRoundsToWaitForConfirmation?: number }) {
+  /** Compose the atomic transaction group and send it to the network */
+  async execute(params?: {
+    /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
+    maxRoundsToWaitForConfirmation?: number
+  }) {
     const group = await this.buildGroup()
 
     let waitRounds = params?.maxRoundsToWaitForConfirmation
