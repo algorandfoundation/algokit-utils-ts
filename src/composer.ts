@@ -1,5 +1,6 @@
 import algosdk from 'algosdk'
 import { sendAtomicTransactionComposer } from './transaction/transaction'
+import { AlgoAmount } from './types/amount'
 
 export type CommonTxnParams = {
   /** The address sending the transaction */
@@ -13,11 +14,11 @@ export type CommonTxnParams = {
   /** Prevent multiple transactions with the same lease being included within the validity window */
   lease?: Uint8Array | string
   /** The transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
-  staticFee?: number
+  staticFee?: AlgoAmount
   /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees */
-  extraFee?: number
+  extraFee?: AlgoAmount
   /** Throw an error if the fee for the transaction is more than this amount */
-  maxFee?: number
+  maxFee?: AlgoAmount
   /** How many rounds the transaction should be valid for */
   validityWindow?: number
   /**
@@ -25,21 +26,21 @@ export type CommonTxnParams = {
    * If left undefined, the value from algod will be used.
    * Only set this when you intentionally want this to be some time in the future
    */
-  firstValidRound?: number
+  firstValidRound?: bigint
   /** The last round this transaction is valid. It is recommended to use validityWindow instead */
-  lastValidRound?: number
+  lastValidRound?: bigint
 }
 
 export type PayTxnParams = CommonTxnParams & {
   /** That account that will receive the ALGO */
   to: string
-  /** Amount, in microALGO, to send */
-  amount: number
+  /** Amount to send */
+  amount: AlgoAmount
 }
 
 export type AssetCreateParams = CommonTxnParams & {
   /** The total amount of the smallest divisible unit to create */
-  total: number
+  total: bigint
   /** The amount of decimal places the asset should have */
   decimals?: number
   /** Whether the asset is frozen by default in the creator address */
@@ -64,7 +65,7 @@ export type AssetCreateParams = CommonTxnParams & {
 
 export type AssetConfigParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: number
+  assetID: bigint
   /** The address that can change the manager, reserve, clawback, and freeze addresses */
   manager?: string
   /** The address that holds the uncirculated supply */
@@ -77,7 +78,7 @@ export type AssetConfigParams = CommonTxnParams & {
 
 export type AssetFreezeParams = CommonTxnParams & {
   /** The ID of the asset */
-  assetID: number
+  assetID: bigint
   /** The account to freeze or unfreeze */
   account: string
   /** Whether the assets in the account should be frozen */
@@ -86,24 +87,24 @@ export type AssetFreezeParams = CommonTxnParams & {
 
 export type AssetDestroyParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: number
+  assetID: bigint
 }
 
 export type KeyRegParams = CommonTxnParams & {
   voteKey?: Uint8Array
   selectionKey?: Uint8Array
-  voteFirst: number
-  voteLast: number
-  voteKeyDilution: number
+  voteFirst: bigint
+  voteLast: bigint
+  voteKeyDilution: bigint
   nonParticipation: boolean
   stateProofKey?: Uint8Array
 }
 
 export type AssetTransferParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: number
+  assetID: bigint
   /** Amount of the asset to transfer (smallest divisible unit) */
-  amount: number
+  amount: bigint
   /** The account to send the asset to */
   to: string
   /** The account to take the asset from */
@@ -114,14 +115,14 @@ export type AssetTransferParams = CommonTxnParams & {
 
 export type AssetOptInParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: number
+  assetID: bigint
 }
 
 export type AppCallParams = CommonTxnParams & {
   /** The [OnComplete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) */
   onComplete?: algosdk.OnApplicationComplete
   /** ID of the application */
-  appID?: number
+  appID?: bigint
   /** The program to execute for all OnCompletes other than ClearState */
   approvalProgram?: Uint8Array
   /** The program to execute for ClearState OnComplete */
@@ -142,9 +143,9 @@ export type AppCallParams = CommonTxnParams & {
   /** Account references */
   accountReferences?: string[]
   /** App references */
-  appReferences?: number[]
+  appReferences?: bigint[]
   /** Asset references */
-  assetReferences?: number[]
+  assetReferences?: bigint[]
   /** Number of extra pages required for the programs */
   extraPages?: number
   /** Box references */
@@ -154,7 +155,7 @@ export type AppCallParams = CommonTxnParams & {
 export type MethodCallParams = CommonTxnParams &
   Omit<AppCallParams, 'args'> & {
     /** ID of the application */
-    appID: number
+    appID: bigint
     /** The ABI method to call */
     method: algosdk.ABIMethod
     /** Arguments to the ABI method */
@@ -293,11 +294,11 @@ export default class AlgokitComposer {
     if (params.note) txn.note = new Uint8Array(Buffer.from(params.note))
 
     if (params.firstValidRound) {
-      txn.firstRound = params.firstValidRound
+      txn.firstRound = Number(params.firstValidRound)
     }
 
     if (params.lastValidRound) {
-      txn.lastRound = params.lastValidRound
+      txn.lastRound = Number(params.lastValidRound)
     } else {
       txn.lastRound = txn.firstRound + (params.validityWindow ?? this.defaultValidityWindow)
     }
@@ -307,13 +308,13 @@ export default class AlgokitComposer {
     }
 
     if (params.staticFee !== undefined) {
-      txn.fee = params.staticFee
+      txn.fee = params.staticFee.microAlgos
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
-      if (params.extraFee) txn.fee += params.extraFee
+      if (params.extraFee) txn.fee += params.extraFee.microAlgos
     }
 
-    if (params.maxFee !== undefined && txn.fee > params.maxFee) {
+    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgos) {
       throw Error(`Transaction fee ${txn.fee} is greater than maxFee ${params.maxFee}`)
     }
 
@@ -353,7 +354,7 @@ export default class AlgokitComposer {
             txn = this.buildPayment(arg, suggestedParams)
             break
           case 'assetOptIn':
-            txn = this.buildAssetTransfer({ ...arg, to: arg.sender, amount: 0 }, suggestedParams)
+            txn = this.buildAssetTransfer({ ...arg, to: arg.sender, amount: 0n }, suggestedParams)
             break
           case 'assetCreate':
             txn = this.buildAssetCreate(arg, suggestedParams)
@@ -388,6 +389,9 @@ export default class AlgokitComposer {
 
     methodAtc.addMethodCall({
       ...params,
+      appID: Number(params.appID || 0),
+      note: params.note ? new Uint8Array(Buffer.from(params.note)) : undefined,
+      lease: params.lease ? new Uint8Array(Buffer.from(params.lease)) : undefined,
       suggestedParams,
       signer: params.signer ?? this.getSigner(params.sender),
       methodArgs: methodArgs,
@@ -400,7 +404,7 @@ export default class AlgokitComposer {
     const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: params.sender,
       to: params.to,
-      amount: params.amount,
+      amount: params.amount.microAlgos,
       suggestedParams,
     })
 
@@ -428,8 +432,8 @@ export default class AlgokitComposer {
       clearProgram: params.clearProgram,
       appArgs: params.args,
       accounts: params.accountReferences,
-      foreignApps: params.appReferences,
-      foreignAssets: params.assetReferences,
+      foreignApps: params.appReferences?.map((x) => Number(x)),
+      foreignAssets: params.assetReferences?.map((x) => Number(x)),
       extraPages: params.extraPages,
       numLocalInts: params.schema?.localUints || 0,
       numLocalByteSlices: params.schema?.localByteSlices || 0,
@@ -454,7 +458,7 @@ export default class AlgokitComposer {
       })
     }
 
-    txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, onComplete, appIndex: params.appID! })
+    txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, onComplete, appIndex: Number(params.appID || 0) })
 
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
@@ -462,7 +466,7 @@ export default class AlgokitComposer {
   private buildAssetConfig(params: AssetConfigParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      assetIndex: params.assetID,
+      assetIndex: Number(params.assetID),
       suggestedParams,
       manager: params.manager,
       reserve: params.reserve,
@@ -477,7 +481,7 @@ export default class AlgokitComposer {
   private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      assetIndex: params.assetID,
+      assetIndex: Number(params.assetID),
       suggestedParams,
     })
 
@@ -487,7 +491,7 @@ export default class AlgokitComposer {
   private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      assetIndex: params.assetID,
+      assetIndex: Number(params.assetID),
       freezeTarget: params.account,
       freezeState: params.frozen,
       suggestedParams,
@@ -500,7 +504,7 @@ export default class AlgokitComposer {
     const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: params.sender,
       to: params.to,
-      assetIndex: params.assetID,
+      assetIndex: Number(params.assetID),
       amount: params.amount,
       suggestedParams,
       closeRemainderTo: params.closeAssetTo,
@@ -516,7 +520,7 @@ export default class AlgokitComposer {
     if (params.nonParticipation) {
       txn = algosdk.makeKeyRegistrationTxnWithSuggestedParams(
         params.sender,
-        params.note,
+        params.note === undefined ? undefined : new Uint8Array(Buffer.from(params.note)),
         undefined,
         undefined,
         undefined,
@@ -530,12 +534,12 @@ export default class AlgokitComposer {
     } else {
       txn = algosdk.makeKeyRegistrationTxnWithSuggestedParams(
         params.sender,
-        params.note,
+        params.note === undefined ? undefined : new Uint8Array(Buffer.from(params.note)),
         params.voteKey!,
         params.selectionKey!,
-        params.voteFirst,
-        params.voteLast,
-        params.voteKeyDilution,
+        Number(params.voteFirst),
+        Number(params.voteLast),
+        Number(params.voteKeyDilution),
         suggestedParams,
         params.rekeyTo,
         false,
@@ -591,7 +595,7 @@ export default class AlgokitComposer {
         return [{ txn: assetTransfer, signer }]
       }
       case 'assetOptIn': {
-        const assetTransfer = this.buildAssetTransfer({ ...txn, to: txn.sender, amount: 0 }, suggestedParams)
+        const assetTransfer = this.buildAssetTransfer({ ...txn, to: txn.sender, amount: 0n }, suggestedParams)
         return [{ txn: assetTransfer, signer }]
       }
       case 'keyReg': {
