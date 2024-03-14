@@ -9,9 +9,9 @@ export type CommonTxnParams = {
   /** Change the signing key of the sender to the given address */
   rekeyTo?: string
   /** Note to attach to the transaction*/
-  note?: Uint8Array
+  note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window */
-  lease?: Uint8Array
+  lease?: Uint8Array | string
   /** The transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
   staticFee?: number
   /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees */
@@ -288,9 +288,9 @@ export default class AlgokitComposer {
   }
 
   private commonTxnBuildStep(params: CommonTxnParams, txn: algosdk.Transaction, suggestedParams: algosdk.SuggestedParams) {
-    if (params.lease) txn.addLease(params.lease)
+    if (params.lease) new Uint8Array(Buffer.from(params.lease))
     if (params.rekeyTo) txn.addRekey(params.rekeyTo)
-    if (params.note) txn.note = params.note
+    if (params.note) txn.note = new Uint8Array(Buffer.from(params.note))
 
     if (params.firstValidRound) {
       txn.firstRound = params.firstValidRound
