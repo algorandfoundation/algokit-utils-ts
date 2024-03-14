@@ -13,7 +13,7 @@ export type CommonTxnParams = {
   /** Prevent multiple transactions with the same lease being included within the validity window */
   lease?: Uint8Array
   /** The transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
-  flatFee?: number
+  staticFee?: number
   /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees */
   extraFee?: number
   /** Throw an error if the fee for the transaction is more than this amount */
@@ -302,12 +302,12 @@ export default class AlgokitComposer {
       txn.lastRound = txn.firstRound + (params.validityWindow ?? this.defaultValidityWindow)
     }
 
-    if (params.flatFee !== undefined && params.extraFee !== undefined) {
-      throw Error('Cannot set both flatFee and extraFee')
+    if (params.staticFee !== undefined && params.extraFee !== undefined) {
+      throw Error('Cannot set both staticFee and extraFee')
     }
 
-    if (params.flatFee !== undefined) {
-      txn.fee = params.flatFee
+    if (params.staticFee !== undefined) {
+      txn.fee = params.staticFee
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
       if (params.extraFee) txn.fee += params.extraFee
