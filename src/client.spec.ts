@@ -10,7 +10,7 @@ describe('client', () => {
   let alice: algosdk.Account
   let bob: algosdk.Account
   let appClient: TestContractClient
-  let appID: number
+  let appID: bigint
 
   const fixture = algorandFixture()
 
@@ -35,13 +35,13 @@ describe('client', () => {
     )
     await appClient.create.createApplication({})
 
-    appID = Number((await appClient.appClient.getAppReference()).appId)
+    appID = BigInt((await appClient.appClient.getAppReference()).appId)
   })
 
   test('sendPayment', async () => {
     const alicePreBalance = (await client.algod.accountInformation(alice.addr).do()).amount
     const bobPreBalance = (await client.algod.accountInformation(bob.addr).do()).amount
-    await client.send.payment({ sender: alice.addr, to: bob.addr, amount: 1 })
+    await client.send.payment({ sender: alice.addr, to: bob.addr, amount: algokit.microAlgos(1) })
     const alicePostBalance = (await client.algod.accountInformation(alice.addr).do()).amount
     const bobPostBalance = (await client.algod.accountInformation(bob.addr).do()).amount
 
@@ -50,7 +50,7 @@ describe('client', () => {
   })
 
   test('sendAssetCreate', async () => {
-    const createResult = await client.send.assetCreate({ sender: alice.addr, total: 100 })
+    const createResult = await client.send.assetCreate({ sender: alice.addr, total: 100n })
 
     const assetIndex = Number(createResult.confirmations![0].assetIndex)
 
@@ -62,7 +62,11 @@ describe('client', () => {
     const bobPreBalance = (await client.algod.accountInformation(bob.addr).do()).amount
 
     const doMathAtc = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).atc()
-    const result = await client.newGroup().addPayment({ sender: alice.addr, to: bob.addr, amount: 1 }).addAtc(doMathAtc).execute()
+    const result = await client
+      .newGroup()
+      .addPayment({ sender: alice.addr, to: bob.addr, amount: algokit.microAlgos(1) })
+      .addAtc(doMathAtc)
+      .execute()
 
     const alicePostBalance = (await client.algod.accountInformation(alice.addr).do()).amount
     const bobPostBalance = (await client.algod.accountInformation(bob.addr).do()).amount
@@ -79,7 +83,7 @@ describe('client', () => {
 
     const methodRes = await client
       .newGroup()
-      .addPayment({ sender: alice.addr, to: bob.addr, amount: 1, note: new Uint8Array([1]) })
+      .addPayment({ sender: alice.addr, to: bob.addr, amount: algokit.microAlgos(1), note: new Uint8Array([1]) })
       .addMethodCall({
         sender: alice.addr,
         appID: appID,
@@ -102,12 +106,12 @@ describe('client', () => {
       sender: alice.addr,
       appID: appID,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: 0 }],
+      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0) }],
     }
 
     const txnRes = await client
       .newGroup()
-      .addPayment({ sender: alice.addr, to: alice.addr, amount: 0, note: new Uint8Array([1]) })
+      .addPayment({ sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0), note: new Uint8Array([1]) })
       .addMethodCall(txnArgParams)
       .execute()
 
@@ -141,14 +145,14 @@ describe('client', () => {
       sender: alice.addr,
       appID: appID,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: 0 }],
+      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0) }],
     }
 
     const nestedTxnArgRes = await client
       .newGroup()
       .addMethodCall({
         sender: alice.addr,
-        appID: Number((await appClient.appClient.getAppReference()).appId),
+        appID,
         method: appClient.appClient.getABIMethod('nestedTxnArg')!,
         args: [{ type: 'methodCall', ...txnArgParams }],
       })
@@ -163,15 +167,15 @@ describe('client', () => {
       sender: alice.addr,
       appID: appID,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: 0 }],
+      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0) }],
     }
 
     const secondTxnArgParams = {
       type: 'methodCall' as const,
       sender: alice.addr,
-      appID: Number((await appClient.appClient.getAppReference()).appId),
+      appID,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: 1 }],
+      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(1) }],
       note: new Uint8Array([1]),
     }
 
@@ -179,7 +183,7 @@ describe('client', () => {
       .newGroup()
       .addMethodCall({
         sender: alice.addr,
-        appID: Number((await appClient.appClient.getAppReference()).appId),
+        appID,
         method: appClient.appClient.getABIMethod('doubleNestedTxnArg')!,
         args: [{ type: 'methodCall', ...txnArgParams }, secondTxnArgParams],
       })
@@ -192,13 +196,13 @@ describe('client', () => {
 
   test('assetOptIn', async () => {
     const { algod, testAccount } = fixture.context
-    const assetID = Number((await client.send.assetCreate({ sender: alice.addr, total: 1 })).confirmations![0].assetIndex)
+    const assetID = BigInt((await client.send.assetCreate({ sender: alice.addr, total: 1n })).confirmations![0].assetIndex!)
 
     await client.send.assetOptIn({
       sender: testAccount.addr,
-      assetID: assetID,
+      assetID,
       signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
     })
-    expect(await algod.accountAssetInformation(testAccount.addr, assetID).do()).toBeDefined()
+    expect(await algod.accountAssetInformation(testAccount.addr, Number(assetID)).do()).toBeDefined()
   })
 })
