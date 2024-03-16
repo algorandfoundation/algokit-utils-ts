@@ -3,6 +3,8 @@ import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
 import { SendTransactionFrom } from '../types/transaction'
+import { TransactionSignerAccount } from './account'
+import AlgorandClient from './algorand-client'
 import { TransactionLookupResult } from './indexer'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
@@ -23,9 +25,9 @@ export interface AlgorandTestAutomationContext {
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
-  testAccount: Account
+  testAccount: Account & TransactionSignerAccount
   /** Generate and fund an additional ephemerally created account */
-  generateAccount: (params: GetTestAccountParams) => Promise<Account>
+  generateAccount: (params: GetTestAccountParams) => Promise<Account & TransactionSignerAccount>
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
@@ -67,6 +69,11 @@ export interface AlgorandFixture {
    * ```
    */
   get context(): AlgorandTestAutomationContext
+
+  /**
+   * Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
+   */
+  get algorand(): AlgorandClient
 
   /**
    * Testing framework agnostic handler method to run before each test to prepare the `context` for that test.
