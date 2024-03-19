@@ -30,6 +30,7 @@ import {
   AppMetadata,
   AppReference,
   AppState,
+  AppStorageSchema,
   BoxName,
   DELETABLE_TEMPLATE_NAME,
   OnSchemaBreak,
@@ -156,7 +157,10 @@ export interface AppClientDeployCallInterfaceParams {
 }
 
 /** Parameters to pass into ApplicationClient.deploy */
-export interface AppClientDeployParams extends AppClientDeployCoreParams, AppClientDeployCallInterfaceParams {}
+export interface AppClientDeployParams extends AppClientDeployCoreParams, AppClientDeployCallInterfaceParams {
+  /** Any overrides for the storage schema to request for the created app; by default the schema indicated by the app spec is used. */
+  schema?: Partial<AppStorageSchema>
+}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AppClientCallRawArgs extends RawAppCallArgs {}
@@ -201,7 +205,12 @@ export type AppClientCreateOnComplete = {
 }
 
 /** Parameters for creating a contract using ApplicationClient */
-export type AppClientCreateParams = AppClientCallParams & AppClientCompilationParams & AppClientCreateOnComplete
+export type AppClientCreateParams = AppClientCallParams &
+  AppClientCompilationParams &
+  AppClientCreateOnComplete & {
+    /** Any overrides for the storage schema to request for the created app; by default the schema indicated by the app spec is used. */
+    schema?: Partial<AppStorageSchema>
+  }
 
 /** Parameters for updating a contract using ApplicationClient */
 export type AppClientUpdateParams = AppClientCallParams & AppClientCompilationParams
@@ -396,6 +405,7 @@ export class ApplicationClient {
    */
   async deploy(deploy?: AppClientDeployParams) {
     const {
+      schema,
       sender: deploySender,
       version,
       allowUpdate,
@@ -463,6 +473,7 @@ export class ApplicationClient {
             globalInts: this.appSpec.state.global.num_uints,
             localByteSlices: this.appSpec.state.local.num_byte_slices,
             localInts: this.appSpec.state.local.num_uints,
+            ...schema,
           },
           transactionParams: this.params,
           ...(sendParams ?? {}),
@@ -503,7 +514,17 @@ export class ApplicationClient {
    * @returns The details of the created app, or the transaction to create it if `skipSending` and the compilation result
    */
   async create(create?: AppClientCreateParams) {
-    const { sender: createSender, note, sendParams, deployTimeParams, updatable, deletable, onCompleteAction, ...args } = create ?? {}
+    const {
+      sender: createSender,
+      note,
+      sendParams,
+      deployTimeParams,
+      updatable,
+      deletable,
+      onCompleteAction,
+      schema,
+      ...args
+    } = create ?? {}
 
     if (this._appId !== 0) {
       throw new Error(`Attempt to create app which already has an app id of ${this._appId}`)
@@ -527,6 +548,7 @@ export class ApplicationClient {
             globalInts: this.appSpec.state.global.num_uints,
             localByteSlices: this.appSpec.state.local.num_byte_slices,
             localInts: this.appSpec.state.local.num_uints,
+            ...schema,
           },
           onCompleteAction,
           args: await this.getCallArgs(args, sender),
