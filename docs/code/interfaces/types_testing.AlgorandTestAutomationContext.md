@@ -43,8 +43,6 @@ Generate and fund an additional ephemerally created account
 
 ▸ (`params`): `Promise`\<`default`\>
 
-Generate and fund an additional ephemerally created account
-
 ##### Parameters
 
 | Name | Type |
@@ -119,8 +117,6 @@ Wait for the indexer to catch up with all transactions logged by `transactionLog
 
 ▸ (): `Promise`\<`void`\>
 
-Wait for the indexer to catch up with all transactions logged by `transactionLogger`
-
 ##### Returns
 
 `Promise`\<`void`\>
@@ -140,8 +136,6 @@ Wait for the indexer to catch up with the given transaction ID
 #### Type declaration
 
 ▸ (`transactionId`): `Promise`\<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
-
-Wait for the indexer to catch up with the given transaction ID
 
 ##### Parameters
 

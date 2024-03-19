@@ -95,7 +95,7 @@ Error.message
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1076
+node_modules/typescript/lib/lib.es5.d.ts:1077
 
 ___
 
@@ -109,7 +109,7 @@ Error.name
 
 #### Defined in
 
-node_modules/typescript/lib/lib.es5.d.ts:1075
+node_modules/typescript/lib/lib.es5.d.ts:1076
 
 ___
 
@@ -161,8 +161,6 @@ https://v8.dev/docs/stack-trace-api#customizing-stack-traces
 
 ▸ (`err`, `stackTraces`): `any`
 
-Optional override for formatting stack traces
-
 ##### Parameters
 
 | Name | Type |
@@ -174,17 +172,13 @@ Optional override for formatting stack traces
 
 `any`
 
-**`See`**
-
-https://v8.dev/docs/stack-trace-api#customizing-stack-traces
-
 #### Inherited from
 
 Error.prepareStackTrace
 
 #### Defined in
 
-node_modules/@types/node/globals.d.ts:11
+node_modules/@types/node/globals.d.ts:28
 
 ___
 
@@ -198,7 +192,7 @@ Error.stackTraceLimit
 
 #### Defined in
 
-node_modules/@types/node/globals.d.ts:13
+node_modules/@types/node/globals.d.ts:30
 
 ## Methods
 
@@ -225,7 +219,7 @@ Error.captureStackTrace
 
 #### Defined in
 
-node_modules/@types/node/globals.d.ts:4
+node_modules/@types/node/globals.d.ts:21
 
 ___
 
