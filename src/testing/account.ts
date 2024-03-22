@@ -16,8 +16,12 @@ import Kmd = algosdk.Kmd
  * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables
  * @returns The account, with private key loaded
  */
-export async function getTestAccount({ suppressLog, initialFunds }: GetTestAccountParams, algod: Algodv2, kmd?: Kmd): Promise<Account> {
-  const account = algosdk.generateAccount()
+export async function getTestAccount(
+  { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
+  algod: Algodv2,
+  kmd?: Kmd,
+): Promise<Account> {
+  const account = accountGetter ? await accountGetter(algod, kmd) : algosdk.generateAccount()
 
   Config.getLogger(suppressLog).info(
     `New test account created with address '${account.addr}' and mnemonic '${algosdk.secretKeyToMnemonic(account.sk)}'.`,
