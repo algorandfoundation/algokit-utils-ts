@@ -1,5 +1,5 @@
 import algosdk from 'algosdk'
-import { getAlgoNodeConfig, getConfigFromEnvOrDefaults, getDefaultLocalNetConfig } from '..'
+import { getAlgoNodeConfig, getConfigFromEnvOrDefaults, getDefaultLocalNetConfig } from '../network-client'
 import { TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
