@@ -1,12 +1,13 @@
 import algosdk from 'algosdk'
-import { sendAtomicTransactionComposer } from './transaction/transaction'
-import { AlgoAmount } from './types/amount'
+import { sendAtomicTransactionComposer } from '../transaction/transaction'
+import { TransactionSignerAccount } from './account'
+import { AlgoAmount } from './amount'
 
 export type CommonTxnParams = {
   /** The address sending the transaction */
   sender: string
   /** The function used to sign transactions */
-  signer?: algosdk.TransactionSigner
+  signer?: algosdk.TransactionSigner | TransactionSignerAccount
   /** Change the signing key of the sender to the given address */
   rekeyTo?: string
   /** Note to attach to the transaction*/
@@ -65,7 +66,7 @@ export type AssetCreateParams = CommonTxnParams & {
 
 export type AssetConfigParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: bigint
+  assetId: bigint
   /** The address that can change the manager, reserve, clawback, and freeze addresses */
   manager?: string
   /** The address that holds the uncirculated supply */
@@ -78,7 +79,7 @@ export type AssetConfigParams = CommonTxnParams & {
 
 export type AssetFreezeParams = CommonTxnParams & {
   /** The ID of the asset */
-  assetID: bigint
+  assetId: bigint
   /** The account to freeze or unfreeze */
   account: string
   /** Whether the assets in the account should be frozen */
@@ -87,7 +88,7 @@ export type AssetFreezeParams = CommonTxnParams & {
 
 export type AssetDestroyParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: bigint
+  assetId: bigint
 }
 
 export type KeyRegParams = CommonTxnParams & {
@@ -102,7 +103,7 @@ export type KeyRegParams = CommonTxnParams & {
 
 export type AssetTransferParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: bigint
+  assetId: bigint
   /** Amount of the asset to transfer (smallest divisible unit) */
   amount: bigint
   /** The account to send the asset to */
@@ -115,14 +116,14 @@ export type AssetTransferParams = CommonTxnParams & {
 
 export type AssetOptInParams = CommonTxnParams & {
   /** ID of the asset */
-  assetID: bigint
+  assetId: bigint
 }
 
 export type AppCallParams = CommonTxnParams & {
   /** The [OnComplete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) */
   onComplete?: algosdk.OnApplicationComplete
   /** ID of the application */
-  appID?: bigint
+  appId?: bigint
   /** The program to execute for all OnCompletes other than ClearState */
   approvalProgram?: Uint8Array
   /** The program to execute for ClearState OnComplete */
@@ -155,7 +156,7 @@ export type AppCallParams = CommonTxnParams & {
 export type MethodCallParams = CommonTxnParams &
   Omit<AppCallParams, 'args'> & {
     /** ID of the application */
-    appID: bigint
+    appId: bigint
     /** The ABI method to call */
     method: algosdk.ABIMethod
     /** Arguments to the ABI method */
@@ -378,7 +379,10 @@ export default class AlgokitComposer {
             throw Error(`Unsupported method arg transaction type: ${arg.type}`)
         }
 
-        methodArgs.push({ txn, signer: params.signer || this.getSigner(params.sender) })
+        methodArgs.push({
+          txn,
+          signer: params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : this.getSigner(params.sender),
+        })
         return
       }
 
@@ -389,11 +393,11 @@ export default class AlgokitComposer {
 
     methodAtc.addMethodCall({
       ...params,
-      appID: Number(params.appID || 0),
+      appID: Number(params.appId || 0),
       note: params.note ? new Uint8Array(Buffer.from(params.note)) : undefined,
       lease: params.lease ? new Uint8Array(Buffer.from(params.lease)) : undefined,
       suggestedParams,
-      signer: params.signer ?? this.getSigner(params.sender),
+      signer: params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : this.getSigner(params.sender),
       methodArgs: methodArgs,
     })
 
@@ -445,7 +449,7 @@ export default class AlgokitComposer {
 
     const onComplete = params.onComplete || algosdk.OnApplicationComplete.NoOpOC
 
-    if (!params.appID) {
+    if (!params.appId) {
       if (params.approvalProgram === undefined || params.clearProgram === undefined) {
         throw new Error('approvalProgram and clearProgram are required for application creation')
       }
@@ -458,7 +462,7 @@ export default class AlgokitComposer {
       })
     }
 
-    txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, onComplete, appIndex: Number(params.appID || 0) })
+    txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, onComplete, appIndex: Number(params.appId || 0) })
 
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
@@ -466,7 +470,7 @@ export default class AlgokitComposer {
   private buildAssetConfig(params: AssetConfigParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      assetIndex: Number(params.assetID),
+      assetIndex: Number(params.assetId),
       suggestedParams,
       manager: params.manager,
       reserve: params.reserve,
@@ -481,7 +485,7 @@ export default class AlgokitComposer {
   private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      assetIndex: Number(params.assetID),
+      assetIndex: Number(params.assetId),
       suggestedParams,
     })
 
@@ -491,7 +495,7 @@ export default class AlgokitComposer {
   private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      assetIndex: Number(params.assetID),
+      assetIndex: Number(params.assetId),
       freezeTarget: params.account,
       freezeState: params.frozen,
       suggestedParams,
@@ -504,7 +508,7 @@ export default class AlgokitComposer {
     const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: params.sender,
       to: params.to,
-      assetIndex: Number(params.assetID),
+      assetIndex: Number(params.assetId),
       amount: params.amount,
       suggestedParams,
       closeRemainderTo: params.closeAssetTo,
@@ -563,7 +567,7 @@ export default class AlgokitComposer {
       return this.buildMethodCall(txn, suggestedParams)
     }
 
-    const signer = txn.signer ?? this.getSigner(txn.sender)
+    const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
 
     switch (txn.type) {
       case 'pay': {

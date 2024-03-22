@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import AccountInformationModel = algosdk.modelsv2.Account
 import Account = algosdk.Account
 import MultisigMetadata = algosdk.MultisigMetadata
 import Transaction = algosdk.Transaction
@@ -126,3 +127,7 @@ export interface AccountConfig {
   /** @deprecated Renamed to senderAddress in 2.3.1 */
   senderMnemonic?: string
 }
+
+type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
+type ToNumberIfExtends<K, E> = K extends E ? number : K
+export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'get_obj_for_encoding'>
