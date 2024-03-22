@@ -40,6 +40,8 @@ export interface GetTestAccountParams {
   initialFunds: AlgoAmount
   /** Whether to suppress the log (which includes a mnemonic) or not (default: do not suppress the log) */
   suppressLog?: boolean
+  /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
+  accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>
 }
 
 /** Configuration for creating an Algorand testing fixture. */
@@ -52,6 +54,8 @@ export interface AlgorandFixtureConfig {
   kmd?: Kmd
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGOs. */
   testAccountFunding?: AlgoAmount
+  /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
+  accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>
 }
 
 /** An Algorand automated testing fixture */
