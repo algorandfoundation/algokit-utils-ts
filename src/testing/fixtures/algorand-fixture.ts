@@ -102,11 +102,12 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       indexer: indexer,
       kmd: kmd,
       testAccount: await getTestAccount(
-        { initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true },
+        { initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true, accountGetter: fixtureConfig?.accountGetter },
         transactionLoggerAlgod,
         kmd,
       ),
-      generateAccount: (params: GetTestAccountParams) => getTestAccount(params, transactionLoggerAlgod, kmd),
+      generateAccount: (params: GetTestAccountParams) =>
+        getTestAccount({ accountGetter: fixtureConfig?.accountGetter, ...params }, transactionLoggerAlgod, kmd),
       transactionLogger: transactionLogger,
       waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
       waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => lookupTransactionById(transactionId, indexer)),
