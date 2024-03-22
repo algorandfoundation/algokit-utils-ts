@@ -166,3 +166,13 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
     totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
   }
 }
+
+export async function getAccountAssetInformation(sender: string | SendTransactionFrom, assetId: bigint, algod: Algodv2) {
+  const info = await algod.accountAssetInformation(typeof sender === 'string' ? sender : getSenderAddress(sender), Number(assetId)).do()
+
+  return {
+    balance: BigInt(info['asset-holding']['amount']),
+    frozen: info['asset-holding']['is-frozen'] === 'true',
+    round: BigInt(info['round']),
+  }
+}
