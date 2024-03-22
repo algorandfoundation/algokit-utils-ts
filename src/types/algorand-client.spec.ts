@@ -33,7 +33,7 @@ describe('AlgorandClient', () => {
   test('sendPayment', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).amount
     const bobPreBalance = (await algorand.account.getInformation(bob)).amount
-    await algorand.send.payment({ sender: alice.addr, to: bob.addr, amount: algokit.microAlgos(1) })
+    await algorand.send.payment({ sender: alice.addr, receiver: bob.addr, amount: algokit.microAlgos(1) })
     const alicePostBalance = (await algorand.account.getInformation(alice)).amount
     const bobPostBalance = (await algorand.account.getInformation(bob)).amount
 
@@ -56,7 +56,7 @@ describe('AlgorandClient', () => {
     const doMathAtc = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).atc()
     const result = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, to: bob.addr, amount: algokit.microAlgos(1) })
+      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: algokit.microAlgos(1) })
       .addAtc(doMathAtc)
       .execute()
 
@@ -75,7 +75,7 @@ describe('AlgorandClient', () => {
 
     const methodRes = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, to: bob.addr, amount: algokit.microAlgos(1), note: new Uint8Array([1]) })
+      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: algokit.microAlgos(1), note: new Uint8Array([1]) })
       .addMethodCall({
         sender: alice.addr,
         appId: appId,
@@ -98,12 +98,12 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0) }],
+      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) }],
     }
 
     const txnRes = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0), note: new Uint8Array([1]) })
+      .addPayment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0), note: new Uint8Array([1]) })
       .addMethodCall(txnArgParams)
       .execute()
 
@@ -137,7 +137,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0) }],
+      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) }],
     }
 
     const nestedTxnArgRes = await algorand
@@ -159,7 +159,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(0) }],
+      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) }],
     }
 
     const secondTxnArgParams = {
@@ -167,7 +167,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, to: alice.addr, amount: algokit.microAlgos(1) }],
+      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(1) }],
       note: new Uint8Array([1]),
     }
 

@@ -34,7 +34,7 @@ export type CommonTxnParams = {
 
 export type PayTxnParams = CommonTxnParams & {
   /** That account that will receive the ALGO */
-  to: string
+  receiver: string
   /** Amount to send */
   amount: AlgoAmount
 }
@@ -107,7 +107,7 @@ export type AssetTransferParams = CommonTxnParams & {
   /** Amount of the asset to transfer (smallest divisible unit) */
   amount: bigint
   /** The account to send the asset to */
-  to: string
+  receiver: string
   /** The account to take the asset from */
   clawbackTarget?: string
   /** The account to close the asset to */
@@ -355,7 +355,7 @@ export default class AlgokitComposer {
             txn = this.buildPayment(arg, suggestedParams)
             break
           case 'assetOptIn':
-            txn = this.buildAssetTransfer({ ...arg, to: arg.sender, amount: 0n }, suggestedParams)
+            txn = this.buildAssetTransfer({ ...arg, receiver: arg.sender, amount: 0n }, suggestedParams)
             break
           case 'assetCreate':
             txn = this.buildAssetCreate(arg, suggestedParams)
@@ -407,7 +407,7 @@ export default class AlgokitComposer {
   private buildPayment(params: PayTxnParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      to: params.to,
+      to: params.receiver,
       amount: params.amount.microAlgos,
       suggestedParams,
     })
@@ -507,7 +507,7 @@ export default class AlgokitComposer {
   private buildAssetTransfer(params: AssetTransferParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: params.sender,
-      to: params.to,
+      to: params.receiver,
       assetIndex: Number(params.assetId),
       amount: params.amount,
       suggestedParams,
@@ -599,7 +599,7 @@ export default class AlgokitComposer {
         return [{ txn: assetTransfer, signer }]
       }
       case 'assetOptIn': {
-        const assetTransfer = this.buildAssetTransfer({ ...txn, to: txn.sender, amount: 0n }, suggestedParams)
+        const assetTransfer = this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)
         return [{ txn: assetTransfer, signer }]
       }
       case 'keyReg': {
