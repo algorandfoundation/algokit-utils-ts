@@ -1,5 +1,6 @@
 import algosdk from 'algosdk'
-import { getAlgoClient, getAlgoIndexerClient, getAlgoKmdClient, getTestNetDispenserApiClient } from '..'
+import { getTestNetDispenserApiClient } from '../dispenser-client'
+import { getAlgoClient, getAlgoIndexerClient, getAlgoKmdClient } from '../network-client'
 import { AppLookup } from './app'
 import {
   AppDetails,

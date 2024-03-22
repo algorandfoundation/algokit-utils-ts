@@ -1,5 +1,10 @@
 import algosdk from 'algosdk'
-import * as algokit from '..'
+import { getAccountInformation, mnemonicAccountFromEnvironment, multisigAccount, randomAccount, rekeyedAccount } from '../account/account'
+import { getDispenserAccount } from '../account/get-dispenser-account'
+import { mnemonicAccount } from '../account/mnemonic-account'
+import { getKmdWalletAccount } from '../localnet/get-kmd-wallet-account'
+import { getLocalNetDispenserAccount } from '../localnet/get-localnet-dispenser-account'
+import { getSenderAddress, getSenderTransactionSigner } from '../transaction/transaction'
 import { AccountInformation, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
@@ -37,8 +42,8 @@ export class AccountManager {
    */
   private signerAccount<T extends SendTransactionFrom>(account: T): TransactionSignerAccount & { account: T } {
     const acc = {
-      addr: algokit.getSenderAddress(account),
-      signer: algokit.getSenderTransactionSigner(account),
+      addr: getSenderAddress(account),
+      signer: getSenderTransactionSigner(account),
     }
     this._accounts[acc.addr] = acc
     return { ...acc, account }
@@ -51,9 +56,7 @@ export class AccountManager {
    */
   public withAccount(account: TransactionSignerAccount | SendTransactionFrom) {
     const acc =
-      'signer' in account && 'addr' in account
-        ? account
-        : { signer: algokit.getSenderTransactionSigner(account), addr: algokit.getSenderAddress(account) }
+      'signer' in account && 'addr' in account ? account : { signer: getSenderTransactionSigner(account), addr: getSenderAddress(account) }
     this._accounts[acc.addr] = acc
     return this
   }
@@ -108,7 +111,7 @@ export class AccountManager {
    * @returns The account information
    */
   public async getInformation(sender: string | TransactionSignerAccount): Promise<AccountInformation> {
-    return algokit.getAccountInformation(sender, this._clientManager.algod)
+    return getAccountInformation(sender, this._clientManager.algod)
   }
 
   /**
@@ -125,8 +128,8 @@ export class AccountManager {
    * @returns The account
    */
   public fromMnemonic = (mnemonicSecret: string, sender?: string) => {
-    const account = algokit.mnemonicAccount(mnemonicSecret)
-    return this.signerAccount(sender ? algokit.rekeyedAccount(account, sender) : account)
+    const account = mnemonicAccount(mnemonicSecret)
+    return this.signerAccount(sender ? rekeyedAccount(account, sender) : account)
   }
 
   /**
@@ -157,7 +160,7 @@ export class AccountManager {
    * @returns The account
    */
   public fromEnvironment = async (name: string, fundWith?: AlgoAmount) =>
-    this.signerAccount(await algokit.mnemonicAccountFromEnvironment({ name, fundWith }, this._clientManager.algod, this._clientManager.kmd))
+    this.signerAccount(await mnemonicAccountFromEnvironment({ name, fundWith }, this._clientManager.algod, this._clientManager.kmd))
 
   /**
    * Tracks and returns an Algorand account with private key loaded from the given KMD wallet (identified by name).
@@ -180,9 +183,9 @@ export class AccountManager {
     predicate?: (account: Record<string, any>) => boolean,
     sender?: string,
   ) => {
-    const account = await algokit.getKmdWalletAccount({ name, predicate }, this._clientManager.algod, this._clientManager.kmd)
+    const account = await getKmdWalletAccount({ name, predicate }, this._clientManager.algod, this._clientManager.kmd)
     if (!account) throw new Error(`Unable to find KMD account ${name}${predicate ? ' with predicate' : ''}`)
-    return this.signerAccount(sender ? algokit.rekeyedAccount(account, sender) : account)
+    return this.signerAccount(sender ? rekeyedAccount(account, sender) : account)
   }
 
   /**
@@ -198,7 +201,7 @@ export class AccountManager {
    * @returns A multisig account wrapper
    */
   public multisig = (multisigParams: algosdk.MultisigMetadata, signingAccounts: (algosdk.Account | SigningAccount)[]) => {
-    return this.signerAccount(algokit.multisigAccount(multisigParams, signingAccounts))
+    return this.signerAccount(multisigAccount(multisigParams, signingAccounts))
   }
 
   /**
@@ -210,7 +213,7 @@ export class AccountManager {
    * ```
    * @returns The account
    */
-  public random = () => this.signerAccount(algokit.randomAccount())
+  public random = () => this.signerAccount(randomAccount())
 
   /**
    * Returns an account (with private key loaded) that can act as a dispenser.
@@ -223,7 +226,7 @@ export class AccountManager {
    *  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC.
    * @returns The account
    */
-  public dispenser = async () => this.signerAccount(await algokit.getDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
+  public dispenser = async () => this.signerAccount(await getDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
 
   /**
    * Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
@@ -235,5 +238,5 @@ export class AccountManager {
    * @returns The account
    */
   public localNetDispenser = async () =>
-    this.signerAccount(await algokit.getLocalNetDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
+    this.signerAccount(await getLocalNetDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
 }
