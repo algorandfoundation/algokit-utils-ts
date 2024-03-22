@@ -10,7 +10,7 @@ describe('AlgorandClient', () => {
   let alice: TransactionSignerAccount
   let bob: TransactionSignerAccount
   let appClient: TestContractClient
-  let appId: number
+  let appId: bigint
 
   const fixture = algorandFixture()
 
@@ -27,7 +27,7 @@ describe('AlgorandClient', () => {
     })
 
     const app = await appClient.create.createApplication({})
-    appId = Number(app.appId)
+    appId = BigInt(app.appId)
   })
 
   test('sendPayment', async () => {
@@ -188,7 +188,7 @@ describe('AlgorandClient', () => {
 
   test('assetOptIn', async () => {
     const { algod } = fixture.context
-    const assetId = Number((await algorand.send.assetCreate({ sender: alice.addr, total: 1 })).confirmation.assetIndex!)
+    const assetId = BigInt((await algorand.send.assetCreate({ sender: alice.addr, total: 1n })).confirmation.assetIndex!)
 
     await algorand.send.assetOptIn({
       sender: alice.addr,

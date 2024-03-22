@@ -27,9 +27,9 @@ export type CommonTxnParams = {
    * If left undefined, the value from algod will be used.
    * Only set this when you intentionally want this to be some time in the future
    */
-  firstValidRound?: number
+  firstValidRound?: bigint
   /** The last round this transaction is valid. It is recommended to use validityWindow instead */
-  lastValidRound?: number
+  lastValidRound?: bigint
 }
 
 export type PayTxnParams = CommonTxnParams & {
@@ -41,7 +41,7 @@ export type PayTxnParams = CommonTxnParams & {
 
 export type AssetCreateParams = CommonTxnParams & {
   /** The total amount of the smallest divisible unit to create */
-  total: number | bigint
+  total: bigint
   /** The amount of decimal places the asset should have */
   decimals?: number
   /** Whether the asset is frozen by default in the creator address */
@@ -66,7 +66,7 @@ export type AssetCreateParams = CommonTxnParams & {
 
 export type AssetConfigParams = CommonTxnParams & {
   /** ID of the asset */
-  assetId: number
+  assetId: bigint
   /** The address that can change the manager, reserve, clawback, and freeze addresses */
   manager?: string
   /** The address that holds the uncirculated supply */
@@ -79,7 +79,7 @@ export type AssetConfigParams = CommonTxnParams & {
 
 export type AssetFreezeParams = CommonTxnParams & {
   /** The ID of the asset */
-  assetId: number
+  assetId: bigint
   /** The account to freeze or unfreeze */
   account: string
   /** Whether the assets in the account should be frozen */
@@ -88,24 +88,24 @@ export type AssetFreezeParams = CommonTxnParams & {
 
 export type AssetDestroyParams = CommonTxnParams & {
   /** ID of the asset */
-  assetId: number
+  assetId: bigint
 }
 
 export type KeyRegParams = CommonTxnParams & {
   voteKey?: Uint8Array
   selectionKey?: Uint8Array
-  voteFirst: number
-  voteLast: number
-  voteKeyDilution: number
+  voteFirst: bigint
+  voteLast: bigint
+  voteKeyDilution: bigint
   nonParticipation: boolean
   stateProofKey?: Uint8Array
 }
 
 export type AssetTransferParams = CommonTxnParams & {
   /** ID of the asset */
-  assetId: number
+  assetId: bigint
   /** Amount of the asset to transfer (smallest divisible unit) */
-  amount: number | bigint
+  amount: bigint
   /** The account to send the asset to */
   to: string
   /** The account to take the asset from */
@@ -116,14 +116,14 @@ export type AssetTransferParams = CommonTxnParams & {
 
 export type AssetOptInParams = CommonTxnParams & {
   /** ID of the asset */
-  assetId: number
+  assetId: bigint
 }
 
 export type AppCallParams = CommonTxnParams & {
   /** The [OnComplete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) */
   onComplete?: algosdk.OnApplicationComplete
   /** ID of the application */
-  appId?: number
+  appId?: bigint
   /** The program to execute for all OnCompletes other than ClearState */
   approvalProgram?: Uint8Array
   /** The program to execute for ClearState OnComplete */
@@ -144,9 +144,9 @@ export type AppCallParams = CommonTxnParams & {
   /** Account references */
   accountReferences?: string[]
   /** App references */
-  appReferences?: number[]
+  appReferences?: bigint[]
   /** Asset references */
-  assetReferences?: number[]
+  assetReferences?: bigint[]
   /** Number of extra pages required for the programs */
   extraPages?: number
   /** Box references */
@@ -156,7 +156,7 @@ export type AppCallParams = CommonTxnParams & {
 export type MethodCallParams = CommonTxnParams &
   Omit<AppCallParams, 'args'> & {
     /** ID of the application */
-    appId: number
+    appId: bigint
     /** The ABI method to call */
     method: algosdk.ABIMethod
     /** Arguments to the ABI method */
