@@ -1,5 +1,12 @@
 import algosdk from 'algosdk'
-import { getAccountInformation, mnemonicAccountFromEnvironment, multisigAccount, randomAccount, rekeyedAccount } from '../account/account'
+import {
+  getAccountAssetInformation,
+  getAccountInformation,
+  mnemonicAccountFromEnvironment,
+  multisigAccount,
+  randomAccount,
+  rekeyedAccount,
+} from '../account/account'
 import { getDispenserAccount } from '../account/get-dispenser-account'
 import { mnemonicAccount } from '../account/mnemonic-account'
 import { getKmdWalletAccount } from '../localnet/get-kmd-wallet-account'
@@ -112,6 +119,10 @@ export class AccountManager {
    */
   public async getInformation(sender: string | TransactionSignerAccount): Promise<AccountInformation> {
     return getAccountInformation(sender, this._clientManager.algod)
+  }
+
+  public async getAssetInformation(sender: string | TransactionSignerAccount, assetId: bigint) {
+    return getAccountAssetInformation(sender, assetId, this._clientManager.algod)
   }
 
   /**
