@@ -222,7 +222,7 @@ export const sendTransaction = async function (
 
   await algod.sendRawTransaction(signedTransaction).do()
 
-  Config.getLogger(suppressLog).info(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
+  Config.getLogger(suppressLog).verbose(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
 
   let confirmation: modelsv2.PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
@@ -535,7 +535,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     let groupId: string | undefined = undefined
     if (transactionsToSend.length > 1) {
       groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
-      Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
+      Config.getLogger(sendParams?.suppressLog).verbose(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
         transactionsToSend,
       })
 
@@ -557,9 +557,11 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
 
     if (transactionsToSend.length > 1) {
-      Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
+      Config.getLogger(sendParams?.suppressLog).verbose(
+        `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,
+      )
     } else {
-      Config.getLogger(sendParams?.suppressLog).info(
+      Config.getLogger(sendParams?.suppressLog).verbose(
         `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${algosdk.encodeAddress(
           transactionsToSend[0].from.publicKey,
         )}`,
@@ -591,11 +593,11 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-    Config.logger.info('Received error executing Atomic Transaction Composer, for more information enable the debug flag')
     if (Config.debug && typeof e === 'object') {
       e.traces = []
-      Config.logger.debug(
+      Config.logger.error(
         'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
+        e,
       )
       let simulate = undefined
       if (Config.debug && Config.projectRoot && !Config.traceAll) {
@@ -623,6 +625,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
           })
         }
       }
+    } else {
+      Config.logger.error('Received error executing Atomic Transaction Composer, for more information enable the debug flag', e)
     }
     throw e
   }
