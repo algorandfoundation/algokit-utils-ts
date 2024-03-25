@@ -733,14 +733,14 @@ describe('application-client', () => {
           create_8:"
         `)
         expect(e.led.traces.length).toBe(1)
+        expect(
+          logging.testLogger.getLogSnapshot({
+            accounts: [testAccount],
+            transactions: app.operationPerformed === 'create' ? [app.transaction, e.led.txId] : [],
+            apps: [app.appId],
+          }),
+        ).toMatchSnapshot()
       }
-      expect(
-        logging.testLogger.getLogSnapshot({
-          accounts: [testAccount],
-          transactions: app.operationPerformed === 'create' ? [app.transaction] : [],
-          apps: [app.appId],
-        }),
-      ).toMatchSnapshot()
     })
   })
 

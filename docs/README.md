@@ -84,9 +84,9 @@ export type Logger = {
 }
 ```
 
-Note: this interface type is directly compatible with [Winston](https://github.com/winstonjs/winston).
+Note: this interface type is directly compatible with [Winston](https://github.com/winstonjs/winston) so you should be able to pass AlgoKit a Winston logger.
 
-By default, the [`ConsoleLogger`](./code/modules/types_logging.md#consolelogger) is set as the logger, which will send log messages to the various `console.*` methods. There is also a [`NullLogger`](./code/modules/types_logging.md#nulllogger) if you want to disable logging.
+By default, the [`consoleLogger`](./code/modules/types_logging.md#consolelogger) is set as the logger, which will send log messages to the various `console.*` methods for all logs apart from verbose logs. There is also a [`nullLogger`](./code/modules/types_logging.md#nulllogger) if you want to disable logging, or various leveled console loggers: [`verboseConsoleLogger`](./code/modules/types_logging.md#verboseconsolelogger) (also outputs verbose logs), [`infoConsoleLogger`](./code/modules/types_logging.md#infoconsolelogger) (only outputs info, warning and error logs), [`warningConsoleLogger`](./code/modules/types_logging.md#warningconsolelogger) (only outputs warning and error logs).
 
 If you want to override the logger you can use the following:
 

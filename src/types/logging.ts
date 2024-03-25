@@ -15,8 +15,32 @@ export const consoleLogger: Logger = {
   error: console.error,
   warn: console.warn,
   info: console.info,
+  verbose: () => {},
+  debug: console.debug,
+}
+
+export const infoConsoleLogger: Logger = {
+  error: console.error,
+  warn: console.warn,
+  info: console.info,
+  verbose: () => {},
+  debug: () => {},
+}
+
+export const verboseConsoleLogger: Logger = {
+  error: console.error,
+  warn: console.warn,
+  info: console.info,
   verbose: console.trace,
   debug: console.debug,
+}
+
+export const warningConsoleLogger: Logger = {
+  error: console.error,
+  warn: console.warn,
+  info: () => {},
+  verbose: () => {},
+  debug: () => {},
 }
 
 /** A logger implementation that does nothing */
