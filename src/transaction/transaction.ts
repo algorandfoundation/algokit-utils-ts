@@ -593,6 +593,9 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
+    // Remove headers as it doesn't have anything useful.
+    delete e.response?.headers
+
     if (Config.debug && typeof e === 'object') {
       e.traces = []
       Config.logger.error(
