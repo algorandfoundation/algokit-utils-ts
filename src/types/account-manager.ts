@@ -37,7 +37,7 @@ export class AccountManager {
    * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
    * @returns The `AccountManager` so method calls can be chained
    */
-  public withDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AccountManager {
+  public setDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AccountManager {
     this._defaultSigner = 'signer' in signer ? signer.signer : signer
     return this
   }
@@ -61,7 +61,7 @@ export class AccountManager {
    * @param account The account to register
    * @returns The AccountCreator instance for method chaining
    */
-  public withAccount(account: TransactionSignerAccount | SendTransactionFrom) {
+  public setSignerFromAccount(account: TransactionSignerAccount | SendTransactionFrom) {
     const acc =
       'signer' in account && 'addr' in account ? account : { signer: getSenderTransactionSigner(account), addr: getSenderAddress(account) }
     this._accounts[acc.addr] = acc
@@ -74,7 +74,7 @@ export class AccountManager {
    * @param signer The signer to sign transactions with for the given sender
    * @returns The AccountCreator instance for method chaining
    */
-  public withSigner(sender: string, signer: algosdk.TransactionSigner) {
+  public setSigner(sender: string, signer: algosdk.TransactionSigner) {
     this._accounts[sender] = { addr: sender, signer }
     return this
   }
