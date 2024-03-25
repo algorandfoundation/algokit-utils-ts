@@ -21,7 +21,7 @@ Fields for an asset transfer transaction. https://developer.algorand.org/docs/re
 
 ### amount
 
-• **amount**: `number`
+• **amount**: `number` \| `bigint`
 
 [aamt] Amount of asset to transfer. A zero amount transferred to self allocates that asset in the account's Assets map.
 
@@ -45,7 +45,7 @@ ___
 
 ### close-amount
 
-• `Optional` **close-amount**: `number`
+• `Optional` **close-amount**: `number` \| `bigint`
 
 Number of assets transfered to the close-to account as part of the transaction.
 

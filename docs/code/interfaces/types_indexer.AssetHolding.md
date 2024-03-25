@@ -21,7 +21,7 @@ Describes an asset held by an account. https://developer.algorand.org/docs/rest-
 
 ### amount
 
-• **amount**: `number`
+• **amount**: `number` \| `bigint`
 
 (a) number of units held.
 
