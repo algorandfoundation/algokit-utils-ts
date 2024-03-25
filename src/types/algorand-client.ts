@@ -49,8 +49,8 @@ export default class AlgorandClient {
    * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public withDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AlgorandClient {
-    this._accountManager.withDefaultSigner(signer)
+  public setDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AlgorandClient {
+    this._accountManager.setDefaultSigner(signer)
     return this
   }
 
@@ -59,8 +59,8 @@ export default class AlgorandClient {
    * @param account The account to register
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public withAccount(account: TransactionSignerAccount | SendTransactionFrom) {
-    this._accountManager.withAccount(account)
+  public setSignerFromAccount(account: TransactionSignerAccount | SendTransactionFrom) {
+    this._accountManager.setSignerFromAccount(account)
     return this
   }
 
@@ -70,8 +70,8 @@ export default class AlgorandClient {
    * @param signer The signer to sign transactions with for the given sender
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public withSigner(sender: string, signer: algosdk.TransactionSigner) {
-    this._accountManager.withSigner(sender, signer)
+  public setSigner(sender: string, signer: algosdk.TransactionSigner) {
+    this._accountManager.setSigner(sender, signer)
     return this
   }
 
@@ -81,7 +81,7 @@ export default class AlgorandClient {
    * @param until A date until which to cache, or if not specified then the timeout is used
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public withSuggestedParams(suggestedParams: algosdk.SuggestedParams, until?: Date) {
+  public setSuggestedParams(suggestedParams: algosdk.SuggestedParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
     this._cachedSuggestedParamsExpiry = until ?? new Date(+new Date() + this._cachedSuggestedParamsTimeout)
     return this
@@ -92,7 +92,7 @@ export default class AlgorandClient {
    * @param timeout The timeout in milliseconds
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public withSuggestedParamsTimeout(timeout: number) {
+  public setSuggestedParamsTimeout(timeout: number) {
     this._cachedSuggestedParamsTimeout = timeout
     return this
   }
