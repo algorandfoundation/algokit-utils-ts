@@ -23,6 +23,7 @@
 - [compileTeal](index.md#compileteal)
 - [controlFees](index.md#controlfees)
 - [createApp](index.md#createapp)
+- [createAsset](index.md#createasset)
 - [decodeAppState](index.md#decodeappstate)
 - [deployApp](index.md#deployapp)
 - [encodeLease](index.md#encodelease)
@@ -202,7 +203,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L170)
+[src/asset.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L237)
 
 ___
 
@@ -237,7 +238,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L237)
+[src/asset.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L304)
 
 ___
 
@@ -268,7 +269,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L81)
+[src/asset.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L148)
 
 ___
 
@@ -299,7 +300,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L119)
+[src/asset.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L186)
 
 ___
 
@@ -431,6 +432,37 @@ The details of the created app, or the transaction to create it if `skipSending`
 #### Defined in
 
 [src/app.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L56)
+
+___
+
+### createAsset
+
+▸ **createAsset**(`create`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+
+Create an Algorand Standard Asset (ASA).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `create` | [`CreateAssetParams`](../interfaces/types_asset.CreateAssetParams.md) | The asset creation definition |
+| `algod` | `default` | An algod client |
+
+#### Returns
+
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
+
+The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+
+**`Example`**
+
+```typescript
+await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My asset' }, algod)
+```
+
+#### Defined in
+
+[src/asset.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L81)
 
 ___
 
@@ -623,7 +655,7 @@ ___
 
 #### Defined in
 
-[src/indexer-lookup.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L109)
+[src/indexer-lookup.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L133)
 
 ___
 
@@ -1950,7 +1982,7 @@ The result of the look-up
 
 #### Defined in
 
-[src/indexer-lookup.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L30)
+[src/indexer-lookup.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L54)
 
 ___
 
@@ -1977,7 +2009,7 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L42)
+[src/indexer-lookup.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L66)
 
 ___
 
@@ -2002,7 +2034,7 @@ The result of the look-up
 
 #### Defined in
 
-[src/indexer-lookup.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L20)
+[src/indexer-lookup.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L42)
 
 ___
 
@@ -2411,7 +2443,7 @@ The search results
 
 #### Defined in
 
-[src/indexer-lookup.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L75)
+[src/indexer-lookup.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L99)
 
 ___
 

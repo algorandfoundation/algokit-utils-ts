@@ -1,4 +1,5 @@
 import { describe, test } from '@jest/globals'
+import invariant from 'tiny-invariant'
 import * as algokit from './'
 import { algorandFixture } from './testing'
 import { generateTestAsset } from './testing/_asset'
@@ -6,6 +7,45 @@ import { generateTestAsset } from './testing/_asset'
 describe('asset', () => {
   const localnet = algorandFixture()
   beforeEach(localnet.beforeEach, 100_000)
+
+  test('Create an asset succeeds', async () => {
+    const { algod, testAccount } = localnet.context
+    const accounts = [algokit.randomAccount(), algokit.randomAccount(), algokit.randomAccount(), algokit.randomAccount()]
+    const hash = new Uint8Array(32).fill(1)
+    const result = await algokit.createAsset(
+      {
+        creator: testAccount,
+        total: 1000,
+        decimals: 0,
+        name: 'Test Asset',
+        unit: 'TEST',
+        url: 'https://example.com',
+        metadataHash: hash,
+        manager: accounts[0].addr,
+        reserveAccount: accounts[1].addr,
+        freezeAccount: accounts[2].addr,
+        clawbackAccount: accounts[3].addr,
+        frozenByDefault: true,
+      },
+      algod,
+    )
+
+    expect(result.confirmation?.assetIndex).toBeGreaterThan(0)
+    invariant(result.confirmation)
+    invariant(typeof result.confirmation!.assetIndex! === 'number')
+    const assetData = await algod.getAssetByID(result.confirmation.assetIndex).do()
+    expect(assetData.params.total).toBe(1000)
+    expect(assetData.params.decimals).toBe(0)
+    expect(assetData.params['default-frozen']).toBe(true)
+    expect(assetData.params['unit-name']).toBe('TEST')
+    expect(assetData.params.name).toBe('Test Asset')
+    expect(assetData.params.url).toBe('https://example.com')
+    expect(assetData.params['metadata-hash']).toBe(Buffer.from(hash).toString('base64'))
+    expect(assetData.params.manager).toBe(accounts[0].addr)
+    expect(assetData.params.reserve).toBe(accounts[1].addr)
+    expect(assetData.params.freeze).toBe(accounts[2].addr)
+    expect(assetData.params.clawback).toBe(accounts[3].addr)
+  })
 
   test('OptIn an asset to an account succeed', async () => {
     const { algod, testAccount, generateAccount } = localnet.context
