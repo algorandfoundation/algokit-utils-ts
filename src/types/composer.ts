@@ -199,16 +199,23 @@ export default class AlgokitComposer {
   /** The default transaction validity window */
   defaultValidityWindow = 10
 
-  constructor(
-    algod: algosdk.Algodv2,
-    getSigner: (address: string) => algosdk.TransactionSigner,
-    getSuggestedParams?: () => Promise<algosdk.SuggestedParams>,
-  ) {
+  constructor({
+    algod,
+    getSigner,
+    getSuggestedParams,
+    defaultValidityWindow,
+  }: {
+    algod: algosdk.Algodv2
+    getSigner: (address: string) => algosdk.TransactionSigner
+    getSuggestedParams?: () => Promise<algosdk.SuggestedParams>
+    defaultValidityWindow?: number
+  }) {
     this.atc = new algosdk.AtomicTransactionComposer()
     this.algod = algod
     const defaultGetSendParams = () => algod.getTransactionParams().do()
     this.getSuggestedParams = getSuggestedParams ?? defaultGetSendParams
     this.getSigner = getSigner
+    this.defaultValidityWindow = defaultValidityWindow ?? this.defaultValidityWindow
   }
 
   addPayment(params: PayTxnParams): AlgokitComposer {

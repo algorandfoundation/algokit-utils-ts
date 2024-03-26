@@ -39,9 +39,21 @@ export default class AlgorandClient {
   private _cachedSuggestedParamsExpiry?: Date
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
+  private _defaultValidityWindow: number = 10
+
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config)
     this._accountManager = new AccountManager(this._clientManager)
+  }
+
+  /**
+   * Sets the default validity window for transactions.
+   * @param validityWindow The number of rounds between the first and last valid rounds
+   * @returns The `AlgorandClient` so method calls can be chained
+   */
+  public setDefaultValidityWindow(validityWindow: number) {
+    this._defaultValidityWindow = validityWindow
+    return this
   }
 
   /**
@@ -125,11 +137,12 @@ export default class AlgorandClient {
 
   /** Start a new `AlgokitComposer` transaction group */
   newGroup() {
-    return new AlgokitComposer(
-      this.client.algod,
-      (addr: string) => this.account.getSigner(addr),
-      () => this.getSuggestedParams(),
-    )
+    return new AlgokitComposer({
+      algod: this.client.algod,
+      getSigner: (addr: string) => this.account.getSigner(addr),
+      getSuggestedParams: () => this.getSuggestedParams(),
+      defaultValidityWindow: this._defaultValidityWindow,
+    })
   }
 
   /**
