@@ -28,7 +28,7 @@ The account to opt in/out for
 
 #### Defined in
 
-[src/types/asset.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L31)
+[src/types/asset.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L94)
 
 ___
 
@@ -40,7 +40,7 @@ The IDs of the assets to opt in for / out of
 
 #### Defined in
 
-[src/types/asset.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L33)
+[src/types/asset.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L96)
 
 ___
 
@@ -52,7 +52,7 @@ The maximum fee that you are happy to pay per transaction (default: unbounded) -
 
 #### Defined in
 
-[src/types/asset.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L41)
+[src/types/asset.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L104)
 
 ___
 
@@ -64,7 +64,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/asset.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L39)
+[src/types/asset.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L102)
 
 ___
 
@@ -76,7 +76,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/asset.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L43)
+[src/types/asset.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L106)
 
 ___
 
@@ -88,7 +88,7 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/asset.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L37)
+[src/types/asset.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L100)
 
 ___
 
@@ -100,4 +100,4 @@ Whether or not to validate the opt-in/out is valid before issuing transactions; 
 
 #### Defined in
 
-[src/types/asset.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L35)
+[src/types/asset.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L98)

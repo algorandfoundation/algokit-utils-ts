@@ -5,6 +5,7 @@ import { AlgoClientConfig, AlgoConfig } from './types/network-client'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
+import IntDecoding = algosdk.IntDecoding
 
 /** Retrieve configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment not algod-side) */
 export function getConfigFromEnvOrDefaults(): AlgoConfig {
@@ -135,11 +136,11 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
 /** Returns an indexer SDK client that automatically retries on idempotent calls
  *
  * @param config The config if you want to override the default (getting config from process.env)
+ * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
  * @example Default (load from environment variables)
  *
  *  ```typescript
  *  // Uses process.env.INDEXER_SERVER, process.env.INDEXER_PORT and process.env.INDEXER_TOKEN
- *  // Automatically detects if you are using PureStake to switch in the right header name for INDEXER_TOKEN
  *  const indexer = getAlgoIndexerClient()
  *  await indexer.makeHealthCheck().do()
  *  ```
@@ -158,11 +159,18 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  *  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  *  await indexer.makeHealthCheck().do()
  * ```
+ * @example Override int decoding for responses
+ * ```typescript
+ *  const indexer = getAlgoIndexerClient(config, IntDecoding.BIGINT)
+ * ```
  */
-export function getAlgoIndexerClient(config?: AlgoClientConfig): Indexer {
+export function getAlgoIndexerClient(config?: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
   const { token, server, port } = config ?? getIndexerConfigFromEnvironment()
   const httpClientWithRetry = new AlgoHttpClientWithRetry(getAlgoTokenHeader(server, token, 'X-Indexer-API-Token'), server, port)
-  return new Indexer(httpClientWithRetry)
+  const indexer = new Indexer(httpClientWithRetry)
+  // Use mixed int decoding by default so bigints don't have lost precision
+  indexer.setIntEncoding(overrideIntDecoding ?? IntDecoding.MIXED)
+  return indexer
 }
 
 /**

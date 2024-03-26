@@ -23,6 +23,7 @@
 - [compileTeal](index.md#compileteal)
 - [controlFees](index.md#controlfees)
 - [createApp](index.md#createapp)
+- [createAsset](index.md#createasset)
 - [decodeAppState](index.md#decodeappstate)
 - [deployApp](index.md#deployapp)
 - [encodeLease](index.md#encodelease)
@@ -202,7 +203,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L170)
+[src/asset.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L241)
 
 ___
 
@@ -237,7 +238,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L237)
+[src/asset.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L308)
 
 ___
 
@@ -268,7 +269,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L81)
+[src/asset.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L152)
 
 ___
 
@@ -299,7 +300,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L119)
+[src/asset.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L190)
 
 ___
 
@@ -431,6 +432,37 @@ The details of the created app, or the transaction to create it if `skipSending`
 #### Defined in
 
 [src/app.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L56)
+
+___
+
+### createAsset
+
+▸ **createAsset**(`create`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) & \{ `confirmation?`: \{ `assetIndex`: `number` \| `bigint`  }  }\>
+
+Create an Algorand Standard Asset (ASA).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `create` | [`CreateAssetParams`](../interfaces/types_asset.CreateAssetParams.md) | The asset creation definition |
+| `algod` | `default` | An algod client |
+
+#### Returns
+
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) & \{ `confirmation?`: \{ `assetIndex`: `number` \| `bigint`  }  }\>
+
+The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+
+**`Example`**
+
+```typescript
+await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My asset' }, algod)
+```
+
+#### Defined in
+
+[src/asset.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L81)
 
 ___
 
@@ -888,13 +920,13 @@ Returns an algod SDK client that automatically retries on idempotent calls
 
 #### Defined in
 
-[src/network-client.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L129)
+[src/network-client.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L130)
 
 ___
 
 ### getAlgoIndexerClient
 
-▸ **getAlgoIndexerClient**(`config?`): `Indexer`
+▸ **getAlgoIndexerClient**(`config?`, `overrideIntDecoding?`): `Indexer`
 
 Returns an indexer SDK client that automatically retries on idempotent calls
 
@@ -903,6 +935,7 @@ Returns an indexer SDK client that automatically retries on idempotent calls
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `config?` | [`AlgoClientConfig`](../interfaces/types_network_client.AlgoClientConfig.md) | The config if you want to override the default (getting config from process.env) |
+| `overrideIntDecoding?` | `IntDecoding` | Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers |
 
 #### Returns
 
@@ -912,7 +945,6 @@ Returns an indexer SDK client that automatically retries on idempotent calls
 
 ```typescript
  // Uses process.env.INDEXER_SERVER, process.env.INDEXER_PORT and process.env.INDEXER_TOKEN
- // Automatically detects if you are using PureStake to switch in the right header name for INDEXER_TOKEN
  const indexer = getAlgoIndexerClient()
  await indexer.makeHealthCheck().do()
  ```
@@ -938,9 +970,15 @@ Returns an indexer SDK client that automatically retries on idempotent calls
  await indexer.makeHealthCheck().do()
 ```
 
+**`Example`**
+
+```typescript
+ const indexer = getAlgoIndexerClient(config, IntDecoding.BIGINT)
+```
+
 #### Defined in
 
-[src/network-client.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L162)
+[src/network-client.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L167)
 
 ___
 
@@ -977,7 +1015,7 @@ KMD client allows you to export private keys, which is useful to get the default
 
 #### Defined in
 
-[src/network-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L185)
+[src/network-client.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L193)
 
 ___
 
@@ -1000,7 +1038,7 @@ Returns the Algorand configuration to point to the AlgoNode service
 
 #### Defined in
 
-[src/network-client.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L75)
+[src/network-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L76)
 
 ___
 
@@ -1016,7 +1054,7 @@ Retrieve the algod configuration from environment variables (expects to be calle
 
 #### Defined in
 
-[src/network-client.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L37)
+[src/network-client.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L38)
 
 ___
 
@@ -1517,7 +1555,7 @@ Retrieve configurations from environment variables when defined or get defaults 
 
 #### Defined in
 
-[src/network-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L10)
+[src/network-client.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L11)
 
 ___
 
@@ -1566,7 +1604,7 @@ Returns the Algorand configuration to point to the default LocalNet
 
 #### Defined in
 
-[src/network-client.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L86)
+[src/network-client.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L87)
 
 ___
 
@@ -1608,7 +1646,7 @@ Retrieve the indexer configuration from environment variables (expects to be cal
 
 #### Defined in
 
-[src/network-client.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L54)
+[src/network-client.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L55)
 
 ___
 
@@ -1878,7 +1916,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L197)
+[src/network-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L205)
 
 ___
 
@@ -1925,7 +1963,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L192)
+[src/network-client.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L200)
 
 ___
 
