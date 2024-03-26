@@ -31,7 +31,7 @@ async function unwrapSingleSendResult(results: Promise<SendAtomicTransactionComp
 }
 
 /** A client that brokers easy access to Algorand functionality. */
-export default class AlgorandClient {
+export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
 
@@ -285,3 +285,5 @@ export default class AlgorandClient {
     return new AlgorandClient(config)
   }
 }
+
+export default AlgorandClient
