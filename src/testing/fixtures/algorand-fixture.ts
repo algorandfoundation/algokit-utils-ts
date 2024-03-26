@@ -104,7 +104,8 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       transactionLoggerAlgod,
       kmd,
     )
-    algorandClient = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd }).setSignerFromAccount(acc)
+    algorandClient = algorandClient ?? AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+    algorandClient.setSignerFromAccount(acc)
     const testAccount = { ...acc, signer: algorandClient.account.getSigner(acc.addr) }
     context = {
       algod: transactionLoggerAlgod,
