@@ -30,7 +30,7 @@ ___
 
 ### indexerConfig
 
-• **indexerConfig**: [`AlgoClientConfig`](types_network_client.AlgoClientConfig.md)
+• `Optional` **indexerConfig**: [`AlgoClientConfig`](types_network_client.AlgoClientConfig.md)
 
 Indexer client configuration
 
@@ -42,7 +42,7 @@ ___
 
 ### kmdConfig
 
-• **kmdConfig**: [`AlgoClientConfig`](types_network_client.AlgoClientConfig.md)
+• `Optional` **kmdConfig**: [`AlgoClientConfig`](types_network_client.AlgoClientConfig.md)
 
 Kmd configuration
 

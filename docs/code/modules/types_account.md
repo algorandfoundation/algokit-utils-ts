@@ -14,9 +14,23 @@
 - [AccountConfig](../interfaces/types_account.AccountConfig.md)
 - [TransactionSignerAccount](../interfaces/types_account.TransactionSignerAccount.md)
 
+### Type Aliases
+
+- [AccountInformation](types_account.md#accountinformation)
+
 ### Variables
 
 - [DISPENSER\_ACCOUNT](types_account.md#dispenser_account)
+
+## Type Aliases
+
+### AccountInformation
+
+Ƭ **AccountInformation**: `Omit`\<`NumberConverter`\<`AccountInformationModel`\>, ``"get_obj_for_encoding"``\>
+
+#### Defined in
+
+[src/types/account.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L133)
 
 ## Variables
 
@@ -28,4 +42,4 @@ The account name identifier used for fund dispensing in test environments
 
 #### Defined in
 
-[src/types/account.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L10)
+[src/types/account.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L11)
