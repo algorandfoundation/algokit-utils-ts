@@ -4,17 +4,20 @@
 
 ## Table of contents
 
-### Type Aliases
+### References
 
+- [AlgokitComposerParams](index.md#algokitcomposerparams)
+- [AlgorandClient](index.md#algorandclient)
 - [AppCallParams](index.md#appcallparams)
 - [AssetConfigParams](index.md#assetconfigparams)
 - [AssetCreateParams](index.md#assetcreateparams)
 - [AssetDestroyParams](index.md#assetdestroyparams)
 - [AssetFreezeParams](index.md#assetfreezeparams)
+- [AssetOptInParams](index.md#assetoptinparams)
 - [AssetTransferParams](index.md#assettransferparams)
 - [CommonTxnParams](index.md#commontxnparams)
-- [KeyRegParams](index.md#keyregparams)
 - [MethodCallParams](index.md#methodcallparams)
+- [OnlineKeyRegParams](index.md#onlinekeyregparams)
 - [PayTxnParams](index.md#paytxnparams)
 
 ### Variables
@@ -48,7 +51,9 @@
 - [getAccount](index.md#getaccount)
 - [getAccountAddressAsString](index.md#getaccountaddressasstring)
 - [getAccountAddressAsUint8Array](index.md#getaccountaddressasuint8array)
+- [getAccountAssetInformation](index.md#getaccountassetinformation)
 - [getAccountConfigFromEnvironment](index.md#getaccountconfigfromenvironment)
+- [getAccountInformation](index.md#getaccountinformation)
 - [getAlgoClient](index.md#getalgoclient)
 - [getAlgoIndexerClient](index.md#getalgoindexerclient)
 - [getAlgoKmdClient](index.md#getalgokmdclient)
@@ -119,120 +124,83 @@
 - [updateApp](index.md#updateapp)
 - [waitForConfirmation](index.md#waitforconfirmation)
 
-## Type Aliases
+## References
+
+### AlgokitComposerParams
+
+Re-exports [AlgokitComposerParams](types_composer.md#algokitcomposerparams)
+
+___
+
+### AlgorandClient
+
+Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+
+___
 
 ### AppCallParams
 
-Ƭ **AppCallParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `accountReferences?`: `string`[] ; `appID?`: `number` ; `appReferences?`: `number`[] ; `approvalProgram?`: `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `number`[] ; `boxReferences?`: `algosdk.BoxReference`[] ; `clearProgram?`: `Uint8Array` ; `extraPages?`: `number` ; `onComplete?`: `algosdk.OnApplicationComplete` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalUints`: `number` ; `localByteSlices`: `number` ; `localUints`: `number`  }  }
-
-#### Defined in
-
-[src/composer.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L81)
+Re-exports [AppCallParams](types_composer.md#appcallparams)
 
 ___
 
 ### AssetConfigParams
 
-Ƭ **AssetConfigParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `assetID`: `number` ; `clawback?`: `string` ; `freeze?`: `string` ; `manager?`: `string` ; `reserve?`: `string`  }
-
-#### Defined in
-
-[src/composer.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L45)
+Re-exports [AssetConfigParams](types_composer.md#assetconfigparams)
 
 ___
 
 ### AssetCreateParams
 
-Ƭ **AssetCreateParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `assetName?`: `string` ; `clawback?`: `string` ; `decimals?`: `number` ; `defaultFrozen?`: `boolean` ; `freeze?`: `string` ; `manager?`: `string` ; `metadataHash?`: `Uint8Array` ; `reserve?`: `string` ; `total`: `number` ; `unitName?`: `string` ; `url?`: `string`  }
-
-#### Defined in
-
-[src/composer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L31)
+Re-exports [AssetCreateParams](types_composer.md#assetcreateparams)
 
 ___
 
 ### AssetDestroyParams
 
-Ƭ **AssetDestroyParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `assetID`: `number`  }
-
-#### Defined in
-
-[src/composer.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L59)
+Re-exports [AssetDestroyParams](types_composer.md#assetdestroyparams)
 
 ___
 
 ### AssetFreezeParams
 
-Ƭ **AssetFreezeParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `account`: `string` ; `assetID`: `number` ; `frozen`: `boolean`  }
+Re-exports [AssetFreezeParams](types_composer.md#assetfreezeparams)
 
-#### Defined in
+___
 
-[src/composer.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L53)
+### AssetOptInParams
+
+Re-exports [AssetOptInParams](types_composer.md#assetoptinparams)
 
 ___
 
 ### AssetTransferParams
 
-Ƭ **AssetTransferParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `amount`: `number` ; `assetID`: `number` ; `clawbackTarget?`: `string` ; `closeAssetTo?`: `string` ; `to`: `string`  }
-
-#### Defined in
-
-[src/composer.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L73)
+Re-exports [AssetTransferParams](types_composer.md#assettransferparams)
 
 ___
 
 ### CommonTxnParams
 
-Ƭ **CommonTxnParams**: `Object`
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `extraFee?` | `number` | The fee to pay IN ADDITION to the suggested fee. Useful for covering inner tranasction fees |
-| `firstValidRound?` | `number` | Set the first round this transaction is valid. If left undefined, the value from algod will be used. Only set this when you intentionally want this to be some time in the future |
-| `flatFee?` | `number` | The tranasction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction |
-| `lastValidRound?` | `number` | The last round this transaction is valid. It is recommended to use validityWindow instead |
-| `lease?` | `Uint8Array` | - |
-| `note?` | `Uint8Array` | - |
-| `rekeyTo?` | `string` | - |
-| `sender` | `string` | - |
-| `signer?` | `algosdk.TransactionSigner` | - |
-| `validityWindow?` | `number` | How many rounds the transaction should be valid for |
-
-#### Defined in
-
-[src/composer.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L4)
-
-___
-
-### KeyRegParams
-
-Ƭ **KeyRegParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `nonParticipation`: `boolean` ; `selectionKey?`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `number` ; `voteKey?`: `Uint8Array` ; `voteKeyDilution`: `number` ; `voteLast`: `number`  }
-
-#### Defined in
-
-[src/composer.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L63)
+Re-exports [CommonTxnParams](types_composer.md#commontxnparams)
 
 ___
 
 ### MethodCallParams
 
-Ƭ **MethodCallParams**: [`CommonTxnParams`](index.md#commontxnparams) & `Omit`\<[`AppCallParams`](index.md#appcallparams), ``"args"``\> & \{ `appID`: `number` ; `args?`: (`algosdk.ABIValue` \| `Txn`)[] ; `method`: `algosdk.ABIMethod`  }
+Re-exports [MethodCallParams](types_composer.md#methodcallparams)
 
-#### Defined in
+___
 
-[src/composer.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L100)
+### OnlineKeyRegParams
+
+Re-exports [OnlineKeyRegParams](types_composer.md#onlinekeyregparams)
 
 ___
 
 ### PayTxnParams
 
-Ƭ **PayTxnParams**: [`CommonTxnParams`](index.md#commontxnparams) & \{ `amount`: `number` ; `to`: `string`  }
-
-#### Defined in
-
-[src/composer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/composer.ts#L26)
+Re-exports [PayTxnParams](types_composer.md#paytxnparams)
 
 ## Variables
 
@@ -941,7 +909,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L127)
+[src/account/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L128)
 
 ___
 
@@ -963,7 +931,29 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L119)
+[src/account/account.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L120)
+
+___
+
+### getAccountAssetInformation
+
+▸ **getAccountAssetInformation**(`sender`, `assetId`, `algod`): `Promise`\<\{ `balance`: `bigint` ; `frozen`: `boolean` ; `round`: `bigint`  }\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) |
+| `assetId` | `bigint` |
+| `algod` | `default` |
+
+#### Returns
+
+`Promise`\<\{ `balance`: `bigint` ; `frozen`: `boolean` ; `round`: `bigint`  }\>
+
+#### Defined in
+
+[src/account/account.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L170)
 
 ___
 
@@ -997,6 +987,40 @@ environment variables
 #### Defined in
 
 [src/account/get-account-config-from-environment.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/get-account-config-from-environment.ts#L13)
+
+___
+
+### getAccountInformation
+
+▸ **getAccountInformation**(`sender`, `algod`): `Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+
+Returns the given sender account's current status, balance and spendable amounts.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The address of the sender/account to look up |
+| `algod` | `default` | - |
+
+#### Returns
+
+`Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+
+The account information
+
+**`Example`**
+
+```typescript
+const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+const accountInfo = await account.getInformation(address);
+```
+
+[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+
+#### Defined in
+
+[src/account/account.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L145)
 
 ___
 
@@ -2260,7 +2284,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/account/account.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L87)
+[src/account/account.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L88)
 
 ___
 
@@ -2285,7 +2309,7 @@ A multisig account wrapper
 
 #### Defined in
 
-[src/account/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L23)
+[src/account/account.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L24)
 
 ___
 
@@ -2460,7 +2484,7 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account/account.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L52)
+[src/account/account.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L53)
 
 ___
 
@@ -2518,7 +2542,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account/account.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L33)
+[src/account/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L34)
 
 ___
 
@@ -2788,7 +2812,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account/account.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L43)
+[src/account/account.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L44)
 
 ___
 
