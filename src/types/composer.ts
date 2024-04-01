@@ -190,6 +190,17 @@ type Txn =
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | (MethodCallParams & { type: 'methodCall' })
 
+export type AlgokitComposerParams = {
+  /** The algod client to use to get suggestedParams and send the transaction group */
+  algod: algosdk.Algodv2
+  /** The function used to get the TransactionSigner for a given address */
+  getSigner: (address: string) => algosdk.TransactionSigner
+  /** The method used to get SuggestedParams for transactions in the group */
+  getSuggestedParams?: () => Promise<algosdk.SuggestedParams>
+  /** How many rounds a transaction should be valid for by default */
+  defaultValidityWindow?: number
+}
+
 export default class AlgokitComposer {
   /** Map of txid to ABI method */
   private txnMethodMap: Map<string, algosdk.ABIMethod> = new Map()
@@ -212,23 +223,13 @@ export default class AlgokitComposer {
   /** The default transaction validity window */
   defaultValidityWindow = 10
 
-  constructor({
-    algod,
-    getSigner,
-    getSuggestedParams,
-    defaultValidityWindow,
-  }: {
-    algod: algosdk.Algodv2
-    getSigner: (address: string) => algosdk.TransactionSigner
-    getSuggestedParams?: () => Promise<algosdk.SuggestedParams>
-    defaultValidityWindow?: number
-  }) {
+  constructor(params: AlgokitComposerParams) {
     this.atc = new algosdk.AtomicTransactionComposer()
-    this.algod = algod
-    const defaultGetSendParams = () => algod.getTransactionParams().do()
-    this.getSuggestedParams = getSuggestedParams ?? defaultGetSendParams
-    this.getSigner = getSigner
-    this.defaultValidityWindow = defaultValidityWindow ?? this.defaultValidityWindow
+    this.algod = params.algod
+    const defaultGetSendParams = () => params.algod.getTransactionParams().do()
+    this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSendParams
+    this.getSigner = params.getSigner
+    this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
   }
 
   addPayment(params: PayTxnParams): AlgokitComposer {
