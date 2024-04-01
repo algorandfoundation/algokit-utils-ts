@@ -37,6 +37,8 @@ export type PayTxnParams = CommonTxnParams & {
   receiver: string
   /** Amount to send */
   amount: AlgoAmount
+  /** If given, close the sender account and send the remaining balance to this address */
+  closeRemainderTo?: string
 }
 
 export type AssetCreateParams = CommonTxnParams & {
@@ -416,6 +418,7 @@ export default class AlgokitComposer {
       from: params.sender,
       to: params.receiver,
       amount: params.amount.microAlgos,
+      closeRemainderTo: params.closeRemainderTo,
       suggestedParams,
     })
 
