@@ -48,13 +48,13 @@ export type AssetCreateParams = CommonTxnParams & {
   decimals?: number
   /** Whether the asset is frozen by default in the creator address */
   defaultFrozen?: boolean
-  /** The address that can change the manager, reserve, clawback, and freeze addresses */
+  /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
   manager?: string
   /** The address that holds the uncirculated supply */
   reserve?: string
-  /** The address that can freeze the asset in any account */
+  /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
   freeze?: string
-  /** The address that can clawback the asset from any account */
+  /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
   clawback?: string
   /** The short ticker name for the asset */
   unitName?: string
@@ -69,13 +69,13 @@ export type AssetCreateParams = CommonTxnParams & {
 export type AssetConfigParams = CommonTxnParams & {
   /** ID of the asset */
   assetId: bigint
-  /** The address that can change the manager, reserve, clawback, and freeze addresses */
+  /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
   manager?: string
   /** The address that holds the uncirculated supply */
   reserve?: string
-  /** The address that can freeze the asset in any account */
+  /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
   freeze?: string
-  /** The address that can clawback the asset from any account */
+  /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
   clawback?: string
 }
 
