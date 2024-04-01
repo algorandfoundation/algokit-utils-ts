@@ -93,15 +93,26 @@ export type AssetDestroyParams = CommonTxnParams & {
   assetId: bigint
 }
 
-export type KeyRegParams = CommonTxnParams & {
-  voteKey?: Uint8Array
-  selectionKey?: Uint8Array
+export type OnlineKeyRegParams = CommonTxnParams & {
+  /** The root participation public key */
+  voteKey: Uint8Array
+  /** The VRF public key */
+  selectionKey: Uint8Array
+  /** The first round that the participation key is valid. Not to be confused with the `firstValid` round of the keyreg transaction */
   voteFirst: bigint
+  /** The last round that the participation key is valid. Not to be confused with the `lastValid` round of the keyreg transaction */
   voteLast: bigint
+  /** This is the dilution for the 2-level participation key. It determines the interval (number of rounds) for generating new ephemeral keys */
   voteKeyDilution: bigint
-  nonParticipation: boolean
+  /** The 64 byte state proof public key commitment */
   stateProofKey?: Uint8Array
 }
+
+// Not yet exposed because of bug in algosdk
+// export type OfflineKeyRegParams = CommonTxnParams & {
+//   /** Prevent this account from ever participating again. On network with rewards enabled, also disable rewards for this account */
+//   preventAddressFromEverParticipatingAgain?: boolean
+// }
 
 export type AssetTransferParams = CommonTxnParams & {
   /** ID of the asset */
@@ -174,7 +185,7 @@ type Txn =
   | (AssetTransferParams & { type: 'assetTransfer' })
   | (AssetOptInParams & { type: 'assetOptIn' })
   | (AppCallParams & { type: 'appCall' })
-  | (KeyRegParams & { type: 'keyReg' })
+  | (OnlineKeyRegParams & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | (MethodCallParams & { type: 'methodCall' })
@@ -268,7 +279,7 @@ export default class AlgokitComposer {
     return this
   }
 
-  addKeyReg(params: KeyRegParams): AlgokitComposer {
+  addOnlineKeyReg(params: OnlineKeyRegParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'keyReg' })
 
     return this
@@ -528,38 +539,20 @@ export default class AlgokitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  private buildKeyReg(params: KeyRegParams, suggestedParams: algosdk.SuggestedParams) {
-    let txn: algosdk.Transaction
-
-    if (params.nonParticipation) {
-      txn = algosdk.makeKeyRegistrationTxnWithSuggestedParams(
-        params.sender,
-        params.note === undefined ? undefined : new Uint8Array(Buffer.from(params.note)),
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        suggestedParams,
-        params.rekeyTo,
-        true,
-        undefined,
-      )
-    } else {
-      txn = algosdk.makeKeyRegistrationTxnWithSuggestedParams(
-        params.sender,
-        params.note === undefined ? undefined : new Uint8Array(Buffer.from(params.note)),
-        params.voteKey!,
-        params.selectionKey!,
-        Number(params.voteFirst),
-        Number(params.voteLast),
-        Number(params.voteKeyDilution),
-        suggestedParams,
-        params.rekeyTo,
-        false,
-        params.stateProofKey,
-      )
-    }
+  private buildKeyReg(params: OnlineKeyRegParams, suggestedParams: algosdk.SuggestedParams) {
+    const txn = algosdk.makeKeyRegistrationTxnWithSuggestedParams(
+      params.sender,
+      params.note === undefined ? undefined : new Uint8Array(Buffer.from(params.note)),
+      params.voteKey,
+      params.selectionKey,
+      Number(params.voteFirst),
+      Number(params.voteLast),
+      Number(params.voteKeyDilution),
+      suggestedParams,
+      params.rekeyTo,
+      false,
+      params.stateProofKey,
+    )
 
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
