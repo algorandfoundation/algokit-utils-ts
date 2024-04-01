@@ -25,8 +25,7 @@ export class AccountManager {
 
   /**
    * Create a new account creator
-   * @param algod The algod client to use
-   * @param kmd The optional kmd client to use
+   * @param clientManager The ClientManager client to use for algod and kmd clients
    */
   constructor(clientManager: ClientManager) {
     this._clientManager = clientManager
