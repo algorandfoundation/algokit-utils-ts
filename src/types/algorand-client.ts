@@ -11,8 +11,8 @@ import AlgokitComposer, {
   AssetFreezeParams,
   AssetOptInParams,
   AssetTransferParams,
-  KeyRegParams,
   MethodCallParams,
+  OnlineKeyRegParams,
   PayTxnParams,
 } from './composer'
 import { AlgoConfig } from './network-client'
@@ -170,8 +170,8 @@ export class AlgorandClient {
     appCall: (params: AppCallParams) => {
       return unwrapSingleSendResult(this.newGroup().addAppCall(params).execute())
     },
-    keyReg: (params: KeyRegParams) => {
-      return unwrapSingleSendResult(this.newGroup().addKeyReg(params).execute())
+    onlineKeyReg: (params: OnlineKeyRegParams) => {
+      return unwrapSingleSendResult(this.newGroup().addOnlineKeyReg(params).execute())
     },
     methodCall: (params: MethodCallParams) => {
       return unwrapSingleSendResult(this.newGroup().addMethodCall(params).execute())
@@ -206,8 +206,8 @@ export class AlgorandClient {
     appCall: async (params: AppCallParams) => {
       return (await this.newGroup().addAppCall(params).buildGroup()).map((ts) => ts.txn)[0]
     },
-    keyReg: async (params: KeyRegParams) => {
-      return (await this.newGroup().addKeyReg(params).buildGroup()).map((ts) => ts.txn)[0]
+    onlineKeyReg: async (params: OnlineKeyRegParams) => {
+      return (await this.newGroup().addOnlineKeyReg(params).buildGroup()).map((ts) => ts.txn)[0]
     },
     methodCall: async (params: MethodCallParams) => {
       return (await this.newGroup().addMethodCall(params).buildGroup()).map((ts) => ts.txn)
