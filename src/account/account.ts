@@ -3,7 +3,7 @@ import { Config } from '../config'
 import { getOrCreateKmdWalletAccount } from '../localnet/get-or-create-kmd-wallet-account'
 import { isLocalNet } from '../localnet/is-localnet'
 import { getSenderAddress } from '../transaction/transaction'
-import { AccountInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
+import { AccountAssetInformation, AccountInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
 import { SendTransactionFrom } from '../types/transaction'
 import { getAccountConfigFromEnvironment } from './get-account-config-from-environment'
@@ -135,11 +135,12 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
  * @example
  * ```typescript
  * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
- * const accountInfo = await account.getInformation(address);
+ * const accountInfo = await account.getInformation(address, algod);
  * ```
  *
  * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
  * @param sender The address of the sender/account to look up
+ * @param algod The algod instance
  * @returns The account information
  */
 export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
@@ -167,10 +168,31 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
   }
 }
 
-export async function getAccountAssetInformation(sender: string | SendTransactionFrom, assetId: bigint, algod: Algodv2) {
+/**
+ * Returns the given sender account's asset holding for a given asset.
+ *
+ * @example
+ * ```typescript
+ * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+ * const assetId = 123345;
+ * const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
+ * ```
+ *
+ * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+ * @param sender The address of the sender/account to look up
+ * @param assetId The ID of the asset to return a holding for
+ * @param algod The algod instance
+ * @returns The account asset holding information
+ */
+export async function getAccountAssetInformation(
+  sender: string | SendTransactionFrom,
+  assetId: number | bigint,
+  algod: Algodv2,
+): Promise<AccountAssetInformation> {
   const info = await algod.accountAssetInformation(typeof sender === 'string' ? sender : getSenderAddress(sender), Number(assetId)).do()
 
   return {
+    assetId: BigInt(assetId),
     balance: BigInt(info['asset-holding']['amount']),
     frozen: info['asset-holding']['is-frozen'] === 'true',
     round: BigInt(info['round']),

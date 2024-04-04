@@ -71,6 +71,10 @@ export interface SendAtomicTransactionComposerResults extends SendTransactionRes
   txIds: string[]
   /** If ABI method(s) were called the processed return values */
   returns?: ABIReturn[]
+  /** The responses if the transactions were sent and waited for,
+   * the index of the confirmation will match the index of the underlying transaction
+   */
+  confirmations: modelsv2.PendingTransactionResponse[]
 }
 
 /** The result of sending and confirming a transaction */

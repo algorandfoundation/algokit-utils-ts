@@ -36,7 +36,7 @@ describe('deploy-app', () => {
     expect(app.updatable).toBe(creationMetadata.updatable)
     expect(app.deletable).toBe(creationMetadata.deletable)
     expect(app.version).toBe(creationMetadata.version)
-  })
+  }, 20_000)
 
   test('Latest created app is retrieved', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -51,7 +51,7 @@ describe('deploy-app', () => {
     expect(apps.apps[name].appId).not.toBe(app1.appId)
     expect(apps.apps[name].appId).not.toBe(app2.appId)
     expect(apps.apps[name].appId).toBe(app3.appId)
-  })
+  }, 20_000)
 
   test('Created, updated and deleted apps are retrieved by name with deployment metadata', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -91,7 +91,7 @@ describe('deploy-app', () => {
     const app3Data = apps.apps[name3]
     expect(app3Data.appId).toBe(app3.appId)
     expect(app3Data.deleted).toBe(true)
-  })
+  }, 20_000)
 
   test('Deploy new app', async () => {
     const { algod, indexer, testAccount } = localnet.context
@@ -120,7 +120,7 @@ describe('deploy-app', () => {
         apps: [result.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Fail to deploy immutable app without TMPL_UPDATABLE', async () => {
     const { algod, indexer, testAccount } = localnet.context
@@ -184,7 +184,7 @@ describe('deploy-app', () => {
         apps: [result1.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy update to immutable updated app fails', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -213,7 +213,7 @@ describe('deploy-app', () => {
         apps: [result1.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy failure for updated app fails if onupdate = Fail', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -246,7 +246,7 @@ describe('deploy-app', () => {
         apps: [result1.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy replacement to deletable, updated app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -288,7 +288,7 @@ describe('deploy-app', () => {
         apps: [result1.appId, result2.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy failure for replacement of permanent, updated app', async () => {
     algokit.Config.configure({ debug: false }) // Remove noise from snapshot
@@ -320,7 +320,7 @@ describe('deploy-app', () => {
         apps: [result1.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy replacement of deletable schema broken app', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -362,7 +362,7 @@ describe('deploy-app', () => {
         apps: [result1.appId, result2.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy replacement to schema broken, permanent app fails', async () => {
     algokit.Config.configure({ debug: false }) // Remove noise from snapshot
@@ -394,7 +394,7 @@ describe('deploy-app', () => {
         apps: [result1.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -427,7 +427,7 @@ describe('deploy-app', () => {
         apps: [result1.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Do nothing if deploying app with no changes', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -460,7 +460,7 @@ describe('deploy-app', () => {
         apps: [result.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy append for schema broken app if onSchemaBreak = AppendApp', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -500,7 +500,7 @@ describe('deploy-app', () => {
         apps: [result1.appId, result2.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 
   test('Deploy append for update app if onUpdate = AppendApp', async () => {
     const { algod, indexer, testAccount, waitForIndexer } = localnet.context
@@ -540,7 +540,7 @@ describe('deploy-app', () => {
         apps: [result1.appId, result2.appId],
       }),
     ).toMatchSnapshot()
-  })
+  }, 20_000)
 })
 
 test('Strip comments remove comments without removing commands', async () => {

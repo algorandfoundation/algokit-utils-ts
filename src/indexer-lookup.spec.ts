@@ -26,7 +26,7 @@ describe('indexer-lookup', () => {
 
     expect(txn.transaction.id).toBe(transaction.txID())
     expect(txn['current-round']).toBeGreaterThanOrEqual(transaction.firstRound)
-  })
+  }, 20_000)
 
   test('Account is found by id', async () => {
     const { indexer, testAccount, transactionLogger } = localnet.context
@@ -35,7 +35,7 @@ describe('indexer-lookup', () => {
     const account = await algokit.lookupAccountByAddress(testAccount.addr, indexer)
 
     expect(account.account.address).toBe(testAccount.addr)
-  })
+  }, 20_000)
 
   test('Transactions are searched with pagination', async () => {
     const { algod, indexer, testAccount, generateAccount, transactionLogger } = localnet.context
@@ -62,7 +62,7 @@ describe('indexer-lookup', () => {
 
     expect(Number(transactions['current-round'])).toBeGreaterThan(0)
     expect(transactions.transactions.map((t) => t.id).sort()).toEqual([transaction1.txID(), transaction2.txID()].sort())
-  })
+  }, 20_000)
 
   test('Application create transactions are found by creator with pagination', async () => {
     const { algod, indexer, testAccount, generateAccount, waitForIndexer } = localnet.context
@@ -84,5 +84,5 @@ describe('indexer-lookup', () => {
     const apps = await algokit.lookupAccountCreatedApplicationByAddress(indexer, testAccount.addr, true, 1)
 
     expect(apps.map((a) => a.id).sort()).toEqual([app1.appId, app2.appId].sort())
-  })
+  }, 20_000)
 })

@@ -26,15 +26,7 @@
 
 Ƭ **AppClientByCreatorAndNameDetails**: [`AppSpecAppDetailsBase`](types_app_client.md#appspecappdetailsbase) & [`AppDetailsBase`](types_app_client.md#appdetailsbase) & `Omit`\<[`ResolveAppByCreatorAndNameBase`](types_app_client.md#resolveappbycreatorandnamebase), ``"findExistingUsing"``\>
 
-#### Defined in
-
-[src/types/client-manager.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L139)
-
-___
-
-### AppClientByIdDetails
-
-Ƭ **AppClientByIdDetails**: [`AppSpecAppDetailsBase`](types_app_client.md#appspecappdetailsbase) & [`AppDetailsBase`](types_app_client.md#appdetailsbase) & [`ResolveAppByIdBase`](../interfaces/types_app_client.ResolveAppByIdBase.md)
+Details to resolve an app client by creator address and name.
 
 #### Defined in
 
@@ -42,13 +34,27 @@ ___
 
 ___
 
+### AppClientByIdDetails
+
+Ƭ **AppClientByIdDetails**: [`AppSpecAppDetailsBase`](types_app_client.md#appspecappdetailsbase) & [`AppDetailsBase`](types_app_client.md#appdetailsbase) & [`ResolveAppByIdBase`](../interfaces/types_app_client.ResolveAppByIdBase.md)
+
+Details to resolve an app client by app ID.
+
+#### Defined in
+
+[src/types/client-manager.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L157)
+
+___
+
 ### TypedAppClientByCreatorAndNameDetails
 
 Ƭ **TypedAppClientByCreatorAndNameDetails**: [`AppDetailsBase`](types_app_client.md#appdetailsbase) & `Omit`\<[`ResolveAppByCreatorAndNameBase`](types_app_client.md#resolveappbycreatorandnamebase), ``"findExistingUsing"``\>
 
+Details to resolve a typed app creator address and name.
+
 #### Defined in
 
-[src/types/client-manager.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L143)
+[src/types/client-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L152)
 
 ___
 
@@ -56,6 +62,8 @@ ___
 
 Ƭ **TypedAppClientByIdDetails**: [`AppDetailsBase`](types_app_client.md#appdetailsbase) & [`ResolveAppByIdBase`](../interfaces/types_app_client.ResolveAppByIdBase.md)
 
+Details to resolve a typed app by app ID.
+
 #### Defined in
 
-[src/types/client-manager.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L147)
+[src/types/client-manager.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L162)

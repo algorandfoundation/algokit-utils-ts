@@ -27,8 +27,6 @@ Testing framework agnostic handler method to run after each test to reset the lo
 
 ▸ (): `void`
 
-Testing framework agnostic handler method to run after each test to reset the logger.
-
 ##### Returns
 
 `void`
@@ -48,8 +46,6 @@ Testing framework agnostic handler method to run before each test to prepare the
 #### Type declaration
 
 ▸ (): `void`
-
-Testing framework agnostic handler method to run before each test to prepare the `testLogger` for that test.
 
 ##### Returns
 

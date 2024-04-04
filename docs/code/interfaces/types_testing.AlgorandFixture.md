@@ -29,8 +29,6 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 ▸ (): `Promise`\<`void`\>
 
-Testing framework agnostic handler method to run before each test to prepare the `context` for that test.
-
 ##### Returns
 
 `Promise`\<`void`\>

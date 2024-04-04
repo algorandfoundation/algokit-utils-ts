@@ -16,15 +16,16 @@ import { AccountInformation, SigningAccount, TransactionSignerAccount } from './
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
 import { SendTransactionFrom } from './transaction'
+import LogicSigAccount = algosdk.LogicSigAccount
 
-/** Creates and keeps track of signing accounts against sending addresses. */
+/** Creates and keeps track of signing accounts that can sign transactions for a sending address. */
 export class AccountManager {
   private _clientManager: ClientManager
   private _accounts: { [address: string]: TransactionSignerAccount } = {}
   private _defaultSigner?: algosdk.TransactionSigner
 
   /**
-   * Create a new account creator
+   * Create a new account manager.
    * @param clientManager The ClientManager client to use for algod and kmd clients
    */
   constructor(clientManager: ClientManager) {
@@ -33,6 +34,9 @@ export class AccountManager {
 
   /**
    * Sets the default signer to use if no other signer is specified.
+   *
+   * If this isn't set an a transaction needs signing for a given sender
+   * then an error will be thrown from `getSigner` / `getAccount`.
    * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
    * @returns The `AccountManager` so method calls can be chained
    */
@@ -42,9 +46,8 @@ export class AccountManager {
   }
 
   /**
-   * Records the given account against the address of the account for later retrieval and returns a `TransactionSignerAccount`.
-   * @param account The account to use.
-   * @returns A `TransactionSignerAccount` for the given account.
+   * Records the given account against the address of the account for later
+   * retrieval and returns a `TransactionSignerAccount`.
    */
   private signerAccount<T extends SendTransactionFrom>(account: T): TransactionSignerAccount & { account: T } {
     const acc = {
@@ -57,13 +60,12 @@ export class AccountManager {
 
   /**
    * Tracks the given account for later signing.
-   * @param account The account to register
-   * @returns The AccountCreator instance for method chaining
+   * @param account The account to register, which can be a `TransactionSignerAccount`
+   *  or any `SendTransactionFrom` compatible account object
+   * @returns The `AccountManager` instance for method chaining
    */
   public setSignerFromAccount(account: TransactionSignerAccount | SendTransactionFrom) {
-    const acc =
-      'signer' in account && 'addr' in account ? account : { signer: getSenderTransactionSigner(account), addr: getSenderAddress(account) }
-    this._accounts[acc.addr] = acc
+    this.signerAccount(account)
     return this
   }
 
@@ -71,7 +73,7 @@ export class AccountManager {
    * Tracks the given account for later signing.
    * @param sender The sender address to use this signer for
    * @param signer The signer to sign transactions with for the given sender
-   * @returns The AccountCreator instance for method chaining
+   * @returns The `AccountManager` instance for method chaining
    */
   public setSigner(sender: string, signer: algosdk.TransactionSigner) {
     this._accounts[sender] = { addr: sender, signer }
@@ -106,21 +108,36 @@ export class AccountManager {
   /**
    * Returns the given sender account's current status, balance and spendable amounts.
    *
+   * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
    * @example
    * ```typescript
    * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
-   * const accountInfo = await account.getInformation(address);
+   * const accountInfo = await accountManager.getInformation(address);
    * ```
    *
-   * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
-   * @param sender The address of the sender/account to look up
+   * @param sender The account / address to look up
    * @returns The account information
    */
   public async getInformation(sender: string | TransactionSignerAccount): Promise<AccountInformation> {
     return getAccountInformation(sender, this._clientManager.algod)
   }
 
-  public async getAssetInformation(sender: string | TransactionSignerAccount, assetId: bigint) {
+  /**
+   * Returns the given sender account's asset holding for a given asset.
+   *
+   * @example
+   * ```typescript
+   * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+   * const assetId = 123345;
+   * const accountInfo = await accountManager.getAccountAssetInformation(address, assetId);
+   * ```
+   *
+   * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+   * @param sender The address of the sender/account to look up
+   * @param assetId The ID of the asset to return a holding for
+   * @returns The account asset holding information
+   */
+  public async getAssetInformation(sender: string | TransactionSignerAccount, assetId: number | bigint) {
     return getAccountAssetInformation(sender, assetId, this._clientManager.algod)
   }
 
@@ -137,7 +154,7 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic = (mnemonicSecret: string, sender?: string) => {
+  public fromMnemonic(mnemonicSecret: string, sender?: string) {
     const account = mnemonicAccount(mnemonicSecret)
     return this.signerAccount(sender ? rekeyedAccount(account, sender) : account)
   }
@@ -169,14 +186,15 @@ export class AccountManager {
    * @param fundWith The optional amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
    * @returns The account
    */
-  public fromEnvironment = async (name: string, fundWith?: AlgoAmount) =>
+  public async fromEnvironment(name: string, fundWith?: AlgoAmount) {
     this.signerAccount(await mnemonicAccountFromEnvironment({ name, fundWith }, this._clientManager.algod, this._clientManager.kmd))
+  }
 
   /**
    * Tracks and returns an Algorand account with private key loaded from the given KMD wallet (identified by name).
    *
-   * @param name: The name of the wallet to retrieve an account from
-   * @param predicate: An optional filter to use to find the account (otherwise it will return a random account from the wallet)
+   * @param name The name of the wallet to retrieve an account from
+   * @param predicate An optional filter to use to find the account (otherwise it will return a random account from the wallet)
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @example Get default funded account in a LocalNet
    *
@@ -187,12 +205,12 @@ export class AccountManager {
    * ```
    * @returns The account
    */
-  public fromKmd = async (
+  public async fromKmd(
     name: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean,
     sender?: string,
-  ) => {
+  ) {
     const account = await getKmdWalletAccount({ name, predicate }, this._clientManager.algod, this._clientManager.kmd)
     if (!account) throw new Error(`Unable to find KMD account ${name}${predicate ? ' with predicate' : ''}`)
     return this.signerAccount(sender ? rekeyedAccount(account, sender) : account)
@@ -210,8 +228,23 @@ export class AccountManager {
    * @param signingAccounts The signers that are currently present
    * @returns A multisig account wrapper
    */
-  public multisig = (multisigParams: algosdk.MultisigMetadata, signingAccounts: (algosdk.Account | SigningAccount)[]) => {
+  public multisig(multisigParams: algosdk.MultisigMetadata, signingAccounts: (algosdk.Account | SigningAccount)[]) {
     return this.signerAccount(multisigAccount(multisigParams, signingAccounts))
+  }
+
+  /**
+   * Tracks and returns an account that represents a logic signature.
+   *
+   * @example
+   * ```typescript
+   * const account = await account.logicsig(program, [new Uint8Array(3, ...)])
+   * ```
+   * @param program The bytes that make up the compiled logic signature
+   * @param args The (binary) arguments to pass into the logic signature
+   * @returns A logic signature account wrapper
+   */
+  public logicsig(program: Uint8Array, args?: Array<Uint8Array>) {
+    this.signerAccount(new LogicSigAccount(program, args))
   }
 
   /**
@@ -223,7 +256,9 @@ export class AccountManager {
    * ```
    * @returns The account
    */
-  public random = () => this.signerAccount(randomAccount())
+  public random() {
+    this.signerAccount(randomAccount())
+  }
 
   /**
    * Returns an account (with private key loaded) that can act as a dispenser.
@@ -236,7 +271,9 @@ export class AccountManager {
    *  otherwise it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC.
    * @returns The account
    */
-  public dispenser = async () => this.signerAccount(await getDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
+  public async dispenser() {
+    this.signerAccount(await getDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
+  }
 
   /**
    * Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
@@ -247,6 +284,7 @@ export class AccountManager {
    * ```
    * @returns The account
    */
-  public localNetDispenser = async () =>
+  public async localNetDispenser() {
     this.signerAccount(await getLocalNetDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
+  }
 }

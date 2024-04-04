@@ -1,36 +1,21 @@
 import algosdk from 'algosdk'
+import { Config } from '..'
 import { getAlgoNodeConfig, getConfigFromEnvOrDefaults, getDefaultLocalNetConfig } from '../network-client'
 import { TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import AlgokitComposer, {
-  AppCallParams,
-  AssetConfigParams,
-  AssetCreateParams,
-  AssetDestroyParams,
-  AssetFreezeParams,
-  AssetOptInParams,
-  AssetTransferParams,
-  MethodCallParams,
-  OnlineKeyRegParams,
-  PayTxnParams,
-} from './composer'
+import AlgokitComposer, { ExecuteParams, MethodCallParams } from './composer'
 import { AlgoConfig } from './network-client'
-import { SendAtomicTransactionComposerResults, SendTransactionFrom } from './transaction'
+import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults, SendTransactionFrom } from './transaction'
+import Transaction = algosdk.Transaction
 
-async function unwrapSingleSendResult(results: Promise<SendAtomicTransactionComposerResults>) {
-  const result = await results
+/** Result from sending a single transaction. */
+export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
 
-  return {
-    // Last item covers when a group is created by an app call with ABI transaction parameters
-    transaction: result.transactions[result.transactions.length - 1],
-    confirmation: result.confirmations![result.confirmations!.length - 1],
-    txId: result.txIds[0],
-    ...result,
-  }
-}
-
-/** A client that brokers easy access to Algorand functionality. */
+/** A client that brokers easy access to Algorand functionality.
+ *
+ * Note: this class is a new Beta feature and may be subject to change.
+ */
 export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
@@ -145,76 +130,143 @@ export class AlgorandClient {
     })
   }
 
+  private _send<T>(
+    c: (c: AlgokitComposer) => (params: T) => AlgokitComposer,
+    log?: {
+      preLog?: (params: T, transaction: Transaction) => string
+      postLog?: (params: T, result: SendSingleTransactionResult) => string
+    },
+  ): (params: T, config?: ExecuteParams) => Promise<SendSingleTransactionResult> {
+    return async (params, config) => {
+      const composer = this.newGroup()
+
+      // Ensure `this` is properly populated
+      c(composer).apply(composer, [params])
+
+      if (log?.preLog) {
+        const transaction = (await composer.buildGroup()).pop()!.txn
+        Config.getLogger(config?.suppressLog).debug(log.preLog(params, transaction))
+      }
+
+      const rawResult = await composer.execute(config)
+      const result = {
+        // Last item covers when a group is created by an app call with ABI transaction parameters
+        transaction: rawResult.transactions[rawResult.transactions.length - 1],
+        confirmation: rawResult.confirmations![rawResult.confirmations!.length - 1],
+        txId: rawResult.txIds[0],
+        ...rawResult,
+      }
+
+      if (log?.postLog) {
+        Config.getLogger(config?.suppressLog).debug(log.postLog(params, result))
+      }
+
+      return result
+    }
+  }
+
   /**
-   * Methods for sending a transaction
+   * Methods for sending a single transaction.
    */
   send = {
-    payment: (params: PayTxnParams) => {
-      return unwrapSingleSendResult(this.newGroup().addPayment(params).execute())
-    },
-    assetCreate: (params: AssetCreateParams) => {
-      return unwrapSingleSendResult(this.newGroup().addAssetCreate(params).execute())
-    },
-    assetConfig: (params: AssetConfigParams) => {
-      return unwrapSingleSendResult(this.newGroup().addAssetConfig(params).execute())
-    },
-    assetFreeze: (params: AssetFreezeParams) => {
-      return unwrapSingleSendResult(this.newGroup().addAssetFreeze(params).execute())
-    },
-    assetDestroy: (params: AssetDestroyParams) => {
-      return unwrapSingleSendResult(this.newGroup().addAssetDestroy(params).execute())
-    },
-    assetTransfer: (params: AssetTransferParams) => {
-      return unwrapSingleSendResult(this.newGroup().addAssetTransfer(params).execute())
-    },
-    appCall: (params: AppCallParams) => {
-      return unwrapSingleSendResult(this.newGroup().addAppCall(params).execute())
-    },
-    onlineKeyReg: (params: OnlineKeyRegParams) => {
-      return unwrapSingleSendResult(this.newGroup().addOnlineKeyReg(params).execute())
-    },
-    methodCall: (params: MethodCallParams) => {
-      return unwrapSingleSendResult(this.newGroup().addMethodCall(params).execute())
-    },
-    assetOptIn: (params: AssetOptInParams) => {
-      return unwrapSingleSendResult(this.newGroup().addAssetOptIn(params).execute())
-    },
+    /**
+     * Send a payment transaction.
+     */
+    payment: this._send((c) => c.addPayment, {
+      preLog: (params, transaction) =>
+        `Sending ${params.amount.microAlgos} µALGOs from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+    }),
+    /**
+     * Create an asset.
+     */
+    assetCreate: this._send((c) => c.addAssetCreate, {
+      postLog: (params, result) =>
+        `Created asset${params.assetName ? ` ${params.assetName} ` : ''}${params.unitName ? ` (${params.unitName}) ` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
+    }),
+    /**
+     * Configure an existing asset.
+     */
+    assetConfig: this._send((c) => c.addAssetConfig, {
+      preLog: (params, transaction) => `Configuring asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    }),
+    /**
+     * Freeze or unfreeze an asset.
+     */
+    assetFreeze: this._send((c) => c.addAssetFreeze, {
+      preLog: (params, transaction) => `Freezing asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    }),
+    /**
+     * Destroy an asset.
+     */
+    assetDestroy: this._send((c) => c.addAssetDestroy, {
+      preLog: (params, transaction) => `Destroying asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    }),
+    /**
+     * Transfer an asset.
+     */
+    assetTransfer: this._send((c) => c.addAssetTransfer, {
+      preLog: (params, transaction) =>
+        `Transferring ${params.amount} units of asset with ID ${params.assetId} from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+    }),
+    /**
+     * Opt an account into an asset.
+     */
+    assetOptIn: this._send((c) => c.addAssetOptIn, {
+      preLog: (params, transaction) =>
+        `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    }),
+    /**
+     * Call a smart contract.
+     *
+     * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+     */
+    appCall: this._send((c) => c.addAppCall),
+    /**
+     * Call a smart contract ABI method.
+     *
+     * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+     */
+    methodCall: this._send((c) => c.addMethodCall),
+    /** Register an online key. */
+    onlineKeyRegistration: this._send((c) => c.addOnlineKeyRegistration, {
+      preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${transaction.txID()}`,
+    }),
+  }
+
+  private _transaction<T>(c: (c: AlgokitComposer) => (params: T) => AlgokitComposer): (params: T) => Promise<Transaction> {
+    return async (params: T) => {
+      const composer = this.newGroup()
+      const result = await c(composer).apply(composer, [params]).buildGroup()
+      return result.map((ts) => ts.txn)[0]
+    }
   }
 
   /**
    * Methods for building transactions
    */
   transactions = {
-    payment: async (params: PayTxnParams) => {
-      return (await this.newGroup().addPayment(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
-    assetCreate: async (params: AssetCreateParams) => {
-      return (await this.newGroup().addAssetCreate(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
-    assetConfig: async (params: AssetConfigParams) => {
-      return (await this.newGroup().addAssetConfig(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
-    assetFreeze: async (params: AssetFreezeParams) => {
-      return (await this.newGroup().addAssetFreeze(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
-    assetDestroy: async (params: AssetDestroyParams) => {
-      return (await this.newGroup().addAssetDestroy(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
-    assetTransfer: async (params: AssetTransferParams) => {
-      return (await this.newGroup().addAssetTransfer(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
-    appCall: async (params: AppCallParams) => {
-      return (await this.newGroup().addAppCall(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
-    onlineKeyReg: async (params: OnlineKeyRegParams) => {
-      return (await this.newGroup().addOnlineKeyReg(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
+    /** Create a payment transaction. */
+    payment: this._transaction((c) => c.addPayment),
+    /** Create an asset creation transaction. */
+    assetCreate: this._transaction((c) => c.addAssetCreate),
+    /** Create an asset config transaction. */
+    assetConfig: this._transaction((c) => c.addAssetConfig),
+    /** Create an asset freeze transaction. */
+    assetFreeze: this._transaction((c) => c.addAssetFreeze),
+    /** Create an asset destroy transaction. */
+    assetDestroy: this._transaction((c) => c.addAssetDestroy),
+    /** Create an asset transfer transaction. */
+    assetTransfer: this._transaction((c) => c.addAssetTransfer),
+    /** Create an asset opt-in transaction. */
+    assetOptIn: this._transaction((c) => c.addAssetOptIn),
+    /** Create an application call transaction. */
+    appCall: this._transaction((c) => c.addAppCall),
+    /** Create an application call with ABI method call transaction. */
     methodCall: async (params: MethodCallParams) => {
       return (await this.newGroup().addMethodCall(params).buildGroup()).map((ts) => ts.txn)
     },
-    assetOptIn: async (params: AssetOptInParams) => {
-      return (await this.newGroup().addAssetOptIn(params).buildGroup()).map((ts) => ts.txn)[0]
-    },
+    /** Create an online key registration transaction. */
+    onlineKeyRegistration: this._transaction((c) => c.addOnlineKeyRegistration),
   }
 
   // Static methods to create an `AlgorandClient`
