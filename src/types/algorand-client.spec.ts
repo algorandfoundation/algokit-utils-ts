@@ -4,6 +4,7 @@ import * as algokit from '../index'
 import { algorandFixture } from '../testing'
 import { TransactionSignerAccount } from './account'
 import AlgorandClient from './algorand-client'
+import { MethodCallParams } from './composer'
 
 describe('AlgorandClient', () => {
   let algorand: AlgorandClient
@@ -28,7 +29,7 @@ describe('AlgorandClient', () => {
 
     const app = await appClient.create.createApplication({})
     appId = BigInt(app.appId)
-  })
+  }, 10_000)
 
   test('sendPayment', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).amount
@@ -98,7 +99,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) }],
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) })],
     }
 
     const txnRes = await algorand
@@ -111,12 +112,11 @@ describe('AlgorandClient', () => {
   })
 
   test('method with method call arg', async () => {
-    const helloWorldParams = {
-      type: 'methodCall' as const,
+    const helloWorldCall = {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('helloWorld')!,
-    }
+    } satisfies MethodCallParams
 
     const methodArgRes = await algorand
       .newGroup()
@@ -124,7 +124,7 @@ describe('AlgorandClient', () => {
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('methodArg')!,
-        args: [helloWorldParams],
+        args: [helloWorldCall],
       })
       .execute()
 
@@ -133,12 +133,12 @@ describe('AlgorandClient', () => {
   })
 
   test('method with method call arg that has a txn arg', async () => {
-    const txnArgParams = {
+    const txnArgCall = {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) }],
-    }
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) })],
+    } satisfies MethodCallParams
 
     const nestedTxnArgRes = await algorand
       .newGroup()
@@ -146,7 +146,7 @@ describe('AlgorandClient', () => {
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('nestedTxnArg')!,
-        args: [{ type: 'methodCall', ...txnArgParams }],
+        args: [txnArgCall],
       })
       .execute()
 
@@ -155,21 +155,20 @@ describe('AlgorandClient', () => {
   })
 
   test('method with two method call args that each have a txn arg', async () => {
-    const txnArgParams = {
+    const firstTxnCall = {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) }],
-    }
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) })],
+    } satisfies MethodCallParams
 
-    const secondTxnArgParams = {
-      type: 'methodCall' as const,
+    const secondTxnCall = {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [{ type: 'pay' as const, sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(1) }],
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(1) })],
       note: new Uint8Array([1]),
-    }
+    } satisfies MethodCallParams
 
     const doubleNestedTxnArgRes = await algorand
       .newGroup()
@@ -177,7 +176,7 @@ describe('AlgorandClient', () => {
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('doubleNestedTxnArg')!,
-        args: [{ type: 'methodCall', ...txnArgParams }, secondTxnArgParams],
+        args: [firstTxnCall, secondTxnCall],
       })
       .execute()
 

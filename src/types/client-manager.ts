@@ -132,16 +132,31 @@ export class ClientManager {
   }
 }
 
+/**
+ * Interface to identify a typed client that can be used to interact with an application.
+ */
 export interface TypedAppClient<TClient> {
   new (details: AppDetails, algod: algosdk.Algodv2): TClient
 }
 
+/**
+ * Details to resolve an app client by creator address and name.
+ */
 export type AppClientByCreatorAndNameDetails = AppSpecAppDetailsBase &
   AppDetailsBase &
   Omit<ResolveAppByCreatorAndNameBase, 'findExistingUsing'>
 
+/**
+ * Details to resolve a typed app creator address and name.
+ */
 export type TypedAppClientByCreatorAndNameDetails = AppDetailsBase & Omit<ResolveAppByCreatorAndNameBase, 'findExistingUsing'>
 
+/**
+ * Details to resolve an app client by app ID.
+ */
 export type AppClientByIdDetails = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByIdBase
 
+/**
+ * Details to resolve a typed app by app ID.
+ */
 export type TypedAppClientByIdDetails = AppDetailsBase & ResolveAppByIdBase

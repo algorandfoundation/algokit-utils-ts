@@ -4,6 +4,8 @@
 
 [types/client-manager](../modules/types_client_manager.md).TypedAppClient
 
+Interface to identify a typed client that can be used to interact with an application.
+
 ## Type parameters
 
 | Name |
@@ -35,4 +37,4 @@
 
 #### Defined in
 
-[src/types/client-manager.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L136)
+[src/types/client-manager.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L139)

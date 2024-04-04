@@ -4,22 +4,6 @@
 
 ## Table of contents
 
-### References
-
-- [AlgokitComposerParams](index.md#algokitcomposerparams)
-- [AlgorandClient](index.md#algorandclient)
-- [AppCallParams](index.md#appcallparams)
-- [AssetConfigParams](index.md#assetconfigparams)
-- [AssetCreateParams](index.md#assetcreateparams)
-- [AssetDestroyParams](index.md#assetdestroyparams)
-- [AssetFreezeParams](index.md#assetfreezeparams)
-- [AssetOptInParams](index.md#assetoptinparams)
-- [AssetTransferParams](index.md#assettransferparams)
-- [CommonTxnParams](index.md#commontxnparams)
-- [MethodCallParams](index.md#methodcallparams)
-- [OnlineKeyRegParams](index.md#onlinekeyregparams)
-- [PayTxnParams](index.md#paytxnparams)
-
 ### Variables
 
 - [Config](index.md#config)
@@ -123,84 +107,6 @@
 - [transferAsset](index.md#transferasset)
 - [updateApp](index.md#updateapp)
 - [waitForConfirmation](index.md#waitforconfirmation)
-
-## References
-
-### AlgokitComposerParams
-
-Re-exports [AlgokitComposerParams](types_composer.md#algokitcomposerparams)
-
-___
-
-### AlgorandClient
-
-Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
-
-___
-
-### AppCallParams
-
-Re-exports [AppCallParams](types_composer.md#appcallparams)
-
-___
-
-### AssetConfigParams
-
-Re-exports [AssetConfigParams](types_composer.md#assetconfigparams)
-
-___
-
-### AssetCreateParams
-
-Re-exports [AssetCreateParams](types_composer.md#assetcreateparams)
-
-___
-
-### AssetDestroyParams
-
-Re-exports [AssetDestroyParams](types_composer.md#assetdestroyparams)
-
-___
-
-### AssetFreezeParams
-
-Re-exports [AssetFreezeParams](types_composer.md#assetfreezeparams)
-
-___
-
-### AssetOptInParams
-
-Re-exports [AssetOptInParams](types_composer.md#assetoptinparams)
-
-___
-
-### AssetTransferParams
-
-Re-exports [AssetTransferParams](types_composer.md#assettransferparams)
-
-___
-
-### CommonTxnParams
-
-Re-exports [CommonTxnParams](types_composer.md#commontxnparams)
-
-___
-
-### MethodCallParams
-
-Re-exports [MethodCallParams](types_composer.md#methodcallparams)
-
-___
-
-### OnlineKeyRegParams
-
-Re-exports [OnlineKeyRegParams](types_composer.md#onlinekeyregparams)
-
-___
-
-### PayTxnParams
-
-Re-exports [PayTxnParams](types_composer.md#paytxnparams)
 
 ## Variables
 
@@ -937,23 +843,37 @@ ___
 
 ### getAccountAssetInformation
 
-▸ **getAccountAssetInformation**(`sender`, `assetId`, `algod`): `Promise`\<\{ `balance`: `bigint` ; `frozen`: `boolean` ; `round`: `bigint`  }\>
+▸ **getAccountAssetInformation**(`sender`, `assetId`, `algod`): `Promise`\<[`AccountAssetInformation`](types_account.md#accountassetinformation)\>
+
+Returns the given sender account's asset holding for a given asset.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) |
-| `assetId` | `bigint` |
-| `algod` | `default` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The address of the sender/account to look up |
+| `assetId` | `number` \| `bigint` | The ID of the asset to return a holding for |
+| `algod` | `default` | The algod instance |
 
 #### Returns
 
-`Promise`\<\{ `balance`: `bigint` ; `frozen`: `boolean` ; `round`: `bigint`  }\>
+`Promise`\<[`AccountAssetInformation`](types_account.md#accountassetinformation)\>
+
+The account asset holding information
+
+**`Example`**
+
+```typescript
+const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+const assetId = 123345;
+const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
+```
+
+[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
 
 #### Defined in
 
-[src/account/account.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L170)
+[src/account/account.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L187)
 
 ___
 
@@ -1001,7 +921,7 @@ Returns the given sender account's current status, balance and spendable amounts
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The address of the sender/account to look up |
-| `algod` | `default` | - |
+| `algod` | `default` | The algod instance |
 
 #### Returns
 
@@ -1013,14 +933,14 @@ The account information
 
 ```typescript
 const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
-const accountInfo = await account.getInformation(address);
+const accountInfo = await account.getInformation(address, algod);
 ```
 
 [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
 
 #### Defined in
 
-[src/account/account.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L145)
+[src/account/account.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L146)
 
 ___
 

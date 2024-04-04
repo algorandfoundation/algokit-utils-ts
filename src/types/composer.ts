@@ -1,15 +1,36 @@
 import algosdk from 'algosdk'
-import { sendAtomicTransactionComposer } from '../transaction/transaction'
+import { encodeLease, encodeTransactionNote, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
+import { SendAtomicTransactionComposerResults } from './transaction'
+import Transaction = algosdk.Transaction
+import TransactionWithSigner = algosdk.TransactionWithSigner
+import isTransactionWithSigner = algosdk.isTransactionWithSigner
+import encodeAddress = algosdk.encodeAddress
 
-export type CommonTxnParams = {
+/** Transaction parameter that provides an account address. */
+export type AccountAddressParam = string
+
+/** Transaction parameter that provides a round number. */
+export type RoundNumberParam = bigint
+
+/** Transaction parameter that provides an asset amount. */
+export type AssetAmountParam = bigint
+
+/** Transaction parameter that provides an asset ID. */
+export type AssetIdParam = bigint
+
+/** Transaction parameter that provides an application ID. */
+export type AppIdParam = bigint
+
+/** Common parameters for defining a transaction. */
+export type CommonTransactionParams = {
   /** The address sending the transaction */
-  sender: string
+  sender: AccountAddressParam
   /** The function used to sign transactions */
   signer?: algosdk.TransactionSigner | TransactionSignerAccount
   /** Change the signing key of the sender to the given address */
-  rekeyTo?: string
+  rekeyTo?: AccountAddressParam
   /** Note to attach to the transaction*/
   note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window */
@@ -27,35 +48,37 @@ export type CommonTxnParams = {
    * If left undefined, the value from algod will be used.
    * Only set this when you intentionally want this to be some time in the future
    */
-  firstValidRound?: bigint
+  firstValidRound?: RoundNumberParam
   /** The last round this transaction is valid. It is recommended to use validityWindow instead */
-  lastValidRound?: bigint
+  lastValidRound?: RoundNumberParam
 }
 
-export type PayTxnParams = CommonTxnParams & {
+/** Parameters to define a payment transaction. */
+export type PaymentParams = CommonTransactionParams & {
   /** That account that will receive the ALGO */
-  receiver: string
+  receiver: AccountAddressParam
   /** Amount to send */
   amount: AlgoAmount
   /** If given, close the sender account and send the remaining balance to this address */
-  closeRemainderTo?: string
+  closeRemainderTo?: AccountAddressParam
 }
 
-export type AssetCreateParams = CommonTxnParams & {
+/** Parameters to define an asset create transaction. */
+export type AssetCreateParams = CommonTransactionParams & {
   /** The total amount of the smallest divisible unit to create */
-  total: bigint
+  total: AssetAmountParam
   /** The amount of decimal places the asset should have */
   decimals?: number
   /** Whether the asset is frozen by default in the creator address */
   defaultFrozen?: boolean
   /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
-  manager?: string
+  manager?: AccountAddressParam
   /** The address that holds the uncirculated supply */
-  reserve?: string
+  reserve?: AccountAddressParam
   /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
-  freeze?: string
+  freeze?: AccountAddressParam
   /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
-  clawback?: string
+  clawback?: AccountAddressParam
   /** The short ticker name for the asset */
   unitName?: string
   /** The full name of the asset */
@@ -66,77 +89,84 @@ export type AssetCreateParams = CommonTxnParams & {
   metadataHash?: Uint8Array
 }
 
-export type AssetConfigParams = CommonTxnParams & {
+/** Parameters to define an asset config transaction. */
+export type AssetConfigParams = CommonTransactionParams & {
   /** ID of the asset */
-  assetId: bigint
+  assetId: AssetIdParam
   /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
-  manager?: string
+  manager?: AccountAddressParam
   /** The address that holds the uncirculated supply */
-  reserve?: string
+  reserve?: AccountAddressParam
   /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
-  freeze?: string
+  freeze?: AccountAddressParam
   /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
-  clawback?: string
+  clawback?: AccountAddressParam
 }
 
-export type AssetFreezeParams = CommonTxnParams & {
+/** Parameters to define an asset freeze transaction. */
+export type AssetFreezeParams = CommonTransactionParams & {
   /** The ID of the asset */
-  assetId: bigint
+  assetId: AssetIdParam
   /** The account to freeze or unfreeze */
-  account: string
+  account: AccountAddressParam
   /** Whether the assets in the account should be frozen */
   frozen: boolean
 }
 
-export type AssetDestroyParams = CommonTxnParams & {
+/** Parameters to define an asset destroy transaction. */
+export type AssetDestroyParams = CommonTransactionParams & {
   /** ID of the asset */
-  assetId: bigint
+  assetId: AssetIdParam
 }
 
-export type OnlineKeyRegParams = CommonTxnParams & {
+/** Parameters to define an asset transfer transaction. */
+export type AssetTransferParams = CommonTransactionParams & {
+  /** ID of the asset */
+  assetId: AssetIdParam
+  /** Amount of the asset to transfer (smallest divisible unit) */
+  amount: AssetAmountParam
+  /** The account to send the asset to */
+  receiver: AccountAddressParam
+  /** The account to take the asset from */
+  clawbackTarget?: AccountAddressParam
+  /** The account to close the asset to */
+  closeAssetTo?: AccountAddressParam
+}
+
+/** Parameters to define an asset opt-in transaction. */
+export type AssetOptInParams = CommonTransactionParams & {
+  /** ID of the asset */
+  assetId: AssetIdParam
+}
+
+/** Parameters to define an online key registration transaction. */
+export type OnlineKeyRegistrationParams = CommonTransactionParams & {
   /** The root participation public key */
   voteKey: Uint8Array
   /** The VRF public key */
   selectionKey: Uint8Array
   /** The first round that the participation key is valid. Not to be confused with the `firstValid` round of the keyreg transaction */
-  voteFirst: bigint
+  voteFirst: RoundNumberParam
   /** The last round that the participation key is valid. Not to be confused with the `lastValid` round of the keyreg transaction */
-  voteLast: bigint
+  voteLast: RoundNumberParam
   /** This is the dilution for the 2-level participation key. It determines the interval (number of rounds) for generating new ephemeral keys */
-  voteKeyDilution: bigint
+  voteKeyDilution: RoundNumberParam
   /** The 64 byte state proof public key commitment */
   stateProofKey?: Uint8Array
 }
 
 // Not yet exposed because of bug in algosdk
-// export type OfflineKeyRegParams = CommonTxnParams & {
+// export type OfflineKeyRegistrationParams = CommonTransactionParams & {
 //   /** Prevent this account from ever participating again. On network with rewards enabled, also disable rewards for this account */
 //   preventAddressFromEverParticipatingAgain?: boolean
 // }
 
-export type AssetTransferParams = CommonTxnParams & {
-  /** ID of the asset */
-  assetId: bigint
-  /** Amount of the asset to transfer (smallest divisible unit) */
-  amount: bigint
-  /** The account to send the asset to */
-  receiver: string
-  /** The account to take the asset from */
-  clawbackTarget?: string
-  /** The account to close the asset to */
-  closeAssetTo?: string
-}
-
-export type AssetOptInParams = CommonTxnParams & {
-  /** ID of the asset */
-  assetId: bigint
-}
-
-export type AppCallParams = CommonTxnParams & {
+/** Parameters to define an application call transaction. */
+export type AppCallParams = CommonTransactionParams & {
   /** The [OnComplete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) */
   onComplete?: algosdk.OnApplicationComplete
   /** ID of the application */
-  appId?: bigint
+  appId?: AppIdParam
   /** The program to execute for all OnCompletes other than ClearState */
   approvalProgram?: Uint8Array
   /** The program to execute for ClearState OnComplete */
@@ -155,29 +185,36 @@ export type AppCallParams = CommonTxnParams & {
   /** Application arguments */
   args?: Uint8Array[]
   /** Account references */
-  accountReferences?: string[]
+  accountReferences?: AccountAddressParam[]
   /** App references */
-  appReferences?: bigint[]
+  appReferences?: AppIdParam[]
   /** Asset references */
-  assetReferences?: bigint[]
+  assetReferences?: AssetIdParam[]
   /** Number of extra pages required for the programs */
   extraPages?: number
   /** Box references */
   boxReferences?: algosdk.BoxReference[]
 }
 
-export type MethodCallParams = CommonTxnParams &
+/** Parameters to define an ABI method application call transaction. */
+export type MethodCallParams = CommonTransactionParams &
   Omit<AppCallParams, 'args'> & {
     /** ID of the application */
-    appId: bigint
+    appId: AppIdParam
     /** The ABI method to call */
     method: algosdk.ABIMethod
-    /** Arguments to the ABI method */
-    args?: (algosdk.ABIValue | Txn)[]
+    /** Arguments to the ABI method, either:
+     * * An ABI value
+     * * A transaction with explcit signer
+     * * A transaction (where the signer will be automatically assigned)
+     * * An unawaited transaction (e.g. from algorand.transactions.transactionType())
+     * * Another method call (via method call params object)
+     */
+    args?: (algosdk.ABIValue | TransactionWithSigner | Transaction | Promise<Transaction> | MethodCallParams)[]
   }
 
 type Txn =
-  | (PayTxnParams & { type: 'pay' })
+  | (PaymentParams & { type: 'pay' })
   | (AssetCreateParams & { type: 'assetCreate' })
   | (AssetConfigParams & { type: 'assetConfig' })
   | (AssetFreezeParams & { type: 'assetFreeze' })
@@ -185,11 +222,20 @@ type Txn =
   | (AssetTransferParams & { type: 'assetTransfer' })
   | (AssetOptInParams & { type: 'assetOptIn' })
   | (AppCallParams & { type: 'appCall' })
-  | (OnlineKeyRegParams & { type: 'keyReg' })
+  | (OnlineKeyRegistrationParams & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | (MethodCallParams & { type: 'methodCall' })
 
+/** Parameters to configure transaction execution. */
+export interface ExecuteParams {
+  /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
+  maxRoundsToWaitForConfirmation?: number
+  /** Whether to suppress log messages from transaction send, default: do not suppress */
+  suppressLog?: boolean
+}
+
+/** Parameters to create an `AlgokitComposer`. */
 export type AlgokitComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: algosdk.Algodv2
@@ -201,6 +247,10 @@ export type AlgokitComposerParams = {
   defaultValidityWindow?: number
 }
 
+/** AlgoKit Composer helps you compose and execute transactions as a transaction group.
+ *
+ * Note: this class is a new Beta feature and may be subject to change.
+ */
 export default class AlgokitComposer {
   /** Map of txid to ABI method */
   private txnMethodMap: Map<string, algosdk.ABIMethod> = new Map()
@@ -208,91 +258,150 @@ export default class AlgokitComposer {
   /** Transactions that have not yet been composed */
   private txns: Txn[] = []
 
-  /** The underlying AtomicTransactionComposer */
-  atc: algosdk.AtomicTransactionComposer
+  /** The algod client used by the composer. */
+  private algod: algosdk.Algodv2
 
-  /** The algod client used by the composer for suggestedParams */
-  algod: algosdk.Algodv2
+  /** An async function that will return suggestedParams. */
+  private getSuggestedParams: () => Promise<algosdk.SuggestedParams>
 
-  /** An async function that will return suggestedParams */
-  getSuggestedParams: () => Promise<algosdk.SuggestedParams>
-
-  /** A function that takes in an address and return a signer function for that address */
-  getSigner: (address: string) => algosdk.TransactionSigner
+  /** A function that takes in an address and return a signer function for that address. */
+  private getSigner: (address: string) => algosdk.TransactionSigner
 
   /** The default transaction validity window */
-  defaultValidityWindow = 10
+  private defaultValidityWindow = 10
 
+  /**
+   * Create an `AlgoKitComposer`.
+   * @param params The configuration for this composer
+   */
   constructor(params: AlgokitComposerParams) {
-    this.atc = new algosdk.AtomicTransactionComposer()
     this.algod = params.algod
-    const defaultGetSendParams = () => params.algod.getTransactionParams().do()
-    this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSendParams
+    const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
+    this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
   }
 
-  addPayment(params: PayTxnParams): AlgokitComposer {
+  /**
+   * Add a payment transaction to the transaction group.
+   * @param params The payment transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addPayment(params: PaymentParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'pay' })
 
     return this
   }
 
+  /**
+   * Add an asset create transaction to the transaction group.
+   * @param params The asset create transaction parameters
+   * @returns The composer so you can chain method calls
+   */
   addAssetCreate(params: AssetCreateParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetCreate' })
 
     return this
   }
 
+  /**
+   * Add an asset config transaction to the transaction group.
+   * @param params The asset config transaction parameters
+   * @returns The composer so you can chain method calls
+   */
   addAssetConfig(params: AssetConfigParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetConfig' })
 
     return this
   }
 
+  /**
+   * Add an asset freeze transaction to the transaction group.
+   * @param params The asset freeze transaction parameters
+   * @returns The composer so you can chain method calls
+   */
   addAssetFreeze(params: AssetFreezeParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetFreeze' })
 
     return this
   }
 
+  /**
+   * Add an asset destroy transaction to the transaction group.
+   * @param params The asset destroy transaction parameters
+   * @returns The composer so you can chain method calls
+   */
   addAssetDestroy(params: AssetDestroyParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetDestroy' })
 
     return this
   }
 
+  /**
+   * Add an asset transfer transaction to the transaction group.
+   * @param params The asset transfer transaction parameters
+   * @returns The composer so you can chain method calls
+   */
   addAssetTransfer(params: AssetTransferParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetTransfer' })
 
     return this
   }
 
+  /**
+   * Add an asset opt-in transaction to the transaction group.
+   * @param params The asset opt-in transaction parameters
+   * @returns The composer so you can chain method calls
+   */
   addAssetOptIn(params: AssetOptInParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetOptIn' })
 
     return this
   }
 
+  /**
+   * Add an application call transaction to the transaction group.
+   *
+   * Note: we recommend using app clients to make it easier to make app calls.
+   * @param params The application call transaction parameters
+   * @returns The composer so you can chain method calls
+   */
   addAppCall(params: AppCallParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'appCall' })
 
     return this
   }
 
-  addOnlineKeyReg(params: OnlineKeyRegParams): AlgokitComposer {
+  /**
+   * Add an ABI method application call transaction to the transaction group.
+   *
+   * Note: we recommend using app clients to make it easier to make app calls.
+   * @param params The ABI method application call transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addMethodCall(params: MethodCallParams) {
+    this.txns.push({ ...params, type: 'methodCall' })
+    return this
+  }
+
+  /**
+   * Add an online key registration transaction to the transaction group.
+   * @param params The online key registration transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'keyReg' })
 
     return this
   }
 
+  /**
+   * Add the transactions within an `AtomicTransactionComposer` to the transaction group.
+   * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
+   * @returns The composer so you can chain method calls
+   */
   addAtc(atc: algosdk.AtomicTransactionComposer): AlgokitComposer {
     this.txns.push({ atc, type: 'atc' })
-    return this
-  }
-
-  addMethodCall(params: MethodCallParams) {
-    this.txns.push({ ...params, type: 'methodCall' })
     return this
   }
 
@@ -310,10 +419,10 @@ export default class AlgokitComposer {
     return txnWithSigners
   }
 
-  private commonTxnBuildStep(params: CommonTxnParams, txn: algosdk.Transaction, suggestedParams: algosdk.SuggestedParams) {
-    if (params.lease) new Uint8Array(Buffer.from(params.lease))
+  private commonTxnBuildStep(params: CommonTransactionParams, txn: algosdk.Transaction, suggestedParams: algosdk.SuggestedParams) {
+    if (params.lease) txn.addLease(encodeLease(params.lease)!)
     if (params.rekeyTo) txn.addRekey(params.rekeyTo)
-    if (params.note) txn.note = new Uint8Array(Buffer.from(params.note))
+    if (params.note) txn.note = encodeTransactionNote(params.note)
 
     if (params.firstValidRound) {
       txn.firstRound = Number(params.firstValidRound)
@@ -335,6 +444,7 @@ export default class AlgokitComposer {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
       if (params.extraFee) txn.fee += params.extraFee.microAlgos
     }
+    txn.flatFee = true
 
     if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgos) {
       throw Error(`Transaction fee ${txn.fee} is greater than maxFee ${params.maxFee}`)
@@ -343,80 +453,53 @@ export default class AlgokitComposer {
     return txn
   }
 
-  private buildMethodCall(params: MethodCallParams, suggestedParams: algosdk.SuggestedParams): algosdk.TransactionWithSigner[] {
+  private async buildMethodCall(
+    params: MethodCallParams,
+    suggestedParams: algosdk.SuggestedParams,
+  ): Promise<algosdk.TransactionWithSigner[]> {
     const methodArgs: algosdk.ABIArgument[] = []
-    /** When a methodCall is encountered, we need to offset the arg index because one method call might have multiple txns */
-    let argOffset = 0
-
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
       return ['boolean', 'number', 'bigint', 'string', 'Uint8Array'].includes(typeof x)
     }
 
-    params.args?.forEach((arg, i) => {
+    for (const arg of params.args ?? []) {
       if (isAbiValue(arg)) {
         methodArgs.push(arg)
-        return
+        continue
       }
 
-      if (Object.values(algosdk.ABITransactionType).includes(params.method.args[i + argOffset].type as algosdk.ABITransactionType)) {
-        let txn: algosdk.Transaction
-        switch (arg.type) {
-          case 'methodCall': {
-            const tempTxnWithSigners = this.buildMethodCall(arg, suggestedParams)
-            methodArgs.push(...tempTxnWithSigners)
-            argOffset += tempTxnWithSigners.length - 1
-            return
-          }
-          case 'appCall':
-            txn = this.buildAppCall(arg, suggestedParams)
-            break
-          case 'pay':
-            txn = this.buildPayment(arg, suggestedParams)
-            break
-          case 'assetOptIn':
-            txn = this.buildAssetTransfer({ ...arg, receiver: arg.sender, amount: 0n }, suggestedParams)
-            break
-          case 'assetCreate':
-            txn = this.buildAssetCreate(arg, suggestedParams)
-            break
-          case 'assetConfig':
-            txn = this.buildAssetConfig(arg, suggestedParams)
-            break
-          case 'assetDestroy':
-            txn = this.buildAssetDestroy(arg, suggestedParams)
-            break
-          case 'assetFreeze':
-            txn = this.buildAssetFreeze(arg, suggestedParams)
-            break
-          case 'assetTransfer':
-            txn = this.buildAssetTransfer(arg, suggestedParams)
-            break
-          case 'keyReg':
-            txn = this.buildKeyReg(arg, suggestedParams)
-            break
-          default:
-            throw Error(`Unsupported method arg transaction type: ${arg.type}`)
-        }
-
-        methodArgs.push({
-          txn,
-          signer: params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : this.getSigner(params.sender),
-        })
-        return
+      if (isTransactionWithSigner(arg)) {
+        methodArgs.push(arg)
+        continue
       }
 
-      throw Error(`Unsupported method arg: ${arg}`)
-    })
+      if ('method' in arg) {
+        const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams)
+        methodArgs.push(...tempTxnWithSigners)
+        continue
+      }
+
+      const txn = await arg
+      methodArgs.push({
+        txn,
+        signer: params.signer
+          ? 'signer' in params.signer
+            ? params.signer.signer
+            : params.signer
+          : this.getSigner(encodeAddress(txn.from.publicKey)),
+      })
+    }
 
     const methodAtc = new algosdk.AtomicTransactionComposer()
 
     methodAtc.addMethodCall({
       ...params,
       appID: Number(params.appId || 0),
-      note: params.note ? new Uint8Array(Buffer.from(params.note)) : undefined,
-      lease: params.lease ? new Uint8Array(Buffer.from(params.lease)) : undefined,
+      note: encodeTransactionNote(params.note),
+      lease: encodeLease(params.lease),
+      rekeyTo: params.rekeyTo,
       suggestedParams,
       signer: params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : this.getSigner(params.sender),
       methodArgs: methodArgs,
@@ -425,7 +508,7 @@ export default class AlgokitComposer {
     return this.buildAtc(methodAtc)
   }
 
-  private buildPayment(params: PayTxnParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: params.sender,
       to: params.receiver,
@@ -442,49 +525,17 @@ export default class AlgokitComposer {
       from: params.sender,
       total: params.total,
       decimals: params.decimals ?? 0,
-      suggestedParams,
+      assetName: params.assetName,
+      unitName: params.unitName,
+      assetURL: params.url,
       defaultFrozen: params.defaultFrozen ?? false,
-    })
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
-  }
-
-  private buildAppCall(params: AppCallParams, suggestedParams: algosdk.SuggestedParams) {
-    const sdkParams = {
-      from: params.sender,
+      assetMetadataHash: params.metadataHash,
+      manager: params.manager,
+      reserve: params.reserve,
+      freeze: params.freeze,
+      clawback: params.clawback,
       suggestedParams,
-      onComplete: params.onComplete,
-      approvalProgram: params.approvalProgram,
-      clearProgram: params.clearProgram,
-      appArgs: params.args,
-      accounts: params.accountReferences,
-      foreignApps: params.appReferences?.map((x) => Number(x)),
-      foreignAssets: params.assetReferences?.map((x) => Number(x)),
-      extraPages: params.extraPages,
-      numLocalInts: params.schema?.localUints || 0,
-      numLocalByteSlices: params.schema?.localByteSlices || 0,
-      numGlobalInts: params.schema?.globalUints || 0,
-      numGlobalByteSlices: params.schema?.globalByteSlices || 0,
-    }
-
-    let txn: algosdk.Transaction
-
-    const onComplete = params.onComplete || algosdk.OnApplicationComplete.NoOpOC
-
-    if (!params.appId) {
-      if (params.approvalProgram === undefined || params.clearProgram === undefined) {
-        throw new Error('approvalProgram and clearProgram are required for application creation')
-      }
-
-      txn = algosdk.makeApplicationCreateTxnFromObject({
-        ...sdkParams,
-        onComplete,
-        approvalProgram: params.approvalProgram,
-        clearProgram: params.clearProgram,
-      })
-    }
-
-    txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, onComplete, appIndex: Number(params.appId || 0) })
+    })
 
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
@@ -540,17 +591,57 @@ export default class AlgokitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  private buildKeyReg(params: OnlineKeyRegParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAppCall(params: AppCallParams, suggestedParams: algosdk.SuggestedParams) {
+    const sdkParams = {
+      from: params.sender,
+      suggestedParams,
+      onComplete: params.onComplete,
+      approvalProgram: params.approvalProgram,
+      clearProgram: params.clearProgram,
+      appArgs: params.args,
+      accounts: params.accountReferences,
+      foreignApps: params.appReferences?.map((x) => Number(x)),
+      foreignAssets: params.assetReferences?.map((x) => Number(x)),
+      extraPages: params.extraPages,
+      numLocalInts: params.schema?.localUints || 0,
+      numLocalByteSlices: params.schema?.localByteSlices || 0,
+      numGlobalInts: params.schema?.globalUints || 0,
+      numGlobalByteSlices: params.schema?.globalByteSlices || 0,
+    }
+
+    let txn: algosdk.Transaction
+
+    const onComplete = params.onComplete || algosdk.OnApplicationComplete.NoOpOC
+
+    if (!params.appId) {
+      if (params.approvalProgram === undefined || params.clearProgram === undefined) {
+        throw new Error('approvalProgram and clearProgram are required for application creation')
+      }
+
+      txn = algosdk.makeApplicationCreateTxnFromObject({
+        ...sdkParams,
+        onComplete,
+        approvalProgram: params.approvalProgram,
+        clearProgram: params.clearProgram,
+      })
+    }
+
+    txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, onComplete, appIndex: Number(params.appId || 0) })
+
+    return this.commonTxnBuildStep(params, txn, suggestedParams)
+  }
+
+  private buildKeyReg(params: OnlineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
     const txn = algosdk.makeKeyRegistrationTxnWithSuggestedParams(
       params.sender,
-      params.note === undefined ? undefined : new Uint8Array(Buffer.from(params.note)),
+      undefined,
       params.voteKey,
       params.selectionKey,
       Number(params.voteFirst),
       Number(params.voteLast),
       Number(params.voteKeyDilution),
       suggestedParams,
-      params.rekeyTo,
+      undefined,
       false,
       params.stateProofKey,
     )
@@ -558,7 +649,7 @@ export default class AlgokitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  private buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): algosdk.TransactionWithSigner[] {
+  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.TransactionWithSigner[]> {
     if (txn.type === 'txnWithSigner') {
       return [txn]
     }
@@ -568,7 +659,7 @@ export default class AlgokitComposer {
     }
 
     if (txn.type === 'methodCall') {
-      return this.buildMethodCall(txn, suggestedParams)
+      return await this.buildMethodCall(txn, suggestedParams)
     }
 
     const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
@@ -615,18 +706,24 @@ export default class AlgokitComposer {
     }
   }
 
-  /** Compose all of the transactions in a single atomic transaction group */
-  async buildGroup() {
+  /**
+   * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
+   *
+   * You can then use the transactions standalone, or use the composer to execute or simulate the transactions.
+   * @returns The (new) built atomic transaction composer and the transactions
+   */
+  async build() {
+    const atc = new algosdk.AtomicTransactionComposer()
     const suggestedParams = await this.getSuggestedParams()
 
     const txnWithSigners: algosdk.TransactionWithSigner[] = []
 
-    this.txns.forEach((txn) => {
-      txnWithSigners.push(...this.buildTxn(txn, suggestedParams))
-    })
+    for (const txn of this.txns) {
+      txnWithSigners.push(...(await this.buildTxn(txn, suggestedParams)))
+    }
 
     txnWithSigners.forEach((ts) => {
-      this.atc.addTransaction(ts)
+      atc.addTransaction(ts)
     })
 
     const methodCalls = new Map<number, algosdk.ABIMethod>()
@@ -636,30 +733,42 @@ export default class AlgokitComposer {
       if (method) methodCalls.set(idx, method)
     })
 
-    this.atc['methodCalls'] = methodCalls
+    atc['methodCalls'] = methodCalls
 
-    return this.atc.buildGroup()
+    return {
+      atc,
+      transactions: atc.buildGroup(),
+    }
   }
 
-  /** Compose the atomic transaction group and send it to the network */
-  async execute(params?: {
-    /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
-    maxRoundsToWaitForConfirmation?: number
-  }) {
-    const group = await this.buildGroup()
+  /**
+   * Compose all of the transactions in a single atomic transaction group.
+   *
+   * @returns The transactions with signers
+   */
+  async buildGroup() {
+    return (await this.build()).transactions
+  }
+
+  /**
+   * Compose the atomic transaction group and send it to the network
+   * @param params The parameters to control execution with
+   * @returns The execution result
+   */
+  async execute(params?: ExecuteParams): Promise<SendAtomicTransactionComposerResults> {
+    const { atc, transactions: group } = await this.build()
 
     let waitRounds = params?.maxRoundsToWaitForConfirmation
-
     if (waitRounds === undefined) {
       const lastRound = group.reduce((max, txn) => Math.max(txn.txn.lastRound, max), 0)
       const { firstRound } = await this.getSuggestedParams()
-      waitRounds = lastRound - firstRound
+      waitRounds = lastRound - firstRound + 1
     }
 
     return await sendAtomicTransactionComposer(
       {
-        atc: this.atc,
-        sendParams: { suppressLog: true, maxRoundsToWaitForConfirmation: waitRounds },
+        atc: atc,
+        sendParams: { suppressLog: params?.suppressLog, maxRoundsToWaitForConfirmation: waitRounds },
       },
       this.algod,
     )
