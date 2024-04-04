@@ -12,6 +12,6 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "rollup.config.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "rollup-multi-plugin.ts", "rollup.config.ts"],
   "exclude": ["**/*.algo.ts"],
 }

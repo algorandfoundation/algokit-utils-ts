@@ -5,6 +5,7 @@ import * as algokit from '.'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata, AppDeploymentParams } from './types/app'
+import { LogicError } from './types/logic-error'
 
 describe('deploy-app', () => {
   const localnet = algorandFixture()
@@ -203,16 +204,23 @@ describe('deploy-app', () => {
       codeInjectionValue: 2,
       onUpdate: 'update',
     })
-    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
 
-    invariant('transaction' in result1)
-    expect(
-      logging.testLogger.getLogSnapshot({
-        accounts: [testAccount],
-        transactions: [result1.transaction],
-        apps: [result1.appId],
-      }),
-    ).toMatchSnapshot()
+    try {
+      await algokit.deployApp(deployment2, algod, indexer)
+      invariant(false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e.message).toMatch(/logic eval error: assert failed/)
+      const logicError = LogicError.parseLogicError(e)
+      invariant('transaction' in result1)
+      expect(
+        logging.testLogger.getLogSnapshot({
+          accounts: [testAccount],
+          transactions: [result1.transaction, logicError!.txId],
+          apps: [result1.appId],
+        }),
+      ).toMatchSnapshot()
+    }
   }, 20_000)
 
   test('Deploy failure for updated app fails if onupdate = Fail', async () => {
@@ -310,16 +318,22 @@ describe('deploy-app', () => {
       onUpdate: 'replace',
     })) as AppDeploymentParams
 
-    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
-
-    invariant('transaction' in result1)
-    expect(
-      logging.testLogger.getLogSnapshot({
-        accounts: [testAccount],
-        transactions: [result1.transaction],
-        apps: [result1.appId],
-      }),
-    ).toMatchSnapshot()
+    try {
+      await algokit.deployApp(deployment2, algod, indexer)
+      invariant(false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e.message).toMatch(/logic eval error: assert failed/)
+      const logicError = LogicError.parseLogicError(e)
+      invariant('transaction' in result1)
+      expect(
+        logging.testLogger.getLogSnapshot({
+          accounts: [testAccount],
+          transactions: [result1.transaction, logicError!.txId],
+          apps: [result1.appId],
+        }),
+      ).toMatchSnapshot()
+    }
   }, 20_000)
 
   test('Deploy replacement of deletable schema broken app', async () => {
@@ -384,16 +398,22 @@ describe('deploy-app', () => {
       onSchemaBreak: 'replace',
     })) as AppDeploymentParams
 
-    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(/logic eval error: assert failed/)
-
-    invariant('transaction' in result1)
-    expect(
-      logging.testLogger.getLogSnapshot({
-        accounts: [testAccount],
-        transactions: [result1.transaction],
-        apps: [result1.appId],
-      }),
-    ).toMatchSnapshot()
+    try {
+      await algokit.deployApp(deployment2, algod, indexer)
+      invariant(false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e.message).toMatch(/logic eval error: assert failed/)
+      const logicError = LogicError.parseLogicError(e)
+      invariant('transaction' in result1)
+      expect(
+        logging.testLogger.getLogSnapshot({
+          accounts: [testAccount],
+          transactions: [result1.transaction, logicError!.txId],
+          apps: [result1.appId],
+        }),
+      ).toMatchSnapshot()
+    }
   }, 20_000)
 
   test('Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail', async () => {

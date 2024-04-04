@@ -46,7 +46,7 @@ The account to opt in/out for
 
 #### Defined in
 
-[src/types/asset.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L9)
+[src/types/asset.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L72)
 
 ___
 
@@ -58,7 +58,7 @@ The address of the creator account for the asset; if unspecified then it looks i
 
 #### Defined in
 
-[src/types/asset.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L23)
+[src/types/asset.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L86)
 
 ___
 
@@ -74,7 +74,7 @@ The ID of the assets to opt in for / out of
 
 #### Defined in
 
-[src/types/asset.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L11)
+[src/types/asset.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L74)
 
 ___
 
@@ -102,7 +102,7 @@ Whether or not to validate the account has a zero-balance before issuing the opt
 
 #### Defined in
 
-[src/types/asset.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L25)
+[src/types/asset.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L88)
 
 ___
 
@@ -134,7 +134,7 @@ An (optional) [transaction lease](https://developer.algorand.org/articles/leased
 
 #### Defined in
 
-[src/types/asset.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L17)
+[src/types/asset.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L80)
 
 ___
 
@@ -182,7 +182,7 @@ The (optional) transaction note
 
 #### Defined in
 
-[src/types/asset.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L15)
+[src/types/asset.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L78)
 
 ___
 
@@ -263,4 +263,4 @@ Optional transaction parameters
 
 #### Defined in
 
-[src/types/asset.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L13)
+[src/types/asset.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L76)

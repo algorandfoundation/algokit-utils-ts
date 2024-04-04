@@ -100,7 +100,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
     const acc = await getTestAccount(
-      { initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true },
+      { initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true, accountGetter: fixtureConfig?.accountGetter },
       transactionLoggerAlgod,
       kmd,
     )
@@ -113,7 +113,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       kmd: kmd,
       testAccount,
       generateAccount: async (params: GetTestAccountParams) => {
-        const account = await getTestAccount(params, transactionLoggerAlgod, kmd)
+        const account = await getTestAccount({ accountGetter: fixtureConfig?.accountGetter, ...params }, transactionLoggerAlgod, kmd)
         algorandClient.setSignerFromAccount(account)
         return { ...account, signer: algorandClient.account.getSigner(account.addr) }
       },

@@ -222,7 +222,7 @@ export const sendTransaction = async function (
 
   await algod.sendRawTransaction(signedTransaction).do()
 
-  Config.getLogger(suppressLog).info(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
+  Config.getLogger(suppressLog).verbose(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
 
   let confirmation: modelsv2.PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
@@ -322,10 +322,83 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     }
   })
 
-  const findTxnBelowRefLimit = (
+  const populateGroupResource = (
     txns: algosdk.TransactionWithSigner[],
-    type: 'account' | 'assetHolding' | 'appLocal' | 'other' = 'other',
-  ) => {
+    reference:
+      | string
+      | algosdk.modelsv2.BoxReference
+      | algosdk.modelsv2.ApplicationLocalReference
+      | algosdk.modelsv2.AssetHoldingReference
+      | bigint
+      | number,
+    type: 'account' | 'assetHolding' | 'appLocal' | 'app' | 'box' | 'asset',
+  ): void => {
+    // If this is a asset holding or app local, first try to find a transaction that already has the account available
+    if (type === 'assetHolding' || type === 'appLocal') {
+      const { account } = reference as algosdk.modelsv2.ApplicationLocalReference | algosdk.modelsv2.AssetHoldingReference
+
+      const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
+        if (t.txn.type !== algosdk.TransactionType.appl) return false
+
+        const accounts = t.txn.appAccounts?.length || 0
+        const assets = t.txn.appForeignAssets?.length || 0
+        const apps = t.txn.appForeignApps?.length || 0
+        const boxes = t.txn.boxes?.length || 0
+
+        return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
+      }
+
+      let txnIndex = txns.findIndex((t) => {
+        if (!isApplBelowLimit(t)) return false
+
+        return (
+          // account is in the foreign accounts array
+          t.txn.appAccounts?.map((a) => algosdk.encodeAddress(a.publicKey)).includes(account) ||
+          // account is available as an app account
+          t.txn.appForeignApps?.map((a) => algosdk.getApplicationAddress(a)).includes(account) ||
+          // account is available since it's in one of the fields
+          Object.values(t.txn)
+            .map((f) => JSON.stringify(f))
+            .includes(JSON.stringify(algosdk.decodeAddress(account)))
+        )
+      })
+
+      if (txnIndex > -1) {
+        if (type === 'assetHolding') {
+          const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
+          txns[txnIndex].txn.appForeignAssets?.push(Number(asset))
+        } else {
+          const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
+          txns[txnIndex].txn.appForeignApps?.push(Number(app))
+        }
+        return
+      }
+
+      // Now try to find a txn that already has that app or asset available
+      txnIndex = txns.findIndex((t) => {
+        if (!isApplBelowLimit(t)) return false
+
+        // check if there is space in the accounts array
+        if ((t.txn.appAccounts?.length || 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
+
+        if (type === 'assetHolding') {
+          const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
+          return t.txn.appForeignAssets?.includes(Number(asset))
+        } else {
+          const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
+          return t.txn.appForeignApps?.includes(Number(app)) || t.txn.appIndex === Number(app)
+        }
+      })
+
+      if (txnIndex > -1) {
+        const { account } = reference as algosdk.modelsv2.AssetHoldingReference | algosdk.modelsv2.ApplicationLocalReference
+
+        txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+
+        return
+      }
+    }
+
     const txnIndex = txns.findIndex((t) => {
       if (t.txn.type !== algosdk.TransactionType.appl) return false
 
@@ -347,7 +420,24 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       throw Error('No more transactions below reference limit. Add another app call to the group.')
     }
 
-    return txnIndex
+    if (type === 'account') {
+      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(reference as string))
+    } else if (type === 'app') {
+      txns[txnIndex].txn.appForeignApps?.push(Number(reference))
+    } else if (type === 'box') {
+      const { app, name } = reference as algosdk.modelsv2.BoxReference
+      txns[txnIndex].txn.boxes?.push({ appIndex: Number(app), name: name })
+    } else if (type === 'assetHolding') {
+      const { asset, account } = reference as algosdk.modelsv2.AssetHoldingReference
+      txns[txnIndex].txn.appForeignAssets?.push(Number(asset))
+      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+    } else if (type === 'appLocal') {
+      const { app, account } = reference as algosdk.modelsv2.ApplicationLocalReference
+      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+      txns[txnIndex].txn.appForeignApps?.push(Number(app))
+    } else if (type === 'asset') {
+      txns[txnIndex].txn.appForeignAssets?.push(Number(reference))
+    }
   }
 
   const g = unnamedResourcesAccessed.group
@@ -356,42 +446,42 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     // Do cross-reference resources first because they are the most restrictive in terms
     // of which transactions can be used
     g.appLocals?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group, 'appLocal')
-      group[txnIndex].txn.appForeignApps?.push(Number(a.app))
-      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+      populateGroupResource(group, a, 'appLocal')
+
+      // Remove resources from the group if we're adding them here
+      g.accounts = g.accounts?.filter((acc) => acc !== a.account)
+      g.apps = g.apps?.filter((app) => BigInt(app) !== BigInt(a.app))
     })
 
     g.assetHoldings?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group, 'assetHolding')
-      group[txnIndex].txn.appForeignAssets?.push(Number(a.asset))
-      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a.account))
+      populateGroupResource(group, a, 'assetHolding')
+
+      // Remove resources from the group if we're adding them here
+      g.accounts = g.accounts?.filter((acc) => acc !== a.account)
+      g.assets = g.assets?.filter((asset) => BigInt(asset) !== BigInt(a.asset))
     })
 
     // Do accounts next because the account limit is 4
     g.accounts?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group, 'account')
-      group[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(a))
+      populateGroupResource(group, a, 'account')
     })
 
     g.boxes?.forEach((b) => {
-      const txnIndex = findTxnBelowRefLimit(group)
-      group[txnIndex].txn.boxes?.push({ appIndex: Number(b.app), name: b.name })
+      populateGroupResource(group, b, 'box')
     })
 
     g.assets?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group)
-      group[txnIndex].txn.appForeignAssets?.push(Number(a))
+      populateGroupResource(group, a, 'asset')
     })
 
     g.apps?.forEach((a) => {
-      const txnIndex = findTxnBelowRefLimit(group)
-      group[txnIndex].txn.appForeignApps?.push(Number(a))
+      populateGroupResource(group, a, 'app')
     })
 
     if (g.extraBoxRefs) {
       for (let i = 0; i < g.extraBoxRefs; i += 1) {
-        const txnIndex = findTxnBelowRefLimit(group)
-        group[txnIndex].txn.boxes?.push({ appIndex: 0, name: new Uint8Array(0) })
+        const ref = new algosdk.modelsv2.BoxReference({ app: 0, name: new Uint8Array(0) })
+        populateGroupResource(group, ref, 'box')
       }
     }
   }
@@ -445,7 +535,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     let groupId: string | undefined = undefined
     if (transactionsToSend.length > 1) {
       groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
-      Config.getLogger(sendParams?.suppressLog).info(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
+      Config.getLogger(sendParams?.suppressLog).verbose(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
         transactionsToSend,
       })
 
@@ -467,9 +557,11 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
 
     if (transactionsToSend.length > 1) {
-      Config.getLogger(sendParams?.suppressLog).info(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
+      Config.getLogger(sendParams?.suppressLog).verbose(
+        `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,
+      )
     } else {
-      Config.getLogger(sendParams?.suppressLog).info(
+      Config.getLogger(sendParams?.suppressLog).verbose(
         `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${algosdk.encodeAddress(
           transactionsToSend[0].from.publicKey,
         )}`,
@@ -501,11 +593,14 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-    Config.logger.info('Received error executing Atomic Transaction Composer, for more information enable the debug flag')
+    // Remove headers as it doesn't have anything useful.
+    delete e.response?.headers
+
     if (Config.debug && typeof e === 'object') {
       e.traces = []
-      Config.logger.debug(
+      Config.logger.error(
         'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
+        e,
       )
       let simulate = undefined
       if (Config.debug && Config.projectRoot && !Config.traceAll) {
@@ -533,6 +628,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
           })
         }
       }
+    } else {
+      Config.logger.error('Received error executing Atomic Transaction Composer, for more information enable the debug flag', e)
     }
     throw e
   }

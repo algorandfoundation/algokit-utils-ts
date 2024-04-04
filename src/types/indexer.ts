@@ -79,7 +79,16 @@ export interface ApplicationLookupResult {
 export interface TransactionResult extends Record<string, any> {
   /** Transaction ID */
   id: string
-  /** [type] Indicates what type of transaction this is. Different types have different fields. */
+  /** [type] Indicates what type of transaction this is. Different types have different fields.
+   * Valid types, and where their fields are stored:
+   *  * [pay] payment-transaction
+   *  * [keyreg] keyreg-transaction
+   *  * [acfg] asset-config-transaction
+   *  * [axfer] asset-transfer-transaction
+   *  * [afrz] asset-freeze-transaction
+   *  * [appl] application-transaction
+   *  * [stpf] state-proof-transaction
+   */
   'tx-type': TransactionType
   /** [fee] Transaction fee. */
   fee: number
@@ -133,6 +142,8 @@ export interface TransactionResult extends Record<string, any> {
   'keyreg-transaction'?: KeyRegistrationTransactionResult
   /** If the transaction is a `pay` transaction this will be populated see `tx-type` */
   'payment-transaction'?: PaymentTransactionResult
+  /** If the transaction is a `stpf` transaction this will be populated see `tx-type` */
+  'state-proof-transaction'?: StateProofTransactionResult
   /** [sgnr] this is included with signed transactions when the signing address does not equal the sender.
    * The backend can use this to ensure that auth addr is equal to the accounts auth addr.
    */
@@ -263,6 +274,175 @@ export interface PaymentTransactionResult {
   receiver: string
 }
 
+/** Fields for a state proof transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionstateproof.
+ *
+ * See also https://developer.algorand.org/docs/get-details/stateproofs/,
+ * https://developer.algorand.org/docs/get-details/stateproofs/light_client/,
+ * https://github.com/algorand/go-algorand/blob/master/data/transactions/stateproof.go,
+ * https://github.com/algorand/go-algorand/blob/master/crypto/stateproof/structs.go,
+ * https://github.com/algorand/go-algorand/blob/master/data/stateproofmsg/message.go, and
+ * https://developer.algorand.org/docs/rest-apis/algod/#stateproof.
+ */
+export interface StateProofTransactionResult {
+  /** [spmsg] State proof message
+   *
+   * Message represents the message that the state proofs are attesting to. This message can be
+   * used by lightweight client and gives it the ability to verify proofs on the Algorand's state.
+   *
+   * In addition to that proof, this message also contains fields that
+   * are needed in order to verify the next state proofs (VotersCommitment and LnProvenWeight).
+   */
+  message: {
+    /** [b] BlockHeadersCommitment contains a commitment on all light block headers within a state proof interval. */
+    'block-headers-commitment': string
+    /** [f] First round the message attests to */
+    'first-attested-round': number
+    /** [l] Last round the message attests to */
+    'latest-attested-round': number
+    /** [P] An integer value representing the natural log of the proven weight with 16 bits of precision. This value would be used to verify the next state proof. */
+    'ln-proven-weight': number | bigint
+    /** [v] The vector commitment root of the top N accounts to sign the next StateProof.
+     *
+     * Pattern : "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$" */
+    'voters-commitment': string
+  }
+  /** [sp] a proof on Algorand's state */
+  'state-proof': {
+    /** [P] Part proofs that make up the overall proof */
+    'part-proofs': MerkleArrayProof
+    /** [pr] The positions that are revealed */
+    'positions-to-reveal': number[]
+    /** [r] Reveals is a sparse map from the position being revealed
+     * to the corresponding elements from the sigs and participants
+     * arrays.
+     */
+    reveals: {
+      /** The position being revealed */
+      position: number
+      /** [p] Participant
+       *
+       * A Participant corresponds to an account whose AccountData.Status
+       * is Online, and for which the expected sigRound satisfies
+       * AccountData.VoteFirstValid <= sigRound <= AccountData.VoteLastValid.
+       *
+       * In the Algorand ledger, it is possible for multiple accounts to have
+       * the same PK.  Thus, the PK is not necessarily unique among Participants.
+       * However, each account will produce a unique Participant struct, to avoid
+       * potential DoS attacks where one account claims to have the same VoteID PK
+       * as another account.
+       */
+      participant: {
+        /** [p] PK is the identifier used to verify the signature for a specific participant
+         *
+         * Verifier is used to verify a merklesignature.Signature produced by merklesignature.Secrets.
+         */
+        verifier: {
+          /** [cmt] Commitment represents the root of the vector commitment tree built upon the MSS keys. */
+          commitment: string
+          /** [lf] The lifetime of the key */
+          'key-lifetime': number
+        }
+        /** [w] Weight is AccountData.MicroAlgos. */
+        weight: number | bigint
+      }
+      /** [s] A sigslotCommit is a single slot in the sigs array that forms the state proof. */
+      'sig-slot': {
+        /** [l] L is the total weight of signatures in lower-numbered slots.
+         * This is initialized once the builder has collected a sufficient
+         * number of signatures.
+         */
+        'lower-sig-weight': number | bigint
+        /** [s] Sig is a signature by the participant on the expected message.
+         *
+         * Signature represents a signature in the Merkle signature scheme using falcon signatures as an underlying crypto scheme.
+         * It consists of an ephemeral public key, a signature, a Merkle verification path and an index.
+         * The Merkle signature considered valid only if the Signature is verified under the ephemeral public key and
+         * the Merkle verification path verifies that the ephemeral public key is located at the given index of the tree
+         * (for the root given in the long-term public key).
+         * More details can be found on Algorand's spec
+         */
+        signature: {
+          /** [sig] Signature in the Merkle signature scheme using falcon signatures */
+          'falcon-signature': string
+          /** [idx] Merkle array index */
+          'merkle-array-index': number
+          /** [prf] Merkle verification path */
+          proof: MerkleArrayProof
+          /** [vkey] Falcon verifier key */
+          'verifying-key': string
+        }
+      }
+    }[]
+    /** [v] Merkle signature salt version */
+    'salt-version': number
+    /** [c] Digest of the signature commit */
+    'sig-commit': string
+    /** [S] Proofs for the signature */
+    'sig-proofs': MerkleArrayProof
+    /** [w] The combined weight of the signatures */
+    'signed-weight': number | bigint
+  }
+  /** [sptype] State proof type, per https://github.com/algorand/go-algorand/blob/master/protocol/stateproof.go#L24
+   *
+   *  * 0: StateProofBasic is our initial state proof setup. using falcon keys and subset-sum hash
+   */
+  'state-proof-type': number
+}
+
+/**
+ * Merkle array Proof.
+ *
+ * Proof is used to convince a verifier about membership of leaves: h0,h1...hn
+ * at indexes i0,i1...in on a tree. The verifier has a trusted value of the tree
+ * root hash.
+ *
+ * Path is bounded by MaxNumLeaves since there could be multiple reveals, and
+ * given the distribution of the elt positions and the depth of the tree,
+ * the path length can increase up to 2^MaxTreeDepth / 2
+ *
+ * Consider two different reveals for the same tree:
+ * ```
+ * .                z5
+ * .         z3              z4
+ * .     y       z       z1      z2
+ * .   q   r   s   t   u   v   w   x
+ * .  a b c d e f g h i j k l m n o p
+ * .    ^
+ * . hints: [a, r, z, z4]
+ * . len(hints) = 4
+ * ```
+ * You need a to combine with b to get q, need r to combine with the computed q and get y, and so on.
+ *
+ * The worst case is this:
+ * ```
+ * .               z5
+ * .        z3              z4
+ * .    y       z       z1      z2
+ * .  q   r   s   t   u   v   w   x
+ * . a b c d e f g h i j k l m n o p
+ * . ^   ^     ^   ^ ^   ^     ^   ^
+ * .
+ * . hints: [b, d, e, g, j, l, m, o]
+ * . len(hints) = 2^4/2
+ * ```
+ */
+export interface MerkleArrayProof {
+  /** [hsh] The metadata of the hash factory that was used to hash the proofs */
+  'hash-factory': {
+    /** [t] The type of hash https://github.com/algorand/go-algorand/blob/master/crypto/hashes.go#L42 */
+    'hash-type': number
+  }
+  /** [pth] Path is bounded by MaxNumLeavesOnEncodedTree since there could be multiple reveals, and
+   * given the distribution of the elt positions and the depth of the tree,
+   * the path length can increase up to 2^MaxEncodedTreeDepth / 2
+   */
+  path: string[]
+  /** [td] TreeDepth represents the depth of the tree that is being proven.
+   * It is the number of edges from the root to a leaf.
+   */
+  'tree-depth': number
+}
+
 /** Fields for an application transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication */
 export interface ApplicationTransactionResult extends Omit<ApplicationParams, 'creator' | 'global-state'> {
   /** [apat] List of accounts in addition to the sender that may be accessed from the application's approval-program and clear-state-program. */
@@ -304,11 +484,11 @@ export interface AssetFreezeTransactionResult {
 /** Fields for an asset transfer transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer */
 export interface AssetTransferTransactionResult {
   /** [aamt] Amount of asset to transfer. A zero amount transferred to self allocates that asset in the account's Assets map. */
-  amount: number
+  amount: number | bigint
   /** [xaid] ID of the asset being transferred. */
   'asset-id': number
   /** Number of assets transfered to the close-to account as part of the transaction. */
-  'close-amount'?: number
+  'close-amount'?: number | bigint
   /** [aclose] Indicates that the asset should be removed from the account's Assets map, and specifies where the remaining asset holdings should be transferred. It's always valid to transfer remaining asset holdings to the creator account. */
   'close-to'?: string
   /** [arcv] Recipient address of the transfer. */
@@ -428,7 +608,7 @@ export interface MultisigTransactionSubSignature {
    *
    * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
    */
-  signature: string
+  signature?: string
 }
 
 /** Represents a TEAL value delta. https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta */
@@ -640,7 +820,7 @@ export interface AssetHolding {
   /**
    * (a) number of units held.
    */
-  amount: number
+  amount: number | bigint
   /**
    * Asset ID of the holding.
    */

@@ -9,7 +9,7 @@ import {
   sendGroupOfTransactions,
   sendTransaction,
 } from './transaction'
-import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams } from './types/asset'
+import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
 import { SendTransactionFrom, SendTransactionResult, TransactionGroupToSend, TransactionToSign } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
 
@@ -65,6 +65,77 @@ async function ensureAssetBalanceConditions(
     }
     throw new Error(errorMessage)
   }
+}
+
+/**
+ * Create an Algorand Standard Asset (ASA).
+ * @param create The asset creation definition
+ * @param algod An algod client
+ * @returns The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+ *
+ * @example Usage example
+ * ```typescript
+ * await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My asset' }, algod)
+ * ```
+ */
+export async function createAsset(
+  create: CreateAssetParams,
+  algod: Algodv2,
+): Promise<SendTransactionResult & { confirmation?: { assetIndex: number | bigint } }> {
+  const {
+    creator,
+    total,
+    decimals,
+    name,
+    unit,
+    url,
+    metadataHash,
+    manager,
+    reserveAccount,
+    freezeAccount,
+    clawbackAccount,
+    frozenByDefault,
+    note,
+    transactionParams,
+    lease,
+    ...sendParams
+  } = create
+
+  const transaction = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
+    from: getSenderAddress(creator),
+    total,
+    decimals,
+    assetName: name,
+    unitName: unit,
+    assetURL: url,
+    defaultFrozen: frozenByDefault ?? false,
+    assetMetadataHash: metadataHash,
+    manager: manager ? getSenderAddress(manager) : undefined,
+    reserve: reserveAccount ? getSenderAddress(reserveAccount) : undefined,
+    freeze: freezeAccount ? getSenderAddress(freezeAccount) : undefined,
+    clawback: clawbackAccount ? getSenderAddress(clawbackAccount) : undefined,
+    rekeyTo: undefined,
+    suggestedParams: await getTransactionParams(transactionParams, algod),
+    note: encodeTransactionNote(note),
+  })
+
+  const encodedLease = encodeLease(lease)
+  if (encodedLease) {
+    transaction.addLease(encodedLease)
+  }
+
+  if (!sendParams.skipSending) {
+    const result = await sendTransaction({ transaction, from: creator, sendParams }, algod)
+    Config.getLogger(sendParams.suppressLog).info(
+      `Successfully created asset ${name ? `${name} ` : ''}${unit ? `(${unit}) ` : ''} with ${total} units and ${decimals} decimals via transaction ${transaction.txID()} with asset index ${
+        result.confirmation?.assetIndex
+      } and creator ${getSenderAddress(creator)}.`,
+    )
+
+    return result as SendTransactionResult & { confirmation: { assetIndex: number | bigint } }
+  }
+
+  return { transaction }
 }
 
 /**

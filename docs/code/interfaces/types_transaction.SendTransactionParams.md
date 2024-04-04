@@ -12,6 +12,8 @@ The sending configuration for a transaction
 
   ↳ [`AppCallParams`](types_app.AppCallParams.md)
 
+  ↳ [`CreateAssetParams`](types_asset.CreateAssetParams.md)
+
   ↳ [`AssetOptInParams`](types_asset.AssetOptInParams.md)
 
   ↳ [`AlgoTransferParams`](types_transfer.AlgoTransferParams.md)
