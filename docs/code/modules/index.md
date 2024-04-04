@@ -203,7 +203,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L241)
+[src/asset.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L242)
 
 ___
 
@@ -238,7 +238,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L308)
+[src/asset.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L309)
 
 ___
 
@@ -269,7 +269,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L152)
+[src/asset.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L153)
 
 ___
 
@@ -300,7 +300,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L190)
+[src/asset.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L191)
 
 ___
 

@@ -124,8 +124,9 @@ export async function createAsset(
     transaction.addLease(encodedLease)
   }
 
+  const result = await sendTransaction({ transaction, from: creator, sendParams }, algod)
+
   if (!sendParams.skipSending) {
-    const result = await sendTransaction({ transaction, from: creator, sendParams }, algod)
     Config.getLogger(sendParams.suppressLog).info(
       `Successfully created asset ${name ? `${name} ` : ''}${unit ? `(${unit}) ` : ''} with ${total} units and ${decimals} decimals via transaction ${transaction.txID()} with asset index ${
         result.confirmation?.assetIndex
@@ -135,7 +136,7 @@ export async function createAsset(
     return result as SendTransactionResult & { confirmation: { assetIndex: number | bigint } }
   }
 
-  return { transaction }
+  return { transaction: result.transaction }
 }
 
 /**
