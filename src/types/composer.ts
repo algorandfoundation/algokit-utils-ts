@@ -190,7 +190,7 @@ export type MethodCallParams = CommonTransactionParams &
     method: algosdk.ABIMethod
     /** Arguments to the ABI method, either:
      * * An ABI value
-     * * A transaction with explcit signer
+     * * A transaction with explicit signer
      * * A transaction (where the signer will be automatically assigned)
      * * An unawaited transaction (e.g. from algorand.transactions.transactionType())
      * * Another method call (via method call params object)
