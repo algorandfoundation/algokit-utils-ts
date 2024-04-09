@@ -237,6 +237,9 @@ export type AlgokitComposerParams = {
  * Note: this class is a new Beta feature and may be subject to change.
  */
 export default class AlgokitComposer {
+  /** The ATC used to compose the group */
+  private atc = new algosdk.AtomicTransactionComposer()
+
   /** Map of txid to ABI method */
   private txnMethodMap: Map<string, algosdk.ABIMethod> = new Map()
 
@@ -695,44 +698,43 @@ export default class AlgokitComposer {
    * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
    *
    * You can then use the transactions standalone, or use the composer to execute or simulate the transactions.
-   * @returns The (new) built atomic transaction composer and the transactions
+   * @returns The built atomic transaction composer and the transactions
    */
   async build() {
-    const atc = new algosdk.AtomicTransactionComposer()
-    const suggestedParams = await this.getSuggestedParams()
+    if (this.atc.getStatus() === algosdk.AtomicTransactionComposerStatus.BUILDING) {
+      const suggestedParams = await this.getSuggestedParams()
 
-    const txnWithSigners: algosdk.TransactionWithSigner[] = []
+      const txnWithSigners: algosdk.TransactionWithSigner[] = []
 
-    for (const txn of this.txns) {
-      txnWithSigners.push(...(await this.buildTxn(txn, suggestedParams)))
+      for (const txn of this.txns) {
+        txnWithSigners.push(...(await this.buildTxn(txn, suggestedParams)))
+      }
+
+      txnWithSigners.forEach((ts) => {
+        this.atc.addTransaction(ts)
+      })
+
+      const methodCalls = new Map<number, algosdk.ABIMethod>()
+
+      txnWithSigners.forEach((ts, idx) => {
+        const method = this.txnMethodMap.get(ts.txn.txID())
+        if (method) methodCalls.set(idx, method)
+      })
+
+      this.atc['methodCalls'] = methodCalls
     }
 
-    txnWithSigners.forEach((ts) => {
-      atc.addTransaction(ts)
-    })
-
-    const methodCalls = new Map<number, algosdk.ABIMethod>()
-
-    txnWithSigners.forEach((ts, idx) => {
-      const method = this.txnMethodMap.get(ts.txn.txID())
-      if (method) methodCalls.set(idx, method)
-    })
-
-    atc['methodCalls'] = methodCalls
-
-    return {
-      atc,
-      transactions: atc.buildGroup(),
-    }
+    return { atc: this.atc, transactions: this.atc.buildGroup() }
   }
 
   /**
-   * Compose all of the transactions in a single atomic transaction group.
-   *
-   * @returns The transactions with signers
+   * Rebuild the group, discarding any previously built transactions.
+   * This will potentially cause new signers and suggested params to be used if the callbacks return a new value compared to the first build.
+   * @returns The newly built atomic transaction composer and the transactions
    */
-  async buildGroup() {
-    return (await this.build()).transactions
+  async rebuild() {
+    this.atc = new algosdk.AtomicTransactionComposer()
+    return await this.build()
   }
 
   /**
@@ -741,7 +743,7 @@ export default class AlgokitComposer {
    * @returns The execution result
    */
   async execute(params?: ExecuteParams): Promise<SendAtomicTransactionComposerResults> {
-    const { atc, transactions: group } = await this.build()
+    const group = (await this.build()).transactions
 
     let waitRounds = params?.maxRoundsToWaitForConfirmation
     if (waitRounds === undefined) {
@@ -752,7 +754,7 @@ export default class AlgokitComposer {
 
     return await sendAtomicTransactionComposer(
       {
-        atc: atc,
+        atc: this.atc,
         sendParams: { suppressLog: params?.suppressLog, maxRoundsToWaitForConfirmation: waitRounds },
       },
       this.algod,
