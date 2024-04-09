@@ -144,7 +144,7 @@ export class AlgorandClient {
       c(composer).apply(composer, [params])
 
       if (log?.preLog) {
-        const transaction = (await composer.buildGroup()).pop()!.txn
+        const transaction = (await composer.build()).transactions.at(-1)!.txn
         Config.getLogger(config?.suppressLog).debug(log.preLog(params, transaction))
       }
 
@@ -236,8 +236,8 @@ export class AlgorandClient {
   private _transaction<T>(c: (c: AlgokitComposer) => (params: T) => AlgokitComposer): (params: T) => Promise<Transaction> {
     return async (params: T) => {
       const composer = this.newGroup()
-      const result = await c(composer).apply(composer, [params]).buildGroup()
-      return result.map((ts) => ts.txn)[0]
+      const result = await c(composer).apply(composer, [params]).build()
+      return result.transactions.map((ts) => ts.txn)[0]
     }
   }
 
@@ -263,7 +263,7 @@ export class AlgorandClient {
     appCall: this._transaction((c) => c.addAppCall),
     /** Create an application call with ABI method call transaction. */
     methodCall: async (params: MethodCallParams) => {
-      return (await this.newGroup().addMethodCall(params).buildGroup()).map((ts) => ts.txn)
+      return (await this.newGroup().addMethodCall(params).build()).transactions.map((ts) => ts.txn)
     },
     /** Create an online key registration transaction. */
     onlineKeyRegistration: this._transaction((c) => c.addOnlineKeyRegistration),
