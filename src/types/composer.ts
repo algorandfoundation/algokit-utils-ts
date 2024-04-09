@@ -8,29 +8,14 @@ import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import encodeAddress = algosdk.encodeAddress
 
-/** Transaction parameter that provides an account address. */
-export type AccountAddressParam = string
-
-/** Transaction parameter that provides a round number. */
-export type RoundNumberParam = bigint
-
-/** Transaction parameter that provides an asset amount. */
-export type AssetAmountParam = bigint
-
-/** Transaction parameter that provides an asset ID. */
-export type AssetIdParam = bigint
-
-/** Transaction parameter that provides an application ID. */
-export type AppIdParam = bigint
-
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
   /** The address sending the transaction */
-  sender: AccountAddressParam
+  sender: string
   /** The function used to sign transactions */
   signer?: algosdk.TransactionSigner | TransactionSignerAccount
   /** Change the signing key of the sender to the given address */
-  rekeyTo?: AccountAddressParam
+  rekeyTo?: string
   /** Note to attach to the transaction*/
   note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window */
@@ -48,37 +33,37 @@ export type CommonTransactionParams = {
    * If left undefined, the value from algod will be used.
    * Only set this when you intentionally want this to be some time in the future
    */
-  firstValidRound?: RoundNumberParam
+  firstValidRound?: bigint
   /** The last round this transaction is valid. It is recommended to use validityWindow instead */
-  lastValidRound?: RoundNumberParam
+  lastValidRound?: bigint
 }
 
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
   /** That account that will receive the ALGO */
-  receiver: AccountAddressParam
+  receiver: string
   /** Amount to send */
   amount: AlgoAmount
   /** If given, close the sender account and send the remaining balance to this address */
-  closeRemainderTo?: AccountAddressParam
+  closeRemainderTo?: string
 }
 
 /** Parameters to define an asset create transaction. */
 export type AssetCreateParams = CommonTransactionParams & {
   /** The total amount of the smallest divisible unit to create */
-  total: AssetAmountParam
+  total: bigint
   /** The amount of decimal places the asset should have */
   decimals?: number
   /** Whether the asset is frozen by default in the creator address */
   defaultFrozen?: boolean
   /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
-  manager?: AccountAddressParam
+  manager?: string
   /** The address that holds the uncirculated supply */
-  reserve?: AccountAddressParam
+  reserve?: string
   /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
-  freeze?: AccountAddressParam
+  freeze?: string
   /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
-  clawback?: AccountAddressParam
+  clawback?: string
   /** The short ticker name for the asset */
   unitName?: string
   /** The full name of the asset */
@@ -92,23 +77,23 @@ export type AssetCreateParams = CommonTransactionParams & {
 /** Parameters to define an asset config transaction. */
 export type AssetConfigParams = CommonTransactionParams & {
   /** ID of the asset */
-  assetId: AssetIdParam
+  assetId: bigint
   /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
-  manager?: AccountAddressParam
+  manager?: string
   /** The address that holds the uncirculated supply */
-  reserve?: AccountAddressParam
+  reserve?: string
   /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
-  freeze?: AccountAddressParam
+  freeze?: string
   /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
-  clawback?: AccountAddressParam
+  clawback?: string
 }
 
 /** Parameters to define an asset freeze transaction. */
 export type AssetFreezeParams = CommonTransactionParams & {
   /** The ID of the asset */
-  assetId: AssetIdParam
+  assetId: bigint
   /** The account to freeze or unfreeze */
-  account: AccountAddressParam
+  account: string
   /** Whether the assets in the account should be frozen */
   frozen: boolean
 }
@@ -116,27 +101,27 @@ export type AssetFreezeParams = CommonTransactionParams & {
 /** Parameters to define an asset destroy transaction. */
 export type AssetDestroyParams = CommonTransactionParams & {
   /** ID of the asset */
-  assetId: AssetIdParam
+  assetId: bigint
 }
 
 /** Parameters to define an asset transfer transaction. */
 export type AssetTransferParams = CommonTransactionParams & {
   /** ID of the asset */
-  assetId: AssetIdParam
+  assetId: bigint
   /** Amount of the asset to transfer (smallest divisible unit) */
-  amount: AssetAmountParam
+  amount: bigint
   /** The account to send the asset to */
-  receiver: AccountAddressParam
+  receiver: string
   /** The account to take the asset from */
-  clawbackTarget?: AccountAddressParam
+  clawbackTarget?: string
   /** The account to close the asset to */
-  closeAssetTo?: AccountAddressParam
+  closeAssetTo?: string
 }
 
 /** Parameters to define an asset opt-in transaction. */
 export type AssetOptInParams = CommonTransactionParams & {
   /** ID of the asset */
-  assetId: AssetIdParam
+  assetId: bigint
 }
 
 /** Parameters to define an online key registration transaction. */
@@ -146,11 +131,11 @@ export type OnlineKeyRegistrationParams = CommonTransactionParams & {
   /** The VRF public key */
   selectionKey: Uint8Array
   /** The first round that the participation key is valid. Not to be confused with the `firstValid` round of the keyreg transaction */
-  voteFirst: RoundNumberParam
+  voteFirst: bigint
   /** The last round that the participation key is valid. Not to be confused with the `lastValid` round of the keyreg transaction */
-  voteLast: RoundNumberParam
+  voteLast: bigint
   /** This is the dilution for the 2-level participation key. It determines the interval (number of rounds) for generating new ephemeral keys */
-  voteKeyDilution: RoundNumberParam
+  voteKeyDilution: bigint
   /** The 64 byte state proof public key commitment */
   stateProofKey?: Uint8Array
 }
@@ -166,7 +151,7 @@ export type AppCallParams = CommonTransactionParams & {
   /** The [OnComplete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) */
   onComplete?: algosdk.OnApplicationComplete
   /** ID of the application */
-  appId?: AppIdParam
+  appId?: bigint
   /** The program to execute for all OnCompletes other than ClearState */
   approvalProgram?: Uint8Array
   /** The program to execute for ClearState OnComplete */
@@ -185,11 +170,11 @@ export type AppCallParams = CommonTransactionParams & {
   /** Application arguments */
   args?: Uint8Array[]
   /** Account references */
-  accountReferences?: AccountAddressParam[]
+  accountReferences?: string[]
   /** App references */
-  appReferences?: AppIdParam[]
+  appReferences?: bigint[]
   /** Asset references */
-  assetReferences?: AssetIdParam[]
+  assetReferences?: bigint[]
   /** Number of extra pages required for the programs */
   extraPages?: number
   /** Box references */
@@ -200,7 +185,7 @@ export type AppCallParams = CommonTransactionParams & {
 export type MethodCallParams = CommonTransactionParams &
   Omit<AppCallParams, 'args'> & {
     /** ID of the application */
-    appId: AppIdParam
+    appId: bigint
     /** The ABI method to call */
     method: algosdk.ABIMethod
     /** Arguments to the ABI method, either:
