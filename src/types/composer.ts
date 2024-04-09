@@ -485,13 +485,19 @@ export default class AlgokitComposer {
     methodAtc.addMethodCall({
       ...params,
       appID: Number(params.appId || 0),
-      note: encodeTransactionNote(params.note),
-      lease: encodeLease(params.lease),
-      rekeyTo: params.rekeyTo,
       suggestedParams,
       signer: params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : this.getSigner(params.sender),
       methodArgs: methodArgs,
+      // note, lease, and rekeyTo are set in the common build step
+      note: undefined,
+      lease: undefined,
+      rekeyTo: undefined,
     })
+
+    // Run the actual method call txn through the common build step to set fees and validity rounds
+    const group = methodAtc.buildGroup()
+    const methodIdx = group.length - 1
+    group[methodIdx].txn = this.commonTxnBuildStep(params, group[methodIdx].txn, suggestedParams)
 
     return this.buildAtc(methodAtc)
   }
