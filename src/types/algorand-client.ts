@@ -15,6 +15,8 @@ export type SendSingleTransactionResult = SendAtomicTransactionComposerResults &
 /** A client that brokers easy access to Algorand functionality.
  *
  * Note: this class is a new Beta feature and may be subject to change.
+ *
+ * @beta
  */
 export class AlgorandClient {
   private _clientManager: ClientManager

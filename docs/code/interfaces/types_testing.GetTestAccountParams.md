@@ -39,7 +39,7 @@ Optional override for how to get an account; this allows you to retrieve account
 
 #### Defined in
 
-[src/types/testing.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L44)
+[src/types/testing.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L46)
 
 ___
 

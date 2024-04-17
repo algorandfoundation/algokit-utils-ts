@@ -4,6 +4,11 @@
 
 ## Table of contents
 
+### References
+
+- [AlgorandClient](index.md#algorandclient)
+- [SendSingleTransactionResult](index.md#sendsingletransactionresult)
+
 ### Variables
 
 - [Config](index.md#config)
@@ -107,6 +112,18 @@
 - [transferAsset](index.md#transferasset)
 - [updateApp](index.md#updateapp)
 - [waitForConfirmation](index.md#waitforconfirmation)
+
+## References
+
+### AlgorandClient
+
+Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+
+___
+
+### SendSingleTransactionResult
+
+Re-exports [SendSingleTransactionResult](types_algorand_client.md#sendsingletransactionresult)
 
 ## Variables
 

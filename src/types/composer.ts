@@ -235,6 +235,8 @@ export type AlgokitComposerParams = {
 /** AlgoKit Composer helps you compose and execute transactions as a transaction group.
  *
  * Note: this class is a new Beta feature and may be subject to change.
+ *
+ * @beta
  */
 export default class AlgokitComposer {
   /** The ATC used to compose the group */
