@@ -86,7 +86,7 @@ test('My test', async () => {
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L38)
+[src/testing/fixtures/algorand-fixture.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L39)
 
 ▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
@@ -124,7 +124,7 @@ test('My test', async () => {
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L63)
+[src/testing/fixtures/algorand-fixture.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L64)
 
 ___
 

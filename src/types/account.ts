@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import AccountInformationModel = algosdk.modelsv2.Account
 import Account = algosdk.Account
 import MultisigMetadata = algosdk.MultisigMetadata
 import Transaction = algosdk.Transaction
@@ -125,4 +126,21 @@ export interface AccountConfig {
 
   /** @deprecated Renamed to senderAddress in 2.3.1 */
   senderMnemonic?: string
+}
+
+type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
+type ToNumberIfExtends<K, E> = K extends E ? number : K
+/** Account information at a given round. */
+export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'get_obj_for_encoding'>
+
+/** Account asset holding information at a given round. */
+export type AccountAssetInformation = {
+  /** The ID of the asset held. */
+  assetId: bigint
+  /** The current balance of that asset holding. */
+  balance: bigint
+  /** Whether or not the asset is frozen for the account. */
+  frozen: boolean
+  /** The round as at which the holding was correct. */
+  round: bigint
 }

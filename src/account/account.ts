@@ -3,11 +3,12 @@ import { Config } from '../config'
 import { getOrCreateKmdWalletAccount } from '../localnet/get-or-create-kmd-wallet-account'
 import { isLocalNet } from '../localnet/is-localnet'
 import { getSenderAddress } from '../transaction/transaction'
-import { MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
+import { AccountAssetInformation, AccountInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AlgoAmount } from '../types/amount'
 import { SendTransactionFrom } from '../types/transaction'
 import { getAccountConfigFromEnvironment } from './get-account-config-from-environment'
 import { mnemonicAccount } from './mnemonic-account'
+import AccountInformationModel = algosdk.modelsv2.Account
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
@@ -126,4 +127,74 @@ export function getAccountAddressAsUint8Array(account: SendTransactionFrom | str
  */
 export function getAccountAddressAsString(addressEncodedInB64: string): string {
   return algosdk.encodeAddress(Buffer.from(addressEncodedInB64, 'base64'))
+}
+
+/**
+ * Returns the given sender account's current status, balance and spendable amounts.
+ *
+ * @example
+ * ```typescript
+ * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+ * const accountInfo = await account.getInformation(address, algod);
+ * ```
+ *
+ * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+ * @param sender The address of the sender/account to look up
+ * @param algod The algod instance
+ * @returns The account information
+ */
+export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
+  const account = AccountInformationModel.from_obj_for_encoding(
+    await algod.accountInformation(typeof sender === 'string' ? sender : getSenderAddress(sender)).do(),
+  )
+
+  return {
+    ...account,
+    // None of these can practically overflow 2^53
+    amount: Number(account.amount),
+    amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
+    minBalance: Number(account.minBalance),
+    pendingRewards: Number(account.pendingRewards),
+    rewards: Number(account.rewards),
+    round: Number(account.round),
+    totalAppsOptedIn: Number(account.totalAppsOptedIn),
+    totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
+    totalCreatedApps: Number(account.totalCreatedApps),
+    totalCreatedAssets: Number(account.totalCreatedAssets),
+    appsTotalExtraPages: account.appsTotalExtraPages ? Number(account.appsTotalExtraPages) : undefined,
+    rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
+    totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
+    totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
+  }
+}
+
+/**
+ * Returns the given sender account's asset holding for a given asset.
+ *
+ * @example
+ * ```typescript
+ * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+ * const assetId = 123345;
+ * const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
+ * ```
+ *
+ * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+ * @param sender The address of the sender/account to look up
+ * @param assetId The ID of the asset to return a holding for
+ * @param algod The algod instance
+ * @returns The account asset holding information
+ */
+export async function getAccountAssetInformation(
+  sender: string | SendTransactionFrom,
+  assetId: number | bigint,
+  algod: Algodv2,
+): Promise<AccountAssetInformation> {
+  const info = await algod.accountAssetInformation(typeof sender === 'string' ? sender : getSenderAddress(sender), Number(assetId)).do()
+
+  return {
+    assetId: BigInt(assetId),
+    balance: BigInt(info['asset-holding']['amount']),
+    frozen: info['asset-holding']['is-frozen'] === 'true',
+    round: BigInt(info['round']),
+  }
 }

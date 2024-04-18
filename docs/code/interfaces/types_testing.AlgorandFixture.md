@@ -14,6 +14,7 @@ An Algorand automated testing fixture
 
 ### Accessors
 
+- [algorand](types_testing.AlgorandFixture.md#algorand)
 - [context](types_testing.AlgorandFixture.md#context)
 
 ## Properties
@@ -34,9 +35,25 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Defined in
 
-[src/types/testing.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L78)
+[src/types/testing.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L85)
 
 ## Accessors
+
+### algorand
+
+• `get` **algorand**(): [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)
+
+Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
+
+#### Returns
+
+[`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)
+
+#### Defined in
+
+[src/types/testing.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L80)
+
+___
 
 ### context
 
@@ -59,4 +76,4 @@ test('My test', () => {
 
 #### Defined in
 
-[src/types/testing.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L73)
+[src/types/testing.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L75)

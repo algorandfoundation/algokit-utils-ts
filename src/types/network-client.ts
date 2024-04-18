@@ -15,7 +15,7 @@ export interface AlgoConfig {
   /** Algo client configuration */
   algodConfig: AlgoClientConfig
   /** Indexer client configuration */
-  indexerConfig: AlgoClientConfig
+  indexerConfig?: AlgoClientConfig
   /** Kmd configuration */
-  kmdConfig: AlgoClientConfig
+  kmdConfig?: AlgoClientConfig
 }

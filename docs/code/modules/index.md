@@ -4,6 +4,11 @@
 
 ## Table of contents
 
+### References
+
+- [AlgorandClient](index.md#algorandclient)
+- [SendSingleTransactionResult](index.md#sendsingletransactionresult)
+
 ### Variables
 
 - [Config](index.md#config)
@@ -35,7 +40,9 @@
 - [getAccount](index.md#getaccount)
 - [getAccountAddressAsString](index.md#getaccountaddressasstring)
 - [getAccountAddressAsUint8Array](index.md#getaccountaddressasuint8array)
+- [getAccountAssetInformation](index.md#getaccountassetinformation)
 - [getAccountConfigFromEnvironment](index.md#getaccountconfigfromenvironment)
+- [getAccountInformation](index.md#getaccountinformation)
 - [getAlgoClient](index.md#getalgoclient)
 - [getAlgoIndexerClient](index.md#getalgoindexerclient)
 - [getAlgoKmdClient](index.md#getalgokmdclient)
@@ -105,6 +112,18 @@
 - [transferAsset](index.md#transferasset)
 - [updateApp](index.md#updateapp)
 - [waitForConfirmation](index.md#waitforconfirmation)
+
+## References
+
+### AlgorandClient
+
+Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+
+___
+
+### SendSingleTransactionResult
+
+Re-exports [SendSingleTransactionResult](types_algorand_client.md#sendsingletransactionresult)
 
 ## Variables
 
@@ -813,7 +832,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L127)
+[src/account/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L128)
 
 ___
 
@@ -835,7 +854,43 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L119)
+[src/account/account.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L120)
+
+___
+
+### getAccountAssetInformation
+
+▸ **getAccountAssetInformation**(`sender`, `assetId`, `algod`): `Promise`\<[`AccountAssetInformation`](types_account.md#accountassetinformation)\>
+
+Returns the given sender account's asset holding for a given asset.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The address of the sender/account to look up |
+| `assetId` | `number` \| `bigint` | The ID of the asset to return a holding for |
+| `algod` | `default` | The algod instance |
+
+#### Returns
+
+`Promise`\<[`AccountAssetInformation`](types_account.md#accountassetinformation)\>
+
+The account asset holding information
+
+**`Example`**
+
+```typescript
+const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+const assetId = 123345;
+const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
+```
+
+[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+
+#### Defined in
+
+[src/account/account.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L187)
 
 ___
 
@@ -869,6 +924,40 @@ environment variables
 #### Defined in
 
 [src/account/get-account-config-from-environment.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/get-account-config-from-environment.ts#L13)
+
+___
+
+### getAccountInformation
+
+▸ **getAccountInformation**(`sender`, `algod`): `Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+
+Returns the given sender account's current status, balance and spendable amounts.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The address of the sender/account to look up |
+| `algod` | `default` | The algod instance |
+
+#### Returns
+
+`Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+
+The account information
+
+**`Example`**
+
+```typescript
+const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+const accountInfo = await account.getInformation(address, algod);
+```
+
+[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+
+#### Defined in
+
+[src/account/account.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L146)
 
 ___
 
@@ -2132,7 +2221,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/account/account.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L87)
+[src/account/account.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L88)
 
 ___
 
@@ -2157,7 +2246,7 @@ A multisig account wrapper
 
 #### Defined in
 
-[src/account/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L23)
+[src/account/account.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L24)
 
 ___
 
@@ -2332,7 +2421,7 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account/account.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L52)
+[src/account/account.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L53)
 
 ___
 
@@ -2390,7 +2479,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account/account.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L33)
+[src/account/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L34)
 
 ___
 
@@ -2660,7 +2749,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account/account.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L43)
+[src/account/account.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L44)
 
 ___
 
