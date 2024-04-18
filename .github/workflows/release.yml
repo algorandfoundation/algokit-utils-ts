@@ -65,11 +65,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      # semantic-release needs node 18
-      - name: Use Node.js 18.x
+      # semantic-release needs node 20
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 20.x
 
       - name: Download built package
         uses: actions/download-artifact@v4
