@@ -187,7 +187,7 @@ export class AccountManager {
    * @returns The account
    */
   public async fromEnvironment(name: string, fundWith?: AlgoAmount) {
-    this.signerAccount(await mnemonicAccountFromEnvironment({ name, fundWith }, this._clientManager.algod, this._clientManager.kmd))
+    return this.signerAccount(await mnemonicAccountFromEnvironment({ name, fundWith }, this._clientManager.algod, this._clientManager.kmd))
   }
 
   /**
@@ -244,7 +244,7 @@ export class AccountManager {
    * @returns A logic signature account wrapper
    */
   public logicsig(program: Uint8Array, args?: Array<Uint8Array>) {
-    this.signerAccount(new LogicSigAccount(program, args))
+    return this.signerAccount(new LogicSigAccount(program, args))
   }
 
   /**
@@ -257,7 +257,7 @@ export class AccountManager {
    * @returns The account
    */
   public random() {
-    this.signerAccount(randomAccount())
+    return this.signerAccount(randomAccount())
   }
 
   /**
@@ -272,7 +272,7 @@ export class AccountManager {
    * @returns The account
    */
   public async dispenser() {
-    this.signerAccount(await getDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
+    return this.signerAccount(await getDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
   }
 
   /**
@@ -285,6 +285,6 @@ export class AccountManager {
    * @returns The account
    */
   public async localNetDispenser() {
-    this.signerAccount(await getLocalNetDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
+    return this.signerAccount(await getLocalNetDispenserAccount(this._clientManager.algod, this._clientManager.kmd))
   }
 }
