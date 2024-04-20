@@ -91,13 +91,13 @@ export async function lookupAssetHoldings(
     },
     (nextToken) => {
       let s = indexer.lookupAssetBalances(Number(assetId)).limit(paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT)
-      if (options?.currencyGreaterThan) {
+      if (options?.currencyGreaterThan !== undefined) {
         s = s.currencyGreaterThan(options.currencyGreaterThan)
       }
-      if (options?.currencyLessThan) {
+      if (options?.currencyLessThan !== undefined) {
         s = s.currencyLessThan(options.currencyLessThan)
       }
-      if (options?.includeAll) {
+      if (options?.includeAll !== undefined) {
         s = s.includeAll(options.includeAll)
       }
       if (nextToken) {
