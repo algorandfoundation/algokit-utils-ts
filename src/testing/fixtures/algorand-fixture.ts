@@ -7,6 +7,7 @@ import {
   getConfigFromEnvOrDefaults,
   lookupTransactionById,
 } from '../../'
+import AlgorandClient from '../../types/algorand-client'
 import { AlgoConfig } from '../../types/network-client'
 import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
 import { getTestAccount } from '../account'
@@ -92,22 +93,30 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
   const indexer = fixtureConfig?.indexer ?? getAlgoIndexerClient(config.indexerConfig)
   const kmd = fixtureConfig?.kmd ?? getAlgoKmdClient(config.kmdConfig)
   let context: AlgorandTestAutomationContext
+  let algorandClient: AlgorandClient
 
   const beforeEach = async () => {
     Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
+    const acc = await getTestAccount(
+      { initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true },
+      transactionLoggerAlgod,
+      kmd,
+    )
+    algorandClient = algorandClient ?? AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+    algorandClient.setSignerFromAccount(acc).setDefaultValidityWindow(1000).setSuggestedParamsTimeout(0)
+    const testAccount = { ...acc, signer: algorandClient.account.getSigner(acc.addr) }
     context = {
       algod: transactionLoggerAlgod,
       indexer: indexer,
       kmd: kmd,
-      testAccount: await getTestAccount(
-        { initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true, accountGetter: fixtureConfig?.accountGetter },
-        transactionLoggerAlgod,
-        kmd,
-      ),
-      generateAccount: (params: GetTestAccountParams) =>
-        getTestAccount({ accountGetter: fixtureConfig?.accountGetter, ...params }, transactionLoggerAlgod, kmd),
+      testAccount,
+      generateAccount: async (params: GetTestAccountParams) => {
+        const account = await getTestAccount(params, transactionLoggerAlgod, kmd)
+        algorandClient.setSignerFromAccount(account)
+        return { ...account, signer: algorandClient.account.getSigner(account.addr) }
+      },
       transactionLogger: transactionLogger,
       waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
       waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => lookupTransactionById(transactionId, indexer)),
@@ -117,6 +126,9 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
   return {
     get context() {
       return context
+    },
+    get algorand() {
+      return algorandClient
     },
     beforeEach,
   }

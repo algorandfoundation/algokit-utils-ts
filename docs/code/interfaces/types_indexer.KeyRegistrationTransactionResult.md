@@ -28,7 +28,7 @@ Fields for a `keyreg` transaction https://developer.algorand.org/docs/rest-apis/
 
 #### Defined in
 
-[src/types/indexer.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L503)
+[src/types/indexer.ts:523](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L523)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:508](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L508)
+[src/types/indexer.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L528)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L513)
+[src/types/indexer.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L533)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:515](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L515)
+[src/types/indexer.ts:535](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L535)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L517)
+[src/types/indexer.ts:537](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L537)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L519)
+[src/types/indexer.ts:539](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L539)
 
 ___
 
@@ -106,4 +106,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:524](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L524)
+[src/types/indexer.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L544)

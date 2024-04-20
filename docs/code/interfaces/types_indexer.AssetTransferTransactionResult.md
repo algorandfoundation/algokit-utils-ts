@@ -21,13 +21,13 @@ Fields for an asset transfer transaction. https://developer.algorand.org/docs/re
 
 ### amount
 
-• **amount**: `number`
+• **amount**: `number` \| `bigint`
 
 [aamt] Amount of asset to transfer. A zero amount transferred to self allocates that asset in the account's Assets map.
 
 #### Defined in
 
-[src/types/indexer.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L487)
+[src/types/indexer.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L507)
 
 ___
 
@@ -39,19 +39,19 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:489](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L489)
+[src/types/indexer.ts:509](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L509)
 
 ___
 
 ### close-amount
 
-• `Optional` **close-amount**: `number`
+• `Optional` **close-amount**: `number` \| `bigint`
 
 Number of assets transfered to the close-to account as part of the transaction.
 
 #### Defined in
 
-[src/types/indexer.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L491)
+[src/types/indexer.ts:511](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L511)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:493](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L493)
+[src/types/indexer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L513)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L495)
+[src/types/indexer.ts:515](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L515)
 
 ___
 
@@ -87,4 +87,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:497](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L497)
+[src/types/indexer.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L517)

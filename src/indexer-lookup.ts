@@ -4,6 +4,9 @@ import {
   AccountLookupResult,
   ApplicationCreatedLookupResult,
   ApplicationResult,
+  AssetBalancesLookupResult,
+  LookupAssetHoldingsOptions,
+  MiniAssetHolding,
   TransactionLookupResult,
   TransactionSearchResults,
 } from './types/indexer'
@@ -32,7 +35,7 @@ export async function lookupAccountByAddress(accountAddress: string, indexer: In
 }
 
 /**
- * Looks up applications that were created by the given address.
+ * Looks up applications that were created by the given address; will automatically paginate through all data.
  * @param indexer An indexer instance
  * @param address The address of the creator to look up
  * @param getAll Whether or not to include deleted applications
@@ -57,6 +60,46 @@ export async function lookupAccountCreatedApplicationByAddress(
         .lookupAccountCreatedApplications(address)
         .includeAll(getAll)
         .limit(paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT)
+      if (nextToken) {
+        s = s.nextToken(nextToken)
+      }
+      return s
+    },
+  )
+}
+
+/**
+ * Looks up asset holdings for the given asset; will automatically paginate through all data.
+ * @param indexer An indexer instance
+ * @param assetId The ID of the asset to look up holdings for
+ * @param options Optional options to control the lookup
+ * @param paginationLimit The number of records to return per paginated request, default 1000
+ * @returns The list of application results
+ */
+export async function lookupAssetHoldings(
+  indexer: Indexer,
+  assetId: number | bigint,
+  options?: LookupAssetHoldingsOptions,
+  paginationLimit?: number,
+): Promise<MiniAssetHolding[]> {
+  return await executePaginatedRequest(
+    (response: AssetBalancesLookupResult | { message: string }) => {
+      if ('message' in response) {
+        throw { status: 404, ...response }
+      }
+      return response.balances
+    },
+    (nextToken) => {
+      let s = indexer.lookupAssetBalances(Number(assetId)).limit(paginationLimit ?? DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT)
+      if (options?.currencyGreaterThan) {
+        s = s.currencyGreaterThan(options.currencyGreaterThan)
+      }
+      if (options?.currencyLessThan) {
+        s = s.currencyLessThan(options.currencyLessThan)
+      }
+      if (options?.includeAll) {
+        s = s.includeAll(options.includeAll)
+      }
       if (nextToken) {
         s = s.nextToken(nextToken)
       }

@@ -58,6 +58,26 @@ export interface AssetLookupResult {
   asset: AssetResult
 }
 
+/** Options when looking up an asset's account holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-idbalances */
+export interface LookupAssetHoldingsOptions {
+  /** Results should have a decimal units amount less than this value. */
+  currencyLessThan?: number
+  /** Results should have a decimal units amount greater than this value. */
+  currencyGreaterThan?: number
+  /** Include all items including closed accounts and opted-out asset holdings. */
+  includeAll?: boolean
+}
+
+/** Indexer result for an asset's account holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-idbalances */
+export interface AssetBalancesLookupResult {
+  /** Round at which the results were computed. */
+  'current-round': number
+  /** Used for pagination, when making another request provide this token with the next parameter. */
+  'next-token': string
+  /** The list of accounts who hold this asset with their balance */
+  balances: MiniAssetHolding[]
+}
+
 /** Indexer result for a transaction lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid */
 export interface TransactionLookupResult {
   /** Round at which the results were computed. */
@@ -300,7 +320,7 @@ export interface StateProofTransactionResult {
     /** [l] Last round the message attests to */
     'latest-attested-round': number
     /** [P] An integer value representing the natural log of the proven weight with 16 bits of precision. This value would be used to verify the next state proof. */
-    'ln-proven-weight': number
+    'ln-proven-weight': number | bigint
     /** [v] The vector commitment root of the top N accounts to sign the next StateProof.
      *
      * Pattern : "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$" */
@@ -343,7 +363,7 @@ export interface StateProofTransactionResult {
           'key-lifetime': number
         }
         /** [w] Weight is AccountData.MicroAlgos. */
-        weight: number
+        weight: number | bigint
       }
       /** [s] A sigslotCommit is a single slot in the sigs array that forms the state proof. */
       'sig-slot': {
@@ -351,7 +371,7 @@ export interface StateProofTransactionResult {
          * This is initialized once the builder has collected a sufficient
          * number of signatures.
          */
-        'lower-sig-weight': number
+        'lower-sig-weight': number | bigint
         /** [s] Sig is a signature by the participant on the expected message.
          *
          * Signature represents a signature in the Merkle signature scheme using falcon signatures as an underlying crypto scheme.
@@ -380,7 +400,7 @@ export interface StateProofTransactionResult {
     /** [S] Proofs for the signature */
     'sig-proofs': MerkleArrayProof
     /** [w] The combined weight of the signatures */
-    'signed-weight': number
+    'signed-weight': number | bigint
   }
   /** [sptype] State proof type, per https://github.com/algorand/go-algorand/blob/master/protocol/stateproof.go#L24
    *
@@ -484,11 +504,11 @@ export interface AssetFreezeTransactionResult {
 /** Fields for an asset transfer transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer */
 export interface AssetTransferTransactionResult {
   /** [aamt] Amount of asset to transfer. A zero amount transferred to self allocates that asset in the account's Assets map. */
-  amount: number
+  amount: number | bigint
   /** [xaid] ID of the asset being transferred. */
   'asset-id': number
   /** Number of assets transfered to the close-to account as part of the transaction. */
-  'close-amount'?: number
+  'close-amount'?: number | bigint
   /** [aclose] Indicates that the asset should be removed from the account's Assets map, and specifies where the remaining asset holdings should be transferred. It's always valid to transfer remaining asset holdings to the creator account. */
   'close-to'?: string
   /** [arcv] Recipient address of the transfer. */
@@ -820,7 +840,7 @@ export interface AssetHolding {
   /**
    * (a) number of units held.
    */
-  amount: number
+  amount: number | bigint
   /**
    * Asset ID of the holding.
    */
@@ -835,4 +855,26 @@ export interface AssetHolding {
   'opted-in-at-round': number
   /** Round during which the account opted out of this asset holding. */
   'opted-out-at-round': number
+}
+
+/** Describes an asset holding for an account of a known asset. https://developer.algorand.org/docs/rest-apis/indexer/#miniassetholding */
+export interface MiniAssetHolding {
+  /**
+   * Address of the account that holds the asset.
+   */
+  address: string
+  /**
+   * (a) number of units held.
+   */
+  amount: number | bigint
+  /** Whether or not the asset holding is currently deleted from its account. */
+  deleted?: boolean
+  /**
+   * [f] whether or not the holding is frozen.
+   */
+  'is-frozen': boolean
+  /** Round during which the account opted into this asset holding. */
+  'opted-in-at-round'?: number
+  /** Round during which the account opted out of this asset holding. */
+  'opted-out-at-round'?: number
 }

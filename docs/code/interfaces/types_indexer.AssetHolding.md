@@ -21,13 +21,13 @@ Describes an asset held by an account. https://developer.algorand.org/docs/rest-
 
 ### amount
 
-• **amount**: `number`
+• **amount**: `number` \| `bigint`
 
 (a) number of units held.
 
 #### Defined in
 
-[src/types/indexer.ts:823](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L823)
+[src/types/indexer.ts:843](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L843)
 
 ___
 
@@ -39,7 +39,7 @@ Asset ID of the holding.
 
 #### Defined in
 
-[src/types/indexer.ts:827](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L827)
+[src/types/indexer.ts:847](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L847)
 
 ___
 
@@ -51,7 +51,7 @@ Whether or not the asset holding is currently deleted from its account.
 
 #### Defined in
 
-[src/types/indexer.ts:829](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L829)
+[src/types/indexer.ts:849](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L849)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:833](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L833)
+[src/types/indexer.ts:853](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L853)
 
 ___
 
@@ -75,7 +75,7 @@ Round during which the account opted into this asset holding.
 
 #### Defined in
 
-[src/types/indexer.ts:835](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L835)
+[src/types/indexer.ts:855](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L855)
 
 ___
 
@@ -87,4 +87,4 @@ Round during which the account opted out of this asset holding.
 
 #### Defined in
 
-[src/types/indexer.ts:837](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L837)
+[src/types/indexer.ts:857](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L857)

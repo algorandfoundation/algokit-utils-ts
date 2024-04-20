@@ -35,7 +35,7 @@ There are a number of ways to produce one of these configuration objects:
 Once you have the configuration for a client, to get the client you can use the following functions:
 
 - [`algokit.getAlgoClient(config)`](../code/modules/index.md#getalgoclient) - Returns an Algod client for the given configuration; the client automatically retries on transient HTTP errors; if one isn't provided it retrieves it from the environment
-- [`algokit.getAlgoIndexerClient(config)`](../code/modules/index.md#getalgoindexerclient) - Returns an Indexer client for given configuration; if one isn't provided it retrieves it from the environment
+- [`algokit.getAlgoIndexerClient(config, overrideIntDecoding)`](../code/modules/index.md#getalgoindexerclient) - Returns an Indexer client for given configuration; if one isn't provided it retrieves it from the environment
 - [`algokit.getAlgoKmdClient(config)`](../code/modules/index.md#getalgokmdclient) - Returns a Kmd client for the given configuration; if one isn't provided it retrieves it from the environment
 
 ## Automatic retry

@@ -4,6 +4,11 @@
 
 ## Table of contents
 
+### References
+
+- [AlgorandClient](index.md#algorandclient)
+- [SendSingleTransactionResult](index.md#sendsingletransactionresult)
+
 ### Variables
 
 - [Config](index.md#config)
@@ -23,6 +28,7 @@
 - [compileTeal](index.md#compileteal)
 - [controlFees](index.md#controlfees)
 - [createApp](index.md#createapp)
+- [createAsset](index.md#createasset)
 - [decodeAppState](index.md#decodeappstate)
 - [deployApp](index.md#deployapp)
 - [encodeLease](index.md#encodelease)
@@ -34,7 +40,9 @@
 - [getAccount](index.md#getaccount)
 - [getAccountAddressAsString](index.md#getaccountaddressasstring)
 - [getAccountAddressAsUint8Array](index.md#getaccountaddressasuint8array)
+- [getAccountAssetInformation](index.md#getaccountassetinformation)
 - [getAccountConfigFromEnvironment](index.md#getaccountconfigfromenvironment)
+- [getAccountInformation](index.md#getaccountinformation)
 - [getAlgoClient](index.md#getalgoclient)
 - [getAlgoIndexerClient](index.md#getalgoindexerclient)
 - [getAlgoKmdClient](index.md#getalgokmdclient)
@@ -76,6 +84,7 @@
 - [isTestNet](index.md#istestnet)
 - [lookupAccountByAddress](index.md#lookupaccountbyaddress)
 - [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
+- [lookupAssetHoldings](index.md#lookupassetholdings)
 - [lookupTransactionById](index.md#lookuptransactionbyid)
 - [microAlgos](index.md#microalgos)
 - [mnemonicAccount](index.md#mnemonicaccount)
@@ -104,6 +113,18 @@
 - [transferAsset](index.md#transferasset)
 - [updateApp](index.md#updateapp)
 - [waitForConfirmation](index.md#waitforconfirmation)
+
+## References
+
+### AlgorandClient
+
+Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+
+___
+
+### SendSingleTransactionResult
+
+Re-exports [SendSingleTransactionResult](types_algorand_client.md#sendsingletransactionresult)
 
 ## Variables
 
@@ -202,7 +223,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L170)
+[src/asset.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L242)
 
 ___
 
@@ -237,7 +258,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L237)
+[src/asset.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L309)
 
 ___
 
@@ -268,7 +289,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L81)
+[src/asset.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L153)
 
 ___
 
@@ -299,7 +320,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L119)
+[src/asset.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L191)
 
 ___
 
@@ -431,6 +452,37 @@ The details of the created app, or the transaction to create it if `skipSending`
 #### Defined in
 
 [src/app.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L56)
+
+___
+
+### createAsset
+
+▸ **createAsset**(`create`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) & \{ `confirmation?`: \{ `assetIndex`: `number` \| `bigint`  }  }\>
+
+Create an Algorand Standard Asset (ASA).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `create` | [`CreateAssetParams`](../interfaces/types_asset.CreateAssetParams.md) | The asset creation definition |
+| `algod` | `default` | An algod client |
+
+#### Returns
+
+`Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) & \{ `confirmation?`: \{ `assetIndex`: `number` \| `bigint`  }  }\>
+
+The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
+
+**`Example`**
+
+```typescript
+await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My asset' }, algod)
+```
+
+#### Defined in
+
+[src/asset.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L81)
 
 ___
 
@@ -623,7 +675,7 @@ ___
 
 #### Defined in
 
-[src/indexer-lookup.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L109)
+[src/indexer-lookup.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L152)
 
 ___
 
@@ -781,7 +833,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L127)
+[src/account/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L128)
 
 ___
 
@@ -803,7 +855,43 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L119)
+[src/account/account.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L120)
+
+___
+
+### getAccountAssetInformation
+
+▸ **getAccountAssetInformation**(`sender`, `assetId`, `algod`): `Promise`\<[`AccountAssetInformation`](types_account.md#accountassetinformation)\>
+
+Returns the given sender account's asset holding for a given asset.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The address of the sender/account to look up |
+| `assetId` | `number` \| `bigint` | The ID of the asset to return a holding for |
+| `algod` | `default` | The algod instance |
+
+#### Returns
+
+`Promise`\<[`AccountAssetInformation`](types_account.md#accountassetinformation)\>
+
+The account asset holding information
+
+**`Example`**
+
+```typescript
+const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+const assetId = 123345;
+const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
+```
+
+[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+
+#### Defined in
+
+[src/account/account.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L187)
 
 ___
 
@@ -837,6 +925,40 @@ environment variables
 #### Defined in
 
 [src/account/get-account-config-from-environment.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/get-account-config-from-environment.ts#L13)
+
+___
+
+### getAccountInformation
+
+▸ **getAccountInformation**(`sender`, `algod`): `Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+
+Returns the given sender account's current status, balance and spendable amounts.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sender` | `string` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The address of the sender/account to look up |
+| `algod` | `default` | The algod instance |
+
+#### Returns
+
+`Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+
+The account information
+
+**`Example`**
+
+```typescript
+const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
+const accountInfo = await account.getInformation(address, algod);
+```
+
+[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+
+#### Defined in
+
+[src/account/account.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L146)
 
 ___
 
@@ -888,13 +1010,13 @@ Returns an algod SDK client that automatically retries on idempotent calls
 
 #### Defined in
 
-[src/network-client.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L129)
+[src/network-client.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L130)
 
 ___
 
 ### getAlgoIndexerClient
 
-▸ **getAlgoIndexerClient**(`config?`): `Indexer`
+▸ **getAlgoIndexerClient**(`config?`, `overrideIntDecoding?`): `Indexer`
 
 Returns an indexer SDK client that automatically retries on idempotent calls
 
@@ -903,6 +1025,7 @@ Returns an indexer SDK client that automatically retries on idempotent calls
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `config?` | [`AlgoClientConfig`](../interfaces/types_network_client.AlgoClientConfig.md) | The config if you want to override the default (getting config from process.env) |
+| `overrideIntDecoding?` | `IntDecoding` | Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers |
 
 #### Returns
 
@@ -912,7 +1035,6 @@ Returns an indexer SDK client that automatically retries on idempotent calls
 
 ```typescript
  // Uses process.env.INDEXER_SERVER, process.env.INDEXER_PORT and process.env.INDEXER_TOKEN
- // Automatically detects if you are using PureStake to switch in the right header name for INDEXER_TOKEN
  const indexer = getAlgoIndexerClient()
  await indexer.makeHealthCheck().do()
  ```
@@ -938,9 +1060,15 @@ Returns an indexer SDK client that automatically retries on idempotent calls
  await indexer.makeHealthCheck().do()
 ```
 
+**`Example`**
+
+```typescript
+ const indexer = getAlgoIndexerClient(config, IntDecoding.BIGINT)
+```
+
 #### Defined in
 
-[src/network-client.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L162)
+[src/network-client.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L167)
 
 ___
 
@@ -977,7 +1105,7 @@ KMD client allows you to export private keys, which is useful to get the default
 
 #### Defined in
 
-[src/network-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L185)
+[src/network-client.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L193)
 
 ___
 
@@ -1000,7 +1128,7 @@ Returns the Algorand configuration to point to the AlgoNode service
 
 #### Defined in
 
-[src/network-client.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L75)
+[src/network-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L76)
 
 ___
 
@@ -1016,7 +1144,7 @@ Retrieve the algod configuration from environment variables (expects to be calle
 
 #### Defined in
 
-[src/network-client.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L37)
+[src/network-client.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L38)
 
 ___
 
@@ -1517,7 +1645,7 @@ Retrieve configurations from environment variables when defined or get defaults 
 
 #### Defined in
 
-[src/network-client.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L10)
+[src/network-client.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L11)
 
 ___
 
@@ -1566,7 +1694,7 @@ Returns the Algorand configuration to point to the default LocalNet
 
 #### Defined in
 
-[src/network-client.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L86)
+[src/network-client.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L87)
 
 ___
 
@@ -1608,7 +1736,7 @@ Retrieve the indexer configuration from environment variables (expects to be cal
 
 #### Defined in
 
-[src/network-client.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L54)
+[src/network-client.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L55)
 
 ___
 
@@ -1878,7 +2006,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L197)
+[src/network-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L205)
 
 ___
 
@@ -1925,7 +2053,7 @@ ___
 
 #### Defined in
 
-[src/network-client.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L192)
+[src/network-client.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/network-client.ts#L200)
 
 ___
 
@@ -1950,7 +2078,7 @@ The result of the look-up
 
 #### Defined in
 
-[src/indexer-lookup.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L30)
+[src/indexer-lookup.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L33)
 
 ___
 
@@ -1958,7 +2086,7 @@ ___
 
 ▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
 
-Looks up applications that were created by the given address.
+Looks up applications that were created by the given address; will automatically paginate through all data.
 
 #### Parameters
 
@@ -1977,7 +2105,34 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L42)
+[src/indexer-lookup.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L45)
+
+___
+
+### lookupAssetHoldings
+
+▸ **lookupAssetHoldings**(`indexer`, `assetId`, `options?`, `paginationLimit?`): `Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
+
+Looks up asset holdings for the given asset; will automatically paginate through all data.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `indexer` | `default` | An indexer instance |
+| `assetId` | `number` \| `bigint` | The ID of the asset to look up holdings for |
+| `options?` | [`LookupAssetHoldingsOptions`](../interfaces/types_indexer.LookupAssetHoldingsOptions.md) | Optional options to control the lookup |
+| `paginationLimit?` | `number` | The number of records to return per paginated request, default 1000 |
+
+#### Returns
+
+`Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
+
+The list of application results
+
+#### Defined in
+
+[src/indexer-lookup.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L79)
 
 ___
 
@@ -2002,7 +2157,7 @@ The result of the look-up
 
 #### Defined in
 
-[src/indexer-lookup.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L20)
+[src/indexer-lookup.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L23)
 
 ___
 
@@ -2094,7 +2249,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/account/account.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L87)
+[src/account/account.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L88)
 
 ___
 
@@ -2119,7 +2274,7 @@ A multisig account wrapper
 
 #### Defined in
 
-[src/account/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L23)
+[src/account/account.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L24)
 
 ___
 
@@ -2294,7 +2449,7 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account/account.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L52)
+[src/account/account.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L53)
 
 ___
 
@@ -2352,7 +2507,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account/account.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L33)
+[src/account/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L34)
 
 ___
 
@@ -2411,7 +2566,7 @@ The search results
 
 #### Defined in
 
-[src/indexer-lookup.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L75)
+[src/indexer-lookup.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L118)
 
 ___
 
@@ -2622,7 +2777,7 @@ The SigningAccount wrapper
 
 #### Defined in
 
-[src/account/account.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L43)
+[src/account/account.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L44)
 
 ___
 

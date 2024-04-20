@@ -11,6 +11,7 @@ There is a subset of [indexer API calls](https://developer.algorand.org/docs/res
 - [`algokit.lookupTransactionById(transactionId, indexer)`](../code/modules/index.md#lookuptransactionbyid) - Finds a transaction by ID
 - [`algokit.lookupAccountByAddress(accountAddress, indexer)`](../code/modules/index.md#lookupaccountbyaddress) - Finds an account by address
 - [`algokit.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)`](../code/modules/index.md#lookupaccountcreatedapplicationbyaddress) - Finds all applications created for an account
+- [`algokit.lookupAssetHoldings(indexer, assetId, options?, paginationLimit?)`](../code/modules/index.md#lookupassetholdings) - Finds all asset holdings for the given asset
 - [`algokit.searchTransactions(indexer, searchCriteria, paginationLimit?)`](../code/modules/index.md#searchtransactions) - Search for transactions with a given set of criteria
 - [`algokit.executePaginatedRequest(extractItems, buildRequest)`](../code/modules/index.md#executepaginatedrequest) - Execute the given indexer request with automatic pagination
 

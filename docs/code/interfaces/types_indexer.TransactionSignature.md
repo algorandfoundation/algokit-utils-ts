@@ -24,7 +24,7 @@ Logicsig signature
 
 #### Defined in
 
-[src/types/indexer.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L555)
+[src/types/indexer.ts:575](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L575)
 
 ___
 
@@ -36,7 +36,7 @@ Multisig signature
 
 #### Defined in
 
-[src/types/indexer.ts:557](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L557)
+[src/types/indexer.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L577)
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:562](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L562)
+[src/types/indexer.ts:582](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L582)

@@ -23,7 +23,7 @@ The `AtomicTransactionComposer` with transactions loaded to send
 
 #### Defined in
 
-[src/types/transaction.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L128)
+[src/types/transaction.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L132)
 
 ___
 
@@ -35,4 +35,4 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L130)
+[src/types/transaction.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L134)
