@@ -28,7 +28,7 @@ Maximum number of TEAL byte slices that may be stored in the key/value store.
 
 #### Defined in
 
-[src/types/indexer.ts:667](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L667)
+[src/types/indexer.ts:687](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L687)
 
 ___
 
@@ -40,4 +40,4 @@ Maximum number of TEAL uints that may be stored in the key/value store.
 
 #### Defined in
 
-[src/types/indexer.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L669)
+[src/types/indexer.ts:689](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L689)

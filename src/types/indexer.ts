@@ -58,6 +58,26 @@ export interface AssetLookupResult {
   asset: AssetResult
 }
 
+/** Options when looking up an asset's account holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-idbalances */
+export interface LookupAssetHoldingsOptions {
+  /** Results should have a decimal units amount less than this value. */
+  currencyLessThan?: number
+  /** Results should have a decimal units amount greater than this value. */
+  currencyGreaterThan?: number
+  /** Include all items including closed accounts and opted-out asset holdings. */
+  includeAll?: boolean
+}
+
+/** Indexer result for an asset's account holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-idbalances */
+export interface AssetBalancesLookupResult {
+  /** Round at which the results were computed. */
+  'current-round': number
+  /** Used for pagination, when making another request provide this token with the next parameter. */
+  'next-token': string
+  /** The list of accounts who hold this asset with their balance */
+  balances: MiniAssetHolding[]
+}
+
 /** Indexer result for a transaction lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid */
 export interface TransactionLookupResult {
   /** Round at which the results were computed. */
@@ -835,4 +855,26 @@ export interface AssetHolding {
   'opted-in-at-round': number
   /** Round during which the account opted out of this asset holding. */
   'opted-out-at-round': number
+}
+
+/** Describes an asset holding for an account of a known asset. https://developer.algorand.org/docs/rest-apis/indexer/#miniassetholding */
+export interface MiniAssetHolding {
+  /**
+   * Address of the account that holds the asset.
+   */
+  address: string
+  /**
+   * (a) number of units held.
+   */
+  amount: number | bigint
+  /** Whether or not the asset holding is currently deleted from its account. */
+  deleted?: boolean
+  /**
+   * [f] whether or not the holding is frozen.
+   */
+  'is-frozen': boolean
+  /** Round during which the account opted into this asset holding. */
+  'opted-in-at-round'?: number
+  /** Round during which the account opted out of this asset holding. */
+  'opted-out-at-round'?: number
 }

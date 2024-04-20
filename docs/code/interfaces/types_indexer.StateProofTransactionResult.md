@@ -47,7 +47,7 @@ are needed in order to verify the next state proofs (VotersCommitment and LnProv
 
 #### Defined in
 
-[src/types/indexer.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L295)
+[src/types/indexer.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L315)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L310)
+[src/types/indexer.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L330)
 
 ___
 
@@ -85,4 +85,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L389)
+[src/types/indexer.ts:409](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L409)
