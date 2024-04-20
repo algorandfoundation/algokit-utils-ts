@@ -97,13 +97,13 @@ ___
 
 ### dispenser
 
-▸ **dispenser**(): `Promise`\<`void`\>
+▸ **dispenser**(): `Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default` \| [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Returns an account (with private key loaded) that can act as a dispenser.
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default` \| [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The account
 
@@ -123,7 +123,7 @@ ___
 
 ### fromEnvironment
 
-▸ **fromEnvironment**(`name`, `fundWith?`): `Promise`\<`void`\>
+▸ **fromEnvironment**(`name`, `fundWith?`): `Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default` \| [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 Tracks and returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
 
@@ -146,7 +146,7 @@ This allows you to write code that will work seamlessly in production and local 
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default` \| [`SigningAccount`](types_account.SigningAccount.md)  }\>
 
 The account
 
@@ -352,13 +352,13 @@ ___
 
 ### localNetDispenser
 
-▸ **localNetDispenser**(): `Promise`\<`void`\>
+▸ **localNetDispenser**(): `Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default`  }\>
 
 Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts).
 
 #### Returns
 
-`Promise`\<`void`\>
+`Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default`  }\>
 
 The account
 
@@ -376,7 +376,7 @@ ___
 
 ### logicsig
 
-▸ **logicsig**(`program`, `args?`): `void`
+▸ **logicsig**(`program`, `args?`): [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `LogicSigAccount`  }
 
 Tracks and returns an account that represents a logic signature.
 
@@ -389,7 +389,7 @@ Tracks and returns an account that represents a logic signature.
 
 #### Returns
 
-`void`
+[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `LogicSigAccount`  }
 
 A logic signature account wrapper
 
@@ -439,13 +439,13 @@ ___
 
 ### random
 
-▸ **random**(): `void`
+▸ **random**(): [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default`  }
 
 Tracks and returns a new, random Algorand account with secret key loaded.
 
 #### Returns
 
-`void`
+[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: `default`  }
 
 The account
 
