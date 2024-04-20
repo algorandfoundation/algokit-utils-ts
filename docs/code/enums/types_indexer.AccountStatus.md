@@ -24,7 +24,7 @@ Indicates that the associated account is neither a delegator nor a delegate
 
 #### Defined in
 
-[src/types/indexer.ts:774](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L774)
+[src/types/indexer.ts:794](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L794)
 
 ___
 
@@ -36,7 +36,7 @@ Indicates that the associated account is delegated
 
 #### Defined in
 
-[src/types/indexer.ts:770](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L770)
+[src/types/indexer.ts:790](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L790)
 
 ___
 
@@ -48,4 +48,4 @@ Indicates that the associated account used as part of the delegation pool
 
 #### Defined in
 
-[src/types/indexer.ts:772](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L772)
+[src/types/indexer.ts:792](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L792)

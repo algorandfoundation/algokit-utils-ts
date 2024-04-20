@@ -84,6 +84,7 @@
 - [isTestNet](index.md#istestnet)
 - [lookupAccountByAddress](index.md#lookupaccountbyaddress)
 - [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
+- [lookupAssetHoldings](index.md#lookupassetholdings)
 - [lookupTransactionById](index.md#lookuptransactionbyid)
 - [microAlgos](index.md#microalgos)
 - [mnemonicAccount](index.md#mnemonicaccount)
@@ -674,7 +675,7 @@ ___
 
 #### Defined in
 
-[src/indexer-lookup.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L109)
+[src/indexer-lookup.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L152)
 
 ___
 
@@ -2077,7 +2078,7 @@ The result of the look-up
 
 #### Defined in
 
-[src/indexer-lookup.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L30)
+[src/indexer-lookup.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L33)
 
 ___
 
@@ -2085,7 +2086,7 @@ ___
 
 ▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
 
-Looks up applications that were created by the given address.
+Looks up applications that were created by the given address; will automatically paginate through all data.
 
 #### Parameters
 
@@ -2104,7 +2105,34 @@ The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L42)
+[src/indexer-lookup.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L45)
+
+___
+
+### lookupAssetHoldings
+
+▸ **lookupAssetHoldings**(`indexer`, `assetId`, `options?`, `paginationLimit?`): `Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
+
+Looks up asset holdings for the given asset; will automatically paginate through all data.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `indexer` | `default` | An indexer instance |
+| `assetId` | `number` \| `bigint` | The ID of the asset to look up holdings for |
+| `options?` | [`LookupAssetHoldingsOptions`](../interfaces/types_indexer.LookupAssetHoldingsOptions.md) | Optional options to control the lookup |
+| `paginationLimit?` | `number` | The number of records to return per paginated request, default 1000 |
+
+#### Returns
+
+`Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
+
+The list of application results
+
+#### Defined in
+
+[src/indexer-lookup.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L79)
 
 ___
 
@@ -2129,7 +2157,7 @@ The result of the look-up
 
 #### Defined in
 
-[src/indexer-lookup.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L20)
+[src/indexer-lookup.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L23)
 
 ___
 
@@ -2538,7 +2566,7 @@ The search results
 
 #### Defined in
 
-[src/indexer-lookup.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L75)
+[src/indexer-lookup.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L118)
 
 ___
 
