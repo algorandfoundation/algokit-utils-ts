@@ -484,10 +484,23 @@ export default class AlgokitComposer {
 
     const methodAtc = new algosdk.AtomicTransactionComposer()
 
+    const appID = Number(params.appId || 0)
     methodAtc.addMethodCall({
-      ...params,
-      appID: Number(params.appId || 0),
+      appID,
+      sender: params.sender,
       suggestedParams,
+      onComplete: params.onComplete,
+      appAccounts: params.accountReferences,
+      appForeignApps: params.appReferences?.map((x) => Number(x)),
+      appForeignAssets: params.assetReferences?.map((x) => Number(x)),
+      approvalProgram: params.approvalProgram,
+      clearProgram: params.clearProgram,
+      extraPages: params.extraPages,
+      numLocalInts: params.schema?.localUints || appID === 0 ? 0 : undefined,
+      numLocalByteSlices: params.schema?.localByteSlices || appID === 0 ? 0 : undefined,
+      numGlobalInts: params.schema?.globalUints || appID === 0 ? 0 : undefined,
+      numGlobalByteSlices: params.schema?.globalByteSlices || appID === 0 ? 0 : undefined,
+      method: params.method,
       signer: params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : this.getSigner(params.sender),
       methodArgs: methodArgs,
       // note, lease, and rekeyTo are set in the common build step
