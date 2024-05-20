@@ -298,15 +298,15 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 
     // Do accounts first because the account limit is 4
     r.accounts?.forEach((a) => {
-      group[i].txn.appAccounts?.push(algosdk.decodeAddress(a))
+      group[i].txn.appAccounts = [...(group[i].txn.appAccounts ?? []), algosdk.decodeAddress(a)]
     })
 
     r.apps?.forEach((a) => {
-      group[i].txn.appForeignApps?.push(Number(a))
+      group[i].txn.appForeignApps = [...(group[i].txn.appForeignApps ?? []), Number(a)]
     })
 
     r.assets?.forEach((a) => {
-      group[i].txn.appForeignAssets?.push(Number(a))
+      group[i].txn.appForeignAssets = [...(group[i].txn.appForeignAssets ?? []), Number(a)]
     })
 
     const accounts = group[i].txn.appAccounts?.length || 0
@@ -366,10 +366,10 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       if (txnIndex > -1) {
         if (type === 'assetHolding') {
           const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
-          txns[txnIndex].txn.appForeignAssets?.push(Number(asset))
+          txns[txnIndex].txn.appForeignAssets = [...(txns[txnIndex].txn.appForeignAssets ?? []), Number(asset)]
         } else {
           const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
-          txns[txnIndex].txn.appForeignApps?.push(Number(app))
+          txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(app)]
         }
         return
       }
@@ -393,7 +393,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       if (txnIndex > -1) {
         const { account } = reference as algosdk.modelsv2.AssetHoldingReference | algosdk.modelsv2.ApplicationLocalReference
 
-        txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+        txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(account)]
 
         return
       }
@@ -421,22 +421,22 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     }
 
     if (type === 'account') {
-      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(reference as string))
+      txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(reference as string)]
     } else if (type === 'app') {
-      txns[txnIndex].txn.appForeignApps?.push(Number(reference))
+      txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(reference)]
     } else if (type === 'box') {
       const { app, name } = reference as algosdk.modelsv2.BoxReference
-      txns[txnIndex].txn.boxes?.push({ appIndex: Number(app), name: name })
+      txns[txnIndex].txn.boxes = [...(txns[txnIndex].txn.boxes ?? []), { appIndex: Number(app), name }]
     } else if (type === 'assetHolding') {
       const { asset, account } = reference as algosdk.modelsv2.AssetHoldingReference
-      txns[txnIndex].txn.appForeignAssets?.push(Number(asset))
-      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
+      txns[txnIndex].txn.appForeignAssets = [...(txns[txnIndex].txn.appForeignAssets ?? []), Number(asset)]
+      txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(account)]
     } else if (type === 'appLocal') {
       const { app, account } = reference as algosdk.modelsv2.ApplicationLocalReference
-      txns[txnIndex].txn.appAccounts?.push(algosdk.decodeAddress(account))
-      txns[txnIndex].txn.appForeignApps?.push(Number(app))
+      txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(account)]
+      txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(app)]
     } else if (type === 'asset') {
-      txns[txnIndex].txn.appForeignAssets?.push(Number(reference))
+      txns[txnIndex].txn.appForeignAssets = [...(txns[txnIndex].txn.appForeignAssets ?? []), Number(reference)]
     }
   }
 
