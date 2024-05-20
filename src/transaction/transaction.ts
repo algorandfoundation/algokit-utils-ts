@@ -428,13 +428,15 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       const { app, name } = reference as algosdk.modelsv2.BoxReference
       txns[txnIndex].txn.boxes = [...(txns[txnIndex].txn.boxes ?? []), { appIndex: Number(app), name }]
 
-      // Add the app if it is not already available
-      let appAlreadyAvailable = false
-      txns.forEach((t) => {
-        if (t.txn.appIndex === Number(reference)) appAlreadyAvailable = true
-        if (t.txn.appForeignApps?.includes(Number(reference))) appAlreadyAvailable = true
-      })
-      if (!appAlreadyAvailable) populateGroupResource(txns, app, 'app')
+      if (app !== 0) {
+        // Add the app if it is not already available
+        let appAlreadyAvailable = false
+        txns.forEach((t) => {
+          if (t.txn.appIndex === Number(reference)) appAlreadyAvailable = true
+          if (t.txn.appForeignApps?.includes(Number(reference))) appAlreadyAvailable = true
+        })
+        if (!appAlreadyAvailable) populateGroupResource(txns, app, 'app')
+      }
     } else if (type === 'assetHolding') {
       const { asset, account } = reference as algosdk.modelsv2.AssetHoldingReference
       txns[txnIndex].txn.appForeignAssets = [...(txns[txnIndex].txn.appForeignAssets ?? []), Number(asset)]
