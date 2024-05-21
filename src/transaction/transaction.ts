@@ -333,20 +333,20 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       | number,
     type: 'account' | 'assetHolding' | 'appLocal' | 'app' | 'box' | 'asset',
   ): void => {
+    const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
+      if (t.txn.type !== algosdk.TransactionType.appl) return false
+
+      const accounts = t.txn.appAccounts?.length || 0
+      const assets = t.txn.appForeignAssets?.length || 0
+      const apps = t.txn.appForeignApps?.length || 0
+      const boxes = t.txn.boxes?.length || 0
+
+      return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
+    }
+
     // If this is a asset holding or app local, first try to find a transaction that already has the account available
     if (type === 'assetHolding' || type === 'appLocal') {
       const { account } = reference as algosdk.modelsv2.ApplicationLocalReference | algosdk.modelsv2.AssetHoldingReference
-
-      const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
-        if (t.txn.type !== algosdk.TransactionType.appl) return false
-
-        const accounts = t.txn.appAccounts?.length || 0
-        const assets = t.txn.appForeignAssets?.length || 0
-        const apps = t.txn.appForeignApps?.length || 0
-        const boxes = t.txn.boxes?.length || 0
-
-        return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
-      }
 
       let txnIndex = txns.findIndex((t) => {
         if (!isApplBelowLimit(t)) return false
@@ -399,6 +399,25 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       }
     }
 
+    // If this is a box, first try to find a transaction that already has the app available
+    if (type === 'box') {
+      const { app, name } = reference as algosdk.modelsv2.BoxReference
+
+      const txnIndex = txns.findIndex((t) => {
+        if (!isApplBelowLimit(t)) return false
+
+        // If the app is in the foreign array OR the app being called, then we know it's available
+        return t.txn.appForeignApps?.includes(Number(app)) || t.txn.appIndex === Number(app)
+      })
+
+      if (txnIndex > -1) {
+        txns[txnIndex].txn.boxes = [...(txns[txnIndex].txn.boxes ?? []), { appIndex: Number(app), name }]
+
+        return
+      }
+    }
+
+    // Find the txn index to put the reference(s)
     const txnIndex = txns.findIndex((t) => {
       if (t.txn.type !== algosdk.TransactionType.appl) return false
 
@@ -409,9 +428,13 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       const apps = t.txn.appForeignApps?.length || 0
       const boxes = t.txn.boxes?.length || 0
 
+      // If we're adding local state or asset holding, we need space for the acocunt and the other reference
       if (type === 'assetHolding' || type === 'appLocal') {
         return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES - 1 && accounts < MAX_APP_CALL_ACCOUNT_REFERENCES
       }
+
+      // If we're adding a box, we need space for both the box ref and the app ref
+      if (type === 'box') return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES - 1
 
       return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
     })
@@ -429,13 +452,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       txns[txnIndex].txn.boxes = [...(txns[txnIndex].txn.boxes ?? []), { appIndex: Number(app), name }]
 
       if (app.toString() !== '0') {
-        // Add the app if it is not already available
-        let appAlreadyAvailable = false
-        for (const t of txns) {
-          appAlreadyAvailable = t.txn.appForeignApps?.includes(Number(app)) || t.txn.appIndex === Number(app)
-          if (appAlreadyAvailable) break
-        }
-        if (!appAlreadyAvailable) populateGroupResource(txns, app, 'app')
+        txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(app)]
       }
     } else if (type === 'assetHolding') {
       const { asset, account } = reference as algosdk.modelsv2.AssetHoldingReference
@@ -479,7 +496,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     g.boxes?.forEach((b) => {
       populateGroupResource(group, b, 'box')
 
-      // Remove resources from the group if we're adding them here
+      // Remove apps as resource from the group if we're adding it here
       g.apps = g.apps?.filter((app) => BigInt(app) !== BigInt(b.app))
     })
 
