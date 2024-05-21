@@ -1,10 +1,18 @@
 /* eslint-disable no-console */
-import { TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
+import algosdk from 'algosdk'
+import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
 import * as algokit from '../index'
 import { algorandFixture } from '../testing'
 import { TransactionSignerAccount } from './account'
 import AlgorandClient from './algorand-client'
 import { MethodCallParams } from './composer'
+
+async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
+  const teal = new Uint8Array(Buffer.from(b64Teal, 'base64'))
+  const result = await algorand.client.algod.compile(teal).do()
+
+  return new Uint8Array(Buffer.from(result.result, 'base64'))
+}
 
 describe('AlgorandClient', () => {
   let algorand: AlgorandClient
@@ -195,5 +203,17 @@ describe('AlgorandClient', () => {
       signer: alice,
     })
     expect(await algod.accountAssetInformation(alice.addr, Number(assetId)).do()).toBeDefined()
+  })
+
+  test('methodCall create', async () => {
+    const contract = new algosdk.ABIContract(APP_SPEC.contract)
+
+    await algorand.send.methodCall({
+      sender: alice.addr,
+      appId: 0n,
+      method: contract.getMethodByName('createApplication'),
+      approvalProgram: await compileProgram(algorand, APP_SPEC.source.approval),
+      clearProgram: await compileProgram(algorand, APP_SPEC.source.clear),
+    })
   })
 })

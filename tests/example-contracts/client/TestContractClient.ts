@@ -15,7 +15,7 @@ import type {
   AppReference,
   CoreAppCallArgs,
   RawAppCallArgs,
-  TealTemplateParams
+  TealTemplateParams,
 } from '../../../src/types/app'
 import type {
   AppClientCallCoreParams,
@@ -27,205 +27,206 @@ import type {
 import type { AppSpec } from '../../../src/types/app-spec'
 import type { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionToSign } from '../../../src/types/transaction'
 export const APP_SPEC: AppSpec = {
-  "hints": {
-    "doMath(uint64,uint64,string)uint64": {
-      "call_config": {
-        "no_op": "CALL"
-      }
+  hints: {
+    'doMath(uint64,uint64,string)uint64': {
+      call_config: {
+        no_op: 'CALL',
+      },
     },
-    "txnArg(pay)address": {
-      "call_config": {
-        "no_op": "CALL"
-      }
+    'txnArg(pay)address': {
+      call_config: {
+        no_op: 'CALL',
+      },
     },
-    "helloWorld()string": {
-      "call_config": {
-        "no_op": "CALL"
-      }
+    'helloWorld()string': {
+      call_config: {
+        no_op: 'CALL',
+      },
     },
-    "methodArg(appl)uint64": {
-      "call_config": {
-        "no_op": "CALL"
-      }
+    'methodArg(appl)uint64': {
+      call_config: {
+        no_op: 'CALL',
+      },
     },
-    "nestedTxnArg(pay,appl)uint64": {
-      "call_config": {
-        "no_op": "CALL"
-      }
+    'nestedTxnArg(pay,appl)uint64': {
+      call_config: {
+        no_op: 'CALL',
+      },
     },
-    "doubleNestedTxnArg(pay,appl,pay,appl)uint64": {
-      "call_config": {
-        "no_op": "CALL"
-      }
+    'doubleNestedTxnArg(pay,appl,pay,appl)uint64': {
+      call_config: {
+        no_op: 'CALL',
+      },
     },
-    "createApplication()void": {
-      "call_config": {
-        "no_op": "CREATE"
-      }
-    }
+    'createApplication()void': {
+      call_config: {
+        no_op: 'CREATE',
+      },
+    },
   },
-  "bare_call_config": {
-    "no_op": "NEVER",
-    "opt_in": "NEVER",
-    "close_out": "NEVER",
-    "update_application": "NEVER",
-    "delete_application": "NEVER"
+  bare_call_config: {
+    no_op: 'NEVER',
+    opt_in: 'NEVER',
+    close_out: 'NEVER',
+    update_application: 'NEVER',
+    delete_application: 'NEVER',
   },
-  "schema": {
-    "local": {
-      "declared": {},
-      "reserved": {}
+  schema: {
+    local: {
+      declared: {},
+      reserved: {},
     },
-    "global": {
-      "declared": {},
-      "reserved": {}
-    }
-  },
-  "state": {
-    "global": {
-      "num_byte_slices": 0,
-      "num_uints": 0
+    global: {
+      declared: {},
+      reserved: {},
     },
-    "local": {
-      "num_byte_slices": 0,
-      "num_uints": 0
-    }
   },
-  "source": {
-    "approval": "I3ByYWdtYSB2ZXJzaW9uIDEwCgovLyBUaGlzIFRFQUwgd2FzIGdlbmVyYXRlZCBieSBURUFMU2NyaXB0IHYwLjg2LjAKLy8gaHR0cHM6Ly9naXRodWIuY29tL2FsZ29yYW5kZm91bmRhdGlvbi9URUFMU2NyaXB0CgovLyBUaGlzIGNvbnRyYWN0IGlzIGNvbXBsaWFudCB3aXRoIGFuZC9vciBpbXBsZW1lbnRzIHRoZSBmb2xsb3dpbmcgQVJDczogWyBBUkM0IF0KCi8vIFRoZSBmb2xsb3dpbmcgdGVuIGxpbmVzIG9mIFRFQUwgaGFuZGxlIGluaXRpYWwgcHJvZ3JhbSBmbG93Ci8vIFRoaXMgcGF0dGVybiBpcyB1c2VkIHRvIG1ha2UgaXQgZWFzeSBmb3IgYW55b25lIHRvIHBhcnNlIHRoZSBzdGFydCBvZiB0aGUgcHJvZ3JhbSBhbmQgZGV0ZXJtaW5lIGlmIGEgc3BlY2lmaWMgYWN0aW9uIGlzIGFsbG93ZWQKLy8gSGVyZSwgYWN0aW9uIHJlZmVycyB0byB0aGUgT25Db21wbGV0ZSBpbiBjb21iaW5hdGlvbiB3aXRoIHdoZXRoZXIgdGhlIGFwcCBpcyBiZWluZyBjcmVhdGVkIG9yIGNhbGxlZAovLyBFdmVyeSBwb3NzaWJsZSBhY3Rpb24gZm9yIHRoaXMgY29udHJhY3QgaXMgcmVwcmVzZW50ZWQgaW4gdGhlIHN3aXRjaCBzdGF0ZW1lbnQKLy8gSWYgdGhlIGFjdGlvbiBpcyBub3QgaW1wbGVtZW50ZWQgaW4gdGhlIGNvbnRyYWN0LCBpdHMgcmVzcGVjdGl2ZSBicmFuY2ggd2lsbCBiZSAiKk5PVF9JTVBMRU1FTlRFRCIgd2hpY2gganVzdCBjb250YWlucyAiZXJyIgp0eG4gQXBwbGljYXRpb25JRAohCmludCA2CioKdHhuIE9uQ29tcGxldGlvbgorCnN3aXRjaCAqY2FsbF9Ob09wICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVEICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqY3JlYXRlX05vT3AgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVEICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVECgoqTk9UX0lNUExFTUVOVEVEOgoJZXJyCgovLyBnZXRTdW0oYTogbnVtYmVyLCBiOiBudW1iZXIpOiBudW1iZXIKLy8KLy8gQ2FsY3VsYXRlcyB0aGUgc3VtIG9mIHR3byBudW1iZXJzCi8vCi8vIEBwYXJhbSBhCi8vIEBwYXJhbSBiCi8vIEByZXR1cm5zIFRoZSBzdW0gb2YgYSBhbmQgYgpnZXRTdW06Cglwcm90byAyIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czoxMgoJLy8gcmV0dXJuIGEgKyBiOwoJZnJhbWVfZGlnIC0xIC8vIGE6IG51bWJlcgoJZnJhbWVfZGlnIC0yIC8vIGI6IG51bWJlcgoJKwoJcmV0c3ViCgovLyBnZXREaWZmZXJlbmNlKGE6IG51bWJlciwgYjogbnVtYmVyKTogbnVtYmVyCi8vCi8vIENhbGN1bGF0ZXMgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiB0d28gbnVtYmVycwovLwovLyBAcGFyYW0gYQovLyBAcGFyYW0gYgovLyBAcmV0dXJucyBUaGUgZGlmZmVyZW5jZSBiZXR3ZWVuIGEgYW5kIGIuCmdldERpZmZlcmVuY2U6Cglwcm90byAyIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czoyMwoJLy8gcmV0dXJuIGEgPj0gYiA/IGEgLSBiIDogYiAtIGE7CglmcmFtZV9kaWcgLTEgLy8gYTogbnVtYmVyCglmcmFtZV9kaWcgLTIgLy8gYjogbnVtYmVyCgk+PQoJYnogKnRlcm5hcnkwX2ZhbHNlCglmcmFtZV9kaWcgLTEgLy8gYTogbnVtYmVyCglmcmFtZV9kaWcgLTIgLy8gYjogbnVtYmVyCgktCgliICp0ZXJuYXJ5MF9lbmQKCip0ZXJuYXJ5MF9mYWxzZToKCWZyYW1lX2RpZyAtMiAvLyBiOiBudW1iZXIKCWZyYW1lX2RpZyAtMSAvLyBhOiBudW1iZXIKCS0KCip0ZXJuYXJ5MF9lbmQ6CglyZXRzdWIKCi8vIGRvTWF0aCh1aW50NjQsdWludDY0LHN0cmluZyl1aW50NjQKKmFiaV9yb3V0ZV9kb01hdGg6CgkvLyBUaGUgQUJJIHJldHVybiBwcmVmaXgKCWJ5dGUgMHgxNTFmN2M3NQoKCS8vIG9wZXJhdGlvbjogc3RyaW5nCgl0eG5hIEFwcGxpY2F0aW9uQXJncyAzCglleHRyYWN0IDIgMAoKCS8vIGI6IHVpbnQ2NAoJdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgoJYnRvaQoKCS8vIGE6IHVpbnQ2NAoJdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQoJYnRvaQoKCS8vIGV4ZWN1dGUgZG9NYXRoKHVpbnQ2NCx1aW50NjQsc3RyaW5nKXVpbnQ2NAoJY2FsbHN1YiBkb01hdGgKCWl0b2IKCWNvbmNhdAoJbG9nCglpbnQgMQoJcmV0dXJuCgovLyBkb01hdGgoYTogbnVtYmVyLCBiOiBudW1iZXIsIG9wZXJhdGlvbjogc3RyaW5nKTogbnVtYmVyCi8vCi8vIEEgbWV0aG9kIHRoYXQgdGFrZXMgdHdvIG51bWJlcnMgYW5kIGRvZXMgZWl0aGVyIGFkZGl0aW9uIG9yIHN1YnRyYWN0aW9uCi8vCi8vIEBwYXJhbSBhIFRoZSBmaXJzdCBudW1iZXIKLy8gQHBhcmFtIGIgVGhlIHNlY29uZCBudW1iZXIKLy8gQHBhcmFtIG9wZXJhdGlvbiBUaGUgb3BlcmF0aW9uIHRvIHBlcmZvcm0uIENhbiBiZSBlaXRoZXIgJ3N1bScgb3IgJ2RpZmZlcmVuY2UnCi8vCi8vIEByZXR1cm5zIFRoZSByZXN1bHQgb2YgdGhlIG9wZXJhdGlvbgpkb01hdGg6Cglwcm90byAzIDEKCgkvLyBQdXNoIGVtcHR5IGJ5dGVzIGFmdGVyIHRoZSBmcmFtZSBwb2ludGVyIHRvIHJlc2VydmUgc3BhY2UgZm9yIGxvY2FsIHZhcmlhYmxlcwoJYnl0ZSAweAoKCS8vICppZjBfY29uZGl0aW9uCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czozOAoJLy8gb3BlcmF0aW9uID09PSAnc3VtJwoJZnJhbWVfZGlnIC0zIC8vIG9wZXJhdGlvbjogc3RyaW5nCglieXRlIDB4NzM3NTZkIC8vICJzdW0iCgk9PQoJYnogKmlmMF9lbHNlaWYxX2NvbmRpdGlvbgoKCS8vICppZjBfY29uc2VxdWVudAoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6MzkKCS8vIHJlc3VsdCA9IHRoaXMuZ2V0U3VtKGEsIGIpCglmcmFtZV9kaWcgLTIgLy8gYjogbnVtYmVyCglmcmFtZV9kaWcgLTEgLy8gYTogbnVtYmVyCgljYWxsc3ViIGdldFN1bQoJZnJhbWVfYnVyeSAwIC8vIHJlc3VsdDogbnVtYmVyCgliICppZjBfZW5kCgoqaWYwX2Vsc2VpZjFfY29uZGl0aW9uOgoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NDAKCS8vIG9wZXJhdGlvbiA9PT0gJ2RpZmZlcmVuY2UnCglmcmFtZV9kaWcgLTMgLy8gb3BlcmF0aW9uOiBzdHJpbmcKCWJ5dGUgMHg2NDY5NjY2NjY1NzI2NTZlNjM2NSAvLyAiZGlmZmVyZW5jZSIKCT09CglieiAqaWYwX2Vsc2UKCgkvLyAqaWYwX2Vsc2VpZjFfY29uc2VxdWVudAoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NDEKCS8vIHJlc3VsdCA9IHRoaXMuZ2V0RGlmZmVyZW5jZShhLCBiKQoJZnJhbWVfZGlnIC0yIC8vIGI6IG51bWJlcgoJZnJhbWVfZGlnIC0xIC8vIGE6IG51bWJlcgoJY2FsbHN1YiBnZXREaWZmZXJlbmNlCglmcmFtZV9idXJ5IDAgLy8gcmVzdWx0OiBudW1iZXIKCWIgKmlmMF9lbmQKCippZjBfZWxzZToKCWVyciAvLyAnSW52YWxpZCBvcGVyYXRpb24nCgoqaWYwX2VuZDoKCS8vIHRlc3RfY29udHJhY3QvdGVzdC5hbGdvLnRzOjQ0CgkvLyByZXR1cm4gcmVzdWx0OwoJZnJhbWVfZGlnIDAgLy8gcmVzdWx0OiBudW1iZXIKCgkvLyBzZXQgdGhlIHN1YnJvdXRpbmUgcmV0dXJuIHZhbHVlCglmcmFtZV9idXJ5IDAKCXJldHN1YgoKLy8gdHhuQXJnKHBheSlhZGRyZXNzCiphYmlfcm91dGVfdHhuQXJnOgoJLy8gVGhlIEFCSSByZXR1cm4gcHJlZml4CglieXRlIDB4MTUxZjdjNzUKCgkvLyB0eG46IHBheQoJdHhuIEdyb3VwSW5kZXgKCWludCAxCgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgcGF5Cgk9PQoJYXNzZXJ0CgoJLy8gZXhlY3V0ZSB0eG5BcmcocGF5KWFkZHJlc3MKCWNhbGxzdWIgdHhuQXJnCgljb25jYXQKCWxvZwoJaW50IDEKCXJldHVybgoKLy8gdHhuQXJnKHR4bjogUGF5VHhuKTogQWRkcmVzcwp0eG5Bcmc6Cglwcm90byAxIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czo0OAoJLy8gcmV0dXJuIHR4bi5zZW5kZXI7CglmcmFtZV9kaWcgLTEgLy8gdHhuOiBQYXlUeG4KCWd0eG5zIFNlbmRlcgoJcmV0c3ViCgovLyBoZWxsb1dvcmxkKClzdHJpbmcKKmFiaV9yb3V0ZV9oZWxsb1dvcmxkOgoJLy8gVGhlIEFCSSByZXR1cm4gcHJlZml4CglieXRlIDB4MTUxZjdjNzUKCgkvLyBleGVjdXRlIGhlbGxvV29ybGQoKXN0cmluZwoJY2FsbHN1YiBoZWxsb1dvcmxkCglkdXAKCWxlbgoJaXRvYgoJZXh0cmFjdCA2IDIKCXN3YXAKCWNvbmNhdAoJY29uY2F0Cglsb2cKCWludCAxCglyZXR1cm4KCi8vIGhlbGxvV29ybGQoKTogc3RyaW5nCmhlbGxvV29ybGQ6Cglwcm90byAwIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czo1MgoJLy8gcmV0dXJuICdIZWxsbywgV29ybGQhJzsKCWJ5dGUgMHg0ODY1NmM2YzZmMmMyMDU3NmY3MjZjNjQyMSAvLyAiSGVsbG8sIFdvcmxkISIKCXJldHN1YgoKLy8gbWV0aG9kQXJnKGFwcGwpdWludDY0CiphYmlfcm91dGVfbWV0aG9kQXJnOgoJLy8gVGhlIEFCSSByZXR1cm4gcHJlZml4CglieXRlIDB4MTUxZjdjNzUKCgkvLyBjYWxsOiBhcHBsCgl0eG4gR3JvdXBJbmRleAoJaW50IDEKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBhcHBsCgk9PQoJYXNzZXJ0CgoJLy8gZXhlY3V0ZSBtZXRob2RBcmcoYXBwbCl1aW50NjQKCWNhbGxzdWIgbWV0aG9kQXJnCglpdG9iCgljb25jYXQKCWxvZwoJaW50IDEKCXJldHVybgoKLy8gbWV0aG9kQXJnKGNhbGw6IEFwcENhbGxUeG4pOiBBcHBJRAptZXRob2RBcmc6Cglwcm90byAxIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czo1NgoJLy8gcmV0dXJuIGNhbGwuYXBwbGljYXRpb25JRAoJZnJhbWVfZGlnIC0xIC8vIGNhbGw6IEFwcENhbGxUeG4KCWd0eG5zIEFwcGxpY2F0aW9uSUQKCXJldHN1YgoKLy8gbmVzdGVkVHhuQXJnKHBheSxhcHBsKXVpbnQ2NAoqYWJpX3JvdXRlX25lc3RlZFR4bkFyZzoKCS8vIFRoZSBBQkkgcmV0dXJuIHByZWZpeAoJYnl0ZSAweDE1MWY3Yzc1CgoJLy8gY2FsbDogYXBwbAoJdHhuIEdyb3VwSW5kZXgKCWludCAxCgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgYXBwbAoJPT0KCWFzc2VydAoKCS8vIHR4bjogcGF5Cgl0eG4gR3JvdXBJbmRleAoJaW50IDIKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBwYXkKCT09Cglhc3NlcnQKCgkvLyBleGVjdXRlIG5lc3RlZFR4bkFyZyhwYXksYXBwbCl1aW50NjQKCWNhbGxzdWIgbmVzdGVkVHhuQXJnCglpdG9iCgljb25jYXQKCWxvZwoJaW50IDEKCXJldHVybgoKLy8gbmVzdGVkVHhuQXJnKHR4bjogUGF5VHhuLCBjYWxsOiBBcHBDYWxsVHhuKTogQXBwSUQKbmVzdGVkVHhuQXJnOgoJcHJvdG8gMiAxCgoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NjAKCS8vIHJldHVybiBjYWxsLmFwcGxpY2F0aW9uSUQKCWZyYW1lX2RpZyAtMiAvLyBjYWxsOiBBcHBDYWxsVHhuCglndHhucyBBcHBsaWNhdGlvbklECglyZXRzdWIKCi8vIGRvdWJsZU5lc3RlZFR4bkFyZyhwYXksYXBwbCxwYXksYXBwbCl1aW50NjQKKmFiaV9yb3V0ZV9kb3VibGVOZXN0ZWRUeG5Bcmc6CgkvLyBUaGUgQUJJIHJldHVybiBwcmVmaXgKCWJ5dGUgMHgxNTFmN2M3NQoKCS8vIGNhbGwzOiBhcHBsCgl0eG4gR3JvdXBJbmRleAoJaW50IDEKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBhcHBsCgk9PQoJYXNzZXJ0CgoJLy8gdHhuMjogcGF5Cgl0eG4gR3JvdXBJbmRleAoJaW50IDIKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBwYXkKCT09Cglhc3NlcnQKCgkvLyBjYWxsMTogYXBwbAoJdHhuIEdyb3VwSW5kZXgKCWludCAzCgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgYXBwbAoJPT0KCWFzc2VydAoKCS8vIHR4bjA6IHBheQoJdHhuIEdyb3VwSW5kZXgKCWludCA0CgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgcGF5Cgk9PQoJYXNzZXJ0CgoJLy8gZXhlY3V0ZSBkb3VibGVOZXN0ZWRUeG5BcmcocGF5LGFwcGwscGF5LGFwcGwpdWludDY0CgljYWxsc3ViIGRvdWJsZU5lc3RlZFR4bkFyZwoJaXRvYgoJY29uY2F0Cglsb2cKCWludCAxCglyZXR1cm4KCi8vIGRvdWJsZU5lc3RlZFR4bkFyZyh0eG4wOiBQYXlUeG4sIGNhbGwxOiBBcHBDYWxsVHhuLCB0eG4yOiBQYXlUeG4sIGNhbGwzOiBBcHBDYWxsVHhuKTogQXBwSUQKZG91YmxlTmVzdGVkVHhuQXJnOgoJcHJvdG8gNCAxCgoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NjQKCS8vIHJldHVybiBjYWxsMS5hcHBsaWNhdGlvbklECglmcmFtZV9kaWcgLTIgLy8gY2FsbDE6IEFwcENhbGxUeG4KCWd0eG5zIEFwcGxpY2F0aW9uSUQKCXJldHN1YgoKKmFiaV9yb3V0ZV9jcmVhdGVBcHBsaWNhdGlvbjoKCWludCAxCglyZXR1cm4KCipjcmVhdGVfTm9PcDoKCW1ldGhvZCAiY3JlYXRlQXBwbGljYXRpb24oKXZvaWQiCgl0eG5hIEFwcGxpY2F0aW9uQXJncyAwCgltYXRjaCAqYWJpX3JvdXRlX2NyZWF0ZUFwcGxpY2F0aW9uCgllcnIKCipjYWxsX05vT3A6CgltZXRob2QgImRvTWF0aCh1aW50NjQsdWludDY0LHN0cmluZyl1aW50NjQiCgltZXRob2QgInR4bkFyZyhwYXkpYWRkcmVzcyIKCW1ldGhvZCAiaGVsbG9Xb3JsZCgpc3RyaW5nIgoJbWV0aG9kICJtZXRob2RBcmcoYXBwbCl1aW50NjQiCgltZXRob2QgIm5lc3RlZFR4bkFyZyhwYXksYXBwbCl1aW50NjQiCgltZXRob2QgImRvdWJsZU5lc3RlZFR4bkFyZyhwYXksYXBwbCxwYXksYXBwbCl1aW50NjQiCgl0eG5hIEFwcGxpY2F0aW9uQXJncyAwCgltYXRjaCAqYWJpX3JvdXRlX2RvTWF0aCAqYWJpX3JvdXRlX3R4bkFyZyAqYWJpX3JvdXRlX2hlbGxvV29ybGQgKmFiaV9yb3V0ZV9tZXRob2RBcmcgKmFiaV9yb3V0ZV9uZXN0ZWRUeG5BcmcgKmFiaV9yb3V0ZV9kb3VibGVOZXN0ZWRUeG5BcmcKCWVycg==",
-    "clear": "I3ByYWdtYSB2ZXJzaW9uIDEw"
+  state: {
+    global: {
+      num_byte_slices: 0,
+      num_uints: 0,
+    },
+    local: {
+      num_byte_slices: 0,
+      num_uints: 0,
+    },
   },
-  "contract": {
-    "name": "TestContract",
-    "desc": "",
-    "methods": [
+  source: {
+    approval:
+      'I3ByYWdtYSB2ZXJzaW9uIDEwCgovLyBUaGlzIFRFQUwgd2FzIGdlbmVyYXRlZCBieSBURUFMU2NyaXB0IHYwLjg2LjAKLy8gaHR0cHM6Ly9naXRodWIuY29tL2FsZ29yYW5kZm91bmRhdGlvbi9URUFMU2NyaXB0CgovLyBUaGlzIGNvbnRyYWN0IGlzIGNvbXBsaWFudCB3aXRoIGFuZC9vciBpbXBsZW1lbnRzIHRoZSBmb2xsb3dpbmcgQVJDczogWyBBUkM0IF0KCi8vIFRoZSBmb2xsb3dpbmcgdGVuIGxpbmVzIG9mIFRFQUwgaGFuZGxlIGluaXRpYWwgcHJvZ3JhbSBmbG93Ci8vIFRoaXMgcGF0dGVybiBpcyB1c2VkIHRvIG1ha2UgaXQgZWFzeSBmb3IgYW55b25lIHRvIHBhcnNlIHRoZSBzdGFydCBvZiB0aGUgcHJvZ3JhbSBhbmQgZGV0ZXJtaW5lIGlmIGEgc3BlY2lmaWMgYWN0aW9uIGlzIGFsbG93ZWQKLy8gSGVyZSwgYWN0aW9uIHJlZmVycyB0byB0aGUgT25Db21wbGV0ZSBpbiBjb21iaW5hdGlvbiB3aXRoIHdoZXRoZXIgdGhlIGFwcCBpcyBiZWluZyBjcmVhdGVkIG9yIGNhbGxlZAovLyBFdmVyeSBwb3NzaWJsZSBhY3Rpb24gZm9yIHRoaXMgY29udHJhY3QgaXMgcmVwcmVzZW50ZWQgaW4gdGhlIHN3aXRjaCBzdGF0ZW1lbnQKLy8gSWYgdGhlIGFjdGlvbiBpcyBub3QgaW1wbGVtZW50ZWQgaW4gdGhlIGNvbnRyYWN0LCBpdHMgcmVzcGVjdGl2ZSBicmFuY2ggd2lsbCBiZSAiKk5PVF9JTVBMRU1FTlRFRCIgd2hpY2gganVzdCBjb250YWlucyAiZXJyIgp0eG4gQXBwbGljYXRpb25JRAohCmludCA2CioKdHhuIE9uQ29tcGxldGlvbgorCnN3aXRjaCAqY2FsbF9Ob09wICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVEICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqY3JlYXRlX05vT3AgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVEICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVECgoqTk9UX0lNUExFTUVOVEVEOgoJZXJyCgovLyBnZXRTdW0oYTogbnVtYmVyLCBiOiBudW1iZXIpOiBudW1iZXIKLy8KLy8gQ2FsY3VsYXRlcyB0aGUgc3VtIG9mIHR3byBudW1iZXJzCi8vCi8vIEBwYXJhbSBhCi8vIEBwYXJhbSBiCi8vIEByZXR1cm5zIFRoZSBzdW0gb2YgYSBhbmQgYgpnZXRTdW06Cglwcm90byAyIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czoxMgoJLy8gcmV0dXJuIGEgKyBiOwoJZnJhbWVfZGlnIC0xIC8vIGE6IG51bWJlcgoJZnJhbWVfZGlnIC0yIC8vIGI6IG51bWJlcgoJKwoJcmV0c3ViCgovLyBnZXREaWZmZXJlbmNlKGE6IG51bWJlciwgYjogbnVtYmVyKTogbnVtYmVyCi8vCi8vIENhbGN1bGF0ZXMgdGhlIGRpZmZlcmVuY2UgYmV0d2VlbiB0d28gbnVtYmVycwovLwovLyBAcGFyYW0gYQovLyBAcGFyYW0gYgovLyBAcmV0dXJucyBUaGUgZGlmZmVyZW5jZSBiZXR3ZWVuIGEgYW5kIGIuCmdldERpZmZlcmVuY2U6Cglwcm90byAyIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czoyMwoJLy8gcmV0dXJuIGEgPj0gYiA/IGEgLSBiIDogYiAtIGE7CglmcmFtZV9kaWcgLTEgLy8gYTogbnVtYmVyCglmcmFtZV9kaWcgLTIgLy8gYjogbnVtYmVyCgk+PQoJYnogKnRlcm5hcnkwX2ZhbHNlCglmcmFtZV9kaWcgLTEgLy8gYTogbnVtYmVyCglmcmFtZV9kaWcgLTIgLy8gYjogbnVtYmVyCgktCgliICp0ZXJuYXJ5MF9lbmQKCip0ZXJuYXJ5MF9mYWxzZToKCWZyYW1lX2RpZyAtMiAvLyBiOiBudW1iZXIKCWZyYW1lX2RpZyAtMSAvLyBhOiBudW1iZXIKCS0KCip0ZXJuYXJ5MF9lbmQ6CglyZXRzdWIKCi8vIGRvTWF0aCh1aW50NjQsdWludDY0LHN0cmluZyl1aW50NjQKKmFiaV9yb3V0ZV9kb01hdGg6CgkvLyBUaGUgQUJJIHJldHVybiBwcmVmaXgKCWJ5dGUgMHgxNTFmN2M3NQoKCS8vIG9wZXJhdGlvbjogc3RyaW5nCgl0eG5hIEFwcGxpY2F0aW9uQXJncyAzCglleHRyYWN0IDIgMAoKCS8vIGI6IHVpbnQ2NAoJdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgoJYnRvaQoKCS8vIGE6IHVpbnQ2NAoJdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQoJYnRvaQoKCS8vIGV4ZWN1dGUgZG9NYXRoKHVpbnQ2NCx1aW50NjQsc3RyaW5nKXVpbnQ2NAoJY2FsbHN1YiBkb01hdGgKCWl0b2IKCWNvbmNhdAoJbG9nCglpbnQgMQoJcmV0dXJuCgovLyBkb01hdGgoYTogbnVtYmVyLCBiOiBudW1iZXIsIG9wZXJhdGlvbjogc3RyaW5nKTogbnVtYmVyCi8vCi8vIEEgbWV0aG9kIHRoYXQgdGFrZXMgdHdvIG51bWJlcnMgYW5kIGRvZXMgZWl0aGVyIGFkZGl0aW9uIG9yIHN1YnRyYWN0aW9uCi8vCi8vIEBwYXJhbSBhIFRoZSBmaXJzdCBudW1iZXIKLy8gQHBhcmFtIGIgVGhlIHNlY29uZCBudW1iZXIKLy8gQHBhcmFtIG9wZXJhdGlvbiBUaGUgb3BlcmF0aW9uIHRvIHBlcmZvcm0uIENhbiBiZSBlaXRoZXIgJ3N1bScgb3IgJ2RpZmZlcmVuY2UnCi8vCi8vIEByZXR1cm5zIFRoZSByZXN1bHQgb2YgdGhlIG9wZXJhdGlvbgpkb01hdGg6Cglwcm90byAzIDEKCgkvLyBQdXNoIGVtcHR5IGJ5dGVzIGFmdGVyIHRoZSBmcmFtZSBwb2ludGVyIHRvIHJlc2VydmUgc3BhY2UgZm9yIGxvY2FsIHZhcmlhYmxlcwoJYnl0ZSAweAoKCS8vICppZjBfY29uZGl0aW9uCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czozOAoJLy8gb3BlcmF0aW9uID09PSAnc3VtJwoJZnJhbWVfZGlnIC0zIC8vIG9wZXJhdGlvbjogc3RyaW5nCglieXRlIDB4NzM3NTZkIC8vICJzdW0iCgk9PQoJYnogKmlmMF9lbHNlaWYxX2NvbmRpdGlvbgoKCS8vICppZjBfY29uc2VxdWVudAoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6MzkKCS8vIHJlc3VsdCA9IHRoaXMuZ2V0U3VtKGEsIGIpCglmcmFtZV9kaWcgLTIgLy8gYjogbnVtYmVyCglmcmFtZV9kaWcgLTEgLy8gYTogbnVtYmVyCgljYWxsc3ViIGdldFN1bQoJZnJhbWVfYnVyeSAwIC8vIHJlc3VsdDogbnVtYmVyCgliICppZjBfZW5kCgoqaWYwX2Vsc2VpZjFfY29uZGl0aW9uOgoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NDAKCS8vIG9wZXJhdGlvbiA9PT0gJ2RpZmZlcmVuY2UnCglmcmFtZV9kaWcgLTMgLy8gb3BlcmF0aW9uOiBzdHJpbmcKCWJ5dGUgMHg2NDY5NjY2NjY1NzI2NTZlNjM2NSAvLyAiZGlmZmVyZW5jZSIKCT09CglieiAqaWYwX2Vsc2UKCgkvLyAqaWYwX2Vsc2VpZjFfY29uc2VxdWVudAoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NDEKCS8vIHJlc3VsdCA9IHRoaXMuZ2V0RGlmZmVyZW5jZShhLCBiKQoJZnJhbWVfZGlnIC0yIC8vIGI6IG51bWJlcgoJZnJhbWVfZGlnIC0xIC8vIGE6IG51bWJlcgoJY2FsbHN1YiBnZXREaWZmZXJlbmNlCglmcmFtZV9idXJ5IDAgLy8gcmVzdWx0OiBudW1iZXIKCWIgKmlmMF9lbmQKCippZjBfZWxzZToKCWVyciAvLyAnSW52YWxpZCBvcGVyYXRpb24nCgoqaWYwX2VuZDoKCS8vIHRlc3RfY29udHJhY3QvdGVzdC5hbGdvLnRzOjQ0CgkvLyByZXR1cm4gcmVzdWx0OwoJZnJhbWVfZGlnIDAgLy8gcmVzdWx0OiBudW1iZXIKCgkvLyBzZXQgdGhlIHN1YnJvdXRpbmUgcmV0dXJuIHZhbHVlCglmcmFtZV9idXJ5IDAKCXJldHN1YgoKLy8gdHhuQXJnKHBheSlhZGRyZXNzCiphYmlfcm91dGVfdHhuQXJnOgoJLy8gVGhlIEFCSSByZXR1cm4gcHJlZml4CglieXRlIDB4MTUxZjdjNzUKCgkvLyB0eG46IHBheQoJdHhuIEdyb3VwSW5kZXgKCWludCAxCgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgcGF5Cgk9PQoJYXNzZXJ0CgoJLy8gZXhlY3V0ZSB0eG5BcmcocGF5KWFkZHJlc3MKCWNhbGxzdWIgdHhuQXJnCgljb25jYXQKCWxvZwoJaW50IDEKCXJldHVybgoKLy8gdHhuQXJnKHR4bjogUGF5VHhuKTogQWRkcmVzcwp0eG5Bcmc6Cglwcm90byAxIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czo0OAoJLy8gcmV0dXJuIHR4bi5zZW5kZXI7CglmcmFtZV9kaWcgLTEgLy8gdHhuOiBQYXlUeG4KCWd0eG5zIFNlbmRlcgoJcmV0c3ViCgovLyBoZWxsb1dvcmxkKClzdHJpbmcKKmFiaV9yb3V0ZV9oZWxsb1dvcmxkOgoJLy8gVGhlIEFCSSByZXR1cm4gcHJlZml4CglieXRlIDB4MTUxZjdjNzUKCgkvLyBleGVjdXRlIGhlbGxvV29ybGQoKXN0cmluZwoJY2FsbHN1YiBoZWxsb1dvcmxkCglkdXAKCWxlbgoJaXRvYgoJZXh0cmFjdCA2IDIKCXN3YXAKCWNvbmNhdAoJY29uY2F0Cglsb2cKCWludCAxCglyZXR1cm4KCi8vIGhlbGxvV29ybGQoKTogc3RyaW5nCmhlbGxvV29ybGQ6Cglwcm90byAwIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czo1MgoJLy8gcmV0dXJuICdIZWxsbywgV29ybGQhJzsKCWJ5dGUgMHg0ODY1NmM2YzZmMmMyMDU3NmY3MjZjNjQyMSAvLyAiSGVsbG8sIFdvcmxkISIKCXJldHN1YgoKLy8gbWV0aG9kQXJnKGFwcGwpdWludDY0CiphYmlfcm91dGVfbWV0aG9kQXJnOgoJLy8gVGhlIEFCSSByZXR1cm4gcHJlZml4CglieXRlIDB4MTUxZjdjNzUKCgkvLyBjYWxsOiBhcHBsCgl0eG4gR3JvdXBJbmRleAoJaW50IDEKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBhcHBsCgk9PQoJYXNzZXJ0CgoJLy8gZXhlY3V0ZSBtZXRob2RBcmcoYXBwbCl1aW50NjQKCWNhbGxzdWIgbWV0aG9kQXJnCglpdG9iCgljb25jYXQKCWxvZwoJaW50IDEKCXJldHVybgoKLy8gbWV0aG9kQXJnKGNhbGw6IEFwcENhbGxUeG4pOiBBcHBJRAptZXRob2RBcmc6Cglwcm90byAxIDEKCgkvLyB0ZXN0X2NvbnRyYWN0L3Rlc3QuYWxnby50czo1NgoJLy8gcmV0dXJuIGNhbGwuYXBwbGljYXRpb25JRAoJZnJhbWVfZGlnIC0xIC8vIGNhbGw6IEFwcENhbGxUeG4KCWd0eG5zIEFwcGxpY2F0aW9uSUQKCXJldHN1YgoKLy8gbmVzdGVkVHhuQXJnKHBheSxhcHBsKXVpbnQ2NAoqYWJpX3JvdXRlX25lc3RlZFR4bkFyZzoKCS8vIFRoZSBBQkkgcmV0dXJuIHByZWZpeAoJYnl0ZSAweDE1MWY3Yzc1CgoJLy8gY2FsbDogYXBwbAoJdHhuIEdyb3VwSW5kZXgKCWludCAxCgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgYXBwbAoJPT0KCWFzc2VydAoKCS8vIHR4bjogcGF5Cgl0eG4gR3JvdXBJbmRleAoJaW50IDIKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBwYXkKCT09Cglhc3NlcnQKCgkvLyBleGVjdXRlIG5lc3RlZFR4bkFyZyhwYXksYXBwbCl1aW50NjQKCWNhbGxzdWIgbmVzdGVkVHhuQXJnCglpdG9iCgljb25jYXQKCWxvZwoJaW50IDEKCXJldHVybgoKLy8gbmVzdGVkVHhuQXJnKHR4bjogUGF5VHhuLCBjYWxsOiBBcHBDYWxsVHhuKTogQXBwSUQKbmVzdGVkVHhuQXJnOgoJcHJvdG8gMiAxCgoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NjAKCS8vIHJldHVybiBjYWxsLmFwcGxpY2F0aW9uSUQKCWZyYW1lX2RpZyAtMiAvLyBjYWxsOiBBcHBDYWxsVHhuCglndHhucyBBcHBsaWNhdGlvbklECglyZXRzdWIKCi8vIGRvdWJsZU5lc3RlZFR4bkFyZyhwYXksYXBwbCxwYXksYXBwbCl1aW50NjQKKmFiaV9yb3V0ZV9kb3VibGVOZXN0ZWRUeG5Bcmc6CgkvLyBUaGUgQUJJIHJldHVybiBwcmVmaXgKCWJ5dGUgMHgxNTFmN2M3NQoKCS8vIGNhbGwzOiBhcHBsCgl0eG4gR3JvdXBJbmRleAoJaW50IDEKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBhcHBsCgk9PQoJYXNzZXJ0CgoJLy8gdHhuMjogcGF5Cgl0eG4gR3JvdXBJbmRleAoJaW50IDIKCS0KCWR1cAoJZ3R4bnMgVHlwZUVudW0KCWludCBwYXkKCT09Cglhc3NlcnQKCgkvLyBjYWxsMTogYXBwbAoJdHhuIEdyb3VwSW5kZXgKCWludCAzCgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgYXBwbAoJPT0KCWFzc2VydAoKCS8vIHR4bjA6IHBheQoJdHhuIEdyb3VwSW5kZXgKCWludCA0CgktCglkdXAKCWd0eG5zIFR5cGVFbnVtCglpbnQgcGF5Cgk9PQoJYXNzZXJ0CgoJLy8gZXhlY3V0ZSBkb3VibGVOZXN0ZWRUeG5BcmcocGF5LGFwcGwscGF5LGFwcGwpdWludDY0CgljYWxsc3ViIGRvdWJsZU5lc3RlZFR4bkFyZwoJaXRvYgoJY29uY2F0Cglsb2cKCWludCAxCglyZXR1cm4KCi8vIGRvdWJsZU5lc3RlZFR4bkFyZyh0eG4wOiBQYXlUeG4sIGNhbGwxOiBBcHBDYWxsVHhuLCB0eG4yOiBQYXlUeG4sIGNhbGwzOiBBcHBDYWxsVHhuKTogQXBwSUQKZG91YmxlTmVzdGVkVHhuQXJnOgoJcHJvdG8gNCAxCgoJLy8gdGVzdF9jb250cmFjdC90ZXN0LmFsZ28udHM6NjQKCS8vIHJldHVybiBjYWxsMS5hcHBsaWNhdGlvbklECglmcmFtZV9kaWcgLTIgLy8gY2FsbDE6IEFwcENhbGxUeG4KCWd0eG5zIEFwcGxpY2F0aW9uSUQKCXJldHN1YgoKKmFiaV9yb3V0ZV9jcmVhdGVBcHBsaWNhdGlvbjoKCWludCAxCglyZXR1cm4KCipjcmVhdGVfTm9PcDoKCW1ldGhvZCAiY3JlYXRlQXBwbGljYXRpb24oKXZvaWQiCgl0eG5hIEFwcGxpY2F0aW9uQXJncyAwCgltYXRjaCAqYWJpX3JvdXRlX2NyZWF0ZUFwcGxpY2F0aW9uCgllcnIKCipjYWxsX05vT3A6CgltZXRob2QgImRvTWF0aCh1aW50NjQsdWludDY0LHN0cmluZyl1aW50NjQiCgltZXRob2QgInR4bkFyZyhwYXkpYWRkcmVzcyIKCW1ldGhvZCAiaGVsbG9Xb3JsZCgpc3RyaW5nIgoJbWV0aG9kICJtZXRob2RBcmcoYXBwbCl1aW50NjQiCgltZXRob2QgIm5lc3RlZFR4bkFyZyhwYXksYXBwbCl1aW50NjQiCgltZXRob2QgImRvdWJsZU5lc3RlZFR4bkFyZyhwYXksYXBwbCxwYXksYXBwbCl1aW50NjQiCgl0eG5hIEFwcGxpY2F0aW9uQXJncyAwCgltYXRjaCAqYWJpX3JvdXRlX2RvTWF0aCAqYWJpX3JvdXRlX3R4bkFyZyAqYWJpX3JvdXRlX2hlbGxvV29ybGQgKmFiaV9yb3V0ZV9tZXRob2RBcmcgKmFiaV9yb3V0ZV9uZXN0ZWRUeG5BcmcgKmFiaV9yb3V0ZV9kb3VibGVOZXN0ZWRUeG5BcmcKCWVycg==',
+    clear: 'I3ByYWdtYSB2ZXJzaW9uIDEw',
+  },
+  contract: {
+    name: 'TestContract',
+    desc: '',
+    methods: [
       {
-        "name": "doMath",
-        "desc": "A method that takes two numbers and does either addition or subtraction",
-        "args": [
+        name: 'doMath',
+        desc: 'A method that takes two numbers and does either addition or subtraction',
+        args: [
           {
-            "name": "a",
-            "type": "uint64",
-            "desc": "The first number"
+            name: 'a',
+            type: 'uint64',
+            desc: 'The first number',
           },
           {
-            "name": "b",
-            "type": "uint64",
-            "desc": "The second number"
+            name: 'b',
+            type: 'uint64',
+            desc: 'The second number',
           },
           {
-            "name": "operation",
-            "type": "string",
-            "desc": "The operation to perform. Can be either 'sum' or 'difference'"
-          }
+            name: 'operation',
+            type: 'string',
+            desc: "The operation to perform. Can be either 'sum' or 'difference'",
+          },
         ],
-        "returns": {
-          "type": "uint64",
-          "desc": "The result of the operation"
-        }
+        returns: {
+          type: 'uint64',
+          desc: 'The result of the operation',
+        },
       },
       {
-        "name": "txnArg",
-        "args": [
+        name: 'txnArg',
+        args: [
           {
-            "name": "txn",
-            "type": "pay"
-          }
+            name: 'txn',
+            type: 'pay',
+          },
         ],
-        "returns": {
-          "type": "address"
-        }
+        returns: {
+          type: 'address',
+        },
       },
       {
-        "name": "helloWorld",
-        "args": [],
-        "returns": {
-          "type": "string"
-        }
+        name: 'helloWorld',
+        args: [],
+        returns: {
+          type: 'string',
+        },
       },
       {
-        "name": "methodArg",
-        "args": [
+        name: 'methodArg',
+        args: [
           {
-            "name": "call",
-            "type": "appl"
-          }
+            name: 'call',
+            type: 'appl',
+          },
         ],
-        "returns": {
-          "type": "uint64"
-        }
+        returns: {
+          type: 'uint64',
+        },
       },
       {
-        "name": "nestedTxnArg",
-        "args": [
+        name: 'nestedTxnArg',
+        args: [
           {
-            "name": "txn",
-            "type": "pay"
+            name: 'txn',
+            type: 'pay',
           },
           {
-            "name": "call",
-            "type": "appl"
-          }
+            name: 'call',
+            type: 'appl',
+          },
         ],
-        "returns": {
-          "type": "uint64"
-        }
+        returns: {
+          type: 'uint64',
+        },
       },
       {
-        "name": "doubleNestedTxnArg",
-        "args": [
+        name: 'doubleNestedTxnArg',
+        args: [
           {
-            "name": "txn0",
-            "type": "pay"
+            name: 'txn0',
+            type: 'pay',
           },
           {
-            "name": "call1",
-            "type": "appl"
+            name: 'call1',
+            type: 'appl',
           },
           {
-            "name": "txn2",
-            "type": "pay"
+            name: 'txn2',
+            type: 'pay',
           },
           {
-            "name": "call3",
-            "type": "appl"
-          }
+            name: 'call3',
+            type: 'appl',
+          },
         ],
-        "returns": {
-          "type": "uint64"
-        }
+        returns: {
+          type: 'uint64',
+        },
       },
       {
-        "name": "createApplication",
-        "args": [],
-        "returns": {
-          "type": "void"
-        }
-      }
-    ]
-  }
+        name: 'createApplication',
+        args: [],
+        returns: {
+          type: 'void',
+        },
+      },
+    ],
+  },
 }
 
 /**
  * Defines an onCompletionAction of 'no_op'
  */
-export type OnCompleteNoOp =  { onCompleteAction?: 'no_op' | OnApplicationComplete.NoOpOC }
+export type OnCompleteNoOp = { onCompleteAction?: 'no_op' | OnApplicationComplete.NoOpOC }
 /**
  * Defines an onCompletionAction of 'opt_in'
  */
-export type OnCompleteOptIn =  { onCompleteAction: 'opt_in' | OnApplicationComplete.OptInOC }
+export type OnCompleteOptIn = { onCompleteAction: 'opt_in' | OnApplicationComplete.OptInOC }
 /**
  * Defines an onCompletionAction of 'close_out'
  */
-export type OnCompleteCloseOut =  { onCompleteAction: 'close_out' | OnApplicationComplete.CloseOutOC }
+export type OnCompleteCloseOut = { onCompleteAction: 'close_out' | OnApplicationComplete.CloseOutOC }
 /**
  * Defines an onCompletionAction of 'delete_application'
  */
-export type OnCompleteDelApp =  { onCompleteAction: 'delete_application' | OnApplicationComplete.DeleteApplicationOC }
+export type OnCompleteDelApp = { onCompleteAction: 'delete_application' | OnApplicationComplete.DeleteApplicationOC }
 /**
  * Defines an onCompletionAction of 'update_application'
  */
-export type OnCompleteUpdApp =  { onCompleteAction: 'update_application' | OnApplicationComplete.UpdateApplicationOC }
+export type OnCompleteUpdApp = { onCompleteAction: 'update_application' | OnApplicationComplete.UpdateApplicationOC }
 /**
  * A state record containing a single unsigned integer
  */
@@ -257,9 +258,15 @@ export type AppCreateCallTransactionResult = AppCallTransactionResult & Partial<
 export type AppUpdateCallTransactionResult = AppCallTransactionResult & Partial<AppCompilationResult>
 
 export type AppClientComposeCallCoreParams = Omit<AppClientCallCoreParams, 'sendParams'> & {
-  sendParams?: Omit<SendTransactionParams, 'skipSending' | 'atc' | 'skipWaiting' | 'maxRoundsToWaitForConfirmation' | 'populateAppCallResources'>
+  sendParams?: Omit<
+    SendTransactionParams,
+    'skipSending' | 'atc' | 'skipWaiting' | 'maxRoundsToWaitForConfirmation' | 'populateAppCallResources'
+  >
 }
-export type AppClientComposeExecuteParams = Pick<SendTransactionParams, 'skipWaiting' | 'maxRoundsToWaitForConfirmation' | 'populateAppCallResources' | 'suppressLog'>
+export type AppClientComposeExecuteParams = Pick<
+  SendTransactionParams,
+  'skipWaiting' | 'maxRoundsToWaitForConfirmation' | 'populateAppCallResources' | 'suppressLog'
+>
 
 /**
  * Defines the types of available calls and state of the TestContract smart contract.
@@ -268,8 +275,9 @@ export type TestContract = {
   /**
    * Maps method signatures / names to their argument and return types.
    */
-  methods:
-    & Record<'doMath(uint64,uint64,string)uint64' | 'doMath', {
+  methods: Record<
+    'doMath(uint64,uint64,string)uint64' | 'doMath',
+    {
       argsObj: {
         /**
          * The first number
@@ -289,51 +297,76 @@ export type TestContract = {
        * The result of the operation
        */
       returns: bigint
-    }>
-    & Record<'txnArg(pay)address' | 'txnArg', {
-      argsObj: {
-        txn: TransactionToSign | Transaction | Promise<SendTransactionResult>
+    }
+  > &
+    Record<
+      'txnArg(pay)address' | 'txnArg',
+      {
+        argsObj: {
+          txn: TransactionToSign | Transaction | Promise<SendTransactionResult>
+        }
+        argsTuple: [txn: TransactionToSign | Transaction | Promise<SendTransactionResult>]
+        returns: string
       }
-      argsTuple: [txn: TransactionToSign | Transaction | Promise<SendTransactionResult>]
-      returns: string
-    }>
-    & Record<'helloWorld()string' | 'helloWorld', {
-      argsObj: {
+    > &
+    Record<
+      'helloWorld()string' | 'helloWorld',
+      {
+        argsObj: {}
+        argsTuple: []
+        returns: string
       }
-      argsTuple: []
-      returns: string
-    }>
-    & Record<'methodArg(appl)uint64' | 'methodArg', {
-      argsObj: {
-        call: TransactionToSign | Transaction | Promise<SendTransactionResult>
+    > &
+    Record<
+      'methodArg(appl)uint64' | 'methodArg',
+      {
+        argsObj: {
+          call: TransactionToSign | Transaction | Promise<SendTransactionResult>
+        }
+        argsTuple: [call: TransactionToSign | Transaction | Promise<SendTransactionResult>]
+        returns: bigint
       }
-      argsTuple: [call: TransactionToSign | Transaction | Promise<SendTransactionResult>]
-      returns: bigint
-    }>
-    & Record<'nestedTxnArg(pay,appl)uint64' | 'nestedTxnArg', {
-      argsObj: {
-        txn: TransactionToSign | Transaction | Promise<SendTransactionResult>
-        call: TransactionToSign | Transaction | Promise<SendTransactionResult>
+    > &
+    Record<
+      'nestedTxnArg(pay,appl)uint64' | 'nestedTxnArg',
+      {
+        argsObj: {
+          txn: TransactionToSign | Transaction | Promise<SendTransactionResult>
+          call: TransactionToSign | Transaction | Promise<SendTransactionResult>
+        }
+        argsTuple: [
+          txn: TransactionToSign | Transaction | Promise<SendTransactionResult>,
+          call: TransactionToSign | Transaction | Promise<SendTransactionResult>,
+        ]
+        returns: bigint
       }
-      argsTuple: [txn: TransactionToSign | Transaction | Promise<SendTransactionResult>, call: TransactionToSign | Transaction | Promise<SendTransactionResult>]
-      returns: bigint
-    }>
-    & Record<'doubleNestedTxnArg(pay,appl,pay,appl)uint64' | 'doubleNestedTxnArg', {
-      argsObj: {
-        txn0: TransactionToSign | Transaction | Promise<SendTransactionResult>
-        call1: TransactionToSign | Transaction | Promise<SendTransactionResult>
-        txn2: TransactionToSign | Transaction | Promise<SendTransactionResult>
-        call3: TransactionToSign | Transaction | Promise<SendTransactionResult>
+    > &
+    Record<
+      'doubleNestedTxnArg(pay,appl,pay,appl)uint64' | 'doubleNestedTxnArg',
+      {
+        argsObj: {
+          txn0: TransactionToSign | Transaction | Promise<SendTransactionResult>
+          call1: TransactionToSign | Transaction | Promise<SendTransactionResult>
+          txn2: TransactionToSign | Transaction | Promise<SendTransactionResult>
+          call3: TransactionToSign | Transaction | Promise<SendTransactionResult>
+        }
+        argsTuple: [
+          txn0: TransactionToSign | Transaction | Promise<SendTransactionResult>,
+          call1: TransactionToSign | Transaction | Promise<SendTransactionResult>,
+          txn2: TransactionToSign | Transaction | Promise<SendTransactionResult>,
+          call3: TransactionToSign | Transaction | Promise<SendTransactionResult>,
+        ]
+        returns: bigint
       }
-      argsTuple: [txn0: TransactionToSign | Transaction | Promise<SendTransactionResult>, call1: TransactionToSign | Transaction | Promise<SendTransactionResult>, txn2: TransactionToSign | Transaction | Promise<SendTransactionResult>, call3: TransactionToSign | Transaction | Promise<SendTransactionResult>]
-      returns: bigint
-    }>
-    & Record<'createApplication()void' | 'createApplication', {
-      argsObj: {
+    > &
+    Record<
+      'createApplication()void' | 'createApplication',
+      {
+        argsObj: {}
+        argsTuple: []
+        returns: void
       }
-      argsTuple: []
-      returns: void
-    }>
+    >
 }
 /**
  * Defines the possible abi call signatures
@@ -345,7 +378,8 @@ export type TestContractSig = keyof TestContract['methods']
 export type TypedCallParams<TSignature extends TestContractSig | undefined> = {
   method: TSignature
   methodArgs: TSignature extends undefined ? undefined : Array<ABIAppCallArg | undefined>
-} & AppClientCallCoreParams & CoreAppCallArgs
+} & AppClientCallCoreParams &
+  CoreAppCallArgs
 /**
  * Defines the arguments required for a bare call
  */
@@ -366,8 +400,7 @@ export type TestContractCreateCalls = (typeof TestContractCallFactory)['create']
 /**
  * Defines supported create methods for this smart contract
  */
-export type TestContractCreateCallParams =
-  | (TypedCallParams<'createApplication()void'> & (OnCompleteNoOp))
+export type TestContractCreateCallParams = TypedCallParams<'createApplication()void'> & OnCompleteNoOp
 /**
  * Defines arguments required for the deploy method.
  */
@@ -378,7 +411,6 @@ export type TestContractDeployArgs = {
    */
   createCall?: (callFactory: TestContractCreateCalls) => TestContractCreateCallParams
 }
-
 
 /**
  * Exposes methods for constructing all available smart contract calls
@@ -396,7 +428,10 @@ export abstract class TestContractCallFactory {
        * @param params Any additional parameters for the call
        * @returns A TypedCallParams object for the call
        */
-      createApplication(args: MethodArgs<'createApplication()void'>, params: AppClientCallCoreParams & CoreAppCallArgs & AppClientCompilationParams & (OnCompleteNoOp) = {}) {
+      createApplication(
+        args: MethodArgs<'createApplication()void'>,
+        params: AppClientCallCoreParams & CoreAppCallArgs & AppClientCompilationParams & OnCompleteNoOp = {},
+      ) {
         return {
           method: 'createApplication()void' as const,
           methodArgs: Array.isArray(args) ? args : [],
@@ -485,7 +520,10 @@ export abstract class TestContractCallFactory {
    * @param params Any additional parameters for the call
    * @returns A TypedCallParams object for the call
    */
-  static doubleNestedTxnArg(args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>, params: AppClientCallCoreParams & CoreAppCallArgs) {
+  static doubleNestedTxnArg(
+    args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>,
+    params: AppClientCallCoreParams & CoreAppCallArgs,
+  ) {
     return {
       method: 'doubleNestedTxnArg(pay,appl,pay,appl)uint64' as const,
       methodArgs: Array.isArray(args) ? args : [args.txn0, args.call1, args.txn2, args.call3],
@@ -511,12 +549,18 @@ export class TestContractClient {
    * @param appDetails appDetails The details to identify the app to deploy
    * @param algod An algod client instance
    */
-  constructor(appDetails: AppDetails, private algod: Algodv2) {
+  constructor(
+    appDetails: AppDetails,
+    private algod: Algodv2,
+  ) {
     this.sender = appDetails.sender
-    this.appClient = algokit.getAppClient({
-      ...appDetails,
-      app: APP_SPEC
-    }, algod)
+    this.appClient = algokit.getAppClient(
+      {
+        ...appDetails,
+        app: APP_SPEC,
+      },
+      algod,
+    )
   }
 
   /**
@@ -526,14 +570,18 @@ export class TestContractClient {
    * @param returnValueFormatter An optional delegate to format the return value if required
    * @returns The smart contract response with an updated return value
    */
-  protected mapReturnValue<TReturn, TResult extends AppCallTransactionResult = AppCallTransactionResult>(result: AppCallTransactionResult, returnValueFormatter?: (value: any) => TReturn): AppCallTransactionResultOfType<TReturn> & TResult {
-    if(result.return?.decodeError) {
+  protected mapReturnValue<TReturn, TResult extends AppCallTransactionResult = AppCallTransactionResult>(
+    result: AppCallTransactionResult,
+    returnValueFormatter?: (value: any) => TReturn,
+  ): AppCallTransactionResultOfType<TReturn> & TResult {
+    if (result.return?.decodeError) {
       throw result.return.decodeError
     }
-    const returnValue = result.return?.returnValue !== undefined && returnValueFormatter !== undefined
-      ? returnValueFormatter(result.return.returnValue)
-      : result.return?.returnValue as TReturn | undefined
-      return { ...result, return: returnValue } as AppCallTransactionResultOfType<TReturn> & TResult
+    const returnValue =
+      result.return?.returnValue !== undefined && returnValueFormatter !== undefined
+        ? returnValueFormatter(result.return.returnValue)
+        : (result.return?.returnValue as TReturn | undefined)
+    return { ...result, return: returnValue } as AppCallTransactionResultOfType<TReturn> & TResult
   }
 
   /**
@@ -543,7 +591,10 @@ export class TestContractClient {
    * @param returnValueFormatter An optional delegate which when provided will be used to map non-undefined return values to the target type
    * @returns The result of the smart contract call
    */
-  public async call<TSignature extends keyof TestContract['methods']>(typedCallParams: TypedCallParams<TSignature>, returnValueFormatter?: (value: any) => MethodReturn<TSignature>) {
+  public async call<TSignature extends keyof TestContract['methods']>(
+    typedCallParams: TypedCallParams<TSignature>,
+    returnValueFormatter?: (value: any) => MethodReturn<TSignature>,
+  ) {
     return this.mapReturnValue<MethodReturn<TSignature>>(await this.appClient.call(typedCallParams), returnValueFormatter)
   }
 
@@ -575,8 +626,13 @@ export class TestContractClient {
        * @param params Any additional parameters for the call
        * @returns The create result
        */
-      async createApplication(args: MethodArgs<'createApplication()void'>, params: AppClientCallCoreParams & AppClientCompilationParams & (OnCompleteNoOp) = {}) {
-        return $this.mapReturnValue<MethodReturn<'createApplication()void'>, AppCreateCallTransactionResult>(await $this.appClient.create(TestContractCallFactory.create.createApplication(args, params)))
+      async createApplication(
+        args: MethodArgs<'createApplication()void'>,
+        params: AppClientCallCoreParams & AppClientCompilationParams & OnCompleteNoOp = {},
+      ) {
+        return $this.mapReturnValue<MethodReturn<'createApplication()void'>, AppCreateCallTransactionResult>(
+          await $this.appClient.create(TestContractCallFactory.create.createApplication(args, params)),
+        )
       },
     }
   }
@@ -655,53 +711,76 @@ export class TestContractClient {
    * @param params Any additional parameters for the call
    * @returns The result of the call
    */
-  public doubleNestedTxnArg(args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>, params: AppClientCallCoreParams & CoreAppCallArgs = {}) {
+  public doubleNestedTxnArg(
+    args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>,
+    params: AppClientCallCoreParams & CoreAppCallArgs = {},
+  ) {
     return this.call(TestContractCallFactory.doubleNestedTxnArg(args, params))
   }
 
   public compose(): TestContractComposer {
     const client = this
     const atc = new AtomicTransactionComposer()
-    let promiseChain:Promise<unknown> = Promise.resolve()
+    let promiseChain: Promise<unknown> = Promise.resolve()
     const resultMappers: Array<undefined | ((x: any) => any)> = []
     return {
       doMath(args: MethodArgs<'doMath(uint64,uint64,string)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.doMath(args, {...params, sendParams: {...params?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() =>
+          client.doMath(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+        )
         resultMappers.push(undefined)
         return this
       },
       txnArg(args: MethodArgs<'txnArg(pay)address'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.txnArg(args, {...params, sendParams: {...params?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() =>
+          client.txnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+        )
         resultMappers.push(undefined)
         return this
       },
       helloWorld(args: MethodArgs<'helloWorld()string'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.helloWorld(args, {...params, sendParams: {...params?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() =>
+          client.helloWorld(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+        )
         resultMappers.push(undefined)
         return this
       },
       methodArg(args: MethodArgs<'methodArg(appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.methodArg(args, {...params, sendParams: {...params?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() =>
+          client.methodArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+        )
         resultMappers.push(undefined)
         return this
       },
       nestedTxnArg(args: MethodArgs<'nestedTxnArg(pay,appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.nestedTxnArg(args, {...params, sendParams: {...params?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() =>
+          client.nestedTxnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+        )
         resultMappers.push(undefined)
         return this
       },
-      doubleNestedTxnArg(args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.doubleNestedTxnArg(args, {...params, sendParams: {...params?.sendParams, skipSending: true, atc}}))
+      doubleNestedTxnArg(
+        args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>,
+        params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
+      ) {
+        promiseChain = promiseChain.then(() =>
+          client.doubleNestedTxnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+        )
         resultMappers.push(undefined)
         return this
       },
       clearState(args?: BareCallArgs & AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.clearState({...args, sendParams: {...args?.sendParams, skipSending: true, atc}}))
+        promiseChain = promiseChain.then(() => client.clearState({ ...args, sendParams: { ...args?.sendParams, skipSending: true, atc } }))
         resultMappers.push(undefined)
         return this
       },
-      addTransaction(txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>, defaultSender?: SendTransactionFrom) {
-        promiseChain = promiseChain.then(async () => atc.addTransaction(await algokit.getTransactionWithSigner(txn, defaultSender ?? client.sender)))
+      addTransaction(
+        txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
+        defaultSender?: SendTransactionFrom,
+      ) {
+        promiseChain = promiseChain.then(async () =>
+          atc.addTransaction(await algokit.getTransactionWithSigner(txn, defaultSender ?? client.sender)),
+        )
         return this
       },
       async atc() {
@@ -713,7 +792,9 @@ export class TestContractClient {
         const result = await atc.simulate(client.algod, new modelsv2.SimulateRequest({ txnGroups: [], ...options }))
         return {
           ...result,
-          returns: result.methodResults?.map((val, i) => resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)
+          returns: result.methodResults?.map((val, i) =>
+            resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue,
+          ),
         }
       },
       async execute(sendParams?: AppClientComposeExecuteParams) {
@@ -721,9 +802,9 @@ export class TestContractClient {
         const result = await algokit.sendAtomicTransactionComposer({ atc, sendParams }, client.algod)
         return {
           ...result,
-          returns: result.returns?.map((val, i) => resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)
+          returns: result.returns?.map((val, i) => (resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)),
         }
-      }
+      },
     } as unknown as TestContractComposer
   }
 }
@@ -737,7 +818,10 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  doMath(args: MethodArgs<'doMath(uint64,uint64,string)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs): TestContractComposer<[...TReturns, MethodReturn<'doMath(uint64,uint64,string)uint64'>]>
+  doMath(
+    args: MethodArgs<'doMath(uint64,uint64,string)uint64'>,
+    params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
+  ): TestContractComposer<[...TReturns, MethodReturn<'doMath(uint64,uint64,string)uint64'>]>
 
   /**
    * Calls the txnArg(pay)address ABI method.
@@ -746,7 +830,10 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  txnArg(args: MethodArgs<'txnArg(pay)address'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs): TestContractComposer<[...TReturns, MethodReturn<'txnArg(pay)address'>]>
+  txnArg(
+    args: MethodArgs<'txnArg(pay)address'>,
+    params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
+  ): TestContractComposer<[...TReturns, MethodReturn<'txnArg(pay)address'>]>
 
   /**
    * Calls the helloWorld()string ABI method.
@@ -755,7 +842,10 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  helloWorld(args: MethodArgs<'helloWorld()string'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs): TestContractComposer<[...TReturns, MethodReturn<'helloWorld()string'>]>
+  helloWorld(
+    args: MethodArgs<'helloWorld()string'>,
+    params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
+  ): TestContractComposer<[...TReturns, MethodReturn<'helloWorld()string'>]>
 
   /**
    * Calls the methodArg(appl)uint64 ABI method.
@@ -764,7 +854,10 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  methodArg(args: MethodArgs<'methodArg(appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs): TestContractComposer<[...TReturns, MethodReturn<'methodArg(appl)uint64'>]>
+  methodArg(
+    args: MethodArgs<'methodArg(appl)uint64'>,
+    params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
+  ): TestContractComposer<[...TReturns, MethodReturn<'methodArg(appl)uint64'>]>
 
   /**
    * Calls the nestedTxnArg(pay,appl)uint64 ABI method.
@@ -773,7 +866,10 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  nestedTxnArg(args: MethodArgs<'nestedTxnArg(pay,appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs): TestContractComposer<[...TReturns, MethodReturn<'nestedTxnArg(pay,appl)uint64'>]>
+  nestedTxnArg(
+    args: MethodArgs<'nestedTxnArg(pay,appl)uint64'>,
+    params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
+  ): TestContractComposer<[...TReturns, MethodReturn<'nestedTxnArg(pay,appl)uint64'>]>
 
   /**
    * Calls the doubleNestedTxnArg(pay,appl,pay,appl)uint64 ABI method.
@@ -782,7 +878,10 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  doubleNestedTxnArg(args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs): TestContractComposer<[...TReturns, MethodReturn<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>]>
+  doubleNestedTxnArg(
+    args: MethodArgs<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>,
+    params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
+  ): TestContractComposer<[...TReturns, MethodReturn<'doubleNestedTxnArg(pay,appl,pay,appl)uint64'>]>
 
   /**
    * Makes a clear_state call to an existing instance of the TestContract smart contract.
@@ -798,7 +897,10 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    * @param txn One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils helpers (signer is obtained from the defaultSender parameter)
    * @param defaultSender The default sender to be used to obtain a signer where the object provided to the transaction parameter does not include a signer.
    */
-  addTransaction(txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>, defaultSender?: SendTransactionFrom): TestContractComposer<TReturns>
+  addTransaction(
+    txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
+    defaultSender?: SendTransactionFrom,
+  ): TestContractComposer<TReturns>
   /**
    * Returns the underlying AtomicTransactionComposer instance
    */
