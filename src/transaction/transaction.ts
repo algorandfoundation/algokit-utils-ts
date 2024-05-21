@@ -428,7 +428,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       const { app, name } = reference as algosdk.modelsv2.BoxReference
       txns[txnIndex].txn.boxes = [...(txns[txnIndex].txn.boxes ?? []), { appIndex: Number(app), name }]
 
-      if (app !== 0) {
+      if (app.toString() !== '0') {
         // Add the app if it is not already available
         let appAlreadyAvailable = false
         for (const t of txns) {
