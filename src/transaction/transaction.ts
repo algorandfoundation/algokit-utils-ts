@@ -431,10 +431,10 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       if (app !== 0) {
         // Add the app if it is not already available
         let appAlreadyAvailable = false
-        txns.forEach((t) => {
-          if (t.txn.appIndex === Number(reference)) appAlreadyAvailable = true
-          if (t.txn.appForeignApps?.includes(Number(reference))) appAlreadyAvailable = true
-        })
+        for (const t of txns) {
+          appAlreadyAvailable = t.txn.appForeignApps?.includes(Number(app)) || t.txn.appIndex === Number(app)
+          if (appAlreadyAvailable) break
+        }
         if (!appAlreadyAvailable) populateGroupResource(txns, app, 'app')
       }
     } else if (type === 'assetHolding') {
