@@ -327,7 +327,7 @@ describe('transaction', () => {
       expect(e.traces[0].message).toEqual(
         `transaction ${txn2.txID()}: overspend (account ${
           testAccount.addr
-        }, data {AccountBaseData:{Status:Offline MicroAlgos:{Raw:9998000} RewardsBase:${rewardsBase} RewardedMicroAlgos:{Raw:0} AuthAddr:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ TotalAppSchema:{_struct:{} NumUint:0 NumByteSlice:0} TotalExtraAppPages:0 TotalAppParams:0 TotalAppLocalStates:0 TotalAssetParams:0 TotalAssets:0 TotalBoxes:0 TotalBoxBytes:0} VotingData:{VoteID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] SelectionID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] StateProofID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] VoteFirstValid:0 VoteLastValid:0 VoteKeyDilution:0}}, tried to spend {9999999999999})`,
+        }, data {AccountBaseData:{Status:Offline MicroAlgos:{Raw:9998000} RewardsBase:${rewardsBase} RewardedMicroAlgos:{Raw:0} AuthAddr:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ IncentiveEligible:false TotalAppSchema:{_struct:{} NumUint:0 NumByteSlice:0} TotalExtraAppPages:0 TotalAppParams:0 TotalAppLocalStates:0 TotalAssetParams:0 TotalAssets:0 TotalBoxes:0 TotalBoxBytes:0 LastProposed:0 LastHeartbeat:0} VotingData:{VoteID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] SelectionID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] StateProofID:[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] VoteFirstValid:0 VoteLastValid:0 VoteKeyDilution:0}}, tried to spend {9999999999999})`,
       )
     }
   })
