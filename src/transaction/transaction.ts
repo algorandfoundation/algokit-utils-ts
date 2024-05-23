@@ -434,7 +434,9 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       }
 
       // If we're adding a box, we need space for both the box ref and the app ref
-      if (type === 'box') return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES - 1
+      if (type === 'box' && BigInt((reference as algosdk.modelsv2.BoxReference).app) !== BigInt(0)) {
+        return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES - 1
+      }
 
       return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
     })
