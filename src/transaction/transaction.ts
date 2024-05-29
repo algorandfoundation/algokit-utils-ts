@@ -246,9 +246,29 @@ async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransaction
     allowEmptySignatures: true,
   })
 
+  const signerWithFixedSgnr: algosdk.TransactionSigner = async (txns: algosdk.Transaction[], indexes: number[]) => {
+    const stxns = await algosdk.makeEmptyTransactionSigner()(txns, indexes)
+    return Promise.all(
+      stxns.map(async (stxn) => {
+        const decodedStxn = algosdk.decodeSignedTransaction(stxn)
+        const sender = algosdk.encodeAddress(decodedStxn.txn.from.publicKey)
+
+        const authAddr = (await algod.accountInformation(sender).do())['auth-addr']
+
+        const stxnObj: { txn: algosdk.EncodedTransaction; sgnr?: Buffer } = { txn: decodedStxn.txn.get_obj_for_encoding() }
+
+        if (authAddr !== undefined) {
+          stxnObj.sgnr = Buffer.from(algosdk.decodeAddress(authAddr).publicKey)
+        }
+
+        return algosdk.encodeObj(stxnObj)
+      }),
+    )
+  }
+
   const emptySignerAtc = atc.clone()
   emptySignerAtc['transactions'].forEach((t: algosdk.TransactionWithSigner) => {
-    t.signer = algosdk.makeEmptyTransactionSigner()
+    t.signer = signerWithFixedSgnr
   })
 
   const result = await emptySignerAtc.simulate(algod, simReq)

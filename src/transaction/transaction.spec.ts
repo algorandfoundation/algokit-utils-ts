@@ -783,4 +783,35 @@ describe('Resource Packer: meta', () => {
 
     expect(res.transaction.appAccounts?.length || 0).toBe(0)
   })
+
+  test('rekeyed account', async () => {
+    const { testAccount } = fixture.context
+    const { algorand } = fixture
+
+    const authAddr = algorand.account.random().account
+
+
+    await algorand.send.payment({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      rekeyTo: authAddr.addr,
+      amount: algokit.microAlgos(0),
+    })
+
+    await externalClient.fundAppAccount(algokit.microAlgos(200_000))
+
+    await externalClient.call({
+      method: 'createAsset',
+      methodArgs: [],
+      sendParams: { fee: algokit.microAlgos(2_000) },
+      sender: { addr: testAccount.addr, signer: algosdk.makeBasicAccountTransactionSigner(authAddr) },
+    })
+    const res = await externalClient.call({
+      method: 'senderAssetBalance',
+      methodArgs: [],
+      sender: { addr: testAccount.addr, signer: algosdk.makeBasicAccountTransactionSigner(authAddr) },
+    })
+
+    expect(res.transaction.appAccounts?.length || 0).toBe(0)
+  })
 })
