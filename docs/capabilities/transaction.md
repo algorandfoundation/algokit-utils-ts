@@ -1,20 +1,6 @@
 # Transaction management
 
-Transaction management is one of the core capabilities provided by AlgoKit Utils. It allows you to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour.
-
-## `SendTransactionParams`
-
-Any AlgoKit Utils function that needs to sign/send a transaction will generally take all or part of [`SendTransactionParams`](../code/interfaces/types_transaction.SendTransactionParams.md) interface, which represents a standard set of configurations that can be applied to a given transaction or transactions that are to be sent to an Algorand network.
-
-The following parameters are able to be provided, with all of them being optional:
-
-- **skipSending: boolean** - Whether to skip signing and sending the transaction to the chain (default: transaction signed and sent to chain, unless `atc` is specified) and instead just return the raw transaction, e.g. so you can add it to a group of transactions
-- **skipWaiting: boolean** - Whether to skip waiting for the submitted transaction (only relevant if `skipSending` is `false` or unset) and turn this transaction send into an async operation
-- **atc: AtomicTransactionComposer** - An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true`
-- **suppressLog: boolean** - Whether to suppress log messages from transaction send, default: do not suppress
-- **fee: AlgoAmount** - The flat fee you want to pay, useful for covering extra fees in a transaction group or app call
-- **maxFee: AlgoAmount** - The maximum fee that you are happy to pay (default: unbounded) - if this is set it's possible the transaction could get rejected during network congestion
-- **maxRoundsToWaitForConfirmation: number** - The maximum number of rounds to wait for confirmation, only applies if `skipWaiting` is `undefined` or `false`, default: wait up to 5 rounds
+Transaction management is one of the core capabilities provided by AlgoKit Utils. It allows you to form or send standalone transactions or a group of any type of transcations with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, and fees.
 
 ## `SendTransactionResult`
 
@@ -28,7 +14,7 @@ It consists of two properties:
 A useful pattern to use to access these properties is destructuring, e.g.:
 
 ```typescript
-const { transaction, confirmation } = await algokit.sendTransaction(...)
+const { transaction, confirmation } = await algorand.send...
 ```
 
 There are various variations of the `SendTransactionResult` that are exposed by various functions within AlgoKit Utils, including:

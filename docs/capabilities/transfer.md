@@ -4,18 +4,6 @@ Algo transfers is a higher-order use case capability provided by AlgoKit Utils t
 
 To see some usage examples check out the [automated tests](../../src/transfer.spec.ts).
 
-## `transferAlgos`
-
-The key function to facilitate Algo transfers is `algokit.transferAlgos(transfer, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes a [`AlgoTransferParams`](../code/interfaces/types_transfer.AlgoTransferParams.md):
-
-- All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
-- `from: SendTransactionFrom` - The account that will send the ALGOs
-- `to: SendTransactionFrom | string` - The address of the account that will receive the ALGOs
-- `amount: AlgoAmount` - The [amount](./amount.md) of ALGOs to send
-- `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
-- `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
-- `lease?: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
-
 ## `ensureFunded`
 
 The `ensureFunded` function automatically funds an account to maintain a minimum amount of disposable ALGOs. This is particularly useful for automation and deployment scripts. The function is defined as `algokit.ensureFunded(funding, algod, kmd?)` and returns a [`EnsureFundedReturnType`](../code/interfaces/types_transfer.EnsureFundedReturnType.md) if a transaction was needed, or `undefined` if no transaction was required. The function takes a [`EnsureFundedParams`](../code/interfaces/types_transfer.EnsureFundedParams.md) object as an argument:
@@ -30,20 +18,6 @@ The `ensureFunded` function automatically funds an account to maintain a minimum
 - `lease?: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
 
 The function calls Algod to find the current balance and minimum balance requirement, calculates the difference between those two numbers, and checks to see if it's more than the `minSpendingBalance`. If so, it will send the difference, or the `minFundingIncrement` if that is specified. If the `fundingSource` is an instance of `TestNetDispenserApiClient`, the function will use the dispenser API to fund the account. Refer to [algokit-cli documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/dispenser.md#ci-access-token) for details on obtaining an access token for AlgoKit TestNet Dispenser API.
-
-## `transferAsset`
-
-The key function to facilitate asset transfers is `transferAsset(transfer, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes a [`TransferAssetParams`](../code/interfaces/types_transfer.TransferAssetParams.md):
-
-- All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
-- `from: SendTransactionFrom` - The account that will send the asset
-- `to: SendTransactionFrom | string` - The account / account address that will receive the asset
-- `assetId: number` - The asset id that will be transfered
-- `amount: number | bigint` - The amount to send in the smallest divisible unit
-- `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
-- `clawbackFrom: SendTransactionFrom | string` - An optional address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata.
-- `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
-- `lease?: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
 
 ## Dispenser
 

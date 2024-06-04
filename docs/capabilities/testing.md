@@ -35,7 +35,8 @@ describe('MY MODULE', () => {
   beforeEach(fixture.beforeEach, 10_000)
 
   test('MY TEST', async () => {
-    const { algod, testAccount /* ... */ } = fixture.context
+    const { algorand } = fixture
+    const { testAccount /* ... */ } = fixture.context
 
     // Test stuff!
   })
@@ -57,7 +58,8 @@ describe('MY MODULE', () => {
   beforeEach(fixture.beforeEach, 10_000)
 
   test('MY TEST', async () => {
-    const { algod, testAccount /* ... */ } = fixture.context
+    const { algorand } = fixture
+    const { testAccount /* ... */ } = fixture.context
 
     // Test stuff!
   })
@@ -147,8 +149,9 @@ If you want to quickly pin some behaviour of what logic you have does in terms o
 This might look something like this:
 
 ```typescript
-const { algod, indexer, testAccount } = fixture.context
-const result = await algokit.deployApp(getAppDeploymentParams(), algod, indexer)
+const { algorand } = fixture
+const { testAccount /* ... */ } = fixture.context
+const result = await algokit.deployApp(getAppDeploymentParams(), algorand.client.algod, algorand.client.indexer)
 expect(
   logging.testLogger.getLogSnapshot({
     accounts: [testAccount],

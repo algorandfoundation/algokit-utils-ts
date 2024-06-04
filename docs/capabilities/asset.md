@@ -3,56 +3,42 @@
 The Algorand Standard Asset (asset) management functions include creating, opting in and transferring assets, which are fundamental to asset interaction in a blockchain environment.
 To see some usage examples check out the [automated tests](../../src/asset.spec.ts).
 
+## AlgorandClient
+
+It is recommended to use the `AlgorandClient` for forming and sending transactions. `AlgorandClient.prototype.send`, `AlgorandClient.prototype.transaction`, and `AlgorandClient.prototype.newGroup` can all be used using the same interface depending on whether you want to send a tranasction, prepare a transaction, or add a transaction to a group.
+
+All of the examples on this page will be using `AlgorandClient.prototype.send` to send a singular transaction.
+
 ## Creation
 
-To create an asset you can use the `createAsset(create, algod)` function, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes an [`AssetCreateParams`](../code/interfaces/types_asset.CreateAssetParams.md):
+To create an asset you can use the `assetCreate` function, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes an [`AssetCreateParams`](../code/modules/types_composer.md#assetcreateparams):
 
-- All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
-- `creator: SendTransactionFrom` - The account to create the asset. This account automatically is opted in to the asset and holds all units after creation.
-- `total: number | bigint` - The total number of base (decimal) units of the asset to create. If decimal is, say, 2, then for every 100 `total` there would be 1 whole unit.
-- `decimals: number` - The number of digits to use after the decimal point when displaying the asset. If 0, the asset is not divisible. If 1, the base unit of the asset is in tenths, and so on up to 19 decimal places.
-- `name?: string` - The optional name of the asset. Max size if 32 bytes.
-- `unit?: string` - The optional name of the unit of this asset. Max size is 8 bytes.
-- `url?: string` - Specifies an optional URL where more information about the asset can be retrieved. Max size is 96 bytes.
-- `metadataHash?: string | Uint8Array` - This field is intended to be a 32-byte hash of some metadata that is relevant to your asset and/or asset holders.
-- `manager?: string | SendTransactionFrom` - The optional account that can manage the configuration of the asset and destroy it.
-- `reserveAccount?: string | SendTransactionFrom` - The optional account that holds the reserve (non-minted) units of the asset. This address has no specific authority in the protocol itself and is informational.
-- `freezeAccount?: string | SendTransactionFrom` - The optional account that can be used to freeze holdings of this asset. If empty, freezing is not permitted.
-- `clawbackAccount?: string | SendTransactionFrom` - The optional account that can clawback holdings of this asset. If empty, clawback is not permitted.
-- `frozenByDefault?: boolean` - Whether to freeze holdings for this asset by default. If `true` then for anyone apart from the creator to hold the asset it needs to be unfrozen per account using `freeze`. Defaults to `false`.
-- `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
-- `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
-- `lease?: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
+```ts
+// Example
+const result = await algorand.send.assetCreate({
+  sender: testAccount.addr,
+  total: 100n,
+  assetName: 'My Asset',
+})
 
-```typescript
-await algokit.createAsset(
-  {
-    creator: account,
-    total: 100,
-    decimals: 0,
-    name: 'My asset',
-    // Can optionally specify other parameters per above
-    // Can optionally also specify transactionParams, note, lease and other send params
-  },
-  algod,
-)
+const assetId = result.confirmation.assetIndex!
 ```
 
 ## Transfer
 
 ### `transferAsset`
 
-The key function to facilitate asset transfers is `transferAsset(transfer, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes a [`TransferAssetParams`](../code/interfaces/types_transfer.TransferAssetParams.md):
+The key function to facilitate asset transfers is `transferAsset(transfer, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes a [`AssetTransferParams`](../code/modules/types_composer.md#assettransferparams):
 
-- All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
-- `from: SendTransactionFrom` - The account that will send the asset
-- `to: SendTransactionFrom | string` - The account / account address that will receive the asset
-- `assetId: number` - The asset id that will be transfered
-- `amount: number | bigint` - The amount to send in the smallest divisible unit
-- `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
-- `clawbackFrom: SendTransactionFrom | string` - An optional address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata.
-- `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
-- `lease?: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
+```ts
+// Example
+await algorand.send.assetTransfer({
+  sender: alice.addr,
+  receiver: bob.addr,
+  amount: 1n,
+  assetId: 1337n,
+})
+```
 
 ## Opt-in/out
 
@@ -66,25 +52,14 @@ AlgoKit Utils gives you functions that allow you to do opt-ins in bulk or as a s
 
 ### `assetOptIn`
 
-To opt-in an account to a single asset you can use the [`algokit.assetOptIn(optIn, algod)`](../code/modules/index.md#assetoptin) function. The `optIn` argument is an object [containing](../code/interfaces/types_asset.AssetOptInParams.md):
-
-- All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
-- `account: SendTransactionFrom` - The account that will opt-in to the asset
-- `assetId: number` - The asset id that will be opted-in to
-- `transactionParams: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
-- `note: TransactionNote` - The optional [transaction note](./transaction.md#transaction-notes)
-- `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
+To opt-in an account to a single asset you can use the `assetOptIn` function which takes in [`AssetOptInParams`](../code/modules/types_composer.md#assetoptinparams):
 
 ```typescript
 // Example
-await algokit.assetOptIn(
-  {
-    account: account,
-    assetId: 12345,
-    // Can optionally also specify transactionParams, note, lease and other send params
-  },
-  algod,
-)
+await algorand.send.assetOptIn({
+  sender: alice.addr,
+  assetId: 1337n,
+})
 ```
 
 ### `assetOptOut`
