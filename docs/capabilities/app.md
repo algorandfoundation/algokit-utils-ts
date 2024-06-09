@@ -43,6 +43,9 @@ This [type](../code/modules/types_app.md#appcallargs) is a union of two types: `
 
 ### Utility methods
 
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+
 If you want to manually construct a transaction, but use these types to specify the arguments then you can use the following methods:
 
 - [`algokit.getAppArgsForTransaction`](../code/modules/index.md#getappargsfortransaction) - Takes a `RawAppCallArgs` object and returns the corresponding fields ready to set onto an `algosdk.Transaction`
@@ -76,6 +79,9 @@ To get a box reference when reading box state there is a helpful [`BoxName`](../
 
 ## Creating and updating apps
 
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+
 ### `createApp`
 
 To create an app you can call [`algokit.createApp(createPayload, algod)`](../code/modules/index.md#createapp). See the tests for an [example](../../src/app.spec.ts).
@@ -108,6 +114,9 @@ The update payload and behaviour is the same as `createApp` with two payload dif
 
 ## Calling an app
 
+> [!NOTE]
+> This method requires the [legacy AlgoKit Utils import method to access it](../README.md#usage).
+
 To call an app outside of creation or update you can call [`algokit.callApp(callPayload, algod)`](../code/modules/index.md#callapp).
 
 The payload to configure an app call consists of a union of [`SendTransactionParams`](transaction.md#sendtransactionparams) and the [following properties](../code/interfaces/types_app.AppCallParams.md):
@@ -126,6 +135,9 @@ The payload to configure an app call consists of a union of [`SendTransactionPar
 If you pass in args that represent an ABI then it will use an `AtomicTransactionComposer` to construct and send the transaction(s). Because it's possible that other transactions may be present as ABI arguments, the full set of transactions that were sent are returned in `transactions` and the primary transaction for the create call will also be available in `transaction`. If you pass in the `atc` or `skipSending: true` then it won't execute the transaction and will simply return the transaction(s). The `return` value will have any ABI return value within it.
 
 ## Accessing state
+
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
 
 ### Global state
 
@@ -153,6 +165,9 @@ To access and parse box values and names for an app you can use the following me
 - [`algokit.getBoxReference(box)`](../code/modules/index.md#getboxreference) - Returns an `algosdk.BoxReference` representation of the given [box identifier](#referencing-boxes), which is useful when constructing a raw `algosdk.Transaction`
 
 ## Getting an app reference
+
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
 
 To get reference information and metadata about an existing app you can use the following methods:
 

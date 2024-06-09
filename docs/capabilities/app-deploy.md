@@ -37,6 +37,9 @@ Furthermore, the implementation contains the following implementation characteri
 
 ## `getCreatorAppsByName`
 
+> [!NOTE]
+> This method requires the [legacy AlgoKit Utils import method to access it](../README.md#usage).
+
 There is a method `algokit.getCreatorAppsByName(creatorAccount, indexer)`, which performs a series of indexer lookups that return all apps created by the given creator (as a [`SendTransactionFrom`](account.md#sendtransactionfrom), or the encoded string representation of the public key of the account) indexed by the name it was deployed under if the creation transaction contained the following payload in the transaction note field:
 
 ```
@@ -89,6 +92,9 @@ Given there are a number of indexer calls to retrieve this data it's a non-trivi
 
 ## `deployApp`
 
+> [!NOTE]
+> This method requires the [legacy AlgoKit Utils import method to access it](../README.md#usage).
+
 The method that performs the deployment logic is `algokit.deployApp(deployment, algod, indexer?)`. It performs an idempotent (safely retryable) deployment. It will detect if the app already exists and if it doesn't it will create it. If the app does already exist then it will:
 
 - Detect if the app has been updated (i.e. the logic has changed) and either fail or perform either an update or a replacement based on the deployment configuration.
@@ -121,6 +127,9 @@ The first parameter `deployment` is an [`AppDeploymentParams`](../code/interface
 `deployApp` is idempotent which means you can safely call it again multiple times and it will only apply any changes it detects. If you call it again straight after calling it then it will do nothing.
 
 ### Compilation and template substitution
+
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
 
 When compiling TEAL template code, the capabilities described in the [design above](#design) are present, namely the ability to supply deploy-time parameters and the ability to control immutability and permanence of the smart contract at deploy-time.
 

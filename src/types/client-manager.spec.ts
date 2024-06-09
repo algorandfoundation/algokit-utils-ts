@@ -1,8 +1,9 @@
 import { describe, expect, test } from '@jest/globals'
-import { envResetFixture } from '../tests/fixtures/env-fixture'
-import * as algokit from './'
+import { Config } from '..'
+import { envResetFixture } from '../../tests/fixtures/env-fixture'
+import { ClientManager } from './client-manager'
 
-describe('network-clients', () => {
+describe('ClientManager', () => {
   envResetFixture()
 
   // Don't spam algonode all the time, remove the `skip` to run these manually
@@ -21,12 +22,12 @@ describe('network-clients', () => {
       debug: jest.fn(),
       verbose: jest.fn(),
     }
-    algokit.Config.configure({ logger: myLogger })
+    Config.configure({ logger: myLogger })
     afterEach(() => {
       jest.clearAllMocks()
     })
     test('Retries indexer calls', async () => {
-      const indexer = await algokit.getAlgoIndexerClient(algokit.getAlgoNodeConfig('testnet', 'indexer'))
+      const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('testnet', 'indexer'))
 
       const response = await Promise.all(
         new Array(150).fill(0).map(async (_) => {
@@ -39,7 +40,7 @@ describe('network-clients', () => {
       )
     }, 10_000)
     test('Retries algod calls', async () => {
-      const algod = await algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
+      const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
 
       const response = await Promise.all(
         new Array(150).fill(0).map(async (_) => {
@@ -58,7 +59,7 @@ describe('network-clients', () => {
       process.env.ALGOD_SERVER = 'http://localhost'
       process.env.ALGOD_PORT = '4001'
       process.env.ALGOD_TOKEN = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-      const config = algokit.getAlgodConfigFromEnvironment()
+      const config = ClientManager.getAlgodConfigFromEnvironment()
 
       expect(config.server).toBe('http://localhost')
       expect(config.port).toBe('4001')
@@ -69,7 +70,7 @@ describe('network-clients', () => {
       process.env.ALGOD_SERVER = undefined
       process.env.ALGOD_PORT = undefined
       process.env.ALGOD_TOKEN = undefined
-      expect(() => algokit.getAlgodConfigFromEnvironment()).toThrowError(
+      expect(() => ClientManager.getAlgodConfigFromEnvironment()).toThrowError(
         'Attempt to get default algod configuration without specifying ALGOD_SERVER in the environment variables',
       )
     })
@@ -78,7 +79,7 @@ describe('network-clients', () => {
       process.env.INDEXER_SERVER = 'http://localhost'
       process.env.INDEXER_PORT = '8980'
       process.env.INDEXER_TOKEN = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-      const config = algokit.getIndexerConfigFromEnvironment()
+      const config = ClientManager.getIndexerConfigFromEnvironment()
 
       expect(config.server).toBe('http://localhost')
       expect(config.port).toBe('8980')
@@ -86,25 +87,25 @@ describe('network-clients', () => {
     })
 
     test('Gets AlgoNode config for MainNet algod', () => {
-      const config = algokit.getAlgoNodeConfig('mainnet', 'algod')
+      const config = ClientManager.getAlgoNodeConfig('mainnet', 'algod')
       expect(config.server).toBe('https://mainnet-api.algonode.cloud/')
       expect(config.port).toBe(443)
     })
 
     test('Gets AlgoNode config for TestNet algod', () => {
-      const config = algokit.getAlgoNodeConfig('testnet', 'algod')
+      const config = ClientManager.getAlgoNodeConfig('testnet', 'algod')
       expect(config.server).toBe('https://testnet-api.algonode.cloud/')
       expect(config.port).toBe(443)
     })
 
     test('Gets AlgoNode config for MainNet indexer', () => {
-      const config = algokit.getAlgoNodeConfig('mainnet', 'indexer')
+      const config = ClientManager.getAlgoNodeConfig('mainnet', 'indexer')
       expect(config.server).toBe('https://mainnet-idx.algonode.cloud/')
       expect(config.port).toBe(443)
     })
 
     test('Gets AlgoNode config for TestNet indexer', () => {
-      const config = algokit.getAlgoNodeConfig('testnet', 'indexer')
+      const config = ClientManager.getAlgoNodeConfig('testnet', 'indexer')
       expect(config.server).toBe('https://testnet-idx.algonode.cloud/')
       expect(config.port).toBe(443)
     })
@@ -113,51 +114,51 @@ describe('network-clients', () => {
       process.env.INDEXER_SERVER = undefined
       process.env.INDEXER_PORT = undefined
       process.env.INDEXER_TOKEN = undefined
-      expect(() => algokit.getIndexerConfigFromEnvironment()).toThrowError(
+      expect(() => ClientManager.getIndexerConfigFromEnvironment()).toThrowError(
         'Attempt to get default indexer configuration without specifying INDEXER_SERVER in the environment variables',
       )
     })
 
     test('Get working LocalNet algod client', async () => {
-      const algod = algokit.getAlgoClient(algokit.getDefaultLocalNetConfig('algod'))
+      const algod = ClientManager.getAlgodClient(ClientManager.getDefaultLocalNetConfig('algod'))
       await algod.status().do()
     })
 
     test('Get working LocalNet indexer client', async () => {
-      const indexer = algokit.getAlgoIndexerClient(algokit.getDefaultLocalNetConfig('algod'))
+      const indexer = ClientManager.getIndexerClient(ClientManager.getDefaultLocalNetConfig('indexer'))
       await indexer.makeHealthCheck().do()
     })
 
     test('Get working LocalNet kmd client', async () => {
-      const kmd = algokit.getAlgoKmdClient(algokit.getDefaultLocalNetConfig('algod'))
+      const kmd = ClientManager.getKmdClient(ClientManager.getDefaultLocalNetConfig('kmd'))
       await kmd.listWallets()
     })
 
     test('Get working MainNet algod client', async () => {
-      const algod = algokit.getAlgoClient(algokit.getAlgoNodeConfig('mainnet', 'algod'))
+      const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('mainnet', 'algod'))
       await algod.status().do()
     })
 
     test('Get working MainNet indexer client', async () => {
-      const indexer = algokit.getAlgoIndexerClient(algokit.getAlgoNodeConfig('mainnet', 'indexer'))
+      const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('mainnet', 'indexer'))
       await indexer.makeHealthCheck().do()
     })
 
     test('Determine LocalNet algod client is LocalNet', async () => {
-      const algod = algokit.getAlgoClient(algokit.getDefaultLocalNetConfig('algod'))
-      const localNet = await algokit.isLocalNet(algod)
+      const algod = ClientManager.getAlgodClient(ClientManager.getDefaultLocalNetConfig('algod'))
+      const localNet = await new ClientManager({ algod }).isLocalNet()
       expect(localNet).toBe(true)
     })
 
     test('Determine TestNet algod client is not LocalNet', async () => {
-      const algod = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-      const localNet = await algokit.isLocalNet(algod)
+      const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
+      const localNet = await new ClientManager({ algod }).isLocalNet()
       expect(localNet).toBe(false)
     })
 
     test('Determine MainNet algod client is not LocalNet', async () => {
-      const algod = algokit.getAlgoClient(algokit.getAlgoNodeConfig('mainnet', 'algod'))
-      const localNet = await algokit.isLocalNet(algod)
+      const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('mainnet', 'algod'))
+      const localNet = await new ClientManager({ algod }).isLocalNet()
       expect(localNet).toBe(false)
     })
   })

@@ -2,17 +2,64 @@
 
 Application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker).
 
+> [!NOTE]
+> This page covers the untyped app client, but it's worth exploring the [typed client generation feature in AlgoKit](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
+
 App client is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App management](./app.md). It allows you to access a high productivity application client that works with ARC-0032 application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
 
 To see some usage examples check out the [automated tests](../../src/types/app-client.spec.ts).
 
 ## Design
 
-The design for the app client is based on a wrapper for parsing an [ARC-0032](https://github.com/algorandfoundation/ARCs/pull/150) application spec and wrapping the [App deployment](./app-deploy.md) functionality and corresponding [design](./app-deploy.md#design). It's also heavily inspired by [beaker-ts](https://github.com/algorand-devrel/beaker-ts), which this library aims to eventually replace.
+The design for the app client is based on a wrapper for parsing an [ARC-0032](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec and wrapping the [App deployment](./app-deploy.md) functionality and corresponding [design](./app-deploy.md#design).
 
 ## Creating an application client
 
-To create an application you can either use `algokit.getAppClient(appDetails, algod)` or `import { ApplicationClient } from '@algorandfoundation/algokit-utils/types/app-client'` and `new ApplicationClient(appDetails, algod)`
+To create an application client you can do it via [`AlgorandClient`](./algorand-client.md) or directly.
+
+### Via `AlgorandClient`
+
+This is the recommended way to create an application client. To create an application this way you can do:
+
+```typescript
+// Get by creator address and app name via indexer
+const client = algorand.client.getAppClientByCreatorAndName({
+  app: appSpec,
+  creatorAddress,
+})
+// With optional params
+const client = algorand.client.getAppClientByCreatorAndName({
+  app: appSpec,
+  creatorAddress,
+  name: nameOverride,
+  deployTimeParams,
+  sender: defaultSender,
+})
+
+// Get by app ID
+const client = algorand.client.getAppClientById({
+  id: 12345,
+  app: appSpec,
+})
+// With optional params
+const client = algorand.client.getAppClientById({
+  id: 12345,
+  app: appSpec,
+  name: nameOverride,
+  deployTimeParams,
+  sender: defaultSender,
+})
+```
+
+### Directly
+
+To create an application you can do:
+
+```typescript
+import { ApplicationClient } from '@algorandfoundation/algokit-utils/types/app-client'
+
+const client = new ApplicationClient(appDetails, algod)
+```
 
 The `appDetails` parameter is of type [`AppSpecAppDetails`](../code/modules/types_app_client.md#appspecappdetails), which contains some core properties and then one of two key mechanisms to specify the app to target.
 
@@ -115,6 +162,9 @@ const result = await appClient.call({
 
 ## Reading state
 
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+
 There are various methods defined that let you read state from the smart contract app:
 
 - `getGlobalState()` - Gets the current global state using [`algokit.getAppGlobalState](./app.md#global-state)
@@ -159,13 +209,11 @@ Note: This information will only show if the Application Client has a source map
 - You have called `create`, `update` or `deploy`
 - You have called `importSourceMaps(sourceMaps)` and provided the source maps (which you can get by calling `exportSourceMaps()` after calling `create`, `update` or `deploy` and it returns a serialisable value)
 
-If you want to go a step further and automatically issue a [dry run transaction](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/debugging/#dryrun-rest-endpoint) when there is an error when an ABI method is called you can turn on debug mode:
+If you want to go a step further and automatically issue a [simulated transaction](https://algorand.github.io/js-algorand-sdk/classes/modelsv2.SimulateTransactionResult.html) and get trace information when there is an error when an ABI method is called you can turn on debug mode:
 
 ```typescript
 algokit.Config.configure({ debug: true })
 ```
-
-> ⚠️ **Note:** The "dry run" feature has been deprecated and is now replaced by the "simulation" feature. Please refer to the [Simulation Documentation](https://algorand.github.io/js-algorand-sdk/classes/modelsv2.SimulateTransactionResult.html) for more details.
 
 If you do that then the exception will have the `traces` property within the underlying exception will have key information from the simulation within it and this will get populated into the `led.traces` property of the thrown error.
 

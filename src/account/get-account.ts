@@ -1,16 +1,14 @@
 import algosdk from 'algosdk'
-import { Config } from '../config'
-import { getOrCreateKmdWalletAccount } from '../localnet/get-or-create-kmd-wallet-account'
-import { isLocalNet } from '../localnet/is-localnet'
 import { AccountConfig, SigningAccount } from '../types/account'
+import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
+import { ClientManager } from '../types/client-manager'
 import { getAccountConfigFromEnvironment } from './get-account-config-from-environment'
-import { mnemonicAccount } from './mnemonic-account'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
-/**  @deprecated use mnemonicAccountFromEnvironment instead
+/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
  *
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
@@ -46,7 +44,7 @@ export async function getAccount(
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
-/**  @deprecated use mnemonicAccountFromEnvironment instead
+/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
  * Note: This function expects to run in a Node.js environment.
@@ -73,7 +71,7 @@ export async function getAccount(
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
-/**  @deprecated use mnemonicAccountFromEnvironment instead
+/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
  * Note: This function expects to run in a Node.js environment.
@@ -128,22 +126,5 @@ export async function getAccount(
     throw new Error('Missing name or account config')
   }
 
-  if (config.accountMnemonic) {
-    const signer = mnemonicAccount(config.accountMnemonic)
-    const sender = config.senderAddress || config.senderMnemonic
-    if (sender) {
-      Config.logger.debug(`Using rekeyed account ${signer.addr} for sender ${sender} for ${name} account`)
-      return new SigningAccount(signer, sender)
-    } else {
-      return signer
-    }
-  }
-
-  if (await isLocalNet(algod)) {
-    const account = await getOrCreateKmdWalletAccount({ name, fundWith }, algod, kmdClient)
-    config.accountMnemonic = algosdk.secretKeyToMnemonic(account.sk)
-    return account
-  }
-
-  throw new Error(`Missing environment variable ${name.toUpperCase()}_MNEMONIC when looking for account ${name}`)
+  return (await new AccountManager(new ClientManager({ algod, kmd: kmdClient })).fromEnvironment(name, fundWith)).account
 }

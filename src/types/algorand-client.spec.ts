@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import algosdk from 'algosdk'
 import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
-import * as algokit from '../index'
 import { algorandFixture } from '../testing'
 import { TransactionSignerAccount } from './account'
 import AlgorandClient from './algorand-client'
+import { AlgoAmount } from './amount'
 import { MethodCallParams } from './composer'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
@@ -27,7 +27,7 @@ describe('AlgorandClient', () => {
     await fixture.beforeEach()
 
     alice = fixture.context.testAccount
-    bob = await fixture.context.generateAccount({ initialFunds: algokit.microAlgos(100_000) })
+    bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.MicroAlgos(100_000) })
 
     algorand = fixture.algorand
     appClient = algorand.client.getTypedAppClientById(TestContractClient, {
@@ -42,7 +42,7 @@ describe('AlgorandClient', () => {
   test('sendPayment', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).amount
     const bobPreBalance = (await algorand.account.getInformation(bob)).amount
-    await algorand.send.payment({ sender: alice.addr, receiver: bob.addr, amount: algokit.microAlgos(1) })
+    await algorand.send.payment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgos(1) })
     const alicePostBalance = (await algorand.account.getInformation(alice)).amount
     const bobPostBalance = (await algorand.account.getInformation(bob)).amount
 
@@ -65,7 +65,7 @@ describe('AlgorandClient', () => {
     const doMathAtc = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).atc()
     const result = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: algokit.microAlgos(1) })
+      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgos(1) })
       .addAtc(doMathAtc)
       .execute()
 
@@ -84,7 +84,7 @@ describe('AlgorandClient', () => {
 
     const methodRes = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: algokit.microAlgos(1), note: new Uint8Array([1]) })
+      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgos(1), note: new Uint8Array([1]) })
       .addMethodCall({
         sender: alice.addr,
         appId: appId,
@@ -107,12 +107,12 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) })],
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgos(0) })],
     }
 
     const txnRes = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0), note: new Uint8Array([1]) })
+      .addPayment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgos(0), note: new Uint8Array([1]) })
       .addMethodCall(txnArgParams)
       .execute()
 
@@ -145,7 +145,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) })],
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgos(0) })],
     } satisfies MethodCallParams
 
     const nestedTxnArgRes = await algorand
@@ -167,14 +167,14 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(0) })],
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgos(0) })],
     } satisfies MethodCallParams
 
     const secondTxnCall = {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: algokit.microAlgos(1) })],
+      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgos(1) })],
       note: new Uint8Array([1]),
     } satisfies MethodCallParams
 

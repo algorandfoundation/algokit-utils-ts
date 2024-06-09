@@ -402,8 +402,8 @@ describe('application-client', () => {
   })
 
   test('Call app with rekey', async () => {
-    const { algod, testAccount } = localnet.context
-    const rekeyTo = algokit.randomAccount()
+    const { algod, testAccount, algorand } = localnet.context
+    const rekeyTo = algorand.account.random()
     const client = algokit.getAppClient(
       {
         resolveBy: 'id',
@@ -427,7 +427,7 @@ describe('application-client', () => {
     })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algokit.rekeyedAccount(rekeyTo, testAccount.addr)
+    const rekeyedAccount = algorand.account.rekeyed(rekeyTo, testAccount.addr)
     await algokit.transferAlgos(
       {
         amount: (0).algos(),

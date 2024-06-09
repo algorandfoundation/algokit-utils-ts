@@ -1,6 +1,8 @@
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './types/dispenser-client'
 
 /**
+ * @deprecated Use `clientManager.getTestNetDispenser` instead
+ *
  * Create a new TestNetDispenserApiClient instance.
  * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
  *
