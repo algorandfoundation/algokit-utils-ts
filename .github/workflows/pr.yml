@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           npm ci --ignore-scripts
-          npm run generate:code-docs -- --version
+          npm ls --all
           npm run generate:code-docs
           # Add untracked files as empty so they come up in diff
           git add -N .
