@@ -858,7 +858,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L127)
+[src/account/account.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L126)
 
 ___
 
@@ -884,7 +884,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L116)
+[src/account/account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L115)
 
 ___
 
@@ -924,7 +924,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L169)
+[src/account/account.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L168)
 
 ___
 
@@ -995,7 +995,7 @@ const accountInfo = await account.getInformation(address, algod);
 
 #### Defined in
 
-[src/account/account.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L147)
+[src/account/account.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L146)
 
 ___
 
@@ -2358,7 +2358,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/account/account.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L96)
+[src/account/account.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L95)
 
 ___
 
@@ -2387,7 +2387,7 @@ Returns an account wrapper that supports partial or full multisig signing.
 
 #### Defined in
 
-[src/account/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L23)
+[src/account/account.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L22)
 
 ___
 
@@ -2566,7 +2566,7 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account/account.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L59)
+[src/account/account.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L58)
 
 ___
 
@@ -2628,7 +2628,7 @@ Returns an account wrapper that supports a rekeyed account.
 
 #### Defined in
 
-[src/account/account.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L35)
+[src/account/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L34)
 
 ___
 
@@ -2902,7 +2902,7 @@ Returns an account wrapper that supports a transaction signer with associated se
 
 #### Defined in
 
-[src/account/account.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L47)
+[src/account/account.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L46)
 
 ___
 
