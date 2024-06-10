@@ -36,8 +36,8 @@ jobs:
         shell: bash
         run: |
           npm ci --ignore-scripts
-          npm ls --all
           npm run generate:code-docs
+          cat docs/code/classes/types_kmd_account_manager.KmdAccountManager.md
           # Add untracked files as empty so they come up in diff
           git add -N .
           # Print changed files and error out if there are changes after generating docs
