@@ -142,7 +142,7 @@ environment variables, or against default LocalNet if no environment variables p
 
 Note: requires a Node.js environment to execute.
 
-It present, it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC and optionally
+If present, it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC and optionally
 process.env.DISPENSER_SENDER if it's a rekeyed account.
 
 #### Returns
@@ -402,7 +402,7 @@ The `TransactionSigner` or throws an error if not found and no default signer is
 **`Example`**
 
 ```typescript
-const signer = accountManager.getSigner("{SENDERADDRESS}")
+const signer = accountManager.getSigner("SENDERADDRESS")
 ```
 
 #### Defined in

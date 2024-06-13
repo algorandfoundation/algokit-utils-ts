@@ -7,7 +7,6 @@
 ### References
 
 - [AlgorandClient](index.md#algorandclient)
-- [SendSingleTransactionResult](index.md#sendsingletransactionresult)
 
 ### Variables
 
@@ -15,7 +14,6 @@
 - [MAX\_APP\_CALL\_ACCOUNT\_REFERENCES](index.md#max_app_call_account_references)
 - [MAX\_APP\_CALL\_FOREIGN\_REFERENCES](index.md#max_app_call_foreign_references)
 - [MAX\_TRANSACTION\_GROUP\_SIZE](index.md#max_transaction_group_size)
-- [default](index.md#default)
 
 ### Functions
 
@@ -121,12 +119,6 @@
 
 Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
 
-___
-
-### SendSingleTransactionResult
-
-Re-exports [SendSingleTransactionResult](types_algorand_client.md#sendsingletransactionresult)
-
 ## Variables
 
 ### Config
@@ -168,26 +160,6 @@ ___
 #### Defined in
 
 [src/transaction/transaction.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L27)
-
-___
-
-### default
-
-• **default**: `Object`
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `AlgorandClient` | typeof [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) | - |
-| `Config` | [`UpdatableConfig`](../classes/types_config.UpdatableConfig.md) | The AlgoKit config. To update it use the configure method. |
-| `algos` | (`algos`: `number`) => [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
-| `microAlgos` | (`microAlgos`: `number`) => [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
-| `transactionFees` | (`numberOfTransactions`: `number`) => [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
-
-#### Defined in
-
-[src/index.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/index.ts#L27)
 
 ## Functions
 
@@ -1017,7 +989,7 @@ ___
 
 Use `ClientManager.getAlgodClient(config)` or `ClientManager.getAlgodClientFromEnvironment()` instead.
 
-Returns an algod SDK client that automatically retries on idempotent calls
+Returns an algod SDK client that automatically retries transient failures on idempotent calls
 
 **`Example`**
 
@@ -1074,7 +1046,7 @@ ___
 
 Use `ClientManager.getIndexerClient(config, overrideIntDecoding)` or `ClientManager.getIndexerClientFromEnvironment(overrideIntDecoding)` instead.
 
-Returns an indexer SDK client that automatically retries on idempotent calls
+Returns an indexer SDK client that automatically retries transient failures on idempotent calls
 
 **`Example`**
 
@@ -1135,7 +1107,7 @@ ___
 
 Use `ClientManager.getKmdClient(config)` or `ClientManager.getKmdClientFromEnvironment()` instead.
 
-Returns a KMD SDK client that automatically retries on idempotent calls.
+Returns a KMD SDK client that automatically retries transient failures on idempotent calls.
 
 KMD client allows you to export private keys, which is useful to get the default account in a LocalNet network.
 
