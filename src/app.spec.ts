@@ -33,8 +33,8 @@ describe('app', () => {
   })
 
   test('createApp with rekey performs rekey', async () => {
-    const { algod, testAccount } = localnet.context
-    const rekeyTo = algokit.randomAccount()
+    const { algod, algorand, testAccount } = localnet.context
+    const rekeyTo = algorand.account.random()
     const contract = await getTestingAppContract()
     await algokit.createApp(
       {
@@ -50,7 +50,7 @@ describe('app', () => {
     )
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algokit.rekeyedAccount(rekeyTo, testAccount.addr)
+    const rekeyedAccount = algorand.account.rekeyed(rekeyTo, testAccount.addr)
     await algokit.transferAlgos(
       {
         amount: (0).algos(),

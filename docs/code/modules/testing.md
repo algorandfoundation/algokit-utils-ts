@@ -57,7 +57,8 @@ Creates a test fixture for automated testing against Algorand.
 By default it tests against an environment variable specified client
  if the standard environment variables are specified, otherwise against
  a default LocalNet instance, but you can pass in an algod, indexer
- and/or kmd if you want to test against an explicitly defined network.
+ and/or kmd (or their respective config) if you want to test against
+an explicitly defined network.
 
 #### Parameters
 
@@ -84,17 +85,27 @@ test('My test', async () => {
 })
 ```
 
+**`Example`**
+
+```typescript
+const algorand = algorandFixture({
+ algod: new Algodv2('localhost', 12345, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
+ // ...
+})
+
+beforeEach(algorand.beforeEach, 10_000)
+
+test('My test', async () => {
+    const {algod, indexer, testAccount, ...} = algorand.context
+    // test things...
+})
+```
+
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L39)
+[src/testing/fixtures/algorand-fixture.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L48)
 
 ▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
-
-Creates a test fixture for automated testing against Algorand.
-By default it tests against an environment variable specified client
- if the standard environment variables are specified, otherwise against
- a default LocalNet instance, but you can pass in an algod, indexer
- and/or kmd if you want to test against an explicitly defined network.
 
 #### Parameters
 
@@ -108,6 +119,16 @@ By default it tests against an environment variable specified client
 [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
 The fixture
+
+**`Deprecated`**
+
+Config can be passed in directly to fixture config now.
+
+Creates a test fixture for automated testing against Algorand.
+By default it tests against an environment variable specified client
+ if the standard environment variables are specified, otherwise against
+ a default LocalNet instance, but you can pass in an algod, indexer
+ and/or kmd if you want to test against an explicitly defined network.
 
 **`Example`**
 
@@ -124,13 +145,13 @@ test('My test', async () => {
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L64)
+[src/testing/fixtures/algorand-fixture.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L75)
 
 ___
 
 ### getTestAccount
 
-▸ **getTestAccount**(`param0`, `algod`, `kmd?`): `Promise`\<`Account`\>
+▸ **getTestAccount**(`param0`, `algorand`): `Promise`\<`Account`\>
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
@@ -142,8 +163,7 @@ Note: By default this will log the mnemonic of the account.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `param0` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
-| `algod` | `default` | An algod client |
-| `kmd?` | `default` | A KMD client, if not specified then a default KMD client will be loaded from environment variables |
+| `algorand` | [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) | An AlgorandClient client |
 
 #### Returns
 
@@ -153,7 +173,7 @@ The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L19)
+[src/testing/account.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L15)
 
 ___
 

@@ -11,6 +11,7 @@
 ### Interfaces
 
 - [AlgoSdkClients](../interfaces/types_client_manager.AlgoSdkClients.md)
+- [NetworkDetails](../interfaces/types_client_manager.NetworkDetails.md)
 - [TypedAppClient](../interfaces/types_client_manager.TypedAppClient.md)
 
 ### Type Aliases
@@ -30,7 +31,7 @@ Details to resolve an app client by creator address and name.
 
 #### Defined in
 
-[src/types/client-manager.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L145)
+[src/types/client-manager.ts:459](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L459)
 
 ___
 
@@ -42,7 +43,7 @@ Details to resolve an app client by app ID.
 
 #### Defined in
 
-[src/types/client-manager.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L157)
+[src/types/client-manager.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L471)
 
 ___
 
@@ -54,7 +55,7 @@ Details to resolve a typed app creator address and name.
 
 #### Defined in
 
-[src/types/client-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L152)
+[src/types/client-manager.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L466)
 
 ___
 
@@ -66,4 +67,4 @@ Details to resolve a typed app by app ID.
 
 #### Defined in
 
-[src/types/client-manager.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L162)
+[src/types/client-manager.ts:476](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L476)

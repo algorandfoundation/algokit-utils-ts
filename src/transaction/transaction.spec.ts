@@ -790,7 +790,6 @@ describe('Resource Packer: meta', () => {
 
     const authAddr = algorand.account.random().account
 
-
     await algorand.send.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,

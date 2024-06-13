@@ -5,6 +5,9 @@ To see some usage examples check out the [automated tests](../../src/asset.spec.
 
 ## Creation
 
+> [!NOTE]
+> This method requires the [legacy AlgoKit Utils import method to access it](../README.md#usage).
+
 To create an asset you can use the `createAsset(create, algod)` function, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes an [`AssetCreateParams`](../code/interfaces/types_asset.CreateAssetParams.md):
 
 - All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
@@ -40,6 +43,9 @@ await algokit.createAsset(
 
 ## Transfer
 
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+
 ### `transferAsset`
 
 The key function to facilitate asset transfers is `transferAsset(transfer, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes a [`TransferAssetParams`](../code/interfaces/types_transfer.TransferAssetParams.md):
@@ -55,6 +61,9 @@ The key function to facilitate asset transfers is `transferAsset(transfer, algod
 - `lease?: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
 
 ## Opt-in/out
+
+> [!NOTE]
+> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
 
 Before an account can receive a specific asset, it must `opt-in` to receive it. An opt-in transaction places an asset holding of 0 into the account and increases its minimum balance by [100,000 microAlgos](https://developer.algorand.org/docs/get-details/asa/#assets-overview).
 

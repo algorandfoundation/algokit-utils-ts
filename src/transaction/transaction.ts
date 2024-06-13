@@ -101,15 +101,6 @@ export const getSenderAddress = function (sender: string | SendTransactionFrom) 
   return typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr : sender.address()
 }
 
-const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
-  const cache = new Map()
-  const cached = function (this: unknown, val: T) {
-    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
-  }
-  cached.cache = cache
-  return cached as (val: T) => R
-}
-
 /**
  * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
  * AtomicTransactionComposer's addTransaction method.
@@ -141,6 +132,15 @@ export const getTransactionWithSigner = async (
           txn: transaction,
           signer: getSenderTransactionSigner(defaultSender),
         }
+}
+
+const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
+  const cache = new Map()
+  const cached = function (this: unknown, val: T) {
+    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
+  }
+  cached.cache = cache
+  return cached as (val: T) => R
 }
 
 /**

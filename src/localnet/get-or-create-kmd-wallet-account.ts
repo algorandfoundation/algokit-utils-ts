@@ -1,15 +1,14 @@
 import algosdk from 'algosdk'
-import { Config } from '../config'
-import { getAlgoKmdClient } from '../network-client'
-import { transferAlgos } from '../transfer/transfer-algos'
 import { AlgoAmount } from '../types/amount'
-import { getKmdWalletAccount } from './get-kmd-wallet-account'
-import { getLocalNetDispenserAccount } from './get-localnet-dispenser-account'
+import { ClientManager } from '../types/client-manager'
+import { KmdAccountManager } from '../types/kmd-account-manager'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
+ * @deprecated use `algorandClient.account.kmd.getOrCreateWalletAccount(name, fundWith)` or `new KMDAccountManager(clientManager).getOrCreateWalletAccount(name, fundWith)` instead.
+ *
  * Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
  *
  * This is useful to get idempotent accounts from LocalNet without having to specify the private key (which will change when resetting the LocalNet).
@@ -31,38 +30,10 @@ export async function getOrCreateKmdWalletAccount(
   algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account> {
-  const kmd = kmdClient ?? getAlgoKmdClient()
-
-  // Get an existing account from the KMD wallet
-  const existing = await getKmdWalletAccount(walletAccount, algod, kmd)
-  if (existing) {
-    return existing
-  }
-
-  // None existed: create the KMD wallet instead
-  const walletId = (await kmd.createWallet(walletAccount.name, '')).wallet.id
-  const walletHandle = (await kmd.initWalletHandle(walletId, '')).wallet_handle_token
-  await kmd.generateKey(walletHandle)
-
-  // Get the account from the new KMD wallet
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const account = (await getKmdWalletAccount(walletAccount, algod, kmd))!
-
-  Config.logger.info(
-    `LocalNet account '${walletAccount.name}' doesn't yet exist; created account ${account.addr} with keys stored in KMD and funding with ${
-      walletAccount.fundWith?.algos ?? 1000
-    } ALGOs`,
-  )
-
-  // Fund the account from the dispenser
-  await transferAlgos(
-    {
-      amount: walletAccount.fundWith ?? AlgoAmount.Algos(1000),
-      from: await getLocalNetDispenserAccount(algod, kmd),
-      to: account.addr,
-    },
-    algod,
-  )
-
-  return account
+  return (
+    await new KmdAccountManager(new ClientManager({ algod, kmd: kmdClient })).getOrCreateWalletAccount(
+      walletAccount.name,
+      walletAccount.fundWith,
+    )
+  ).account
 }

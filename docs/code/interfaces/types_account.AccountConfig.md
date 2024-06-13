@@ -4,6 +4,9 @@
 
 [types/account](../modules/types_account.md).AccountConfig
 
+**`Deprecated`**
+
+The methods that use this can be achieved using `AccountManager` instead.
 Config for an account config
 
 ## Table of contents
@@ -25,7 +28,7 @@ Mnemonic for an account
 
 #### Defined in
 
-[src/types/account.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L121)
+[src/types/account.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L140)
 
 ___
 
@@ -37,7 +40,7 @@ Account name used to retrieve config
 
 #### Defined in
 
-[src/types/account.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L125)
+[src/types/account.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L144)
 
 ___
 
@@ -49,7 +52,7 @@ Address of a rekeyed account
 
 #### Defined in
 
-[src/types/account.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L123)
+[src/types/account.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L142)
 
 ___
 
@@ -63,4 +66,4 @@ Renamed to senderAddress in 2.3.1
 
 #### Defined in
 
-[src/types/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L128)
+[src/types/account.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L147)

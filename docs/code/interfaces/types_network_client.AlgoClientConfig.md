@@ -4,7 +4,7 @@
 
 [types/network-client](../modules/types_network_client.md).AlgoClientConfig
 
-Config for an Algorand SDK client
+Config for an Algorand SDK client.
 
 ## Table of contents
 
