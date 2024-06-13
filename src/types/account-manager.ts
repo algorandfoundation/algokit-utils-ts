@@ -142,7 +142,7 @@ export class AccountManager {
    * @param sender The sender address
    * @example
    * ```typescript
-   * const signer = accountManager.getSigner("{SENDERADDRESS}")
+   * const signer = accountManager.getSigner("SENDERADDRESS")
    * ```
    * @returns The `TransactionSigner` or throws an error if not found and no default signer is set
    */
@@ -397,7 +397,7 @@ export class AccountManager {
    *
    * Note: requires a Node.js environment to execute.
    *
-   * It present, it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC and optionally
+   * If present, it will load the account mnemonic stored in process.env.DISPENSER_MNEMONIC and optionally
    * process.env.DISPENSER_SENDER if it's a rekeyed account.
    *
    * @example
