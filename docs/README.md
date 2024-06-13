@@ -33,8 +33,10 @@ This library requires `algosdk` as a peer dependency. Ensure you have it install
 To use this library simply include the following at the top of your file:
 
 ```typescript
-import algokit from '@algorandfoundation/algokit-utils'
+import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 ```
+
+As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import withing the {} in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
 
 > [!WARNING]
 > Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as`):
@@ -44,8 +46,6 @@ import algokit from '@algorandfoundation/algokit-utils'
 > ```
 >
 > This version will still work, but it exposes an older, function-based interface to the functionality that is in the process of being deprecated. The recommended way to use AlgoKit Utils is via the `AlgorandClient` class mentioned below, which is easier and more convenient to use. Some functionality won't yet be migrated to the new approach and this old approach will be needed, but the documentation pages will indicate when this is the case.
-
-Then you can use intellisense to auto-complete the various functionality that is available by typing `algokit.` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
 
 The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `algokit.AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
 

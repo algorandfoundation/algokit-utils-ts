@@ -17,15 +17,4 @@ export * from './network-client'
 // Up to date exports
 export * from './amount'
 export * from './config'
-export * from './types/algorand-client'
-
-// Default export with intellisense of the most pertinent parts of AlgoKit Utils
-import * as amount from './amount'
-import * as config from './config'
-import * as algorand from './types/algorand-client'
-
-export default {
-  ...amount,
-  ...config,
-  AlgorandClient: algorand.AlgorandClient,
-}
+export { AlgorandClient } from './types/algorand-client'

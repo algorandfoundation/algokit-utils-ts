@@ -16,6 +16,14 @@ This library can be installed from NPM using your favourite npm client, e.g.:
 npm install @algorandfoundation/algokit-utils
 ```
 
+Then to import it:
+
+```typescript
+import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
+```
+
+See [usage](./docs/README.md#usage) for more.
+
 ## Guiding principles
 
 This library follows the [Guiding Principles of AlgoKit](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/algokit.md#guiding-principles).
