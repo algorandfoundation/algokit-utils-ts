@@ -6,7 +6,7 @@ Account management is one of the core capabilities provided by AlgoKit Utils. It
 
 The [`AccountManager`](../code/classes/types_account_manager.AccountManager.md) is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`AlgokitComposer`](./algokit-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
 
-To get an instance of `AccountManager` you can get it from either [`AlgorandClient`](./algorand-client.md) via `algorand.account` or instantiate it directly (passing in a [`ClientManager`](./client.md)):
+To get an instance of `AccountManager`, you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.account` or instantiate it directly (passing in a [`ClientManager`](./client.md)):
 
 ```typescript
 import { AccountManager } from '@algorandfoundation/algokit-utils/types/account-manager'
@@ -123,7 +123,7 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 )
 // Same as above, but dedicated method call for convenience
 const localNetDispenserAccount = await kmdAccountManager.getLocalNetDispenserAccount()
-// Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
+// Idempotently get (if exists) or create (if it doesn't exist yet) an account by name using KMD
 // if creating it then fund it with 2 Algos from the default dispenser account
 const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
 // This will return the same account as above since the name matches

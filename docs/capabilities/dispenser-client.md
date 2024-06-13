@@ -11,7 +11,7 @@ To create a Dispenser Client, you need to provide an authorization token. This c
 
 If both methods are used, the constructor argument takes precedence.
 
-You can get a TestNet dispenser API via `ClientManager` (e.g. via `algorand.client.testNetDispenser()`), or directly, e.g.:
+You can get a TestNet dispenser API client via `ClientManager` (e.g. via `algorand.client.testNetDispenser()`), or directly, e.g.:
 
 ```ts
 import { TestNetDispenserApiClient } from '@algorandfoundation/algokit-utils/types/dispenser-client'

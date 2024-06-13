@@ -61,13 +61,13 @@ Once you have the configuration for a client, to get a new client you can use th
 
 You can also shortcut needing to write the likes of `ClientManager.getAlgoClient(ClientManager.getAlgodConfigFromEnvironment())` with environment shortcut methods:
 
-- [`ClientManager.getAlgodClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getalgodclientfromenvironment) - Returns an Algod client by loading from the config from environment variables
-- [`ClientManager.getIndexerClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getindexerclientfromenvironment) - Returns an indexer client by loading from the config from environment variables
-- [`ClientManager.getKmdClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getkmdclientfromenvironment) - Returns a kmd client by loading from the config from environment variables
+- [`ClientManager.getAlgodClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getalgodclientfromenvironment) - Returns an Algod client by loading the config from environment variables
+- [`ClientManager.getIndexerClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getindexerclientfromenvironment) - Returns an indexer client by loading the config from environment variables
+- [`ClientManager.getKmdClientFromEnvironment(config)`](../code/classes/types_client_manager.ClientManager.md#getkmdclientfromenvironment) - Returns a kmd client by loading the config from environment variables
 
 ### Accessing SDK clients via ClientManager instance
 
-Once you have an `ClientManager` instance, you can access the SDK clients for the various Algorand APIs from it (expressed here as `algorand.client` to denote the syntax via an [`AlgorandClient`](./algorand-client.md)):
+Once you have a `ClientManager` instance, you can access the SDK clients for the various Algorand APIs from it (expressed here as `algorand.client` to denote the syntax via an [`AlgorandClient`](./algorand-client.md)):
 
 ```typescript
 const algorand = AlgorandClient.defaultLocalNet()
@@ -97,7 +97,7 @@ You can also create a [TestNet dispenser API client instance](./dispenser-client
 
 ## Automatic retry
 
-When receiving an Algod or indexer client from AlgoKit Utils, it will be a special wrapper client that has transient failure retries in there. This is done via the [`AlgoHttpClientWithRetry`](../code/classes/types_algo_http_client_with_retry.AlgoHttpClientWithRetry.md) class.
+When receiving an Algod or Indexer client from AlgoKit Utils, it will be a special wrapper client that handles retrying transient failures. This is done via the [`AlgoHttpClientWithRetry`](../code/classes/types_algo_http_client_with_retry.AlgoHttpClientWithRetry.md) class.
 
 ## Network information
 

@@ -16,7 +16,7 @@ To import the AlgoAmount class you can access it via:
 import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
 ```
 
-You may not need to import this type to use it though since there are also special methods that are exposed from `algokit.` and overrides on the `number` protoype per below.
+You may not need to import this type to use it though since there are also special methods that are exposed from `algokit.` and extend the `number` protoype per below.
 
 ### Creating an `AlgoAmount`
 

@@ -59,7 +59,7 @@ export function getDefaultLocalNetConfig(configOrPort: 'algod' | 'indexer' | 'km
 /**
  * @deprecated Use `ClientManager.getAlgodClient(config)` or `ClientManager.getAlgodClientFromEnvironment()` instead.
  *
- * Returns an algod SDK client that automatically retries on idempotent calls
+ * Returns an algod SDK client that automatically retries transient failures on idempotent calls
  *
  * @param config The config if you want to override the default (getting config from process.env)
  * @example Default (load from environment variables)
@@ -93,7 +93,7 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
 /**
  * @deprecated Use `ClientManager.getIndexerClient(config, overrideIntDecoding)` or `ClientManager.getIndexerClientFromEnvironment(overrideIntDecoding)` instead.
  *
- * Returns an indexer SDK client that automatically retries on idempotent calls
+ * Returns an indexer SDK client that automatically retries transient failures on idempotent calls
  *
  * @param config The config if you want to override the default (getting config from process.env)
  * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
@@ -133,7 +133,7 @@ export function getAlgoIndexerClient(config?: AlgoClientConfig, overrideIntDecod
 /**
  * @deprecated Use `ClientManager.getKmdClient(config)` or `ClientManager.getKmdClientFromEnvironment()` instead.
  *
- * Returns a KMD SDK client that automatically retries on idempotent calls.
+ * Returns a KMD SDK client that automatically retries transient failures on idempotent calls.
  *
  * KMD client allows you to export private keys, which is useful to get the default account in a LocalNet network.
  *

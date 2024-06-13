@@ -40,10 +40,10 @@ export class KmdAccountManager {
     predicate?: (account: Record<string, any>) => boolean,
     sender?: string,
   ): Promise<(TransactionSignerAccount & { account: SigningAccount }) | undefined> {
-    const wallets = await this._clientManager.kmd.listWallets()
+    const walletsResponse = await this._clientManager.kmd.listWallets()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const wallet = wallets.wallets.filter((w: any) => w.name === walletName)
+    const wallet = walletsResponse.wallets.filter((w: any) => w.name === walletName)
     if (wallet.length === 0) {
       return undefined
     }
@@ -51,24 +51,24 @@ export class KmdAccountManager {
     const walletId = wallet[0].id
 
     const walletHandle = (await this._clientManager.kmd.initWalletHandle(walletId, '')).wallet_handle_token
-    const keyIds = (await this._clientManager.kmd.listKeys(walletHandle)).addresses
+    const addresses = (await this._clientManager.kmd.listKeys(walletHandle)).addresses
 
     let i = 0
     if (predicate) {
-      for (i = 0; i < keyIds.length; i++) {
-        const key = keyIds[i]
-        const account = await this._clientManager.algod.accountInformation(key).do()
+      for (i = 0; i < addresses.length; i++) {
+        const address = addresses[i]
+        const account = await this._clientManager.algod.accountInformation(address).do()
         if (predicate(account)) {
           break
         }
       }
     }
 
-    if (i >= keyIds.length) {
+    if (i >= addresses.length) {
       return undefined
     }
 
-    const accountKey = (await this._clientManager.kmd.exportKey(walletHandle, '', keyIds[i])).private_key
+    const accountKey = (await this._clientManager.kmd.exportKey(walletHandle, '', addresses[i])).private_key
 
     const accountMnemonic = algosdk.secretKeyToMnemonic(accountKey)
 
