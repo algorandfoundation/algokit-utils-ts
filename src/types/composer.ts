@@ -78,6 +78,8 @@ export type AssetCreateParams = CommonTransactionParams & {
 
   /** The amount of decimal places the asset should have.
    *
+   * If unspecified then the asset will be in whole units (i.e. `0`).
+   *
    * * If 0, the asset is not divisible;
    * * If 1, the base unit of the asset is in tenths;
    * * If 2, the base unit of the asset is in hundredths;
@@ -88,7 +90,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    */
   decimals?: number
 
-  /** Whether the asset is frozen by default in the creator address.
+  /** Whether the asset is frozen by default for all accounts.
    * Defaults to `false`.
    *
    * If `true` then for anyone apart from the creator to hold the

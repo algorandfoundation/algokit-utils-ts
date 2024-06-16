@@ -7,6 +7,8 @@ import { AlgoTransferParams } from '../types/transfer'
 import Algodv2 = algosdk.Algodv2
 
 /**
+ * @deprecated Use `algorand.send.payment()` / `algorand.transaction.payment()` instead
+ *
  * Transfer ALGOs between two accounts.
  * @param transfer The transfer definition
  * @param algod An algod client

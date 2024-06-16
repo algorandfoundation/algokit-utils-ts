@@ -50,7 +50,7 @@ In order to get/register accounts for signing operations you can use the followi
   - Note: `fundWith` allows you to control how many ALGOs are seeded into an account created in KMD
 - [`algorand.account.fromMnemonic(mnemonicSecret, sender?)`](../code/classes/types_account_manager.AccountManager.md#frommnemonic) - Registers and returns an account with secret key loaded by taking the mnemonic secret
 - [`algorand.account.multisig(multisigParams, signingAccounts)`](../code/classes/types_account_manager.AccountManager.md#multisig) - Registers and returns a multisig account with one or more signing keys loaded
-- [`algorand.account.rekeyed(signer, sender)`](../code/classes/types_account_manager.AccountManager.md#rekeyed) - Registers and returns an account representing the given rekeyed sender/signer combination
+- [`algorand.account.rekeyed(sender, signer)`](../code/classes/types_account_manager.AccountManager.md#rekeyed) - Registers and returns an account representing the given rekeyed sender/signer combination
 - [`algorand.account.random()`](../code/classes/types_account_manager.AccountManager.md#random) - Returns a new, cryptographically randomly generated account with private key loaded
 - [`algorand.account.fromKmd()`](../code/classes/types_account_manager.AccountManager.md#fromkmd) - Returns an account with private key loaded from the given KMD wallet (identified by name)
 - [`algorand.account.logicsig(program, args?)`](../code/classes/types_account_manager.AccountManager.md#logicsig) - Returns an account that represents a logic signature

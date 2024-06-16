@@ -1,6 +1,6 @@
 import algosdk from 'algosdk'
 import { getSenderAddress } from '../transaction/transaction'
-import { AccountAssetInformation, AccountInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
+import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
@@ -10,6 +10,7 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 import MultisigMetadata = algosdk.MultisigMetadata
 import TransactionSigner = algosdk.TransactionSigner
+import AccountInformationModel = algosdk.modelsv2.Account
 
 /**
  * @deprecated Use `algorandClient.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
@@ -24,7 +25,7 @@ export function multisigAccount(multisigParams: MultisigMetadata, signingAccount
 }
 
 /**
- * @deprecated Use `algorandClient.account.rekeyed(account, sender)` or `new SigningAccount(account, sender)` instead.
+ * @deprecated Use `algorandClient.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
  *
  * Returns an account wrapper that supports a rekeyed account.
  * @param signer The account, with private key loaded, that is signing
@@ -127,6 +128,11 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
   return algosdk.encodeAddress(Buffer.from(addressEncodedInB64, 'base64'))
 }
 
+type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
+type ToNumberIfExtends<K, E> = K extends E ? number : K
+/** @deprecated Account information at a given round. */
+export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'get_obj_for_encoding'>
+
 /**
  * @deprecated Use `algorandClient.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
  *
@@ -144,7 +150,26 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
  * @returns The account information
  */
 export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
-  return new AccountManager(new ClientManager({ algod })).getInformation(getSenderAddress(sender))
+  const account = AccountInformationModel.from_obj_for_encoding(await algod.accountInformation(getSenderAddress(sender)).do())
+
+  return {
+    ...account,
+    // None of these can practically overflow 2^53
+    amount: Number(account.amount),
+    amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
+    minBalance: Number(account.minBalance),
+    pendingRewards: Number(account.pendingRewards),
+    rewards: Number(account.rewards),
+    round: Number(account.round),
+    totalAppsOptedIn: Number(account.totalAppsOptedIn),
+    totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
+    totalCreatedApps: Number(account.totalCreatedApps),
+    totalCreatedAssets: Number(account.totalCreatedAssets),
+    appsTotalExtraPages: account.appsTotalExtraPages ? Number(account.appsTotalExtraPages) : undefined,
+    rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
+    totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
+    totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
+  }
 }
 
 /**

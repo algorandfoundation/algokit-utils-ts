@@ -40,27 +40,25 @@ describe('AlgorandClient', () => {
   }, 10_000)
 
   test('sendPayment', async () => {
-    const alicePreBalance = (await algorand.account.getInformation(alice)).amount
-    const bobPreBalance = (await algorand.account.getInformation(bob)).amount
+    const alicePreBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPreBalance = (await algorand.account.getInformation(bob)).balance
     await algorand.send.payment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgos(1) })
-    const alicePostBalance = (await algorand.account.getInformation(alice)).amount
-    const bobPostBalance = (await algorand.account.getInformation(bob)).amount
+    const alicePostBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
-    expect(alicePostBalance).toBe(alicePreBalance - 1001)
-    expect(bobPostBalance).toBe(bobPreBalance + 1)
+    expect(alicePostBalance.microAlgos).toBe(alicePreBalance.microAlgos - 1001)
+    expect(bobPostBalance.microAlgos).toBe(bobPreBalance.microAlgos + 1)
   })
 
   test('sendAssetCreate', async () => {
     const createResult = await algorand.send.assetCreate({ sender: alice.addr, total: 100n })
 
-    const assetIndex = Number(createResult.confirmation.assetIndex)
-
-    expect(assetIndex).toBeGreaterThan(0)
+    expect(createResult.assetId).toBeGreaterThan(0)
   })
 
   test('addAtc from generated client', async () => {
-    const alicePreBalance = (await algorand.account.getInformation(alice)).amount
-    const bobPreBalance = (await algorand.account.getInformation(bob)).amount
+    const alicePreBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPreBalance = (await algorand.account.getInformation(bob)).balance
 
     const doMathAtc = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).atc()
     const result = await algorand
@@ -69,18 +67,18 @@ describe('AlgorandClient', () => {
       .addAtc(doMathAtc)
       .execute()
 
-    const alicePostBalance = (await algorand.account.getInformation(alice)).amount
-    const bobPostBalance = (await algorand.account.getInformation(bob)).amount
+    const alicePostBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
-    expect(alicePostBalance).toBe(alicePreBalance - 2001)
-    expect(bobPostBalance).toBe(bobPreBalance + 1)
+    expect(alicePostBalance.microAlgos).toBe(alicePreBalance.microAlgos - 2001)
+    expect(bobPostBalance.microAlgos).toBe(bobPreBalance.microAlgos + 1)
 
     expect(result.returns?.[0].returnValue?.valueOf()).toBe(3n)
   })
 
   test('addMethodCall', async () => {
-    const alicePreBalance = (await algorand.account.getInformation(alice)).amount
-    const bobPreBalance = (await algorand.account.getInformation(bob)).amount
+    const alicePreBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPreBalance = (await algorand.account.getInformation(bob)).balance
 
     const methodRes = await algorand
       .newGroup()
@@ -93,11 +91,11 @@ describe('AlgorandClient', () => {
       })
       .execute()
 
-    const alicePostBalance = (await algorand.account.getInformation(alice)).amount
-    const bobPostBalance = (await algorand.account.getInformation(bob)).amount
+    const alicePostBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
-    expect(alicePostBalance).toBe(alicePreBalance - 2001)
-    expect(bobPostBalance).toBe(bobPreBalance + 1)
+    expect(alicePostBalance.microAlgos).toBe(alicePreBalance.microAlgos - 2001)
+    expect(bobPostBalance.microAlgos).toBe(bobPreBalance.microAlgos + 1)
 
     expect(methodRes.returns?.[0].returnValue?.valueOf()).toBe(3n)
   })
@@ -195,7 +193,7 @@ describe('AlgorandClient', () => {
 
   test('assetOptIn', async () => {
     const { algod } = fixture.context
-    const assetId = BigInt((await algorand.send.assetCreate({ sender: alice.addr, total: 1n })).confirmation.assetIndex!)
+    const assetId = (await algorand.send.assetCreate({ sender: alice.addr, total: 1n })).assetId
 
     await algorand.send.assetOptIn({
       sender: alice.addr,

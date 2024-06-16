@@ -1,9 +1,17 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
 import { calculateFundAmount, chunkArray, memoize } from '../util'
-import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
+import {
+  AccountAssetInformation,
+  AccountInformation,
+  DISPENSER_ACCOUNT,
+  MultisigAccount,
+  SigningAccount,
+  TransactionSignerAccount,
+} from './account'
 import { SendSingleTransactionResult } from './algorand-client'
 import { AlgoAmount } from './amount'
+import { AssetManager } from './asset-manager'
 import { ClientManager } from './client-manager'
 import AlgokitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
@@ -213,12 +221,12 @@ export class AccountManager {
     return {
       ...account,
       // None of these can practically overflow 2^53
-      amount: Number(account.amount),
-      amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
-      minBalance: Number(account.minBalance),
-      pendingRewards: Number(account.pendingRewards),
-      rewards: Number(account.rewards),
-      round: Number(account.round),
+      balance: AlgoAmount.MicroAlgos(Number(account.amount)),
+      amountWithoutPendingRewards: AlgoAmount.MicroAlgos(Number(account.amountWithoutPendingRewards)),
+      minBalance: AlgoAmount.MicroAlgos(Number(account.minBalance)),
+      pendingRewards: AlgoAmount.MicroAlgos(Number(account.pendingRewards)),
+      rewards: AlgoAmount.MicroAlgos(Number(account.rewards)),
+      validAsOfRound: BigInt(account.round),
       totalAppsOptedIn: Number(account.totalAppsOptedIn),
       totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
       totalCreatedApps: Number(account.totalCreatedApps),
@@ -245,7 +253,7 @@ export class AccountManager {
    * @param assetId The ID of the asset to return a holding for
    * @returns The account asset holding information
    */
-  public async getAssetInformation(sender: string | TransactionSignerAccount, assetId: number | bigint) {
+  public async getAssetInformation(sender: string | TransactionSignerAccount, assetId: number | bigint): Promise<AccountAssetInformation> {
     const info = await this._clientManager.algod
       .accountAssetInformation(typeof sender === 'string' ? sender : sender.addr, Number(assetId))
       .do()
@@ -288,7 +296,7 @@ export class AccountManager {
    * @param sender The sender address to use as the new sender
    * @returns The account
    */
-  public rekeyed(account: TransactionSignerAccount, sender: string) {
+  public rekeyed(sender: string, account: TransactionSignerAccount) {
     return this.signerAccount({ addr: sender, signer: account.signer })
   }
 
@@ -469,7 +477,7 @@ export class AccountManager {
    */
   async assetBulkOptIn(
     account: string | TransactionSignerAccount,
-    assetIds: (number | bigint)[],
+    assetIds: bigint[],
     options?: Omit<CommonTransactionParams, 'sender'> & ExecuteParams,
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
@@ -521,16 +529,18 @@ export class AccountManager {
    */
   async assetBulkOptOut(
     account: string | TransactionSignerAccount,
-    assetIds: (number | bigint)[],
+    assetIds: bigint[],
     options?: Omit<CommonTransactionParams, 'sender'> &
       ExecuteParams & {
         /** Whether or not to check if the account has a zero balance for each asset first or not.
+         *
+         * Defaults to `true`.
          *
          * If this is set to `true` and the account has an asset balance it will throw an error.
          *
          * If this is set to `false` and the account has an asset balance it will lose those assets to the asset creator.
          */
-        ensureZeroBalance: boolean
+        ensureZeroBalance?: boolean
       },
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
@@ -544,7 +554,7 @@ export class AccountManager {
       const notOptedInAssetIds: bigint[] = []
       const nonZeroBalanceAssetIds: bigint[] = []
       for (const assetId of assetGroup) {
-        if (options?.ensureZeroBalance) {
+        if (options?.ensureZeroBalance !== false) {
           try {
             const accountAssetInfo = await this.getAssetInformation(sender, assetId)
             if (accountAssetInfo.balance !== 0n) {
@@ -569,7 +579,7 @@ export class AccountManager {
       for (const assetId of assetGroup) {
         composer.addAssetOptOut({
           ...options,
-          creator: (await this._clientManager.algod.getAssetByID(Number(assetId)).do()).params.creator as string,
+          creator: (await new AssetManager(this._clientManager).getById(BigInt(assetId))).creator,
           sender,
           assetId: BigInt(assetId),
         })
@@ -592,7 +602,7 @@ export class AccountManager {
 
   private async _getEnsureFundedAmount(sender: string, minSpendingBalance: AlgoAmount, minFundingIncrement?: AlgoAmount) {
     const accountInfo = await this.getInformation(sender)
-    const currentSpendingBalance = accountInfo.amount - accountInfo.minBalance
+    const currentSpendingBalance = accountInfo.balance.microAlgos - accountInfo.minBalance.microAlgos
 
     const amountFunded = calculateFundAmount(minSpendingBalance.microAlgos, currentSpendingBalance, minFundingIncrement?.microAlgos ?? 0)
 

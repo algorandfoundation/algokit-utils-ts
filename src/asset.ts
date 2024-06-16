@@ -9,6 +9,8 @@ import { SendTransactionResult } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
 
 /**
+ * @deprecated use `algorandClient.send.assetCreate()` / `algorandClient.transaction.assetCreate()` instead
+ *
  * Create an Algorand Standard Asset (ASA).
  * @param create The asset creation definition
  * @param algod An algod client
@@ -51,6 +53,8 @@ export async function createAsset(
 }
 
 /**
+ * @deprecated use `algorandClient.send.assetOptIn()` / `algorandClient.transaction.assetOptIn()` instead
+ *
  * Opt-in an account to an asset.
  * @param optIn The opt-in definition
  * @param algod An algod client
@@ -80,6 +84,8 @@ export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promi
 }
 
 /**
+ * @deprecated use `algorandClient.send.assetOptOut()` / `algorandClient.transaction.assetOptOut()` instead
+ *
  * Opt-out an account from an asset.
  * @param optOut The opt-in definition
  * @param algod An algod client
@@ -112,6 +118,8 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
 }
 
 /**
+ * @deprecated use `algorandClient.account.assetBulkOptIn()` instead
+ *
  * Opt in to a list of assets on the Algorand blockchain.
  *
  * @param optIn - The bulk opt-in request.
@@ -123,7 +131,7 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
 export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
   const result = await new AccountManager(new ClientManager({ algod }))
     .setSignerFromAccount(optIn.account)
-    .assetBulkOptIn(getSenderAddress(optIn.account), optIn.assetIds, {
+    .assetBulkOptIn(getSenderAddress(optIn.account), optIn.assetIds.map(BigInt), {
       note: encodeTransactionNote(optIn.note),
       maxFee: optIn.maxFee,
       suppressLog: optIn.suppressLog,
@@ -137,6 +145,8 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
 }
 
 /**
+ * @deprecated use `algorandClient.account.assetBulkOptOut()` instead
+ *
  * Opt out of multiple assets in Algorand blockchain.
  *
  * @param optOut The bulk opt-out request.
@@ -148,7 +158,7 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
 export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
   const result = await new AccountManager(new ClientManager({ algod }))
     .setSignerFromAccount(optOut.account)
-    .assetBulkOptOut(getSenderAddress(optOut.account), optOut.assetIds, {
+    .assetBulkOptOut(getSenderAddress(optOut.account), optOut.assetIds.map(BigInt), {
       ensureZeroBalance: optOut.validateBalances ?? true,
       note: encodeTransactionNote(optOut.note),
       maxFee: optOut.maxFee,

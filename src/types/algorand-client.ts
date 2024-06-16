@@ -2,8 +2,9 @@ import algosdk from 'algosdk'
 import { Config } from '../config'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
+import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import AlgokitComposer, { AssetOptOutParams, ExecuteParams, MethodCallParams } from './composer'
+import AlgokitComposer, { AssetCreateParams, AssetOptOutParams, ExecuteParams, MethodCallParams } from './composer'
 import { AlgoConfig } from './network-client'
 import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
@@ -19,6 +20,7 @@ export type SendSingleTransactionResult = SendAtomicTransactionComposerResults &
 export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
+  private _assetManager: AssetManager
 
   private _cachedSuggestedParams?: algosdk.SuggestedParams
   private _cachedSuggestedParamsExpiry?: Date
@@ -29,6 +31,7 @@ export class AlgorandClient {
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config)
     this._accountManager = new AccountManager(this._clientManager)
+    this._assetManager = new AssetManager(this._clientManager)
   }
 
   /**
@@ -130,6 +133,11 @@ export class AlgorandClient {
   /** Get or create accounts that can sign transactions. */
   public get account() {
     return this._accountManager
+  }
+
+  /** Methods for interacting with assets. */
+  get asset() {
+    return this._assetManager
   }
 
   /** Start a new `AlgokitComposer` transaction group */
@@ -266,10 +274,13 @@ export class AlgorandClient {
     /**
      * Create an asset.
      */
-    assetCreate: this._send((c) => c.addAssetCreate, {
-      postLog: (params, result) =>
-        `Created asset${params.assetName ? ` ${params.assetName} ` : ''}${params.unitName ? ` (${params.unitName}) ` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
-    }),
+    assetCreate: async (params: AssetCreateParams & ExecuteParams) => {
+      const result = await this._send((c) => c.addAssetCreate, {
+        postLog: (params, result) =>
+          `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
+      })(params)
+      return { ...result, assetId: BigInt(result.confirmation.assetIndex ?? 0) }
+    },
     /**
      * Configure an existing asset.
      */
@@ -331,7 +342,7 @@ export class AlgorandClient {
         }
       }
 
-      params.creator = params.creator ?? ((await this.client.algod.getAssetByID(Number(params.assetId)).do()).params.creator as string)
+      params.creator = params.creator ?? (await this.asset.getById(params.assetId)).creator
 
       return await this._send((c) => c.addAssetOptOut, {
         preLog: (params, transaction) =>

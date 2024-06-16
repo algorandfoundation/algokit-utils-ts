@@ -9,6 +9,9 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
+ * @deprecated Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnvironment()`
+ * / `algorand.account.ensureFundedFromTestNetDispenserApi()` instead
+ *
  * Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
  *
  * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
@@ -70,6 +73,8 @@ export async function ensureFunded<T extends EnsureFundedParams>(
 }
 
 /**
+ * @deprecated Use `algorand.send.assetTransfer()` / `algorand.transaction.assetTransfer()` instead
+ *
  * Transfer asset between two accounts.
  * @param transfer The transfer definition
  * @param algod An algod client
@@ -100,6 +105,8 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
 }
 
 /**
+ * @deprecated Use `algorand.send.rekey()` / `algorand.transaction.rekey()` instead
+ *
  * Rekey an account to a new address.
  *
  * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).

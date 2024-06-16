@@ -14,7 +14,7 @@ describe('AccountManager', () => {
     const account = await algorand.account.fromEnvironment(uuid())
 
     const accountInfo = await algorand.account.getInformation(account.addr)
-    expect(accountInfo.amount).toBeGreaterThan(0)
+    expect(accountInfo.balance.microAlgos).toBeGreaterThan(0)
   }, 10e6)
 
   test('Same account is subsequently retrieved', async () => {
