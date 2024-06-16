@@ -9,15 +9,20 @@ import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import encodeAddress = algosdk.encodeAddress
 
+export const MAX_TRANSACTION_GROUP_SIZE = 16
+
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
   /** The address sending the transaction */
   sender: string
   /** The function used to sign transactions */
   signer?: algosdk.TransactionSigner | TransactionSignerAccount
-  /** Change the signing key of the sender to the given address */
+  /** Change the signing key of the sender to the given address.
+   *
+   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   */
   rekeyTo?: string
-  /** Note to attach to the transaction*/
+  /** Note to attach to the transaction */
   note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window */
   lease?: Uint8Array | string
@@ -49,30 +54,125 @@ export type PaymentParams = CommonTransactionParams & {
   closeRemainderTo?: string
 }
 
-/** Parameters to define an asset create transaction. */
+/** Parameters to define a rekey transaction. */
+export type RekeyParams = CommonTransactionParams & {
+  /** Change the signing key of the sender to the given address.
+   *
+   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   */
+  rekeyTo: string
+}
+
+/** Parameters to define an asset create transaction.
+ *
+ * The account that sends this transaction will automatically be opted in to the asset and will hold all units after creation.
+ */
 export type AssetCreateParams = CommonTransactionParams & {
-  /** The total amount of the smallest divisible unit to create */
+  /** The total amount of the smallest divisible (decimal) unit to create.
+   *
+   * For example, if `decimals` is, say, 2, then for every 100 `total` there would be 1 whole unit.
+   *
+   * This field can only be specified upon asset creation.
+   */
   total: bigint
-  /** The amount of decimal places the asset should have */
+
+  /** The amount of decimal places the asset should have.
+   *
+   * * If 0, the asset is not divisible;
+   * * If 1, the base unit of the asset is in tenths;
+   * * If 2, the base unit of the asset is in hundredths;
+   * * If 3, the base unit of the asset is in thousandths;
+   * * and so on up to 19 decimal places.
+   *
+   * This field can only be specified upon asset creation.
+   */
   decimals?: number
-  /** Whether the asset is frozen by default in the creator address */
+
+  /** Whether the asset is frozen by default in the creator address.
+   * Defaults to `false`.
+   *
+   * If `true` then for anyone apart from the creator to hold the
+   * asset it needs to be unfrozen per account using an asset freeze
+   * transaction from the `freeze` account, which must be set on creation.
+   *
+   * This field can only be specified upon asset creation.
+   */
   defaultFrozen?: boolean
-  /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
+
+  /** The address of the optional account that can manage the configuration of the asset and destroy it.
+   *
+   * The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the `manager` the asset becomes permanently immutable.
+   */
   manager?: string
-  /** The address that holds the uncirculated supply */
+
+  /**
+   * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
+   *
+   * This address has no specific authority in the protocol itself and is informational only.
+   *
+   * Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md)
+   * rely on this field to hold meaningful data.
+   *
+   * It can be used in the case where you want to signal to holders of your asset that the uncirculated units
+   * of the asset reside in an account that is different from the default creator account.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
+   */
   reserve?: string
-  /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
+
+  /**
+   * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
+   *
+   * If empty, freezing is not permitted.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
+   */
   freeze?: string
-  /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
+
+  /**
+   * The address of the optional account that can clawback holdings of this asset from any account.
+   *
+   * **This field should be used with caution** as the clawback account has the ability to **unconditionally take assets from any account**.
+   *
+   * If empty, clawback is not permitted.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
+   */
   clawback?: string
-  /** The short ticker name for the asset */
+
+  /** The optional name of the unit of this asset (e.g. ticker name).
+   *
+   * Max size is 8 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
   unitName?: string
-  /** The full name of the asset */
+
+  /** The optional name of the asset.
+   *
+   * Max size is 32 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
   assetName?: string
-  /** The metadata URL for the asset */
+
+  /** Specifies an optional URL where more information about the asset can be retrieved (e.g. metadata).
+   *
+   * Max size is 96 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
   url?: string
-  /** Hash of the metadata contained in the metadata URL */
-  metadataHash?: Uint8Array
+
+  /** 32-byte hash of some metadata that is relevant to your asset and/or asset holders.
+   *
+   * The format of this metadata is up to the application.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  metadataHash?: string | Uint8Array
 }
 
 /** Parameters to define an asset config transaction. */
@@ -123,6 +223,17 @@ export type AssetTransferParams = CommonTransactionParams & {
 export type AssetOptInParams = CommonTransactionParams & {
   /** ID of the asset */
   assetId: bigint
+}
+
+/** Parameters to define an asset opt-out transaction. */
+export type AssetOptOutParams = CommonTransactionParams & {
+  /** ID of the asset */
+  assetId: bigint
+  /**
+   * The address of the asset creator account to close the asset
+   *   position to (any remaining asset units will be sent to this account)
+   */
+  creator: string
 }
 
 /** Parameters to define an online key registration transaction. */
@@ -201,12 +312,14 @@ export type MethodCallParams = CommonTransactionParams &
 
 type Txn =
   | (PaymentParams & { type: 'pay' })
+  | (RekeyParams & { type: 'rekey' })
   | (AssetCreateParams & { type: 'assetCreate' })
   | (AssetConfigParams & { type: 'assetConfig' })
   | (AssetFreezeParams & { type: 'assetFreeze' })
   | (AssetDestroyParams & { type: 'assetDestroy' })
   | (AssetTransferParams & { type: 'assetTransfer' })
   | (AssetOptInParams & { type: 'assetOptIn' })
+  | (AssetOptOutParams & { type: 'assetOptOut' })
   | (AppCallParams & { type: 'appCall' })
   | (OnlineKeyRegistrationParams & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
@@ -281,11 +394,24 @@ export default class AlgokitComposer {
 
   /**
    * Add a payment transaction to the transaction group.
+   *
+   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
    * @param params The payment transaction parameters
    * @returns The composer so you can chain method calls
    */
   addPayment(params: PaymentParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'pay' })
+
+    return this
+  }
+
+  /**
+   * Add a rekey transaction to the transaction group.
+   * @param params The rekey transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addRekey(params: RekeyParams): AlgokitComposer {
+    this.txns.push({ ...params, type: 'rekey' })
 
     return this
   }
@@ -352,6 +478,17 @@ export default class AlgokitComposer {
    */
   addAssetOptIn(params: AssetOptInParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'assetOptIn' })
+
+    return this
+  }
+
+  /**
+   * Add an asset opt-out transaction to the transaction group.
+   * @param params The asset opt-out transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addAssetOptOut(params: AssetOptOutParams): AlgokitComposer {
+    this.txns.push({ ...params, type: 'assetOptOut' })
 
     return this
   }
@@ -692,6 +829,10 @@ export default class AlgokitComposer {
         const payment = this.buildPayment(txn, suggestedParams)
         return [{ txn: payment, signer }]
       }
+      case 'rekey': {
+        const rekey = this.buildPayment({ ...txn, receiver: txn.sender, amount: (0).microAlgos() }, suggestedParams)
+        return [{ txn: rekey, signer }]
+      }
       case 'assetCreate': {
         const assetCreate = this.buildAssetCreate(txn, suggestedParams)
         return [{ txn: assetCreate, signer }]
@@ -718,6 +859,13 @@ export default class AlgokitComposer {
       }
       case 'assetOptIn': {
         const assetTransfer = this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)
+        return [{ txn: assetTransfer, signer }]
+      }
+      case 'assetOptOut': {
+        const assetTransfer = this.buildAssetTransfer(
+          { ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator },
+          suggestedParams,
+        )
         return [{ txn: assetTransfer, signer }]
       }
       case 'keyReg': {

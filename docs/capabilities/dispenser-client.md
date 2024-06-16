@@ -23,7 +23,7 @@ const clientFromAlgorandClient = algorand.client.getTestNetDispenser({ authToken
 // Using environment variable
 process.env['ALGOKIT_DISPENSER_ACCESS_TOKEN'] = 'your_auth_token'
 const client = new TestNetDispenserApiClient()
-const clientFromAlgorandClient = algorand.client.getTestNetDispenserApiClient()
+const clientFromAlgorandClient = algorand.client.getTestNetDispenserFromEnvironment()
 ```
 
 ## Funding an Account

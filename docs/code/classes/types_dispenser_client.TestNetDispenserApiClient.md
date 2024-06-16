@@ -64,13 +64,13 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 ### constructor
 
-• **new TestNetDispenserApiClient**(`params`): [`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md)
+• **new TestNetDispenserApiClient**(`params?`): [`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `params` | ``null`` \| [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) |
+| `params?` | [`TestNetDispenserApiClientParams`](../interfaces/types_dispenser_client.TestNetDispenserApiClientParams.md) |
 
 #### Returns
 
@@ -145,7 +145,7 @@ Sends a funding request to the dispenser API to fund the specified address with 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `address` | `string` | The address to fund. |
-| `amount` | `number` | The amount of Algo to fund. |
+| `amount` | `number` | The amount of microAlgos to fund. |
 
 #### Returns
 

@@ -1,12 +1,14 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
-import { TransactionSignerAccount } from './account'
+import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import AlgokitComposer, { ExecuteParams, MethodCallParams } from './composer'
+import AlgokitComposer, { AssetOptOutParams, ExecuteParams, MethodCallParams } from './composer'
 import { AlgoConfig } from './network-client'
-import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults, SendTransactionFrom } from './transaction'
+import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
+import Account = algosdk.Account
+import LogicSigAccount = algosdk.LogicSigAccount
 
 /** Result from sending a single transaction. */
 export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
@@ -51,10 +53,22 @@ export class AlgorandClient {
 
   /**
    * Tracks the given account for later signing.
-   * @param account The account to register
+   * @param account The account to register, which can be a `TransactionSignerAccount` or
+   *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
+   * @example
+   * ```typescript
+   * const accountManager = AlgorandClient.mainnet()
+   *  .setSignerFromAccount(algosdk.generateAccount())
+   *  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
+   *  .setSignerFromAccount(new SigningAccount(mnemonic, sender))
+   *  .setSignerFromAccount(new MultisigAccount({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]}, [account1, account2]))
+   *  .setSignerFromAccount({addr: "SENDERADDRESS", signer: transactionSigner})
+   * ```
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSignerFromAccount(account: TransactionSignerAccount | SendTransactionFrom) {
+  public setSignerFromAccount(
+    account: TransactionSignerAccount | TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount,
+  ) {
     this._accountManager.setSignerFromAccount(account)
     return this
   }
@@ -134,8 +148,8 @@ export class AlgorandClient {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
     },
-  ): (params: T, config?: ExecuteParams) => Promise<SendSingleTransactionResult> {
-    return async (params, config) => {
+  ): (params: T & ExecuteParams) => Promise<SendSingleTransactionResult> {
+    return async (params) => {
       const composer = this.newGroup()
 
       // Ensure `this` is properly populated
@@ -143,10 +157,10 @@ export class AlgorandClient {
 
       if (log?.preLog) {
         const transaction = (await composer.build()).transactions.at(-1)!.txn
-        Config.getLogger(config?.suppressLog).debug(log.preLog(params, transaction))
+        Config.getLogger(params?.suppressLog).debug(log.preLog(params, transaction))
       }
 
-      const rawResult = await composer.execute(config)
+      const rawResult = await composer.execute(params)
       const result = {
         // Last item covers when a group is created by an app call with ABI transaction parameters
         transaction: rawResult.transactions[rawResult.transactions.length - 1],
@@ -156,7 +170,7 @@ export class AlgorandClient {
       }
 
       if (log?.postLog) {
-        Config.getLogger(config?.suppressLog).debug(log.postLog(params, result))
+        Config.getLogger(params?.suppressLog).debug(log.postLog(params, result))
       }
 
       return result
@@ -168,11 +182,86 @@ export class AlgorandClient {
    */
   send = {
     /**
-     * Send a payment transaction.
+     * Send a payment transaction to transfer algos between accounts.
+     * @param params The parameters for the payment transaction
+     * @example Basic example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *  sender: 'SENDERADDRESS',
+     *  receiver: 'RECEIVERADDRESS',
+     *  amount: algosdk.algosToMicroalgos(1),
+     * })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *   amount: (4).algos(),
+     *   receiver: 'RECEIVERADDRESS',
+     *   sender: 'SENDERADDRESS',
+     *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // Use this with caution, it's generally better to use algorand.send.rekey
+     *   rekeyTo: 'REKEYTOADDRESS',
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender nad not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     *
+     * @returns The result of the transaction and the transaction that was sent
      */
     payment: this._send((c) => c.addPayment, {
       preLog: (params, transaction) =>
         `Sending ${params.amount.microAlgos} µALGOs from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+    }),
+    /**
+     * Rekey an account to a new address.
+     *
+     * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+     *
+     * @param params The parameters for the rekey transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.send.rekey({sender: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.send.rekey({
+     *   sender: "ACCOUNTADDRESS",
+     *   rekeyTo: "NEWADDRESS",
+     *   lease: 'lease',
+     *   note: 'note',
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender nad not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
+     */
+    rekey: this._send((c) => c.addRekey, {
+      postLog: (params, result) => `Rekeyed ${params.sender} to ${params.rekeyTo} via transaction ${result.txIds.at(-1)}`,
     }),
     /**
      * Create an asset.
@@ -214,6 +303,42 @@ export class AlgorandClient {
         `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
     }),
     /**
+     * Opt an account out of an asset.
+     */
+    assetOptOut: async (
+      params: Omit<AssetOptOutParams, 'creator'> & {
+        /** Optional asset creator account address; if not specified it will be retrieved from algod */
+        creator?: string
+        /** Whether or not to check if the account has a zero balance first or not.
+         *
+         * If this is set to `true` and the account has an asset balance it will throw an error.
+         *
+         * If this is set to `false` and the account has an asset balance it will lose those assets to the asset creator.
+         */
+        ensureZeroBalance: boolean
+      } & ExecuteParams,
+    ) => {
+      if (params.ensureZeroBalance) {
+        let balance = 0n
+        try {
+          const accountAssetInfo = await this.account.getAssetInformation(params.sender, params.assetId)
+          balance = accountAssetInfo.balance
+        } catch (e) {
+          throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)
+        }
+        if (balance !== 0n) {
+          throw new Error(`Account ${params.sender} does not have a zero balance for Asset ${params.assetId}; can't opt-out.`)
+        }
+      }
+
+      params.creator = params.creator ?? ((await this.client.algod.getAssetByID(Number(params.assetId)).do()).params.creator as string)
+
+      return await this._send((c) => c.addAssetOptOut, {
+        preLog: (params, transaction) =>
+          `Opting ${params.sender} out of asset with ID ${params.assetId} to creator ${params.creator} via transaction ${transaction.txID()}`,
+      })(params as AssetOptOutParams & ExecuteParams)
+    },
+    /**
      * Call a smart contract.
      *
      * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
@@ -243,8 +368,70 @@ export class AlgorandClient {
    * Methods for building transactions
    */
   transactions = {
-    /** Create a payment transaction. */
+    /**
+     * Create a payment transaction to transfer algos between accounts.
+     * @param params The parameters for the payment transaction
+     * @example Basic example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *  sender: 'SENDERADDRESS',
+     *  receiver: 'RECEIVERADDRESS',
+     *  amount: algosdk.algosToMicroalgos(1),
+     * })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *   amount: (4).algos(),
+     *   receiver: 'RECEIVERADDRESS',
+     *   sender: 'SENDERADDRESS',
+     *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   rekeyTo: 'REKEYTOADDRESS',
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     *
+     * @returns The payment transaction
+     */
     payment: this._transaction((c) => c.addPayment),
+    /**
+     * Create a rekey transaction to rekey an account to a new address.
+     *
+     * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+     *
+     * @param params The parameters for the rekey transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transactions.rekey({sender: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.transactions.rekey({
+     *   sender: "ACCOUNTADDRESS",
+     *   rekeyTo: "NEWADDRESS",
+     *   lease: 'lease',
+     *   note: 'note',
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The rekey transaction
+     */
+    rekey: this._transaction((c) => c.addRekey),
     /** Create an asset creation transaction. */
     assetCreate: this._transaction((c) => c.addAssetCreate),
     /** Create an asset config transaction. */
@@ -257,6 +444,8 @@ export class AlgorandClient {
     assetTransfer: this._transaction((c) => c.addAssetTransfer),
     /** Create an asset opt-in transaction. */
     assetOptIn: this._transaction((c) => c.addAssetOptIn),
+    /** Create an asset opt-out transaction. */
+    assetOptOut: this._transaction((c) => c.addAssetOptOut),
     /** Create an application call transaction. */
     appCall: this._transaction((c) => c.addAppCall),
     /** Create an application call with ABI method call transaction. */

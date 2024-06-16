@@ -8,6 +8,11 @@
 
 - [AccountManager](../classes/types_account_manager.AccountManager.md)
 
+### Interfaces
+
+- [BulkAssetOptInOutResult](../interfaces/types_account_manager.BulkAssetOptInOutResult.md)
+- [EnsureFundedResult](../interfaces/types_account_manager.EnsureFundedResult.md)
+
 ### Functions
 
 - [getAccountTransactionSigner](types_account_manager.md#getaccounttransactionsigner)
@@ -35,4 +40,4 @@ A transaction signer
 
 #### Defined in
 
-[src/types/account-manager.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L26)
+[src/types/account-manager.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L38)

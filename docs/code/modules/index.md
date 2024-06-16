@@ -216,7 +216,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:242](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L242)
+[src/asset.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L123)
 
 ___
 
@@ -251,7 +251,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L309)
+[src/asset.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L148)
 
 ___
 
@@ -282,7 +282,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L153)
+[src/asset.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L64)
 
 ___
 
@@ -313,7 +313,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L191)
+[src/asset.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L93)
 
 ___
 
@@ -475,7 +475,7 @@ await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My a
 
 #### Defined in
 
-[src/asset.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L81)
+[src/asset.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L22)
 
 ___
 
@@ -640,7 +640,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 #### Defined in
 
-[src/transfer/transfer.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L89)
+[src/transfer/transfer.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L23)
 
 ___
 
@@ -1956,7 +1956,7 @@ An instance of the TestNetDispenserApiClient class.
 
 **`Deprecated`**
 
-Use `clientManager.getTestNetDispenser` instead
+Use `clientManager.getTestNetDispenser` or `clientManager.getTestNetDispenserFromEnvironment` instead
 
 Create a new TestNetDispenserApiClient instance.
 Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
@@ -2571,7 +2571,7 @@ await algokit.rekeyAccount({ from, rekeyTo }, algod)
 
 #### Defined in
 
-[src/transfer/transfer.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L182)
+[src/transfer/transfer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L116)
 
 ___
 
@@ -2905,7 +2905,7 @@ await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
 
 #### Defined in
 
-[src/transfer/transfer-algos.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer-algos.ts#L19)
+[src/transfer/transfer-algos.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer-algos.ts#L20)
 
 ___
 
@@ -2936,7 +2936,7 @@ await algokit.transferAsset({ from, to, assetId, amount }, algod)
 
 #### Defined in
 
-[src/transfer/transfer.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L140)
+[src/transfer/transfer.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L83)
 
 ___
 

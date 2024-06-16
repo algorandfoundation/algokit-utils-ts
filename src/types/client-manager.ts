@@ -158,10 +158,10 @@ export class ClientManager {
 
   /**
    * Returns a TestNet Dispenser API client.
+   *
    * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
    *
    * @param params An object containing parameters for the TestNetDispenserApiClient class.
-   *  Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`.
    * @example
    * const client = clientManager.getTestNetDispenser(
    *     {
@@ -172,8 +172,27 @@ export class ClientManager {
    *
    * @returns An instance of the TestNetDispenserApiClient class.
    */
-  public getTestNetDispenser(params: TestNetDispenserApiClientParams | null = null) {
+  public getTestNetDispenser(params: TestNetDispenserApiClientParams) {
     return new TestNetDispenserApiClient(params)
+  }
+
+  /**
+   * Returns a TestNet Dispenser API client, loading the auth token from `process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN`.
+   *
+   * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
+   *
+   * @param params An object containing parameters for the TestNetDispenserApiClient class.
+   * @example
+   * const client = clientManager.getTestNetDispenserFromEnvironment(
+   *     {
+   *       requestTimeout: 15,
+   *     }
+   * )
+   *
+   * @returns An instance of the TestNetDispenserApiClient class.
+   */
+  public getTestNetDispenserFromEnvironment(params?: Omit<TestNetDispenserApiClientParams, 'authToken'>) {
+    return new TestNetDispenserApiClient(params ? { ...params, authToken: '' } : undefined)
   }
 
   /**

@@ -1,20 +1,32 @@
 import algosdk from 'algosdk'
+import { Config } from '../config'
+import { calculateFundAmount, chunkArray, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
+import { SendSingleTransactionResult } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
+import AlgokitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import LogicSigAccount = algosdk.LogicSigAccount
 import Account = algosdk.Account
 import TransactionSigner = algosdk.TransactionSigner
 import AccountInformationModel = algosdk.modelsv2.Account
 
-const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
-  const cache = new Map()
-  const cached = function (this: unknown, val: T) {
-    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
-  }
-  cached.cache = cache
-  return cached as (val: T) => R
+/** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
+export interface BulkAssetOptInOutResult {
+  /** The ID of the asset opted into / out of */
+  assetId: bigint
+  /** The transaction ID of the resulting opt in / out */
+  transactionId: string
+}
+
+/** Result from performing an ensureFunded call. */
+export interface EnsureFundedResult {
+  /** The transaction ID of the transaction that funded the account. */
+  transactionId: string
+  /** The amount that was sent to the account. */
+  amountFunded: AlgoAmount
 }
 
 /**
@@ -51,6 +63,14 @@ export class AccountManager {
   constructor(clientManager: ClientManager) {
     this._clientManager = clientManager
     this._kmdAccountManager = new KmdAccountManager(clientManager)
+  }
+
+  private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
+    return new AlgokitComposer({
+      algod: this._clientManager.algod,
+      getSigner: this.getSigner.bind(this),
+      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),
+    })
   }
 
   /** KMD account manager that allows you to easily get and create accounts using KMD. */
@@ -428,5 +448,320 @@ export class AccountManager {
   public async localNetDispenser() {
     const dispenser = await this._kmdAccountManager.getLocalNetDispenserAccount()
     return this.signerAccount(dispenser.account)
+  }
+
+  /**
+   * Opt an account in to a list of Algorand Standard Assets.
+   *
+   * Transactions will be sent in batches of 16 as transaction groups.
+   *
+   * @param account The account to opt-in
+   * @param assetIds The list of asset IDs to opt-in to
+   * @param options Any parameters to control the transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * algorand.account.assetBulkOptIn("ACCOUNTADDRESS", [12345, 67890])
+   * // With configuration
+   * algorand.account.assetBulkOptIn("ACCOUNTADDRESS", [12345, 67890], { maxFee: (1000).microAlgos(), suppressLog: true })
+   * ```
+   * @returns An array of records matching asset ID to transaction ID of the opt in
+   */
+  async assetBulkOptIn(
+    account: string | TransactionSignerAccount,
+    assetIds: (number | bigint)[],
+    options?: Omit<CommonTransactionParams, 'sender'> & ExecuteParams,
+  ): Promise<BulkAssetOptInOutResult[]> {
+    const results: BulkAssetOptInOutResult[] = []
+
+    const params = await this._clientManager.algod.getTransactionParams().do()
+
+    for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
+      const composer = this._getComposer(() => Promise.resolve(params))
+
+      for (const assetId of assetGroup) {
+        composer.addAssetOptIn({
+          ...options,
+          sender: typeof account === 'string' ? account : account.addr,
+          assetId: BigInt(assetId),
+        })
+      }
+
+      const result = await composer.execute(options)
+
+      Config.getLogger(options?.suppressLog).info(
+        `Successfully opted in ${account} for assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +
+          `\n  Grouped under ${result.groupId} in round ${result.confirmations?.[0]?.confirmedRound}.`,
+      )
+
+      assetGroup.forEach((assetId, index) => {
+        results.push({ assetId: BigInt(assetId), transactionId: result.txIds[index] })
+      })
+    }
+
+    return results
+  }
+
+  /**
+   * Opt an account out of a list of Algorand Standard Assets.
+   *
+   * Transactions will be sent in batches of 16 as transaction groups.
+   *
+   * @param account The account to opt-in
+   * @param assetIds The list of asset IDs to opt-out of
+   * @param options Any parameters to control the transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * algorand.account.assetBulkOptOut("ACCOUNTADDRESS", [12345, 67890])
+   * // With configuration
+   * algorand.account.assetBulkOptOut("ACCOUNTADDRESS", [12345, 67890], { maxFee: (1000).microAlgos(), suppressLog: true })
+   * ```
+   * @returns An array of records matching asset ID to transaction ID of the opt in
+   */
+  async assetBulkOptOut(
+    account: string | TransactionSignerAccount,
+    assetIds: (number | bigint)[],
+    options?: Omit<CommonTransactionParams, 'sender'> &
+      ExecuteParams & {
+        /** Whether or not to check if the account has a zero balance for each asset first or not.
+         *
+         * If this is set to `true` and the account has an asset balance it will throw an error.
+         *
+         * If this is set to `false` and the account has an asset balance it will lose those assets to the asset creator.
+         */
+        ensureZeroBalance: boolean
+      },
+  ): Promise<BulkAssetOptInOutResult[]> {
+    const results: BulkAssetOptInOutResult[] = []
+
+    const params = await this._clientManager.algod.getTransactionParams().do()
+    const sender = typeof account === 'string' ? account : account.addr
+
+    for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
+      const composer = this._getComposer(() => Promise.resolve(params))
+
+      const notOptedInAssetIds: bigint[] = []
+      const nonZeroBalanceAssetIds: bigint[] = []
+      for (const assetId of assetGroup) {
+        if (options?.ensureZeroBalance) {
+          try {
+            const accountAssetInfo = await this.getAssetInformation(sender, assetId)
+            if (accountAssetInfo.balance !== 0n) {
+              nonZeroBalanceAssetIds.push(BigInt(assetId))
+            }
+          } catch (e) {
+            notOptedInAssetIds.push(BigInt(assetId))
+          }
+        }
+      }
+
+      if (notOptedInAssetIds.length > 0 || nonZeroBalanceAssetIds.length > 0) {
+        throw new Error(
+          `Account ${sender}${notOptedInAssetIds.length > 0 ? ` is not opted-in to Asset${notOptedInAssetIds.length > 1 ? 's' : ''} ${notOptedInAssetIds.join(', ')}` : ''}${
+            nonZeroBalanceAssetIds.length > 0
+              ? ` has non-zero balance for Asset${nonZeroBalanceAssetIds.length > 1 ? 's' : ''} ${nonZeroBalanceAssetIds.join(', ')}`
+              : ''
+          }; can't opt-out.`,
+        )
+      }
+
+      for (const assetId of assetGroup) {
+        composer.addAssetOptOut({
+          ...options,
+          creator: (await this._clientManager.algod.getAssetByID(Number(assetId)).do()).params.creator as string,
+          sender,
+          assetId: BigInt(assetId),
+        })
+      }
+
+      const result = await composer.execute(options)
+
+      Config.getLogger(options?.suppressLog).info(
+        `Successfully opted ${account} out of assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +
+          `\n  Grouped under ${result.groupId} in round ${result.confirmations?.[0]?.confirmedRound}.`,
+      )
+
+      assetGroup.forEach((assetId, index) => {
+        results.push({ assetId: BigInt(assetId), transactionId: result.txIds[index] })
+      })
+    }
+
+    return results
+  }
+
+  private async _getEnsureFundedAmount(sender: string, minSpendingBalance: AlgoAmount, minFundingIncrement?: AlgoAmount) {
+    const accountInfo = await this.getInformation(sender)
+    const currentSpendingBalance = accountInfo.amount - accountInfo.minBalance
+
+    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgos, currentSpendingBalance, minFundingIncrement?.microAlgos ?? 0)
+
+    return amountFunded === null ? undefined : AlgoAmount.MicroAlgos(amountFunded)
+  }
+
+  /**
+   * Funds a given account using a dispenser account as a funding source such that
+   * the given account has a certain amount of algos free to spend (accounting for
+   * ALGOs locked in minimum balance requirement).
+   *
+   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   *
+   * @param accountToFund The account to fund
+   * @param dispenserAccount The account to use as a dispenser funding source
+   * @param minSpendingBalance The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algos(1))
+   * // With configuration
+   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algos(1),
+   *  { minFundingIncrement: algokit.algos(2), fee: (1000).microAlgos(), suppressLog: true }
+   * )
+   * ```
+   * @returns
+   * - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
+   * - `undefined` if no funds were needed.
+   */
+  async ensureFunded(
+    accountToFund: string | TransactionSignerAccount,
+    dispenserAccount: string | TransactionSignerAccount,
+    minSpendingBalance: AlgoAmount,
+    options?: {
+      minFundingIncrement?: AlgoAmount
+    } & ExecuteParams &
+      Omit<CommonTransactionParams, 'sender'>,
+  ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
+    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+
+    const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
+    if (!amountFunded) return undefined
+
+    const result = await this._getComposer()
+      .addPayment({
+        ...options,
+        sender: typeof dispenserAccount === 'string' ? dispenserAccount : dispenserAccount.addr,
+        receiver: addressToFund,
+        amount: amountFunded,
+      })
+      .execute(options)
+
+    return {
+      ...result,
+      transaction: result.transactions[0],
+      confirmation: result.confirmations[0],
+      transactionId: result.txIds[0],
+      amountFunded: amountFunded,
+    }
+  }
+
+  /**
+   * Funds a given account using a dispenser account retrieved from the environment,
+   * per the `dispenserFromEnvironment` method, as a funding source such that
+   * the given account has a certain amount of algos free to spend (accounting for
+   * ALGOs locked in minimum balance requirement).
+   *
+   * **Note:** requires a Node.js environment to execute.
+   *
+   * The dispenser account is retrieved from the account mnemonic stored in
+   * process.env.DISPENSER_MNEMONIC and optionally process.env.DISPENSER_SENDER
+   * if it's a rekeyed account, or against default LocalNet if no environment variables present.
+   *
+   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   *
+   * @param accountToFund The account to fund
+   * @param minSpendingBalance The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algos(1))
+   * // With configuration
+   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algos(1),
+   *  { minFundingIncrement: algokit.algos(2), fee: (1000).microAlgos(), suppressLog: true }
+   * )
+   * ```
+   * @returns
+   * - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
+   * - `undefined` if no funds were needed.
+   */
+  async ensureFundedFromEnvironment(
+    accountToFund: string | TransactionSignerAccount,
+    minSpendingBalance: AlgoAmount,
+    options?: {
+      minFundingIncrement?: AlgoAmount
+    } & ExecuteParams &
+      Omit<CommonTransactionParams, 'sender'>,
+  ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
+    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+    const dispenserAccount = await this.dispenserFromEnvironment()
+
+    const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
+    if (!amountFunded) return undefined
+
+    const result = await this._getComposer()
+      .addPayment({
+        ...options,
+        sender: dispenserAccount.addr,
+        receiver: addressToFund,
+        amount: amountFunded,
+      })
+      .execute(options)
+
+    return {
+      ...result,
+      transaction: result.transactions[0],
+      confirmation: result.confirmations[0],
+      transactionId: result.txIds[0],
+      amountFunded: amountFunded,
+    }
+  }
+
+  /**
+   * Funds a given account using the TestNet Dispenser API as a funding source such that
+   * the account has a certain amount of algos free to spend (accounting for ALGOs locked
+   * in minimum balance requirement).
+   *
+   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   *
+   * @param accountToFund The account to fund
+   * @param dispenserClient The TestNet dispenser funding client
+   * @param minSpendingBalance The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algos(1))
+   * // With configuration
+   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algos(1),
+   *  { minFundingIncrement: algokit.algos(2) }
+   * )
+   * ```
+   * @returns
+   * - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
+   * - `undefined` if no funds were needed.
+   */
+  async ensureFundedFromTestNetDispenserApi(
+    accountToFund: string | TransactionSignerAccount,
+    dispenserClient: TestNetDispenserApiClient,
+    minSpendingBalance: AlgoAmount,
+    options: {
+      minFundingIncrement?: AlgoAmount
+    },
+  ): Promise<EnsureFundedResult | undefined> {
+    if (!(await this._clientManager.isTestNet())) {
+      throw new Error('Attempt to fund using TestNet dispenser API on non TestNet network.')
+    }
+
+    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+
+    const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
+    if (!amountFunded) return undefined
+
+    const result = await dispenserClient.fund(addressToFund, amountFunded.microAlgos)
+    return {
+      amountFunded: AlgoAmount.MicroAlgos(result.amount),
+      transactionId: result.txId,
+    }
   }
 }

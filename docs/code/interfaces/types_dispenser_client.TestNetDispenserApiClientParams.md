@@ -25,7 +25,7 @@ ___
 
 ### requestTimeout
 
-• **requestTimeout**: ``null`` \| `number`
+• `Optional` **requestTimeout**: `number`
 
 #### Defined in
 

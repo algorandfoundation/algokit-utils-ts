@@ -372,11 +372,11 @@ describe('transfer', () => {
     expect(accountInfo['amount']).toBe(1_000_000)
   })
 
-  test('ensureFunded uses dispenser api with access token sucessfully', async () => {
+  test('ensureFunded uses dispenser api with access token successfully', async () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
 
     const algodClient = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
-    const dispenserClient = new TestNetDispenserApiClient(null)
+    const dispenserClient = new TestNetDispenserApiClient()
     Object.assign(dispenserClient, {
       fund: jest.fn().mockImplementation(() => {
         return Promise.resolve({ txId: 'dummy_tx_id', amount: 200_000 })
@@ -404,7 +404,7 @@ describe('transfer', () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
 
     const algodClient = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
-    const dispenserClient = new TestNetDispenserApiClient(null)
+    const dispenserClient = new TestNetDispenserApiClient()
     Object.assign(dispenserClient, {
       fund: jest.fn().mockImplementation(() => {
         return Promise.reject(new Error('dummy_error'))
@@ -443,7 +443,6 @@ describe('rekey', () => {
   test('Rekey works', async () => {
     const { algod, testAccount, algorand } = localnet.context
     const secondAccount = algorand.account.random()
-    const rekeyedAccount = algorand.account.rekeyed(secondAccount, testAccount.addr)
 
     await algokit.rekeyAccount(
       {
@@ -455,6 +454,7 @@ describe('rekey', () => {
     )
 
     // This will throw if the rekey wasn't successful
+    const rekeyedAccount = algorand.account.rekeyed(secondAccount, testAccount.addr)
     await algokit.transferAlgos(
       {
         amount: (1).microAlgos(),

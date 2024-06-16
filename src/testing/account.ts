@@ -49,10 +49,13 @@ export async function getTestAccount(
 
   const dispenser = await algorand.account.dispenserFromEnvironment()
 
-  await algorand.send.payment(
-    { sender: dispenser.addr, receiver: account.addr, amount: initialFunds, note: 'Funding test account' },
-    { suppressLog },
-  )
+  await algorand.send.payment({
+    sender: dispenser.addr,
+    receiver: account.addr,
+    amount: initialFunds,
+    note: 'Funding test account',
+    suppressLog,
+  })
 
   const accountInfo = await algorand.account.getInformation(account.addr)
 

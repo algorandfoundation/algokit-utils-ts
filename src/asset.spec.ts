@@ -62,24 +62,6 @@ describe('asset', () => {
     expect(testAccountInfoAfterOptIn['total-assets-opted-in']).toBe(1)
   })
 
-  test('OptIn assets to an account second attempt failed ', async () => {
-    const { algod, testAccount, generateAccount } = localnet.context
-    const dummyAssetId = await generateTestAsset(algod, testAccount, 0)
-    const dummyAssetId2 = await generateTestAsset(algod, testAccount, 0)
-    const dummyAssetIds = [dummyAssetId, dummyAssetId2]
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
-
-    await algokit.assetBulkOptIn({ account: secondAccount, assetIds: dummyAssetIds }, algod)
-
-    const secondAccountInfo = await algod.accountInformation(secondAccount.addr).do()
-    expect(secondAccountInfo['total-assets-opted-in']).toBe(2)
-
-    // await optIn(algod, secondAccount, dummyAssetIds)
-    await expect(algokit.assetBulkOptIn({ account: secondAccount, assetIds: [dummyAssetId] }, algod)).rejects.toThrow(
-      `Asset ${dummyAssetId} cannot be opted in. Ensure that they are valid and that the account has not previously opted into them.`,
-    )
-  }, 10e6)
-
   test('OptIn two batches of asset to an account succeed', async () => {
     const { algod, testAccount, generateAccount } = localnet.context
     const dummyAssetIds: number[] = []
@@ -123,7 +105,7 @@ describe('asset', () => {
     expect(secondAccountInfo['total-assets-opted-in']).toBe(1)
 
     await expect(algokit.assetBulkOptOut({ account: secondAccount, assetIds: dummyAssetIds }, algod)).rejects.toThrow(
-      'Assets 1234567, -132 cannot be opted out. Ensure that they are valid and that the account has previously opted into them and holds zero balance.',
+      `Account ${secondAccount.addr} is not opted-in to Assets 1234567, -132; can't opt-out.`,
     )
 
     const secondAccountInfoAfterFailedOptOut = await algod.accountInformation(secondAccount.addr).do()
@@ -154,7 +136,7 @@ describe('asset', () => {
     )
 
     await expect(algokit.assetBulkOptOut({ account: secondAccount, assetIds: dummyAssetIds }, algod)).rejects.toThrow(
-      `Asset ${dummyAssetId} cannot be opted out. Ensure that they are valid and that the account has previously opted into them and holds zero balance.`,
+      `Account ${secondAccount.addr} has non-zero balance for Asset ${dummyAssetId}; can't opt-out.`,
     )
 
     const secondAccountInfoAfterFailedOptOut = await algod.accountInformation(secondAccount.addr).do()
@@ -196,7 +178,7 @@ describe('asset', () => {
     )
 
     await expect(algokit.assetOptOut({ account: secondAccount, assetId: dummyAssetId }, algod)).rejects.toThrow(
-      `Asset ${dummyAssetId} cannot be opted out. Ensure that they are valid and that the account has previously opted into them and holds zero balance.`,
+      `Account ${secondAccount.addr} does not have a zero balance for Asset ${dummyAssetId}; can't opt-out.`,
     )
 
     const secondAccountInfoAfterFailedOptOut = await algod.accountInformation(secondAccount.addr).do()
