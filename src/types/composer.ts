@@ -50,7 +50,10 @@ export type PaymentParams = CommonTransactionParams & {
   receiver: string
   /** Amount to send */
   amount: AlgoAmount
-  /** If given, close the sender account and send the remaining balance to this address */
+  /** If given, close the sender account and send the remaining balance to this address
+   *
+   * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
+   */
   closeRemainderTo?: string
 }
 
@@ -177,12 +180,17 @@ export type AssetCreateParams = CommonTransactionParams & {
   metadataHash?: string | Uint8Array
 }
 
-/** Parameters to define an asset config transaction. */
+/** Parameters to define an asset reconfiguration transaction.
+ *
+ * **Note:** The manager, reserve, freeze, and clawback addresses
+ * are immutably empty if they are not set. If manager is not set then
+ * all fields are immutable from that point forward.
+ */
 export type AssetConfigParams = CommonTransactionParams & {
   /** ID of the asset */
   assetId: bigint
   /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
-  manager?: string
+  manager: string | undefined
   /** The address that holds the uncirculated supply */
   reserve?: string
   /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
@@ -201,7 +209,10 @@ export type AssetFreezeParams = CommonTransactionParams & {
   frozen: boolean
 }
 
-/** Parameters to define an asset destroy transaction. */
+/** Parameters to define an asset destroy transaction.
+ *
+ * Created assets can be destroyed only by the asset manager account. All of the assets must be owned by the creator of the asset before the asset can be deleted.
+ */
 export type AssetDestroyParams = CommonTransactionParams & {
   /** ID of the asset */
   assetId: bigint
@@ -215,9 +226,17 @@ export type AssetTransferParams = CommonTransactionParams & {
   amount: bigint
   /** The account to send the asset to */
   receiver: string
-  /** The account to take the asset from */
+  /** The account to take the asset from.
+   *
+   * Requires the sender to be the clawback account.
+   *
+   * *Warning:* Be careful with this parameter as it can lead to unexpected loss of funds if not used correctly.
+   */
   clawbackTarget?: string
-  /** The account to close the asset to */
+  /** The account to close the asset to
+   *
+   * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
+   */
   closeAssetTo?: string
 }
 
