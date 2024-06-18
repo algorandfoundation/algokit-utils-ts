@@ -790,10 +790,7 @@ describe('Resource Packer: meta', () => {
 
     const authAddr = algorand.account.random().account
 
-    await algorand.send.rekey({
-      sender: testAccount.addr,
-      rekeyTo: authAddr.addr,
-    })
+    await algorand.account.rekeyAccount(testAccount.addr, authAddr.addr)
 
     await externalClient.fundAppAccount(algokit.microAlgos(200_000))
 

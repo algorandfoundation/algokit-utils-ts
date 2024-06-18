@@ -600,6 +600,69 @@ export class AccountManager {
     return results
   }
 
+  /**
+   * Rekey an account to a new address.
+   *
+   * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   *
+   * @param account The account to rekey
+   * @param rekeyTo The new address to rekey the account to, or a signing account that should now
+   *  be tracked as the signer for `account` in this `AccountManager`
+   * @param options Any parameters to control the transaction or execution of the transaction
+   *
+   * @example Basic example (with string addresses)
+   * ```typescript
+   * await algorand.account.rekeyAccount({account: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
+   * ```
+   * @example Basic example (with signer accounts)
+   * ```typescript
+   * await algorand.account.rekeyAccount({account: account1, rekeyTo: newSignerAccount})
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.account.rekeyAccount({
+   *   account: "ACCOUNTADDRESS",
+   *   rekeyTo: "NEWADDRESS",
+   *   lease: 'lease',
+   *   note: 'note',
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgos(),
+   *   staticFee: (1000).microAlgos(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgos(),
+   *   maxRoundsToWaitForConfirmation: 5,
+   *   suppressLog: true,
+   * })
+   * ```
+   * @returns The result of the transaction and the transaction that was sent
+   */
+  async rekeyAccount(
+    account: string | TransactionSignerAccount,
+    rekeyTo: string | TransactionSignerAccount,
+    options?: Omit<CommonTransactionParams, 'sender'> & ExecuteParams,
+  ): Promise<SendSingleTransactionResult> {
+    const result = await this._getComposer()
+      .addPayment({
+        ...options,
+        sender: typeof account === 'string' ? account : account.addr,
+        receiver: typeof account === 'string' ? account : account.addr,
+        amount: AlgoAmount.MicroAlgos(0),
+        rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : rekeyTo.addr,
+      })
+      .execute(options)
+
+    // If the rekey is a signing account set it as the signer for this account
+    if (typeof rekeyTo !== 'string') {
+      this.rekeyed(typeof account === 'string' ? account : account.addr, rekeyTo)
+    }
+
+    Config.getLogger(options?.suppressLog).info(`Rekeyed ${account} to ${rekeyTo} via transaction ${result.txIds.at(-1)}`)
+
+    return { ...result, transaction: result.transactions.at(-1)!, confirmation: result.confirmations.at(-1)! }
+  }
+
   private async _getEnsureFundedAmount(sender: string, minSpendingBalance: AlgoAmount, minFundingIncrement?: AlgoAmount) {
     const accountInfo = await this.getInformation(sender)
     const currentSpendingBalance = accountInfo.balance.microAlgos - accountInfo.minBalance.microAlgos

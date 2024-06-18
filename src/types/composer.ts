@@ -57,15 +57,6 @@ export type PaymentParams = CommonTransactionParams & {
   closeRemainderTo?: string
 }
 
-/** Parameters to define a rekey transaction. */
-export type RekeyParams = CommonTransactionParams & {
-  /** Change the signing key of the sender to the given address.
-   *
-   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
-   */
-  rekeyTo: string
-}
-
 /** Parameters to define an asset create transaction.
  *
  * The account that sends this transaction will automatically be opted in to the asset and will hold all units after creation.
@@ -333,7 +324,6 @@ export type MethodCallParams = CommonTransactionParams &
 
 type Txn =
   | (PaymentParams & { type: 'pay' })
-  | (RekeyParams & { type: 'rekey' })
   | (AssetCreateParams & { type: 'assetCreate' })
   | (AssetConfigParams & { type: 'assetConfig' })
   | (AssetFreezeParams & { type: 'assetFreeze' })
@@ -415,24 +405,11 @@ export default class AlgokitComposer {
 
   /**
    * Add a payment transaction to the transaction group.
-   *
-   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
    * @param params The payment transaction parameters
    * @returns The composer so you can chain method calls
    */
   addPayment(params: PaymentParams): AlgokitComposer {
     this.txns.push({ ...params, type: 'pay' })
-
-    return this
-  }
-
-  /**
-   * Add a rekey transaction to the transaction group.
-   * @param params The rekey transaction parameters
-   * @returns The composer so you can chain method calls
-   */
-  addRekey(params: RekeyParams): AlgokitComposer {
-    this.txns.push({ ...params, type: 'rekey' })
 
     return this
   }
@@ -849,10 +826,6 @@ export default class AlgokitComposer {
       case 'pay': {
         const payment = this.buildPayment(txn, suggestedParams)
         return [{ txn: payment, signer }]
-      }
-      case 'rekey': {
-        const rekey = this.buildPayment({ ...txn, receiver: txn.sender, amount: (0).microAlgos() }, suggestedParams)
-        return [{ txn: rekey, signer }]
       }
       case 'assetCreate': {
         const assetCreate = this.buildAssetCreate(txn, suggestedParams)

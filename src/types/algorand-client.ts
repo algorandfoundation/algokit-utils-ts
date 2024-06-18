@@ -209,7 +209,7 @@ export class AlgorandClient {
      *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
      *   lease: 'lease',
      *   note: 'note',
-     *   // Use this with caution, it's generally better to use algorand.send.rekey
+     *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
      *   rekeyTo: 'REKEYTOADDRESS',
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
@@ -232,44 +232,6 @@ export class AlgorandClient {
     payment: this._send((c) => c.addPayment, {
       preLog: (params, transaction) =>
         `Sending ${params.amount.microAlgos} µALGOs from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-    }),
-    /**
-     * Rekey an account to a new address.
-     *
-     * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
-     *
-     * @param params The parameters for the rekey transaction
-     *
-     * @example Basic example
-     * ```typescript
-     * await algorand.send.rekey({sender: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
-     * ```
-     * @example Advanced example
-     * ```typescript
-     * await algorand.send.rekey({
-     *   sender: "ACCOUNTADDRESS",
-     *   rekeyTo: "NEWADDRESS",
-     *   lease: 'lease',
-     *   note: 'note',
-     *   firstValidRound: 1000n,
-     *   validityWindow: 10,
-     *   extraFee: (1000).microAlgos(),
-     *   staticFee: (1000).microAlgos(),
-     *   // Max fee doesn't make sense with extraFee AND staticFee
-     *   //  already specified, but here for completeness
-     *   maxFee: (3000).microAlgos(),
-     *   // Signer only needed if you want to provide one,
-     *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
-     *   signer: transactionSigner,
-     *   maxRoundsToWaitForConfirmation: 5,
-     *   suppressLog: true,
-     * })
-     * ```
-     * @returns The result of the transaction and the transaction that was sent
-     */
-    rekey: this._send((c) => c.addRekey, {
-      postLog: (params, result) => `Rekeyed ${params.sender} to ${params.rekeyTo} via transaction ${result.txIds.at(-1)}`,
     }),
     /**
      * Create a new Algorand Standard Asset.
@@ -651,6 +613,7 @@ export class AlgorandClient {
      *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
      *   lease: 'lease',
      *   note: 'note',
+     *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
      *   rekeyTo: 'REKEYTOADDRESS',
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
@@ -665,36 +628,6 @@ export class AlgorandClient {
      * @returns The payment transaction
      */
     payment: this._transaction((c) => c.addPayment),
-    /**
-     * Create a rekey transaction to rekey an account to a new address.
-     *
-     * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
-     *
-     * @param params The parameters for the rekey transaction
-     *
-     * @example Basic example
-     * ```typescript
-     * await algorand.transactions.rekey({sender: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
-     * ```
-     * @example Advanced example
-     * ```typescript
-     * await algorand.transactions.rekey({
-     *   sender: "ACCOUNTADDRESS",
-     *   rekeyTo: "NEWADDRESS",
-     *   lease: 'lease',
-     *   note: 'note',
-     *   firstValidRound: 1000n,
-     *   validityWindow: 10,
-     *   extraFee: (1000).microAlgos(),
-     *   staticFee: (1000).microAlgos(),
-     *   // Max fee doesn't make sense with extraFee AND staticFee
-     *   //  already specified, but here for completeness
-     *   maxFee: (3000).microAlgos(),
-     * })
-     * ```
-     * @returns The rekey transaction
-     */
-    rekey: this._transaction((c) => c.addRekey),
     /** Create a create Algorand Standard Asset transaction.
      *
      * The account that sends this transaction will automatically be

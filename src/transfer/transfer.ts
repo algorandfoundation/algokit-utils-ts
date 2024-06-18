@@ -105,7 +105,7 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
 }
 
 /**
- * @deprecated Use `algorand.send.rekey()` / `algorand.transaction.rekey()` instead
+ * @deprecated Use `algorand.account.rekeyAccount()` instead
  *
  * Rekey an account to a new address.
  *
@@ -127,11 +127,13 @@ export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Prom
     rekey,
     {
       sender: getSenderAddress(rekey.from),
+      receiver: getSenderAddress(rekey.from),
+      amount: (0).microAlgos(),
       rekeyTo: typeof rekey.rekeyTo === 'string' ? rekey.rekeyTo : getSenderAddress(rekey.rekeyTo),
       note: encodeTransactionNote(rekey.note),
       lease: rekey.lease,
     },
-    (c) => c.transactions.rekey,
-    (c) => c.send.rekey,
+    (c) => c.transactions.payment,
+    (c) => c.send.payment,
   )
 }

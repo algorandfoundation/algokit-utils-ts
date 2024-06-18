@@ -361,9 +361,7 @@ describe('rekey', () => {
     const { testAccount, algorand } = localnet.context
     const secondAccount = algorand.account.random()
 
-    await algorand.send.rekey({
-      sender: testAccount.addr,
-      rekeyTo: secondAccount.addr,
+    await algorand.account.rekeyAccount(testAccount.addr, secondAccount.addr, {
       note: 'Rekey',
     })
 
