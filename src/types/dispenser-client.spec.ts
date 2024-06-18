@@ -13,7 +13,7 @@ describe('TestNetDispenserApiClient', () => {
   afterEach(() => {
     process.env = env
   })
-  it('should fund account with algos with auth token', async () => {
+  it('should fund account with Algos with auth token', async () => {
     const mockResponse = { txID: 'dummy_tx_id', amount: 1 }
     fetchMock.mockResponseOnce(JSON.stringify(mockResponse))
 

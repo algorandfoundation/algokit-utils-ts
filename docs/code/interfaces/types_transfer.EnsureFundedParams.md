@@ -4,6 +4,8 @@
 
 [types/transfer](../modules/types_transfer.md).EnsureFundedParams
 
+**`Deprecated`**
+
 Parameters for `ensureFunded` call.
 
 ## Hierarchy
@@ -150,7 +152,7 @@ ___
 
 • **minSpendingBalance**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement)
+The minimum balance of Algos that the account should have available to spend (i.e. on top of minimum balance requirement)
 
 #### Defined in
 

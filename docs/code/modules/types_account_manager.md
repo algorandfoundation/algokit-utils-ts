@@ -40,4 +40,4 @@ A transaction signer
 
 #### Defined in
 
-[src/types/account-manager.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L38)
+[src/types/account-manager.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L46)

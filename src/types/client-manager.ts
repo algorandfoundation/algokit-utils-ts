@@ -222,6 +222,21 @@ export class ClientManager {
    * @param typedClient The typed client type to use
    * @param details The details to resolve the app by creator address and name
    * @param cachedAppLookup A cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this manager on construction.
+   * @example Use name in ARC-32 app spec
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   *   creatorAddress: "CREATORADDRESS",
+   *   sender: alice,
+   * })
+   * ```
+   * @example Specify name
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   *   creatorAddress: "CREATORADDRESS",
+   *   name: "contract-name",
+   *   sender: alice,
+   * })
+   * ```
    * @returns The typed client instance
    */
   public getTypedAppClientByCreatorAndName<TClient>(
@@ -236,6 +251,13 @@ export class ClientManager {
    * Returns a new typed client, resolving the app by app ID.
    * @param typedClient The typed client type to use
    * @param details The details to resolve the app by ID
+   * @example
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
+   *   id: 12345,
+   *   sender: alice,
+   * })
+   * ```
    * @returns The typed client instance
    */
   public getTypedAppClientById<TClient>(typedClient: TypedAppClient<TClient>, details: TypedAppClientByIdDetails) {

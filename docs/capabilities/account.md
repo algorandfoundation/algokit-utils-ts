@@ -47,7 +47,7 @@ In order to get/register accounts for signing operations you can use the followi
 
 - [`algorand.account.fromEnvironment(name, fundWith)`](../code/classes/types_account_manager.AccountManager.md#fromenvironment) - Registers and returns an account with private key loaded by convention based on the given name identifier - either by idempotently creating the account in KMD or from environment variable via `process.env['{NAME}_MNEMONIC']` and (optionally) `process.env['{NAME}_SENDER']` (if account is rekeyed)
   - This allows you to have powerful code that will automatically create and fund an account by name locally and when deployed against TestNet/MainNet will automatically resolve from environment variables, without having to have different code
-  - Note: `fundWith` allows you to control how many ALGOs are seeded into an account created in KMD
+  - Note: `fundWith` allows you to control how many Algos are seeded into an account created in KMD
 - [`algorand.account.fromMnemonic(mnemonicSecret, sender?)`](../code/classes/types_account_manager.AccountManager.md#frommnemonic) - Registers and returns an account with secret key loaded by taking the mnemonic secret
 - [`algorand.account.multisig(multisigParams, signingAccounts)`](../code/classes/types_account_manager.AccountManager.md#multisig) - Registers and returns a multisig account with one or more signing keys loaded
 - [`algorand.account.rekeyed(sender, signer)`](../code/classes/types_account_manager.AccountManager.md#rekeyed) - Registers and returns an account representing the given rekeyed sender/signer combination
@@ -62,31 +62,53 @@ In order to get/register accounts for signing operations you can use the followi
 
 ## Rekey account
 
-> [!NOTE]
-> This method requires the [legacy AlgoKit Utils import method to access them](../README.md#usage).
-
 One of the unique features of Algorand is the ability to change the private key that can authorise transactions for an account. This is called [rekeying](https://developer.algorand.org/docs/get-details/accounts/rekey/).
 
-You can issue a transaction to rekey an account by using the `algokit.rekeyAccount(rekey, algod)` function. The `rekey` parameter is an [`AlgoRekeyParams`](../code/interfaces/types_transfer.AlgoRekeyParams.md) object with the following properties:
+> [!WARNING]
+> Rekeying should be done with caution as a rekey transaction can result in permanent loss of control of an account.
 
-- All properties in [`SendTransactionParams`](./transaction.md#sendtransactionparams)
-- `from: SendTransactionFrom` - The account that will be rekeyed
-- `rekeyTo: SendTransactionFrom | string` - The address of the account that will be used to authorise transactions for the rekeyed account going forward
-- `transactionParams?: SuggestedParams` - The optional [transaction parameters](./transaction.md#transaction-params)
-- `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes)
-- `lease?: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
+You can issue a transaction to rekey an account by using the [`algorand.account.rekeyAccount(account, rekeyTo, options)`](../code/classes/types_account_manager.AccountManager.md#rekeyaccount) function:
+
+- `account: string | TransactionSignerAccount` - The account address or signing account of the account that will be rekeyed
+- `rekeyTo: string | TransactionSignerAccount` - The account address or signing account of the account that will be used to authorise transactions for the rekeyed account going forward. If a signing account is provided that will now be tracked as the signer for `account` in the `AccountManager` instance.
+- An `options` object, which has:
+  - [Common transaction parameters](./algorand-client.md#transaction-parameters)
+  - [Execution parameters](./algorand-client.md#sending-a-single-transaction)
+
+You can also pass in `rekeyTo` as a [common transaction parameter](./algorand-client.md#transaction-parameters) to any transaction.
+
+### Examples
 
 ```typescript
-// Example
-await algokit.rekeyAccount(
-  {
-    from: account,
-    rekeyTo: newAccount,
-    // Optionally specify transactionParams, note, lease and transaction sending parameters
-  },
-  algod,
-)
+// Basic example (with string addresses)
 
+await algorand.account.rekeyAccount({ account: 'ACCOUNTADDRESS', rekeyTo: 'NEWADDRESS' })
+
+// Basic example (with signer accounts)
+
+await algorand.account.rekeyAccount({ account: account1, rekeyTo: newSignerAccount })
+
+// Advanced example
+
+await algorand.account.rekeyAccount({
+  account: 'ACCOUNTADDRESS',
+  rekeyTo: 'NEWADDRESS',
+  lease: 'lease',
+  note: 'note',
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgos(),
+  staticFee: (1000).microAlgos(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgos(),
+  maxRoundsToWaitForConfirmation: 5,
+  suppressLog: true,
+})
+
+// Using a rekeyed account
+
+// Note: if a signing account is passed into `algorand.account.rekeyAccount` then you don't need to call `rekeyedAccount` to register the new signer
 const rekeyedAccount = algokit.rekeyedAccount(newAccount, account.addr)
 // rekeyedAccount can be used to sign transactions on behalf of account...
 ```
@@ -95,7 +117,7 @@ const rekeyedAccount = algokit.rekeyedAccount(newAccount, account.addr)
 
 When running LocalNet, you have an instance of the [Key Management Daemon](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md), which is useful for:
 
-- Accessing the private key of the default accounts that are pre-seeded with algos so that other accounts can be funded and it's possible to use LocalNet
+- Accessing the private key of the default accounts that are pre-seeded with Algos so that other accounts can be funded and it's possible to use LocalNet
 - Idempotently creating new accounts against a name that will stay intact while the LocalNet instance is running without you needing to store private keys anywhere (i.e. completely automated)
 
 The KMD SDK is fairly low level so to make use of it there is a fair bit of boilerplate code that's needed. This code has been abstracted away into the `KmdAccountManager` class.

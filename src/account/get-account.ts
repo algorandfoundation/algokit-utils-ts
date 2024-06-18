@@ -29,7 +29,7 @@ import Kmd = algosdk.Kmd
  * const account = await getAccount('ACCOUNT', algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `name`: The name identifier of the account
@@ -56,7 +56,7 @@ export async function getAccount(
  * const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
  *
  * @param account The details of the account to get, an object with:
  *   * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName)
@@ -91,7 +91,7 @@ export async function getAccount(
  * const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName) OR

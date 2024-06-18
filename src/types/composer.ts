@@ -13,40 +13,48 @@ export const MAX_TRANSACTION_GROUP_SIZE = 16
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
-  /** The address sending the transaction */
+  /** The address of the account sending the transaction. */
   sender: string
-  /** The function used to sign transactions */
+  /** The function used to sign transaction(s); if not specified then
+   *  an attempt will be made to find a registered signer for the
+   *  given `sender` or use a default signer (if configured).
+   */
   signer?: algosdk.TransactionSigner | TransactionSignerAccount
   /** Change the signing key of the sender to the given address.
    *
    * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
    */
   rekeyTo?: string
-  /** Note to attach to the transaction */
+  /** Note to attach to the transaction. Max of 1000 bytes. */
   note?: Uint8Array | string
-  /** Prevent multiple transactions with the same lease being included within the validity window */
+  /** Prevent multiple transactions with the same lease being included within the validity window.
+   *
+   * A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/)
+   *  enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios).
+   */
   lease?: Uint8Array | string
-  /** The transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
+  /** The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. */
   staticFee?: AlgoAmount
-  /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees */
+  /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees. */
   extraFee?: AlgoAmount
-  /** Throw an error if the fee for the transaction is more than this amount */
+  /** Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. */
   maxFee?: AlgoAmount
-  /** How many rounds the transaction should be valid for */
+  /** How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. */
   validityWindow?: number
   /**
    * Set the first round this transaction is valid.
    * If left undefined, the value from algod will be used.
-   * Only set this when you intentionally want this to be some time in the future
+   *
+   * We recommend you only set this when you intentionally want this to be some time in the future.
    */
   firstValidRound?: bigint
-  /** The last round this transaction is valid. It is recommended to use validityWindow instead */
+  /** The last round this transaction is valid. It is recommended to use `validityWindow` instead. */
   lastValidRound?: bigint
 }
 
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
-  /** That account that will receive the ALGO */
+  /** The address of the account that will receive the Algos */
   receiver: string
   /** Amount to send */
   amount: AlgoAmount
@@ -83,6 +91,38 @@ export type AssetCreateParams = CommonTransactionParams & {
    * This field can only be specified upon asset creation.
    */
   decimals?: number
+
+  /** The optional name of the asset.
+   *
+   * Max size is 32 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  assetName?: string
+
+  /** The optional name of the unit of this asset (e.g. ticker name).
+   *
+   * Max size is 8 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  unitName?: string
+
+  /** Specifies an optional URL where more information about the asset can be retrieved (e.g. metadata).
+   *
+   * Max size is 96 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  url?: string
+
+  /** 32-byte hash of some metadata that is relevant to your asset and/or asset holders.
+   *
+   * The format of this metadata is up to the application.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  metadataHash?: string | Uint8Array
 
   /** Whether the asset is frozen by default for all accounts.
    * Defaults to `false`.
@@ -137,38 +177,6 @@ export type AssetCreateParams = CommonTransactionParams & {
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
    */
   clawback?: string
-
-  /** The optional name of the unit of this asset (e.g. ticker name).
-   *
-   * Max size is 8 bytes.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  unitName?: string
-
-  /** The optional name of the asset.
-   *
-   * Max size is 32 bytes.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  assetName?: string
-
-  /** Specifies an optional URL where more information about the asset can be retrieved (e.g. metadata).
-   *
-   * Max size is 96 bytes.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  url?: string
-
-  /** 32-byte hash of some metadata that is relevant to your asset and/or asset holders.
-   *
-   * The format of this metadata is up to the application.
-   *
-   * This field can only be specified upon asset creation.
-   */
-  metadataHash?: string | Uint8Array
 }
 
 /** Parameters to define an asset reconfiguration transaction.
@@ -178,23 +186,54 @@ export type AssetCreateParams = CommonTransactionParams & {
  * all fields are immutable from that point forward.
  */
 export type AssetConfigParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset to reconfigure */
   assetId: bigint
-  /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
+  /** The address of the optional account that can manage the configuration of the asset and destroy it.
+   *
+   * The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`.
+   *
+   * If not set (`undefined` or `""`) the asset will become permanently immutable.
+   */
   manager: string | undefined
-  /** The address that holds the uncirculated supply */
+  /**
+   * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
+   *
+   * This address has no specific authority in the protocol itself and is informational only.
+   *
+   * Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md)
+   * rely on this field to hold meaningful data.
+   *
+   * It can be used in the case where you want to signal to holders of your asset that the uncirculated units
+   * of the asset reside in an account that is different from the default creator account.
+   *
+   * If not set (`undefined` or `""`) the field will become permanently empty.
+   */
   reserve?: string
-  /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
+  /**
+   * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
+   *
+   * If empty, freezing is not permitted.
+   *
+   * If not set (`undefined` or `""`) the field will become permanently empty.
+   */
   freeze?: string
-  /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
+  /**
+   * The address of the optional account that can clawback holdings of this asset from any account.
+   *
+   * **This field should be used with caution** as the clawback account has the ability to **unconditionally take assets from any account**.
+   *
+   * If empty, clawback is not permitted.
+   *
+   * If not set (`undefined` or `""`) the field will become permanently empty.
+   */
   clawback?: string
 }
 
 /** Parameters to define an asset freeze transaction. */
 export type AssetFreezeParams = CommonTransactionParams & {
-  /** The ID of the asset */
+  /** The ID of the asset to freeze/unfreeze */
   assetId: bigint
-  /** The account to freeze or unfreeze */
+  /** The address of the account to freeze or unfreeze */
   account: string
   /** Whether the assets in the account should be frozen */
   frozen: boolean
@@ -205,45 +244,45 @@ export type AssetFreezeParams = CommonTransactionParams & {
  * Created assets can be destroyed only by the asset manager account. All of the assets must be owned by the creator of the asset before the asset can be deleted.
  */
 export type AssetDestroyParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset to destroy */
   assetId: bigint
 }
 
 /** Parameters to define an asset transfer transaction. */
 export type AssetTransferParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset to transfer. */
   assetId: bigint
-  /** Amount of the asset to transfer (smallest divisible unit) */
+  /** Amount of the asset to transfer (in smallest divisible (decimal) units). */
   amount: bigint
-  /** The account to send the asset to */
+  /** The address of the account that will receive the asset unit(s). */
   receiver: string
-  /** The account to take the asset from.
+  /** Optional address of an account to clawback the asset from.
    *
    * Requires the sender to be the clawback account.
    *
-   * *Warning:* Be careful with this parameter as it can lead to unexpected loss of funds if not used correctly.
+   * **Warning:** Be careful with this parameter as it can lead to unexpected loss of funds if not used correctly.
    */
   clawbackTarget?: string
-  /** The account to close the asset to
+  /** Optional address of an account to close the asset position to.
    *
-   * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
+   * **Warning:** Be careful with this parameter as it can lead to loss of funds if not used correctly.
    */
   closeAssetTo?: string
 }
 
 /** Parameters to define an asset opt-in transaction. */
 export type AssetOptInParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset that will be opted-in to. */
   assetId: bigint
 }
 
 /** Parameters to define an asset opt-out transaction. */
 export type AssetOptOutParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset that will be opted-out of. */
   assetId: bigint
   /**
    * The address of the asset creator account to close the asset
-   *   position to (any remaining asset units will be sent to this account)
+   *   position to (any remaining asset units will be sent to this account).
    */
   creator: string
 }
@@ -341,7 +380,7 @@ type Txn =
 export interface ExecuteParams {
   /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
   maxRoundsToWaitForConfirmation?: number
-  /** Whether to suppress log messages from transaction send, default: do not suppress */
+  /** Whether to suppress log messages from transaction send, default: do not suppress. */
   suppressLog?: boolean
 }
 

@@ -190,14 +190,14 @@ export class AlgorandClient {
    */
   public send = {
     /**
-     * Send a payment transaction to transfer algos between accounts.
+     * Send a payment transaction to transfer Algos between accounts.
      * @param params The parameters for the payment transaction
      * @example Basic example
      * ```typescript
      * const result = await algorandClient.send.payment({
      *  sender: 'SENDERADDRESS',
      *  receiver: 'RECEIVERADDRESS',
-     *  amount: algosdk.algosToMicroalgos(1),
+     *  amount: (4).algos(),
      * })
      * ```
      * @example Advanced example
@@ -211,6 +211,7 @@ export class AlgorandClient {
      *   note: 'note',
      *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
      *   rekeyTo: 'REKEYTOADDRESS',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -220,7 +221,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -231,7 +232,7 @@ export class AlgorandClient {
      */
     payment: this._send((c) => c.addPayment, {
       preLog: (params, transaction) =>
-        `Sending ${params.amount.microAlgos} µALGOs from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+        `Sending ${params.amount.microAlgos} µAlgos from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
     }),
     /**
      * Create a new Algorand Standard Asset.
@@ -262,6 +263,7 @@ export class AlgorandClient {
      *   clawback: 'CLAWBACKADDRESS',
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -271,7 +273,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -310,6 +312,7 @@ export class AlgorandClient {
      *   clawback: 'CLAWBACKADDRESS',
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -319,7 +322,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -348,6 +351,7 @@ export class AlgorandClient {
      *   frozen: true,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -357,7 +361,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -388,6 +392,7 @@ export class AlgorandClient {
      *   assetId: 123456n,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -397,7 +402,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -429,6 +434,7 @@ export class AlgorandClient {
      *   closeAssetTo: 'ADDRESSTOCLOSETO'
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -438,7 +444,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -466,6 +472,7 @@ export class AlgorandClient {
      *   assetId: 123456n,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -475,7 +482,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -506,13 +513,14 @@ export class AlgorandClient {
      * ```
      * @example Advanced example
      * ```typescript
-     * await algorand.send.assetOptIn({
+     * await algorand.send.assetOptOut({
      *   sender: 'SENDERADDRESS',
      *   assetId: 123456n,
      *   creator: 'CREATORADDRESS',
      *   ensureZeroBalance: true,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -522,7 +530,7 @@ export class AlgorandClient {
      *   maxFee: (3000).microAlgos(),
      *   // Signer only needed if you want to provide one,
      *   //  generally you'd register it with AlgorandClient
-     *   //  against the sender nad not need to pass it in
+     *   //  against the sender and not need to pass it in
      *   signer: transactionSigner,
      *   maxRoundsToWaitForConfirmation: 5,
      *   suppressLog: true,
@@ -594,14 +602,14 @@ export class AlgorandClient {
    */
   public transactions = {
     /**
-     * Create a payment transaction to transfer algos between accounts.
+     * Create a payment transaction to transfer Algos between accounts.
      * @param params The parameters for the payment transaction
      * @example Basic example
      * ```typescript
      * const result = await algorandClient.send.payment({
      *  sender: 'SENDERADDRESS',
      *  receiver: 'RECEIVERADDRESS',
-     *  amount: algosdk.algosToMicroalgos(1),
+     *  amount: (4).algos(),
      * })
      * ```
      * @example Advanced example
@@ -615,6 +623,7 @@ export class AlgorandClient {
      *   note: 'note',
      *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
      *   rekeyTo: 'REKEYTOADDRESS',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -656,6 +665,7 @@ export class AlgorandClient {
      *   clawback: 'CLAWBACKADDRESS',
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -691,6 +701,7 @@ export class AlgorandClient {
      *   clawback: 'CLAWBACKADDRESS',
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -720,6 +731,7 @@ export class AlgorandClient {
      *   frozen: true,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -751,6 +763,7 @@ export class AlgorandClient {
      *   assetId: 123456n,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -783,6 +796,7 @@ export class AlgorandClient {
      *   closeAssetTo: 'ADDRESSTOCLOSETO'
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -810,6 +824,7 @@ export class AlgorandClient {
      *   assetId: 123456n,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),
@@ -842,6 +857,7 @@ export class AlgorandClient {
      *   ensureZeroBalance: true,
      *   lease: 'lease',
      *   note: 'note',
+     *   // You wouldn't normally set this field
      *   firstValidRound: 1000n,
      *   validityWindow: 10,
      *   extraFee: (1000).microAlgos(),

@@ -2,7 +2,7 @@
 
 Algo amount handling is one of the core capabilities provided by AlgoKit Utils. It allows you to reliably and tersely specify amounts of microAlgos and Algos and safely convert between them.
 
-Any AlgoKit Utils function that needs an Algo amount will take an `AlgoAmount` object, which ensures that there is never any confusion about what value is being passed around. Whenever an AlgoKit Utils function calls into an underlying algosdk function, or if you need to take an `AlgoAmount` and pass it into an underlying algosdk function (per the [modularity principle](../README.md#core-principles)) you can safely and explicitly convert to microAlgos or algos.
+Any AlgoKit Utils function that needs an Algo amount will take an `AlgoAmount` object, which ensures that there is never any confusion about what value is being passed around. Whenever an AlgoKit Utils function calls into an underlying algosdk function, or if you need to take an `AlgoAmount` and pass it into an underlying algosdk function (per the [modularity principle](../README.md#core-principles)) you can safely and explicitly convert to microAlgos or Algos.
 
 To see some usage examples check out the [automated tests](../../src/types/amount.spec.ts). Alternatively, you see the [reference documentation](../code/classes/types_amount.AlgoAmount.md) for `AlgoAmount`.
 
@@ -41,7 +41,7 @@ import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
 
 ### Extracting a value from `AlgoAmount`
 
-The `AlgoAmount` class has methods to return algos and microAlgos:
+The `AlgoAmount` class has methods to return Algos and microAlgos:
 
 - `amount.algos()` - Returns the value in Algos
 - `amount.microAlgos()` - Returns the value in microAlgos

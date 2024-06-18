@@ -11,7 +11,31 @@ To create a Dispenser Client, you need to provide an authorization token. This c
 
 If both methods are used, the constructor argument takes precedence.
 
-You can get a TestNet dispenser API client via `ClientManager` (e.g. via `algorand.client.testNetDispenser()`), or directly, e.g.:
+The recommended way to get a TestNet dispenser API client is [via `ClientManager`](./client.md):
+
+```typescript
+// With auth token
+const dispenserClient = algorand.client.getTestNetDispenser({
+  authToken: 'your_auth_token',
+})
+
+// With auth token and timeout
+const dispenserClient = algorand.client.getTestNetDispenser({
+  authToken: 'your_auth_token',
+  requestTimeout: 2 /* seconds */,
+})
+
+// From environment variables
+// i.e. process.env['ALGOKIT_DISPENSER_ACCESS_TOKEN'] = 'your_auth_token'
+const dispenserClient = algorand.client.getTestNetDispenserFromEnvironment()
+
+// From environment variables with request timeout
+const dispenserClient = algorand.client.getTestNetDispenserFromEnvironment({
+  requestTimeout: 2 /* seconds */,
+})
+```
+
+Alternatively, you can construct it directly.
 
 ```ts
 import { TestNetDispenserApiClient } from '@algorandfoundation/algokit-utils/types/dispenser-client'

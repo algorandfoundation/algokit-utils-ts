@@ -29,7 +29,7 @@ describe('Transfer capability', () => {
       sender: testAccount.addr,
       receiver: secondAccount.addr,
       amount: (5).algos(),
-      note: 'Transfer 5 ALGOs',
+      note: 'Transfer 5 Algos',
     })
 
     const accountInfo = await algorand.account.getInformation(secondAccount.addr)

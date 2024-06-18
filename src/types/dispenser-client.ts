@@ -14,17 +14,25 @@ const dispenserAssets = {
   },
 }
 
+/** The TestNet Dispenser API response when funding. */
 export interface DispenserFundResponse {
+  /** The ID of the transaction that was issued to fund the account. */
   txId: string
+  /** The number of microAlgos that was funded. */
   amount: number
 }
 
+/** The TestNet Dispenser API response when getting the current limit.  */
 export interface DispenserLimitResponse {
+  /** The limit, in microAlgos, that you can currently fund. */
   amount: number
 }
 
+/** The parameters to construct a TestNet Dispenser API client. */
 export interface TestNetDispenserApiClientParams {
+  /** The API auth token */
   authToken: string
+  /** The request timeout in seconds */
   requestTimeout?: number
 }
 

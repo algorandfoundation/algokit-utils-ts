@@ -4,6 +4,8 @@
 
 [types/dispenser-client](../modules/types_dispenser_client.md).TestNetDispenserApiClientParams
 
+The parameters to construct a TestNet Dispenser API client.
+
 ## Table of contents
 
 ### Properties
@@ -17,9 +19,11 @@
 
 • **authToken**: `string`
 
+The API auth token
+
 #### Defined in
 
-[src/types/dispenser-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L27)
+[src/types/dispenser-client.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L34)
 
 ___
 
@@ -27,6 +31,8 @@ ___
 
 • `Optional` **requestTimeout**: `number`
 
+The request timeout in seconds
+
 #### Defined in
 
-[src/types/dispenser-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L28)
+[src/types/dispenser-client.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L36)

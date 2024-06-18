@@ -83,7 +83,7 @@ export function randomAccount(): Account {
  * const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
  * If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:

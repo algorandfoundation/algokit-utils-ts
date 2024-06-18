@@ -31,7 +31,7 @@ export const microAlgos = (microAlgos: number) => {
 }
 
 /** Returns an amount of µAlgos to cover standard fees for the given number of transactions using AlgoAmount
- * @param numberOfTransactions The of standard transaction fees to return the amount of ALGOs
+ * @param numberOfTransactions The of standard transaction fees to return the amount of Algos
  */
 export const transactionFees = (numberOfTransactions: number) => {
   return AlgoAmount.MicroAlgos(numberOfTransactions * algosdk.ALGORAND_MIN_TX_FEE)

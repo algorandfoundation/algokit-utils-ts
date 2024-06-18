@@ -48,8 +48,8 @@ describe('transaction', () => {
       )
     }).rejects.toThrowError(
       'Cancelled transaction due to high network congestion fees. ' +
-        'Algorand suggested fees would cause this transaction to cost 1000 µALGOs. ' +
-        'Cap for this transaction is 1 µALGOs.',
+        'Algorand suggested fees would cause this transaction to cost 1000 µAlgos. ' +
+        'Cap for this transaction is 1 µAlgos.',
     )
   })
 

@@ -7,6 +7,20 @@
 ### References
 
 - [AlgorandClient](index.md#algorandclient)
+- [executePaginatedRequest](index.md#executepaginatedrequest)
+- [lookupAccountByAddress](index.md#lookupaccountbyaddress)
+- [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
+- [lookupAssetHoldings](index.md#lookupassetholdings)
+- [lookupTransactionById](index.md#lookuptransactionbyid)
+- [searchTransactions](index.md#searchtransactions)
+
+### Namespaces
+
+- [indexer](index.indexer.md)
+
+### Type Aliases
+
+- [AccountInformation](index.md#accountinformation)
 
 ### Variables
 
@@ -33,7 +47,6 @@
 - [encodeLease](index.md#encodelease)
 - [encodeTransactionNote](index.md#encodetransactionnote)
 - [ensureFunded](index.md#ensurefunded)
-- [executePaginatedRequest](index.md#executepaginatedrequest)
 - [getABIMethodSignature](index.md#getabimethodsignature)
 - [getABIReturn](index.md#getabireturn)
 - [getAccount](index.md#getaccount)
@@ -81,10 +94,6 @@
 - [isMainNet](index.md#ismainnet)
 - [isSchemaIsBroken](index.md#isschemaisbroken)
 - [isTestNet](index.md#istestnet)
-- [lookupAccountByAddress](index.md#lookupaccountbyaddress)
-- [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
-- [lookupAssetHoldings](index.md#lookupassetholdings)
-- [lookupTransactionById](index.md#lookuptransactionbyid)
 - [microAlgos](index.md#microalgos)
 - [mnemonicAccount](index.md#mnemonicaccount)
 - [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
@@ -99,7 +108,6 @@
 - [rekeyAccount](index.md#rekeyaccount)
 - [rekeyedAccount](index.md#rekeyedaccount)
 - [replaceDeployTimeControlParams](index.md#replacedeploytimecontrolparams)
-- [searchTransactions](index.md#searchtransactions)
 - [sendAtomicTransactionComposer](index.md#sendatomictransactioncomposer)
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
@@ -118,6 +126,56 @@
 ### AlgorandClient
 
 Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+
+___
+
+### executePaginatedRequest
+
+Re-exports [executePaginatedRequest](index.indexer.md#executepaginatedrequest)
+
+___
+
+### lookupAccountByAddress
+
+Re-exports [lookupAccountByAddress](index.indexer.md#lookupaccountbyaddress)
+
+___
+
+### lookupAccountCreatedApplicationByAddress
+
+Re-exports [lookupAccountCreatedApplicationByAddress](index.indexer.md#lookupaccountcreatedapplicationbyaddress)
+
+___
+
+### lookupAssetHoldings
+
+Re-exports [lookupAssetHoldings](index.indexer.md#lookupassetholdings)
+
+___
+
+### lookupTransactionById
+
+Re-exports [lookupTransactionById](index.indexer.md#lookuptransactionbyid)
+
+___
+
+### searchTransactions
+
+Re-exports [searchTransactions](index.indexer.md#searchtransactions)
+
+## Type Aliases
+
+### AccountInformation
+
+Ƭ **AccountInformation**: `Omit`\<`NumberConverter`\<`AccountInformationModel`\>, ``"get_obj_for_encoding"``\>
+
+**`Deprecated`**
+
+Account information at a given round.
+
+#### Defined in
+
+[src/account/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L134)
 
 ## Variables
 
@@ -189,8 +247,6 @@ ___
 
 ▸ **assetBulkOptIn**(`optIn`, `algod`): `Promise`\<`Record`\<`number`, `string`\>\>
 
-Opt in to a list of assets on the Algorand blockchain.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -204,6 +260,12 @@ Opt in to a list of assets on the Algorand blockchain.
 
 A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
 
+**`Deprecated`**
+
+use `algorandClient.account.assetBulkOptIn()` instead
+
+Opt in to a list of assets on the Algorand blockchain.
+
 **`Throws`**
 
 If there is an error during the opt-in process.
@@ -216,15 +278,13 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L123)
+[src/asset.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L131)
 
 ___
 
 ### assetBulkOptOut
 
 ▸ **assetBulkOptOut**(`optOut`, `algod`): `Promise`\<`Record`\<`number`, `string`\>\>
-
-Opt out of multiple assets in Algorand blockchain.
 
 #### Parameters
 
@@ -239,6 +299,12 @@ Opt out of multiple assets in Algorand blockchain.
 
 A record object containing asset IDs as keys and their corresponding transaction IDs as values.
 
+**`Deprecated`**
+
+use `algorandClient.account.assetBulkOptOut()` instead
+
+Opt out of multiple assets in Algorand blockchain.
+
 **`Throws`**
 
 If there is an error during the opt-out process.
@@ -251,15 +317,13 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L148)
+[src/asset.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L158)
 
 ___
 
 ### assetOptIn
 
 ▸ **assetOptIn**(`optIn`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
-
-Opt-in an account to an asset.
 
 #### Parameters
 
@@ -274,6 +338,12 @@ Opt-in an account to an asset.
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Deprecated`**
+
+use `algorandClient.send.assetOptIn()` / `algorandClient.transaction.assetOptIn()` instead
+
+Opt-in an account to an asset.
+
 **`Example`**
 
 ```typescript
@@ -282,15 +352,13 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L64)
+[src/asset.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L68)
 
 ___
 
 ### assetOptOut
 
 ▸ **assetOptOut**(`optOut`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
-
-Opt-out an account from an asset.
 
 #### Parameters
 
@@ -305,6 +373,12 @@ Opt-out an account from an asset.
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Deprecated`**
+
+use `algorandClient.send.assetOptOut()` / `algorandClient.transaction.assetOptOut()` instead
+
+Opt-out an account from an asset.
+
 **`Example`**
 
 ```typescript
@@ -313,7 +387,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L93)
+[src/asset.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L99)
 
 ___
 
@@ -346,7 +420,7 @@ ___
 
 ▸ **capTransactionFee**(`transaction`, `maxAcceptableFee`): `void`
 
-Limit the acceptable fee to a defined amount of µALGOs.
+Limit the acceptable fee to a defined amount of µAlgos.
 This also sets the transaction to be flatFee to ensure the transaction only succeeds at
 the estimated rate.
 
@@ -452,8 +526,6 @@ ___
 
 ▸ **createAsset**(`create`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md) & \{ `confirmation?`: \{ `assetIndex`: `number` \| `bigint`  }  }\>
 
-Create an Algorand Standard Asset (ASA).
-
 #### Parameters
 
 | Name | Type | Description |
@@ -467,6 +539,12 @@ Create an Algorand Standard Asset (ASA).
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Deprecated`**
+
+use `algorandClient.send.assetCreate()` / `algorandClient.transaction.assetCreate()` instead
+
+Create an Algorand Standard Asset (ASA).
+
 **`Example`**
 
 ```typescript
@@ -475,7 +553,7 @@ await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My a
 
 #### Defined in
 
-[src/asset.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L22)
+[src/asset.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L24)
 
 ___
 
@@ -613,10 +691,6 @@ ___
 
 ▸ **ensureFunded**\<`T`\>(`funding`, `algod`, `kmd?`): `Promise`\<[`EnsureFundedReturnType`](../interfaces/types_transfer.EnsureFundedReturnType.md) \| `undefined`\>
 
-Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
-
-https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
-
 #### Type parameters
 
 | Name | Type |
@@ -638,37 +712,18 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 - `EnsureFundedReturnType` if funds were transferred.
 - `undefined` if no funds were needed.
 
-#### Defined in
+**`Deprecated`**
 
-[src/transfer/transfer.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L23)
+Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnvironment()`
+/ `algorand.account.ensureFundedFromTestNetDispenserApi()` instead
 
-___
+Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for Algos locked in minimum balance requirement).
 
-### executePaginatedRequest
-
-▸ **executePaginatedRequest**\<`TResult`, `TRequest`\>(`extractItems`, `buildRequest`): `Promise`\<`TResult`[]\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `TResult` | `TResult` |
-| `TRequest` | extends `Object` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `extractItems` | (`response`: `any`) => `TResult`[] |
-| `buildRequest` | (`nextToken?`: `string`) => `TRequest` |
-
-#### Returns
-
-`Promise`\<`TResult`[]\>
+https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 #### Defined in
 
-[src/indexer-lookup.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L152)
+[src/transfer/transfer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L26)
 
 ___
 
@@ -762,7 +817,7 @@ If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then yo
 const account = await getAccount('ACCOUNT', algod)
 ```
 
-If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
 
 #### Defined in
 
@@ -800,7 +855,7 @@ If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then yo
 const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
 ```
 
-If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
 
 #### Defined in
 
@@ -830,7 +885,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L126)
+[src/account/account.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L127)
 
 ___
 
@@ -856,7 +911,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L115)
+[src/account/account.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L116)
 
 ___
 
@@ -896,7 +951,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L168)
+[src/account/account.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L193)
 
 ___
 
@@ -935,7 +990,7 @@ ___
 
 ### getAccountInformation
 
-▸ **getAccountInformation**(`sender`, `algod`): `Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+▸ **getAccountInformation**(`sender`, `algod`): `Promise`\<[`AccountInformation`](index.md#accountinformation)\>
 
 #### Parameters
 
@@ -946,7 +1001,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AccountInformation`](types_account.md#accountinformation)\>
+`Promise`\<[`AccountInformation`](index.md#accountinformation)\>
 
 The account information
 
@@ -967,7 +1022,7 @@ const accountInfo = await account.getInformation(address, algod);
 
 #### Defined in
 
-[src/account/account.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L146)
+[src/account/account.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L152)
 
 ___
 
@@ -2130,110 +2185,6 @@ Use `await algorandClient.client.isTestNet()` or `await new ClientManager({ algo
 
 ___
 
-### lookupAccountByAddress
-
-▸ **lookupAccountByAddress**(`accountAddress`, `indexer`): `Promise`\<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
-
-Looks up an account by address using Indexer.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `accountAddress` | `string` | The address of the account to look up |
-| `indexer` | `default` | An indexer client |
-
-#### Returns
-
-`Promise`\<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
-
-The result of the look-up
-
-#### Defined in
-
-[src/indexer-lookup.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L33)
-
-___
-
-### lookupAccountCreatedApplicationByAddress
-
-▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
-
-Looks up applications that were created by the given address; will automatically paginate through all data.
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `indexer` | `default` | `undefined` | An indexer instance |
-| `address` | `string` | `undefined` | The address of the creator to look up |
-| `getAll` | `undefined` \| `boolean` | `undefined` | Whether or not to include deleted applications |
-| `paginationLimit?` | `number` | `undefined` | The number of records to return per paginated request, default 1000 |
-
-#### Returns
-
-`Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
-
-The list of application results
-
-#### Defined in
-
-[src/indexer-lookup.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L45)
-
-___
-
-### lookupAssetHoldings
-
-▸ **lookupAssetHoldings**(`indexer`, `assetId`, `options?`, `paginationLimit?`): `Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
-
-Looks up asset holdings for the given asset; will automatically paginate through all data.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `indexer` | `default` | An indexer instance |
-| `assetId` | `number` \| `bigint` | The ID of the asset to look up holdings for |
-| `options?` | [`LookupAssetHoldingsOptions`](../interfaces/types_indexer.LookupAssetHoldingsOptions.md) | Optional options to control the lookup |
-| `paginationLimit?` | `number` | The number of records to return per paginated request, default 1000 |
-
-#### Returns
-
-`Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
-
-The list of application results
-
-#### Defined in
-
-[src/indexer-lookup.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L79)
-
-___
-
-### lookupTransactionById
-
-▸ **lookupTransactionById**(`transactionId`, `indexer`): `Promise`\<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
-
-Looks up a transaction by ID using Indexer.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `transactionId` | `string` | The ID of the transaction to look up |
-| `indexer` | `default` | An indexer client |
-
-#### Returns
-
-`Promise`\<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
-
-The result of the look-up
-
-#### Defined in
-
-[src/indexer-lookup.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L23)
-
-___
-
 ### microAlgos
 
 ▸ **microAlgos**(`microAlgos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
@@ -2325,12 +2276,12 @@ If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then
 const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
 ```
 
-If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
 If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
 
 #### Defined in
 
-[src/account/account.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L95)
+[src/account/account.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L96)
 
 ___
 
@@ -2359,7 +2310,7 @@ Returns an account wrapper that supports partial or full multisig signing.
 
 #### Defined in
 
-[src/account/account.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L22)
+[src/account/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L23)
 
 ___
 
@@ -2538,17 +2489,13 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account/account.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L58)
+[src/account/account.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L59)
 
 ___
 
 ### rekeyAccount
 
 ▸ **rekeyAccount**(`rekey`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
-
-Rekey an account to a new address.
-
-**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
 
 #### Parameters
 
@@ -2563,6 +2510,14 @@ Rekey an account to a new address.
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Deprecated`**
+
+Use `algorand.account.rekeyAccount()` instead
+
+Rekey an account to a new address.
+
+**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+
 **`Example`**
 
 ```typescript
@@ -2571,7 +2526,7 @@ await algokit.rekeyAccount({ from, rekeyTo }, algod)
 
 #### Defined in
 
-[src/transfer/transfer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L116)
+[src/transfer/transfer.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L123)
 
 ___
 
@@ -2594,13 +2549,13 @@ The SigningAccount wrapper
 
 **`Deprecated`**
 
-Use `algorandClient.account.rekeyed(account, sender)` or `new SigningAccount(account, sender)` instead.
+Use `algorandClient.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
 
 Returns an account wrapper that supports a rekeyed account.
 
 #### Defined in
 
-[src/account/account.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L34)
+[src/account/account.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L35)
 
 ___
 
@@ -2634,32 +2589,6 @@ The replaced TEAL code
 #### Defined in
 
 [src/app-deploy.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L555)
-
-___
-
-### searchTransactions
-
-▸ **searchTransactions**(`indexer`, `searchCriteria`, `paginationLimit?`): `Promise`\<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
-
-Allows transactions to be searched for the given criteria.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `indexer` | `default` | An indexer client |
-| `searchCriteria` | (`s`: `default`) => `default` | The criteria to search for |
-| `paginationLimit?` | `number` | The number of records to return per paginated request, default 1000 |
-
-#### Returns
-
-`Promise`\<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
-
-The search results
-
-#### Defined in
-
-[src/indexer-lookup.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L118)
 
 ___
 
@@ -2837,7 +2766,7 @@ Returns an amount of µAlgos to cover standard fees for the given number of tran
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `numberOfTransactions` | `number` | The of standard transaction fees to return the amount of ALGOs |
+| `numberOfTransactions` | `number` | The of standard transaction fees to return the amount of Algos |
 
 #### Returns
 
@@ -2874,15 +2803,13 @@ Returns an account wrapper that supports a transaction signer with associated se
 
 #### Defined in
 
-[src/account/account.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L46)
+[src/account/account.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L47)
 
 ___
 
 ### transferAlgos
 
 ▸ **transferAlgos**(`transfer`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
-
-Transfer ALGOs between two accounts.
 
 #### Parameters
 
@@ -2897,6 +2824,12 @@ Transfer ALGOs between two accounts.
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Deprecated`**
+
+Use `algorand.send.payment()` / `algorand.transaction.payment()` instead
+
+Transfer Algos between two accounts.
+
 **`Example`**
 
 ```typescript
@@ -2905,15 +2838,13 @@ await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
 
 #### Defined in
 
-[src/transfer/transfer-algos.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer-algos.ts#L20)
+[src/transfer/transfer-algos.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer-algos.ts#L22)
 
 ___
 
 ### transferAsset
 
 ▸ **transferAsset**(`transfer`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
-
-Transfer asset between two accounts.
 
 #### Parameters
 
@@ -2928,6 +2859,12 @@ Transfer asset between two accounts.
 
 The transaction object and optionally the confirmation if it was sent to the chain (`skipSending` is `false` or unset)
 
+**`Deprecated`**
+
+Use `algorand.send.assetTransfer()` / `algorand.transaction.assetTransfer()` instead
+
+Transfer asset between two accounts.
+
 **`Example`**
 
 ```typescript
@@ -2936,7 +2873,7 @@ await algokit.transferAsset({ from, to, assetId, amount }, algod)
 
 #### Defined in
 
-[src/transfer/transfer.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L83)
+[src/transfer/transfer.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transfer/transfer.ts#L88)
 
 ___
 

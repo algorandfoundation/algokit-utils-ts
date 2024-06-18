@@ -12,7 +12,7 @@ import Kmd = algosdk.Kmd
  * @deprecated Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnvironment()`
  * / `algorand.account.ensureFundedFromTestNetDispenserApi()` instead
  *
- * Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
+ * Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for Algos locked in minimum balance requirement).
  *
  * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
  *

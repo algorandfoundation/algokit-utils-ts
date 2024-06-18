@@ -32,4 +32,4 @@ Result from sending a single transaction.
 
 #### Defined in
 
-[src/types/algorand-client.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L14)
+[src/types/algorand-client.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L15)

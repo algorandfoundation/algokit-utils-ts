@@ -27,6 +27,7 @@ const client = algorand.client.getAppClientByCreatorAndName({
   app: appSpec,
   creatorAddress,
 })
+
 // With optional params
 const client = algorand.client.getAppClientByCreatorAndName({
   app: appSpec,
@@ -41,6 +42,7 @@ const client = algorand.client.getAppClientById({
   id: 12345,
   app: appSpec,
 })
+
 // With optional params
 const client = algorand.client.getAppClientById({
   id: 12345,

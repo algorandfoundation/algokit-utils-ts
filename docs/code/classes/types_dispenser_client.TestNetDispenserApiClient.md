@@ -78,7 +78,7 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 #### Defined in
 
-[src/types/dispenser-client.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L61)
+[src/types/dispenser-client.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L69)
 
 ## Properties
 
@@ -88,7 +88,7 @@ If neither the environment variable 'ALGOKIT_DISPENSER_ACCESS_TOKEN' nor the aut
 
 #### Defined in
 
-[src/types/dispenser-client.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L58)
+[src/types/dispenser-client.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L66)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[src/types/dispenser-client.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L59)
+[src/types/dispenser-client.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L67)
 
 ## Accessors
 
@@ -114,7 +114,7 @@ The authentication token used for API requests.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L77)
+[src/types/dispenser-client.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L85)
 
 ___
 
@@ -130,7 +130,7 @@ The timeout for API requests, in seconds.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L81)
+[src/types/dispenser-client.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L89)
 
 ## Methods
 
@@ -155,7 +155,7 @@ DispenserFundResponse: An object containing the transaction ID and funded amount
 
 #### Defined in
 
-[src/types/dispenser-client.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L142)
+[src/types/dispenser-client.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L150)
 
 ___
 
@@ -173,7 +173,7 @@ DispenserLimitResponse: An object containing the funding limit amount.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L168)
+[src/types/dispenser-client.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L176)
 
 ___
 
@@ -200,7 +200,7 @@ The API response.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L95)
+[src/types/dispenser-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L103)
 
 ___
 
@@ -222,4 +222,4 @@ Sends a refund request to the dispenser API for the specified refundTxnId.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L159)
+[src/types/dispenser-client.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L167)
