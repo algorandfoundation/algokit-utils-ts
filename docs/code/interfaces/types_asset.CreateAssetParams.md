@@ -21,8 +21,10 @@ Parameters for `createAsset` call.
 - [creator](types_asset.CreateAssetParams.md#creator)
 - [decimals](types_asset.CreateAssetParams.md#decimals)
 - [fee](types_asset.CreateAssetParams.md#fee)
+- [firstValid](types_asset.CreateAssetParams.md#firstvalid)
 - [freezeAccount](types_asset.CreateAssetParams.md#freezeaccount)
 - [frozenByDefault](types_asset.CreateAssetParams.md#frozenbydefault)
+- [lastValid](types_asset.CreateAssetParams.md#lastvalid)
 - [lease](types_asset.CreateAssetParams.md#lease)
 - [manager](types_asset.CreateAssetParams.md#manager)
 - [maxFee](types_asset.CreateAssetParams.md#maxfee)
@@ -118,6 +120,22 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 ___
 
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+The first round this transaction will be valid
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[firstValid](types_transaction.SendTransactionParams.md#firstvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
+
+___
+
 ### freezeAccount
 
 • `Optional` **freezeAccount**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -140,6 +158,22 @@ Whether to freeze holdings for this asset by default. If `true` then for anyone 
 #### Defined in
 
 [src/types/asset.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset.ts#L59)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+The last round this transaction will be valid
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[lastValid](types_transaction.SendTransactionParams.md#lastvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
 
 ___
 

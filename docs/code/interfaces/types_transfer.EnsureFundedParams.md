@@ -19,7 +19,9 @@ Parameters for `ensureFunded` call.
 - [accountToFund](types_transfer.EnsureFundedParams.md#accounttofund)
 - [atc](types_transfer.EnsureFundedParams.md#atc)
 - [fee](types_transfer.EnsureFundedParams.md#fee)
+- [firstValid](types_transfer.EnsureFundedParams.md#firstvalid)
 - [fundingSource](types_transfer.EnsureFundedParams.md#fundingsource)
+- [lastValid](types_transfer.EnsureFundedParams.md#lastvalid)
 - [lease](types_transfer.EnsureFundedParams.md#lease)
 - [maxFee](types_transfer.EnsureFundedParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transfer.EnsureFundedParams.md#maxroundstowaitforconfirmation)
@@ -78,6 +80,22 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 ___
 
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+The first round this transaction will be valid
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[firstValid](types_transaction.SendTransactionParams.md#firstvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
+
+___
+
 ### fundingSource
 
 • `Optional` **fundingSource**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom) \| [`TestNetDispenserApiClient`](../classes/types_dispenser_client.TestNetDispenserApiClient.md)
@@ -87,6 +105,22 @@ The account to use as a funding source, will default to using the dispenser acco
 #### Defined in
 
 [src/types/transfer.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L42)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+The last round this transaction will be valid
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[lastValid](types_transaction.SendTransactionParams.md#lastvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
 
 ___
 

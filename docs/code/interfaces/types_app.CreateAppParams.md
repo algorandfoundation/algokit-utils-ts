@@ -21,7 +21,9 @@ Parameters that are passed in when creating an app.
 - [atc](types_app.CreateAppParams.md#atc)
 - [clearStateProgram](types_app.CreateAppParams.md#clearstateprogram)
 - [fee](types_app.CreateAppParams.md#fee)
+- [firstValid](types_app.CreateAppParams.md#firstvalid)
 - [from](types_app.CreateAppParams.md#from)
+- [lastValid](types_app.CreateAppParams.md#lastvalid)
 - [maxFee](types_app.CreateAppParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_app.CreateAppParams.md#maxroundstowaitforconfirmation)
 - [note](types_app.CreateAppParams.md#note)
@@ -115,6 +117,22 @@ CreateOrUpdateAppParams.fee
 
 ___
 
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+The first round this transaction will be valid
+
+#### Inherited from
+
+CreateOrUpdateAppParams.firstValid
+
+#### Defined in
+
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
+
+___
+
 ### from
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -128,6 +146,22 @@ CreateOrUpdateAppParams.from
 #### Defined in
 
 [src/types/app.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L123)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+The last round this transaction will be valid
+
+#### Inherited from
+
+CreateOrUpdateAppParams.lastValid
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
 
 ___
 

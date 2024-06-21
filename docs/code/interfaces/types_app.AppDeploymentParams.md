@@ -24,7 +24,9 @@ The parameters to deploy an app
 - [deployTimeParams](types_app.AppDeploymentParams.md#deploytimeparams)
 - [existingDeployments](types_app.AppDeploymentParams.md#existingdeployments)
 - [fee](types_app.AppDeploymentParams.md#fee)
+- [firstValid](types_app.AppDeploymentParams.md#firstvalid)
 - [from](types_app.AppDeploymentParams.md#from)
+- [lastValid](types_app.AppDeploymentParams.md#lastvalid)
 - [maxFee](types_app.AppDeploymentParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_app.AppDeploymentParams.md#maxroundstowaitforconfirmation)
 - [metadata](types_app.AppDeploymentParams.md#metadata)
@@ -146,6 +148,22 @@ Omit.fee
 
 ___
 
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+The first round this transaction will be valid
+
+#### Inherited from
+
+Omit.firstValid
+
+#### Defined in
+
+[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
+
+___
+
 ### from
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -159,6 +177,22 @@ Omit.from
 #### Defined in
 
 [src/types/app.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L123)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+The last round this transaction will be valid
+
+#### Inherited from
+
+Omit.lastValid
+
+#### Defined in
+
+[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
 
 ___
 
