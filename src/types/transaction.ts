@@ -43,9 +43,9 @@ export interface SendTransactionParams {
   maxRoundsToWaitForConfirmation?: number
   /** **WARNING**: Not recommended for production use due to https://github.com/algorand/go-algorand/issues/5914. Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.  */
   populateAppCallResources?: boolean
-  /** The first round this transaction will be valid */
+  /** If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod */
   firstValid?: number
-  /** The last round this transaction will be valid */
+  /** If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod */
   lastValid?: number
 }
 

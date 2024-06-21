@@ -107,7 +107,7 @@ ___
 
 • `Optional` **firstValid**: `number`
 
-The first round this transaction will be valid
+If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod
 
 #### Inherited from
 
@@ -135,7 +135,7 @@ ___
 
 • `Optional` **lastValid**: `number`
 
-The last round this transaction will be valid
+If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod
 
 #### Inherited from
 
