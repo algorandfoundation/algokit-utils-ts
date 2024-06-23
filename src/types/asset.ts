@@ -3,7 +3,7 @@ import { AlgoAmount } from './amount'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import SuggestedParams = algosdk.SuggestedParams
 
-/** Parameters for `createAsset` call. */
+/** @deprecated Parameters for `createAsset` call. */
 export interface CreateAssetParams extends SendTransactionParams {
   /** The account to create the asset.
    *
@@ -66,7 +66,7 @@ export interface CreateAssetParams extends SendTransactionParams {
   lease?: string | Uint8Array
 }
 
-/** Parameters for `assetOptIn` call. */
+/** @deprecated Parameters for `assetOptIn` call. */
 export interface AssetOptInParams extends SendTransactionParams {
   /** The account to opt in/out for */
   account: SendTransactionFrom
@@ -80,7 +80,7 @@ export interface AssetOptInParams extends SendTransactionParams {
   lease?: string | Uint8Array
 }
 
-/** Parameters for `assetOptOut` call. */
+/** @deprecated Parameters for `assetOptOut` call. */
 export interface AssetOptOutParams extends AssetOptInParams {
   /** The address of the creator account for the asset; if unspecified then it looks it up using algod */
   assetCreatorAddress?: string
@@ -88,7 +88,7 @@ export interface AssetOptOutParams extends AssetOptInParams {
   ensureZeroBalance?: boolean
 }
 
-/** Parameters for `assetBulkOptIn` / `assetBulkOptOut` call. */
+/** @deprecated Parameters for `assetBulkOptIn` / `assetBulkOptOut` call. */
 export interface AssetBulkOptInOutParams {
   /** The account to opt in/out for */
   account: SendTransactionFrom

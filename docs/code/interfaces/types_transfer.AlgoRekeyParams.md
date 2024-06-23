@@ -4,6 +4,8 @@
 
 [types/transfer](../modules/types_transfer.md).AlgoRekeyParams
 
+**`Deprecated`**
+
 Parameters for `rekeyAccount` call.
 
 ## Hierarchy

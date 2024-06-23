@@ -4,10 +4,10 @@ import { AlgoAmount } from './amount'
 
 describe('amount', () => {
   test('toString on 1', () => {
-    expect(`${microAlgos(1)}`).toBe(`1 µALGO`)
+    expect(`${microAlgos(1)}`).toBe(`1 µAlgo`)
   })
   test('toString on big amount', () => {
-    expect(`${algos(100)}`).toBe(`100,000,000 µALGOs`)
+    expect(`${algos(100)}`).toBe(`100,000,000 µAlgos`)
   })
   test('microalgos to microalgos', () => {
     expect(microAlgos(100).microAlgos).toBe(100)

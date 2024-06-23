@@ -4,6 +4,8 @@
 
 [types/asset](../modules/types_asset.md).CreateAssetParams
 
+**`Deprecated`**
+
 Parameters for `createAsset` call.
 
 ## Hierarchy

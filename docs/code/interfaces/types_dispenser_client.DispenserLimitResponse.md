@@ -4,6 +4,8 @@
 
 [types/dispenser-client](../modules/types_dispenser_client.md).DispenserLimitResponse
 
+The TestNet Dispenser API response when getting the current limit.
+
 ## Table of contents
 
 ### Properties
@@ -16,6 +18,8 @@
 
 • **amount**: `number`
 
+The limit, in microAlgos, that you can currently fund.
+
 #### Defined in
 
-[src/types/dispenser-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L23)
+[src/types/dispenser-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L28)

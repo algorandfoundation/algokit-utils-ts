@@ -39,7 +39,7 @@ import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import withing the {} in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
 
 > [!WARNING]
-> Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as`):
+> Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as algokit`):
 >
 > ```typescript
 > import * as algokit from '@algorandfoundation/algokit-utils'
@@ -47,7 +47,7 @@ As well as `AlgorandClient` and `Config`, you can use intellisense to auto-compl
 >
 > This version will still work, but it exposes an older, function-based interface to the functionality that is in the process of being deprecated. The recommended way to use AlgoKit Utils is via the `AlgorandClient` class mentioned below, which is easier and more convenient to use. Some functionality won't yet be migrated to the new approach and this old approach will be needed, but the documentation pages will indicate when this is the case.
 
-The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `algokit.AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
+The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
 
 ```typescript
 // Point to the network configured through environment variables or
@@ -155,29 +155,21 @@ algokit.Config.withDebug(() => {
 The library helps you interact with and develop against the Algorand blockchain with a series of end-to-end capabilities as described below:
 
 - [**AlgorandClient**](./capabilities/algorand-client.md) - The key entrypoint to the AlgoKit Utils functionality
-- Core capabilities
-  - [**Client management**](./capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration
-  - [**Account management**](./capabilities/account.md) - Creation and use of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
-  - [**Algo amount handling**](./capabilities/amount.md) - Reliable and terse specification of microAlgo and Algo amounts and conversion between them
-  - [**Transaction management**](./capabilities/transaction.md) - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
-- Higher-order use cases
-  - [**App management**](./capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
-  - [**App deployment**](./capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
-  - [**ARC-0032 Application Spec client**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
-  - [**Algo transfers**](./capabilities/transfer.md) - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
+- **Core capabilities**
+  - [**Client management**](./capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration, and creation of other API clients (e.g. TestNet Dispenser API and app clients)
+  - [**Account management**](./capabilities/account.md) - Creation, use, and management of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
+  - [**Algo amount handling**](./capabilities/amount.md) - Reliable, explicit, and terse specification of microAlgo and Algo amounts and safe conversion between them
+  - [**Transaction management**](./capabilities/transaction.md) - Ability to construct and send single and atomically grouped transactions with consistent and highly configurable semantics, including configurable control of transaction notes, logging, fees, validity, signing, and sending behaviour
+- **Higher-order use cases**
+  - [**Asset management**](./capabilities/asset.md) - Creation, transfer, destroying, opting in and out and managing Algorand Standard Assets
+  - [**Typed application clients**](./capabilities/typed-app-clients.md) - Type-safe application clients that are [generated](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients) from ARC-0032 application spec files and allow you to intuitively and productively interact with a deployed app, which is the recommended way of interacting with apps and builds on top of the following capabilities:
+    - [**ARC-0032 Application Spec client**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts
+    - [**App management**](./capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
+    - [**App deployment**](./capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
+  - [**Algo transfers (payments)**](./capabilities/transfer.md) - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
   - [**Automated testing**](./capabilities/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
-  - [**Indexer lookups / searching**](./capabilities/indexer.md) - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
+  - [**Indexer lookups / searching**](./capabilities/indexer.md) - Type-safe indexer API wrappers (no `Record<string, any>` pain from the SDK client), including automatic pagination control
 
 # Reference documentation
 
 We have [auto-generated reference documentation for the code](./code/README.md).
-
-# Roadmap
-
-This library will naturally evolve with any logical developer experience improvements needed to facilitate the [AlgoKit](https://github.com/algorandfoundation/algokit-cli) roadmap as it evolves.
-
-Likely future capability additions include:
-
-- Typed application client (similar to [beaker-ts](https://github.com/algorand-devrel/beaker-ts))
-- Asset management
-- Expanded indexer API wrapper support

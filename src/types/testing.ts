@@ -57,7 +57,7 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   indexer?: Indexer
   /** An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   kmd?: Kmd
-  /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGOs. */
+  /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 Algos. */
   testAccountFunding?: AlgoAmount
   /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
   accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>

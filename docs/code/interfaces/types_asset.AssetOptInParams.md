@@ -4,6 +4,8 @@
 
 [types/asset](../modules/types_asset.md).AssetOptInParams
 
+**`Deprecated`**
+
 Parameters for `assetOptIn` call.
 
 ## Hierarchy

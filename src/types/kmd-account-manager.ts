@@ -127,7 +127,7 @@ export class KmdAccountManager {
     Config.logger.info(
       `LocalNet account '${name}' doesn't yet exist; created account ${account.addr} with keys stored in KMD and funding with ${
         fundWith?.algos ?? 1000
-      } ALGOs`,
+      } Algos`,
     )
 
     // Fund the account from the dispenser

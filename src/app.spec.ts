@@ -50,7 +50,7 @@ describe('app', () => {
     )
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(rekeyTo, testAccount.addr)
+    const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
     await algokit.transferAlgos(
       {
         amount: (0).algos(),

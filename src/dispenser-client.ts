@@ -1,7 +1,7 @@
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './types/dispenser-client'
 
 /**
- * @deprecated Use `clientManager.getTestNetDispenser` instead
+ * @deprecated Use `clientManager.getTestNetDispenser` or `clientManager.getTestNetDispenserFromEnvironment` instead
  *
  * Create a new TestNetDispenserApiClient instance.
  * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
@@ -19,5 +19,5 @@ import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './ty
  * @returns An instance of the TestNetDispenserApiClient class.
  */
 export function getTestNetDispenserApiClient(params: TestNetDispenserApiClientParams | null = null) {
-  return new TestNetDispenserApiClient(params)
+  return new TestNetDispenserApiClient(params === null ? undefined : params)
 }

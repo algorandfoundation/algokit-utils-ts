@@ -19,7 +19,7 @@ export class AlgoAmount {
   }
 
   toString(): string {
-    return `${this.microAlgos.toLocaleString('en-US')} µALGO${this.microAlgos === 1 ? '' : 's'}`
+    return `${this.microAlgos.toLocaleString('en-US')} µAlgo${this.microAlgos === 1 ? '' : 's'}`
   }
 
   /** valueOf allows you to use `AlgoAmount` in comparison operations such as `<` and `>=` etc.,

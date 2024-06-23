@@ -48,8 +48,8 @@ describe('transaction', () => {
       )
     }).rejects.toThrowError(
       'Cancelled transaction due to high network congestion fees. ' +
-        'Algorand suggested fees would cause this transaction to cost 1000 µALGOs. ' +
-        'Cap for this transaction is 1 µALGOs.',
+        'Algorand suggested fees would cause this transaction to cost 1000 µAlgos. ' +
+        'Cap for this transaction is 1 µAlgos.',
     )
   })
 
@@ -790,12 +790,7 @@ describe('Resource Packer: meta', () => {
 
     const authAddr = algorand.account.random().account
 
-    await algorand.send.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
-      rekeyTo: authAddr.addr,
-      amount: algokit.microAlgos(0),
-    })
+    await algorand.account.rekeyAccount(testAccount.addr, authAddr.addr)
 
     await externalClient.fundAppAccount(algokit.microAlgos(200_000))
 

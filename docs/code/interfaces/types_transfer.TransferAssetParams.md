@@ -4,6 +4,8 @@
 
 [types/transfer](../modules/types_transfer.md).TransferAssetParams
 
+**`Deprecated`**
+
 Parameters for `transferAsset` call.
 
 ## Hierarchy

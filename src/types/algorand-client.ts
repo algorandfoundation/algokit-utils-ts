@@ -1,12 +1,15 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
-import { TransactionSignerAccount } from './account'
+import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
+import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import AlgokitComposer, { ExecuteParams, MethodCallParams } from './composer'
+import AlgokitComposer, { AssetCreateParams, AssetOptOutParams, ExecuteParams, MethodCallParams } from './composer'
 import { AlgoConfig } from './network-client'
-import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults, SendTransactionFrom } from './transaction'
+import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
+import Account = algosdk.Account
+import LogicSigAccount = algosdk.LogicSigAccount
 
 /** Result from sending a single transaction. */
 export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
@@ -17,6 +20,7 @@ export type SendSingleTransactionResult = SendAtomicTransactionComposerResults &
 export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
+  private _assetManager: AssetManager
 
   private _cachedSuggestedParams?: algosdk.SuggestedParams
   private _cachedSuggestedParamsExpiry?: Date
@@ -27,6 +31,7 @@ export class AlgorandClient {
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config)
     this._accountManager = new AccountManager(this._clientManager)
+    this._assetManager = new AssetManager(this._clientManager)
   }
 
   /**
@@ -51,10 +56,22 @@ export class AlgorandClient {
 
   /**
    * Tracks the given account for later signing.
-   * @param account The account to register
+   * @param account The account to register, which can be a `TransactionSignerAccount` or
+   *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
+   * @example
+   * ```typescript
+   * const accountManager = AlgorandClient.mainnet()
+   *  .setSignerFromAccount(algosdk.generateAccount())
+   *  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
+   *  .setSignerFromAccount(new SigningAccount(mnemonic, sender))
+   *  .setSignerFromAccount(new MultisigAccount({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]}, [account1, account2]))
+   *  .setSignerFromAccount({addr: "SENDERADDRESS", signer: transactionSigner})
+   * ```
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSignerFromAccount(account: TransactionSignerAccount | SendTransactionFrom) {
+  public setSignerFromAccount(
+    account: TransactionSignerAccount | TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount,
+  ) {
     this._accountManager.setSignerFromAccount(account)
     return this
   }
@@ -93,7 +110,7 @@ export class AlgorandClient {
   }
 
   /** Get suggested params for a transaction (either cached or from algod if the cache is stale or empty) */
-  async getSuggestedParams(): Promise<algosdk.SuggestedParams> {
+  public async getSuggestedParams(): Promise<algosdk.SuggestedParams> {
     if (this._cachedSuggestedParams && (!this._cachedSuggestedParamsExpiry || this._cachedSuggestedParamsExpiry > new Date())) {
       return {
         ...this._cachedSuggestedParams,
@@ -118,8 +135,13 @@ export class AlgorandClient {
     return this._accountManager
   }
 
+  /** Methods for interacting with assets. */
+  public get asset() {
+    return this._assetManager
+  }
+
   /** Start a new `AlgokitComposer` transaction group */
-  newGroup() {
+  public newGroup() {
     return new AlgokitComposer({
       algod: this.client.algod,
       getSigner: (addr: string) => this.account.getSigner(addr),
@@ -134,8 +156,8 @@ export class AlgorandClient {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
     },
-  ): (params: T, config?: ExecuteParams) => Promise<SendSingleTransactionResult> {
-    return async (params, config) => {
+  ): (params: T & ExecuteParams) => Promise<SendSingleTransactionResult> {
+    return async (params) => {
       const composer = this.newGroup()
 
       // Ensure `this` is properly populated
@@ -143,10 +165,10 @@ export class AlgorandClient {
 
       if (log?.preLog) {
         const transaction = (await composer.build()).transactions.at(-1)!.txn
-        Config.getLogger(config?.suppressLog).debug(log.preLog(params, transaction))
+        Config.getLogger(params?.suppressLog).debug(log.preLog(params, transaction))
       }
 
-      const rawResult = await composer.execute(config)
+      const rawResult = await composer.execute(params)
       const result = {
         // Last item covers when a group is created by an app call with ABI transaction parameters
         transaction: rawResult.transactions[rawResult.transactions.length - 1],
@@ -156,7 +178,7 @@ export class AlgorandClient {
       }
 
       if (log?.postLog) {
-        Config.getLogger(config?.suppressLog).debug(log.postLog(params, result))
+        Config.getLogger(params?.suppressLog).debug(log.postLog(params, result))
       }
 
       return result
@@ -166,53 +188,389 @@ export class AlgorandClient {
   /**
    * Methods for sending a single transaction.
    */
-  send = {
+  public send = {
     /**
-     * Send a payment transaction.
+     * Send a payment transaction to transfer Algos between accounts.
+     * @param params The parameters for the payment transaction
+     * @example Basic example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *  sender: 'SENDERADDRESS',
+     *  receiver: 'RECEIVERADDRESS',
+     *  amount: (4).algos(),
+     * })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *   amount: (4).algos(),
+     *   receiver: 'RECEIVERADDRESS',
+     *   sender: 'SENDERADDRESS',
+     *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+     *   rekeyTo: 'REKEYTOADDRESS',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     *
+     * @returns The result of the transaction and the transaction that was sent
      */
     payment: this._send((c) => c.addPayment, {
       preLog: (params, transaction) =>
-        `Sending ${params.amount.microAlgos} µALGOs from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+        `Sending ${params.amount.microAlgos} µAlgos from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
     }),
     /**
-     * Create an asset.
+     * Create a new Algorand Standard Asset.
+     *
+     * The account that sends this transaction will automatically be
+     * opted in to the asset and will hold all units after creation.
+     *
+     * @param params The parameters for the asset creation transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.send.assetCreate({sender: "CREATORADDRESS", total: 100n})
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.send.assetCreate({
+     *   sender: 'CREATORADDRESS',
+     *   total: 100n,
+     *   decimals: 2,
+     *   assetName: 'asset',
+     *   unitName: 'unit',
+     *   url: 'url',
+     *   metadataHash: 'metadataHash',
+     *   defaultFrozen: false,
+     *   manager: 'MANAGERADDRESS',
+     *   reserve: 'RESERVEADDRESS',
+     *   freeze: 'FREEZEADDRESS',
+     *   clawback: 'CLAWBACKADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
      */
-    assetCreate: this._send((c) => c.addAssetCreate, {
-      postLog: (params, result) =>
-        `Created asset${params.assetName ? ` ${params.assetName} ` : ''}${params.unitName ? ` (${params.unitName}) ` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
-    }),
+    assetCreate: async (params: AssetCreateParams & ExecuteParams) => {
+      const result = await this._send((c) => c.addAssetCreate, {
+        postLog: (params, result) =>
+          `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
+      })(params)
+      return { ...result, assetId: BigInt(result.confirmation.assetIndex ?? 0) }
+    },
     /**
-     * Configure an existing asset.
+     * Configure an existing Algorand Standard Asset.
+     *
+     * **Note:** The manager, reserve, freeze, and clawback addresses
+     * are immutably empty if they are not set. If manager is not set then
+     * all fields are immutable from that point forward.
+     *
+     * @param params The parameters for the asset config transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.send.assetConfig({sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.send.assetCreate({
+     *   sender: 'MANAGERADDRESS',
+     *   assetId: 123456n,
+     *   manager: 'MANAGERADDRESS',
+     *   reserve: 'RESERVEADDRESS',
+     *   freeze: 'FREEZEADDRESS',
+     *   clawback: 'CLAWBACKADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
      */
     assetConfig: this._send((c) => c.addAssetConfig, {
       preLog: (params, transaction) => `Configuring asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
     }),
     /**
-     * Freeze or unfreeze an asset.
+     * Freeze or unfreeze an Algorand Standard Asset for an account.
+     *
+     * @param params The parameters for the asset freeze transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.send.assetFreeze({sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.send.assetFreeze({
+     *   sender: 'MANAGERADDRESS',
+     *   assetId: 123456n,
+     *   account: 'ACCOUNTADDRESS',
+     *   frozen: true,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
      */
     assetFreeze: this._send((c) => c.addAssetFreeze, {
       preLog: (params, transaction) => `Freezing asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
     }),
     /**
-     * Destroy an asset.
+     * Destroys an Algorand Standard Asset.
+     *
+     * Created assets can be destroyed only by the asset manager account.
+     * All of the assets must be owned by the creator of the asset before
+     * the asset can be deleted.
+     *
+     * @param params The parameters for the asset destroy transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.send.assetDestroy({sender: "MANAGERADDRESS", assetId: 123456n })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.send.assetDestroy({
+     *   sender: 'MANAGERADDRESS',
+     *   assetId: 123456n,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
      */
     assetDestroy: this._send((c) => c.addAssetDestroy, {
       preLog: (params, transaction) => `Destroying asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
     }),
     /**
-     * Transfer an asset.
+     * Transfer an Algorand Standard Asset.
+     *
+     * @param params The parameters for the asset transfer transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.send.assetTransfer({sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+     * ```
+     * @example Advanced example (with clawback)
+     * ```typescript
+     * await algorand.send.assetTransfer({
+     *   sender: 'CLAWBACKADDRESS',
+     *   assetId: 123456n,
+     *   amount: 1n,
+     *   receiver: 'RECEIVERADDRESS',
+     *   clawbackTarget: 'HOLDERADDRESS',
+     *   // This field needs to be used with caution
+     *   closeAssetTo: 'ADDRESSTOCLOSETO'
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
      */
     assetTransfer: this._send((c) => c.addAssetTransfer, {
       preLog: (params, transaction) =>
         `Transferring ${params.amount} units of asset with ID ${params.assetId} from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
     }),
     /**
-     * Opt an account into an asset.
+     * Opt an account into an Algorand Standard Asset.
+     *
+     * @param params The parameters for the asset opt-in transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.send.assetOptIn({sender: "SENDERADDRESS", assetId: 123456n })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.send.assetOptIn({
+     *   sender: 'SENDERADDRESS',
+     *   assetId: 123456n,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
      */
     assetOptIn: this._send((c) => c.addAssetOptIn, {
       preLog: (params, transaction) =>
         `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
     }),
+    /**
+     * Opt an account out of an Algorand Standard Asset.
+     *
+     * *Note:* If the account has a balance of the asset,
+     * it will not be able to opt-out unless `ensureZeroBalance`
+     * is set to `false` (but then the account will lose the assets).
+     *
+     * @param params The parameters for the asset opt-out transaction
+     *
+     * @example Basic example (without creator)
+     * ```typescript
+     * await algorand.send.assetOptOut({sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
+     * ```
+     * @example Basic example (with creator)
+     * ```typescript
+     * await algorand.send.assetOptOut({sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n, ensureZeroBalance: true })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.send.assetOptOut({
+     *   sender: 'SENDERADDRESS',
+     *   assetId: 123456n,
+     *   creator: 'CREATORADDRESS',
+     *   ensureZeroBalance: true,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     *   // Signer only needed if you want to provide one,
+     *   //  generally you'd register it with AlgorandClient
+     *   //  against the sender and not need to pass it in
+     *   signer: transactionSigner,
+     *   maxRoundsToWaitForConfirmation: 5,
+     *   suppressLog: true,
+     * })
+     * ```
+     * @returns The result of the transaction and the transaction that was sent
+     */
+    assetOptOut: async (
+      params: Omit<AssetOptOutParams, 'creator'> & {
+        /** Optional asset creator account address; if not specified it will be retrieved from algod */
+        creator?: string
+        /** Whether or not to check if the account has a zero balance first or not.
+         *
+         * If this is set to `true` and the account has an asset balance it will throw an error.
+         *
+         * If this is set to `false` and the account has an asset balance it will lose those assets to the asset creator.
+         */
+        ensureZeroBalance: boolean
+      } & ExecuteParams,
+    ) => {
+      if (params.ensureZeroBalance) {
+        let balance = 0n
+        try {
+          const accountAssetInfo = await this.account.getAssetInformation(params.sender, params.assetId)
+          balance = accountAssetInfo.balance
+        } catch (e) {
+          throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)
+        }
+        if (balance !== 0n) {
+          throw new Error(`Account ${params.sender} does not have a zero balance for Asset ${params.assetId}; can't opt-out.`)
+        }
+      }
+
+      params.creator = params.creator ?? (await this.asset.getById(params.assetId)).creator
+
+      return await this._send((c) => c.addAssetOptOut, {
+        preLog: (params, transaction) =>
+          `Opting ${params.sender} out of asset with ID ${params.assetId} to creator ${params.creator} via transaction ${transaction.txID()}`,
+      })(params as AssetOptOutParams & ExecuteParams)
+    },
     /**
      * Call a smart contract.
      *
@@ -242,21 +600,276 @@ export class AlgorandClient {
   /**
    * Methods for building transactions
    */
-  transactions = {
-    /** Create a payment transaction. */
+  public transactions = {
+    /**
+     * Create a payment transaction to transfer Algos between accounts.
+     * @param params The parameters for the payment transaction
+     * @example Basic example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *  sender: 'SENDERADDRESS',
+     *  receiver: 'RECEIVERADDRESS',
+     *  amount: (4).algos(),
+     * })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * const result = await algorandClient.send.payment({
+     *   amount: (4).algos(),
+     *   receiver: 'RECEIVERADDRESS',
+     *   sender: 'SENDERADDRESS',
+     *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+     *   rekeyTo: 'REKEYTOADDRESS',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     *
+     * @returns The payment transaction
+     */
     payment: this._transaction((c) => c.addPayment),
-    /** Create an asset creation transaction. */
+    /** Create a create Algorand Standard Asset transaction.
+     *
+     * The account that sends this transaction will automatically be
+     * opted in to the asset and will hold all units after creation.
+     *
+     * @param params The parameters for the asset creation transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transaction.assetCreate({sender: "CREATORADDRESS", total: 100n})
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.transaction.assetCreate({
+     *   sender: 'CREATORADDRESS',
+     *   total: 100n,
+     *   decimals: 2,
+     *   assetName: 'asset',
+     *   unitName: 'unit',
+     *   url: 'url',
+     *   metadataHash: 'metadataHash',
+     *   defaultFrozen: false,
+     *   manager: 'MANAGERADDRESS',
+     *   reserve: 'RESERVEADDRESS',
+     *   freeze: 'FREEZEADDRESS',
+     *   clawback: 'CLAWBACKADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The asset create transaction
+     */
     assetCreate: this._transaction((c) => c.addAssetCreate),
-    /** Create an asset config transaction. */
+    /** Create an asset config transaction to reconfigure an existing Algorand Standard Asset.
+     *
+     * **Note:** The manager, reserve, freeze, and clawback addresses
+     * are immutably empty if they are not set. If manager is not set then
+     * all fields are immutable from that point forward.
+     *
+     * @param params The parameters for the asset config transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transaction.assetConfig({sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.transaction.assetCreate({
+     *   sender: 'MANAGERADDRESS',
+     *   assetId: 123456n,
+     *   manager: 'MANAGERADDRESS',
+     *   reserve: 'RESERVEADDRESS',
+     *   freeze: 'FREEZEADDRESS',
+     *   clawback: 'CLAWBACKADDRESS',
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The asset config transaction
+     */
     assetConfig: this._transaction((c) => c.addAssetConfig),
-    /** Create an asset freeze transaction. */
+    /** Create an Algorand Standard Asset freeze transaction.
+     *
+     * @param params The parameters for the asset freeze transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transaction.assetFreeze({sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.transaction.assetFreeze({
+     *   sender: 'MANAGERADDRESS',
+     *   assetId: 123456n,
+     *   account: 'ACCOUNTADDRESS',
+     *   frozen: true,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The asset freeze transaction
+     */
     assetFreeze: this._transaction((c) => c.addAssetFreeze),
-    /** Create an asset destroy transaction. */
+    /** Create an Algorand Standard Asset destroy transaction.
+     *
+     * Created assets can be destroyed only by the asset manager account.
+     * All of the assets must be owned by the creator of the asset before
+     * the asset can be deleted.
+     *
+     * @param params The parameters for the asset destroy transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transaction.assetDestroy({sender: "MANAGERADDRESS", assetId: 123456n })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.transaction.assetDestroy({
+     *   sender: 'MANAGERADDRESS',
+     *   assetId: 123456n,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The asset destroy transaction
+     */
     assetDestroy: this._transaction((c) => c.addAssetDestroy),
-    /** Create an asset transfer transaction. */
+    /** Create an Algorand Standard Asset transfer transaction.
+     *
+     * @param params The parameters for the asset transfer transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transaction.assetTransfer({sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+     * ```
+     * @example Advanced example (with clawback)
+     * ```typescript
+     * await algorand.transaction.assetTransfer({
+     *   sender: 'CLAWBACKADDRESS',
+     *   assetId: 123456n,
+     *   amount: 1n,
+     *   receiver: 'RECEIVERADDRESS',
+     *   clawbackTarget: 'HOLDERADDRESS',
+     *   // This field needs to be used with caution
+     *   closeAssetTo: 'ADDRESSTOCLOSETO'
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The result of the asset transfer transaction
+     */
     assetTransfer: this._transaction((c) => c.addAssetTransfer),
-    /** Create an asset opt-in transaction. */
+    /** Create an Algorand Standard Asset opt-in transaction.
+     *
+     * @param params The parameters for the asset opt-in transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transaction.assetOptIn({sender: "SENDERADDRESS", assetId: 123456n })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.transaction.assetOptIn({
+     *   sender: 'SENDERADDRESS',
+     *   assetId: 123456n,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The asset opt-in transaction
+     */
     assetOptIn: this._transaction((c) => c.addAssetOptIn),
+    /** Create an asset opt-out transaction.
+     *
+     * *Note:* If the account has a balance of the asset,
+     * it will lose those assets
+     *
+     * @param params The parameters for the asset opt-out transaction
+     *
+     * @example Basic example
+     * ```typescript
+     * await algorand.transaction.assetOptOut({sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n })
+     * ```
+     * @example Advanced example
+     * ```typescript
+     * await algorand.transaction.assetOptIn({
+     *   sender: 'SENDERADDRESS',
+     *   assetId: 123456n,
+     *   creator: 'CREATORADDRESS',
+     *   ensureZeroBalance: true,
+     *   lease: 'lease',
+     *   note: 'note',
+     *   // You wouldn't normally set this field
+     *   firstValidRound: 1000n,
+     *   validityWindow: 10,
+     *   extraFee: (1000).microAlgos(),
+     *   staticFee: (1000).microAlgos(),
+     *   // Max fee doesn't make sense with extraFee AND staticFee
+     *   //  already specified, but here for completeness
+     *   maxFee: (3000).microAlgos(),
+     * })
+     * ```
+     * @returns The asset opt-out transaction
+     */
+    assetOptOut: this._transaction((c) => c.addAssetOptOut),
     /** Create an application call transaction. */
     appCall: this._transaction((c) => c.addAppCall),
     /** Create an application call with ABI method call transaction. */
