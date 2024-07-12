@@ -217,12 +217,11 @@ export class ClientManager {
   /**
    * Retrieve client configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment)
    *
-   * If `process.env.ALGOD_SERVER` is defined it will use that along with optional `process.env.ALGOD_PORT` and `process.env.ALGOD_TOKEN`.
+   * If both `process.env.INDEXER_SERVER` and `process.env.ALGOD_SERVER` is defined it will use both along with optional `process.env.ALGOD_PORT`, `process.env.ALGOD_TOKEN`, `process.env.INDEXER_PORT` and `process.env.INDEXER_TOKEN`.
    *
-   * If `process.env.INDEXER_SERVER` is defined it will use that along with optional `process.env.INDEXER_PORT` and `process.env.INDEXER_TOKEN`.
+   * If only `process.env.ALGOD_SERVER` is defined it will use this along with optional `process.env.ALGOD_PORT` and `process.env.ALGOD_TOKEN` and leave indexer as `undefined`.
    *
-   * If either aren't defined it will use the default LocalNet config, noting if `process.env.ALGOD_SERVER` is specified, but
-   * `process.env.INDEXER_SERVER` isn't then it will leave indexer as `undefined`.
+   * If only `process.env.INDEXER_SERVER` is defined it will use the default (LocalNet) configuration for both algod and indexer.
    *
    * It will return a KMD configuration that uses `process.env.KMD_PORT` (or port 4002) if `process.env.ALGOD_SERVER` is defined,
    * otherwise it will use the default LocalNet config unless it detects testnet or mainnet.
@@ -236,24 +235,24 @@ export class ClientManager {
     if (!process || !process.env) {
       throw new Error('Attempt to get default client configuration from a non Node.js context; supply the config instead')
     }
-    const algodConfig = !process.env.ALGOD_SERVER
-      ? ClientManager.getDefaultLocalNetConfig('algod')
-      : ClientManager.getAlgodConfigFromEnvironment()
-
-    const indexerConfig = !process.env.INDEXER_SERVER
-      ? ClientManager.getDefaultLocalNetConfig('indexer')
-      : !process.env.ALGOD_SERVER
-        ? ClientManager.getIndexerConfigFromEnvironment()
-        : undefined
+    const [algodConfig, indexerConfig, kmdConfig] = process.env.ALGOD_SERVER
+      ? [
+          ClientManager.getAlgodConfigFromEnvironment(),
+          process.env.INDEXER_SERVER ? ClientManager.getIndexerConfigFromEnvironment() : undefined,
+          !process.env.ALGOD_SERVER.includes('mainnet') && !process.env.ALGOD_SERVER.includes('testnet')
+            ? { ...ClientManager.getAlgodConfigFromEnvironment(), port: process?.env?.KMD_PORT ?? '4002' }
+            : undefined,
+        ]
+      : [
+          ClientManager.getDefaultLocalNetConfig('algod'),
+          ClientManager.getDefaultLocalNetConfig('indexer'),
+          ClientManager.getDefaultLocalNetConfig('kmd'),
+        ]
 
     return {
       algodConfig,
       indexerConfig,
-      kmdConfig: process.env.ALGOD_SERVER
-        ? process.env.ALGOD_SERVER.includes('mainnet') || process.env.ALGOD_SERVER.includes('testnet')
-          ? undefined
-          : { ...algodConfig, port: process?.env?.KMD_PORT ?? '4002' }
-        : ClientManager.getDefaultLocalNetConfig('kmd'),
+      kmdConfig,
     }
   }
 
