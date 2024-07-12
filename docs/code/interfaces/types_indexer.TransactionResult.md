@@ -228,7 +228,7 @@ ___
 
 ### global-state-delta
 
-• `Optional` **global-state-delta**: [`GlobalStateDelta`](types_indexer.GlobalStateDelta.md)[]
+• `Optional` **global-state-delta**: [`StateDelta`](../modules/types_indexer.md#statedelta)
 
 [gd] Global state key/value changes for the application being executed by this transaction.
 
@@ -336,7 +336,7 @@ ___
 
 ### local-state-delta
 
-• `Optional` **local-state-delta**: [`LocalStateDelta`](types_indexer.LocalStateDelta.md)[]
+• `Optional` **local-state-delta**: [`AccountStateDelta`](types_indexer.AccountStateDelta.md)[]
 
 [ld] Local state key/value changes for the application being executed by this transaction.
 

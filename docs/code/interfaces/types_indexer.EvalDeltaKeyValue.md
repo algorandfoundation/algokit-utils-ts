@@ -1,15 +1,15 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/indexer](../modules/types_indexer.md) / GlobalStateDelta
+[@algorandfoundation/algokit-utils](../README.md) / [types/indexer](../modules/types_indexer.md) / EvalDeltaKeyValue
 
-# Interface: GlobalStateDelta
+# Interface: EvalDeltaKeyValue
 
-[types/indexer](../modules/types_indexer.md).GlobalStateDelta
+[types/indexer](../modules/types_indexer.md).EvalDeltaKeyValue
 
 ## Table of contents
 
 ### Properties
 
-- [key](types_indexer.GlobalStateDelta.md#key)
-- [value](types_indexer.GlobalStateDelta.md#value)
+- [key](types_indexer.EvalDeltaKeyValue.md#key)
+- [value](types_indexer.EvalDeltaKeyValue.md#value)
 
 ## Properties
 

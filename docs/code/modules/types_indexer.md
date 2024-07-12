@@ -15,6 +15,7 @@
 - [AccountLookupResult](../interfaces/types_indexer.AccountLookupResult.md)
 - [AccountParticipation](../interfaces/types_indexer.AccountParticipation.md)
 - [AccountResult](../interfaces/types_indexer.AccountResult.md)
+- [AccountStateDelta](../interfaces/types_indexer.AccountStateDelta.md)
 - [AppLocalState](../interfaces/types_indexer.AppLocalState.md)
 - [ApplicationCreatedLookupResult](../interfaces/types_indexer.ApplicationCreatedLookupResult.md)
 - [ApplicationLookupResult](../interfaces/types_indexer.ApplicationLookupResult.md)
@@ -32,9 +33,8 @@
 - [AssetsCreatedLookupResult](../interfaces/types_indexer.AssetsCreatedLookupResult.md)
 - [AssetsLookupResult](../interfaces/types_indexer.AssetsLookupResult.md)
 - [EvalDelta](../interfaces/types_indexer.EvalDelta.md)
-- [GlobalStateDelta](../interfaces/types_indexer.GlobalStateDelta.md)
+- [EvalDeltaKeyValue](../interfaces/types_indexer.EvalDeltaKeyValue.md)
 - [KeyRegistrationTransactionResult](../interfaces/types_indexer.KeyRegistrationTransactionResult.md)
-- [LocalStateDelta](../interfaces/types_indexer.LocalStateDelta.md)
 - [LogicTransactionSignature](../interfaces/types_indexer.LogicTransactionSignature.md)
 - [LookupAssetHoldingsOptions](../interfaces/types_indexer.LookupAssetHoldingsOptions.md)
 - [MerkleArrayProof](../interfaces/types_indexer.MerkleArrayProof.md)
@@ -48,3 +48,17 @@
 - [TransactionResult](../interfaces/types_indexer.TransactionResult.md)
 - [TransactionSearchResults](../interfaces/types_indexer.TransactionSearchResults.md)
 - [TransactionSignature](../interfaces/types_indexer.TransactionSignature.md)
+
+### Type Aliases
+
+- [StateDelta](types_indexer.md#statedelta)
+
+## Type Aliases
+
+### StateDelta
+
+Ƭ **StateDelta**: [`EvalDeltaKeyValue`](../interfaces/types_indexer.EvalDeltaKeyValue.md)[]
+
+#### Defined in
+
+[src/types/indexer.ts:644](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L644)
