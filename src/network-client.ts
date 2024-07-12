@@ -1,106 +1,65 @@
 import algosdk from 'algosdk'
-import type { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
-import { AlgoHttpClientWithRetry } from './types/algo-http-client-with-retry'
+import { ClientManager } from './types/client-manager'
 import { AlgoClientConfig, AlgoConfig } from './types/network-client'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
 import IntDecoding = algosdk.IntDecoding
 
-/** Retrieve configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment not algod-side) */
+/**
+ * @deprecated Use `ClientManager.getConfigFromEnvironmentOrLocalNet()` instead.
+ *
+ * Retrieve configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment not algod-side)
+ */
 export function getConfigFromEnvOrDefaults(): AlgoConfig {
-  if (!process || !process.env) {
-    throw new Error('Attempt to get default algod configuration from a non Node.js context; supply the config instead')
-  }
-  const algodConfig = !process.env.ALGOD_SERVER
-    ? getDefaultLocalNetConfig('algod')
-    : { server: process.env.ALGOD_SERVER, port: process.env.ALGOD_PORT, token: process.env.ALGOD_TOKEN }
-
-  const indexerConfig = !process.env.INDEXER_SERVER
-    ? getDefaultLocalNetConfig('indexer')
-    : {
-        server: process.env.INDEXER_SERVER,
-        port: process.env.INDEXER_PORT,
-        token: process.env.INDEXER_TOKEN,
-      }
-
-  return {
-    algodConfig,
-    indexerConfig,
-    kmdConfig:
-      process && process.env && process.env.ALGOD_SERVER
-        ? { ...algodConfig, port: process?.env?.KMD_PORT ?? '4002' }
-        : getDefaultLocalNetConfig('kmd'),
-  }
+  return ClientManager.getConfigFromEnvironmentOrLocalNet()
 }
 
-/** Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment not algod-side) */
+/**
+ * @deprecated Use `ClientManager.getAlgodConfigFromEnvironment()` instead.
+ *
+ * Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment not algod-side)
+ */
 export function getAlgodConfigFromEnvironment(): AlgoClientConfig {
-  if (!process || !process.env) {
-    throw new Error('Attempt to get default algod configuration from a non Node.js context; supply the config instead')
-  }
-
-  if (!process.env.ALGOD_SERVER) {
-    throw new Error('Attempt to get default algod configuration without specifying ALGOD_SERVER in the environment variables')
-  }
-
-  return {
-    server: process.env.ALGOD_SERVER,
-    port: process.env.ALGOD_PORT,
-    token: process.env.ALGOD_TOKEN,
-  }
+  return ClientManager.getAlgodConfigFromEnvironment()
 }
 
-/** Retrieve the indexer configuration from environment variables (expects to be called from a Node.js environment not algod-side) */
+/**
+ * @deprecated Use `ClientManager.getIndexerConfigFromEnvironment()` instead.
+ *
+ * Retrieve the indexer configuration from environment variables (expects to be called from a Node.js environment not algod-side)
+ */
 export function getIndexerConfigFromEnvironment(): AlgoClientConfig {
-  if (!process || !process.env) {
-    throw new Error('Attempt to get default indexer configuration from a non Node.js context; supply the config instead')
-  }
-
-  if (!process.env.INDEXER_SERVER) {
-    throw new Error('Attempt to get default indexer configuration without specifying INDEXER_SERVER in the environment variables')
-  }
-
-  return {
-    server: process.env.INDEXER_SERVER,
-    port: process.env.INDEXER_PORT,
-    token: process.env.INDEXER_TOKEN,
-  }
+  return ClientManager.getIndexerConfigFromEnvironment()
 }
 
-/** Returns the Algorand configuration to point to the AlgoNode service
+/**
+ * @deprecated Use `ClientManager.getAlgoNodeConfig(network, config)` instead.
+ *
+ * Returns the Algorand configuration to point to the AlgoNode service
  *
  * @param network Which network to connect to - TestNet or MainNet
  * @param config Which algod config to return - Algod or Indexer
  */
 export function getAlgoNodeConfig(network: 'testnet' | 'mainnet', config: 'algod' | 'indexer'): AlgoClientConfig {
-  return {
-    server: `https://${network}-${config === 'algod' ? 'api' : 'idx'}.algonode.cloud/`,
-    port: 443,
-  }
+  return ClientManager.getAlgoNodeConfig(network, config)
 }
 
-/** Returns the Algorand configuration to point to the default LocalNet
+/**
+ * @deprecated Use `ClientManager.getDefaultLocalNetConfig(configOrPort)` instead.
+ *
+ * Returns the Algorand configuration to point to the default LocalNet
  *
  * @param configOrPort Which algod config to return - algod, kmd, or indexer OR a port number
  */
 export function getDefaultLocalNetConfig(configOrPort: 'algod' | 'indexer' | 'kmd' | number): AlgoClientConfig {
-  return {
-    server: `http://localhost`,
-    port: configOrPort === 'algod' ? 4001 : configOrPort === 'indexer' ? 8980 : configOrPort === 'kmd' ? 4002 : configOrPort,
-    token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  }
+  return ClientManager.getDefaultLocalNetConfig(configOrPort)
 }
 
-function getAlgoTokenHeader(server: string, token?: string | TokenHeader, defaultHeader?: string): TokenHeader {
-  // Purestake uses a slightly different API key header than the default
-  if (server.includes('purestake.io') && typeof token === 'string') return { 'X-API-Key': token }
-
-  // Because we override the default HTTP Client construction (to get retries) we need to put a string token into the standard header ourselves
-  return typeof token === 'string' ? { [defaultHeader ?? 'X-Algo-API-Token']: token } : token ?? {}
-}
-
-/** Returns an algod SDK client that automatically retries on idempotent calls
+/**
+ * @deprecated Use `ClientManager.getAlgodClient(config)` or `ClientManager.getAlgodClientFromEnvironment()` instead.
+ *
+ * Returns an algod SDK client that automatically retries transient failures on idempotent calls
  *
  * @param config The config if you want to override the default (getting config from process.env)
  * @example Default (load from environment variables)
@@ -128,12 +87,13 @@ function getAlgoTokenHeader(server: string, token?: string | TokenHeader, defaul
  * ```
  */
 export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
-  const { token, server, port } = config ?? getAlgodConfigFromEnvironment()
-  const httpClientWithRetry = new AlgoHttpClientWithRetry(getAlgoTokenHeader(server, token), server, port)
-  return new algosdk.Algodv2(httpClientWithRetry, server)
+  return config ? ClientManager.getAlgodClient(config) : ClientManager.getAlgodClientFromEnvironment()
 }
 
-/** Returns an indexer SDK client that automatically retries on idempotent calls
+/**
+ * @deprecated Use `ClientManager.getIndexerClient(config, overrideIntDecoding)` or `ClientManager.getIndexerClientFromEnvironment(overrideIntDecoding)` instead.
+ *
+ * Returns an indexer SDK client that automatically retries transient failures on idempotent calls
  *
  * @param config The config if you want to override the default (getting config from process.env)
  * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
@@ -165,16 +125,15 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  * ```
  */
 export function getAlgoIndexerClient(config?: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
-  const { token, server, port } = config ?? getIndexerConfigFromEnvironment()
-  const httpClientWithRetry = new AlgoHttpClientWithRetry(getAlgoTokenHeader(server, token, 'X-Indexer-API-Token'), server, port)
-  const indexer = new Indexer(httpClientWithRetry)
-  // Use mixed int decoding by default so bigints don't have lost precision
-  indexer.setIntEncoding(overrideIntDecoding ?? IntDecoding.MIXED)
-  return indexer
+  return config
+    ? ClientManager.getIndexerClient(config, overrideIntDecoding)
+    : ClientManager.getIndexerClientFromEnvironment(overrideIntDecoding)
 }
 
 /**
- * Returns a KMD SDK client that automatically retries on idempotent calls
+ * @deprecated Use `ClientManager.getKmdClient(config)` or `ClientManager.getKmdClientFromEnvironment()` instead.
+ *
+ * Returns a KMD SDK client that automatically retries transient failures on idempotent calls.
  *
  * KMD client allows you to export private keys, which is useful to get the default account in a LocalNet network.
  *
@@ -191,18 +150,15 @@ export function getAlgoIndexerClient(config?: AlgoClientConfig, overrideIntDecod
  * ```
  */
 export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
-  const { token, server } = config ?? getAlgodConfigFromEnvironment()
-  // We can only use Kmd on the LocalNet otherwise it's not exposed so this makes some assumptions
-  // (e.g. same token and server as algod and port 4002 by default)
-  return new Kmd(token as string, server, process?.env?.KMD_PORT ?? '4002')
+  return config ? ClientManager.getKmdClient(config) : ClientManager.getKmdClientFromEnvironment()
 }
 
+/** @deprecated Use `await algorandClient.client.isTestNet()` or `await new ClientManager({ algod }).isTestNet()` instead. */
 export async function isTestNet(algod: Algodv2): Promise<boolean> {
-  const params = await algod.getTransactionParams().do()
-  return ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisID)
+  return await new ClientManager({ algod }).isTestNet()
 }
 
+/** @deprecated Use `await algorandClient.client.isMainNet()` or `await new ClientManager({ algod }).isMainNet()` instead. */
 export async function isMainNet(algod: Algodv2): Promise<boolean> {
-  const params = await algod.getTransactionParams().do()
-  return ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID)
+  return await new ClientManager({ algod }).isMainNet()
 }

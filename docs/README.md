@@ -33,12 +33,46 @@ This library requires `algosdk` as a peer dependency. Ensure you have it install
 To use this library simply include the following at the top of your file:
 
 ```typescript
-import * as algokit from '@algorandfoundation/algokit-utils'
+import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 ```
 
-Then you can use intellisense to auto-complete the various functions that are available by typing `algokit.` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](code/modules/index.md).
+As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import withing the {} in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
+
+> [!WARNING]
+> Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as`):
+>
+> ```typescript
+> import * as algokit from '@algorandfoundation/algokit-utils'
+> ```
+>
+> This version will still work, but it exposes an older, function-based interface to the functionality that is in the process of being deprecated. The recommended way to use AlgoKit Utils is via the `AlgorandClient` class mentioned below, which is easier and more convenient to use. Some functionality won't yet be migrated to the new approach and this old approach will be needed, but the documentation pages will indicate when this is the case.
+
+The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `algokit.AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
+
+```typescript
+// Point to the network configured through environment variables or
+//  if no environment variables it will point to the default LocalNet
+//  configuration
+const algorand = algokit.AlgorandClient.fromEnvironment()
+// Point to default LocalNet configuration
+const algorand = algokit.AlgorandClient.defaultLocalNet()
+// Point to TestNet using AlgoNode free tier
+const algorand = algokit.AlgorandClient.testNet()
+// Point to MainNet using AlgoNode free tier
+const algorand = algokit.AlgorandClient.mainNet()
+// Point to a pre-created algod client
+const algorand = algokit.AlgorandClient.fromClients({ algod })
+// Point to pre-created algod, indexer and kmd clients
+const algorand = algokit.AlgorandClient.fromClients({ algod, indexer, kmd })
+// Point to custom configuration for algod
+const algorand = algokit.AlgorandClient.fromConfig({ algodConfig })
+// Point to custom configuration for algod, indexer and kmd
+const algorand = algokit.AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig })
+```
 
 ## Testing
+
+AlgoKit Utils contains a module that helps you write automated tests against an Algorand network (usually LocalNet). These tests can run locally on a developer's machine, or on a Continuous Integration server.
 
 To use the automated testing functionality, you can import the testing module:
 
@@ -52,7 +86,7 @@ Or, you can generally get away with just importing the `algorandFixture` since i
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 ```
 
-To see what's available feel free to consult the [reference documentation](code/modules/testing.md) or consulting the [testing capability page](capabilities/testing.md).
+To see how to use it consult the [testing capability page](capabilities/testing.md) or to see what's available look at the [reference documentation](./code/modules/testing.md).
 
 ## Types
 
@@ -62,11 +96,11 @@ If you want to extend or pass around any of the types the various functions take
 import {<type>} from '@algorandfoundation/types/<module>'
 ```
 
-Where `<type>` would be replaced with the type and `<module>` would be replaced with the module. You can use intellisense to discover the modules and types in your favourite IDE, or you can explore the [types modules in the reference documentation](code/README.md#modules).
+Where `<type>` would be replaced with the type and `<module>` would be replaced with the module. You can use intellisense to discover the modules and types in your favourite IDE, or you can explore the [types modules in the reference documentation](./code/README.md#modules).
 
 # Config and logging
 
-To configure the AlgoKit library you can make use of the `algokit.Config` object, which has a `configure` method that lets you configure some or all of the configuration options.
+To configure the AlgoKit Utils library you can make use of the `algokit.Config` object, which has a `configure` method that lets you configure some or all of the configuration options.
 
 ## Logging
 
@@ -106,7 +140,7 @@ algokit.configure({ debug: true })
 
 To retrieve the current debug state you can use [`algokit.Config.debug`](./code/interfaces/types_config.Config.md).
 
-This will turn on things like automatic tracing and more verbose logging. It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
+This will turn on things like automatic tracing, more verbose logging and [advanced debugging](./capabilities/debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
 
 If you want to temporarily turn it on you can use the [`withDebug`](./code/classes/types_config.UpdatableConfig.md#withdebug) function:
 
@@ -118,24 +152,25 @@ algokit.Config.withDebug(() => {
 
 # Capabilities
 
-The library helps you with the following capabilities:
+The library helps you interact with and develop against the Algorand blockchain with a series of end-to-end capabilities as described below:
 
+- [**AlgorandClient**](./capabilities/algorand-client.md) - The key entrypoint to the AlgoKit Utils functionality
 - Core capabilities
-  - [**Client management**](capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration
-  - [**Account management**](capabilities/account.md) - Creation and use of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
-  - [**Algo amount handling**](capabilities/amount.md) - Reliable and terse specification of microAlgo and Algo amounts and conversion between them
-  - [**Transaction management**](capabilities/transaction.md) - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
+  - [**Client management**](./capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration
+  - [**Account management**](./capabilities/account.md) - Creation and use of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
+  - [**Algo amount handling**](./capabilities/amount.md) - Reliable and terse specification of microAlgo and Algo amounts and conversion between them
+  - [**Transaction management**](./capabilities/transaction.md) - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
 - Higher-order use cases
-  - [**App management**](capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
-  - [**App deployment**](capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
-  - [**ARC-0032 Application Spec client**](capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
-  - [**Algo transfers**](capabilities/transfer.md) - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
-  - [**Automated testing**](capabilities/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
-  - [**Indexer lookups / searching**](capabilities/indexer.md) - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
+  - [**App management**](./capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
+  - [**App deployment**](./capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
+  - [**ARC-0032 Application Spec client**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
+  - [**Algo transfers**](./capabilities/transfer.md) - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
+  - [**Automated testing**](./capabilities/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
+  - [**Indexer lookups / searching**](./capabilities/indexer.md) - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
 
 # Reference documentation
 
-We have [auto-generated reference documentation for the code](code/README.md).
+We have [auto-generated reference documentation for the code](./code/README.md).
 
 # Roadmap
 

@@ -2,6 +2,9 @@
 
 Transaction management is one of the core capabilities provided by AlgoKit Utils. It allows you to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour.
 
+> [!NOTE]
+> The methods on this page require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+
 ## `SendTransactionParams`
 
 Any AlgoKit Utils function that needs to sign/send a transaction will generally take all or part of [`SendTransactionParams`](../code/interfaces/types_transaction.SendTransactionParams.md) interface, which represents a standard set of configurations that can be applied to a given transaction or transactions that are to be sent to an Algorand network.

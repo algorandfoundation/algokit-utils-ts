@@ -4,6 +4,8 @@ import invariant from 'tiny-invariant'
 import * as algokit from '..'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
+import { ClientManager } from '../types/client-manager'
+import { TestNetDispenserApiClient } from '../types/dispenser-client'
 
 describe('transfer', () => {
   const localnet = algorandFixture()
@@ -297,8 +299,8 @@ describe('transfer', () => {
   }, 10e6)
 
   test('ensureFunded is sent and waited for with correct amount for new account', async () => {
-    const { algod, kmd, testAccount } = localnet.context
-    const secondAccount = algokit.randomAccount()
+    const { algod, kmd, testAccount, algorand } = localnet.context
+    const secondAccount = algorand.account.random()
 
     const result = await algokit.ensureFunded(
       {
@@ -348,9 +350,9 @@ describe('transfer', () => {
   })
 
   test('ensureFunded uses dispenser account by default', async () => {
-    const { algod, kmd } = localnet.context
-    const secondAccount = algokit.randomAccount()
-    const dispenser = await algokit.getDispenserAccount(algod, kmd)
+    const { algod, kmd, algorand } = localnet.context
+    const secondAccount = algorand.account.random()
+    const dispenser = await algorand.account.dispenserFromEnvironment()
 
     const result = await algokit.ensureFunded(
       {
@@ -373,8 +375,8 @@ describe('transfer', () => {
   test('ensureFunded uses dispenser api with access token sucessfully', async () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
 
-    const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-    const dispenserClient = algokit.getTestNetDispenserApiClient()
+    const algodClient = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
+    const dispenserClient = new TestNetDispenserApiClient(null)
     Object.assign(dispenserClient, {
       fund: jest.fn().mockImplementation(() => {
         return Promise.resolve({ txId: 'dummy_tx_id', amount: 200_000 })
@@ -401,8 +403,8 @@ describe('transfer', () => {
   test('ensureFunded uses dispenser api and fails with rejected response', async () => {
     process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN = 'dummy_token'
 
-    const algodClient = algokit.getAlgoClient(algokit.getAlgoNodeConfig('testnet', 'algod'))
-    const dispenserClient = algokit.getTestNetDispenserApiClient()
+    const algodClient = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
+    const dispenserClient = new TestNetDispenserApiClient(null)
     Object.assign(dispenserClient, {
       fund: jest.fn().mockImplementation(() => {
         return Promise.reject(new Error('dummy_error'))
@@ -439,9 +441,9 @@ describe('rekey', () => {
   })
 
   test('Rekey works', async () => {
-    const { algod, testAccount } = localnet.context
-    const secondAccount = algosdk.generateAccount()
-    const rekeyedAccount = algokit.rekeyedAccount(secondAccount, testAccount.addr)
+    const { algod, testAccount, algorand } = localnet.context
+    const secondAccount = algorand.account.random()
+    const rekeyedAccount = algorand.account.rekeyed(secondAccount, testAccount.addr)
 
     await algokit.rekeyAccount(
       {

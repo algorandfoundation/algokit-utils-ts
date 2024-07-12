@@ -2,7 +2,7 @@ import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
 import { getTestingAppCreateParams } from '../tests/example-contracts/testing-app/contract'
 import * as algokit from './'
-import { algorandFixture } from './testing'
+import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()
@@ -18,9 +18,9 @@ describe('indexer-lookup', () => {
   }
 
   test('Transaction is found by id', async () => {
-    const { algod, indexer, testAccount, transactionLogger } = localnet.context
+    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
     const { transaction } = await algokit.sendTransaction({ transaction: await getTestTransaction(), from: testAccount }, algod)
-    await transactionLogger.waitForIndexer(indexer)
+    await waitForIndexer()
 
     const txn = await algokit.lookupTransactionById(transaction.txID(), indexer)
 
@@ -29,8 +29,8 @@ describe('indexer-lookup', () => {
   }, 20_000)
 
   test('Account is found by id', async () => {
-    const { indexer, testAccount, transactionLogger } = localnet.context
-    await transactionLogger.waitForIndexer(indexer)
+    const { indexer, testAccount } = localnet.context
+    await runWhenIndexerCaughtUp(() => algokit.lookupAccountByAddress(testAccount.addr, indexer))
 
     const account = await algokit.lookupAccountByAddress(testAccount.addr, indexer)
 
@@ -38,7 +38,7 @@ describe('indexer-lookup', () => {
   }, 20_000)
 
   test('Transactions are searched with pagination', async () => {
-    const { algod, indexer, testAccount, generateAccount, transactionLogger } = localnet.context
+    const { algod, indexer, testAccount, generateAccount, waitForIndexer } = localnet.context
     const secondAccount = await generateAccount({
       initialFunds: algokit.algos(1),
       suppressLog: true,
@@ -52,7 +52,7 @@ describe('indexer-lookup', () => {
       algod,
     )
     await algokit.sendTransaction({ transaction: await getTestTransaction(1, secondAccount.addr), from: secondAccount }, algod)
-    await transactionLogger.waitForIndexer(indexer)
+    await waitForIndexer()
 
     const transactions = await algokit.searchTransactions(
       indexer,

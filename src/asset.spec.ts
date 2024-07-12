@@ -9,8 +9,8 @@ describe('asset', () => {
   beforeEach(localnet.beforeEach, 100_000)
 
   test('Create an asset succeeds', async () => {
-    const { algod, testAccount } = localnet.context
-    const accounts = [algokit.randomAccount(), algokit.randomAccount(), algokit.randomAccount(), algokit.randomAccount()]
+    const { algod, testAccount, algorand } = localnet.context
+    const accounts = [algorand.account.random(), algorand.account.random(), algorand.account.random(), algorand.account.random()]
     const hash = new Uint8Array(32).fill(1)
     const result = await algokit.createAsset(
       {

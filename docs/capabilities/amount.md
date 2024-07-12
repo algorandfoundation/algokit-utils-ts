@@ -10,6 +10,14 @@ To see some usage examples check out the [automated tests](../../src/types/amoun
 
 The `AlgoAmount` class provides a safe wrapper around an underlying `number` amount of microAlgos where any value entering or existing the `AlgoAmount` class must be explicitly stated to be in microAlgos or Algos. This makes it much safer to handle Algo amounts rather than passing them around as raw `number`'s where it's easy to make a (potentially costly!) mistake and not perform a conversion when one is needed (or perform one when it shouldn't be!).
 
+To import the AlgoAmount class you can access it via:
+
+```typescript
+import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
+```
+
+You may not need to import this type to use it though since there are also special methods that are exposed from `algokit.` and extend the `number` protoype per below.
+
 ### Creating an `AlgoAmount`
 
 There are a few ways to create an `AlgoAmount`:
@@ -25,7 +33,7 @@ There are a few ways to create an `AlgoAmount`:
   - AlgoKit Helper: `algokit.microAlgos(10_000)`
   - Number coersion: `(10_000).microAlgos()` (note: you have to wrap the number in brackets or have it in a variable or function return, a raw number value can't have a method called on it)
 
-Note: to use any of the versions that reference `AlgoAmount` type itself you need to import it:
+Note: per above, to use any of the versions that reference `AlgoAmount` type itself you need to import it:
 
 ```typescript
 import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'

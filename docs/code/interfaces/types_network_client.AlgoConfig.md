@@ -4,7 +4,7 @@
 
 [types/network-client](../modules/types_network_client.md).AlgoConfig
 
-Config for an algo config
+Configuration for algod, indexer and kmd clients.
 
 ## Table of contents
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals'
-import { algos, microAlgos, transactionFees } from '../'
+import { algos, microAlgos, transactionFees } from '../amount'
 import { AlgoAmount } from './amount'
 
 describe('amount', () => {

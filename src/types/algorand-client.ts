@@ -1,6 +1,5 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
-import { getAlgoNodeConfig, getConfigFromEnvOrDefaults, getDefaultLocalNetConfig } from '../network-client'
 import { TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
@@ -12,11 +11,8 @@ import Transaction = algosdk.Transaction
 /** Result from sending a single transaction. */
 export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
 
-/** A client that brokers easy access to Algorand functionality.
- *
- * Note: this class is a new Beta feature and may be subject to change.
- *
- * @beta
+/**
+ * A client that brokers easy access to Algorand functionality.
  */
 export class AlgorandClient {
   private _clientManager: ClientManager
@@ -279,9 +275,9 @@ export class AlgorandClient {
    */
   public static defaultLocalNet() {
     return new AlgorandClient({
-      algodConfig: getDefaultLocalNetConfig('algod'),
-      indexerConfig: getDefaultLocalNetConfig('indexer'),
-      kmdConfig: getDefaultLocalNetConfig('kmd'),
+      algodConfig: ClientManager.getDefaultLocalNetConfig('algod'),
+      indexerConfig: ClientManager.getDefaultLocalNetConfig('indexer'),
+      kmdConfig: ClientManager.getDefaultLocalNetConfig('kmd'),
     })
   }
 
@@ -291,8 +287,8 @@ export class AlgorandClient {
    */
   public static testNet() {
     return new AlgorandClient({
-      algodConfig: getAlgoNodeConfig('testnet', 'algod'),
-      indexerConfig: getAlgoNodeConfig('testnet', 'indexer'),
+      algodConfig: ClientManager.getAlgoNodeConfig('testnet', 'algod'),
+      indexerConfig: ClientManager.getAlgoNodeConfig('testnet', 'indexer'),
       kmdConfig: undefined,
     })
   }
@@ -303,8 +299,8 @@ export class AlgorandClient {
    */
   public static mainNet() {
     return new AlgorandClient({
-      algodConfig: getAlgoNodeConfig('mainnet', 'algod'),
-      indexerConfig: getAlgoNodeConfig('mainnet', 'indexer'),
+      algodConfig: ClientManager.getAlgoNodeConfig('mainnet', 'algod'),
+      indexerConfig: ClientManager.getAlgoNodeConfig('mainnet', 'indexer'),
       kmdConfig: undefined,
     })
   }
@@ -321,13 +317,22 @@ export class AlgorandClient {
   /**
    * Returns an `AlgorandClient` loading the configuration from environment variables.
    *
-   * Retrieve configurations from environment variables when defined or get defaults.
+   * Retrieve configurations from environment variables when defined or get default LocalNet configuration if they aren't defined.
    *
    * Expects to be called from a Node.js environment.
+   *
+   * If `process.env.ALGOD_SERVER` is defined it will use that along with optional `process.env.ALGOD_PORT` and `process.env.ALGOD_TOKEN`.
+   *
+   * If `process.env.INDEXER_SERVER` is defined it will use that along with optional `process.env.INDEXER_PORT` and `process.env.INDEXER_TOKEN`.
+   *
+   * If either aren't defined it will use the default LocalNet config.
+   *
+   * It will return a KMD configuration that uses `process.env.KMD_PORT` (or port 4002) if `process.env.ALGOD_SERVER` is defined,
+   * otherwise it will use the default LocalNet config unless it detects testnet or mainnet.
    * @returns The `AlgorandClient`
    */
   public static fromEnvironment() {
-    return new AlgorandClient(getConfigFromEnvOrDefaults())
+    return new AlgorandClient(ClientManager.getConfigFromEnvironmentOrLocalNet())
   }
 
   /**

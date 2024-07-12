@@ -1,10 +1,10 @@
 import algosdk from 'algosdk'
-import { getDispenserAccount } from '../account/get-dispenser-account'
 import { microAlgos } from '../amount'
 import { Config } from '../config'
-import { isTestNet } from '../network-client'
 import { encodeLease, encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from '../transaction/transaction'
+import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
+import { ClientManager } from '../types/client-manager'
 import { TestNetDispenserApiClient } from '../types/dispenser-client'
 import { SendTransactionResult, TransactionNote } from '../types/transaction'
 import { AlgoRekeyParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from '../types/transfer'
@@ -53,7 +53,7 @@ async function fundUsingTransfer({
     throw new Error('Dispenser API client is not supported in this context.')
   }
 
-  const from = funding.fundingSource ?? (await getDispenserAccount(algod, kmd))
+  const from = funding.fundingSource ?? (await new AccountManager(new ClientManager({ algod, kmd })).dispenserFromEnvironment())
   const amount = microAlgos(Math.max(fundAmount, funding.minFundingIncrement?.microAlgos ?? 0))
   const response = await transferAlgos(
     {
@@ -107,7 +107,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
   )
 
   if (fundAmount !== null) {
-    if ((await isTestNet(algod)) && fundingSource instanceof TestNetDispenserApiClient) {
+    if ((await new ClientManager({ algod }).isTestNet()) && fundingSource instanceof TestNetDispenserApiClient) {
       return await fundUsingDispenserApi(fundingSource, addressToFund, fundAmount)
     } else {
       return await fundUsingTransfer({

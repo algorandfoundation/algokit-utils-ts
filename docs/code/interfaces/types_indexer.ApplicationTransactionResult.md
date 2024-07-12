@@ -84,7 +84,7 @@ Omit.approval-program
 
 #### Defined in
 
-[src/types/indexer.ts:657](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L657)
+[src/types/indexer.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L669)
 
 ___
 
@@ -106,7 +106,7 @@ Omit.clear-state-program
 
 #### Defined in
 
-[src/types/indexer.ts:667](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L667)
+[src/types/indexer.ts:679](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L679)
 
 ___
 
@@ -122,7 +122,7 @@ Omit.extra-program-pages
 
 #### Defined in
 
-[src/types/indexer.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L669)
+[src/types/indexer.ts:681](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L681)
 
 ___
 
@@ -162,7 +162,7 @@ Omit.global-state-schema
 
 #### Defined in
 
-[src/types/indexer.ts:673](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L673)
+[src/types/indexer.ts:685](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L685)
 
 ___
 
@@ -178,7 +178,7 @@ Omit.local-state-schema
 
 #### Defined in
 
-[src/types/indexer.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L675)
+[src/types/indexer.ts:687](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L687)
 
 ___
 

@@ -101,15 +101,6 @@ export const getSenderAddress = function (sender: string | SendTransactionFrom) 
   return typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr : sender.address()
 }
 
-const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
-  const cache = new Map()
-  const cached = function (this: unknown, val: T) {
-    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
-  }
-  cached.cache = cache
-  return cached as (val: T) => R
-}
-
 /**
  * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
  * AtomicTransactionComposer's addTransaction method.
@@ -141,6 +132,15 @@ export const getTransactionWithSigner = async (
           txn: transaction,
           signer: getSenderTransactionSigner(defaultSender),
         }
+}
+
+const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
+  const cache = new Map()
+  const cached = function (this: unknown, val: T) {
+    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
+  }
+  cached.cache = cache
+  return cached as (val: T) => R
 }
 
 /**
@@ -246,9 +246,29 @@ async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransaction
     allowEmptySignatures: true,
   })
 
+  const signerWithFixedSgnr: algosdk.TransactionSigner = async (txns: algosdk.Transaction[], indexes: number[]) => {
+    const stxns = await algosdk.makeEmptyTransactionSigner()(txns, indexes)
+    return Promise.all(
+      stxns.map(async (stxn) => {
+        const decodedStxn = algosdk.decodeSignedTransaction(stxn)
+        const sender = algosdk.encodeAddress(decodedStxn.txn.from.publicKey)
+
+        const authAddr = (await algod.accountInformation(sender).do())['auth-addr']
+
+        const stxnObj: { txn: algosdk.EncodedTransaction; sgnr?: Buffer } = { txn: decodedStxn.txn.get_obj_for_encoding() }
+
+        if (authAddr !== undefined) {
+          stxnObj.sgnr = Buffer.from(algosdk.decodeAddress(authAddr).publicKey)
+        }
+
+        return algosdk.encodeObj(stxnObj)
+      }),
+    )
+  }
+
   const emptySignerAtc = atc.clone()
   emptySignerAtc['transactions'].forEach((t: algosdk.TransactionWithSigner) => {
-    t.signer = algosdk.makeEmptyTransactionSigner()
+    t.signer = signerWithFixedSgnr
   })
 
   const result = await emptySignerAtc.simulate(algod, simReq)

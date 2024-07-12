@@ -42,7 +42,7 @@ Account asset holding information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L137)
+[src/types/account.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L124)
 
 ___
 
@@ -54,7 +54,7 @@ Account information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L134)
+[src/types/account.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L121)
 
 ## Variables
 

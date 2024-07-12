@@ -6,6 +6,7 @@ import { SendTransactionFrom } from '../types/transaction'
 import { TransactionSignerAccount } from './account'
 import AlgorandClient from './algorand-client'
 import { TransactionLookupResult } from './indexer'
+import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
@@ -16,6 +17,8 @@ import Transaction = algosdk.Transaction
  * Test automation context.
  */
 export interface AlgorandTestAutomationContext {
+  /** An AlgorandClient instance loaded with the current context, including testAccount and any generated accounts loaded as signers */
+  algorand: AlgorandClient
   /** Algod client instance that will log transactions in `transactionLogger` */
   algod: Algodv2
   /** Indexer client instance */
@@ -42,17 +45,17 @@ export interface GetTestAccountParams {
   initialFunds: AlgoAmount
   /** Whether to suppress the log (which includes a mnemonic) or not (default: do not suppress the log) */
   suppressLog?: boolean
-  /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>
+  /** Optional override for how to get a test account; this allows you to retrieve accounts from a known or cached list of accounts. */
+  accountGetter?: (algorand: AlgorandClient) => Promise<Account>
 }
 
 /** Configuration for creating an Algorand testing fixture. */
-export interface AlgorandFixtureConfig {
-  /** An optional algod client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
+export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
+  /** An optional algod client, if not specified then it will create one against `algodConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   algod?: Algodv2
-  /** An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
+  /** An optional indexer client, if not specified then it will create one against `indexerConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   indexer?: Indexer
-  /** An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet. */
+  /** An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   kmd?: Kmd
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGOs. */
   testAccountFunding?: AlgoAmount

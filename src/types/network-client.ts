@@ -1,6 +1,6 @@
 import type { TokenHeader } from 'algosdk/dist/types/client/urlTokenBaseHTTPClient'
 
-/** Config for an Algorand SDK client */
+/** Config for an Algorand SDK client. */
 export interface AlgoClientConfig {
   /** Base URL of the server e.g. http://localhost, https://testnet-api.algonode.cloud/, etc. */
   server: string
@@ -10,7 +10,7 @@ export interface AlgoClientConfig {
   token?: string | TokenHeader
 }
 
-/** Config for an algo config */
+/** Configuration for algod, indexer and kmd clients. */
 export interface AlgoConfig {
   /** Algo client configuration */
   algodConfig: AlgoClientConfig

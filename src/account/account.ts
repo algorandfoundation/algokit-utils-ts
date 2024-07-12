@@ -1,14 +1,10 @@
 import algosdk from 'algosdk'
-import { Config } from '../config'
-import { getOrCreateKmdWalletAccount } from '../localnet/get-or-create-kmd-wallet-account'
-import { isLocalNet } from '../localnet/is-localnet'
 import { getSenderAddress } from '../transaction/transaction'
 import { AccountAssetInformation, AccountInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
+import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
+import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
-import { getAccountConfigFromEnvironment } from './get-account-config-from-environment'
-import { mnemonicAccount } from './mnemonic-account'
-import AccountInformationModel = algosdk.modelsv2.Account
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
@@ -16,6 +12,8 @@ import MultisigMetadata = algosdk.MultisigMetadata
 import TransactionSigner = algosdk.TransactionSigner
 
 /**
+ * @deprecated Use `algorandClient.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
+ *
  * Returns an account wrapper that supports partial or full multisig signing.
  * @param multisigParams The parameters that define the multisig account
  * @param signingAccounts The signers that are currently present
@@ -26,6 +24,8 @@ export function multisigAccount(multisigParams: MultisigMetadata, signingAccount
 }
 
 /**
+ * @deprecated Use `algorandClient.account.rekeyed(account, sender)` or `new SigningAccount(account, sender)` instead.
+ *
  * Returns an account wrapper that supports a rekeyed account.
  * @param signer The account, with private key loaded, that is signing
  * @param sender The address of the rekeyed account that will act as a sender
@@ -36,6 +36,8 @@ export function rekeyedAccount(signer: Account, sender: string) {
 }
 
 /**
+ * @deprecated Use `algorandClient.account.getSigner(sender)` (after previously registering the signer with `setSigner`) or `{ addr: sender, signer }` instead.
+ *
  * Returns an account wrapper that supports a transaction signer with associated sender address.
  * @param signer The transaction signer
  * @param sender The address of sender account
@@ -45,7 +47,10 @@ export function transactionSignerAccount(signer: TransactionSigner, sender: stri
   return { addr: sender, signer }
 }
 
-/** Returns a new, random Algorand account with secret key loaded.
+/**
+ * @deprecated Use `algorandClient.account.random()` or `algosdk.generateAccount()` instead.
+ *
+ * Returns a new, random Algorand account with secret key loaded.
  *
  * This is a wrapper around algosdk.generateAccount to provide a more friendly/obvious name.
  *
@@ -56,6 +61,8 @@ export function randomAccount(): Account {
 }
 
 /**
+ * @deprecated Use `algorandClient.account.fromEnvironment(name, fundWith)` or `new AccountManager(clientManager).fromEnvironment()` instead.
+ *
  * Returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
  *
  * Note: This function expects to run in a Node.js environment.
@@ -90,30 +97,18 @@ export async function mnemonicAccountFromEnvironment(
   algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
-  const { name, fundWith } = typeof account === 'string' ? { name: account, fundWith: undefined } : account
-
-  // todo: When eventually removing this method, inline it here
-  const config = getAccountConfigFromEnvironment(name)
-
-  if (config.accountMnemonic) {
-    const signer = mnemonicAccount(config.accountMnemonic)
-    const sender = config.senderAddress
-    if (sender) {
-      Config.logger.debug(`Using rekeyed account ${signer.addr} for sender ${sender} for ${name} account`)
-      return new SigningAccount(signer, sender)
-    } else {
-      return signer
-    }
-  }
-
-  if (await isLocalNet(algod)) {
-    return await getOrCreateKmdWalletAccount({ name, fundWith }, algod, kmdClient)
-  }
-
-  throw new Error(`Missing environment variable ${name.toUpperCase()}_MNEMONIC when looking for account ${name}`)
+  return (
+    await new AccountManager(new ClientManager({ algod, kmd: kmdClient })).fromEnvironment(
+      typeof account === 'string' ? account : account.name,
+      typeof account === 'string' ? undefined : account.fundWith,
+    )
+  ).account
 }
 
-/** Returns an account's address as a byte array
+/**
+ * @deprecated Use `algosdk.decodeAddress` instead.
+ *
+ * Returns an account's address as a byte array
  *
  * @param account Either an account (with private key loaded) or the string address of an account
  */
@@ -121,7 +116,10 @@ export function getAccountAddressAsUint8Array(account: SendTransactionFrom | str
   return algosdk.decodeAddress(typeof account === 'string' ? account : getSenderAddress(account)).publicKey
 }
 
-/** Returns the string address of an Algorand account from a base64 encoded version of the underlying byte array of the address public key
+/**
+ * @deprecated Use `algosdk.encodeAddress` instead.
+ *
+ * Returns the string address of an Algorand account from a base64 encoded version of the underlying byte array of the address public key
  *
  * @param addressEncodedInB64 The base64 encoded version of the underlying byte array of the address public key
  */
@@ -130,6 +128,8 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
 }
 
 /**
+ * @deprecated Use `algorandClient.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
+ *
  * Returns the given sender account's current status, balance and spendable amounts.
  *
  * @example
@@ -144,31 +144,12 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
  * @returns The account information
  */
 export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
-  const account = AccountInformationModel.from_obj_for_encoding(
-    await algod.accountInformation(typeof sender === 'string' ? sender : getSenderAddress(sender)).do(),
-  )
-
-  return {
-    ...account,
-    // None of these can practically overflow 2^53
-    amount: Number(account.amount),
-    amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
-    minBalance: Number(account.minBalance),
-    pendingRewards: Number(account.pendingRewards),
-    rewards: Number(account.rewards),
-    round: Number(account.round),
-    totalAppsOptedIn: Number(account.totalAppsOptedIn),
-    totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
-    totalCreatedApps: Number(account.totalCreatedApps),
-    totalCreatedAssets: Number(account.totalCreatedAssets),
-    appsTotalExtraPages: account.appsTotalExtraPages ? Number(account.appsTotalExtraPages) : undefined,
-    rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
-    totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
-    totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
-  }
+  return new AccountManager(new ClientManager({ algod })).getInformation(getSenderAddress(sender))
 }
 
 /**
+ * @deprecated Use `algorandClient.account.getAssetInformation(sender, assetId)` or `new AccountManager(clientManager).getAssetInformation(sender, assetId)` instead.
+ *
  * Returns the given sender account's asset holding for a given asset.
  *
  * @example
@@ -189,12 +170,5 @@ export async function getAccountAssetInformation(
   assetId: number | bigint,
   algod: Algodv2,
 ): Promise<AccountAssetInformation> {
-  const info = await algod.accountAssetInformation(typeof sender === 'string' ? sender : getSenderAddress(sender), Number(assetId)).do()
-
-  return {
-    assetId: BigInt(assetId),
-    balance: BigInt(info['asset-holding']['amount']),
-    frozen: info['asset-holding']['is-frozen'] === 'true',
-    round: BigInt(info['round']),
-  }
+  return new AccountManager(new ClientManager({ algod })).getAssetInformation(getSenderAddress(sender), assetId)
 }

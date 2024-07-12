@@ -4,6 +4,9 @@ Algo transfers is a higher-order use case capability provided by AlgoKit Utils t
 
 To see some usage examples check out the [automated tests](../../src/transfer.spec.ts).
 
+> [!NOTE]
+> The methods on this page require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+
 ## `transferAlgos`
 
 The key function to facilitate Algo transfers is `algokit.transferAlgos(transfer, algod)`, which returns a [`SendTransactionResult`](./transaction.md#sendtransactionresult) and takes a [`AlgoTransferParams`](../code/interfaces/types_transfer.AlgoTransferParams.md):

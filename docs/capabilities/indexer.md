@@ -4,6 +4,9 @@ Indexer lookups / searching is a higher-order use case capability provided by Al
 
 To see some usage examples check out the [automated tests](../../src/indexer-lookup.spec.ts).
 
+> [!NOTE]
+> The methods on this page require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+
 ## Indexer wrapper functions
 
 There is a subset of [indexer API calls](https://developer.algorand.org/docs/rest-apis/indexer) that are exposed as easy to use methods with correct typing exposed and automatic pagination for multi item returns.
