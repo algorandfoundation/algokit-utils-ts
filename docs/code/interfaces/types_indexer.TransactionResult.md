@@ -228,7 +228,7 @@ ___
 
 ### global-state-delta
 
-• `Optional` **global-state-delta**: `Record`\<`string`, [`EvalDelta`](types_indexer.EvalDelta.md)\>[]
+• `Optional` **global-state-delta**: [`LocalStateDelta`](types_indexer.LocalStateDelta.md)
 
 [gd] Global state key/value changes for the application being executed by this transaction.
 
@@ -336,7 +336,7 @@ ___
 
 ### local-state-delta
 
-• `Optional` **local-state-delta**: `Record`\<`string`, [`EvalDelta`](types_indexer.EvalDelta.md)\>[]
+• `Optional` **local-state-delta**: [`GlobalStateDelta`](types_indexer.GlobalStateDelta.md)
 
 [ld] Local state key/value changes for the application being executed by this transaction.
 

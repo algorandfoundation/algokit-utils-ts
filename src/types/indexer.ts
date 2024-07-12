@@ -194,9 +194,9 @@ export interface TransactionResult extends Record<string, any> {
    */
   lease?: string
   /** [ld] Local state key/value changes for the application being executed by this transaction. */
-  'local-state-delta'?: Record<string, EvalDelta>[]
+  'local-state-delta'?: LocalStateDelta[]
   /** [gd] Global state key/value changes for the application being executed by this transaction. */
-  'global-state-delta'?: Record<string, EvalDelta>[]
+  'global-state-delta'?: GlobalStateDelta[]
   /** [rr] rewards applied to receiver account. */
   'receiver-rewards'?: number
   /** [rs] rewards applied to sender account. */
@@ -629,6 +629,18 @@ export interface MultisigTransactionSubSignature {
    * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
    */
   signature?: string
+}
+
+export interface GlobalStateDelta {
+  key: string
+  value: EvalDelta
+}
+export interface LocalStateDelta {
+  address: string
+  delta: {
+    key: string
+    value: EvalDelta
+  }[]
 }
 
 /** Represents a TEAL value delta. https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta */
