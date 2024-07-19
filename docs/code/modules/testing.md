@@ -151,7 +151,7 @@ ___
 
 ### getTestAccount
 
-▸ **getTestAccount**(`param0`, `algorand`): `Promise`\<`Account`\>
+▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<`Account`\>
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
@@ -162,7 +162,32 @@ Note: By default this will log the mnemonic of the account.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `param0` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
+| `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
+| `algod` | `default` | An algod client |
+| `kmd?` | `default` | A KMD client, if not specified then a default KMD client will be loaded from environment variables |
+
+#### Returns
+
+`Promise`\<`Account`\>
+
+The account, with private key loaded
+
+#### Defined in
+
+[src/testing/account.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L18)
+
+▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Account`\>
+
+Creates an ephemeral Algorand account for the purposes of testing.
+Returns a newly created random test account that is funded from the dispenser
+DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
+Note: By default this will log the mnemonic of the account.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
 | `algorand` | [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) | An AlgorandClient client |
 
 #### Returns
@@ -173,7 +198,7 @@ The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L15)
+[src/testing/account.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L28)
 
 ___
 
