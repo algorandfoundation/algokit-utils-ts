@@ -124,7 +124,7 @@ export class ClientManager {
   }
 
   /**
-   * Returns true if the give network genesisId is associated with a LocalNet network.
+   * Returns true if the given network genesisId is associated with a LocalNet network.
    * @param genesisId The network genesis ID
    * @returns Whether the given genesis ID is associated with a LocalNet network
    */
