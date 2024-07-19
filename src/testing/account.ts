@@ -6,6 +6,8 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
+ * @deprecated Use `getTestAccount(params, algorandClient)` instead. The `algorandClient` object can be created using `AlgorandClient.fromClients({ algod, kmd })`.
+ *
  * Creates an ephemeral Algorand account for the purposes of testing.
  * Returns a newly created random test account that is funded from the dispenser
  * DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
@@ -32,7 +34,9 @@ export async function getTestAccount(
   kmd?: Kmd,
 ): Promise<Account> {
   const algorand =
-    algodOrAlgorandClient instanceof Algodv2 ? AlgorandClient.fromClients({ algod: algodOrAlgorandClient, kmd }) : algodOrAlgorandClient
+    algodOrAlgorandClient instanceof AlgorandClient
+      ? algodOrAlgorandClient
+      : AlgorandClient.fromClients({ algod: algodOrAlgorandClient, kmd })
 
   const account = accountGetter ? await accountGetter(algorand) : algosdk.generateAccount()
 

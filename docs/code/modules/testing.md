@@ -153,11 +153,6 @@ ___
 
 ▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<`Account`\>
 
-Creates an ephemeral Algorand account for the purposes of testing.
-Returns a newly created random test account that is funded from the dispenser
-DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
-Note: By default this will log the mnemonic of the account.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -172,9 +167,18 @@ Note: By default this will log the mnemonic of the account.
 
 The account, with private key loaded
 
+**`Deprecated`**
+
+Use `getTestAccount(params, algorandClient)` instead. The `algorandClient` object can be created using `AlgorandClient.fromClients({ algod, kmd })`.
+
+Creates an ephemeral Algorand account for the purposes of testing.
+Returns a newly created random test account that is funded from the dispenser
+DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
+Note: By default this will log the mnemonic of the account.
+
 #### Defined in
 
-[src/testing/account.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L18)
+[src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L20)
 
 ▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Account`\>
 
@@ -198,7 +202,7 @@ The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L28)
+[src/testing/account.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L30)
 
 ___
 
