@@ -2,6 +2,7 @@ import algosdk from 'algosdk'
 import { encodeLease, encodeTransactionNote, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
+import { ClientManager } from './client-manager'
 import { SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
 import TransactionWithSigner = algosdk.TransactionWithSigner
@@ -228,7 +229,9 @@ export type AlgokitComposerParams = {
   getSigner: (address: string) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
   getSuggestedParams?: () => Promise<algosdk.SuggestedParams>
-  /** How many rounds a transaction should be valid for by default */
+  /** How many rounds a transaction should be valid for by default; if not specified
+   * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
+   */
   defaultValidityWindow?: number
 }
 
@@ -260,6 +263,9 @@ export default class AlgokitComposer {
   /** The default transaction validity window */
   private defaultValidityWindow = 10
 
+  /** Whether the validity window was explicitly set on construction */
+  private defaultValidityWindowIsExplicit = false
+
   /**
    * Create an `AlgoKitComposer`.
    * @param params The configuration for this composer
@@ -270,6 +276,7 @@ export default class AlgokitComposer {
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
+    this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
   }
 
   /**
@@ -421,7 +428,14 @@ export default class AlgokitComposer {
     if (params.lastValidRound) {
       txn.lastRound = Number(params.lastValidRound)
     } else {
-      txn.lastRound = txn.firstRound + (params.validityWindow ?? this.defaultValidityWindow)
+      // If the validity window isn't set in this transaction or by default and we are pointing at
+      //  LocalNet set a bigger window to avoid dead transactions
+      const window =
+        params.validityWindow ??
+        (!this.defaultValidityWindowIsExplicit && ClientManager.genesisIdIsLocalNet(suggestedParams.genesisID)
+          ? 1000
+          : this.defaultValidityWindow)
+      txn.lastRound = txn.firstRound + window
     }
 
     if (params.staticFee !== undefined && params.extraFee !== undefined) {

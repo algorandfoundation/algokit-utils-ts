@@ -121,7 +121,7 @@ ___
 
 ### \_defaultValidityWindow
 
-• `Private` **\_defaultValidityWindow**: `number` = `10`
+• `Private` **\_defaultValidityWindow**: `undefined` \| `number` = `undefined`
 
 #### Defined in
 

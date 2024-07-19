@@ -36,6 +36,7 @@ Exposes access to various API clients.
 - [isMainNet](types_client_manager.ClientManager.md#ismainnet)
 - [isTestNet](types_client_manager.ClientManager.md#istestnet)
 - [network](types_client_manager.ClientManager.md#network)
+- [genesisIdIsLocalNet](types_client_manager.ClientManager.md#genesisidislocalnet)
 - [getAlgoNodeConfig](types_client_manager.ClientManager.md#getalgonodeconfig)
 - [getAlgodClient](types_client_manager.ClientManager.md#getalgodclient)
 - [getAlgodClientFromEnvironment](types_client_manager.ClientManager.md#getalgodclientfromenvironment)
@@ -205,7 +206,7 @@ The `ApplicationClient`
 
 #### Defined in
 
-[src/types/client-manager.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L176)
+[src/types/client-manager.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L185)
 
 ___
 
@@ -229,7 +230,7 @@ The `ApplicationClient`
 
 #### Defined in
 
-[src/types/client-manager.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L188)
+[src/types/client-manager.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L197)
 
 ___
 
@@ -265,7 +266,7 @@ const client = clientManager.getTestNetDispenser(
 
 #### Defined in
 
-[src/types/client-manager.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L166)
+[src/types/client-manager.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L175)
 
 ___
 
@@ -297,7 +298,7 @@ The typed client instance
 
 #### Defined in
 
-[src/types/client-manager.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L199)
+[src/types/client-manager.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L208)
 
 ___
 
@@ -328,7 +329,7 @@ The typed client instance
 
 #### Defined in
 
-[src/types/client-manager.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L213)
+[src/types/client-manager.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L222)
 
 ___
 
@@ -346,7 +347,7 @@ True if the current network is LocalNet.
 
 #### Defined in
 
-[src/types/client-manager.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L130)
+[src/types/client-manager.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L139)
 
 ___
 
@@ -364,7 +365,7 @@ True if the current network is MainNet.
 
 #### Defined in
 
-[src/types/client-manager.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L146)
+[src/types/client-manager.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L155)
 
 ___
 
@@ -382,7 +383,7 @@ True if the current network is TestNet.
 
 #### Defined in
 
-[src/types/client-manager.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L138)
+[src/types/client-manager.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L147)
 
 ___
 
@@ -411,6 +412,30 @@ const genesisId = network.genesisId
 
 ___
 
+### genesisIdIsLocalNet
+
+▸ **genesisIdIsLocalNet**(`genesisId`): `boolean`
+
+Returns true if the given network genesisId is associated with a LocalNet network.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `genesisId` | `string` | The network genesis ID |
+
+#### Returns
+
+`boolean`
+
+Whether the given genesis ID is associated with a LocalNet network
+
+#### Defined in
+
+[src/types/client-manager.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L131)
+
+___
+
 ### getAlgoNodeConfig
 
 ▸ **getAlgoNodeConfig**(`network`, `config`): [`AlgoClientConfig`](../interfaces/types_network_client.AlgoClientConfig.md)
@@ -430,7 +455,7 @@ Returns the Algorand configuration to point to the free tier of the AlgoNode ser
 
 #### Defined in
 
-[src/types/client-manager.ts:305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L305)
+[src/types/client-manager.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L314)
 
 ___
 
@@ -473,7 +498,7 @@ Returns an algod SDK client that automatically retries on idempotent calls.
 
 #### Defined in
 
-[src/types/client-manager.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L344)
+[src/types/client-manager.ts:353](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L353)
 
 ___
 
@@ -497,7 +522,7 @@ Returns an algod SDK client that automatically retries on idempotent calls loade
 
 #### Defined in
 
-[src/types/client-manager.ts:361](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L361)
+[src/types/client-manager.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L370)
 
 ___
 
@@ -515,7 +540,7 @@ Expects `process.env.ALGOD_SERVER` to be defined, and you can also specify `proc
 
 #### Defined in
 
-[src/types/client-manager.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L263)
+[src/types/client-manager.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L272)
 
 ___
 
@@ -548,7 +573,7 @@ const config = ClientManager.getConfigFromEnvironmentOrLocalNet()
 
 #### Defined in
 
-[src/types/client-manager.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L234)
+[src/types/client-manager.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L243)
 
 ___
 
@@ -570,7 +595,7 @@ Returns the Algorand configuration to point to the default LocalNet.
 
 #### Defined in
 
-[src/types/client-manager.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L316)
+[src/types/client-manager.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L325)
 
 ___
 
@@ -620,7 +645,7 @@ Returns an indexer SDK client that automatically retries on idempotent calls
 
 #### Defined in
 
-[src/types/client-manager.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L390)
+[src/types/client-manager.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L399)
 
 ___
 
@@ -650,7 +675,7 @@ Returns an indexer SDK client that automatically retries on idempotent calls loa
 
 #### Defined in
 
-[src/types/client-manager.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L412)
+[src/types/client-manager.ts:421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L421)
 
 ___
 
@@ -668,7 +693,7 @@ Expects `process.env.INDEXER_SERVER` to be defined, and you can also specify `pr
 
 #### Defined in
 
-[src/types/client-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L284)
+[src/types/client-manager.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L293)
 
 ___
 
@@ -698,7 +723,7 @@ KMD client allows you to export private keys, which is useful to (for instance) 
 
 #### Defined in
 
-[src/types/client-manager.ts:427](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L427)
+[src/types/client-manager.ts:436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L436)
 
 ___
 
@@ -721,4 +746,4 @@ Returns a KMD SDK client that automatically retries on idempotent calls loaded f
 
 #### Defined in
 
-[src/types/client-manager.ts:441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L441)
+[src/types/client-manager.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L450)
