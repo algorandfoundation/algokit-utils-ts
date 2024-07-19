@@ -1,5 +1,6 @@
 import algosdk from 'algosdk'
 import { AlgorandClient, Config } from '../'
+import { ClientManager } from '../types/client-manager'
 import { GetTestAccountParams } from '../types/testing'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
@@ -36,7 +37,11 @@ export async function getTestAccount(
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient
       ? algodOrAlgorandClient
-      : AlgorandClient.fromClients({ algod: algodOrAlgorandClient, kmd })
+      : AlgorandClient.fromClients({
+          algod: algodOrAlgorandClient,
+          kmd:
+            kmd ?? ClientManager.getKmdClient({ ...ClientManager.getAlgodConfigFromEnvironment(), port: process?.env?.KMD_PORT ?? '4002' }),
+        })
 
   const account = accountGetter ? await accountGetter(algorand) : algosdk.generateAccount()
 
