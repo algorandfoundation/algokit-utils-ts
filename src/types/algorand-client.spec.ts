@@ -216,4 +216,21 @@ describe('AlgorandClient', () => {
       clearProgram: await compileProgram(algorand, APP_SPEC.source.clear),
     })
   })
+
+  test('issue more than non-LocalNet default validity window transactions against LocalNet works', async () => {
+    const algorand = AlgorandClient.defaultLocalNet()
+
+    const alice = algorand.account.random()
+
+    await algorand.send.payment({
+      sender: (await algorand.account.localNetDispenser()).addr,
+      receiver: alice.addr,
+      amount: (2).algos(),
+    })
+
+    // Default validity window is 10
+    for (let i = 0; i < 10; i++) {
+      await algorand.send.payment({ sender: alice.addr, receiver: alice.addr, amount: i.microAlgos() })
+    }
+  })
 })
