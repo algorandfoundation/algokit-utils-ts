@@ -22,7 +22,7 @@ export class AlgorandClient {
   private _cachedSuggestedParamsExpiry?: Date
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
-  private _defaultValidityWindow: number = 10
+  private _defaultValidityWindow: number | undefined = undefined
 
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config)
