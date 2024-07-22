@@ -1,5 +1,6 @@
 import algosdk from 'algosdk'
 import { AlgorandClient, Config } from '../'
+import { ClientManager } from '../types/client-manager'
 import { GetTestAccountParams } from '../types/testing'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
@@ -14,7 +15,7 @@ import Kmd = algosdk.Kmd
  * Note: By default this will log the mnemonic of the account.
  * @param params The config for the test account to generate
  * @param algod An algod client
- * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables
+ * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables and if not found fallback to the default LocalNet KMD client
  * @returns The account, with private key loaded
  */
 export async function getTestAccount(params: GetTestAccountParams, algod: Algodv2, kmd?: Kmd): Promise<Account>
@@ -33,10 +34,19 @@ export async function getTestAccount(
   algodOrAlgorandClient: Algodv2 | AlgorandClient,
   kmd?: Kmd,
 ): Promise<Account> {
+  let kmdClient = kmd
+  if (!kmdClient) {
+    const kmdConfig = ClientManager.getConfigFromEnvironmentOrLocalNet().kmdConfig
+    kmdClient = kmdConfig ? ClientManager.getKmdClient(kmdConfig) : undefined
+  }
+
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient
       ? algodOrAlgorandClient
-      : AlgorandClient.fromClients({ algod: algodOrAlgorandClient, kmd })
+      : AlgorandClient.fromClients({
+          algod: algodOrAlgorandClient,
+          kmd: kmdClient,
+        })
 
   const account = accountGetter ? await accountGetter(algorand) : algosdk.generateAccount()
 

@@ -159,7 +159,7 @@ ___
 | :------ | :------ | :------ |
 | `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
 | `algod` | `default` | An algod client |
-| `kmd?` | `default` | A KMD client, if not specified then a default KMD client will be loaded from environment variables |
+| `kmd?` | `default` | A KMD client, if not specified then a default KMD client will be loaded from environment variables and if not found fallback to the default LocalNet KMD client |
 
 #### Returns
 
@@ -178,7 +178,7 @@ Note: By default this will log the mnemonic of the account.
 
 #### Defined in
 
-[src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L20)
+[src/testing/account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L21)
 
 ▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Account`\>
 
@@ -202,7 +202,7 @@ The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L30)
+[src/testing/account.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L31)
 
 ___
 
