@@ -53,7 +53,7 @@ many types of accounts, including:
 
 #### Defined in
 
-[src/types/transaction.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L104)
+[src/types/transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L108)
 
 ___
 
