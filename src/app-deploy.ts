@@ -588,6 +588,15 @@ export function performTemplateSubstitution(tealCode: string, templateParams?: T
     for (const key in templateParams) {
       const value = templateParams[key]
       const token = `TMPL_${key.replace(/^TMPL_/, '')}`
+
+      // If this is a number, first replace any byte representations of the number
+      // These may appear in the TEAL in order to circumvent int compression and preserve PC values
+      if (typeof value === 'number' || typeof value === 'boolean') {
+        tealCode = tealCode.replace(new RegExp(`(?<=bytes )${token}`, 'g'), `0x${value.toString(16).padStart(16, '0')}`)
+
+        // We could probably return here since mixing pushint and pushbytes is likely not going to happen, but might as well do both
+      }
+
       tealCode = tealCode.replace(
         new RegExp(token, 'g'),
         typeof value === 'string'
