@@ -165,7 +165,7 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
  */
 export const signTransaction = async (transaction: Transaction, signer: SendTransactionFrom) => {
   return 'sk' in signer
-    ? transaction.signTxn(signer.sk)
+    ? transaction.signTxn(signer.sk!)
     : 'lsig' in signer
       ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
       : 'sign' in signer

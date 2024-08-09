@@ -53,7 +53,8 @@ async function fundUsingTransfer({
     throw new Error('Dispenser API client is not supported in this context.')
   }
 
-  const from = funding.fundingSource ?? (await new AccountManager(new ClientManager({ algod, kmd })).dispenserFromEnvironment())
+  const accManager = new AccountManager(new ClientManager({ algod, kmd }))
+  const from = funding.fundingSource ?? accManager.getAccount(await accManager.dispenserFromEnvironment())
   const amount = microAlgos(Math.max(fundAmount, funding.minFundingIncrement?.microAlgos ?? 0))
   const response = await transferAlgos(
     {

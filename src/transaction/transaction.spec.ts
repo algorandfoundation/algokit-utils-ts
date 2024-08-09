@@ -788,12 +788,12 @@ describe('Resource Packer: meta', () => {
     const { testAccount } = fixture.context
     const { algorand } = fixture
 
-    const authAddr = algorand.account.random().account
+    const authAddr = algorand.account.random()
 
     await algorand.send.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,
-      rekeyTo: authAddr.addr,
+      rekeyTo: authAddr,
       amount: algokit.microAlgos(0),
     })
 
@@ -803,12 +803,12 @@ describe('Resource Packer: meta', () => {
       method: 'createAsset',
       methodArgs: [],
       sendParams: { fee: algokit.microAlgos(2_000) },
-      sender: { addr: testAccount.addr, signer: algosdk.makeBasicAccountTransactionSigner(authAddr) },
+      sender: { addr: testAccount.addr, signer: algorand.account.getSigner(authAddr) },
     })
     const res = await externalClient.call({
       method: 'senderAssetBalance',
       methodArgs: [],
-      sender: { addr: testAccount.addr, signer: algosdk.makeBasicAccountTransactionSigner(authAddr) },
+      sender: { addr: testAccount.addr, signer: algorand.account.getSigner(authAddr) },
     })
 
     expect(res.transaction.appAccounts?.length || 0).toBe(0)

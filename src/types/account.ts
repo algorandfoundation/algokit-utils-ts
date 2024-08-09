@@ -113,6 +113,7 @@ export class SigningAccount implements Account {
 export interface TransactionSignerAccount {
   addr: Readonly<string>
   signer: TransactionSigner
+  sk?: Readonly<Uint8Array>
 }
 
 type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }

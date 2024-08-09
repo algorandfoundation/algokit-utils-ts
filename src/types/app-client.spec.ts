@@ -427,11 +427,11 @@ describe('application-client', () => {
     })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(rekeyTo, testAccount.addr)
+    algorand.account.setSigner(testAccount.addr, algorand.account.getSigner(rekeyTo))
     await algokit.transferAlgos(
       {
         amount: (0).algos(),
-        from: rekeyedAccount,
+        from: algorand.account.getAccount(testAccount.addr),
         to: testAccount,
       },
       algod,

@@ -311,7 +311,7 @@ describe('transfer', () => {
       algod,
       kmd,
     )
-    const accountInfo = await algod.accountInformation(secondAccount.addr).do()
+    const accountInfo = await algod.accountInformation(secondAccount).do()
 
     invariant(result)
     expect(result.transactionId).toBeDefined()
@@ -327,7 +327,7 @@ describe('transfer', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(algosdk.encodeAddress(txnInfo.txn.txn.snd)).toBe(testAccount.addr)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(algosdk.encodeAddress(txnInfo.txn.txn.rcv!)).toBe(secondAccount.addr)
+    expect(algosdk.encodeAddress(txnInfo.txn.txn.rcv!)).toBe(secondAccount)
   })
 
   test('ensureFunded respects minimum funding increment', async () => {
@@ -367,8 +367,8 @@ describe('transfer', () => {
     invariant(result)
     const txnInfo = await algod.pendingTransactionInformation(result.transactionId).do()
     const resultReceiver = algosdk.encodeAddress(txnInfo.txn.txn.snd)
-    expect(resultReceiver).toBe(dispenser.addr)
-    const accountInfo = await algod.accountInformation(secondAccount.addr).do()
+    expect(resultReceiver).toBe(dispenser)
+    const accountInfo = await algod.accountInformation(secondAccount).do()
     expect(accountInfo['amount']).toBe(1_000_000)
   })
 
@@ -443,22 +443,23 @@ describe('rekey', () => {
   test('Rekey works', async () => {
     const { algod, testAccount, algorand } = localnet.context
     const secondAccount = algorand.account.random()
-    const rekeyedAccount = algorand.account.rekeyed(secondAccount, testAccount.addr)
 
     await algokit.rekeyAccount(
       {
-        from: testAccount,
+        from: algorand.account.getAccount(testAccount.addr),
         rekeyTo: secondAccount,
         note: 'Rekey',
       },
       algod,
     )
 
+    algorand.account.setSigner(testAccount.addr, algorand.account.getSigner(secondAccount))
+
     // This will throw if the rekey wasn't successful
     await algokit.transferAlgos(
       {
         amount: (1).microAlgos(),
-        from: rekeyedAccount,
+        from: algorand.account.getAccount(testAccount.addr),
         to: testAccount.addr,
       },
       algod,

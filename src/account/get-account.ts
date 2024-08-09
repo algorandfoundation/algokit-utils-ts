@@ -126,5 +126,6 @@ export async function getAccount(
     throw new Error('Missing name or account config')
   }
 
-  return (await new AccountManager(new ClientManager({ algod, kmd: kmdClient })).fromEnvironment(name, fundWith)).account
+  const accManager = new AccountManager(new ClientManager({ algod, kmd: kmdClient }))
+  return accManager.getAccount(await accManager.fromEnvironment(name, fundWith)) as SigningAccount
 }
