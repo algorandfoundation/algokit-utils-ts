@@ -21,10 +21,10 @@ describe('asset', () => {
         unit: 'TEST',
         url: 'https://example.com',
         metadataHash: hash,
-        manager: accounts[0].addr,
-        reserveAccount: accounts[1].addr,
-        freezeAccount: accounts[2].addr,
-        clawbackAccount: accounts[3].addr,
+        manager: accounts[0],
+        reserveAccount: accounts[1],
+        freezeAccount: accounts[2],
+        clawbackAccount: accounts[3],
         frozenByDefault: true,
       },
       algod,
@@ -41,10 +41,10 @@ describe('asset', () => {
     expect(assetData.params.name).toBe('Test Asset')
     expect(assetData.params.url).toBe('https://example.com')
     expect(assetData.params['metadata-hash']).toBe(Buffer.from(hash).toString('base64'))
-    expect(assetData.params.manager).toBe(accounts[0].addr)
-    expect(assetData.params.reserve).toBe(accounts[1].addr)
-    expect(assetData.params.freeze).toBe(accounts[2].addr)
-    expect(assetData.params.clawback).toBe(accounts[3].addr)
+    expect(assetData.params.manager).toBe(accounts[0])
+    expect(assetData.params.reserve).toBe(accounts[1])
+    expect(assetData.params.freeze).toBe(accounts[2])
+    expect(assetData.params.clawback).toBe(accounts[3])
   })
 
   test('OptIn an asset to an account succeed', async () => {
@@ -145,7 +145,7 @@ describe('asset', () => {
     await algokit.transferAsset(
       {
         from: testAccount,
-        to: secondAccount.addr,
+        to: secondAccount,
         assetId: dummyAssetId,
         amount: 5,
         note: `Transfer 5 assets with id ${dummyAssetId}`,
@@ -187,7 +187,7 @@ describe('asset', () => {
     await algokit.transferAsset(
       {
         from: testAccount,
-        to: secondAccount.addr,
+        to: secondAccount,
         assetId: dummyAssetId,
         amount: 5,
         note: `Transfer 5 assets with id ${dummyAssetId}`,

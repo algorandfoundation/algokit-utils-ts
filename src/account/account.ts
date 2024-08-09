@@ -97,12 +97,13 @@ export async function mnemonicAccountFromEnvironment(
   algod: Algodv2,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
-  return (
-    await new AccountManager(new ClientManager({ algod, kmd: kmdClient })).fromEnvironment(
-      typeof account === 'string' ? account : account.name,
-      typeof account === 'string' ? undefined : account.fundWith,
-    )
-  ).account
+  const accManager = new AccountManager(new ClientManager({ algod, kmd: kmdClient }))
+  const addr = await accManager.fromEnvironment(
+    typeof account === 'string' ? account : account.name,
+    typeof account === 'string' ? undefined : account.fundWith,
+  )
+
+  return accManager.getAccount(addr) as SigningAccount
 }
 
 /**

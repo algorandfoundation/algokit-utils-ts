@@ -89,6 +89,7 @@ export class AccountManager {
     const acc = {
       addr: 'addr' in account ? account.addr : account.address(),
       signer: getAccountTransactionSigner(account),
+      sk: 'sk' in account ? account.sk : undefined,
     }
     this._accounts[acc.addr] = acc
     return { ...acc, account }
@@ -186,10 +187,8 @@ export class AccountManager {
    * @param sender The account / address to look up
    * @returns The account information
    */
-  public async getInformation(sender: string | TransactionSignerAccount): Promise<AccountInformation> {
-    const account = AccountInformationModel.from_obj_for_encoding(
-      await this._clientManager.algod.accountInformation(typeof sender === 'string' ? sender : sender.addr).do(),
-    )
+  public async getInformation(sender: string): Promise<AccountInformation> {
+    const account = AccountInformationModel.from_obj_for_encoding(await this._clientManager.algod.accountInformation(sender).do())
 
     return {
       ...account,
@@ -226,10 +225,8 @@ export class AccountManager {
    * @param assetId The ID of the asset to return a holding for
    * @returns The account asset holding information
    */
-  public async getAssetInformation(sender: string | TransactionSignerAccount, assetId: number | bigint) {
-    const info = await this._clientManager.algod
-      .accountAssetInformation(typeof sender === 'string' ? sender : sender.addr, Number(assetId))
-      .do()
+  public async getAssetInformation(sender: string, assetId: number | bigint) {
+    const info = await this._clientManager.algod.accountAssetInformation(sender, Number(assetId)).do()
 
     return {
       assetId: BigInt(assetId),
@@ -252,25 +249,9 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic(mnemonicSecret: string, sender?: string) {
+  public fromMnemonic(mnemonicSecret: string, sender?: string): string {
     const account = algosdk.mnemonicToSecretKey(mnemonicSecret)
-    return this.signerAccount(new SigningAccount(account, sender))
-  }
-
-  /**
-   * Tracks and returns an Algorand account that is a rekeyed version of the given account to a new sender.
-   *
-   * @example
-   * ```typescript
-   * const account = await account.fromMnemonic("mnemonic secret ...")
-   * const rekeyedAccount = await account.rekeyed(account, "SENDERADDRESS...")
-   * ```
-   * @param account The account to use as the signer for this new rekeyed account
-   * @param sender The sender address to use as the new sender
-   * @returns The account
-   */
-  public rekeyed(account: TransactionSignerAccount, sender: string) {
-    return this.signerAccount({ addr: sender, signer: account.signer })
+    return this.signerAccount(new SigningAccount(account, sender)).addr
   }
 
   /**
@@ -300,7 +281,7 @@ export class AccountManager {
    * @param fundWith The optional amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
    * @returns The account
    */
-  public async fromEnvironment(name: string, fundWith?: AlgoAmount) {
+  public async fromEnvironment(name: string, fundWith?: AlgoAmount): Promise<string> {
     if (!process || !process.env) {
       throw new Error('Attempt to get account with private key from a non Node.js context; this is not supported!')
     }
@@ -310,12 +291,12 @@ export class AccountManager {
 
     if (accountMnemonic) {
       const signer = algosdk.mnemonicToSecretKey(accountMnemonic)
-      return this.signerAccount(new SigningAccount(signer, sender))
+      return this.signerAccount(new SigningAccount(signer, sender)).addr
     }
 
     if (await this._clientManager.isLocalNet()) {
       const account = await this._kmdAccountManager.getOrCreateWalletAccount(name, fundWith)
-      return this.signerAccount(account.account)
+      return this.signerAccount(account.account).addr
     }
 
     throw new Error(`Missing environment variable ${name.toUpperCase()}_MNEMONIC when looking for account ${name}`)
@@ -341,10 +322,10 @@ export class AccountManager {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean,
     sender?: string,
-  ) {
+  ): Promise<string> {
     const account = await this.kmd.getWalletAccount(name, predicate, sender)
     if (!account) throw new Error(`Unable to find KMD account ${name}${predicate ? ' with predicate' : ''}`)
-    return this.signerAccount(account.account)
+    return this.signerAccount(account.account).addr
   }
 
   /**
@@ -359,8 +340,8 @@ export class AccountManager {
    * @param signingAccounts The signers that are currently present
    * @returns A multisig account wrapper
    */
-  public multisig(multisigParams: algosdk.MultisigMetadata, signingAccounts: (algosdk.Account | SigningAccount)[]) {
-    return this.signerAccount(new MultisigAccount(multisigParams, signingAccounts))
+  public multisig(multisigParams: algosdk.MultisigMetadata): string {
+    return this.signerAccount(new MultisigAccount(multisigParams, [])).addr
   }
 
   /**
@@ -374,8 +355,8 @@ export class AccountManager {
    * @param args The (binary) arguments to pass into the logic signature
    * @returns A logic signature account wrapper
    */
-  public logicsig(program: Uint8Array, args?: Array<Uint8Array>) {
-    return this.signerAccount(new LogicSigAccount(program, args))
+  public logicsig(program: Uint8Array, args?: Array<Uint8Array>): string {
+    return this.signerAccount(new LogicSigAccount(program, args)).addr
   }
 
   /**
@@ -387,8 +368,8 @@ export class AccountManager {
    * ```
    * @returns The account
    */
-  public random() {
-    return this.signerAccount(algosdk.generateAccount())
+  public random(): string {
+    return this.signerAccount(algosdk.generateAccount()).addr
   }
 
   /**
@@ -407,7 +388,7 @@ export class AccountManager {
    *
    * @returns The account
    */
-  public async dispenserFromEnvironment() {
+  public async dispenserFromEnvironment(): Promise<string> {
     if (!process || !process.env) {
       throw new Error('Attempt to get dispenser from environment from a non Node.js context; this is not supported!')
     }
@@ -424,10 +405,10 @@ export class AccountManager {
    * ```typescript
    * const account = await account.localNetDispenser()
    * ```
-   * @returns The account
+   * @returns The address
    */
-  public async localNetDispenser() {
+  public async localNetDispenser(): Promise<string> {
     const dispenser = await this._kmdAccountManager.getLocalNetDispenserAccount()
-    return this.signerAccount(dispenser.account)
+    return this.signerAccount(dispenser.account).addr
   }
 }
