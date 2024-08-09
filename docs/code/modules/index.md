@@ -2466,7 +2466,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/app-deploy.ts:616](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L616)
+[src/app-deploy.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L625)
 
 ___
 
@@ -2823,7 +2823,7 @@ The TEAL without comments
 
 #### Defined in
 
-[src/app-deploy.ts:639](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L639)
+[src/app-deploy.ts:648](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L648)
 
 ___
 

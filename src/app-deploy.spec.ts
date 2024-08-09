@@ -588,6 +588,27 @@ test('Can substitute template variable with multiple underscores', async () => {
   `)
 })
 
+test('Can substitue both bytes and int uint64', async () => {
+  const test_teal = `
+  int TMPL_SOME_VALUE
+  pushint TMPL_SOME_VALUE
+  bytes TMPL_SOME_VALUE
+  pushbytes TMPL_SOME_VALUE
+  return
+  `
+  const test_params = {
+    SOME_VALUE: 123,
+  }
+  const substituted = algokit.performTemplateSubstitution(test_teal, test_params)
+  expect(substituted).toBe(`
+  int 123
+  pushint 123
+  bytes 0x000000000000007b
+  pushbytes 0x000000000000007b
+  return
+  `)
+})
+
 function getMetadata(overrides?: Partial<AppDeployMetadata>): AppDeployMetadata {
   return {
     name: 'test',
