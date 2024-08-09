@@ -234,7 +234,7 @@ export class AccountManager {
     return {
       assetId: BigInt(assetId),
       balance: BigInt(info['asset-holding']['amount']),
-      frozen: info['asset-holding']['is-frozen'] === 'true',
+      frozen: info['asset-holding']['is-frozen'] === true,
       round: BigInt(info['round']),
     }
   }
