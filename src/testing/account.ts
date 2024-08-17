@@ -1,6 +1,5 @@
 import algosdk from 'algosdk'
 import { AlgorandClient, Config } from '../'
-import { ClientManager } from '../types/client-manager'
 import { GetTestAccountParams } from '../types/testing'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
@@ -34,18 +33,12 @@ export async function getTestAccount(
   algodOrAlgorandClient: Algodv2 | AlgorandClient,
   kmd?: Kmd,
 ): Promise<Account> {
-  let kmdClient = kmd
-  if (!kmdClient) {
-    const kmdConfig = ClientManager.getConfigFromEnvironmentOrLocalNet().kmdConfig
-    kmdClient = kmdConfig ? ClientManager.getKmdClient(kmdConfig) : undefined
-  }
-
   const algorand =
     algodOrAlgorandClient instanceof AlgorandClient
       ? algodOrAlgorandClient
       : AlgorandClient.fromClients({
           algod: algodOrAlgorandClient,
-          kmd: kmdClient,
+          kmd,
         })
 
   const account = accountGetter ? await accountGetter(algorand) : algosdk.generateAccount()
