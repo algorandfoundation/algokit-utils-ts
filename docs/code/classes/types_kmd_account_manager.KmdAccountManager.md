@@ -16,12 +16,14 @@ that makes it easier to get and manage accounts using KMD.
 ### Properties
 
 - [\_clientManager](types_kmd_account_manager.KmdAccountManager.md#_clientmanager)
+- [\_kmd](types_kmd_account_manager.KmdAccountManager.md#_kmd)
 
 ### Methods
 
 - [getLocalNetDispenserAccount](types_kmd_account_manager.KmdAccountManager.md#getlocalnetdispenseraccount)
 - [getOrCreateWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getorcreatewalletaccount)
 - [getWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getwalletaccount)
+- [kmd](types_kmd_account_manager.KmdAccountManager.md#kmd)
 
 ## Constructors
 
@@ -43,17 +45,27 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L17)
+[src/types/kmd-account-manager.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L18)
 
 ## Properties
 
 ### \_clientManager
 
-• `Private` **\_clientManager**: [`ClientManager`](types_client_manager.ClientManager.md)
+• `Private` **\_clientManager**: `Omit`\<[`ClientManager`](types_client_manager.ClientManager.md), ``"kmd"``\>
 
 #### Defined in
 
 [src/types/kmd-account-manager.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L11)
+
+___
+
+### \_kmd
+
+• `Private` `Optional` **\_kmd**: ``null`` \| `default`
+
+#### Defined in
+
+[src/types/kmd-account-manager.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L12)
 
 ## Methods
 
@@ -77,7 +89,7 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L158)
+[src/types/kmd-account-manager.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L187)
 
 ___
 
@@ -118,7 +130,7 @@ const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('accoun
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L108)
+[src/types/kmd-account-manager.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L135)
 
 ___
 
@@ -153,4 +165,18 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L37)
+[src/types/kmd-account-manager.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L62)
+
+___
+
+### kmd
+
+▸ **kmd**(): `Promise`\<`default`\>
+
+#### Returns
+
+`Promise`\<`default`\>
+
+#### Defined in
+
+[src/types/kmd-account-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L27)

@@ -159,8 +159,7 @@ export class AccountManager {
    * @param sender The sender address
    * @example
    * ```typescript
-   * const account = accountManager.random()
-   * const sender = account.addr
+   * const sender = accountManager.random().addr
    * // ...
    * // Returns the `TransactionSignerAccount` for `sender` that has previously been registered
    * const account = accountManager.getAccount(sender)
@@ -218,7 +217,7 @@ export class AccountManager {
    * ```typescript
    * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
    * const assetId = 123345;
-   * const accountInfo = await accountManager.getAccountAssetInformation(address, assetId);
+   * const accountInfo = await accountManager.getAssetInformation(address, assetId);
    * ```
    *
    * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
@@ -244,8 +243,8 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.fromMnemonic("mnemonic secret ...")
-   * const rekeyedAccount = await account.fromMnemonic("mnemonic secret ...", "SENDERADDRESS...")
+   * const account = accountManager.fromMnemonic("mnemonic secret ...")
+   * const rekeyedAccount = accountManager.fromMnemonic("mnemonic secret ...", "SENDERADDRESS...")
    * ```
    * @param mnemonicSecret The mnemonic secret representing the private key of an account; **Note: Be careful how the mnemonic is handled**,
    *  never commit it into source control and ideally load it from the environment (ideally via a secret storage service) rather than the file system.
@@ -262,8 +261,8 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.fromMnemonic("mnemonic secret ...")
-   * const rekeyedAccount = await account.rekeyed(account, "SENDERADDRESS...")
+   * const account = account.fromMnemonic("mnemonic secret ...")
+   * const rekeyedAccount = accountManager.rekeyed(account, "SENDERADDRESS...")
    * ```
    * @param account The account to use as the signer for this new rekeyed account
    * @param sender The sender address to use as the new sender
@@ -290,7 +289,7 @@ export class AccountManager {
    *
    * If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
    * ```typescript
-   * const account = await account.fromEnvironment('MY_ACCOUNT', algod)
+   * const account = await accountManager.fromEnvironment('MY_ACCOUNT')
    * ```
    *
    * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
@@ -342,7 +341,7 @@ export class AccountManager {
     predicate?: (account: Record<string, any>) => boolean,
     sender?: string,
   ) {
-    const account = await this.kmd.getWalletAccount(name, predicate, sender)
+    const account = await this._kmdAccountManager.getWalletAccount(name, predicate, sender)
     if (!account) throw new Error(`Unable to find KMD account ${name}${predicate ? ' with predicate' : ''}`)
     return this.signerAccount(account.account)
   }
@@ -352,8 +351,8 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.multisig({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]},
-   *  await account.fromEnvironment('ACCOUNT1'))
+   * const account = accountManager.multisig({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]},
+   *  [(await accountManager.fromEnvironment('ACCOUNT1')).account])
    * ```
    * @param multisigParams The parameters that define the multisig account
    * @param signingAccounts The signers that are currently present
@@ -368,7 +367,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.logicsig(program, [new Uint8Array(3, ...)])
+   * const account = account.logicsig(program, [new Uint8Array(3, ...)])
    * ```
    * @param program The bytes that make up the compiled logic signature
    * @param args The (binary) arguments to pass into the logic signature
@@ -383,7 +382,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.random()
+   * const account = account.random()
    * ```
    * @returns The account
    */

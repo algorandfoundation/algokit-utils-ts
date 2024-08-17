@@ -159,7 +159,7 @@ const account = await account.dispenserFromEnvironment()
 
 #### Defined in
 
-[src/types/account-manager.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L410)
+[src/types/account-manager.ts:409](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L409)
 
 ___
 
@@ -196,7 +196,7 @@ The account
 
 If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
 ```typescript
-const account = await account.fromEnvironment('MY_ACCOUNT', algod)
+const account = await accountManager.fromEnvironment('MY_ACCOUNT')
 ```
 
 If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
@@ -204,7 +204,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/types/account-manager.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L303)
+[src/types/account-manager.ts:302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L302)
 
 ___
 
@@ -238,7 +238,7 @@ const defaultDispenserAccount = await account.fromKmd('unencrypted-default-walle
 
 #### Defined in
 
-[src/types/account-manager.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L339)
+[src/types/account-manager.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L338)
 
 ___
 
@@ -264,13 +264,13 @@ The account
 **`Example`**
 
 ```typescript
-const account = await account.fromMnemonic("mnemonic secret ...")
-const rekeyedAccount = await account.fromMnemonic("mnemonic secret ...", "SENDERADDRESS...")
+const account = accountManager.fromMnemonic("mnemonic secret ...")
+const rekeyedAccount = accountManager.fromMnemonic("mnemonic secret ...", "SENDERADDRESS...")
 ```
 
 #### Defined in
 
-[src/types/account-manager.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L255)
+[src/types/account-manager.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L254)
 
 ___
 
@@ -297,8 +297,7 @@ The `TransactionSignerAccount` or throws an error if not found
 **`Example`**
 
 ```typescript
-const account = accountManager.random()
-const sender = account.addr
+const sender = accountManager.random().addr
 // ...
 // Returns the `TransactionSignerAccount` for `sender` that has previously been registered
 const account = accountManager.getAccount(sender)
@@ -306,7 +305,7 @@ const account = accountManager.getAccount(sender)
 
 #### Defined in
 
-[src/types/account-manager.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L170)
+[src/types/account-manager.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L169)
 
 ___
 
@@ -334,14 +333,14 @@ The account asset holding information
 ```typescript
 const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
 const assetId = 123345;
-const accountInfo = await accountManager.getAccountAssetInformation(address, assetId);
+const accountInfo = await accountManager.getAssetInformation(address, assetId);
 ```
 
 [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
 
 #### Defined in
 
-[src/types/account-manager.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L229)
+[src/types/account-manager.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L228)
 
 ___
 
@@ -374,7 +373,7 @@ const accountInfo = await accountManager.getInformation(address);
 
 #### Defined in
 
-[src/types/account-manager.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L189)
+[src/types/account-manager.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L188)
 
 ___
 
@@ -431,7 +430,7 @@ const account = await account.localNetDispenser()
 
 #### Defined in
 
-[src/types/account-manager.ts:429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L429)
+[src/types/account-manager.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L428)
 
 ___
 
@@ -457,12 +456,12 @@ A logic signature account wrapper
 **`Example`**
 
 ```typescript
-const account = await account.logicsig(program, [new Uint8Array(3, ...)])
+const account = account.logicsig(program, [new Uint8Array(3, ...)])
 ```
 
 #### Defined in
 
-[src/types/account-manager.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L377)
+[src/types/account-manager.ts:376](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L376)
 
 ___
 
@@ -488,13 +487,13 @@ A multisig account wrapper
 **`Example`**
 
 ```typescript
-const account = await account.multisig({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]},
- await account.fromEnvironment('ACCOUNT1'))
+const account = accountManager.multisig({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]},
+ [(await accountManager.fromEnvironment('ACCOUNT1')).account])
 ```
 
 #### Defined in
 
-[src/types/account-manager.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L362)
+[src/types/account-manager.ts:361](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L361)
 
 ___
 
@@ -513,12 +512,12 @@ The account
 **`Example`**
 
 ```typescript
-const account = await account.random()
+const account = account.random()
 ```
 
 #### Defined in
 
-[src/types/account-manager.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L390)
+[src/types/account-manager.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L389)
 
 ___
 
@@ -544,13 +543,13 @@ The account
 **`Example`**
 
 ```typescript
-const account = await account.fromMnemonic("mnemonic secret ...")
-const rekeyedAccount = await account.rekeyed(account, "SENDERADDRESS...")
+const account = account.fromMnemonic("mnemonic secret ...")
+const rekeyedAccount = accountManager.rekeyed(account, "SENDERADDRESS...")
 ```
 
 #### Defined in
 
-[src/types/account-manager.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L272)
+[src/types/account-manager.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L271)
 
 ___
 
