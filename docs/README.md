@@ -53,21 +53,21 @@ The main entrypoint to the bulk of the functionality is the `AlgorandClient` cla
 // Point to the network configured through environment variables or
 //  if no environment variables it will point to the default LocalNet
 //  configuration
-const algorand = algokit.AlgorandClient.fromEnvironment()
+const algorand = AlgorandClient.fromEnvironment()
 // Point to default LocalNet configuration
-const algorand = algokit.AlgorandClient.defaultLocalNet()
+const algorand = AlgorandClient.defaultLocalNet()
 // Point to TestNet using AlgoNode free tier
-const algorand = algokit.AlgorandClient.testNet()
+const algorand = AlgorandClient.testNet()
 // Point to MainNet using AlgoNode free tier
-const algorand = algokit.AlgorandClient.mainNet()
+const algorand = AlgorandClient.mainNet()
 // Point to a pre-created algod client
-const algorand = algokit.AlgorandClient.fromClients({ algod })
+const algorand = AlgorandClient.fromClients({ algod })
 // Point to pre-created algod, indexer and kmd clients
-const algorand = algokit.AlgorandClient.fromClients({ algod, indexer, kmd })
+const algorand = AlgorandClient.fromClients({ algod, indexer, kmd })
 // Point to custom configuration for algod
-const algorand = algokit.AlgorandClient.fromConfig({ algodConfig })
+const algorand = AlgorandClient.fromConfig({ algodConfig })
 // Point to custom configuration for algod, indexer and kmd
-const algorand = algokit.AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig })
+const algorand = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig })
 ```
 
 ## Testing

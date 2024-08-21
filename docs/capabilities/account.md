@@ -109,7 +109,7 @@ await algorand.account.rekeyAccount({
 // Using a rekeyed account
 
 // Note: if a signing account is passed into `algorand.account.rekeyAccount` then you don't need to call `rekeyedAccount` to register the new signer
-const rekeyedAccount = algokit.rekeyedAccount(newAccount, account.addr)
+const rekeyedAccount = algorand.account.rekeyed(account.addr, newAccount)
 // rekeyedAccount can be used to sign transactions on behalf of account...
 ```
 

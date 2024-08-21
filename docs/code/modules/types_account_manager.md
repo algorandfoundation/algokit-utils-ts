@@ -10,7 +10,6 @@
 
 ### Interfaces
 
-- [BulkAssetOptInOutResult](../interfaces/types_account_manager.BulkAssetOptInOutResult.md)
 - [EnsureFundedResult](../interfaces/types_account_manager.EnsureFundedResult.md)
 
 ### Functions
@@ -40,4 +39,4 @@ A transaction signer
 
 #### Defined in
 
-[src/types/account-manager.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L46)
+[src/types/account-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L30)

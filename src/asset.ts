@@ -3,6 +3,7 @@ import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
 import { AccountManager } from './types/account-manager'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
+import { AssetManager } from './types/asset-manager'
 import { ClientManager } from './types/client-manager'
 import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
 import { SendTransactionResult } from './types/transaction'
@@ -118,7 +119,7 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
 }
 
 /**
- * @deprecated use `algorandClient.account.assetBulkOptIn()` instead
+ * @deprecated use `algorandClient.asset.bulkOptIn()` instead
  *
  * Opt in to a list of assets on the Algorand blockchain.
  *
@@ -129,13 +130,16 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
  * @example algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
  */
 export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
-  const result = await new AccountManager(new ClientManager({ algod }))
-    .setSignerFromAccount(optIn.account)
-    .assetBulkOptIn(getSenderAddress(optIn.account), optIn.assetIds.map(BigInt), {
+  const clientManager = new ClientManager({ algod })
+  const result = await new AssetManager(clientManager, new AccountManager(clientManager).setSignerFromAccount(optIn.account)).bulkOptIn(
+    getSenderAddress(optIn.account),
+    optIn.assetIds.map(BigInt),
+    {
       note: encodeTransactionNote(optIn.note),
       maxFee: optIn.maxFee,
       suppressLog: optIn.suppressLog,
-    })
+    },
+  )
 
   const returnResult: Record<number, string> = {}
   for (const r of result) {
@@ -145,7 +149,7 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
 }
 
 /**
- * @deprecated use `algorandClient.account.assetBulkOptOut()` instead
+ * @deprecated use `algorandClient.asset.bulkOptOut()` instead
  *
  * Opt out of multiple assets in Algorand blockchain.
  *
@@ -156,14 +160,17 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
  * @example algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
  */
 export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
-  const result = await new AccountManager(new ClientManager({ algod }))
-    .setSignerFromAccount(optOut.account)
-    .assetBulkOptOut(getSenderAddress(optOut.account), optOut.assetIds.map(BigInt), {
+  const clientManager = new ClientManager({ algod })
+  const result = await new AssetManager(clientManager, new AccountManager(clientManager).setSignerFromAccount(optOut.account)).bulkOptOut(
+    getSenderAddress(optOut.account),
+    optOut.assetIds.map(BigInt),
+    {
       ensureZeroBalance: optOut.validateBalances ?? true,
       note: encodeTransactionNote(optOut.note),
       maxFee: optOut.maxFee,
       suppressLog: optOut.suppressLog,
-    })
+    },
+  )
 
   const returnResult: Record<number, string> = {}
   for (const r of result) {

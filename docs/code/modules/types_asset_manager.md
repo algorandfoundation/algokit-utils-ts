@@ -11,3 +11,4 @@
 ### Interfaces
 
 - [AssetInformation](../interfaces/types_asset_manager.AssetInformation.md)
+- [BulkAssetOptInOutResult](../interfaces/types_asset_manager.BulkAssetOptInOutResult.md)

@@ -3,6 +3,7 @@ import { getSenderAddress } from '../transaction/transaction'
 import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
+import { AssetManager } from '../types/asset-manager'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
 import Account = algosdk.Account
@@ -173,7 +174,7 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
 }
 
 /**
- * @deprecated Use `algorandClient.account.getAssetInformation(sender, assetId)` or `new AccountManager(clientManager).getAssetInformation(sender, assetId)` instead.
+ * @deprecated Use `algorandClient.asset.getAccountInformation(sender, assetId)` or `new AssetManager(clientManager, accountManager).getAccountInformation(sender, assetId)` instead.
  *
  * Returns the given sender account's asset holding for a given asset.
  *
@@ -195,5 +196,6 @@ export async function getAccountAssetInformation(
   assetId: number | bigint,
   algod: Algodv2,
 ): Promise<AccountAssetInformation> {
-  return new AccountManager(new ClientManager({ algod })).getAssetInformation(getSenderAddress(sender), assetId)
+  const clientManager = new ClientManager({ algod })
+  return new AssetManager(clientManager, new AccountManager(clientManager)).getAccountInformation(getSenderAddress(sender), BigInt(assetId))
 }

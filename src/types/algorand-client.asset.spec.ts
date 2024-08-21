@@ -50,7 +50,7 @@ describe('Asset capability', () => {
     const secondAccountInfo = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(0)
 
-    await algorand.account.assetBulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
 
     const testAccountInfoAfterOptIn = await algorand.account.getInformation(secondAccount.addr)
     expect(testAccountInfoAfterOptIn.totalAssetsOptedIn).toBe(1)
@@ -64,7 +64,7 @@ describe('Asset capability', () => {
       const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
       dummyAssetIds.push(dummyAssetId)
     }
-    await algorand.account.assetBulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
     const secondAccountInfo = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(20)
   }, 10e6)
@@ -76,12 +76,12 @@ describe('Asset capability', () => {
     const dummyAssetIds = [dummyAssetId, dummyAssetId2]
     const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await algorand.account.assetBulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
 
     const secondAccountInfo = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(2)
 
-    await algorand.account.assetBulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })
 
     const secondAccountInfoAfterOptOut = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfoAfterOptOut.totalAssetsOptedIn).toBe(0)
@@ -93,12 +93,12 @@ describe('Asset capability', () => {
     const dummyAssetIds = [dummyAssetId, 1234567n, -132n]
     const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await algorand.account.assetBulkOptIn(secondAccount, [dummyAssetId], { validityWindow: 100 })
+    await algorand.asset.bulkOptIn(secondAccount, [dummyAssetId], { validityWindow: 100 })
 
     const secondAccountInfo = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(1)
 
-    await expect(algorand.account.assetBulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })).rejects.toThrow(
+    await expect(algorand.asset.bulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })).rejects.toThrow(
       `Account ${secondAccount.addr} is not opted-in to Assets 1234567, -132; can't opt-out.`,
     )
 
@@ -113,7 +113,7 @@ describe('Asset capability', () => {
     const dummyAssetIds = [dummyAssetId, dummyAssetId2]
     const secondAccount = await generateAccount({ initialFunds: (1).algos() })
 
-    await algorand.account.assetBulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
 
     const secondAccountInfo = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(2)
@@ -126,7 +126,7 @@ describe('Asset capability', () => {
       note: `Transfer 5 assets with id ${dummyAssetId}`,
     })
 
-    await expect(algorand.account.assetBulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })).rejects.toThrow(
+    await expect(algorand.asset.bulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })).rejects.toThrow(
       `Account ${secondAccount.addr} has non-zero balance for Asset ${dummyAssetId}; can't opt-out.`,
     )
 
@@ -186,11 +186,11 @@ describe('Asset capability', () => {
       const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
       dummyAssetIds.push(dummyAssetId)
     }
-    await algorand.account.assetBulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
     const secondAccountInfo = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(20)
 
-    await algorand.account.assetBulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })
+    await algorand.asset.bulkOptOut(secondAccount, dummyAssetIds, { validityWindow: 100 })
 
     const secondAccountInfoAfterOptOut = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfoAfterOptOut.totalAssetsOptedIn).toBe(0)

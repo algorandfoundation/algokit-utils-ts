@@ -31,7 +31,7 @@ export class AlgorandClient {
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config)
     this._accountManager = new AccountManager(this._clientManager)
-    this._assetManager = new AssetManager(this._clientManager)
+    this._assetManager = new AssetManager(this._clientManager, this._accountManager)
   }
 
   /**
@@ -232,7 +232,7 @@ export class AlgorandClient {
      */
     payment: this._send((c) => c.addPayment, {
       preLog: (params, transaction) =>
-        `Sending ${params.amount.microAlgos} µAlgo from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+        `Sending ${params.amount.microAlgos} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
     }),
     /**
      * Create a new Algorand Standard Asset.
@@ -554,7 +554,7 @@ export class AlgorandClient {
       if (params.ensureZeroBalance) {
         let balance = 0n
         try {
-          const accountAssetInfo = await this.account.getAssetInformation(params.sender, params.assetId)
+          const accountAssetInfo = await this.asset.getAccountInformation(params.sender, params.assetId)
           balance = accountAssetInfo.balance
         } catch (e) {
           throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)

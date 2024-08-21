@@ -209,10 +209,10 @@ describe('Transfer capability', () => {
       note: `Transfer 5 assets with id ${dummyAssetId}`,
     })
 
-    const secondAccountInfo = await algorand.account.getAssetInformation(secondAccount.addr, dummyAssetId)
+    const secondAccountInfo = await algorand.asset.getAccountInformation(secondAccount.addr, dummyAssetId)
     expect(secondAccountInfo.balance).toBe(5n)
 
-    const testAccountInfo = await algorand.account.getAssetInformation(testAccount.addr, dummyAssetId)
+    const testAccountInfo = await algorand.asset.getAccountInformation(testAccount.addr, dummyAssetId)
     expect(testAccountInfo.balance).toBe(95n)
   }, 10e6)
 
@@ -234,7 +234,7 @@ describe('Transfer capability', () => {
       note: `Transfer 5 assets with id ${dummyAssetId}`,
     })
 
-    const clawbackFromInfo = await algorand.account.getAssetInformation(clawbackAccount.addr, dummyAssetId)
+    const clawbackFromInfo = await algorand.asset.getAccountInformation(clawbackAccount.addr, dummyAssetId)
     expect(clawbackFromInfo.balance).toBe(5n)
 
     await algorand.send.assetTransfer({
@@ -246,13 +246,13 @@ describe('Transfer capability', () => {
       clawbackTarget: clawbackAccount.addr,
     })
 
-    const secondAccountInfo = await algorand.account.getAssetInformation(secondAccount.addr, dummyAssetId)
+    const secondAccountInfo = await algorand.asset.getAccountInformation(secondAccount.addr, dummyAssetId)
     expect(secondAccountInfo.balance).toBe(5n)
 
-    const clawbackAccountInfo = await algorand.account.getAssetInformation(clawbackAccount.addr, dummyAssetId)
+    const clawbackAccountInfo = await algorand.asset.getAccountInformation(clawbackAccount.addr, dummyAssetId)
     expect(clawbackAccountInfo.balance).toBe(0n)
 
-    const testAccountInfo = await algorand.account.getAssetInformation(testAccount.addr, dummyAssetId)
+    const testAccountInfo = await algorand.asset.getAccountInformation(testAccount.addr, dummyAssetId)
     expect(testAccountInfo.balance).toBe(95n)
   }, 10e6)
 

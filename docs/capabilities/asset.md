@@ -274,37 +274,57 @@ await algorand.send.assetOptOut({
 })
 ```
 
-### `assetBulkOptIn`
+### `asset.bulkOptIn`
 
-The [`assetBulkOptIn`](../code/classes/types_account_manager.AccountManager.md#assetbulkoptin) function facilitates the opt-in process for an account to multiple assets, allowing the account to receive and hold those assets.
+The [`asset.bulkOptIn`](../code/classes/types_asset_manager.AssetManager.md#bulkoptin) function facilitates the opt-in process for an account to multiple assets, allowing the account to receive and hold those assets.
 
 ```typescript
 // Basic example
 
-algorand.account.assetBulkOptIn('ACCOUNTADDRESS', [12345n, 67890n])
+algorand.asset.bulkOptIn('ACCOUNTADDRESS', [12345n, 67890n])
 
 // Advanced example
 
-algorand.account.assetBulkOptIn('ACCOUNTADDRESS', [12345n, 67890n], {
+algorand.asset.bulkOptIn('ACCOUNTADDRESS', [12345n, 67890n], {
   maxFee: (1000).microAlgos(),
   suppressLog: true,
 })
 ```
 
-### `assetBulkOptOut`
+### `asset.bulkOptOut`
 
-The [`assetBulkOptOut`](../code/classes/types_account_manager.AccountManager.md#assetbulkoptout) function facilitates the opt-out process for an account from multiple assets, permitting the account to discontinue holding a group of assets.
+The [`asset.bulkOptOut`](../code/classes/types_asset_manager.AssetManager.md#bulkoptout) function facilitates the opt-out process for an account from multiple assets, permitting the account to discontinue holding a group of assets.
 
 ```typescript
 // Basic example
 
-algorand.account.assetBulkOptOut('ACCOUNTADDRESS', [12345n, 67890n])
+algorand.asset.bulkOptOut('ACCOUNTADDRESS', [12345n, 67890n])
 
 // Advanced example
 
-algorand.account.assetBulkOptOut('ACCOUNTADDRESS', [12345n, 67890n], {
+algorand.asset.bulkOptOut('ACCOUNTADDRESS', [12345n, 67890n], {
   ensureZeroBalance: true,
   maxFee: (1000).microAlgos(),
   suppressLog: true,
 })
+```
+
+## Get information
+
+### Getting current parameters for an asset
+
+You can get the current parameters of an asset from algod by using `algorand.asset.getById(assetId)`.
+
+```typescript
+const assetInfo = await assetManager.getById(12353n)
+```
+
+### Getting current holdings of an asset for an account
+
+You can get the current holdings of an asset for a given account from algod by using `algorand.asset.getAccountInformation(accountAddress, assetId)`.
+
+```typescript
+const address = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
+const assetId = 123345n
+const accountInfo = await algorand.asset.getAccountInformation(address, assetId)
 ```

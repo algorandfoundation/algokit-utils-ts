@@ -175,7 +175,7 @@ Account information at a given round.
 
 #### Defined in
 
-[src/account/account.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L134)
+[src/account/account.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L135)
 
 ## Variables
 
@@ -262,7 +262,7 @@ A record object where the keys are the asset IDs and the values are the correspo
 
 **`Deprecated`**
 
-use `algorandClient.account.assetBulkOptIn()` instead
+use `algorandClient.asset.bulkOptIn()` instead
 
 Opt in to a list of assets on the Algorand blockchain.
 
@@ -278,7 +278,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L131)
+[src/asset.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L132)
 
 ___
 
@@ -301,7 +301,7 @@ A record object containing asset IDs as keys and their corresponding transaction
 
 **`Deprecated`**
 
-use `algorandClient.account.assetBulkOptOut()` instead
+use `algorandClient.asset.bulkOptOut()` instead
 
 Opt out of multiple assets in Algorand blockchain.
 
@@ -317,7 +317,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L158)
+[src/asset.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L162)
 
 ___
 
@@ -352,7 +352,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L68)
+[src/asset.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L69)
 
 ___
 
@@ -387,7 +387,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L99)
+[src/asset.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L100)
 
 ___
 
@@ -553,7 +553,7 @@ await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My a
 
 #### Defined in
 
-[src/asset.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L24)
+[src/asset.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L25)
 
 ___
 
@@ -885,7 +885,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L127)
+[src/account/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L128)
 
 ___
 
@@ -911,7 +911,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L116)
+[src/account/account.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L117)
 
 ___
 
@@ -935,7 +935,7 @@ The account asset holding information
 
 **`Deprecated`**
 
-Use `algorandClient.account.getAssetInformation(sender, assetId)` or `new AccountManager(clientManager).getAssetInformation(sender, assetId)` instead.
+Use `algorandClient.asset.getAccountInformation(sender, assetId)` or `new AssetManager(clientManager, accountManager).getAccountInformation(sender, assetId)` instead.
 
 Returns the given sender account's asset holding for a given asset.
 
@@ -951,7 +951,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L193)
+[src/account/account.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L194)
 
 ___
 
@@ -1022,7 +1022,7 @@ const accountInfo = await account.getInformation(address, algod);
 
 #### Defined in
 
-[src/account/account.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L152)
+[src/account/account.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L153)
 
 ___
 
@@ -2281,7 +2281,7 @@ If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC 
 
 #### Defined in
 
-[src/account/account.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L96)
+[src/account/account.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L97)
 
 ___
 
@@ -2310,7 +2310,7 @@ Returns an account wrapper that supports partial or full multisig signing.
 
 #### Defined in
 
-[src/account/account.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L23)
+[src/account/account.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L24)
 
 ___
 
@@ -2489,7 +2489,7 @@ This is a wrapper around algosdk.generateAccount to provide a more friendly/obvi
 
 #### Defined in
 
-[src/account/account.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L59)
+[src/account/account.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L60)
 
 ___
 
@@ -2555,7 +2555,7 @@ Returns an account wrapper that supports a rekeyed account.
 
 #### Defined in
 
-[src/account/account.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L35)
+[src/account/account.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L36)
 
 ___
 
@@ -2803,7 +2803,7 @@ Returns an account wrapper that supports a transaction signer with associated se
 
 #### Defined in
 
-[src/account/account.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L47)
+[src/account/account.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L48)
 
 ___
 

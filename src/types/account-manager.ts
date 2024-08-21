@@ -1,33 +1,17 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
-import { calculateFundAmount, chunkArray, memoize } from '../util'
-import {
-  AccountAssetInformation,
-  AccountInformation,
-  DISPENSER_ACCOUNT,
-  MultisigAccount,
-  SigningAccount,
-  TransactionSignerAccount,
-} from './account'
+import { calculateFundAmount, memoize } from '../util'
+import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { SendSingleTransactionResult } from './algorand-client'
 import { AlgoAmount } from './amount'
-import { AssetManager } from './asset-manager'
 import { ClientManager } from './client-manager'
-import AlgokitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import AlgokitComposer, { CommonTransactionParams, ExecuteParams } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import LogicSigAccount = algosdk.LogicSigAccount
 import Account = algosdk.Account
 import TransactionSigner = algosdk.TransactionSigner
 import AccountInformationModel = algosdk.modelsv2.Account
-
-/** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
-export interface BulkAssetOptInOutResult {
-  /** The ID of the asset opted into / out of */
-  assetId: bigint
-  /** The transaction ID of the resulting opt in / out */
-  transactionId: string
-}
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -239,34 +223,6 @@ export class AccountManager {
   }
 
   /**
-   * Returns the given sender account's asset holding for a given asset.
-   *
-   * @example
-   * ```typescript
-   * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
-   * const assetId = 123345;
-   * const accountInfo = await accountManager.getAssetInformation(address, assetId);
-   * ```
-   *
-   * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
-   * @param sender The address of the sender/account to look up
-   * @param assetId The ID of the asset to return a holding for
-   * @returns The account asset holding information
-   */
-  public async getAssetInformation(sender: string | TransactionSignerAccount, assetId: number | bigint): Promise<AccountAssetInformation> {
-    const info = await this._clientManager.algod
-      .accountAssetInformation(typeof sender === 'string' ? sender : sender.addr, Number(assetId))
-      .do()
-
-    return {
-      assetId: BigInt(assetId),
-      balance: BigInt(info['asset-holding']['amount']),
-      frozen: info['asset-holding']['is-frozen'] === true,
-      round: BigInt(info['round']),
-    }
-  }
-
-  /**
    * Tracks and returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
    *
    * @example
@@ -456,148 +412,6 @@ export class AccountManager {
   public async localNetDispenser() {
     const dispenser = await this._kmdAccountManager.getLocalNetDispenserAccount()
     return this.signerAccount(dispenser.account)
-  }
-
-  /**
-   * Opt an account in to a list of Algorand Standard Assets.
-   *
-   * Transactions will be sent in batches of 16 as transaction groups.
-   *
-   * @param account The account to opt-in
-   * @param assetIds The list of asset IDs to opt-in to
-   * @param options Any parameters to control the transaction or execution of the transaction
-   * @example Example using AlgorandClient
-   * ```typescript
-   * // Basic example
-   * algorand.account.assetBulkOptIn("ACCOUNTADDRESS", [12345n, 67890n])
-   * // With configuration
-   * algorand.account.assetBulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).microAlgos(), suppressLog: true })
-   * ```
-   * @returns An array of records matching asset ID to transaction ID of the opt in
-   */
-  async assetBulkOptIn(
-    account: string | TransactionSignerAccount,
-    assetIds: bigint[],
-    options?: Omit<CommonTransactionParams, 'sender'> & ExecuteParams,
-  ): Promise<BulkAssetOptInOutResult[]> {
-    const results: BulkAssetOptInOutResult[] = []
-
-    const params = await this._clientManager.algod.getTransactionParams().do()
-
-    for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
-      const composer = this._getComposer(() => Promise.resolve(params))
-
-      for (const assetId of assetGroup) {
-        composer.addAssetOptIn({
-          ...options,
-          sender: typeof account === 'string' ? account : account.addr,
-          assetId: BigInt(assetId),
-        })
-      }
-
-      const result = await composer.execute(options)
-
-      Config.getLogger(options?.suppressLog).info(
-        `Successfully opted in ${account} for assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +
-          `\n  Grouped under ${result.groupId} in round ${result.confirmations?.[0]?.confirmedRound}.`,
-      )
-
-      assetGroup.forEach((assetId, index) => {
-        results.push({ assetId: BigInt(assetId), transactionId: result.txIds[index] })
-      })
-    }
-
-    return results
-  }
-
-  /**
-   * Opt an account out of a list of Algorand Standard Assets.
-   *
-   * Transactions will be sent in batches of 16 as transaction groups.
-   *
-   * @param account The account to opt-in
-   * @param assetIds The list of asset IDs to opt-out of
-   * @param options Any parameters to control the transaction or execution of the transaction
-   * @example Example using AlgorandClient
-   * ```typescript
-   * // Basic example
-   * algorand.account.assetBulkOptOut("ACCOUNTADDRESS", [12345n, 67890n])
-   * // With configuration
-   * algorand.account.assetBulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance: true, maxFee: (1000).microAlgos(), suppressLog: true })
-   * ```
-   * @returns An array of records matching asset ID to transaction ID of the opt in
-   */
-  async assetBulkOptOut(
-    account: string | TransactionSignerAccount,
-    assetIds: bigint[],
-    options?: Omit<CommonTransactionParams, 'sender'> &
-      ExecuteParams & {
-        /** Whether or not to check if the account has a zero balance for each asset first or not.
-         *
-         * Defaults to `true`.
-         *
-         * If this is set to `true` and the account has an asset balance it will throw an error.
-         *
-         * If this is set to `false` and the account has an asset balance it will lose those assets to the asset creator.
-         */
-        ensureZeroBalance?: boolean
-      },
-  ): Promise<BulkAssetOptInOutResult[]> {
-    const results: BulkAssetOptInOutResult[] = []
-
-    const params = await this._clientManager.algod.getTransactionParams().do()
-    const sender = typeof account === 'string' ? account : account.addr
-
-    for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
-      const composer = this._getComposer(() => Promise.resolve(params))
-
-      const notOptedInAssetIds: bigint[] = []
-      const nonZeroBalanceAssetIds: bigint[] = []
-      for (const assetId of assetGroup) {
-        if (options?.ensureZeroBalance !== false) {
-          try {
-            const accountAssetInfo = await this.getAssetInformation(sender, assetId)
-            if (accountAssetInfo.balance !== 0n) {
-              nonZeroBalanceAssetIds.push(BigInt(assetId))
-            }
-          } catch (e) {
-            notOptedInAssetIds.push(BigInt(assetId))
-          }
-        }
-      }
-
-      if (notOptedInAssetIds.length > 0 || nonZeroBalanceAssetIds.length > 0) {
-        throw new Error(
-          `Account ${sender}${notOptedInAssetIds.length > 0 ? ` is not opted-in to Asset${notOptedInAssetIds.length > 1 ? 's' : ''} ${notOptedInAssetIds.join(', ')}` : ''}${
-            nonZeroBalanceAssetIds.length > 0
-              ? ` has non-zero balance for Asset${nonZeroBalanceAssetIds.length > 1 ? 's' : ''} ${nonZeroBalanceAssetIds.join(', ')}`
-              : ''
-          }; can't opt-out.`,
-        )
-      }
-
-      for (const assetId of assetGroup) {
-        composer.addAssetOptOut({
-          ...options,
-          creator: (await new AssetManager(this._clientManager).getById(BigInt(assetId))).creator,
-          sender,
-          assetId: BigInt(assetId),
-        })
-      }
-
-      const result = await composer.execute(options)
-
-      Config.getLogger(options?.suppressLog).info(
-        `Successfully opted ${account} out of assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +
-          `\n  Grouped under ${result.groupId} in round ${result.confirmations?.[0]?.confirmedRound}.`,
-      )
-
-      assetGroup.forEach((assetId, index) => {
-        results.push({ assetId: BigInt(assetId), transactionId: result.txIds[index] })
-      })
-    }
-
-    return results
   }
 
   /**

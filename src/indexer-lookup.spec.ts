@@ -1,5 +1,5 @@
 import { beforeEach, describe, test } from '@jest/globals'
-import { getTestingAppContract, getTestingAppCreateParams } from '../tests/example-contracts/testing-app/contract'
+import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { indexer } from './'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 import { AlgoAmount } from './types/amount'
@@ -63,12 +63,7 @@ describe('indexer-lookup', () => {
       initialFunds: (1).algos(),
       suppressLog: true,
     })
-    const createParams = await getTestingAppCreateParams(testAccount, {
-      name: 'test',
-      version: '1.0',
-      updatable: false,
-      deletable: false,
-    })
+
     const app = await getTestingAppContract()
     const app1 = await algorand.client
       .getAppClientById({ app: app.appSpec, id: 0, sender: testAccount })
