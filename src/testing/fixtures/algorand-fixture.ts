@@ -69,7 +69,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig): Algorand
  * ```
  *
  * @param fixtureConfig The fixture configuration
- * @param config The algo configuration
+ * @param config The fixture configuration
  * @returns The fixture
  */
 export function algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined, config: AlgoConfig): AlgorandFixture

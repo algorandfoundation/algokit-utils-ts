@@ -47,7 +47,7 @@ In order to get/register accounts for signing operations you can use the followi
 
 - [`algorand.account.fromEnvironment(name, fundWith)`](../code/classes/types_account_manager.AccountManager.md#fromenvironment) - Registers and returns an account with private key loaded by convention based on the given name identifier - either by idempotently creating the account in KMD or from environment variable via `process.env['{NAME}_MNEMONIC']` and (optionally) `process.env['{NAME}_SENDER']` (if account is rekeyed)
   - This allows you to have powerful code that will automatically create and fund an account by name locally and when deployed against TestNet/MainNet will automatically resolve from environment variables, without having to have different code
-  - Note: `fundWith` allows you to control how many Algos are seeded into an account created in KMD
+  - Note: `fundWith` allows you to control how many Algo are seeded into an account created in KMD
 - [`algorand.account.fromMnemonic(mnemonicSecret, sender?)`](../code/classes/types_account_manager.AccountManager.md#frommnemonic) - Registers and returns an account with secret key loaded by taking the mnemonic secret
 - [`algorand.account.multisig(multisigParams, signingAccounts)`](../code/classes/types_account_manager.AccountManager.md#multisig) - Registers and returns a multisig account with one or more signing keys loaded
 - [`algorand.account.rekeyed(sender, signer)`](../code/classes/types_account_manager.AccountManager.md#rekeyed) - Registers and returns an account representing the given rekeyed sender/signer combination
@@ -117,7 +117,7 @@ const rekeyedAccount = algokit.rekeyedAccount(newAccount, account.addr)
 
 When running LocalNet, you have an instance of the [Key Management Daemon](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md), which is useful for:
 
-- Accessing the private key of the default accounts that are pre-seeded with Algos so that other accounts can be funded and it's possible to use LocalNet
+- Accessing the private key of the default accounts that are pre-seeded with Algo so that other accounts can be funded and it's possible to use LocalNet
 - Idempotently creating new accounts against a name that will stay intact while the LocalNet instance is running without you needing to store private keys anywhere (i.e. completely automated)
 
 The KMD SDK is fairly low level so to make use of it there is a fair bit of boilerplate code that's needed. This code has been abstracted away into the `KmdAccountManager` class.
@@ -146,7 +146,7 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 // Same as above, but dedicated method call for convenience
 const localNetDispenserAccount = await kmdAccountManager.getLocalNetDispenserAccount()
 // Idempotently get (if exists) or create (if it doesn't exist yet) an account by name using KMD
-// if creating it then fund it with 2 Algos from the default dispenser account
+// if creating it then fund it with 2 ALGO from the default dispenser account
 const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
 // This will return the same account as above since the name matches
 const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')

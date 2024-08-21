@@ -59,7 +59,7 @@ export async function getTestAccount(
 
   const accountInfo = await algorand.account.getInformation(account.addr)
 
-  Config.getLogger(suppressLog).info('Test account funded; account balance: %d µAlgos', accountInfo.balance.microAlgos)
+  Config.getLogger(suppressLog).info('Test account funded; account balance: %d µALGO', accountInfo.balance.microAlgos)
 
   return account
 }

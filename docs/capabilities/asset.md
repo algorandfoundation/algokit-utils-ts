@@ -76,7 +76,7 @@ await algorand.send.assetCreate({
 
 ## Reconfigure
 
-If you have a `manager` address set on an asset, that address can end a reconfiguration transaction to change the `manager`, `reserve`, `freeze` and `clawback` fields of the asset if they haven't been set to empty.
+If you have a `manager` address set on an asset, that address can send a reconfiguration transaction to change the `manager`, `reserve`, `freeze` and `clawback` fields of the asset if they haven't been set to empty.
 
 > [!WARNING]
 > If you issue a reconfigure transaction and don't set the _existing_ values for any of the below fields then that field will be permanently set to empty.
@@ -100,7 +100,7 @@ await algorand.send.assetConfig({ sender: 'MANAGERADDRESS', assetId: 123456n, ma
 
 // Advanced example
 
-await algorand.send.assetCreate({
+await algorand.send.assetConfig({
   sender: 'MANAGERADDRESS',
   assetId: 123456n,
   manager: 'MANAGERADDRESS',

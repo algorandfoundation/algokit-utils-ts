@@ -1,15 +1,15 @@
 import algosdk from 'algosdk'
 
-/** Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and numbers */
+/** Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbers */
 export class AlgoAmount {
   private amountInMicroAlgos
 
-  /** Return the amount as a number in µAlgos */
+  /** Return the amount as a number in µAlgo */
   get microAlgos() {
     return this.amountInMicroAlgos
   }
 
-  /** Return the amount as a number in Algos */
+  /** Return the amount as a number in Algo */
   get algos() {
     return algosdk.microalgosToAlgos(this.amountInMicroAlgos)
   }
@@ -19,7 +19,7 @@ export class AlgoAmount {
   }
 
   toString(): string {
-    return `${this.microAlgos.toLocaleString('en-US')} µAlgo${this.microAlgos === 1 ? '' : 's'}`
+    return `${this.microAlgos.toLocaleString('en-US')} µALGO`
   }
 
   /** valueOf allows you to use `AlgoAmount` in comparison operations such as `<` and `>=` etc.,
@@ -30,12 +30,12 @@ export class AlgoAmount {
     return this.microAlgos
   }
 
-  /** Create a `AlgoAmount` object representing the given number of Algos */
+  /** Create a `AlgoAmount` object representing the given number of Algo */
   static Algos(amount: number) {
     return new AlgoAmount({ algos: amount })
   }
 
-  /** Create a `AlgoAmount` object representing the given number of µAlgos */
+  /** Create a `AlgoAmount` object representing the given number of µAlgo */
   static MicroAlgos(amount: number) {
     return new AlgoAmount({ microAlgos: amount })
   }

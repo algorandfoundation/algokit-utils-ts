@@ -210,9 +210,9 @@ export interface TransactionResult extends Record<string, any> {
 export interface AccountResult extends Record<string, any> {
   /** the account public key */
   address: string
-  /** [algo] total number of MicroAlgos in the account */
+  /** [algo] total number of µAlgo in the account */
   amount: number
-  /** specifies the amount of MicroAlgos in the account, without the pending rewards. */
+  /** specifies the amount of µAlgo in the account, without the pending rewards. */
   'amount-without-pending-rewards': number
   /** [appl] applications local data stored in this account.
    *
@@ -256,17 +256,17 @@ export interface AccountResult extends Record<string, any> {
   deleted?: boolean
   /** If participating in consensus, the parameters used by this account in the consensus protocol. */
   participation?: AccountParticipation
-  /** amount of MicroAlgos of pending rewards in this account. */
+  /** amount of µAlgo of pending rewards in this account. */
   'pending-rewards': number
   /** [ebase] used as part of the rewards computation. Only applicable to accounts which are participating. */
   'reward-base'?: number
-  /** [ern] total rewards of MicroAlgos the account has received, including pending rewards. */
+  /** [ern] total rewards of µAlgo the account has received, including pending rewards. */
   rewards: number
   /** The round for which this information is relevant. */
   round: number
   /** Indicates what type of signature is used by this account */
   'sig-type': SignatureType
-  /** [onl] delegation status of the account's MicroAlgos */
+  /** [onl] delegation status of the account's µAlgo */
   status: AccountStatus
   /** The count of all applications that have been opted in, equivalent to the count of application local data (AppLocalState objects) stored in this account. */
   'total-apps-opted-in': number
@@ -284,9 +284,9 @@ export interface AccountResult extends Record<string, any> {
 
 /** Fields for a payment transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionpayment */
 export interface PaymentTransactionResult {
-  /** [amt] number of MicroAlgos intended to be transferred. */
+  /** [amt] number of µAlgo intended to be transferred. */
   amount: number
-  /** Number of MicroAlgos that were sent to the close-remainder-to address when closing the sender account. */
+  /** Number of µAlgo that were sent to the close-remainder-to address when closing the sender account. */
   'close-amount'?: number
   /** [close] when set, indicates that the sending account should be closed and all remaining funds be transferred to this address. */
   'close-remainder-to'?: string

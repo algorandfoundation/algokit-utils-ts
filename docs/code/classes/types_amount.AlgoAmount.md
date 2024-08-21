@@ -4,7 +4,7 @@
 
 [types/amount](../modules/types_amount.md).AlgoAmount
 
-Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and numbers
+Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbers
 
 ## Table of contents
 
@@ -64,7 +64,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgos, Algos and num
 
 • `get` **algos**(): `number`
 
-Return the amount as a number in Algos
+Return the amount as a number in Algo
 
 #### Returns
 
@@ -80,7 +80,7 @@ ___
 
 • `get` **microAlgos**(): `number`
 
-Return the amount as a number in µAlgos
+Return the amount as a number in µAlgo
 
 #### Returns
 
@@ -128,7 +128,7 @@ ___
 
 ▸ **Algos**(`amount`): [`AlgoAmount`](types_amount.AlgoAmount.md)
 
-Create a `AlgoAmount` object representing the given number of Algos
+Create a `AlgoAmount` object representing the given number of Algo
 
 #### Parameters
 
@@ -150,7 +150,7 @@ ___
 
 ▸ **MicroAlgos**(`amount`): [`AlgoAmount`](types_amount.AlgoAmount.md)
 
-Create a `AlgoAmount` object representing the given number of µAlgos
+Create a `AlgoAmount` object representing the given number of µAlgo
 
 #### Parameters
 

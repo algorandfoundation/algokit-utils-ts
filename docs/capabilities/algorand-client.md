@@ -41,7 +41,7 @@ const kmdClient = algorand.client.kmd
 
 The `AlgorandClient` has a number of manager class instances that help you quickly use intellisense to get access to advanced functionality.
 
-- [`AccountManager`](./account.md) via `algorand.account`, there are also some convenience methods that wrap some methods within `AccountManager` that return `AlgorandClient` and thus allow for method chaining:
+- [`AccountManager`](./account.md) via `algorand.account`, there are also some chainable convenience methods which wrap specific methods in `AccountManager`:
   - `algorand.setDefaultSigner(signer)` -
   - `algorand.setSignerFromAccount(account)` -
   - `algorand.setSigner(sender, signer)`

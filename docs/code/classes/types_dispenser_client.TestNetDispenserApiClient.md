@@ -5,7 +5,7 @@
 [types/dispenser-client](../modules/types_dispenser_client.md).TestNetDispenserApiClient
 
 `TestNetDispenserApiClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
-It allows you to fund an address with Algos, refund a transaction, and get the funding limit for the Algo asset.
+It allows you to fund an address with Algo, refund a transaction, and get the funding limit for the Algo asset.
 
 The class requires an authentication token and a request timeout to be initialized. The authentication token can be provided
 either directly as a parameter or through an `ALGOKIT_DISPENSER_ACCESS_TOKEN` environment variable. If neither is provided, an error is thrown.
@@ -145,7 +145,7 @@ Sends a funding request to the dispenser API to fund the specified address with 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `address` | `string` | The address to fund. |
-| `amount` | `number` | The amount of microAlgos to fund. |
+| `amount` | `number` | The amount of µAlgo to fund. |
 
 #### Returns
 

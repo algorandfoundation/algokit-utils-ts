@@ -71,7 +71,7 @@ When calling `algorandFixture()` you can optionally pass in some fixture configu
 - `algod?: Algodv2` - An optional algod client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `indexer?: Indexer` - An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `kmd?: Kmd` - An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
-- `testAccountFunding?: AlgoAmount` - The [amount](./amount.md) of funds to allocate to the default testing account, if not specified then it will get `10` Algos
+- `testAccountFunding?: AlgoAmount` - The [amount](./amount.md) of funds to allocate to the default testing account, if not specified then it will get `10` ALGO
 
 ### Using the fixture context
 
@@ -191,14 +191,14 @@ The easiest way to use this functionality is via the [Algorand fixture](#algoran
 
 ## Getting a test account
 
-When testing, it's often useful to ephemerally generate random accounts, fund them with some number of Algos and then use that account to perform transactions. By creating an ephemeral, random account you naturally get isolation between tests and test runs and don't need to start from a specific blockchain network state. This makes test less flakey, and also means the same test can be run against LocalNet and (say) TestNet.
+When testing, it's often useful to ephemerally generate random accounts, fund them with some number of Algo and then use that account to perform transactions. By creating an ephemeral, random account you naturally get isolation between tests and test runs and don't need to start from a specific blockchain network state. This makes test less flakey, and also means the same test can be run against LocalNet and (say) TestNet.
 
 The key when generating a test account is getting hold of a [dispenser](./transfer.md#dispenser) and then [ensuring the test account is funded](./transfer.md#ensurefunded).
 
 To make it easier to quickly get a test account the testing capability provides the following mechanisms:
 
 - [`algotesting.getTestAccount(testAccountParams, algod, kmd?)`](../code/modules/testing.md#gettestaccount) - Generates a random new account, logs the mnemonic of the account (unless suppressed), funds it from the [dispenser](./transfer.md#dispenser)
-- `algorandFixture.testAccount` - A test account that is always generated for every test (log output suppressed to reduce noise, but worth noting that means the mnemonic isn't logged for this account), by default it is given 10 Algos unless overridden in the [fixture config](#fixture-configuration)
+- `algorandFixture.testAccount` - A test account that is always generated for every test (log output suppressed to reduce noise, but worth noting that means the mnemonic isn't logged for this account), by default it is given 10 Algo unless overridden in the [fixture config](#fixture-configuration)
 - [`algorandFixture.generateAccount(testAccountParams)`](../code/interfaces/types_testing.AlgorandTestAutomationContext.md#generateaccount) - Allows you to quickly generate a test account with the `algod` and `kmd` instances that are part of the given fixture
 
 The parameters object that controls test account generation, [`GetTestAccountParams`](../code/interfaces/types_testing.GetTestAccountParams.md), has the following properties:

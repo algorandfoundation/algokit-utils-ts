@@ -18,7 +18,7 @@ The TestNet Dispenser API response when getting the current limit.
 
 • **amount**: `number`
 
-The limit, in microAlgos, that you can currently fund.
+The limit, in µAlgo, that you can currently fund.
 
 #### Defined in
 

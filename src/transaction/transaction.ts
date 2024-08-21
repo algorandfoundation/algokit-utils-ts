@@ -807,7 +807,7 @@ export const waitForConfirmation = async function (
 }
 
 /**
- * Limit the acceptable fee to a defined amount of µAlgos.
+ * Limit the acceptable fee to a defined amount of µAlgo.
  * This also sets the transaction to be flatFee to ensure the transaction only succeeds at
  * the estimated rate.
  * @param transaction The transaction to cap or suggested params object about to be used to create a transaction
@@ -820,10 +820,10 @@ export function capTransactionFee(transaction: algosdk.Transaction | SuggestedPa
     // Will be based on the current suggested fee-per-byte value.
     if (transaction.fee > maxAcceptableFee.microAlgos) {
       throw new Error(
-        `Cancelled transaction due to high network congestion fees. Algorand suggested fees would cause this transaction to cost ${transaction.fee} µAlgos. Cap for this transaction is ${maxAcceptableFee.microAlgos} µAlgos.`,
+        `Cancelled transaction due to high network congestion fees. Algorand suggested fees would cause this transaction to cost ${transaction.fee} µALGO. Cap for this transaction is ${maxAcceptableFee.microAlgos} µALGO.`,
       )
     } else if (transaction.fee > algosdk.ALGORAND_MIN_TX_FEE) {
-      Config.logger.warn(`Algorand network congestion fees are in effect. This transaction will incur a fee of ${transaction.fee} µAlgos.`)
+      Config.logger.warn(`Algorand network congestion fees are in effect. This transaction will incur a fee of ${transaction.fee} µALGO.`)
     }
 
     // Now set the flat on the transaction. Otherwise the network may increase the fee above our cap and perform the transaction.

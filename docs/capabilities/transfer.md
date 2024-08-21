@@ -10,8 +10,8 @@ The key function to facilitate Algo transfers is `algorand.send.payment(params)`
 
 The base type for specifying a payment transaction is [`PaymentParams`](../code/modules/types_composer.md#paymentparams), which has the following parameters in addition to the [common transaction parameters](./algorand-client.md#transaction-parameters):
 
-- `receiver: string` - The address of the account that will receive the Algos
-- `amount: AlgoAmount` - The amount of Algos to send
+- `receiver: string` - The address of the account that will receive the Algo
+- `amount: AlgoAmount` - The amount of Algo to send
 - `closeRemainderTo?: string` - If given, close the sender account and send the remaining balance to this address (**warning:** use this carefully as it can result in loss of funds if used incorrectly)
 
 ```typescript
@@ -51,16 +51,16 @@ const result2 = await algorand.send.payment({
 
 ## `ensureFunded`
 
-The `ensureFunded` function automatically funds an account to maintain a minimum amount of [disposable Algos](https://developer.algorand.org/docs/get-details/accounts/#minimum-balance). This is particularly useful for automation and deployment scripts that get run multiple times and consume Algos when run.
+The `ensureFunded` function automatically funds an account to maintain a minimum amount of [disposable Algo](https://developer.algorand.org/docs/get-details/accounts/#minimum-balance). This is particularly useful for automation and deployment scripts that get run multiple times and consume Algo when run.
 
 There are 3 variants of this function:
 
-- [`algorand.account.ensureFunded(accountToFund, dispenserAccount, minSpendingBalance, options?)`](../code/classes/types_account_manager.AccountManager.md#ensurefunded) - Funds a given account using a dispenser account as a funding source such that the given account has a certain amount of Algos free to spend (accounting for Algos locked in minimum balance requirement).
-- [`algorand.account.ensureFundedFromEnvironment(accountToFund, minSpendingBalance, options?)`](../code/classes/types_account_manager.AccountManager.md#ensurefundedfromenvironment) - Funds a given account using a dispenser account retrieved from the environment, per the [`dispenserFromEnvironment`](#dispenser) method, as a funding source such that the given account has a certain amount of Algos free to spend (accounting for Algos locked in minimum balance requirement).
+- [`algorand.account.ensureFunded(accountToFund, dispenserAccount, minSpendingBalance, options?)`](../code/classes/types_account_manager.AccountManager.md#ensurefunded) - Funds a given account using a dispenser account as a funding source such that the given account has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
+- [`algorand.account.ensureFundedFromEnvironment(accountToFund, minSpendingBalance, options?)`](../code/classes/types_account_manager.AccountManager.md#ensurefundedfromenvironment) - Funds a given account using a dispenser account retrieved from the environment, per the [`dispenserFromEnvironment`](#dispenser) method, as a funding source such that the given account has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
   - **Note:** requires a Node.js environment to execute.
   - The dispenser account is retrieved from the account mnemonic stored in `process.env.DISPENSER_MNEMONIC` and optionally `process.env.DISPENSER_SENDER`
     if it's a rekeyed account, or against default LocalNet if no environment variables present.
-- [`algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, minSpendingBalance, options)`](../code/classes/types_account_manager.AccountManager.md#ensurefundedfromtestnetdispenserapi) - Funds a given account using the [TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) as a funding source such that the account has a certain amount of Algos free to spend (accounting for Algos locked in minimum balance requirement).
+- [`algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, minSpendingBalance, options)`](../code/classes/types_account_manager.AccountManager.md#ensurefundedfromtestnetdispenserapi) - Funds a given account using the [TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) as a funding source such that the account has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
 
 The general structure of these calls is similar, they all take:
 
@@ -69,7 +69,7 @@ The general structure of these calls is similar, they all take:
   - In `ensureFunded`: `dispenserAccount: string | TransactionSignerAccount` - the address or signing account of the account to use as a dispenser
   - In `ensureFundedFromEnvironment`: Not specified, loaded automatically from the ephemeral environment
   - In `ensureFundedFromTestNetDispenserApi`: `dispenserClient: TestNetDispenserApiClient` - a client instance of the [TestNet dispenser API](./dispenser-client.md)
-- `minSpendingBalance: AlgoAmount` - The minimum balance of Algos that the account should have available to spend (i.e., on top of the minimum balance requirement)
+- `minSpendingBalance: AlgoAmount` - The minimum balance of Algo that the account should have available to spend (i.e., on top of the minimum balance requirement)
 - An `options` object, which has:
   - [Common transaction parameters](./algorand-client.md#transaction-parameters) (not for TestNet Dispenser API)
   - [Execution parameters](./algorand-client.md#sending-a-single-transaction) (not for TestNet Dispenser API)
@@ -119,14 +119,14 @@ await algorand.account.ensureFundedUsingDispenserAPI(
 
 All 3 variants return an [`EnsureFundedReturnType`](../code/modules/types_account_manager.md#) (and the first two also return a [single transaction result](./algorand-client.md#sending-a-single-transaction)) if a funding transaction was needed, or `undefined` if no transaction was required:
 
-- `amountFunded: AlgoAmount` - The number of Algos that was paid
+- `amountFunded: AlgoAmount` - The number of Algo that was paid
 - `transactionId: string` - The ID of the transaction that funded the account
 
 If you are using the TestNet Dispenser API then the `transactionId` is useful if you want to use the [refund functionality](./dispenser-client.md#registering-a-refund).
 
 ## Dispenser
 
-If you want to programmatically send funds to an account so it can transact then you will often need a "dispenser" account that has a store of Algos that can be sent and a private key available for that dispenser account.
+If you want to programmatically send funds to an account so it can transact then you will often need a "dispenser" account that has a store of Algo that can be sent and a private key available for that dispenser account.
 
 There's a number of ways to get a dispensing account in AlgoKit Utils:
 

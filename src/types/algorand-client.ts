@@ -190,7 +190,7 @@ export class AlgorandClient {
    */
   public send = {
     /**
-     * Send a payment transaction to transfer Algos between accounts.
+     * Send a payment transaction to transfer Algo between accounts.
      * @param params The parameters for the payment transaction
      * @example Basic example
      * ```typescript
@@ -232,7 +232,7 @@ export class AlgorandClient {
      */
     payment: this._send((c) => c.addPayment, {
       preLog: (params, transaction) =>
-        `Sending ${params.amount.microAlgos} µAlgos from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+        `Sending ${params.amount.microAlgos} µAlgo from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
     }),
     /**
      * Create a new Algorand Standard Asset.
@@ -303,7 +303,7 @@ export class AlgorandClient {
      * ```
      * @example Advanced example
      * ```typescript
-     * await algorand.send.assetCreate({
+     * await algorand.send.assetConfig({
      *   sender: 'MANAGERADDRESS',
      *   assetId: 123456n,
      *   manager: 'MANAGERADDRESS',
@@ -602,7 +602,7 @@ export class AlgorandClient {
    */
   public transactions = {
     /**
-     * Create a payment transaction to transfer Algos between accounts.
+     * Create a payment transaction to transfer Algo between accounts.
      * @param params The parameters for the payment transaction
      * @example Basic example
      * ```typescript
@@ -692,7 +692,7 @@ export class AlgorandClient {
      * ```
      * @example Advanced example
      * ```typescript
-     * await algorand.transaction.assetCreate({
+     * await algorand.transaction.assetConfig({
      *   sender: 'MANAGERADDRESS',
      *   assetId: 123456n,
      *   manager: 'MANAGERADDRESS',

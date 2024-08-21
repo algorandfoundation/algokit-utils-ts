@@ -128,11 +128,11 @@ export type AccountInformation = {
    */
   address: string
 
-  /** The balance of Algos currently held by the account. */
+  /** The balance of Algo currently held by the account. */
   balance: AlgoAmount
 
   /**
-   * The amount of Algos in the account, without the pending rewards.
+   * The amount of Algo in the account, without the pending rewards.
    */
   amountWithoutPendingRewards: AlgoAmount
 
@@ -143,12 +143,12 @@ export type AccountInformation = {
    */
   minBalance: AlgoAmount
   /**
-   * Amount of Algos of pending rewards in this account.
+   * Amount of Algo of pending rewards in this account.
    */
   pendingRewards: AlgoAmount
 
   /**
-   * Total rewards of Algos the account has received, including pending
+   * Total rewards of Algo the account has received, including pending
    * rewards.
    */
   rewards: AlgoAmount
@@ -159,7 +159,7 @@ export type AccountInformation = {
   validAsOfRound: bigint
 
   /**
-   * Delegation status of the account's MicroAlgos:
+   * Delegation status of the account's Algo:
    * * Offline - indicates that the associated account is delegated.
    * * Online - indicates that the associated account used as part of the delegation pool.
    * * NotParticipating - indicates that the associated account is neither a delegator nor a delegate.

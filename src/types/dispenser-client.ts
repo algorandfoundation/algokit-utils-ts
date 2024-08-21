@@ -18,13 +18,13 @@ const dispenserAssets = {
 export interface DispenserFundResponse {
   /** The ID of the transaction that was issued to fund the account. */
   txId: string
-  /** The number of microAlgos that was funded. */
+  /** The number of µAlgo that was funded. */
   amount: number
 }
 
 /** The TestNet Dispenser API response when getting the current limit.  */
 export interface DispenserLimitResponse {
-  /** The limit, in microAlgos, that you can currently fund. */
+  /** The limit, in µAlgo, that you can currently fund. */
   amount: number
 }
 
@@ -38,7 +38,7 @@ export interface TestNetDispenserApiClientParams {
 
 /**
  * `TestNetDispenserApiClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
- * It allows you to fund an address with Algos, refund a transaction, and get the funding limit for the Algo asset.
+ * It allows you to fund an address with Algo, refund a transaction, and get the funding limit for the Algo asset.
  *
  * The class requires an authentication token and a request timeout to be initialized. The authentication token can be provided
  * either directly as a parameter or through an `ALGOKIT_DISPENSER_ACCESS_TOKEN` environment variable. If neither is provided, an error is thrown.
@@ -143,7 +143,7 @@ export class TestNetDispenserApiClient {
    * Sends a funding request to the dispenser API to fund the specified address with the given amount of Algo.
    *
    * @param address - The address to fund.
-   * @param amount - The amount of microAlgos to fund.
+   * @param amount - The amount of µAlgo to fund.
    *
    * @returns DispenserFundResponse: An object containing the transaction ID and funded amount.
    */

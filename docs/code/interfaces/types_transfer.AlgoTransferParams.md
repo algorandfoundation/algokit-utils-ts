@@ -83,7 +83,7 @@ ___
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account that will send the Algos
+The account that will send the Algo
 
 #### Defined in
 
@@ -216,7 +216,7 @@ ___
 
 • **to**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account / account address that will receive the Algos
+The account / account address that will receive the Algo
 
 #### Defined in
 

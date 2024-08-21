@@ -320,11 +320,11 @@ export class AccountManager {
    * const account = await accountManager.fromEnvironment('MY_ACCOUNT')
    * ```
    *
-   * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
+   * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
    * If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
    *
    * @param name The name identifier of the account
-   * @param fundWith The optional amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+   * @param fundWith The optional amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account
    * @returns The account
    */
   public async fromEnvironment(name: string, fundWith?: AlgoAmount) {
@@ -674,14 +674,14 @@ export class AccountManager {
 
   /**
    * Funds a given account using a dispenser account as a funding source such that
-   * the given account has a certain amount of Algos free to spend (accounting for
-   * Algos locked in minimum balance requirement).
+   * the given account has a certain amount of Algo free to spend (accounting for
+   * Algo locked in minimum balance requirement).
    *
    * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
    *
    * @param accountToFund The account to fund
    * @param dispenserAccount The account to use as a dispenser funding source
-   * @param minSpendingBalance The minimum balance of Algos that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param minSpendingBalance The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement)
    * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
    * @example Example using AlgorandClient
    * ```typescript
@@ -731,8 +731,8 @@ export class AccountManager {
   /**
    * Funds a given account using a dispenser account retrieved from the environment,
    * per the `dispenserFromEnvironment` method, as a funding source such that
-   * the given account has a certain amount of Algos free to spend (accounting for
-   * Algos locked in minimum balance requirement).
+   * the given account has a certain amount of Algo free to spend (accounting for
+   * Algo locked in minimum balance requirement).
    *
    * **Note:** requires a Node.js environment to execute.
    *
@@ -743,7 +743,7 @@ export class AccountManager {
    * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
    *
    * @param accountToFund The account to fund
-   * @param minSpendingBalance The minimum balance of Algos that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param minSpendingBalance The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement)
    * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
    * @example Example using AlgorandClient
    * ```typescript
@@ -792,14 +792,14 @@ export class AccountManager {
 
   /**
    * Funds a given account using the TestNet Dispenser API as a funding source such that
-   * the account has a certain amount of algos free to spend (accounting for Algos locked
+   * the account has a certain amount of Algo free to spend (accounting for Algo locked
    * in minimum balance requirement).
    *
    * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
    *
    * @param accountToFund The account to fund
    * @param dispenserClient The TestNet dispenser funding client
-   * @param minSpendingBalance The minimum balance of Algos that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param minSpendingBalance The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement)
    * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
    * @example Example using AlgorandClient
    * ```typescript

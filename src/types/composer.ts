@@ -54,7 +54,7 @@ export type CommonTransactionParams = {
 
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
-  /** The address of the account that will receive the Algos */
+  /** The address of the account that will receive the Algo */
   receiver: string
   /** Amount to send */
   amount: AlgoAmount

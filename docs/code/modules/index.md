@@ -225,13 +225,13 @@ ___
 
 ▸ **algos**(`algos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-Returns an amount of Algos using AlgoAmount
+Returns an amount of Algo using AlgoAmount
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algos` | `number` | The amount in Algos |
+| `algos` | `number` | The amount of Algo |
 
 #### Returns
 
@@ -420,7 +420,7 @@ ___
 
 ▸ **capTransactionFee**(`transaction`, `maxAcceptableFee`): `void`
 
-Limit the acceptable fee to a defined amount of µAlgos.
+Limit the acceptable fee to a defined amount of µAlgo.
 This also sets the transaction to be flatFee to ensure the transaction only succeeds at
 the estimated rate.
 
@@ -717,7 +717,7 @@ ___
 Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnvironment()`
 / `algorand.account.ensureFundedFromTestNetDispenserApi()` instead
 
-Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for Algos locked in minimum balance requirement).
+Funds a given account using a funding source such that it has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
 
 https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
@@ -784,7 +784,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| \{ `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account` | `string` \| \{ `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account |
 | `algod` | `default` | An algod client |
 | `kmdClient?` | `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
 
@@ -817,7 +817,7 @@ If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then yo
 const account = await getAccount('ACCOUNT', algod)
 ```
 
-If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
+If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
 
 #### Defined in
 
@@ -829,7 +829,7 @@ If that code runs against LocalNet then a wallet called `ACCOUNT` will automatic
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `Object` | The details of the account to get, an object with: * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName) * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account` | `Object` | The details of the account to get, an object with: * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName) * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account |
 | `account.config` | [`AccountConfig`](../interfaces/types_account.AccountConfig.md) | - |
 | `account.fundWith?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
 | `algod` | `default` | An algod client |
@@ -855,7 +855,7 @@ If you have a mnemonic secret loaded into `process.env.ACCOUNT_MNEMONIC` then yo
 const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
 ```
 
-If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
+If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
 
 #### Defined in
 
@@ -1914,7 +1914,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `walletAccount` | `Object` | The wallet details with: * `name`: The name of the wallet to retrieve / create * `fundWith`: The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account |
+| `walletAccount` | `Object` | The wallet details with: * `name`: The name of the wallet to retrieve / create * `fundWith`: The number of Algo to fund the account with when it gets created, if not specified then 1000 ALGO will be funded from the dispenser account |
 | `walletAccount.fundWith?` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | - |
 | `walletAccount.name` | `string` | - |
 | `algod` | `default` | An algod client |
@@ -2189,13 +2189,13 @@ ___
 
 ▸ **microAlgos**(`microAlgos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-Returns an amount of µAlgos using AlgoAmount
+Returns an amount of µAlgo using AlgoAmount
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `microAlgos` | `number` | The amount in µAlgos |
+| `microAlgos` | `number` | The amount of µAlgo |
 
 #### Returns
 
@@ -2243,7 +2243,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| \{ `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: string: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account |
+| `account` | `string` \| \{ `fundWith?`: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) ; `name`: `string`  } | The details of the account to get, either the name identifier (string) or an object with: * `name`: string: The name identifier of the account * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account |
 | `algod` | `default` | An algod client |
 | `kmdClient?` | `default` | An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables |
 
@@ -2276,7 +2276,7 @@ If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then
 const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
 ```
 
-If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) Algos from the default LocalNet dispenser.
+If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
 If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
 
 #### Defined in
@@ -2760,13 +2760,13 @@ ___
 
 ▸ **transactionFees**(`numberOfTransactions`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-Returns an amount of µAlgos to cover standard fees for the given number of transactions using AlgoAmount
+Returns an amount of µAlgo to cover standard fees for the given number of transactions using AlgoAmount
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `numberOfTransactions` | `number` | The of standard transaction fees to return the amount of Algos |
+| `numberOfTransactions` | `number` | The of standard transaction fees to return the amount of Algo |
 
 #### Returns
 
@@ -2828,7 +2828,7 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 Use `algorand.send.payment()` / `algorand.transaction.payment()` instead
 
-Transfer Algos between two accounts.
+Transfer Algo between two accounts.
 
 **`Example`**
 

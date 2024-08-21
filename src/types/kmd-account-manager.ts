@@ -119,12 +119,12 @@ export class KmdAccountManager {
    * If this is used via `mnemonicAccountFromEnvironment`, then you can even use the same code that runs on production without changes for local development!
    *
    * @param name The name of the wallet to retrieve / create
-   * @param fundWith The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account
+   * @param fundWith The number of Algo to fund the account with when it gets created, if not specified then 1000 ALGO will be funded from the dispenser account
    *
    * @example
    * ```typescript
    * // Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
-   * // if creating it then fund it with 2 Algos from the default dispenser account
+   * // if creating it then fund it with 2 ALGO from the default dispenser account
    * const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
    * // This will return the same account as above since the name matches
    * const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
@@ -156,7 +156,7 @@ export class KmdAccountManager {
     Config.logger.info(
       `LocalNet account '${name}' doesn't yet exist; created account ${account.addr} with keys stored in KMD and funding with ${
         fundWith?.algos ?? 1000
-      } Algos`,
+      } ALGO`,
     )
 
     // Fund the account from the dispenser

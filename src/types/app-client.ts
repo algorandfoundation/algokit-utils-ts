@@ -724,7 +724,7 @@ export class ApplicationClient {
   }
 
   /**
-   * Funds ALGOs into the app account for this app.
+   * Funds Algo into the app account for this app.
    * @param fund The parameters for the funding or the funding amount
    * @returns The result of the funding
    */

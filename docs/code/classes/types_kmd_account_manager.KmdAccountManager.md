@@ -110,7 +110,7 @@ If this is used via `mnemonicAccountFromEnvironment`, then you can even use the 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `string` | The name of the wallet to retrieve / create |
-| `fundWith?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account |
+| `fundWith?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The number of Algo to fund the account with when it gets created, if not specified then 1000 ALGO will be funded from the dispenser account |
 
 #### Returns
 
@@ -122,7 +122,7 @@ An Algorand account with private key loaded - either one that already existed in
 
 ```typescript
 // Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
-// if creating it then fund it with 2 Algos from the default dispenser account
+// if creating it then fund it with 2 ALGO from the default dispenser account
 const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
 // This will return the same account as above since the name matches
 const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')

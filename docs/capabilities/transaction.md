@@ -70,7 +70,7 @@ There is a [`algokit.waitForConfirmation(transactionId, maxRoundsToWait, algod)`
 
 If you want to control the fees of a transaction before sending then you can use:
 
-- [`algokit.capTransactionFee(transaction, maxAcceptableFee)`](../code/modules/index.md#captransactionfee) - Limit the acceptable maximum fee of a `algosdk.Transaction` or `algosdk.SuggestedParams` to a defined amount of algos.
+- [`algokit.capTransactionFee(transaction, maxAcceptableFee)`](../code/modules/index.md#captransactionfee) - Limit the acceptable maximum fee of a `algosdk.Transaction` or `algosdk.SuggestedParams` to a defined amount of Algo.
 - [`algokit.controlFees(transaction, feeControl)`](../code/modules/index.md#controlfees) - Allows you to control fees on a `algosdk.Transaction` or `algosdk.SuggestedParams` object either applying a flat fee or a max fee
 
 ### Transaction notes

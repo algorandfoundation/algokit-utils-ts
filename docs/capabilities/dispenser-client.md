@@ -52,7 +52,7 @@ const clientFromAlgorandClient = algorand.client.getTestNetDispenserFromEnvironm
 
 ## Funding an Account
 
-To fund an account with Algos from the dispenser API, use the `fund` method. This method requires the receiver's address, the amount to be funded, and the asset ID.
+To fund an account with Algo from the dispenser API, use the `fund` method. This method requires the receiver's address, the amount to be funded, and the asset ID.
 
 ```ts
 const response = await client.fund('receiver_address', 1000)
@@ -72,7 +72,7 @@ await client.refund('transaction_id')
 
 ## Getting Current Limit
 
-To get the current limit for an account with Algos from the dispenser API, use the `getLimit` method. This method requires the account address.
+To get the current limit for an account with Algo from the dispenser API, use the `getLimit` method. This method requires the account address.
 
 ```ts
 const response = await client.getLimit()

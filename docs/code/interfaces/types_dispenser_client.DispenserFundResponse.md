@@ -19,7 +19,7 @@ The TestNet Dispenser API response when funding.
 
 • **amount**: `number`
 
-The number of microAlgos that was funded.
+The number of µAlgo that was funded.
 
 #### Defined in
 

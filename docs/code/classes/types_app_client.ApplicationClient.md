@@ -459,7 +459,7 @@ ___
 
 ▸ **fundAppAccount**(`fund`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
 
-Funds ALGOs into the app account for this app.
+Funds Algo into the app account for this app.
 
 #### Parameters
 
