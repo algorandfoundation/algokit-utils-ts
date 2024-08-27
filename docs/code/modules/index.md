@@ -278,7 +278,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L132)
+[src/asset.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L131)
 
 ___
 
@@ -317,7 +317,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L162)
+[src/asset.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L159)
 
 ___
 
@@ -352,7 +352,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L69)
+[src/asset.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L68)
 
 ___
 
@@ -387,7 +387,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L100)
+[src/asset.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L99)
 
 ___
 
@@ -553,7 +553,7 @@ await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My a
 
 #### Defined in
 
-[src/asset.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L25)
+[src/asset.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L24)
 
 ___
 
@@ -935,7 +935,7 @@ The account asset holding information
 
 **`Deprecated`**
 
-Use `algorandClient.asset.getAccountInformation(sender, assetId)` or `new AssetManager(clientManager, accountManager).getAccountInformation(sender, assetId)` instead.
+Use `algorandClient.asset.getAccountInformation(sender, assetId)` or `new AssetManager(...).getAccountInformation(sender, assetId)` instead.
 
 Returns the given sender account's asset holding for a given asset.
 

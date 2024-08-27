@@ -2,8 +2,6 @@ import algosdk from 'algosdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation, TransactionSignerAccount } from './account'
-import { AccountManager } from './account-manager'
-import { ClientManager } from './client-manager'
 import AlgoKitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
 import AssetModel = algosdk.modelsv2.Asset
 
@@ -138,28 +136,21 @@ export interface AssetInformation {
 
 /** Allows management of asset information. */
 export class AssetManager {
-  private _clientManager: ClientManager
-  private _accountManager: AccountManager
+  private _algod: algosdk.Algodv2
+  private _newGroup: () => AlgoKitComposer
 
   /**
    * Create a new asset manager.
-   * @param clientManager The ClientManager client to use for algod client
+   * @param algod An algod client
+   * @param newGroup A function that creates a new `AlgoKitComposer` transaction group
    * @example Create a new asset manager
    * ```typescript
-   * const assetManager = new AssetManager(clientManager)
+   * const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, () => signer, () => suggestedParams}))
    * ```
    */
-  constructor(clientManager: ClientManager, accountManager: AccountManager) {
-    this._clientManager = clientManager
-    this._accountManager = accountManager
-  }
-
-  private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
-    return new AlgoKitComposer({
-      algod: this._clientManager.algod,
-      getSigner: this._accountManager.getSigner.bind(this._accountManager),
-      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),
-    })
+  constructor(algod: algosdk.Algodv2, newGroup: () => AlgoKitComposer) {
+    this._algod = algod
+    this._newGroup = newGroup
   }
 
   /**
@@ -174,7 +165,7 @@ export class AssetManager {
    * @returns The asset information
    */
   public async getById(assetId: bigint): Promise<AssetInformation> {
-    const asset = AssetModel.from_obj_for_encoding(await this._clientManager.algod.getAssetByID(Number(assetId)).do())
+    const asset = AssetModel.from_obj_for_encoding(await this._algod.getAssetByID(Number(assetId)).do())
 
     return {
       assetId: BigInt(asset.index),
@@ -212,9 +203,7 @@ export class AssetManager {
    * @returns The account asset holding information
    */
   public async getAccountInformation(sender: string | TransactionSignerAccount, assetId: bigint): Promise<AccountAssetInformation> {
-    const info = await this._clientManager.algod
-      .accountAssetInformation(typeof sender === 'string' ? sender : sender.addr, Number(assetId))
-      .do()
+    const info = await this._algod.accountAssetInformation(typeof sender === 'string' ? sender : sender.addr, Number(assetId)).do()
 
     return {
       assetId: BigInt(assetId),
@@ -248,10 +237,8 @@ export class AssetManager {
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
 
-    const params = await this._clientManager.algod.getTransactionParams().do()
-
     for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
-      const composer = this._getComposer(() => Promise.resolve(params))
+      const composer = this._newGroup()
 
       for (const assetId of assetGroup) {
         composer.addAssetOptIn({
@@ -311,11 +298,11 @@ export class AssetManager {
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
 
-    const params = await this._clientManager.algod.getTransactionParams().do()
+    const params = await this._algod.getTransactionParams().do()
     const sender = typeof account === 'string' ? account : account.addr
 
     for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
-      const composer = this._getComposer(() => Promise.resolve(params))
+      const composer = this._newGroup()
 
       const notOptedInAssetIds: bigint[] = []
       const nonZeroBalanceAssetIds: bigint[] = []

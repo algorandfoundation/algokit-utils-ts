@@ -13,6 +13,8 @@
 - [types/account-manager.spec](modules/types_account_manager_spec.md)
 - [types/algo-http-client-with-retry](modules/types_algo_http_client_with_retry.md)
 - [types/algorand-client](modules/types_algorand_client.md)
+- [types/algorand-client-sender](modules/types_algorand_client_sender.md)
+- [types/algorand-client-transaction-creator](modules/types_algorand_client_transaction_creator.md)
 - [types/algorand-client.asset.spec](modules/types_algorand_client_asset_spec.md)
 - [types/algorand-client.spec](modules/types_algorand_client_spec.md)
 - [types/algorand-client.transfer.spec](modules/types_algorand_client_transfer_spec.md)

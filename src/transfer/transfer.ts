@@ -99,8 +99,8 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
       note: encodeTransactionNote(transfer.note),
       lease: transfer.lease,
     },
-    (c) => c.transactions.assetTransfer,
-    (c) => c.send.assetTransfer,
+    (c) => c.assetTransfer,
+    (c) => c.assetTransfer,
   )
 }
 
@@ -133,7 +133,7 @@ export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Prom
       note: encodeTransactionNote(rekey.note),
       lease: rekey.lease,
     },
-    (c) => c.transactions.payment,
-    (c) => c.send.payment,
+    (c) => c.payment,
+    (c) => c.payment,
   )
 }

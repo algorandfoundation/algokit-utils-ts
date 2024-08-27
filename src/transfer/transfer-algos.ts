@@ -33,7 +33,7 @@ export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2
     transfer.from,
     transfer,
     params,
-    (c) => c.transactions.payment,
-    (c) => c.send.payment,
+    (c) => c.payment,
+    (c) => c.payment,
   )
 }

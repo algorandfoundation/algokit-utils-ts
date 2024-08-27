@@ -21,19 +21,19 @@ A client that brokers easy access to Algorand functionality.
 - [\_cachedSuggestedParamsTimeout](types_algorand_client.AlgorandClient.md#_cachedsuggestedparamstimeout)
 - [\_clientManager](types_algorand_client.AlgorandClient.md#_clientmanager)
 - [\_defaultValidityWindow](types_algorand_client.AlgorandClient.md#_defaultvaliditywindow)
-- [send](types_algorand_client.AlgorandClient.md#send)
-- [transactions](types_algorand_client.AlgorandClient.md#transactions)
+- [\_sender](types_algorand_client.AlgorandClient.md#_sender)
+- [\_transactionCreator](types_algorand_client.AlgorandClient.md#_transactioncreator)
 
 ### Accessors
 
 - [account](types_algorand_client.AlgorandClient.md#account)
 - [asset](types_algorand_client.AlgorandClient.md#asset)
 - [client](types_algorand_client.AlgorandClient.md#client)
+- [send](types_algorand_client.AlgorandClient.md#send)
+- [transactions](types_algorand_client.AlgorandClient.md#transactions)
 
 ### Methods
 
-- [\_send](types_algorand_client.AlgorandClient.md#_send)
-- [\_transaction](types_algorand_client.AlgorandClient.md#_transaction)
 - [getSuggestedParams](types_algorand_client.AlgorandClient.md#getsuggestedparams)
 - [newGroup](types_algorand_client.AlgorandClient.md#newgroup)
 - [setDefaultSigner](types_algorand_client.AlgorandClient.md#setdefaultsigner)
@@ -67,7 +67,7 @@ A client that brokers easy access to Algorand functionality.
 
 #### Defined in
 
-[src/types/algorand-client.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L31)
+[src/types/algorand-client.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L29)
 
 ## Properties
 
@@ -77,7 +77,7 @@ A client that brokers easy access to Algorand functionality.
 
 #### Defined in
 
-[src/types/algorand-client.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L22)
+[src/types/algorand-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L18)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L23)
+[src/types/algorand-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L19)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L25)
+[src/types/algorand-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L23)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L26)
+[src/types/algorand-client.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L24)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L27)
+[src/types/algorand-client.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L25)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L21)
+[src/types/algorand-client.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L17)
 
 ___
 
@@ -137,63 +137,27 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L29)
+[src/types/algorand-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L27)
 
 ___
 
-### send
+### \_sender
 
-• **send**: `Object`
-
-Methods for sending a single transaction.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `appCall` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `accountReferences?`: `string`[] ; `appId?`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram?`: `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: `BoxReference`[] ; `clearProgram?`: `Uint8Array` ; `extraPages?`: `number` ; `onComplete?`: `OnApplicationComplete` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalUints`: `number` ; `localByteSlices`: `number` ; `localUints`: `number`  }  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetConfig` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint` ; `clawback?`: `string` ; `freeze?`: `string` ; `manager`: `undefined` \| `string` ; `reserve?`: `string`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetCreate` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetName?`: `string` ; `clawback?`: `string` ; `decimals?`: `number` ; `defaultFrozen?`: `boolean` ; `freeze?`: `string` ; `manager?`: `string` ; `metadataHash?`: `string` \| `Uint8Array` ; `reserve?`: `string` ; `total`: `bigint` ; `unitName?`: `string` ; `url?`: `string`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<\{ `assetId`: `bigint` ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\> | - |
-| `assetDestroy` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetFreeze` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `account`: `string` ; `assetId`: `bigint` ; `frozen`: `boolean`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetOptIn` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `assetId`: `bigint`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetOptOut` | (`params`: `Omit`\<[`AssetOptOutParams`](../modules/types_composer.md#assetoptoutparams), ``"creator"``\> & \{ `creator?`: `string` ; `ensureZeroBalance`: `boolean`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetTransfer` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `amount`: `bigint` ; `assetId`: `bigint` ; `clawbackTarget?`: `string` ; `closeAssetTo?`: `string` ; `receiver`: `string`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `methodCall` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & `Omit`\<[`AppCallParams`](../modules/types_composer.md#appcallparams), ``"args"``\> & \{ `appId`: `bigint` ; `args?`: (`TransactionWithSigner` \| `Transaction` \| `ABIValue` \| `Promise`\<`Transaction`\> \| [`MethodCallParams`](../modules/types_composer.md#methodcallparams))[] ; `method`: `ABIMethod`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `onlineKeyRegistration` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `payment` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `amount`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `closeRemainderTo?`: `string` ; `receiver`: `string`  } & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
+• `Private` **\_sender**: [`AlgorandClientSender`](types_algorand_client_sender.AlgorandClientSender.md)
 
 #### Defined in
 
-[src/types/algorand-client.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L191)
+[src/types/algorand-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L20)
 
 ___
 
-### transactions
+### \_transactionCreator
 
-• **transactions**: `Object`
-
-Methods for building transactions
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `appCall` | (`params`: [`AppCallParams`](../modules/types_composer.md#appcallparams)) => `Promise`\<`Transaction`\> | - |
-| `assetConfig` | (`params`: [`AssetConfigParams`](../modules/types_composer.md#assetconfigparams)) => `Promise`\<`Transaction`\> | - |
-| `assetCreate` | (`params`: [`AssetCreateParams`](../modules/types_composer.md#assetcreateparams)) => `Promise`\<`Transaction`\> | - |
-| `assetDestroy` | (`params`: [`AssetDestroyParams`](../modules/types_composer.md#assetdestroyparams)) => `Promise`\<`Transaction`\> | - |
-| `assetFreeze` | (`params`: [`AssetFreezeParams`](../modules/types_composer.md#assetfreezeparams)) => `Promise`\<`Transaction`\> | - |
-| `assetOptIn` | (`params`: [`AssetOptInParams`](../modules/types_composer.md#assetoptinparams)) => `Promise`\<`Transaction`\> | - |
-| `assetOptOut` | (`params`: [`AssetOptOutParams`](../modules/types_composer.md#assetoptoutparams)) => `Promise`\<`Transaction`\> | - |
-| `assetTransfer` | (`params`: [`AssetTransferParams`](../modules/types_composer.md#assettransferparams)) => `Promise`\<`Transaction`\> | - |
-| `methodCall` | (`params`: [`MethodCallParams`](../modules/types_composer.md#methodcallparams)) => `Promise`\<`Transaction`[]\> | - |
-| `onlineKeyRegistration` | (`params`: [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams)) => `Promise`\<`Transaction`\> | - |
-| `payment` | (`params`: [`PaymentParams`](../modules/types_composer.md#paymentparams)) => `Promise`\<`Transaction`\> | - |
+• `Private` **\_transactionCreator**: [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
 
 #### Defined in
 
-[src/types/algorand-client.ts:603](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L603)
+[src/types/algorand-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L21)
 
 ## Accessors
 
@@ -243,86 +207,39 @@ Get clients, including algosdk clients and app clients.
 
 [src/types/algorand-client.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L129)
 
+___
+
+### send
+
+• `get` **send**(): [`AlgorandClientSender`](types_algorand_client_sender.AlgorandClientSender.md)
+
+Methods for sending a single transaction.
+
+#### Returns
+
+[`AlgorandClientSender`](types_algorand_client_sender.AlgorandClientSender.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L156)
+
+___
+
+### transactions
+
+• `get` **transactions**(): [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
+
+Methods for building transactions
+
+#### Returns
+
+[`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L163)
+
 ## Methods
-
-### \_send
-
-▸ **_send**\<`T`\>(`c`, `log?`): (`params`: `T` & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `c` | (`c`: [`default`](types_composer.default.md)) => (`params`: `T`) => [`default`](types_composer.default.md) |
-| `log?` | `Object` |
-| `log.postLog?` | (`params`: `T`, `result`: [`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)) => `string` |
-| `log.preLog?` | (`params`: `T`, `transaction`: `Transaction`) => `string` |
-
-#### Returns
-
-`fn`
-
-▸ (`params`): `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `params` | `T` & [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md) |
-
-##### Returns
-
-`Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
-
-#### Defined in
-
-[src/types/algorand-client.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L153)
-
-___
-
-### \_transaction
-
-▸ **_transaction**\<`T`\>(`c`): (`params`: `T`) => `Promise`\<`Transaction`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `c` | (`c`: [`default`](types_composer.default.md)) => (`params`: `T`) => [`default`](types_composer.default.md) |
-
-#### Returns
-
-`fn`
-
-▸ (`params`): `Promise`\<`Transaction`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `params` | `T` |
-
-##### Returns
-
-`Promise`\<`Transaction`\>
-
-#### Defined in
-
-[src/types/algorand-client.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L592)
-
-___
 
 ### getSuggestedParams
 
@@ -527,7 +444,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:889](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L889)
+[src/types/algorand-client.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L173)
 
 ___
 
@@ -551,7 +468,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:926](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L926)
+[src/types/algorand-client.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L210)
 
 ___
 
@@ -575,7 +492,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:956](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L956)
+[src/types/algorand-client.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L240)
 
 ___
 
@@ -606,7 +523,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:947](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L947)
+[src/types/algorand-client.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L231)
 
 ___
 
@@ -624,7 +541,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:913](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L913)
+[src/types/algorand-client.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L197)
 
 ___
 
@@ -642,4 +559,4 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:901](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L901)
+[src/types/algorand-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L185)

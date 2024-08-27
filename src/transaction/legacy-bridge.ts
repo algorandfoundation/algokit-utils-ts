@@ -1,5 +1,7 @@
 import algosdk from 'algosdk'
-import { AlgorandClient, SendSingleTransactionResult } from '../types/algorand-client'
+import { AlgorandClientSender, SendSingleTransactionResult } from '../types/algorand-client-sender'
+import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
+import { AssetManager } from '../types/asset-manager'
 import AlgoKitComposer, { CommonTransactionParams, ExecuteParams } from '../types/composer'
 import { SendTransactionFrom, SendTransactionParams, SendTransactionResult } from '../types/transaction'
 import { getSenderTransactionSigner, getTransactionParams } from './transaction'
@@ -12,10 +14,18 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   from: SendTransactionFrom,
   sendParams: SendTransactionParams,
   params: T,
-  txn: (c: AlgorandClient) => (params: T) => Promise<Transaction>,
-  send: (c: AlgorandClient) => (params: T & ExecuteParams) => Promise<SendSingleTransactionResult>,
+  txn: (c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>,
+  send: (c: AlgorandClientSender) => (params: T & ExecuteParams) => Promise<SendSingleTransactionResult>,
+  suggestedParams?: algosdk.SuggestedParams,
 ): Promise<SendTransactionResult> {
-  const client = AlgorandClient.fromClients({ algod }).setSignerFromAccount(from)
+  const newGroup = () =>
+    new AlgoKitComposer({
+      algod,
+      getSigner: () => getSenderTransactionSigner(from),
+      getSuggestedParams: async () => await getTransactionParams(suggestedParams, algod),
+    })
+  const sender = new AlgorandClientSender(newGroup, new AssetManager(algod, newGroup))
+  const transactionCreator = new AlgorandClientTransactionCreator(newGroup)
 
   if (sendParams.fee) {
     params.staticFee = sendParams.fee
@@ -25,52 +35,12 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   }
 
   if (sendParams.atc || sendParams.skipSending) {
-    const transaction = await txn(client)(params)
+    const transaction = await txn(transactionCreator)(params)
     if (sendParams.atc) {
       sendParams.atc.addTransaction(await { txn: transaction, signer: getSenderTransactionSigner(from) })
     }
     return { transaction }
   }
 
-  return await send(client)({ ...sendParams, ...params })
-}
-
-/** Bridges between legacy `sendTransaction` behaviour and new `AlgoKitComposer` behaviour. */
-export async function legacySendTransactionBridgeComposer<T extends CommonTransactionParams>(
-  algod: Algodv2,
-  from: SendTransactionFrom,
-  params: T,
-  compose: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
-  sendParams?: SendTransactionParams,
-  suggestedParams?: algosdk.SuggestedParams,
-): Promise<SendTransactionResult> {
-  const composer = new AlgoKitComposer({
-    algod,
-    getSigner: (address) => getSenderTransactionSigner(from),
-    getSuggestedParams: async () => await getTransactionParams(suggestedParams, algod),
-  })
-  sendParams = sendParams ?? {}
-
-  if (sendParams.fee) {
-    params.staticFee = sendParams.fee
-  }
-  if (sendParams.maxFee) {
-    params.maxFee = sendParams.maxFee
-  }
-
-  if (sendParams.atc || sendParams.skipSending) {
-    await compose(composer).apply(composer, [params])
-    const transactions = await composer.build()
-    if (sendParams.atc) {
-      transactions.transactions.forEach((txn) => sendParams!.atc!.addTransaction(txn))
-    }
-    return { transaction: transactions.transactions[transactions.transactions.length - 1].txn }
-  }
-
-  const result = await compose(composer).apply(composer, [params]).execute(sendParams)
-  return {
-    ...result,
-    transaction: result.transactions[result.transactions.length - 1],
-    confirmation: result.confirmations[result.confirmations.length - 1],
-  }
+  return await send(sender)({ ...sendParams, ...params })
 }

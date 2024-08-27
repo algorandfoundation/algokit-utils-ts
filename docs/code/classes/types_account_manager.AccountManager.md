@@ -671,7 +671,7 @@ ___
 
 ### rekeyAccount
 
-▸ **rekeyAccount**(`account`, `rekeyTo`, `options?`): `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
+▸ **rekeyAccount**(`account`, `rekeyTo`, `options?`): `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client_sender.md#sendsingletransactionresult)\>
 
 Rekey an account to a new address.
 
@@ -687,7 +687,7 @@ Rekey an account to a new address.
 
 #### Returns
 
-`Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
+`Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client_sender.md#sendsingletransactionresult)\>
 
 The result of the transaction and the transaction that was sent
 

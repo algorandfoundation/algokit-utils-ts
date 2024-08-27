@@ -629,6 +629,7 @@ export default class AlgoKitComposer {
   private async buildMethodCall(
     params: MethodCallParams,
     suggestedParams: algosdk.SuggestedParams,
+    includeSigner: boolean,
   ): Promise<algosdk.TransactionWithSigner[]> {
     const methodArgs: algosdk.ABIArgument[] = []
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
@@ -649,7 +650,7 @@ export default class AlgoKitComposer {
       }
 
       if ('method' in arg) {
-        const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams)
+        const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
         methodArgs.push(...tempTxnWithSigners)
         continue
       }
@@ -657,11 +658,13 @@ export default class AlgoKitComposer {
       const txn = await arg
       methodArgs.push({
         txn,
-        signer: params.signer
-          ? 'signer' in params.signer
-            ? params.signer.signer
-            : params.signer
-          : this.getSigner(encodeAddress(txn.from.publicKey)),
+        signer: includeSigner
+          ? params.signer
+            ? 'signer' in params.signer
+              ? params.signer.signer
+              : params.signer
+            : this.getSigner(encodeAddress(txn.from.publicKey))
+          : algosdk.makeEmptyTransactionSigner(),
       })
     }
 
@@ -841,7 +844,40 @@ export default class AlgoKitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.TransactionWithSigner[]> {
+  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.Transaction[]> {
+    switch (txn.type) {
+      case 'txnWithSigner':
+        return [txn.txn]
+      case 'atc':
+        return txn.atc.buildGroup().map((ts) => ts.txn)
+      case 'methodCall':
+        return (await this.buildMethodCall(txn, suggestedParams, false)).map((ts) => ts.txn)
+      case 'pay':
+        return [this.buildPayment(txn, suggestedParams)]
+      case 'assetCreate':
+        return [this.buildAssetCreate(txn, suggestedParams)]
+      case 'appCall':
+        return [this.buildAppCall(txn, suggestedParams)]
+      case 'assetConfig':
+        return [this.buildAssetConfig(txn, suggestedParams)]
+      case 'assetDestroy':
+        return [this.buildAssetDestroy(txn, suggestedParams)]
+      case 'assetFreeze':
+        return [this.buildAssetFreeze(txn, suggestedParams)]
+      case 'assetTransfer':
+        return [this.buildAssetTransfer(txn, suggestedParams)]
+      case 'assetOptIn':
+        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)]
+      case 'assetOptOut':
+        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator }, suggestedParams)]
+      case 'keyReg':
+        return [this.buildKeyReg(txn, suggestedParams)]
+      default:
+        throw Error(`Unsupported txn type`)
+    }
+  }
+
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.TransactionWithSigner[]> {
     if (txn.type === 'txnWithSigner') {
       return [txn]
     }
@@ -851,58 +887,29 @@ export default class AlgoKitComposer {
     }
 
     if (txn.type === 'methodCall') {
-      return await this.buildMethodCall(txn, suggestedParams)
+      return await this.buildMethodCall(txn, suggestedParams, true)
     }
 
     const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
 
-    switch (txn.type) {
-      case 'pay': {
-        const payment = this.buildPayment(txn, suggestedParams)
-        return [{ txn: payment, signer }]
-      }
-      case 'assetCreate': {
-        const assetCreate = this.buildAssetCreate(txn, suggestedParams)
-        return [{ txn: assetCreate, signer }]
-      }
-      case 'appCall': {
-        const appCall = this.buildAppCall(txn, suggestedParams)
-        return [{ txn: appCall, signer }]
-      }
-      case 'assetConfig': {
-        const assetConfig = this.buildAssetConfig(txn, suggestedParams)
-        return [{ txn: assetConfig, signer }]
-      }
-      case 'assetDestroy': {
-        const assetDestroy = this.buildAssetDestroy(txn, suggestedParams)
-        return [{ txn: assetDestroy, signer }]
-      }
-      case 'assetFreeze': {
-        const assetFreeze = this.buildAssetFreeze(txn, suggestedParams)
-        return [{ txn: assetFreeze, signer }]
-      }
-      case 'assetTransfer': {
-        const assetTransfer = this.buildAssetTransfer(txn, suggestedParams)
-        return [{ txn: assetTransfer, signer }]
-      }
-      case 'assetOptIn': {
-        const assetTransfer = this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)
-        return [{ txn: assetTransfer, signer }]
-      }
-      case 'assetOptOut': {
-        const assetTransfer = this.buildAssetTransfer(
-          { ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator },
-          suggestedParams,
-        )
-        return [{ txn: assetTransfer, signer }]
-      }
-      case 'keyReg': {
-        const keyReg = this.buildKeyReg(txn, suggestedParams)
-        return [{ txn: keyReg, signer }]
-      }
-      default:
-        throw Error(`Unsupported txn type`)
+    return (await this.buildTxn(txn, suggestedParams)).map((txn) => ({ txn, signer }))
+  }
+
+  /**
+   * Compose all of the transactions without signers and return the transaction objects directly.
+   *
+   * @returns The array of built transactions
+   */
+  async buildTransactions() {
+    const suggestedParams = await this.getSuggestedParams()
+
+    const transactions: algosdk.Transaction[] = []
+
+    for (const txn of this.txns) {
+      transactions.push(...(await this.buildTxn(txn, suggestedParams)))
     }
+
+    return transactions
   }
 
   /**
@@ -918,7 +925,7 @@ export default class AlgoKitComposer {
       const txnWithSigners: algosdk.TransactionWithSigner[] = []
 
       for (const txn of this.txns) {
-        txnWithSigners.push(...(await this.buildTxn(txn, suggestedParams)))
+        txnWithSigners.push(...(await this.buildTxnWithSigner(txn, suggestedParams)))
       }
 
       txnWithSigners.forEach((ts) => {

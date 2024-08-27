@@ -1,9 +1,8 @@
 import algosdk from 'algosdk'
+import { AlgorandClient } from '.'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
-import { AccountManager } from './types/account-manager'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
-import { AssetManager } from './types/asset-manager'
 import { ClientManager } from './types/client-manager'
 import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
 import { SendTransactionResult } from './types/transaction'
@@ -48,8 +47,8 @@ export async function createAsset(
     create.creator,
     create,
     params,
-    (client) => client.transactions.assetCreate,
-    (client) => client.send.assetCreate,
+    (client) => client.assetCreate,
+    (client) => client.assetCreate,
   )) as SendTransactionResult & { confirmation: { assetIndex: number | bigint } }
 }
 
@@ -79,8 +78,8 @@ export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promi
     optIn.account,
     optIn,
     params,
-    (c) => c.transactions.assetOptIn,
-    (c) => c.send.assetOptIn,
+    (c) => c.assetOptIn,
+    (c) => c.assetOptIn,
   )
 }
 
@@ -113,8 +112,8 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
     optOut.account,
     optOut,
     params,
-    (c) => c.transactions.assetOptOut,
-    (c) => (params: NewAssetOptOutParams) => c.send.assetOptOut({ ...params, ensureZeroBalance: optOut.ensureZeroBalance ?? true }),
+    (c) => c.assetOptOut,
+    (c) => (params: NewAssetOptOutParams) => c.assetOptOut({ ...params, ensureZeroBalance: optOut.ensureZeroBalance ?? true }),
   )
 }
 
@@ -131,15 +130,13 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
  */
 export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
   const clientManager = new ClientManager({ algod })
-  const result = await new AssetManager(clientManager, new AccountManager(clientManager).setSignerFromAccount(optIn.account)).bulkOptIn(
-    getSenderAddress(optIn.account),
-    optIn.assetIds.map(BigInt),
-    {
+  const result = await AlgorandClient.fromClients({ algod })
+    .setSignerFromAccount(optIn.account)
+    .asset.bulkOptIn(getSenderAddress(optIn.account), optIn.assetIds.map(BigInt), {
       note: encodeTransactionNote(optIn.note),
       maxFee: optIn.maxFee,
       suppressLog: optIn.suppressLog,
-    },
-  )
+    })
 
   const returnResult: Record<number, string> = {}
   for (const r of result) {
@@ -161,16 +158,14 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
  */
 export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
   const clientManager = new ClientManager({ algod })
-  const result = await new AssetManager(clientManager, new AccountManager(clientManager).setSignerFromAccount(optOut.account)).bulkOptOut(
-    getSenderAddress(optOut.account),
-    optOut.assetIds.map(BigInt),
-    {
+  const result = await AlgorandClient.fromClients({ algod })
+    .setSignerFromAccount(optOut.account)
+    .asset.bulkOptOut(getSenderAddress(optOut.account), optOut.assetIds.map(BigInt), {
       ensureZeroBalance: optOut.validateBalances ?? true,
       note: encodeTransactionNote(optOut.note),
       maxFee: optOut.maxFee,
       suppressLog: optOut.suppressLog,
-    },
-  )
+    })
 
   const returnResult: Record<number, string> = {}
   for (const r of result) {

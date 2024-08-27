@@ -15,7 +15,7 @@ import {
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
 import { Config } from '../config'
 import { persistSourceMaps } from '../debugging/debugging'
-import { legacySendTransactionBridgeComposer } from '../transaction/legacy-bridge'
+import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { AlgoAmount } from './amount'
 import {
@@ -736,17 +736,18 @@ export class ApplicationClient {
     }
 
     const ref = await this.getAppReference()
-    return legacySendTransactionBridgeComposer(
+    return legacySendTransactionBridge(
       this.algod,
       sender ?? this.sender!,
+      sendParams ?? {},
       {
         receiver: ref.appAddress,
         sender: getSenderAddress(sender ?? this.sender!),
         amount: amount,
         note: encodeTransactionNote(note),
       },
-      (c) => c.addPayment,
-      sendParams,
+      (c) => c.payment,
+      (c) => c.payment,
       this.params,
     )
   }

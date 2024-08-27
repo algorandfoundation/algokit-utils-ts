@@ -37,7 +37,7 @@ The ID of the asset.
 
 #### Defined in
 
-[src/types/asset-manager.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L21)
+[src/types/asset-manager.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L19)
 
 ___
 
@@ -51,7 +51,7 @@ Max size is 32 bytes.
 
 #### Defined in
 
-[src/types/asset-manager.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L112)
+[src/types/asset-manager.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L110)
 
 ___
 
@@ -65,7 +65,7 @@ Max size is 32 bytes.
 
 #### Defined in
 
-[src/types/asset-manager.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L118)
+[src/types/asset-manager.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L116)
 
 ___
 
@@ -83,7 +83,7 @@ If not set the field is permanently empty.
 
 #### Defined in
 
-[src/types/asset-manager.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L94)
+[src/types/asset-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L92)
 
 ___
 
@@ -99,7 +99,7 @@ closing out an asset position and opting-out of the asset.
 
 #### Defined in
 
-[src/types/asset-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L29)
+[src/types/asset-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L27)
 
 ___
 
@@ -117,7 +117,7 @@ The amount of decimal places the asset was created with.
 
 #### Defined in
 
-[src/types/asset-manager.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L45)
+[src/types/asset-manager.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L43)
 
 ___
 
@@ -133,7 +133,7 @@ transaction from the `freeze` account.
 
 #### Defined in
 
-[src/types/asset-manager.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L53)
+[src/types/asset-manager.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L51)
 
 ___
 
@@ -149,7 +149,7 @@ If not set the field is permanently empty.
 
 #### Defined in
 
-[src/types/asset-manager.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L83)
+[src/types/asset-manager.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L81)
 
 ___
 
@@ -163,7 +163,7 @@ If not set the asset is permanently immutable.
 
 #### Defined in
 
-[src/types/asset-manager.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L59)
+[src/types/asset-manager.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L57)
 
 ___
 
@@ -177,7 +177,7 @@ The format of this metadata is up to the application.
 
 #### Defined in
 
-[src/types/asset-manager.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L136)
+[src/types/asset-manager.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L134)
 
 ___
 
@@ -199,7 +199,7 @@ If not set the field is permanently empty.
 
 #### Defined in
 
-[src/types/asset-manager.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L74)
+[src/types/asset-manager.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L72)
 
 ___
 
@@ -213,7 +213,7 @@ For example, if `decimals` is, say, 2, then for every 100 `total` there is 1 who
 
 #### Defined in
 
-[src/types/asset-manager.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L35)
+[src/types/asset-manager.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L33)
 
 ___
 
@@ -227,7 +227,7 @@ Max size is 8 bytes.
 
 #### Defined in
 
-[src/types/asset-manager.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L100)
+[src/types/asset-manager.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L98)
 
 ___
 
@@ -241,7 +241,7 @@ Max size is 8 bytes.
 
 #### Defined in
 
-[src/types/asset-manager.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L106)
+[src/types/asset-manager.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L104)
 
 ___
 
@@ -255,7 +255,7 @@ Max size is 96 bytes.
 
 #### Defined in
 
-[src/types/asset-manager.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L124)
+[src/types/asset-manager.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L122)
 
 ___
 
@@ -269,4 +269,4 @@ Max size is 96 bytes.
 
 #### Defined in
 
-[src/types/asset-manager.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L130)
+[src/types/asset-manager.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L128)

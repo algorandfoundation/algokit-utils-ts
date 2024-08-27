@@ -48,7 +48,9 @@ AlgoKit Composer helps you compose and execute transactions as a transaction gro
 - [buildKeyReg](types_composer.default.md#buildkeyreg)
 - [buildMethodCall](types_composer.default.md#buildmethodcall)
 - [buildPayment](types_composer.default.md#buildpayment)
+- [buildTransactions](types_composer.default.md#buildtransactions)
 - [buildTxn](types_composer.default.md#buildtxn)
+- [buildTxnWithSigner](types_composer.default.md#buildtxnwithsigner)
 - [commonTxnBuildStep](types_composer.default.md#commontxnbuildstep)
 - [execute](types_composer.default.md#execute)
 - [rebuild](types_composer.default.md#rebuild)
@@ -503,7 +505,7 @@ The built atomic transaction composer and the transactions
 
 #### Defined in
 
-[src/types/composer.ts:914](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L914)
+[src/types/composer.ts:921](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L921)
 
 ___
 
@@ -524,7 +526,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:786](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L786)
+[src/types/composer.ts:789](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L789)
 
 ___
 
@@ -545,7 +547,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L735)
+[src/types/composer.ts:738](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L738)
 
 ___
 
@@ -566,7 +568,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L715)
+[src/types/composer.ts:718](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L718)
 
 ___
 
@@ -587,7 +589,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:750](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L750)
+[src/types/composer.ts:753](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L753)
 
 ___
 
@@ -608,7 +610,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:760](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L760)
+[src/types/composer.ts:763](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L763)
 
 ___
 
@@ -629,7 +631,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:772](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L772)
+[src/types/composer.ts:775](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L775)
 
 ___
 
@@ -670,13 +672,13 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:826](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L826)
+[src/types/composer.ts:829](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L829)
 
 ___
 
 ### buildMethodCall
 
-▸ **buildMethodCall**(`params`, `suggestedParams`): `Promise`\<`TransactionWithSigner`[]\>
+▸ **buildMethodCall**(`params`, `suggestedParams`, `includeSigner`): `Promise`\<`TransactionWithSigner`[]\>
 
 #### Parameters
 
@@ -684,6 +686,7 @@ ___
 | :------ | :------ |
 | `params` | [`MethodCallParams`](../modules/types_composer.md#methodcallparams) |
 | `suggestedParams` | `SuggestedParams` |
+| `includeSigner` | `boolean` |
 
 #### Returns
 
@@ -712,13 +715,52 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:703](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L703)
+[src/types/composer.ts:706](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L706)
+
+___
+
+### buildTransactions
+
+▸ **buildTransactions**(): `Promise`\<`Transaction`[]\>
+
+Compose all of the transactions without signers and return the transaction objects directly.
+
+#### Returns
+
+`Promise`\<`Transaction`[]\>
+
+The array of built transactions
+
+#### Defined in
+
+[src/types/composer.ts:903](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L903)
 
 ___
 
 ### buildTxn
 
-▸ **buildTxn**(`txn`, `suggestedParams`): `Promise`\<`TransactionWithSigner`[]\>
+▸ **buildTxn**(`txn`, `suggestedParams`): `Promise`\<`Transaction`[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `txn` | `Txn` |
+| `suggestedParams` | `SuggestedParams` |
+
+#### Returns
+
+`Promise`\<`Transaction`[]\>
+
+#### Defined in
+
+[src/types/composer.ts:847](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L847)
+
+___
+
+### buildTxnWithSigner
+
+▸ **buildTxnWithSigner**(`txn`, `suggestedParams`): `Promise`\<`TransactionWithSigner`[]\>
 
 #### Parameters
 
@@ -733,7 +775,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:844](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L844)
+[src/types/composer.ts:880](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L880)
 
 ___
 
@@ -779,7 +821,7 @@ The execution result
 
 #### Defined in
 
-[src/types/composer.ts:956](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L956)
+[src/types/composer.ts:963](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L963)
 
 ___
 
@@ -798,4 +840,4 @@ The newly built atomic transaction composer and the transactions
 
 #### Defined in
 
-[src/types/composer.ts:946](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L946)
+[src/types/composer.ts:953](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L953)

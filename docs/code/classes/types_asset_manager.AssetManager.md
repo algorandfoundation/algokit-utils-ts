@@ -14,12 +14,11 @@ Allows management of asset information.
 
 ### Properties
 
-- [\_accountManager](types_asset_manager.AssetManager.md#_accountmanager)
-- [\_clientManager](types_asset_manager.AssetManager.md#_clientmanager)
+- [\_algod](types_asset_manager.AssetManager.md#_algod)
+- [\_newGroup](types_asset_manager.AssetManager.md#_newgroup)
 
 ### Methods
 
-- [\_getComposer](types_asset_manager.AssetManager.md#_getcomposer)
 - [bulkOptIn](types_asset_manager.AssetManager.md#bulkoptin)
 - [bulkOptOut](types_asset_manager.AssetManager.md#bulkoptout)
 - [getAccountInformation](types_asset_manager.AssetManager.md#getaccountinformation)
@@ -29,7 +28,7 @@ Allows management of asset information.
 
 ### constructor
 
-• **new AssetManager**(`clientManager`, `accountManager`): [`AssetManager`](types_asset_manager.AssetManager.md)
+• **new AssetManager**(`algod`, `newGroup`): [`AssetManager`](types_asset_manager.AssetManager.md)
 
 Create a new asset manager.
 
@@ -37,8 +36,8 @@ Create a new asset manager.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `clientManager` | [`ClientManager`](types_client_manager.ClientManager.md) | The ClientManager client to use for algod client |
-| `accountManager` | [`AccountManager`](types_account_manager.AccountManager.md) | - |
+| `algod` | `default` | An algod client |
+| `newGroup` | () => [`default`](types_composer.default.md) | A function that creates a new `AlgoKitComposer` transaction group |
 
 #### Returns
 
@@ -47,54 +46,42 @@ Create a new asset manager.
 **`Example`**
 
 ```typescript
-const assetManager = new AssetManager(clientManager)
+const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, () => signer, () => suggestedParams}))
 ```
 
 #### Defined in
 
-[src/types/asset-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L152)
+[src/types/asset-manager.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L151)
 
 ## Properties
 
-### \_accountManager
+### \_algod
 
-• `Private` **\_accountManager**: [`AccountManager`](types_account_manager.AccountManager.md)
+• `Private` **\_algod**: `default`
 
 #### Defined in
 
-[src/types/asset-manager.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L142)
+[src/types/asset-manager.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L139)
 
 ___
 
-### \_clientManager
+### \_newGroup
 
-• `Private` **\_clientManager**: [`ClientManager`](types_client_manager.ClientManager.md)
+• `Private` **\_newGroup**: () => [`default`](types_composer.default.md)
 
-#### Defined in
+#### Type declaration
 
-[src/types/asset-manager.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L141)
+▸ (): [`default`](types_composer.default.md)
 
-## Methods
-
-### \_getComposer
-
-▸ **_getComposer**(`getSuggestedParams?`): [`default`](types_composer.default.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `getSuggestedParams?` | () => `Promise`\<`SuggestedParams`\> |
-
-#### Returns
+##### Returns
 
 [`default`](types_composer.default.md)
 
 #### Defined in
 
-[src/types/asset-manager.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L157)
+[src/types/asset-manager.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L140)
 
-___
+## Methods
 
 ### bulkOptIn
 
@@ -129,7 +116,7 @@ algorand.asset.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).mi
 
 #### Defined in
 
-[src/types/asset-manager.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L244)
+[src/types/asset-manager.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L233)
 
 ___
 
@@ -166,7 +153,7 @@ algorand.asset.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalanc
 
 #### Defined in
 
-[src/types/asset-manager.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L296)
+[src/types/asset-manager.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L283)
 
 ___
 
@@ -201,7 +188,7 @@ const accountInfo = await algorand.asset.getAccountInformation(address, assetId)
 
 #### Defined in
 
-[src/types/asset-manager.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L214)
+[src/types/asset-manager.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L205)
 
 ___
 
@@ -231,4 +218,4 @@ const assetInfo = await assetManager.getById(12353n);
 
 #### Defined in
 
-[src/types/asset-manager.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L176)
+[src/types/asset-manager.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L167)
