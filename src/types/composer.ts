@@ -2,7 +2,7 @@ import algosdk from 'algosdk'
 import { encodeLease, encodeTransactionNote, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { ClientManager } from './client-manager'
+import { genesisIdIsLocalNet } from './network-client'
 import { SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
 import TransactionWithSigner = algosdk.TransactionWithSigner
@@ -601,9 +601,7 @@ export default class AlgoKitComposer {
       //  LocalNet set a bigger window to avoid dead transactions
       const window =
         params.validityWindow ??
-        (!this.defaultValidityWindowIsExplicit && ClientManager.genesisIdIsLocalNet(suggestedParams.genesisID)
-          ? 1000
-          : this.defaultValidityWindow)
+        (!this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisID) ? 1000 : this.defaultValidityWindow)
       txn.lastRound = txn.firstRound + window
     }
 

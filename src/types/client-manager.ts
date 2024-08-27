@@ -11,7 +11,7 @@ import {
   ResolveAppByIdBase,
 } from './app-client'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
-import { AlgoClientConfig, AlgoConfig } from './network-client'
+import { AlgoClientConfig, AlgoConfig, genesisIdIsLocalNet } from './network-client'
 import Kmd = algosdk.Kmd
 import Indexer = algosdk.Indexer
 import Algodv2 = algosdk.Algodv2
@@ -129,7 +129,7 @@ export class ClientManager {
    * @returns Whether the given genesis ID is associated with a LocalNet network
    */
   public static genesisIdIsLocalNet(genesisId: string) {
-    return genesisId === 'devnet-v1' || genesisId === 'sandnet-v1' || genesisId === 'dockernet-v1'
+    return genesisIdIsLocalNet(genesisId)
   }
 
   /**
