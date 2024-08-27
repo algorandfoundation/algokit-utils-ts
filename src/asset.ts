@@ -1,7 +1,7 @@
 import algosdk from 'algosdk'
-import { AlgorandClient } from '.'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
+import { AlgorandClient } from './types/algorand-client'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
 import { ClientManager } from './types/client-manager'
 import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
