@@ -385,7 +385,7 @@ export interface ExecuteParams {
 }
 
 /** Parameters to create an `AlgokitComposer`. */
-export type AlgokitComposerParams = {
+export type AlgoKitComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: algosdk.Algodv2
   /** The function used to get the TransactionSigner for a given address */
@@ -398,12 +398,7 @@ export type AlgokitComposerParams = {
   defaultValidityWindow?: number
 }
 
-/** AlgoKit Composer helps you compose and execute transactions as a transaction group.
- *
- * Note: this class is a new Beta feature and may be subject to change.
- *
- * @beta
- */
+/** AlgoKit Composer helps you compose and execute transactions as a transaction group. */
 export default class AlgokitComposer {
   /** The ATC used to compose the group */
   private atc = new algosdk.AtomicTransactionComposer()
@@ -417,7 +412,7 @@ export default class AlgokitComposer {
   /** The algod client used by the composer. */
   private algod: algosdk.Algodv2
 
-  /** An async function that will return suggestedParams. */
+  /** An async function that will return suggested params for the transaction. */
   private getSuggestedParams: () => Promise<algosdk.SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
@@ -433,7 +428,7 @@ export default class AlgokitComposer {
    * Create an `AlgoKitComposer`.
    * @param params The configuration for this composer
    */
-  constructor(params: AlgokitComposerParams) {
+  constructor(params: AlgoKitComposerParams) {
     this.algod = params.algod
     const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams

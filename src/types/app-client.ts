@@ -15,8 +15,8 @@ import {
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
 import { Config } from '../config'
 import { persistSourceMaps } from '../debugging/debugging'
-import { getSenderAddress } from '../transaction/transaction'
-import { transferAlgos } from '../transfer/transfer-algos'
+import { legacySendTransactionBridgeComposer } from '../transaction/legacy-bridge'
+import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
@@ -736,17 +736,18 @@ export class ApplicationClient {
     }
 
     const ref = await this.getAppReference()
-    return await transferAlgos(
-      {
-        to: ref.appAddress,
-        amount: amount,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        from: sender ?? this.sender!,
-        note: note,
-        transactionParams: this.params,
-        ...(sendParams ?? {}),
-      },
+    return legacySendTransactionBridgeComposer(
       this.algod,
+      sender ?? this.sender!,
+      {
+        receiver: ref.appAddress,
+        sender: getSenderAddress(sender ?? this.sender!),
+        amount: amount,
+        note: encodeTransactionNote(note),
+      },
+      (c) => c.addPayment,
+      sendParams,
+      this.params,
     )
   }
 
