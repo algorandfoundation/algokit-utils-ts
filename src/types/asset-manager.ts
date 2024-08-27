@@ -4,7 +4,7 @@ import { chunkArray } from '../util'
 import { AccountAssetInformation, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { ClientManager } from './client-manager'
-import AlgokitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import AlgoKitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
 import AssetModel = algosdk.modelsv2.Asset
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
@@ -155,7 +155,7 @@ export class AssetManager {
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
-    return new AlgokitComposer({
+    return new AlgoKitComposer({
       algod: this._clientManager.algod,
       getSigner: this._accountManager.getSigner.bind(this._accountManager),
       getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),

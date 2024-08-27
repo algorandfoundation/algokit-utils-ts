@@ -5,7 +5,7 @@ import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount,
 import { SendSingleTransactionResult } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import AlgokitComposer, { CommonTransactionParams, ExecuteParams } from './composer'
+import AlgoKitComposer, { CommonTransactionParams, ExecuteParams } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -58,7 +58,7 @@ export class AccountManager {
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
-    return new AlgokitComposer({
+    return new AlgoKitComposer({
       algod: this._clientManager.algod,
       getSigner: this.getSigner.bind(this),
       getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),

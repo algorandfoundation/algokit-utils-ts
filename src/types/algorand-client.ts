@@ -4,7 +4,7 @@ import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './acc
 import { AccountManager } from './account-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import AlgokitComposer, { AssetCreateParams, AssetOptOutParams, ExecuteParams, MethodCallParams } from './composer'
+import AlgoKitComposer, { AssetCreateParams, AssetOptOutParams, ExecuteParams, MethodCallParams } from './composer'
 import { AlgoConfig } from './network-client'
 import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
@@ -142,7 +142,7 @@ export class AlgorandClient {
 
   /** Start a new `AlgokitComposer` transaction group */
   public newGroup() {
-    return new AlgokitComposer({
+    return new AlgoKitComposer({
       algod: this.client.algod,
       getSigner: (addr: string) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),
@@ -151,7 +151,7 @@ export class AlgorandClient {
   }
 
   private _send<T>(
-    c: (c: AlgokitComposer) => (params: T) => AlgokitComposer,
+    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
     log?: {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
@@ -589,7 +589,7 @@ export class AlgorandClient {
     }),
   }
 
-  private _transaction<T>(c: (c: AlgokitComposer) => (params: T) => AlgokitComposer): (params: T) => Promise<Transaction> {
+  private _transaction<T>(c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer): (params: T) => Promise<Transaction> {
     return async (params: T) => {
       const composer = this.newGroup()
       const result = await c(composer).apply(composer, [params]).build()

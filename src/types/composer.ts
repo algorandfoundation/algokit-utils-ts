@@ -399,7 +399,7 @@ export type AlgoKitComposerParams = {
 }
 
 /** AlgoKit Composer helps you compose and execute transactions as a transaction group. */
-export default class AlgokitComposer {
+export default class AlgoKitComposer {
   /** The ATC used to compose the group */
   private atc = new algosdk.AtomicTransactionComposer()
 
@@ -442,7 +442,7 @@ export default class AlgokitComposer {
    * @param params The payment transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addPayment(params: PaymentParams): AlgokitComposer {
+  addPayment(params: PaymentParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'pay' })
 
     return this
@@ -453,7 +453,7 @@ export default class AlgokitComposer {
    * @param params The asset create transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetCreate(params: AssetCreateParams): AlgokitComposer {
+  addAssetCreate(params: AssetCreateParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetCreate' })
 
     return this
@@ -464,7 +464,7 @@ export default class AlgokitComposer {
    * @param params The asset config transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetConfig(params: AssetConfigParams): AlgokitComposer {
+  addAssetConfig(params: AssetConfigParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetConfig' })
 
     return this
@@ -475,7 +475,7 @@ export default class AlgokitComposer {
    * @param params The asset freeze transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetFreeze(params: AssetFreezeParams): AlgokitComposer {
+  addAssetFreeze(params: AssetFreezeParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetFreeze' })
 
     return this
@@ -486,7 +486,7 @@ export default class AlgokitComposer {
    * @param params The asset destroy transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetDestroy(params: AssetDestroyParams): AlgokitComposer {
+  addAssetDestroy(params: AssetDestroyParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetDestroy' })
 
     return this
@@ -497,7 +497,7 @@ export default class AlgokitComposer {
    * @param params The asset transfer transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetTransfer(params: AssetTransferParams): AlgokitComposer {
+  addAssetTransfer(params: AssetTransferParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetTransfer' })
 
     return this
@@ -508,7 +508,7 @@ export default class AlgokitComposer {
    * @param params The asset opt-in transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetOptIn(params: AssetOptInParams): AlgokitComposer {
+  addAssetOptIn(params: AssetOptInParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetOptIn' })
 
     return this
@@ -519,7 +519,7 @@ export default class AlgokitComposer {
    * @param params The asset opt-out transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetOptOut(params: AssetOptOutParams): AlgokitComposer {
+  addAssetOptOut(params: AssetOptOutParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetOptOut' })
 
     return this
@@ -532,7 +532,7 @@ export default class AlgokitComposer {
    * @param params The application call transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAppCall(params: AppCallParams): AlgokitComposer {
+  addAppCall(params: AppCallParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'appCall' })
 
     return this
@@ -555,7 +555,7 @@ export default class AlgokitComposer {
    * @param params The online key registration transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): AlgokitComposer {
+  addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'keyReg' })
 
     return this
@@ -566,7 +566,7 @@ export default class AlgokitComposer {
    * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
    * @returns The composer so you can chain method calls
    */
-  addAtc(atc: algosdk.AtomicTransactionComposer): AlgokitComposer {
+  addAtc(atc: algosdk.AtomicTransactionComposer): AlgoKitComposer {
     this.txns.push({ atc, type: 'atc' })
     return this
   }

@@ -1,6 +1,6 @@
 import algosdk from 'algosdk'
 import { AlgorandClient, SendSingleTransactionResult } from '../types/algorand-client'
-import AlgokitComposer, { CommonTransactionParams, ExecuteParams } from '../types/composer'
+import AlgoKitComposer, { CommonTransactionParams, ExecuteParams } from '../types/composer'
 import { SendTransactionFrom, SendTransactionParams, SendTransactionResult } from '../types/transaction'
 import { getSenderTransactionSigner, getTransactionParams } from './transaction'
 import Algodv2 = algosdk.Algodv2
@@ -40,11 +40,11 @@ export async function legacySendTransactionBridgeComposer<T extends CommonTransa
   algod: Algodv2,
   from: SendTransactionFrom,
   params: T,
-  compose: (c: AlgokitComposer) => (params: T) => AlgokitComposer,
+  compose: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
   sendParams?: SendTransactionParams,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<SendTransactionResult> {
-  const composer = new AlgokitComposer({
+  const composer = new AlgoKitComposer({
     algod,
     getSigner: (address) => getSenderTransactionSigner(from),
     getSuggestedParams: async () => await getTransactionParams(suggestedParams, algod),
