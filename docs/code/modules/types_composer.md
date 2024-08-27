@@ -14,7 +14,7 @@
 
 ### Type Aliases
 
-- [AlgokitComposerParams](types_composer.md#algokitcomposerparams)
+- [AlgoKitComposerParams](types_composer.md#algokitcomposerparams)
 - [AppCallParams](types_composer.md#appcallparams)
 - [AssetConfigParams](types_composer.md#assetconfigparams)
 - [AssetCreateParams](types_composer.md#assetcreateparams)
@@ -34,9 +34,9 @@
 
 ## Type Aliases
 
-### AlgokitComposerParams
+### AlgoKitComposerParams
 
-Ƭ **AlgokitComposerParams**: `Object`
+Ƭ **AlgoKitComposerParams**: `Object`
 
 Parameters to create an `AlgokitComposer`.
 

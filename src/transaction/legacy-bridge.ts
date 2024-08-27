@@ -59,7 +59,7 @@ export async function legacySendTransactionBridgeComposer<T extends CommonTransa
   }
 
   if (sendParams.atc || sendParams.skipSending) {
-    await compose(composer)(params)
+    await compose(composer).apply(composer, [params])
     const transactions = await composer.build()
     if (sendParams.atc) {
       transactions.transactions.forEach((txn) => sendParams!.atc!.addTransaction(txn))
@@ -67,7 +67,7 @@ export async function legacySendTransactionBridgeComposer<T extends CommonTransa
     return { transaction: transactions.transactions[transactions.transactions.length - 1].txn }
   }
 
-  const result = await compose(composer)(params).execute(sendParams)
+  const result = await compose(composer).apply(composer, [params]).execute(sendParams)
   return {
     ...result,
     transaction: result.transactions[result.transactions.length - 1],
