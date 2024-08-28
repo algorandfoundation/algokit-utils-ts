@@ -31,6 +31,7 @@
 
 ### Functions
 
+- [algo](index.md#algo)
 - [algos](index.md#algos)
 - [assetBulkOptIn](index.md#assetbulkoptin)
 - [assetBulkOptOut](index.md#assetbulkoptout)
@@ -94,6 +95,7 @@
 - [isMainNet](index.md#ismainnet)
 - [isSchemaIsBroken](index.md#isschemaisbroken)
 - [isTestNet](index.md#istestnet)
+- [microAlgo](index.md#microalgo)
 - [microAlgos](index.md#microalgos)
 - [mnemonicAccount](index.md#mnemonicaccount)
 - [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
@@ -221,6 +223,28 @@ ___
 
 ## Functions
 
+### algo
+
+▸ **algo**(`algos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+Returns an amount of Algo using AlgoAmount
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `algos` | `number` | The amount of Algo |
+
+#### Returns
+
+[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+#### Defined in
+
+[src/amount.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L51)
+
+___
+
 ### algos
 
 ▸ **algos**(`algos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
@@ -239,7 +263,7 @@ Returns an amount of Algo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L22)
+[src/amount.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L44)
 
 ___
 
@@ -2185,6 +2209,28 @@ Use `await algorandClient.client.isTestNet()` or `await new ClientManager({ algo
 
 ___
 
+### microAlgo
+
+▸ **microAlgo**(`microAlgos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+Returns an amount of µAlgo using AlgoAmount
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `microAlgos` | `number` | The amount of µAlgo |
+
+#### Returns
+
+[`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
+
+#### Defined in
+
+[src/amount.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L65)
+
+___
+
 ### microAlgos
 
 ▸ **microAlgos**(`microAlgos`): [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
@@ -2203,7 +2249,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L29)
+[src/amount.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L58)
 
 ___
 
@@ -2774,7 +2820,7 @@ Returns an amount of µAlgo to cover standard fees for the given number of trans
 
 #### Defined in
 
-[src/amount.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L36)
+[src/amount.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L72)
 
 ___
 
@@ -2833,7 +2879,7 @@ Transfer Algo between two accounts.
 **`Example`**
 
 ```typescript
-await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
+await algokit.transferAlgos({ from, to, amount: algokit.algo(1) }, algod)
 ```
 
 #### Defined in

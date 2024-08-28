@@ -67,13 +67,13 @@ export class AlgorandClientSender {
    * const result = await algorandClient.send.payment({
    *  sender: 'SENDERADDRESS',
    *  receiver: 'RECEIVERADDRESS',
-   *  amount: (4).algos(),
+   *  amount: (4).algo(),
    * })
    * ```
    * @example Advanced example
    * ```typescript
    * const result = await algorandClient.send.payment({
-   *   amount: (4).algos(),
+   *   amount: (4).algo(),
    *   receiver: 'RECEIVERADDRESS',
    *   sender: 'SENDERADDRESS',
    *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
@@ -84,11 +84,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in
@@ -102,7 +102,7 @@ export class AlgorandClientSender {
    */
   payment = this._send((c) => c.addPayment, {
     preLog: (params, transaction) =>
-      `Sending ${params.amount.microAlgos} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+      `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
   })
   /**
    * Create a new Algorand Standard Asset.
@@ -136,11 +136,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in
@@ -185,11 +185,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in
@@ -224,11 +224,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in
@@ -265,11 +265,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in
@@ -307,11 +307,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in
@@ -345,11 +345,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in
@@ -392,11 +392,11 @@ export class AlgorandClientSender {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   // Signer only needed if you want to provide one,
    *   //  generally you'd register it with AlgorandClient
    *   //  against the sender and not need to pass it in

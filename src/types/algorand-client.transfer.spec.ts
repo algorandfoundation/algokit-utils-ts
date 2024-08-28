@@ -28,7 +28,7 @@ describe('Transfer capability', () => {
     const result = await algorand.send.payment({
       sender: testAccount.addr,
       receiver: secondAccount.addr,
-      amount: (5).algos(),
+      amount: (5).algo(),
       note: 'Transfer 5 Algos',
     })
 
@@ -45,7 +45,7 @@ describe('Transfer capability', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(algosdk.encodeAddress(result.confirmation.txn.txn.snd)).toBe(testAccount.addr)
 
-    expect(accountInfo.balance.microAlgos).toBe(5_000_000)
+    expect(accountInfo.balance.microAlgo).toBe(5_000_000)
   })
 
   test('Transfer Algo respects string lease', async () => {
@@ -55,7 +55,7 @@ describe('Transfer capability', () => {
     await algorand.send.payment({
       sender: testAccount.addr,
       receiver: secondAccount.addr,
-      amount: (1).algos(),
+      amount: (1).algo(),
       lease: 'test',
     })
 
@@ -63,7 +63,7 @@ describe('Transfer capability', () => {
       algorand.send.payment({
         sender: testAccount.addr,
         receiver: secondAccount.addr,
-        amount: (2).algos(),
+        amount: (2).algo(),
         lease: 'test',
       }),
     ).rejects.toThrow(/overlapping lease/)
@@ -76,7 +76,7 @@ describe('Transfer capability', () => {
     await algorand.send.payment({
       sender: testAccount.addr,
       receiver: secondAccount.addr,
-      amount: (1).algos(),
+      amount: (1).algo(),
       lease: new Uint8Array([1, 2, 3, 4]),
     })
 
@@ -84,7 +84,7 @@ describe('Transfer capability', () => {
       algorand.send.payment({
         sender: testAccount.addr,
         receiver: secondAccount.addr,
-        amount: (2).algos(),
+        amount: (2).algo(),
         lease: new Uint8Array([1, 2, 3, 4]),
       }),
     ).rejects.toThrow(/overlapping lease/)
@@ -93,7 +93,7 @@ describe('Transfer capability', () => {
   test('Transfer ASA, respects lease', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
     await algorand.send.assetTransfer({
@@ -137,7 +137,7 @@ describe('Transfer capability', () => {
   test('Transfer ASA, sender is not opted in', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
 
@@ -157,7 +157,7 @@ describe('Transfer capability', () => {
 
   test('Transfer ASA, asset doesnt exist', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     try {
       await algorand.send.assetTransfer({
@@ -176,7 +176,7 @@ describe('Transfer capability', () => {
   // @deprecated test - remove when removing transferAsset
   test('Transfer ASA, without sending', async () => {
     const { algod, testAccount, generateAccount } = localnet.context
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     const response = await transferAsset(
       {
@@ -197,7 +197,7 @@ describe('Transfer capability', () => {
   test('Transfer ASA, asset is transfered to another account', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
 
@@ -219,8 +219,8 @@ describe('Transfer capability', () => {
   test('Transfer ASA, asset is transfered to another account from revocationTarget', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
-    const clawbackAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
+    const clawbackAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
 
@@ -260,27 +260,27 @@ describe('Transfer capability', () => {
     const { algorand, testAccount } = localnet.context
     const secondAccount = algorand.account.random()
 
-    const result = await algorand.account.ensureFunded(secondAccount, testAccount, (1).microAlgos())
+    const result = await algorand.account.ensureFunded(secondAccount, testAccount, (1).microAlgo())
     const accountInfo = await algorand.account.getInformation(secondAccount.addr)
 
     invariant(result)
     expect(result.transactionId).toBe(result.transaction.txID())
-    expect(result.amountFunded.microAlgos).toBe(100_001)
-    expect(accountInfo.balance.microAlgos).toBe(100_001)
+    expect(result.amountFunded.microAlgo).toBe(100_001)
+    expect(accountInfo.balance.microAlgo).toBe(100_001)
   })
 
   test('ensureFunded respects minimum funding increment', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
-    const secondAccount = await generateAccount({ initialFunds: (100_000).microAlgos() })
+    const secondAccount = await generateAccount({ initialFunds: (100_000).microAlgo() })
 
-    const result = await algorand.account.ensureFunded(secondAccount, testAccount, (1).microAlgos(), {
-      minFundingIncrement: (1).algos(),
+    const result = await algorand.account.ensureFunded(secondAccount, testAccount, (1).microAlgo(), {
+      minFundingIncrement: (1).algo(),
     })
 
     invariant(result)
-    expect(result.amountFunded.algos).toBe(1)
+    expect(result.amountFunded.algo).toBe(1)
     const accountInfo = await algorand.account.getInformation(secondAccount.addr)
-    expect(accountInfo.balance.microAlgos).toBe(1_100_000)
+    expect(accountInfo.balance.microAlgo).toBe(1_100_000)
   })
 
   test('ensureFunded uses dispenser account by default', async () => {
@@ -288,15 +288,15 @@ describe('Transfer capability', () => {
     const secondAccount = algorand.account.random()
     const dispenser = await algorand.account.dispenserFromEnvironment()
 
-    const result = await algorand.account.ensureFundedFromEnvironment(secondAccount, (1).microAlgos(), {
-      minFundingIncrement: (1).algos(),
+    const result = await algorand.account.ensureFundedFromEnvironment(secondAccount, (1).microAlgo(), {
+      minFundingIncrement: (1).algo(),
     })
 
     invariant(result)
     const resultReceiver = algosdk.encodeAddress(result.confirmation.txn.txn.snd)
     expect(resultReceiver).toBe(dispenser.addr)
     const accountInfo = await algorand.account.getInformation(secondAccount.addr)
-    expect(accountInfo.balance.algos).toBe(1)
+    expect(accountInfo.balance.algo).toBe(1)
   })
 
   test('ensureFunded uses dispenser api with access token successfully', async () => {
@@ -313,13 +313,13 @@ describe('Transfer capability', () => {
 
     const accountToFund = algorand.account.random()
 
-    const result = await algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, (100).algos(), {
-      minFundingIncrement: (0.1).algos(),
+    const result = await algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, (100).algo(), {
+      minFundingIncrement: (0.1).algo(),
     })
 
     invariant(result)
     expect(result.transactionId).toBeDefined()
-    expect(result.amountFunded.algos).toBe(0.2)
+    expect(result.amountFunded.algo).toBe(0.2)
   })
 
   test('ensureFunded uses dispenser api and fails with rejected response', async () => {
@@ -336,8 +336,8 @@ describe('Transfer capability', () => {
     const accountToFund = algorand.account.random()
 
     await expect(
-      algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, (100).algos(), {
-        minFundingIncrement: (1).algos(),
+      algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, (100).algo(), {
+        minFundingIncrement: (1).algo(),
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot('"dummy_error"')
   })
@@ -369,7 +369,7 @@ describe('rekey', () => {
     await algorand.send.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,
-      amount: (1).microAlgos(),
+      amount: (1).microAlgo(),
       signer: secondAccount.signer,
     })
   })

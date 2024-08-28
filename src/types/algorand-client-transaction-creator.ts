@@ -31,13 +31,13 @@ export class AlgorandClientTransactionCreator {
    * const result = await algorandClient.send.payment({
    *  sender: 'SENDERADDRESS',
    *  receiver: 'RECEIVERADDRESS',
-   *  amount: (4).algos(),
+   *  amount: (4).algo(),
    * })
    * ```
    * @example Advanced example
    * ```typescript
    * const result = await algorandClient.send.payment({
-   *   amount: (4).algos(),
+   *   amount: (4).algo(),
    *   receiver: 'RECEIVERADDRESS',
    *   sender: 'SENDERADDRESS',
    *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
@@ -48,11 +48,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    *
@@ -90,11 +90,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    * @returns The asset create transaction
@@ -126,11 +126,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    * @returns The asset config transaction
@@ -156,11 +156,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    * @returns The asset freeze transaction
@@ -188,11 +188,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    * @returns The asset destroy transaction
@@ -221,11 +221,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    * @returns The result of the asset transfer transaction
@@ -249,11 +249,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    * @returns The asset opt-in transaction
@@ -282,11 +282,11 @@ export class AlgorandClientTransactionCreator {
    *   // You wouldn't normally set this field
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    * })
    * ```
    * @returns The asset opt-out transaction

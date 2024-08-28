@@ -240,10 +240,10 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 ```typescript
 // Basic example
-await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algos(1))
+await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1))
 // With configuration
-await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algos(1),
- { minFundingIncrement: algokit.algos(2), fee: (1000).microAlgos(), suppressLog: true }
+await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1),
+ { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
 )
 ```
 
@@ -289,10 +289,10 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 ```typescript
 // Basic example
-await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algos(1))
+await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1))
 // With configuration
-await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algos(1),
- { minFundingIncrement: algokit.algos(2), fee: (1000).microAlgos(), suppressLog: true }
+await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1),
+ { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
 )
 ```
 
@@ -333,10 +333,10 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 
 ```typescript
 // Basic example
-await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algos(1))
+await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1))
 // With configuration
-await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algos(1),
- { minFundingIncrement: algokit.algos(2) }
+await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1),
+ { minFundingIncrement: algokit.algo(2) }
 )
 ```
 
@@ -713,11 +713,11 @@ await algorand.account.rekeyAccount({
   note: 'note',
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   maxRoundsToWaitForConfirmation: 5,
   suppressLog: true,
 })

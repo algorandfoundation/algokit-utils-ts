@@ -97,11 +97,11 @@ await algorand.account.rekeyAccount({
   note: 'note',
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   maxRoundsToWaitForConfirmation: 5,
   suppressLog: true,
 })
@@ -147,7 +147,7 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 const localNetDispenserAccount = await kmdAccountManager.getLocalNetDispenserAccount()
 // Idempotently get (if exists) or create (if it doesn't exist yet) an account by name using KMD
 // if creating it then fund it with 2 ALGO from the default dispenser account
-const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
+const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algo())
 // This will return the same account as above since the name matches
 const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
 ```
@@ -160,5 +160,5 @@ const localNetDispenser = await algorand.account.localNetDispenser()
 // Get and register a dispenser by environment variable, or if not set then LocalNet dispenser via KMD
 const dispenser = await algorand.account.dispenserFromEnvironment()
 // Get / create and register account from KMD idempotently by name
-const account1 = await algorand.account.fromKmd('account1', (2).algos())
+const account1 = await algorand.account.fromKmd('account1', (2).algo())
 ```

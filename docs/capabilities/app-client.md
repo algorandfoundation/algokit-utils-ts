@@ -153,7 +153,7 @@ const result = await appClient.call({
   methodArgs: {
     args: [
       appClient.fundAppAccount({
-        amount: algokit.microAlgos(200_000),
+        amount: algokit.microAlgo(200_000),
         sendParams: { skipSending: true },
       }),
     ],

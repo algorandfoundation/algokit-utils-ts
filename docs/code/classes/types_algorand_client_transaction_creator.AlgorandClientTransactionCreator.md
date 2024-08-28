@@ -130,11 +130,11 @@ await algorand.transaction.assetConfig({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 
@@ -194,11 +194,11 @@ await algorand.transaction.assetCreate({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 
@@ -249,11 +249,11 @@ await algorand.transaction.assetDestroy({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 
@@ -302,11 +302,11 @@ await algorand.transaction.assetFreeze({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 
@@ -353,11 +353,11 @@ await algorand.transaction.assetOptIn({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 
@@ -409,11 +409,11 @@ await algorand.transaction.assetOptIn({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 
@@ -465,11 +465,11 @@ await algorand.transaction.assetTransfer({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 
@@ -531,7 +531,7 @@ Create a payment transaction to transfer Algo between accounts.
 const result = await algorandClient.send.payment({
  sender: 'SENDERADDRESS',
  receiver: 'RECEIVERADDRESS',
- amount: (4).algos(),
+ amount: (4).algo(),
 })
 ```
 
@@ -539,7 +539,7 @@ const result = await algorandClient.send.payment({
 
 ```typescript
 const result = await algorandClient.send.payment({
-  amount: (4).algos(),
+  amount: (4).algo(),
   receiver: 'RECEIVERADDRESS',
   sender: 'SENDERADDRESS',
   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
@@ -550,11 +550,11 @@ const result = await algorandClient.send.payment({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
 })
 ```
 

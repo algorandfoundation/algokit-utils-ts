@@ -53,7 +53,7 @@ describe('app', () => {
     const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
     await algokit.transferAlgos(
       {
-        amount: (0).algos(),
+        amount: (0).algo(),
         from: rekeyedAccount,
         to: testAccount,
       },

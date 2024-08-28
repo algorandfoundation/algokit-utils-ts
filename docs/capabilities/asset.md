@@ -60,11 +60,11 @@ await algorand.send.assetCreate({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   // Signer only needed if you want to provide one,
   //  generally you'd register it with AlgorandClient
   //  against the sender and not need to pass it in
@@ -112,11 +112,11 @@ await algorand.send.assetConfig({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   // Signer only needed if you want to provide one,
   //  generally you'd register it with AlgorandClient
   //  against the sender and not need to pass it in
@@ -162,11 +162,11 @@ await algorand.send.assetTransfer({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   // Signer only needed if you want to provide one,
   //  generally you'd register it with AlgorandClient
   //  against the sender and not need to pass it in
@@ -209,11 +209,11 @@ await algorand.send.assetOptIn({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   // Signer only needed if you want to provide one,
   //  generally you'd register it with AlgorandClient
   //  against the sender and not need to pass it in
@@ -260,11 +260,11 @@ await algorand.send.assetOptOut({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   // Signer only needed if you want to provide one,
   //  generally you'd register it with AlgorandClient
   //  against the sender and not need to pass it in
@@ -286,7 +286,7 @@ algorand.asset.bulkOptIn('ACCOUNTADDRESS', [12345n, 67890n])
 // Advanced example
 
 algorand.asset.bulkOptIn('ACCOUNTADDRESS', [12345n, 67890n], {
-  maxFee: (1000).microAlgos(),
+  maxFee: (1000).microAlgo(),
   suppressLog: true,
 })
 ```
@@ -304,7 +304,7 @@ algorand.asset.bulkOptOut('ACCOUNTADDRESS', [12345n, 67890n])
 
 algorand.asset.bulkOptOut('ACCOUNTADDRESS', [12345n, 67890n], {
   ensureZeroBalance: true,
-  maxFee: (1000).microAlgos(),
+  maxFee: (1000).microAlgo(),
   suppressLog: true,
 })
 ```

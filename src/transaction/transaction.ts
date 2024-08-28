@@ -818,9 +818,9 @@ export function capTransactionFee(transaction: algosdk.Transaction | SuggestedPa
   if (!transaction.flatFee) {
     // Once a transaction has been constructed by algosdk, transaction.fee indicates what the total transaction fee
     // Will be based on the current suggested fee-per-byte value.
-    if (transaction.fee > maxAcceptableFee.microAlgos) {
+    if (transaction.fee > maxAcceptableFee.microAlgo) {
       throw new Error(
-        `Cancelled transaction due to high network congestion fees. Algorand suggested fees would cause this transaction to cost ${transaction.fee} µALGO. Cap for this transaction is ${maxAcceptableFee.microAlgos} µALGO.`,
+        `Cancelled transaction due to high network congestion fees. Algorand suggested fees would cause this transaction to cost ${transaction.fee} µALGO. Cap for this transaction is ${maxAcceptableFee.microAlgo} µALGO.`,
       )
     } else if (transaction.fee > algosdk.ALGORAND_MIN_TX_FEE) {
       Config.logger.warn(`Algorand network congestion fees are in effect. This transaction will incur a fee of ${transaction.fee} µALGO.`)
@@ -842,7 +842,7 @@ export function controlFees<T extends SuggestedParams | Transaction>(
 ) {
   const { fee, maxFee } = feeControl
   if (fee) {
-    transaction.fee = fee.microAlgos
+    transaction.fee = fee.microAlgo
     transaction.flatFee = true
   }
 

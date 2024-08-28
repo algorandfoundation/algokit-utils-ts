@@ -94,7 +94,7 @@ You can compose a group of transactions for execution by using the `newGroup()` 
 ```typescript
 const result = algorand
   .newGroup()
-  .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: (1).microAlgos() })
+  .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: (1).microAlgo() })
   .addAssetOptIn({ sender: 'SENDERADDRESS', assetId: 12345n })
   .execute()
 ```

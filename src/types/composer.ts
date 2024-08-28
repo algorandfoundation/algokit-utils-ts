@@ -610,14 +610,14 @@ export default class AlgoKitComposer {
     }
 
     if (params.staticFee !== undefined) {
-      txn.fee = params.staticFee.microAlgos
+      txn.fee = params.staticFee.microAlgo
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
-      if (params.extraFee) txn.fee += params.extraFee.microAlgos
+      if (params.extraFee) txn.fee += params.extraFee.microAlgo
     }
     txn.flatFee = true
 
-    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgos) {
+    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
       throw Error(`Transaction fee ${txn.fee} is greater than maxFee ${params.maxFee}`)
     }
 
@@ -705,7 +705,7 @@ export default class AlgoKitComposer {
     const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: params.sender,
       to: params.receiver,
-      amount: params.amount.microAlgos,
+      amount: params.amount.microAlgo,
       closeRemainderTo: params.closeRemainderTo,
       suggestedParams,
     })

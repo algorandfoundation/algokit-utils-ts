@@ -205,11 +205,11 @@ export class AccountManager {
     return {
       ...account,
       // None of these can practically overflow 2^53
-      balance: AlgoAmount.MicroAlgos(Number(account.amount)),
-      amountWithoutPendingRewards: AlgoAmount.MicroAlgos(Number(account.amountWithoutPendingRewards)),
-      minBalance: AlgoAmount.MicroAlgos(Number(account.minBalance)),
-      pendingRewards: AlgoAmount.MicroAlgos(Number(account.pendingRewards)),
-      rewards: AlgoAmount.MicroAlgos(Number(account.rewards)),
+      balance: AlgoAmount.MicroAlgo(Number(account.amount)),
+      amountWithoutPendingRewards: AlgoAmount.MicroAlgo(Number(account.amountWithoutPendingRewards)),
+      minBalance: AlgoAmount.MicroAlgo(Number(account.minBalance)),
+      pendingRewards: AlgoAmount.MicroAlgo(Number(account.pendingRewards)),
+      rewards: AlgoAmount.MicroAlgo(Number(account.rewards)),
       validAsOfRound: BigInt(account.round),
       totalAppsOptedIn: Number(account.totalAppsOptedIn),
       totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
@@ -441,11 +441,11 @@ export class AccountManager {
    *   note: 'note',
    *   firstValidRound: 1000n,
    *   validityWindow: 10,
-   *   extraFee: (1000).microAlgos(),
-   *   staticFee: (1000).microAlgos(),
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
    *   // Max fee doesn't make sense with extraFee AND staticFee
    *   //  already specified, but here for completeness
-   *   maxFee: (3000).microAlgos(),
+   *   maxFee: (3000).microAlgo(),
    *   maxRoundsToWaitForConfirmation: 5,
    *   suppressLog: true,
    * })
@@ -462,7 +462,7 @@ export class AccountManager {
         ...options,
         sender: typeof account === 'string' ? account : account.addr,
         receiver: typeof account === 'string' ? account : account.addr,
-        amount: AlgoAmount.MicroAlgos(0),
+        amount: AlgoAmount.MicroAlgo(0),
         rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : rekeyTo.addr,
       })
       .execute(options)
@@ -479,11 +479,11 @@ export class AccountManager {
 
   private async _getEnsureFundedAmount(sender: string, minSpendingBalance: AlgoAmount, minFundingIncrement?: AlgoAmount) {
     const accountInfo = await this.getInformation(sender)
-    const currentSpendingBalance = accountInfo.balance.microAlgos - accountInfo.minBalance.microAlgos
+    const currentSpendingBalance = accountInfo.balance.microAlgo - accountInfo.minBalance.microAlgo
 
-    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgos, currentSpendingBalance, minFundingIncrement?.microAlgos ?? 0)
+    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgo, currentSpendingBalance, minFundingIncrement?.microAlgo ?? 0)
 
-    return amountFunded === null ? undefined : AlgoAmount.MicroAlgos(amountFunded)
+    return amountFunded === null ? undefined : AlgoAmount.MicroAlgo(amountFunded)
   }
 
   /**
@@ -500,10 +500,10 @@ export class AccountManager {
    * @example Example using AlgorandClient
    * ```typescript
    * // Basic example
-   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algos(1))
+   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1))
    * // With configuration
-   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algos(1),
-   *  { minFundingIncrement: algokit.algos(2), fee: (1000).microAlgos(), suppressLog: true }
+   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1),
+   *  { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
    * )
    * ```
    * @returns
@@ -562,10 +562,10 @@ export class AccountManager {
    * @example Example using AlgorandClient
    * ```typescript
    * // Basic example
-   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algos(1))
+   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1))
    * // With configuration
-   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algos(1),
-   *  { minFundingIncrement: algokit.algos(2), fee: (1000).microAlgos(), suppressLog: true }
+   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1),
+   *  { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
    * )
    * ```
    * @returns
@@ -618,10 +618,10 @@ export class AccountManager {
    * @example Example using AlgorandClient
    * ```typescript
    * // Basic example
-   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algos(1))
+   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1))
    * // With configuration
-   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algos(1),
-   *  { minFundingIncrement: algokit.algos(2) }
+   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1),
+   *  { minFundingIncrement: algokit.algo(2) }
    * )
    * ```
    * @returns
@@ -645,9 +645,9 @@ export class AccountManager {
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
     if (!amountFunded) return undefined
 
-    const result = await dispenserClient.fund(addressToFund, amountFunded.microAlgos)
+    const result = await dispenserClient.fund(addressToFund, amountFunded.microAlgo)
     return {
-      amountFunded: AlgoAmount.MicroAlgos(result.amount),
+      amountFunded: AlgoAmount.MicroAlgo(result.amount),
       transactionId: result.txId,
     }
   }

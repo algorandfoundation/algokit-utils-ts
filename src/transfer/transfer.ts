@@ -41,7 +41,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
     )
     if (!result) return undefined
     return {
-      amount: result.amountFunded.microAlgos,
+      amount: result.amountFunded.microAlgo,
       transactionId: result.transactionId,
     }
   } else {
@@ -65,7 +65,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
 
     return result
       ? {
-          amount: result.amountFunded.microAlgos,
+          amount: result.amountFunded.microAlgo,
           transactionId: result.txIds[0],
         }
       : undefined
@@ -128,7 +128,7 @@ export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Prom
     {
       sender: getSenderAddress(rekey.from),
       receiver: getSenderAddress(rekey.from),
-      amount: (0).microAlgos(),
+      amount: (0).microAlgo(),
       rekeyTo: typeof rekey.rekeyTo === 'string' ? rekey.rekeyTo : getSenderAddress(rekey.rekeyTo),
       note: encodeTransactionNote(rekey.note),
       lease: rekey.lease,

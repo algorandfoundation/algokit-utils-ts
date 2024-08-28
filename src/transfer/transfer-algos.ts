@@ -16,7 +16,7 @@ import Algodv2 = algosdk.Algodv2
  *
  * @example Usage example
  * ```typescript
- * await algokit.transferAlgos({ from, to, amount: algokit.algos(1) }, algod)
+ * await algokit.transferAlgos({ from, to, amount: algokit.algo(1) }, algod)
  * ```
  */
 export async function transferAlgos(transfer: AlgoTransferParams, algod: Algodv2): Promise<SendTransactionResult> {

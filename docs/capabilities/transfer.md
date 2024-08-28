@@ -19,14 +19,14 @@ The base type for specifying a payment transaction is [`PaymentParams`](../code/
 const result = await algorand.send.payment({
   sender: 'SENDERADDRESS',
   receiver: 'RECEIVERADDRESS',
-  amount: (4).algos(),
+  amount: (4).algo(),
 })
 
 // Advanced example
 const result2 = await algorand.send.payment({
   sender: 'SENDERADDRESS',
   receiver: 'RECEIVERADDRESS',
-  amount: (4).algos(),
+  amount: (4).algo(),
   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
   lease: 'lease',
   note: 'note',
@@ -35,11 +35,11 @@ const result2 = await algorand.send.payment({
   // You wouldn't normally set this field
   firstValidRound: 1000n,
   validityWindow: 10,
-  extraFee: (1000).microAlgos(),
-  staticFee: (1000).microAlgos(),
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
   // Max fee doesn't make sense with extraFee AND staticFee
   //  already specified, but here for completeness
-  maxFee: (3000).microAlgos(),
+  maxFee: (3000).microAlgo(),
   // Signer only needed if you want to provide one,
   //  generally you'd register it with AlgorandClient
   //  against the sender and not need to pass it in
@@ -81,22 +81,22 @@ The general structure of these calls is similar, they all take:
 // From account
 
 // Basic example
-await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', algokit.algos(1))
+await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', algokit.algo(1))
 // With configuration
-await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', algokit.algos(1), {
-  minFundingIncrement: algokit.algos(2),
-  fee: (1000).microAlgos(),
+await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', algokit.algo(1), {
+  minFundingIncrement: algokit.algo(2),
+  fee: (1000).microAlgo(),
   suppressLog: true,
 })
 
 // From environment
 
 // Basic example
-await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.algos(1))
+await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.algo(1))
 // With configuration
-await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.algos(1), {
-  minFundingIncrement: algokit.algos(2),
-  fee: (1000).microAlgos(),
+await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.algo(1), {
+  minFundingIncrement: algokit.algo(2),
+  fee: (1000).microAlgo(),
   suppressLog: true,
 })
 
@@ -106,14 +106,14 @@ await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.alg
 await algorand.account.ensureFundedUsingDispenserAPI(
   'ACCOUNTADDRESS',
   algorand.client.getTestNetDispenserFromEnvironment(),
-  algokit.algos(1),
+  algokit.algo(1),
 )
 // With configuration
 await algorand.account.ensureFundedUsingDispenserAPI(
   'ACCOUNTADDRESS',
   algorand.client.getTestNetDispenserFromEnvironment(),
-  algokit.algos(1),
-  { minFundingIncrement: algokit.algos(2) },
+  algokit.algo(1),
+  { minFundingIncrement: algokit.algo(2) },
 )
 ```
 

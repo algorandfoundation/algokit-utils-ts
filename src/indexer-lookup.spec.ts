@@ -12,7 +12,7 @@ describe('indexer-lookup', () => {
     return await localnet.context.algorand.send.payment({
       sender: from ?? localnet.context.testAccount.addr,
       receiver: localnet.context.testAccount.addr,
-      amount: amount ?? (1).microAlgos(),
+      amount: amount ?? (1).microAlgo(),
     })
   }
 
@@ -39,12 +39,12 @@ describe('indexer-lookup', () => {
   test('Transactions are searched with pagination', async () => {
     const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
     const secondAccount = await generateAccount({
-      initialFunds: (1).algos(),
+      initialFunds: (1).algo(),
       suppressLog: true,
     })
-    const { transaction: transaction1 } = await sendTestTransaction((1).microAlgos())
-    const { transaction: transaction2 } = await sendTestTransaction((2).microAlgos())
-    await sendTestTransaction((1).microAlgos(), secondAccount.addr)
+    const { transaction: transaction1 } = await sendTestTransaction((1).microAlgo())
+    const { transaction: transaction2 } = await sendTestTransaction((2).microAlgo())
+    await sendTestTransaction((1).microAlgo(), secondAccount.addr)
     await waitForIndexer()
 
     const transactions = await indexer.searchTransactions(
@@ -60,7 +60,7 @@ describe('indexer-lookup', () => {
   test('Application create transactions are found by creator with pagination', async () => {
     const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
     const secondAccount = await generateAccount({
-      initialFunds: (1).algos(),
+      initialFunds: (1).algo(),
       suppressLog: true,
     })
 

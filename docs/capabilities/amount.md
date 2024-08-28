@@ -23,15 +23,15 @@ You may not need to import this type to use it though since there are also speci
 There are a few ways to create an `AlgoAmount`:
 
 - Algo
-  - Constructor: `new AlgoAmount({algos: 10})`
-  - Static helper: `AlgoAmount.algos(10)`
-  - AlgoKit Helper: `algokit.algos(10)`
-  - Number coersion: `(10).algos()` (note: you have to wrap the number in brackets or have it in a variable or function return, a raw number value can't have a method called on it)
+  - Constructor: `new AlgoAmount({algo: 10})`
+  - Static helper: `AlgoAmount.algo(10)`
+  - AlgoKit Helper: `algokit.algo(10)`
+  - Number coersion: `(10).algo()` (note: you have to wrap the number in brackets or have it in a variable or function return, a raw number value can't have a method called on it)
 - microAlgo
   - Constructor: `new AlgoAmount({microAlgos: 10_000})`
-  - Static helper: `AlgoAmount.algos(10)`
-  - AlgoKit Helper: `algokit.microAlgos(10_000)`
-  - Number coersion: `(10_000).microAlgos()` (note: you have to wrap the number in brackets or have it in a variable or function return, a raw number value can't have a method called on it)
+  - Static helper: `AlgoAmount.algo(10)`
+  - AlgoKit Helper: `algokit.microAlgo(10_000)`
+  - Number coersion: `(10_000).microAlgo()` (note: you have to wrap the number in brackets or have it in a variable or function return, a raw number value can't have a method called on it)
 
 Note: per above, to use any of the versions that reference `AlgoAmount` type itself you need to import it:
 
@@ -41,10 +41,10 @@ import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
 
 ### Extracting a value from `AlgoAmount`
 
-The `AlgoAmount` class has methods to return Algo and microAlgo:
+The `AlgoAmount` class has properties to return Algo and microAlgo:
 
-- `amount.algos()` - Returns the value in Algo
-- `amount.microAlgos()` - Returns the value in microAlgo
+- `amount.algo` - Returns the value in Algo
+- `amount.microAlgo` - Returns the value in microAlgo
 
 `AlgoAmount` will coerce to a `number` automatically (in microAlgo), which is not recommended to be used outside of allowing you to use `AlgoAmount` objects in comparison operations such as `<` and `>=` etc.
 

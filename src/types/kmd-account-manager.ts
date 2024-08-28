@@ -125,7 +125,7 @@ export class KmdAccountManager {
    * ```typescript
    * // Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
    * // if creating it then fund it with 2 ALGO from the default dispenser account
-   * const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
+   * const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algo())
    * // This will return the same account as above since the name matches
    * const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
    * ```
@@ -155,7 +155,7 @@ export class KmdAccountManager {
 
     Config.logger.info(
       `LocalNet account '${name}' doesn't yet exist; created account ${account.addr} with keys stored in KMD and funding with ${
-        fundWith?.algos ?? 1000
+        fundWith?.algo ?? 1000
       } ALGO`,
     )
 
@@ -167,7 +167,7 @@ export class KmdAccountManager {
       getSuggestedParams: () => this._clientManager.algod.getTransactionParams().do(),
     })
       .addPayment({
-        amount: fundWith ?? AlgoAmount.Algos(1000),
+        amount: fundWith ?? AlgoAmount.Algo(1000),
         receiver: account.addr,
         sender: dispenser.addr,
       })

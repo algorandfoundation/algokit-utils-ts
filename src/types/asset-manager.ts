@@ -226,7 +226,7 @@ export class AssetManager {
    * // Basic example
    * algorand.asset.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n])
    * // With configuration
-   * algorand.asset.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).microAlgos(), suppressLog: true })
+   * algorand.asset.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).microAlgo(), suppressLog: true })
    * ```
    * @returns An array of records matching asset ID to transaction ID of the opt in
    */
@@ -276,7 +276,7 @@ export class AssetManager {
    * // Basic example
    * algorand.asset.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n])
    * // With configuration
-   * algorand.asset.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance: true, maxFee: (1000).microAlgos(), suppressLog: true })
+   * algorand.asset.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance: true, maxFee: (1000).microAlgo(), suppressLog: true })
    * ```
    * @returns An array of records matching asset ID to transaction ID of the opt in
    */

@@ -45,7 +45,7 @@ describe('Asset capability', () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 1)
     const dummyAssetIds = [dummyAssetId]
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     const secondAccountInfo = await algorand.account.getInformation(secondAccount.addr)
     expect(secondAccountInfo.totalAssetsOptedIn).toBe(0)
@@ -59,7 +59,7 @@ describe('Asset capability', () => {
   test('OptIn two batches of asset to an account succeed', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetIds: bigint[] = []
-    const secondAccount = await generateAccount({ initialFunds: (3).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (3).algo() })
     for (let i = 0; i < 20; i++) {
       const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
       dummyAssetIds.push(dummyAssetId)
@@ -74,7 +74,7 @@ describe('Asset capability', () => {
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
     const dummyAssetId2 = await generateTestAsset(algorand, testAccount.addr, 0)
     const dummyAssetIds = [dummyAssetId, dummyAssetId2]
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
 
@@ -91,7 +91,7 @@ describe('Asset capability', () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
     const dummyAssetIds = [dummyAssetId, 1234567n, -132n]
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.asset.bulkOptIn(secondAccount, [dummyAssetId], { validityWindow: 100 })
 
@@ -111,7 +111,7 @@ describe('Asset capability', () => {
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
     const dummyAssetId2 = await generateTestAsset(algorand, testAccount.addr, 0)
     const dummyAssetIds = [dummyAssetId, dummyAssetId2]
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.asset.bulkOptIn(secondAccount, dummyAssetIds, { validityWindow: 100 })
 
@@ -137,7 +137,7 @@ describe('Asset capability', () => {
   test('OptIn and OptOut of a single asset ', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
 
@@ -158,7 +158,7 @@ describe('Asset capability', () => {
   test('OptOut of non-zero balance single asset to an account fails by default', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
-    const secondAccount = await generateAccount({ initialFunds: (1).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
 
@@ -181,7 +181,7 @@ describe('Asset capability', () => {
   test('OptOut of two batches of asset to an account succeed', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetIds: bigint[] = []
-    const secondAccount = await generateAccount({ initialFunds: (3).algos() })
+    const secondAccount = await generateAccount({ initialFunds: (3).algo() })
     for (let i = 0; i < 20; i++) {
       const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 0)
       dummyAssetIds.push(dummyAssetId)

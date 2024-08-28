@@ -81,7 +81,7 @@ import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 
 // These require environment variables to be present, or it will retrieve from default LocalNet
 const algorand = AlgorandClient.fromEnvironment()
-const deployer = algorand.account.fromEnvironment('DEPLOYER', (1).algos())
+const deployer = algorand.account.fromEnvironment('DEPLOYER', (1).algo())
 
 // Create the typed app client
 const appClient = algorand.client.getTypedAppClientByCreatorAndName(HelloWorldAppClient, {
