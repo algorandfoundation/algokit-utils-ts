@@ -3,14 +3,13 @@ import AlgoKitComposer, { MethodCallParams } from './composer'
 
 import Transaction = algosdk.Transaction
 
-/** Orchestrates sending transactions for `AlgorandClient`. */
+/** Orchestrates creating transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionCreator {
   private _newGroup: () => AlgoKitComposer
 
   /**
-   * Creates a new `AlgorandClientSender`
-   * @param newGroup A lambda that Start a new `AlgokitComposer` transaction group
-   * @param assetManager An `AssetManager` instance
+   * Creates a new `AlgorandClientTransactionCreator`
+   * @param newGroup A lambda that starts a new `AlgoKitComposer` transaction group
    */
   constructor(newGroup: () => AlgoKitComposer) {
     this._newGroup = newGroup

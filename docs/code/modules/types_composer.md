@@ -38,7 +38,7 @@
 
 Ƭ **AlgoKitComposerParams**: `Object`
 
-Parameters to create an `AlgokitComposer`.
+Parameters to create an `AlgoKitComposer`.
 
 #### Type declaration
 

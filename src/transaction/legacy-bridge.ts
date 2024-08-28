@@ -37,7 +37,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   if (sendParams.atc || sendParams.skipSending) {
     const transaction = await txn(transactionCreator)(params)
     if (sendParams.atc) {
-      sendParams.atc.addTransaction(await { txn: transaction, signer: getSenderTransactionSigner(from) })
+      sendParams.atc.addTransaction({ txn: transaction, signer: getSenderTransactionSigner(from) })
     }
     return { transaction }
   }

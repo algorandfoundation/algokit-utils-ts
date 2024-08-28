@@ -384,7 +384,7 @@ export interface ExecuteParams {
   suppressLog?: boolean
 }
 
-/** Parameters to create an `AlgokitComposer`. */
+/** Parameters to create an `AlgoKitComposer`. */
 export type AlgoKitComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: algosdk.Algodv2

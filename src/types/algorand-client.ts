@@ -140,7 +140,7 @@ export class AlgorandClient {
     return this._assetManager
   }
 
-  /** Start a new `AlgokitComposer` transaction group */
+  /** Start a new `AlgoKitComposer` transaction group */
   public newGroup() {
     return new AlgoKitComposer({
       algod: this.client.algod,

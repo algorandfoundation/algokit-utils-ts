@@ -4,7 +4,7 @@
 
 [types/algorand-client-transaction-creator](../modules/types_algorand_client_transaction_creator.md).AlgorandClientTransactionCreator
 
-Orchestrates sending transactions for `AlgorandClient`.
+Orchestrates creating transactions for `AlgorandClient`.
 
 ## Table of contents
 
@@ -37,13 +37,13 @@ Orchestrates sending transactions for `AlgorandClient`.
 
 • **new AlgorandClientTransactionCreator**(`newGroup`): [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
 
-Creates a new `AlgorandClientSender`
+Creates a new `AlgorandClientTransactionCreator`
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `newGroup` | () => [`default`](types_composer.default.md) | A lambda that Start a new `AlgokitComposer` transaction group |
+| `newGroup` | () => [`default`](types_composer.default.md) | A lambda that starts a new `AlgoKitComposer` transaction group |
 
 #### Returns
 
@@ -51,7 +51,7 @@ Creates a new `AlgorandClientSender`
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L15)
+[src/types/algorand-client-transaction-creator.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L14)
 
 ## Properties
 
@@ -95,7 +95,7 @@ Create an application call transaction.
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L297)
+[src/types/algorand-client-transaction-creator.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L296)
 
 ___
 
@@ -154,7 +154,7 @@ await algorand.transaction.assetConfig({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L139)
+[src/types/algorand-client-transaction-creator.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L138)
 
 ___
 
@@ -218,7 +218,7 @@ await algorand.transaction.assetCreate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L103)
+[src/types/algorand-client-transaction-creator.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L102)
 
 ___
 
@@ -273,7 +273,7 @@ await algorand.transaction.assetDestroy({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L201)
+[src/types/algorand-client-transaction-creator.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L200)
 
 ___
 
@@ -326,7 +326,7 @@ await algorand.transaction.assetFreeze({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L169)
+[src/types/algorand-client-transaction-creator.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L168)
 
 ___
 
@@ -377,7 +377,7 @@ await algorand.transaction.assetOptIn({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L262)
+[src/types/algorand-client-transaction-creator.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L261)
 
 ___
 
@@ -433,7 +433,7 @@ await algorand.transaction.assetOptIn({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L295)
+[src/types/algorand-client-transaction-creator.ts:294](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L294)
 
 ___
 
@@ -489,7 +489,7 @@ await algorand.transaction.assetTransfer({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L234)
+[src/types/algorand-client-transaction-creator.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L233)
 
 ___
 
@@ -515,7 +515,7 @@ Create an online key registration transaction.
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L303)
+[src/types/algorand-client-transaction-creator.ts:302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L302)
 
 ___
 
@@ -574,7 +574,7 @@ const result = await algorandClient.send.payment({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L62)
+[src/types/algorand-client-transaction-creator.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L61)
 
 ## Methods
 
@@ -612,7 +612,7 @@ const result = await algorandClient.send.payment({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L19)
+[src/types/algorand-client-transaction-creator.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L18)
 
 ___
 
@@ -634,4 +634,4 @@ Create an application call with ABI method call transaction.
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L299)
+[src/types/algorand-client-transaction-creator.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L298)

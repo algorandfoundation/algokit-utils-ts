@@ -16,7 +16,7 @@ export class AlgorandClientSender {
 
   /**
    * Creates a new `AlgorandClientSender`
-   * @param newGroup A lambda that Start a new `AlgokitComposer` transaction group
+   * @param newGroup A lambda that starts a new `AlgoKitComposer` transaction group
    * @param assetManager An `AssetManager` instance
    */
   constructor(newGroup: () => AlgoKitComposer, assetManager: AssetManager) {
