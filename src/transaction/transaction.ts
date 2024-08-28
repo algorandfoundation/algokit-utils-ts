@@ -194,6 +194,9 @@ export const sendTransaction = async function (
   const { transaction, from, sendParams } = send
   const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, atc } = sendParams ?? {}
 
+  if (sendParams?.firstValid) transaction.firstRound = sendParams.firstValid
+  if (sendParams?.lastValid) transaction.lastRound = sendParams.lastValid
+
   controlFees(transaction, { fee, maxFee })
 
   if (atc) {
