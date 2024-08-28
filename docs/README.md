@@ -26,7 +26,7 @@ npm install @algorandfoundation/algokit-utils
 
 ## Peer Dependencies
 
-This library requires `algosdk` as a peer dependency. Ensure you have it installed in your project.
+This library requires `algosdk@2` as a peer dependency. Ensure you have it installed in your project.
 
 # Usage
 
@@ -100,7 +100,7 @@ Where `<type>` would be replaced with the type and `<module>` would be replaced 
 
 # Config and logging
 
-To configure the AlgoKit Utils library you can make use of the `algokit.Config` object, which has a `configure` method that lets you configure some or all of the configuration options.
+To configure the AlgoKit Utils library you can make use of the `Config` object, which has a `configure` method that lets you configure some or all of the configuration options.
 
 ## Logging
 
@@ -125,17 +125,17 @@ By default, the [`consoleLogger`](./code/modules/types_logging.md#consolelogger)
 If you want to override the logger you can use the following:
 
 ```typescript
-algokit.configure({ logger: myLogger })
+Config.configure({ logger: myLogger })
 ```
 
-To retrieve the current debug state you can use [`algokit.Config.logger`](./code/interfaces/types_config.Config.md). To get a logger that is optionally set to the null logger based on a boolean flag you can use the [`algokit.Config.getLogger(useNullLogger)`](./code/classes/types_config.UpdatableConfig.md#getlogger) function.
+To retrieve the current debug state you can use [`Config.logger`](./code/interfaces/types_config.Config.md). To get a logger that is optionally set to the null logger based on a boolean flag you can use the [`Config.getLogger(useNullLogger)`](./code/classes/types_config.UpdatableConfig.md#getlogger) function.
 
 ## Debug mode
 
 To turn on debug mode you can use the following:
 
 ```typescript
-algokit.configure({ debug: true })
+Config.configure({ debug: true })
 ```
 
 To retrieve the current debug state you can use [`algokit.Config.debug`](./code/interfaces/types_config.Config.md).
@@ -145,7 +145,7 @@ This will turn on things like automatic tracing, more verbose logging and [advan
 If you want to temporarily turn it on you can use the [`withDebug`](./code/classes/types_config.UpdatableConfig.md#withdebug) function:
 
 ```typescript
-algokit.Config.withDebug(() => {
+Config.withDebug(() => {
   // Do stuff with algokit.Config.debug set to true
 })
 ```
