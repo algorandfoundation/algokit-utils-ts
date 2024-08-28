@@ -21,8 +21,8 @@ A client that brokers easy access to Algorand functionality.
 - [\_cachedSuggestedParamsTimeout](types_algorand_client.AlgorandClient.md#_cachedsuggestedparamstimeout)
 - [\_clientManager](types_algorand_client.AlgorandClient.md#_clientmanager)
 - [\_defaultValidityWindow](types_algorand_client.AlgorandClient.md#_defaultvaliditywindow)
-- [\_sender](types_algorand_client.AlgorandClient.md#_sender)
 - [\_transactionCreator](types_algorand_client.AlgorandClient.md#_transactioncreator)
+- [\_transactionSender](types_algorand_client.AlgorandClient.md#_transactionsender)
 
 ### Accessors
 
@@ -141,16 +141,6 @@ ___
 
 ___
 
-### \_sender
-
-• `Private` **\_sender**: [`AlgorandClientSender`](types_algorand_client_sender.AlgorandClientSender.md)
-
-#### Defined in
-
-[src/types/algorand-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L20)
-
-___
-
 ### \_transactionCreator
 
 • `Private` **\_transactionCreator**: [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
@@ -158,6 +148,16 @@ ___
 #### Defined in
 
 [src/types/algorand-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L21)
+
+___
+
+### \_transactionSender
+
+• `Private` **\_transactionSender**: [`AlgorandClientTransactionSender`](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L20)
 
 ## Accessors
 
@@ -211,13 +211,13 @@ ___
 
 ### send
 
-• `get` **send**(): [`AlgorandClientSender`](types_algorand_client_sender.AlgorandClientSender.md)
+• `get` **send**(): [`AlgorandClientTransactionSender`](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
 
 Methods for sending a single transaction.
 
 #### Returns
 
-[`AlgorandClientSender`](types_algorand_client_sender.AlgorandClientSender.md)
+[`AlgorandClientTransactionSender`](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
 
 #### Defined in
 

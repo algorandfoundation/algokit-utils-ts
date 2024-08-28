@@ -1,6 +1,6 @@
 import algosdk from 'algosdk'
-import { AlgorandClientSender, SendSingleTransactionResult } from '../types/algorand-client-sender'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
+import { AlgorandClientTransactionSender, SendSingleTransactionResult } from '../types/algorand-client-transaction-sender'
 import { AssetManager } from '../types/asset-manager'
 import AlgoKitComposer, { CommonTransactionParams, ExecuteParams } from '../types/composer'
 import { SendTransactionFrom, SendTransactionParams, SendTransactionResult } from '../types/transaction'
@@ -15,7 +15,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   sendParams: SendTransactionParams,
   params: T,
   txn: (c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>,
-  send: (c: AlgorandClientSender) => (params: T & ExecuteParams) => Promise<SendSingleTransactionResult>,
+  send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<SendSingleTransactionResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<SendTransactionResult> {
   const newGroup = () =>
@@ -24,7 +24,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
       getSigner: () => getSenderTransactionSigner(from),
       getSuggestedParams: async () => await getTransactionParams(suggestedParams, algod),
     })
-  const sender = new AlgorandClientSender(newGroup, new AssetManager(algod, newGroup))
+  const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup))
   const transactionCreator = new AlgorandClientTransactionCreator(newGroup)
 
   if (sendParams.fee) {
@@ -42,5 +42,5 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     return { transaction }
   }
 
-  return await send(sender)({ ...sendParams, ...params })
+  return await send(transactionSender)({ ...sendParams, ...params })
 }

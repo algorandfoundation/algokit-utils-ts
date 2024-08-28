@@ -10,7 +10,7 @@ import Transaction = algosdk.Transaction
 export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
-export class AlgorandClientSender {
+export class AlgorandClientTransactionSender {
   private _newGroup: () => AlgoKitComposer
   private _assetManager: AssetManager
 

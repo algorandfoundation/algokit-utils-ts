@@ -1,8 +1,8 @@
 import algosdk from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
-import { AlgorandClientSender } from './algorand-client-sender'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
+import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import AlgoKitComposer from './composer'
@@ -17,7 +17,7 @@ export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
   private _assetManager: AssetManager
-  private _sender: AlgorandClientSender
+  private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
 
   private _cachedSuggestedParams?: algosdk.SuggestedParams
@@ -30,7 +30,7 @@ export class AlgorandClient {
     this._clientManager = new ClientManager(config)
     this._accountManager = new AccountManager(this._clientManager)
     this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
-    this._sender = new AlgorandClientSender(() => this.newGroup(), this._assetManager)
+    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager)
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
   }
 
@@ -154,7 +154,7 @@ export class AlgorandClient {
    * Methods for sending a single transaction.
    */
   public get send() {
-    return this._sender
+    return this._transactionSender
   }
 
   /**
