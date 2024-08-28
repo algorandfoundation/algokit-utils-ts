@@ -21,7 +21,7 @@ A wrapper around `TransactionSigner` that also has the sender address.
 
 #### Defined in
 
-[src/types/account.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L114)
+[src/types/account.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L120)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L115)
+[src/types/account.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L121)

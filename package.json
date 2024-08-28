@@ -54,7 +54,8 @@
   "overrides": {
     "semver": "7.5.2",
     "eslint-plugin-prettier": "5.0.0",
-    "braces": "3.0.3"
+    "braces": "3.0.3",
+    "micromatch": "4.0.8"
   },
   "dependencies": {
     "buffer": "^6.0.3"

@@ -2,127 +2,289 @@ import algosdk from 'algosdk'
 import { encodeLease, encodeTransactionNote, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { ClientManager } from './client-manager'
+import { genesisIdIsLocalNet } from './network-client'
 import { SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import encodeAddress = algosdk.encodeAddress
 
+export const MAX_TRANSACTION_GROUP_SIZE = 16
+
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
-  /** The address sending the transaction */
+  /** The address of the account sending the transaction. */
   sender: string
-  /** The function used to sign transactions */
+  /** The function used to sign transaction(s); if not specified then
+   *  an attempt will be made to find a registered signer for the
+   *  given `sender` or use a default signer (if configured).
+   */
   signer?: algosdk.TransactionSigner | TransactionSignerAccount
-  /** Change the signing key of the sender to the given address */
+  /** Change the signing key of the sender to the given address.
+   *
+   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   */
   rekeyTo?: string
-  /** Note to attach to the transaction*/
+  /** Note to attach to the transaction. Max of 1000 bytes. */
   note?: Uint8Array | string
-  /** Prevent multiple transactions with the same lease being included within the validity window */
+  /** Prevent multiple transactions with the same lease being included within the validity window.
+   *
+   * A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/)
+   *  enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios).
+   */
   lease?: Uint8Array | string
-  /** The transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction */
+  /** The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. */
   staticFee?: AlgoAmount
-  /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees */
+  /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees. */
   extraFee?: AlgoAmount
-  /** Throw an error if the fee for the transaction is more than this amount */
+  /** Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. */
   maxFee?: AlgoAmount
-  /** How many rounds the transaction should be valid for */
+  /** How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. */
   validityWindow?: number
   /**
    * Set the first round this transaction is valid.
    * If left undefined, the value from algod will be used.
-   * Only set this when you intentionally want this to be some time in the future
+   *
+   * We recommend you only set this when you intentionally want this to be some time in the future.
    */
   firstValidRound?: bigint
-  /** The last round this transaction is valid. It is recommended to use validityWindow instead */
+  /** The last round this transaction is valid. It is recommended to use `validityWindow` instead. */
   lastValidRound?: bigint
 }
 
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
-  /** That account that will receive the ALGO */
+  /** The address of the account that will receive the Algo */
   receiver: string
   /** Amount to send */
   amount: AlgoAmount
-  /** If given, close the sender account and send the remaining balance to this address */
+  /** If given, close the sender account and send the remaining balance to this address
+   *
+   * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
+   */
   closeRemainderTo?: string
 }
 
-/** Parameters to define an asset create transaction. */
+/** Parameters to define an asset create transaction.
+ *
+ * The account that sends this transaction will automatically be opted in to the asset and will hold all units after creation.
+ */
 export type AssetCreateParams = CommonTransactionParams & {
-  /** The total amount of the smallest divisible unit to create */
+  /** The total amount of the smallest divisible (decimal) unit to create.
+   *
+   * For example, if `decimals` is, say, 2, then for every 100 `total` there would be 1 whole unit.
+   *
+   * This field can only be specified upon asset creation.
+   */
   total: bigint
-  /** The amount of decimal places the asset should have */
+
+  /** The amount of decimal places the asset should have.
+   *
+   * If unspecified then the asset will be in whole units (i.e. `0`).
+   *
+   * * If 0, the asset is not divisible;
+   * * If 1, the base unit of the asset is in tenths;
+   * * If 2, the base unit of the asset is in hundredths;
+   * * If 3, the base unit of the asset is in thousandths;
+   * * and so on up to 19 decimal places.
+   *
+   * This field can only be specified upon asset creation.
+   */
   decimals?: number
-  /** Whether the asset is frozen by default in the creator address */
-  defaultFrozen?: boolean
-  /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
-  manager?: string
-  /** The address that holds the uncirculated supply */
-  reserve?: string
-  /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
-  freeze?: string
-  /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
-  clawback?: string
-  /** The short ticker name for the asset */
-  unitName?: string
-  /** The full name of the asset */
+
+  /** The optional name of the asset.
+   *
+   * Max size is 32 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
   assetName?: string
-  /** The metadata URL for the asset */
+
+  /** The optional name of the unit of this asset (e.g. ticker name).
+   *
+   * Max size is 8 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  unitName?: string
+
+  /** Specifies an optional URL where more information about the asset can be retrieved (e.g. metadata).
+   *
+   * Max size is 96 bytes.
+   *
+   * This field can only be specified upon asset creation.
+   */
   url?: string
-  /** Hash of the metadata contained in the metadata URL */
-  metadataHash?: Uint8Array
+
+  /** 32-byte hash of some metadata that is relevant to your asset and/or asset holders.
+   *
+   * The format of this metadata is up to the application.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  metadataHash?: string | Uint8Array
+
+  /** Whether the asset is frozen by default for all accounts.
+   * Defaults to `false`.
+   *
+   * If `true` then for anyone apart from the creator to hold the
+   * asset it needs to be unfrozen per account using an asset freeze
+   * transaction from the `freeze` account, which must be set on creation.
+   *
+   * This field can only be specified upon asset creation.
+   */
+  defaultFrozen?: boolean
+
+  /** The address of the optional account that can manage the configuration of the asset and destroy it.
+   *
+   * The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the `manager` the asset becomes permanently immutable.
+   */
+  manager?: string
+
+  /**
+   * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
+   *
+   * This address has no specific authority in the protocol itself and is informational only.
+   *
+   * Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md)
+   * rely on this field to hold meaningful data.
+   *
+   * It can be used in the case where you want to signal to holders of your asset that the uncirculated units
+   * of the asset reside in an account that is different from the default creator account.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
+   */
+  reserve?: string
+
+  /**
+   * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
+   *
+   * If empty, freezing is not permitted.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
+   */
+  freeze?: string
+
+  /**
+   * The address of the optional account that can clawback holdings of this asset from any account.
+   *
+   * **This field should be used with caution** as the clawback account has the ability to **unconditionally take assets from any account**.
+   *
+   * If empty, clawback is not permitted.
+   *
+   * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
+   */
+  clawback?: string
 }
 
-/** Parameters to define an asset config transaction. */
+/** Parameters to define an asset reconfiguration transaction.
+ *
+ * **Note:** The manager, reserve, freeze, and clawback addresses
+ * are immutably empty if they are not set. If manager is not set then
+ * all fields are immutable from that point forward.
+ */
 export type AssetConfigParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset to reconfigure */
   assetId: bigint
-  /** The address that can change the manager, reserve, clawback, and freeze addresses. There will permanently be no manager if undefined or an empty string */
-  manager?: string
-  /** The address that holds the uncirculated supply */
+  /** The address of the optional account that can manage the configuration of the asset and destroy it.
+   *
+   * The configuration fields it can change are `manager`, `reserve`, `clawback`, and `freeze`.
+   *
+   * If not set (`undefined` or `""`) the asset will become permanently immutable.
+   */
+  manager: string | undefined
+  /**
+   * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
+   *
+   * This address has no specific authority in the protocol itself and is informational only.
+   *
+   * Some standards like [ARC-19](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md)
+   * rely on this field to hold meaningful data.
+   *
+   * It can be used in the case where you want to signal to holders of your asset that the uncirculated units
+   * of the asset reside in an account that is different from the default creator account.
+   *
+   * If not set (`undefined` or `""`) the field will become permanently empty.
+   */
   reserve?: string
-  /** The address that can freeze the asset in any account. Freezing will be permanently disabled if undefined or an empty string. */
+  /**
+   * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
+   *
+   * If empty, freezing is not permitted.
+   *
+   * If not set (`undefined` or `""`) the field will become permanently empty.
+   */
   freeze?: string
-  /** The address that can clawback the asset from any account. Clawback will be permanently disabled if undefined or an empty string. */
+  /**
+   * The address of the optional account that can clawback holdings of this asset from any account.
+   *
+   * **This field should be used with caution** as the clawback account has the ability to **unconditionally take assets from any account**.
+   *
+   * If empty, clawback is not permitted.
+   *
+   * If not set (`undefined` or `""`) the field will become permanently empty.
+   */
   clawback?: string
 }
 
 /** Parameters to define an asset freeze transaction. */
 export type AssetFreezeParams = CommonTransactionParams & {
-  /** The ID of the asset */
+  /** The ID of the asset to freeze/unfreeze */
   assetId: bigint
-  /** The account to freeze or unfreeze */
+  /** The address of the account to freeze or unfreeze */
   account: string
   /** Whether the assets in the account should be frozen */
   frozen: boolean
 }
 
-/** Parameters to define an asset destroy transaction. */
+/** Parameters to define an asset destroy transaction.
+ *
+ * Created assets can be destroyed only by the asset manager account. All of the assets must be owned by the creator of the asset before the asset can be deleted.
+ */
 export type AssetDestroyParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset to destroy */
   assetId: bigint
 }
 
 /** Parameters to define an asset transfer transaction. */
 export type AssetTransferParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset to transfer. */
   assetId: bigint
-  /** Amount of the asset to transfer (smallest divisible unit) */
+  /** Amount of the asset to transfer (in smallest divisible (decimal) units). */
   amount: bigint
-  /** The account to send the asset to */
+  /** The address of the account that will receive the asset unit(s). */
   receiver: string
-  /** The account to take the asset from */
+  /** Optional address of an account to clawback the asset from.
+   *
+   * Requires the sender to be the clawback account.
+   *
+   * **Warning:** Be careful with this parameter as it can lead to unexpected loss of funds if not used correctly.
+   */
   clawbackTarget?: string
-  /** The account to close the asset to */
+  /** Optional address of an account to close the asset position to.
+   *
+   * **Warning:** Be careful with this parameter as it can lead to loss of funds if not used correctly.
+   */
   closeAssetTo?: string
 }
 
 /** Parameters to define an asset opt-in transaction. */
 export type AssetOptInParams = CommonTransactionParams & {
-  /** ID of the asset */
+  /** ID of the asset that will be opted-in to. */
   assetId: bigint
+}
+
+/** Parameters to define an asset opt-out transaction. */
+export type AssetOptOutParams = CommonTransactionParams & {
+  /** ID of the asset that will be opted-out of. */
+  assetId: bigint
+  /**
+   * The address of the asset creator account to close the asset
+   *   position to (any remaining asset units will be sent to this account).
+   */
+  creator: string
 }
 
 /** Parameters to define an online key registration transaction. */
@@ -207,6 +369,7 @@ type Txn =
   | (AssetDestroyParams & { type: 'assetDestroy' })
   | (AssetTransferParams & { type: 'assetTransfer' })
   | (AssetOptInParams & { type: 'assetOptIn' })
+  | (AssetOptOutParams & { type: 'assetOptOut' })
   | (AppCallParams & { type: 'appCall' })
   | (OnlineKeyRegistrationParams & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
@@ -217,12 +380,12 @@ type Txn =
 export interface ExecuteParams {
   /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
   maxRoundsToWaitForConfirmation?: number
-  /** Whether to suppress log messages from transaction send, default: do not suppress */
+  /** Whether to suppress log messages from transaction send, default: do not suppress. */
   suppressLog?: boolean
 }
 
-/** Parameters to create an `AlgokitComposer`. */
-export type AlgokitComposerParams = {
+/** Parameters to create an `AlgoKitComposer`. */
+export type AlgoKitComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: algosdk.Algodv2
   /** The function used to get the TransactionSigner for a given address */
@@ -235,13 +398,8 @@ export type AlgokitComposerParams = {
   defaultValidityWindow?: number
 }
 
-/** AlgoKit Composer helps you compose and execute transactions as a transaction group.
- *
- * Note: this class is a new Beta feature and may be subject to change.
- *
- * @beta
- */
-export default class AlgokitComposer {
+/** AlgoKit Composer helps you compose and execute transactions as a transaction group. */
+export default class AlgoKitComposer {
   /** The ATC used to compose the group */
   private atc = new algosdk.AtomicTransactionComposer()
 
@@ -254,7 +412,7 @@ export default class AlgokitComposer {
   /** The algod client used by the composer. */
   private algod: algosdk.Algodv2
 
-  /** An async function that will return suggestedParams. */
+  /** An async function that will return suggested params for the transaction. */
   private getSuggestedParams: () => Promise<algosdk.SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
@@ -270,7 +428,7 @@ export default class AlgokitComposer {
    * Create an `AlgoKitComposer`.
    * @param params The configuration for this composer
    */
-  constructor(params: AlgokitComposerParams) {
+  constructor(params: AlgoKitComposerParams) {
     this.algod = params.algod
     const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
@@ -284,7 +442,7 @@ export default class AlgokitComposer {
    * @param params The payment transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addPayment(params: PaymentParams): AlgokitComposer {
+  addPayment(params: PaymentParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'pay' })
 
     return this
@@ -295,7 +453,7 @@ export default class AlgokitComposer {
    * @param params The asset create transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetCreate(params: AssetCreateParams): AlgokitComposer {
+  addAssetCreate(params: AssetCreateParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetCreate' })
 
     return this
@@ -306,7 +464,7 @@ export default class AlgokitComposer {
    * @param params The asset config transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetConfig(params: AssetConfigParams): AlgokitComposer {
+  addAssetConfig(params: AssetConfigParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetConfig' })
 
     return this
@@ -317,7 +475,7 @@ export default class AlgokitComposer {
    * @param params The asset freeze transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetFreeze(params: AssetFreezeParams): AlgokitComposer {
+  addAssetFreeze(params: AssetFreezeParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetFreeze' })
 
     return this
@@ -328,7 +486,7 @@ export default class AlgokitComposer {
    * @param params The asset destroy transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetDestroy(params: AssetDestroyParams): AlgokitComposer {
+  addAssetDestroy(params: AssetDestroyParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetDestroy' })
 
     return this
@@ -339,7 +497,7 @@ export default class AlgokitComposer {
    * @param params The asset transfer transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetTransfer(params: AssetTransferParams): AlgokitComposer {
+  addAssetTransfer(params: AssetTransferParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetTransfer' })
 
     return this
@@ -350,8 +508,19 @@ export default class AlgokitComposer {
    * @param params The asset opt-in transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetOptIn(params: AssetOptInParams): AlgokitComposer {
+  addAssetOptIn(params: AssetOptInParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'assetOptIn' })
+
+    return this
+  }
+
+  /**
+   * Add an asset opt-out transaction to the transaction group.
+   * @param params The asset opt-out transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addAssetOptOut(params: AssetOptOutParams): AlgoKitComposer {
+    this.txns.push({ ...params, type: 'assetOptOut' })
 
     return this
   }
@@ -363,7 +532,7 @@ export default class AlgokitComposer {
    * @param params The application call transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAppCall(params: AppCallParams): AlgokitComposer {
+  addAppCall(params: AppCallParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'appCall' })
 
     return this
@@ -386,7 +555,7 @@ export default class AlgokitComposer {
    * @param params The online key registration transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): AlgokitComposer {
+  addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): AlgoKitComposer {
     this.txns.push({ ...params, type: 'keyReg' })
 
     return this
@@ -397,7 +566,7 @@ export default class AlgokitComposer {
    * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
    * @returns The composer so you can chain method calls
    */
-  addAtc(atc: algosdk.AtomicTransactionComposer): AlgokitComposer {
+  addAtc(atc: algosdk.AtomicTransactionComposer): AlgoKitComposer {
     this.txns.push({ atc, type: 'atc' })
     return this
   }
@@ -432,9 +601,7 @@ export default class AlgokitComposer {
       //  LocalNet set a bigger window to avoid dead transactions
       const window =
         params.validityWindow ??
-        (!this.defaultValidityWindowIsExplicit && ClientManager.genesisIdIsLocalNet(suggestedParams.genesisID)
-          ? 1000
-          : this.defaultValidityWindow)
+        (!this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisID) ? 1000 : this.defaultValidityWindow)
       txn.lastRound = txn.firstRound + window
     }
 
@@ -443,14 +610,14 @@ export default class AlgokitComposer {
     }
 
     if (params.staticFee !== undefined) {
-      txn.fee = params.staticFee.microAlgos
+      txn.fee = params.staticFee.microAlgo
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
-      if (params.extraFee) txn.fee += params.extraFee.microAlgos
+      if (params.extraFee) txn.fee += params.extraFee.microAlgo
     }
     txn.flatFee = true
 
-    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgos) {
+    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
       throw Error(`Transaction fee ${txn.fee} is greater than maxFee ${params.maxFee}`)
     }
 
@@ -460,6 +627,7 @@ export default class AlgokitComposer {
   private async buildMethodCall(
     params: MethodCallParams,
     suggestedParams: algosdk.SuggestedParams,
+    includeSigner: boolean,
   ): Promise<algosdk.TransactionWithSigner[]> {
     const methodArgs: algosdk.ABIArgument[] = []
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
@@ -480,7 +648,7 @@ export default class AlgokitComposer {
       }
 
       if ('method' in arg) {
-        const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams)
+        const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
         methodArgs.push(...tempTxnWithSigners)
         continue
       }
@@ -488,11 +656,13 @@ export default class AlgokitComposer {
       const txn = await arg
       methodArgs.push({
         txn,
-        signer: params.signer
-          ? 'signer' in params.signer
-            ? params.signer.signer
-            : params.signer
-          : this.getSigner(encodeAddress(txn.from.publicKey)),
+        signer: includeSigner
+          ? params.signer
+            ? 'signer' in params.signer
+              ? params.signer.signer
+              : params.signer
+            : this.getSigner(encodeAddress(txn.from.publicKey))
+          : algosdk.makeEmptyTransactionSigner(),
       })
     }
 
@@ -535,7 +705,7 @@ export default class AlgokitComposer {
     const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: params.sender,
       to: params.receiver,
-      amount: params.amount.microAlgos,
+      amount: params.amount.microAlgo,
       closeRemainderTo: params.closeRemainderTo,
       suggestedParams,
     })
@@ -672,7 +842,40 @@ export default class AlgokitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.TransactionWithSigner[]> {
+  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.Transaction[]> {
+    switch (txn.type) {
+      case 'txnWithSigner':
+        return [txn.txn]
+      case 'atc':
+        return txn.atc.buildGroup().map((ts) => ts.txn)
+      case 'methodCall':
+        return (await this.buildMethodCall(txn, suggestedParams, false)).map((ts) => ts.txn)
+      case 'pay':
+        return [this.buildPayment(txn, suggestedParams)]
+      case 'assetCreate':
+        return [this.buildAssetCreate(txn, suggestedParams)]
+      case 'appCall':
+        return [this.buildAppCall(txn, suggestedParams)]
+      case 'assetConfig':
+        return [this.buildAssetConfig(txn, suggestedParams)]
+      case 'assetDestroy':
+        return [this.buildAssetDestroy(txn, suggestedParams)]
+      case 'assetFreeze':
+        return [this.buildAssetFreeze(txn, suggestedParams)]
+      case 'assetTransfer':
+        return [this.buildAssetTransfer(txn, suggestedParams)]
+      case 'assetOptIn':
+        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)]
+      case 'assetOptOut':
+        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator }, suggestedParams)]
+      case 'keyReg':
+        return [this.buildKeyReg(txn, suggestedParams)]
+      default:
+        throw Error(`Unsupported txn type`)
+    }
+  }
+
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.TransactionWithSigner[]> {
     if (txn.type === 'txnWithSigner') {
       return [txn]
     }
@@ -682,51 +885,29 @@ export default class AlgokitComposer {
     }
 
     if (txn.type === 'methodCall') {
-      return await this.buildMethodCall(txn, suggestedParams)
+      return await this.buildMethodCall(txn, suggestedParams, true)
     }
 
     const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
 
-    switch (txn.type) {
-      case 'pay': {
-        const payment = this.buildPayment(txn, suggestedParams)
-        return [{ txn: payment, signer }]
-      }
-      case 'assetCreate': {
-        const assetCreate = this.buildAssetCreate(txn, suggestedParams)
-        return [{ txn: assetCreate, signer }]
-      }
-      case 'appCall': {
-        const appCall = this.buildAppCall(txn, suggestedParams)
-        return [{ txn: appCall, signer }]
-      }
-      case 'assetConfig': {
-        const assetConfig = this.buildAssetConfig(txn, suggestedParams)
-        return [{ txn: assetConfig, signer }]
-      }
-      case 'assetDestroy': {
-        const assetDestroy = this.buildAssetDestroy(txn, suggestedParams)
-        return [{ txn: assetDestroy, signer }]
-      }
-      case 'assetFreeze': {
-        const assetFreeze = this.buildAssetFreeze(txn, suggestedParams)
-        return [{ txn: assetFreeze, signer }]
-      }
-      case 'assetTransfer': {
-        const assetTransfer = this.buildAssetTransfer(txn, suggestedParams)
-        return [{ txn: assetTransfer, signer }]
-      }
-      case 'assetOptIn': {
-        const assetTransfer = this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)
-        return [{ txn: assetTransfer, signer }]
-      }
-      case 'keyReg': {
-        const keyReg = this.buildKeyReg(txn, suggestedParams)
-        return [{ txn: keyReg, signer }]
-      }
-      default:
-        throw Error(`Unsupported txn type`)
+    return (await this.buildTxn(txn, suggestedParams)).map((txn) => ({ txn, signer }))
+  }
+
+  /**
+   * Compose all of the transactions without signers and return the transaction objects directly.
+   *
+   * @returns The array of built transactions
+   */
+  async buildTransactions() {
+    const suggestedParams = await this.getSuggestedParams()
+
+    const transactions: algosdk.Transaction[] = []
+
+    for (const txn of this.txns) {
+      transactions.push(...(await this.buildTxn(txn, suggestedParams)))
     }
+
+    return transactions
   }
 
   /**
@@ -742,7 +923,7 @@ export default class AlgokitComposer {
       const txnWithSigners: algosdk.TransactionWithSigner[] = []
 
       for (const txn of this.txns) {
-        txnWithSigners.push(...(await this.buildTxn(txn, suggestedParams)))
+        txnWithSigners.push(...(await this.buildTxnWithSigner(txn, suggestedParams)))
       }
 
       txnWithSigners.forEach((ts) => {

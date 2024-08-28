@@ -70,7 +70,7 @@ ___
 
 • `Optional` **algodConfig**: [`AlgoClientConfig`](types_network_client.AlgoClientConfig.md)
 
-Algo client configuration
+Algod client configuration
 
 #### Inherited from
 
@@ -142,7 +142,7 @@ ___
 
 • `Optional` **testAccountFunding**: [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)
 
-The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGOs.
+The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO.
 
 #### Defined in
 

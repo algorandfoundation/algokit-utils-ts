@@ -27,6 +27,7 @@ const client = algorand.client.getAppClientByCreatorAndName({
   app: appSpec,
   creatorAddress,
 })
+
 // With optional params
 const client = algorand.client.getAppClientByCreatorAndName({
   app: appSpec,
@@ -41,6 +42,7 @@ const client = algorand.client.getAppClientById({
   id: 12345,
   app: appSpec,
 })
+
 // With optional params
 const client = algorand.client.getAppClientById({
   id: 12345,
@@ -151,7 +153,7 @@ const result = await appClient.call({
   methodArgs: {
     args: [
       appClient.fundAppAccount({
-        amount: algokit.microAlgos(200_000),
+        amount: algokit.microAlgo(200_000),
         sendParams: { skipSending: true },
       }),
     ],
