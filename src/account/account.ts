@@ -1,7 +1,8 @@
 import algosdk from 'algosdk'
 import { getSenderAddress } from '../transaction/transaction'
-import { AccountAssetInformation, AccountInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
+import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
+import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
@@ -10,6 +11,7 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 import MultisigMetadata = algosdk.MultisigMetadata
 import TransactionSigner = algosdk.TransactionSigner
+import AccountInformationModel = algosdk.modelsv2.Account
 
 /**
  * @deprecated Use `algorandClient.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
@@ -24,7 +26,7 @@ export function multisigAccount(multisigParams: MultisigMetadata, signingAccount
 }
 
 /**
- * @deprecated Use `algorandClient.account.rekeyed(account, sender)` or `new SigningAccount(account, sender)` instead.
+ * @deprecated Use `algorandClient.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
  *
  * Returns an account wrapper that supports a rekeyed account.
  * @param signer The account, with private key loaded, that is signing
@@ -82,12 +84,12 @@ export function randomAccount(): Account {
  * const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
  * If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `name`: string: The name identifier of the account
- *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
@@ -127,6 +129,11 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
   return algosdk.encodeAddress(Buffer.from(addressEncodedInB64, 'base64'))
 }
 
+type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
+type ToNumberIfExtends<K, E> = K extends E ? number : K
+/** @deprecated Account information at a given round. */
+export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'get_obj_for_encoding'>
+
 /**
  * @deprecated Use `algorandClient.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
  *
@@ -144,11 +151,30 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
  * @returns The account information
  */
 export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
-  return new AccountManager(new ClientManager({ algod })).getInformation(getSenderAddress(sender))
+  const account = AccountInformationModel.from_obj_for_encoding(await algod.accountInformation(getSenderAddress(sender)).do())
+
+  return {
+    ...account,
+    // None of these can practically overflow 2^53
+    amount: Number(account.amount),
+    amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
+    minBalance: Number(account.minBalance),
+    pendingRewards: Number(account.pendingRewards),
+    rewards: Number(account.rewards),
+    round: Number(account.round),
+    totalAppsOptedIn: Number(account.totalAppsOptedIn),
+    totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
+    totalCreatedApps: Number(account.totalCreatedApps),
+    totalCreatedAssets: Number(account.totalCreatedAssets),
+    appsTotalExtraPages: account.appsTotalExtraPages ? Number(account.appsTotalExtraPages) : undefined,
+    rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
+    totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
+    totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
+  }
 }
 
 /**
- * @deprecated Use `algorandClient.account.getAssetInformation(sender, assetId)` or `new AccountManager(clientManager).getAssetInformation(sender, assetId)` instead.
+ * @deprecated Use `algorandClient.asset.getAccountInformation(sender, assetId)` or `new AssetManager(...).getAccountInformation(sender, assetId)` instead.
  *
  * Returns the given sender account's asset holding for a given asset.
  *
@@ -170,5 +196,5 @@ export async function getAccountAssetInformation(
   assetId: number | bigint,
   algod: Algodv2,
 ): Promise<AccountAssetInformation> {
-  return new AccountManager(new ClientManager({ algod })).getAssetInformation(getSenderAddress(sender), assetId)
+  return AlgorandClient.fromClients({ algod }).asset.getAccountInformation(getSenderAddress(sender), BigInt(assetId))
 }

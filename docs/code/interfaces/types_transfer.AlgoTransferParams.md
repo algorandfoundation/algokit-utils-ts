@@ -4,6 +4,8 @@
 
 [types/transfer](../modules/types_transfer.md).AlgoTransferParams
 
+**`Deprecated`**
+
 Parameters for `transferAlgos` call.
 
 ## Hierarchy
@@ -81,7 +83,7 @@ ___
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account that will send the ALGOs
+The account that will send the Algo
 
 #### Defined in
 
@@ -214,7 +216,7 @@ ___
 
 • **to**: `string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
 
-The account / account address that will receive the ALGOs
+The account / account address that will receive the Algo
 
 #### Defined in
 

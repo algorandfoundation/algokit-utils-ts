@@ -69,7 +69,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig): Algorand
  * ```
  *
  * @param fixtureConfig The fixture configuration
- * @param config The algo configuration
+ * @param config The fixture configuration
  * @returns The fixture
  */
 export function algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined, config: AlgoConfig): AlgorandFixture
@@ -90,9 +90,14 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
-    algorandClient = algorandClient ?? AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+    algorandClient = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
     const acc = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorandClient)
-    algorandClient.setSignerFromAccount(acc).setDefaultValidityWindow(1000).setSuggestedParamsTimeout(0)
+    algorandClient.setSignerFromAccount(acc).setSuggestedParamsTimeout(0)
+    // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
+    //  otherwise we are more likely to get invalid transactions.
+    if (await algorandClient.client.isLocalNet()) {
+      algorandClient.setDefaultValidityWindow(1000)
+    }
     const testAccount = { ...acc, signer: algorandClient.account.getSigner(acc.addr) }
     context = {
       algorand: algorandClient,

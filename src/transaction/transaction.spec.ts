@@ -41,15 +41,15 @@ describe('transaction', () => {
           transaction: txn,
           from: testAccount,
           sendParams: {
-            maxFee: algokit.microAlgos(1),
+            maxFee: algokit.microAlgo(1),
           },
         },
         algod,
       )
     }).rejects.toThrowError(
       'Cancelled transaction due to high network congestion fees. ' +
-        'Algorand suggested fees would cause this transaction to cost 1000 µALGOs. ' +
-        'Cap for this transaction is 1 µALGOs.',
+        'Algorand suggested fees would cause this transaction to cost 1000 µALGO. ' +
+        'Cap for this transaction is 1 µALGO.',
     )
   })
 
@@ -62,7 +62,7 @@ describe('transaction', () => {
         transaction: txn,
         from: testAccount,
         sendParams: {
-          maxFee: algokit.microAlgos(1),
+          maxFee: algokit.microAlgo(1),
         },
       },
       algod,
@@ -77,7 +77,7 @@ describe('transaction', () => {
         transaction: txn,
         from: testAccount,
         sendParams: {
-          maxFee: algokit.microAlgos(1000_000),
+          maxFee: algokit.microAlgo(1000_000),
         },
       },
       algod,
@@ -89,7 +89,7 @@ describe('transaction', () => {
   test('Transaction fee is overridable', async () => {
     const { algod, testAccount } = localnet.context
     const txn = await getTestTransaction()
-    const fee = algokit.algos(1)
+    const fee = algokit.algo(1)
     const result = await algokit.sendTransaction(
       {
         transaction: txn,
@@ -102,7 +102,7 @@ describe('transaction', () => {
     )
 
     invariant(result.confirmation)
-    expect(result.confirmation.txn.txn.fee).toBe(fee.microAlgos)
+    expect(result.confirmation.txn.txn.fee).toBe(fee.microAlgo)
   })
 
   test('Transaction group is sent', async () => {
@@ -143,7 +143,7 @@ describe('transaction', () => {
     const txn1 = await getTestTransaction(1)
     const txn2Promise = algokit.transferAlgos(
       {
-        amount: algokit.microAlgos(2),
+        amount: algokit.microAlgo(2),
         from: testAccount,
         to: testAccount.addr,
         skipSending: true,
@@ -168,7 +168,7 @@ describe('transaction', () => {
 
   test('Transaction group is sent using transaction signers', async () => {
     const { algod, testAccount, generateAccount } = localnet.context
-    const account2 = await generateAccount({ suppressLog: true, initialFunds: algokit.algos(10) })
+    const account2 = await generateAccount({ suppressLog: true, initialFunds: algokit.algo(10) })
     const txn1 = await getTestTransaction(1)
     const txn2 = await getTestTransaction(2, account2.addr)
     const txn3 = await getTestTransaction(3)
@@ -233,7 +233,7 @@ describe('transaction', () => {
       {
         from: testAccount,
         to: multisig.addr,
-        amount: algokit.algos(1),
+        amount: algokit.algo(1),
       },
       algod,
     )
@@ -243,7 +243,7 @@ describe('transaction', () => {
       {
         from: multisig,
         to: testAccount.addr,
-        amount: algokit.microAlgos(500),
+        amount: algokit.microAlgo(500),
       },
       algod,
     )
@@ -252,7 +252,7 @@ describe('transaction', () => {
   test('Multisig double account', async () => {
     const { algod, testAccount, generateAccount } = localnet.context
     const account2 = await generateAccount({
-      initialFunds: algokit.algos(10),
+      initialFunds: algokit.algo(10),
       suppressLog: true,
     })
 
@@ -271,7 +271,7 @@ describe('transaction', () => {
       {
         from: testAccount,
         to: multisig.addr,
-        amount: algokit.algos(1),
+        amount: algokit.algo(1),
       },
       algod,
     )
@@ -281,7 +281,7 @@ describe('transaction', () => {
       {
         from: multisig,
         to: testAccount.addr,
-        amount: algokit.microAlgos(500),
+        amount: algokit.microAlgo(500),
       },
       algod,
     )
@@ -416,9 +416,9 @@ const tests = (version: 8 | 9) => () => {
 
     await appClient.create({ method: 'createApplication', methodArgs: [] })
 
-    await appClient.fundAppAccount(algokit.microAlgos(2334300))
+    await appClient.fundAppAccount(algokit.microAlgo(2334300))
 
-    await appClient.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
+    await appClient.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgo(3_000) } })
 
     externalClient = new ApplicationClient(
       {
@@ -474,7 +474,7 @@ const tests = (version: 8 | 9) => () => {
         appClient.call({
           method: 'externalAppCall',
           methodArgs: [],
-          sendParams: { populateAppCallResources: false, fee: algokit.microAlgos(2_000) },
+          sendParams: { populateAppCallResources: false, fee: algokit.microAlgo(2_000) },
         }),
       ).rejects.toThrow('unavailable App')
     })
@@ -483,7 +483,7 @@ const tests = (version: 8 | 9) => () => {
       await appClient.call({
         method: 'externalAppCall',
         methodArgs: [],
-        sendParams: { fee: algokit.microAlgos(2_000) },
+        sendParams: { fee: algokit.microAlgo(2_000) },
       })
     })
   })
@@ -684,8 +684,8 @@ describe('Resource Packer: Mixed', () => {
   test('app account', async () => {
     const { algod, testAccount } = fixture.context
 
-    await v8Client.fundAppAccount(algokit.microAlgos(328500))
-    await v8Client.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
+    await v8Client.fundAppAccount(algokit.microAlgo(328500))
+    await v8Client.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgo(3_000) } })
 
     const externalAppID = (await v8Client.getGlobalState()).externalAppID!.value as bigint
 
@@ -766,18 +766,18 @@ describe('Resource Packer: meta', () => {
       amount: 0,
     })
 
-    await externalClient.fundAppAccount(algokit.microAlgos(106100))
+    await externalClient.fundAppAccount(algokit.microAlgo(106100))
 
     await externalClient.call({ method: 'boxWithPayment', methodArgs: [{ transaction: payment, signer: testAccount }] })
   })
 
   test('sender asset holding', async () => {
-    await externalClient.fundAppAccount(algokit.microAlgos(200_000))
+    await externalClient.fundAppAccount(algokit.microAlgo(200_000))
 
     await externalClient.call({
       method: 'createAsset',
       methodArgs: [],
-      sendParams: { fee: algokit.microAlgos(2_000) },
+      sendParams: { fee: algokit.microAlgo(2_000) },
     })
     const res = await externalClient.call({ method: 'senderAssetBalance', methodArgs: [] })
 
@@ -790,19 +790,14 @@ describe('Resource Packer: meta', () => {
 
     const authAddr = algorand.account.random().account
 
-    await algorand.send.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
-      rekeyTo: authAddr.addr,
-      amount: algokit.microAlgos(0),
-    })
+    await algorand.account.rekeyAccount(testAccount.addr, authAddr.addr)
 
-    await externalClient.fundAppAccount(algokit.microAlgos(200_000))
+    await externalClient.fundAppAccount(algokit.microAlgo(200_000))
 
     await externalClient.call({
       method: 'createAsset',
       methodArgs: [],
-      sendParams: { fee: algokit.microAlgos(2_000) },
+      sendParams: { fee: algokit.microAlgo(2_000) },
       sender: { addr: testAccount.addr, signer: algosdk.makeBasicAccountTransactionSigner(authAddr) },
     })
     const res = await externalClient.call({

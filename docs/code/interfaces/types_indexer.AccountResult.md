@@ -61,7 +61,7 @@ ___
 
 • **amount**: `number`
 
-[algo] total number of MicroAlgos in the account
+[algo] total number of µAlgo in the account
 
 #### Defined in
 
@@ -73,7 +73,7 @@ ___
 
 • **amount-without-pending-rewards**: `number`
 
-specifies the amount of MicroAlgos in the account, without the pending rewards.
+specifies the amount of µAlgo in the account, without the pending rewards.
 
 #### Defined in
 
@@ -231,7 +231,7 @@ ___
 
 • **pending-rewards**: `number`
 
-amount of MicroAlgos of pending rewards in this account.
+amount of µAlgo of pending rewards in this account.
 
 #### Defined in
 
@@ -255,7 +255,7 @@ ___
 
 • **rewards**: `number`
 
-[ern] total rewards of MicroAlgos the account has received, including pending rewards.
+[ern] total rewards of µAlgo the account has received, including pending rewards.
 
 #### Defined in
 
@@ -291,7 +291,7 @@ ___
 
 • **status**: [`AccountStatus`](../enums/types_indexer.AccountStatus.md)
 
-[onl] delegation status of the account's MicroAlgos
+[onl] delegation status of the account's µAlgo
 
 #### Defined in
 
