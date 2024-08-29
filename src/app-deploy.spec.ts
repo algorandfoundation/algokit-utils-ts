@@ -241,9 +241,7 @@ describe('deploy-app', () => {
       onUpdate: 'fail',
     })
     await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(
-      'Update detected and onUpdate=Fail, stopping deployment. ' +
-        'If you want to try deleting and recreating the app then ' +
-        're-run with onUpdate=UpdateApp',
+      'Update detected and onUpdate=Fail, stopping deployment. Try a different onUpdate value to not fail.',
     )
 
     invariant('transaction' in result1)

@@ -1,7 +1,7 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
 import { AssetManager } from './asset-manager'
-import AlgoKitComposer, { AssetCreateParams, AssetOptOutParams, ExecuteParams } from './composer'
+import AlgoKitComposer, { AppCreateParams, AssetCreateParams, AssetOptOutParams, ExecuteParams } from './composer'
 import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults } from './transaction'
 
 import Transaction = algosdk.Transaction
@@ -45,9 +45,9 @@ export class AlgorandClientTransactionSender {
       const rawResult = await composer.execute(params)
       const result = {
         // Last item covers when a group is created by an app call with ABI transaction parameters
-        transaction: rawResult.transactions[rawResult.transactions.length - 1],
-        confirmation: rawResult.confirmations![rawResult.confirmations!.length - 1],
-        txId: rawResult.txIds[0],
+        transaction: rawResult.transactions.at(-1)!,
+        confirmation: rawResult.confirmations.at(-1)!,
+        txId: rawResult.txIds.at(-1)!,
         ...rawResult,
       }
 
@@ -441,17 +441,67 @@ export class AlgorandClientTransactionSender {
     })(params as AssetOptOutParams & ExecuteParams)
   }
   /**
+   * Create a smart contract.
+   *
+   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+   */
+  appCreate = async (params: AppCreateParams & ExecuteParams) => {
+    const result = await this._send((c) => c.addAppCreate, {
+      postLog: (params, result) =>
+        `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+    })(params)
+    return { ...result, appId: BigInt(result.confirmation.applicationIndex ?? 0) }
+  }
+
+  /**
+   * Update a smart contract.
+   *
+   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+   */
+  appUpdate = this._send((c) => c.addAppUpdate)
+
+  /**
+   * Delete a smart contract.
+   *
+   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+   */
+  appDelete = this._send((c) => c.addAppDelete)
+
+  /**
    * Call a smart contract.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
   appCall = this._send((c) => c.addAppCall)
+
   /**
-   * Call a smart contract ABI method.
+   * Create a smart contract via an ABI method.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  methodCall = this._send((c) => c.addMethodCall)
+  appCreateMethodCall = this._send((c) => c.addAppCreateMethodCall)
+
+  /**
+   * Update a smart contract via an ABI method.
+   *
+   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+   */
+  appUpdateMethodCall = this._send((c) => c.addAppUpdateMethodCall)
+
+  /**
+   * Delete a smart contract via an ABI method.
+   *
+   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+   */
+  appDeleteMethodCall = this._send((c) => c.addAppDeleteMethodCall)
+
+  /**
+   * Call a smart contract via an ABI method.
+   *
+   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+   */
+  appCallMethodCall = this._send((c) => c.addAppCallMethodCall)
+
   /** Register an online key. */
   onlineKeyRegistration = this._send((c) => c.addOnlineKeyRegistration, {
     preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${transaction.txID()}`,

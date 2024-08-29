@@ -6,7 +6,7 @@ INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and versio
 WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"numUint":3,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}},"to":{"global":{"numUint":3,"numByteSlice":3,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}}}]
 INFO: onSchemaBreak=AppendApp, will attempt to create a new app
 VERBOSE: Sent transaction ID TXID_2 appl from ACCOUNT_1
-DEBUG: Created app APP_2 from creator ACCOUNT_1"
+DEBUG: App created by ACCOUNT_1 with ID APP_2 via transaction TXID_2"
 `;
 
 exports[`deploy-app Deploy append for update app if onUpdate = AppendApp 1`] = `
@@ -15,7 +15,7 @@ INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and versio
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
 INFO: onUpdate=AppendApp, will attempt to create a new app
 VERBOSE: Sent transaction ID TXID_2 appl from ACCOUNT_1
-DEBUG: Created app APP_2 from creator ACCOUNT_1"
+DEBUG: App created by ACCOUNT_1 with ID APP_2 via transaction TXID_2"
 `;
 
 exports[`deploy-app Deploy failure for replacement of permanent, updated app 1`] = `
@@ -44,7 +44,7 @@ exports[`deploy-app Deploy new app 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 11890 bytes of teal code and 39 bytes of teal code
 INFO: App test not found in apps created by ACCOUNT_1; deploying app with version 1.0.
 VERBOSE: Sent transaction ID TXID_1 appl from ACCOUNT_1
-DEBUG: Created app APP_1 from creator ACCOUNT_1"
+DEBUG: App created by ACCOUNT_1 with ID APP_1 via transaction TXID_1"
 `;
 
 exports[`deploy-app Deploy replacement of deletable schema broken app 1`] = `

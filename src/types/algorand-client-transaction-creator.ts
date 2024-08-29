@@ -1,5 +1,5 @@
 import algosdk from 'algosdk'
-import AlgoKitComposer, { MethodCallParams } from './composer'
+import AlgoKitComposer from './composer'
 
 import Transaction = algosdk.Transaction
 
@@ -19,7 +19,16 @@ export class AlgorandClientTransactionCreator {
     return async (params: T) => {
       const composer = this._newGroup()
       const result = await c(composer).apply(composer, [params]).buildTransactions()
-      return result[result.length - 1]
+      return result.transactions.at(-1)!
+    }
+  }
+
+  private _transactions<T>(
+    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+  ): (params: T) => Promise<{ transactions: Transaction[]; methodCalls: Map<number, algosdk.ABIMethod> }> {
+    return async (params: T) => {
+      const composer = this._newGroup()
+      return await c(composer).apply(composer, [params]).buildTransactions()
     }
   }
 
@@ -292,12 +301,22 @@ export class AlgorandClientTransactionCreator {
    * @returns The asset opt-out transaction
    */
   assetOptOut = this._transaction((c) => c.addAssetOptOut)
+  /** Create an application create transaction. */
+  appCreate = this._transaction((c) => c.addAppCreate)
+  /** Create an application update transaction. */
+  appUpdate = this._transaction((c) => c.addAppUpdate)
+  /** Create an application delete transaction. */
+  appDelete = this._transaction((c) => c.addAppDelete)
   /** Create an application call transaction. */
   appCall = this._transaction((c) => c.addAppCall)
+  /** Create an application create call with ABI method call transaction. */
+  appCreateMethodCall = this._transactions((c) => c.addAppCreateMethodCall)
+  /** Create an application update call with ABI method call transaction. */
+  appUpdateMethodCall = this._transactions((c) => c.addAppUpdateMethodCall)
+  /** Create an application delete call with ABI method call transaction. */
+  appDeleteMethodCall = this._transactions((c) => c.addAppDeleteMethodCall)
   /** Create an application call with ABI method call transaction. */
-  methodCall = async (params: MethodCallParams) => {
-    return await this._newGroup().addMethodCall(params).buildTransactions()
-  }
+  appCallMethodCall = this._transactions((c) => c.addAppCallMethodCall)
   /** Create an online key registration transaction. */
   onlineKeyRegistration = this._transaction((c) => c.addOnlineKeyRegistration)
 }

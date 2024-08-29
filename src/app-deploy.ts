@@ -361,11 +361,7 @@ export async function deployApp(
     )
 
     if (onUpdate === undefined || onUpdate === 'fail' || onUpdate === OnUpdate.Fail) {
-      throw new Error(
-        'Update detected and onUpdate=Fail, stopping deployment. ' +
-          'If you want to try deleting and recreating the app then ' +
-          're-run with onUpdate=UpdateApp',
-      )
+      throw new Error('Update detected and onUpdate=Fail, stopping deployment. Try a different onUpdate value to not fail.')
     }
 
     if (onUpdate === 'append' || onUpdate === OnUpdate.AppendApp) {
