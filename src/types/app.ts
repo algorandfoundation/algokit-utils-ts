@@ -42,6 +42,8 @@ export interface AppReference {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxReference` instead.
+ *
  * A grouping of the app ID and name of the box in an Uint8Array
  */
 export interface BoxReference {
@@ -56,6 +58,8 @@ export interface BoxReference {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxIdentifier` instead.
+ *
  * Something that identifies a box name - either a:
  *  * `Uint8Array`
  *  * `string` (that will be encoded to a Uint8Array)
@@ -133,7 +137,10 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
   args?: AppCallArgs
 }
 
-/** Parameters that are passed in when creating an app. */
+/**
+ * @deprecated Use `AlgoKitComposer` to construct create app transactions instead.
+ *
+ * Parameters that are passed in when creating an app. */
 export interface CreateAppParams extends CreateOrUpdateAppParams {
   /** The storage schema to request for the created app */
   schema: AppStorageSchema
@@ -147,7 +154,9 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
   appId: number | bigint
 }
 
-/** The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
+/** @deprecated Use `algosdk.OnApplicationComplete` directly instead.
+ *
+ * The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
  *
  * Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
  *
@@ -335,7 +344,8 @@ export interface AppState {
       }
 }
 
-/** The name of a box storage box */
+/**
+ * The name of a box storage box */
 export interface BoxName {
   /** Name in UTF-8 */
   name: string

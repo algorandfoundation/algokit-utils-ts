@@ -1,5 +1,4 @@
 import algosdk from 'algosdk'
-import { Buffer } from 'buffer'
 import { Config } from './config'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import {
@@ -32,6 +31,7 @@ import {
   RawAppCallArgs,
   UpdateAppParams,
 } from './types/app'
+import { AppManager } from './types/app-manager'
 import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
 import { toNumber } from './util'
 import ABIMethod = algosdk.ABIMethod
@@ -74,9 +74,9 @@ export async function createApp(
           sender: getSenderAddress(create.from),
           onComplete,
           approvalProgram: create.approvalProgram,
-          clearProgram: create.clearStateProgram,
+          clearStateProgram: create.clearStateProgram,
           method: create.args.method instanceof ABIMethod ? create.args.method : new ABIMethod(create.args.method),
-          extraPages: create.schema.extraPages,
+          extraProgramPages: create.schema.extraPages,
           schema: create.schema,
         },
         (c) => c.appCreateMethodCall,
@@ -91,8 +91,8 @@ export async function createApp(
           sender: getSenderAddress(create.from),
           onComplete,
           approvalProgram: create.approvalProgram,
-          clearProgram: create.clearStateProgram,
-          extraPages: create.schema.extraPages,
+          clearStateProgram: create.clearStateProgram,
+          extraProgramPages: create.schema.extraPages,
           schema: create.schema,
         },
         (c) => c.appCreate,
@@ -125,7 +125,7 @@ export async function updateApp(
   const compiledApproval = typeof approval === 'string' ? await compileTeal(approval, algod) : undefined
   const approvalProgram = compiledApproval ? compiledApproval.compiledBase64ToBytes : approval
   const compiledClear = typeof clear === 'string' ? await compileTeal(clear, algod) : undefined
-  const clearProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
+  const clearStateProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
 
   Config.getLogger(sendParams.suppressLog).debug(`Updating app ${appId}`)
 
@@ -138,7 +138,7 @@ export async function updateApp(
       appID: toNumber(appId),
       onComplete: OnApplicationComplete.UpdateApplicationOC,
       approvalProgram: approvalProgram as Uint8Array,
-      clearProgram: clearProgram as Uint8Array,
+      clearProgram: clearStateProgram as Uint8Array,
       suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
       note: encodeTransactionNote(note),
       ...(await getAppArgsForABICall(args, from)),
@@ -165,7 +165,7 @@ export async function updateApp(
     const transaction = algosdk.makeApplicationUpdateTxnFromObject({
       appIndex: toNumber(appId),
       approvalProgram: approvalProgram as Uint8Array,
-      clearProgram: clearProgram as Uint8Array,
+      clearProgram: clearStateProgram as Uint8Array,
       suggestedParams: await getTransactionParams(transactionParams, algod),
       from: getSenderAddress(from),
       note: encodeTransactionNote(note),
@@ -194,7 +194,9 @@ function attachATC(sendParams: SendTransactionParams) {
   return sendParams.atc
 }
 
-/** Returns an `algosdk.OnApplicationComplete` for the given onCompleteAction.
+/** @deprecated Use `algosdk.OnApplicationComplete` directly instead.
+ *
+ * Returns an `algosdk.OnApplicationComplete` for the given onCompleteAction.
  *
  * If given `undefined` will return `OnApplicationComplete.NoOpOC`.
  *
@@ -309,6 +311,8 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
 }
 
 /**
+ * @deprecated Use `AppManager.getABIReturn` instead.
+ *
  * Returns any ABI return values for the given app call arguments and transaction confirmation.
  * @param args The arguments that were used for the call
  * @param confirmation The transaction confirmation from algod
@@ -320,47 +324,24 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.Pending
   }
   const method = 'txnCount' in args.method ? args.method : new ABIMethod(args.method)
 
-  if (method.returns.type !== 'void' && confirmation) {
-    // The parseMethodResponse method mutates the second parameter :(
-    const resultDummy: ABIResult = {
-      txID: '',
-      method,
-      rawReturnValue: new Uint8Array(),
-    }
-    const response = AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation)
-    return !response.decodeError
-      ? {
-          rawReturnValue: response.rawReturnValue,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          returnValue: response.returnValue!,
-          decodeError: undefined,
-        }
-      : {
-          rawReturnValue: undefined,
-          returnValue: undefined,
-          decodeError: response.decodeError,
-        }
-  }
-  return undefined
+  return AppManager.getABIReturn(confirmation, method)
 }
 
 /**
+ * @deprecated Use `(await appManager.getById(appId)).globalState` instead.
+ *
  * Returns the current global state values for the given app ID
  * @param appId The ID of the app return global state for
  * @param algod An algod client instance
  * @returns The current global state
  */
 export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) {
-  const appInfo = await getAppById(appId, algod)
-
-  if (!appInfo.params || !appInfo.params.globalState) {
-    throw new Error("Couldn't find global state")
-  }
-
-  return decodeAppState(appInfo.params.globalState)
+  return (await new AppManager(algod).getById(BigInt(appId))).globalState
 }
 
 /**
+ * @deprecated Use `appManager.getLocalState` instead.
+ *
  * Returns the current global state values for the given app ID and account
  * @param appId The ID of the app return global state for
  * @param account Either the string address of an account or an account object for the account to get local state for the given app
@@ -368,36 +349,22 @@ export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) 
  * @returns The current local state for the given (app, account) combination
  */
 export async function getAppLocalState(appId: number | bigint, account: string | SendTransactionFrom, algod: Algodv2) {
-  const accountAddress = typeof account === 'string' ? account : getSenderAddress(account)
-  const appInfo = modelsv2.AccountApplicationResponse.from_obj_for_encoding(
-    await algod.accountApplicationInformation(accountAddress, toNumber(appId)).do(),
-  )
-
-  if (!appInfo.appLocalState?.keyValue) {
-    throw new Error("Couldn't find local state")
-  }
-
-  return decodeAppState(appInfo.appLocalState.keyValue)
+  return new AppManager(algod).getLocalState(BigInt(appId), getSenderAddress(account))
 }
 
 /**
+ * @deprecated Use `appManager.getBoxNames` instead.
  * Returns the names of the boxes for the given app.
  * @param appId The ID of the app return box names for
  * @param algod An algod client instance
  * @returns The current box names
  */
 export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Promise<BoxName[]> {
-  const boxResult = await algod.getApplicationBoxes(toNumber(appId)).do()
-  return boxResult.boxes.map((b) => {
-    return {
-      nameRaw: b.name,
-      nameBase64: Buffer.from(b.name).toString('base64'),
-      name: Buffer.from(b.name).toString('utf-8'),
-    }
-  })
+  return new AppManager(algod).getBoxNames(BigInt(appId))
 }
 
 /**
+ * @deprecated Use `appManager.getBoxValue` instead.
  * Returns the value of the given box name for the given app.
  * @param appId The ID of the app return box names for
  * @param boxName The name of the box to return either as a string, binary array or `BoxName`
@@ -405,12 +372,11 @@ export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Pr
  * @returns The current box value as a byte array
  */
 export async function getAppBoxValue(appId: number | bigint, boxName: string | Uint8Array | BoxName, algod: Algodv2): Promise<Uint8Array> {
-  const name = typeof boxName === 'string' ? new Uint8Array(Buffer.from(boxName, 'utf-8')) : 'name' in boxName ? boxName.nameRaw : boxName
-  const boxResult = await algod.getApplicationBoxByName(toNumber(appId), name).do()
-  return boxResult.value
+  return new AppManager(algod).getBoxValue(BigInt(appId), typeof boxName !== 'string' && 'name' in boxName ? boxName.nameRaw : boxName)
 }
 
 /**
+ * @deprecated Use `appManager.getBoxValues` instead.
  * Returns the value of the given box names for the given app.
  * @param appId The ID of the app return box names for
  * @param boxNames The names of the boxes to return either as a string, binary array or `BoxName`
@@ -418,81 +384,57 @@ export async function getAppBoxValue(appId: number | bigint, boxName: string | U
  * @returns The current box values as a byte array in the same order as the passed in box names
  */
 export async function getAppBoxValues(appId: number, boxNames: (string | Uint8Array | BoxName)[], algod: Algodv2): Promise<Uint8Array[]> {
-  return await Promise.all(boxNames.map(async (boxName) => await getAppBoxValue(appId, boxName, algod)))
+  return new AppManager(algod).getBoxValues(
+    BigInt(appId),
+    boxNames.map((b) => (typeof b !== 'string' && 'name' in b ? b.nameRaw : b)),
+  )
 }
 
 /**
+ * @deprecated Use `appManager.getBoxValueFromABIType` instead.
  * Returns the value of the given box name for the given app decoded based on the given ABI type.
  * @param request The parameters for the box value request
  * @param algod An algod client instance
  * @returns The current box value as an ABI value
  */
 export async function getAppBoxValueFromABIType(request: BoxValueRequestParams, algod: Algodv2): Promise<ABIValue> {
-  const { appId, boxName, type } = request
-  const value = await getAppBoxValue(appId, boxName, algod)
-  return type.decode(value)
+  return new AppManager(algod).getBoxValueFromABIType({
+    appId: BigInt(request.appId),
+    boxName: typeof request.boxName !== 'string' && 'name' in request.boxName ? request.boxName.nameRaw : request.boxName,
+    type: request.type,
+  })
 }
 
 /**
+ * @deprecated Use `appManager.getBoxValuesFromABIType` instead.
  * Returns the value of the given box names for the given app decoded based on the given ABI type.
  * @param request The parameters for the box value request
  * @param algod An algod client instance
  * @returns The current box values as an ABI value in the same order as the passed in box names
  */
 export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams, algod: Algodv2): Promise<ABIValue[]> {
-  const { appId, boxNames, type } = request
-  return await Promise.all(boxNames.map(async (boxName) => await getAppBoxValueFromABIType({ appId, boxName, type }, algod)))
+  return new AppManager(algod).getBoxValuesFromABIType({
+    appId: BigInt(request.appId),
+    boxNames: request.boxNames.map((b) => (typeof b !== 'string' && 'name' in b ? b.nameRaw : b)),
+    type: request.type,
+  })
 }
 
 /**
+ * @deprecated Use `AppManager.decodeAppState` instead.
+ *
  * Converts an array of global/local state values from the algod api to a more friendly
  * generic object keyed by the UTF-8 value of the key.
  * @param state A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas`
  * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
  */
 export function decodeAppState(state: { key: string; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
-  const stateValues = {} as AppState
-
-  // Start with empty set
-  for (const stateVal of state) {
-    const keyBase64 = stateVal.key
-    const keyRaw = Buffer.from(keyBase64, 'base64')
-    const key = keyRaw.toString('utf-8')
-    const tealValue = stateVal.value
-
-    const dataTypeFlag = 'action' in tealValue ? tealValue.action : tealValue.type
-    let valueBase64: string
-    let valueRaw: Buffer
-    switch (dataTypeFlag) {
-      case 1:
-        valueBase64 = tealValue.bytes ?? ''
-        valueRaw = Buffer.from(valueBase64, 'base64')
-        stateValues[key] = {
-          keyRaw,
-          keyBase64,
-          valueRaw: new Uint8Array(valueRaw),
-          valueBase64: valueBase64,
-          value: valueRaw.toString('utf-8'),
-        }
-        break
-      case 2: {
-        const value = tealValue.uint ?? 0
-        stateValues[key] = {
-          keyRaw,
-          keyBase64,
-          value,
-        }
-        break
-      }
-      default:
-        throw new Error(`Received unknown state data type of ${dataTypeFlag}`)
-    }
-  }
-
-  return stateValues
+  return AppManager.decodeAppState(state)
 }
 
 /**
+ * @deprecated Use `AlgoKitComposer` methods to construct transactions instead.
+ *
  * Returns the app args ready to load onto an app `Transaction` object
  * @param args The app call args
  * @returns The args ready to load into a `Transaction`
@@ -513,6 +455,7 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
 
 /**
  * @deprecated Use `AlgoKitComposer` methods to construct transactions instead.
+ *
  * Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
  * @param args The ABI app call args
  * @param from The transaction signer
@@ -524,6 +467,7 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
 
 /**
  * @deprecated Use `AppManager.getBoxReference()` instead.
+ *
  * Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
  * @param box The box to return a reference for
  * @returns The box reference ready to pass into a `Transaction`
@@ -537,6 +481,8 @@ function _getAccountAddress(account: string | Address) {
 }
 
 /**
+ * @deprecated Use `appManager.getById` instead.
+ *
  * Gets the current data for the given app from algod.
  *
  * @param appId The id of the app
@@ -548,7 +494,8 @@ export async function getAppById(appId: number | bigint, algod: Algodv2) {
 }
 
 /**
- * @deprecated Use `algokitComposer.compileTeal` instead.
+ * @deprecated Use `appManager.compileTeal` instead.
+ *
  * Compiles the given TEAL using algod and returns the result, including source map.
  *
  * @param algod An algod client
@@ -556,17 +503,12 @@ export async function getAppById(appId: number | bigint, algod: Algodv2) {
  * @returns The information about the compiled file
  */
 export async function compileTeal(tealCode: string, algod: Algodv2): Promise<CompiledTeal> {
-  const compiled = await algod.compile(tealCode).sourcemap(true).do()
-  return {
-    teal: tealCode,
-    compiled: compiled.result,
-    compiledHash: compiled.hash,
-    compiledBase64ToBytes: new Uint8Array(Buffer.from(compiled.result, 'base64')),
-    sourceMap: new SourceMap(compiled['sourcemap']),
-  }
+  return await new AppManager(algod).compileTeal(tealCode)
 }
 
 /**
+ * @deprecated Use `abiMethod.getSignature()` or `new ABIMethod(abiMethodParams).getSignature()` instead.
+ *
  * Returns the encoded ABI spec for a given ABI Method
  * @param method The method to return a signature for
  * @returns The encoded ABI method spec e.g. `method_name(uint64,string)string`

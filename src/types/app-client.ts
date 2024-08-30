@@ -4,7 +4,6 @@ import {
   callApp,
   compileTeal,
   createApp,
-  getABIMethodSignature,
   getAppBoxNames,
   getAppBoxValue,
   getAppBoxValueFromABIType,
@@ -625,7 +624,7 @@ export class ApplicationClient {
       !call.sendParams?.atc &&
       // The method is readonly
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.appSpec.hints[getABIMethodSignature(this.getABIMethod(call.method)!)].read_only
+      this.appSpec.hints[this.getABIMethodSignature(this.getABIMethod(call.method)!)].read_only
     ) {
       const atc = new AtomicTransactionComposer()
       await this.callOfType({ ...call, sendParams: { ...call.sendParams, atc } }, 'no_op')
@@ -886,7 +885,7 @@ export class ApplicationClient {
         throw new Error(`Attempt to call ABI method ${args.method}, but it wasn't found`)
       }
 
-      const methodSignature = getABIMethodSignature(abiMethod)
+      const methodSignature = this.getABIMethodSignature(abiMethod)
 
       return {
         ...args,
@@ -908,7 +907,7 @@ export class ApplicationClient {
                 const method = defaultValueStrategy.data as ABIMethodParams
                 const result = await this.callOfType(
                   {
-                    method: getABIMethodSignature(method),
+                    method: this.getABIMethodSignature(method),
                     methodArgs: method.args.map(() => undefined),
                     sender,
                   },
@@ -951,13 +950,13 @@ export class ApplicationClient {
           `Received a call to method ${method} in contract ${
             this._appName
           }, but this resolved to multiple methods; please pass in an ABI signature instead: ${methods
-            .map(getABIMethodSignature)
+            .map(this.getABIMethodSignature)
             .join(', ')}`,
         )
       }
       return methods[0]
     }
-    return this.appSpec.contract.methods.find((m) => getABIMethodSignature(m) === method)
+    return this.appSpec.contract.methods.find((m) => this.getABIMethodSignature(m) === method)
   }
 
   /**
@@ -1021,5 +1020,9 @@ export class ApplicationClient {
         isClear ? this._clearSourceMap! : this._approvalSourceMap!,
       )
     else return e
+  }
+
+  private getABIMethodSignature(method: ABIMethodParams | ABIMethod) {
+    return 'getSignature' in method ? method.getSignature() : new ABIMethod(method).getSignature()
   }
 }

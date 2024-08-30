@@ -1,6 +1,6 @@
 import algosdk, { ABIMethod } from 'algosdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
-import { AlgorandClientTransactionSender, SendSingleTransactionResult } from '../types/algorand-client-transaction-sender'
+import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
 import { ABIAppCallArgs, BoxIdentifier, BoxReference, RawAppCallArgs } from '../types/app'
 import { AppManager } from '../types/app-manager'
 import { AssetManager } from '../types/asset-manager'
@@ -16,7 +16,13 @@ import AlgoKitComposer, {
   CommonTransactionParams,
   ExecuteParams,
 } from '../types/composer'
-import { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionNote } from '../types/transaction'
+import {
+  SendSingleTransactionResult,
+  SendTransactionFrom,
+  SendTransactionParams,
+  SendTransactionResult,
+  TransactionNote,
+} from '../types/transaction'
 import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner, getTransactionParams } from './transaction'
 import Algodv2 = algosdk.Algodv2
 import Transaction = algosdk.Transaction

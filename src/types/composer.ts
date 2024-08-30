@@ -341,7 +341,7 @@ export type AppCreateParams = Expand<
     /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
-    clearProgram: string | Uint8Array
+    clearStateProgram: string | Uint8Array
     /** The state schema for the app. This is immutable. */
     schema?: {
       /** The number of integers saved in global state */
@@ -354,7 +354,7 @@ export type AppCreateParams = Expand<
       localByteSlices: number
     }
     /** Number of extra pages required for the programs */
-    extraPages?: number
+    extraProgramPages?: number
 
     appId?: never
   }
@@ -366,9 +366,9 @@ export type AppUpdateParams = Expand<
     /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
-    clearProgram: string | Uint8Array
+    clearStateProgram: string | Uint8Array
     /** Number of extra pages required for the programs */
-    extraPages?: number
+    extraProgramPages?: number
 
     schema?: never
   }
@@ -379,9 +379,9 @@ export type AppCallParams = CommonAppCallParams & {
   /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call; defaults to no-op. */
   onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>
   schema?: never
-  extraPages?: never
+  extraProgramPages?: never
   approvalProgram?: never
-  clearProgram?: never
+  clearStateProgram?: never
 }
 
 /** Parameters to define an application delete call transaction. */
@@ -822,11 +822,11 @@ export default class AlgoKitComposer {
           ? (await this.appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
           : params.approvalProgram
         : undefined
-    const clearProgram =
-      'clearProgram' in params
-        ? typeof params.clearProgram === 'string'
-          ? (await this.appManager.compileTeal(params.clearProgram)).compiledBase64ToBytes
-          : params.clearProgram
+    const clearStateProgram =
+      'clearStateProgram' in params
+        ? typeof params.clearStateProgram === 'string'
+          ? (await this.appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+          : params.clearStateProgram
         : undefined
 
     methodAtc.addMethodCall({
@@ -839,12 +839,12 @@ export default class AlgoKitComposer {
       appForeignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
       approvalProgram,
-      clearProgram,
+      clearProgram: clearStateProgram,
       extraPages:
-        'extraPages' in params && params.extraPages !== undefined
-          ? params.extraPages
+        'extraProgramPages' in params && params.extraProgramPages !== undefined
+          ? params.extraProgramPages
           : approvalProgram
-            ? Math.floor((approvalProgram.length + (clearProgram?.length ?? 0)) / APP_PAGE_MAX_SIZE)
+            ? Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0)) / APP_PAGE_MAX_SIZE)
             : undefined,
       numLocalInts: ('schema' in params ? params.schema?.localInts : undefined) ?? (appId === 0 ? 0 : undefined),
       numLocalByteSlices: ('schema' in params ? params.schema?.localByteSlices : undefined) ?? (appId === 0 ? 0 : undefined),
@@ -957,11 +957,11 @@ export default class AlgoKitComposer {
           ? (await this.appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
           : params.approvalProgram
         : undefined
-    const clearProgram =
-      'clearProgram' in params
-        ? typeof params.clearProgram === 'string'
-          ? (await this.appManager.compileTeal(params.clearProgram)).compiledBase64ToBytes
-          : params.clearProgram
+    const clearStateProgram =
+      'clearStateProgram' in params
+        ? typeof params.clearStateProgram === 'string'
+          ? (await this.appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+          : params.clearStateProgram
         : undefined
 
     const sdkParams = {
@@ -973,8 +973,8 @@ export default class AlgoKitComposer {
       appForeignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
       approvalProgram,
-      clearProgram,
-      extraPages: 'extraPages' in params ? params.extraPages : undefined,
+      clearProgram: clearStateProgram,
+      extraPages: 'extraProgramPages' in params ? params.extraProgramPages : undefined,
       numLocalInts: 'schema' in params ? params.schema?.localInts : undefined,
       numLocalByteSlices: 'schema' in params ? params.schema?.localByteSlices : undefined,
       numGlobalInts: 'schema' in params ? params.schema?.globalInts : undefined,
@@ -985,7 +985,7 @@ export default class AlgoKitComposer {
 
     if (appId === 0) {
       if (sdkParams.approvalProgram === undefined || sdkParams.clearProgram === undefined) {
-        throw new Error('approvalProgram and clearProgram are required for application creation')
+        throw new Error('approvalProgram and clearStateProgram are required for application creation')
       }
 
       txn = algosdk.makeApplicationCreateTxnFromObject({
@@ -996,8 +996,8 @@ export default class AlgoKitComposer {
         numGlobalInts: sdkParams.numGlobalInts ?? 0,
         numGlobalByteSlices: sdkParams.numGlobalByteSlices ?? 0,
         approvalProgram: approvalProgram!,
-        clearProgram: clearProgram!,
-        extraPages: sdkParams.extraPages ?? Math.floor((approvalProgram!.length + clearProgram!.length) / APP_PAGE_MAX_SIZE),
+        clearProgram: clearStateProgram!,
+        extraPages: sdkParams.extraPages ?? Math.floor((approvalProgram!.length + clearStateProgram!.length) / APP_PAGE_MAX_SIZE),
       })
     } else {
       txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, appIndex: appId })

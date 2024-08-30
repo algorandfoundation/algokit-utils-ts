@@ -208,7 +208,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       method: contract.getMethodByName('createApplication'),
       approvalProgram: await compileProgram(algorand, APP_SPEC.source.approval),
-      clearProgram: await compileProgram(algorand, APP_SPEC.source.clear),
+      clearStateProgram: await compileProgram(algorand, APP_SPEC.source.clear),
     })
   })
 

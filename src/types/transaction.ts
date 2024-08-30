@@ -45,6 +45,13 @@ export interface SendTransactionParams {
   populateAppCallResources?: boolean
 }
 
+/** Result from sending a single transaction. */
+export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
+
+;Partial<AppCompilationResult> & AppCallTransactionResult & AppReference
+Partial<AppCompilationResult> & AppCallTransactionResult
+AppCallTransactionResult
+
 /** The result of sending a transaction */
 export interface SendTransactionResult {
   /** The transaction */

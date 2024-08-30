@@ -99,7 +99,7 @@ The payload to configure an app consists of a union of [`SendTransactionParams`]
   - `note: TransactionNote` - A [transaction note](transaction.md#transaction-notes)
   - `args: AppCallArgs` - Any [arguments](#appcallargs) passed in to the app call
 
-If you pass in `approvalProgram` or `clearProgram` as a string then it will automatically be compiled using Algod and the compilation result will be returned from the function (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
+If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be returned from the function (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 
 If you pass in args that represent an ABI then it will use an `AtomicTransactionComposer` to construct and send the transaction(s). Because it's possible that other transactions may be present as ABI arguments, the full set of transactions that were sent are returned in `transactions` and the primary transaction for the create call will also be available in `transaction`. If you pass in the `atc` or `skipSending: true` then it won't execute the transaction and will simply return the transaction(s). The `return` value will have any ABI return value within it.
 

@@ -1,13 +1,9 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
 import { AssetManager } from './asset-manager'
-import AlgoKitComposer, { AppCreateParams, AssetCreateParams, AssetOptOutParams, ExecuteParams } from './composer'
-import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults } from './transaction'
-
+import AlgoKitComposer, { AppCreateMethodCall, AppCreateParams, AssetCreateParams, AssetOptOutParams, ExecuteParams } from './composer'
+import { SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
-
-/** Result from sending a single transaction. */
-export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionSender {
@@ -479,7 +475,13 @@ export class AlgorandClientTransactionSender {
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appCreateMethodCall = this._send((c) => c.addAppCreateMethodCall)
+  appCreateMethodCall = async (params: AppCreateMethodCall & ExecuteParams) => {
+    const result = await this._send((c) => c.addAppCreateMethodCall, {
+      postLog: (params, result) =>
+        `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+    })(params)
+    return { ...result, appId: BigInt(result.confirmation.applicationIndex ?? 0) }
+  }
 
   /**
    * Update a smart contract via an ABI method.

@@ -141,7 +141,7 @@ In order for a smart contract to be able to use this functionality, it must have
 
 If you are building a smart contract using the [beaker_production AlgoKit template](https://github.com/algorandfoundation/algokit-beaker-default-template) if provides a reference implementation out of the box for the deploy-time immutability and permanence control.
 
-If you passed in a TEAL template for the approvalProgram or clearProgram (i.e. a `string` rather than a `Uint8Array`) then `deployApp` will return the [compilation result](../code/interfaces/types_app.CompiledTeal.md) of substituting then compiling the TEAL template(s) in the following properties of the return value:
+If you passed in a TEAL template for the approvalProgram or clearStateProgram (i.e. a `string` rather than a `Uint8Array`) then `deployApp` will return the [compilation result](../code/interfaces/types_app.CompiledTeal.md) of substituting then compiling the TEAL template(s) in the following properties of the return value:
 
 - `compiledApproval?: CompiledTeal`
 - `compiledClear?: CompiledTeal`
