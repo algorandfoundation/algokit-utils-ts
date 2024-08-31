@@ -426,6 +426,8 @@ export interface ExecuteParams {
   maxRoundsToWaitForConfirmation?: number
   /** Whether to suppress log messages from transaction send, default: do not suppress. */
   suppressLog?: boolean
+  /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`. */
+  populateAppCallResources?: boolean
 }
 
 /** Parameters to create an `AlgoKitComposer`. */
@@ -449,6 +451,9 @@ export type AlgoKitComposerParams = {
 
 /** AlgoKit Composer helps you compose and execute transactions as a transaction group. */
 export default class AlgoKitComposer {
+  /** Signer used to represent a lack of signer */
+  private static NULL_SIGNER: algosdk.TransactionSigner = algosdk.makeEmptyTransactionSigner()
+
   /** The ATC used to compose the group */
   private atc = new algosdk.AtomicTransactionComposer()
 
@@ -761,6 +766,11 @@ export default class AlgoKitComposer {
     return txn
   }
 
+  /**
+   * Builds an ABI method call transaction and any other associated transactions represented in the ABI args.
+   * @param includeSigner Whether to include the actual signer for the transactions.
+   *  If you are just building transactions without signers yet then set this to `true`.
+   */
   private async buildMethodCall(
     params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
     suggestedParams: algosdk.SuggestedParams,
@@ -770,7 +780,7 @@ export default class AlgoKitComposer {
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
-      return ['boolean', 'number', 'bigint', 'string', 'Uint8Array'].includes(typeof x)
+      return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
     }
 
     for (const arg of params.args ?? []) {
@@ -799,7 +809,7 @@ export default class AlgoKitComposer {
               ? params.signer.signer
               : params.signer
             : this.getSigner(encodeAddress(txn.from.publicKey))
-          : algosdk.makeEmptyTransactionSigner(),
+          : AlgoKitComposer.NULL_SIGNER,
       })
     }
 
@@ -843,7 +853,13 @@ export default class AlgoKitComposer {
       numGlobalInts: appId === 0 ? ('schema' in params ? params.schema?.globalInts ?? 0 : 0) : undefined,
       numGlobalByteSlices: appId === 0 ? ('schema' in params ? params.schema?.globalByteSlices ?? 0 : 0) : undefined,
       method: params.method,
-      signer: params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : this.getSigner(params.sender),
+      signer: includeSigner
+        ? params.signer
+          ? 'signer' in params.signer
+            ? params.signer.signer
+            : params.signer
+          : this.getSigner(params.sender)
+        : AlgoKitComposer.NULL_SIGNER,
       methodArgs: methodArgs,
       // note, lease, and rekeyTo are set in the common build step
       note: undefined,
@@ -1014,14 +1030,9 @@ export default class AlgoKitComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
+  /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
   private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.Transaction[]> {
     switch (txn.type) {
-      case 'txnWithSigner':
-        return [txn.txn]
-      case 'atc':
-        return this.buildAtc(txn.atc).map((ts) => ts.txn)
-      case 'methodCall':
-        return (await this.buildMethodCall(txn, suggestedParams, false)).map((ts) => ts.txn)
       case 'pay':
         return [this.buildPayment(txn, suggestedParams)]
       case 'assetCreate':
@@ -1074,18 +1085,37 @@ export default class AlgoKitComposer {
     const suggestedParams = await this.getSuggestedParams()
 
     const transactions: algosdk.Transaction[] = []
+    const methodCalls = new Map<number, algosdk.ABIMethod>()
+    const signers = new Map<number, algosdk.TransactionSigner>()
 
     for (const txn of this.txns) {
-      transactions.push(...(await this.buildTxn(txn, suggestedParams)))
+      if (!['txnWithSigner', 'atc', 'methodCall'].includes(txn.type)) {
+        transactions.push(...(await this.buildTxn(txn, suggestedParams)))
+      } else {
+        const transactionsWithSigner =
+          txn.type === 'txnWithSigner'
+            ? [txn]
+            : txn.type === 'atc'
+              ? this.buildAtc(txn.atc)
+              : txn.type === 'methodCall'
+                ? await this.buildMethodCall(txn, suggestedParams, false)
+                : []
+
+        transactions.push(...transactionsWithSigner.map((ts) => ts.txn))
+        transactionsWithSigner.forEach((ts, idx) => {
+          if (ts.signer && ts.signer !== AlgoKitComposer.NULL_SIGNER) {
+            signers.set(idx, ts.signer)
+          }
+        })
+      }
     }
 
-    const methodCalls = new Map<number, algosdk.ABIMethod>()
     for (let i = 0; i < transactions.length; i++) {
       const method = this.txnMethodMap.get(transactions[i].txID())
       if (method) methodCalls.set(i, method)
     }
 
-    return { transactions, methodCalls }
+    return { transactions, methodCalls, signers }
   }
 
   /**
@@ -1146,7 +1176,11 @@ export default class AlgoKitComposer {
     return await sendAtomicTransactionComposer(
       {
         atc: this.atc,
-        sendParams: { suppressLog: params?.suppressLog, maxRoundsToWaitForConfirmation: waitRounds },
+        sendParams: {
+          suppressLog: params?.suppressLog,
+          maxRoundsToWaitForConfirmation: waitRounds,
+          populateAppCallResources: params?.populateAppCallResources,
+        },
       },
       this.algod,
     )

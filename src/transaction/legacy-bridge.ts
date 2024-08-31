@@ -1,8 +1,8 @@
 import algosdk, { ABIMethod } from 'algosdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
-import { ABIAppCallArgs, BoxIdentifier, BoxReference, RawAppCallArgs } from '../types/app'
-import { AppManager } from '../types/app-manager'
+import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'
+import { AppManager, BoxReference } from '../types/app-manager'
 import { AssetManager } from '../types/asset-manager'
 import AlgoKitComposer, {
   AppCallMethodCall,
@@ -35,9 +35,11 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   params: T,
   txn:
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
-    | ((
-        c: AlgorandClientTransactionCreator,
-      ) => (params: T) => Promise<{ transactions: Transaction[]; methodCalls: Map<number, algosdk.ABIMethod> }>),
+    | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<{
+        transactions: Transaction[]
+        methodCalls: Map<number, algosdk.ABIMethod>
+        signers: Map<number, algosdk.TransactionSigner>
+      }>),
   send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
@@ -65,7 +67,13 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     const txns = 'transactions' in transaction ? transaction.transactions : [transaction]
     if (sendParams.atc) {
       const baseIndex = sendParams.atc.count()
-      txns.map((txn) => ({ txn, signer: getSenderTransactionSigner(from) })).forEach((t) => sendParams.atc!.addTransaction(t))
+      txns
+        .map((txn, i) => ({
+          txn,
+          signer:
+            'signers' in transaction ? transaction.signers.get(i) ?? getSenderTransactionSigner(from) : getSenderTransactionSigner(from),
+        }))
+        .forEach((t) => sendParams.atc!.addTransaction(t))
       // Populate ATC with method calls
       if ('transactions' in transaction) {
         transaction.methodCalls.forEach((m, i) => sendParams.atc!['methodCalls'].set(i + baseIndex, m))
@@ -97,9 +105,11 @@ export async function legacySendAppTransactionBridge<
   params: Omit<T, 'accountReferences' | 'appReferences' | 'assetReferences' | 'boxReferences' | 'args' | 'lease' | 'rekeyTo' | 'note'>,
   txn:
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
-    | ((
-        c: AlgorandClientTransactionCreator,
-      ) => (params: T) => Promise<{ transactions: Transaction[]; methodCalls: Map<number, algosdk.ABIMethod> }>),
+    | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<{
+        transactions: Transaction[]
+        methodCalls: Map<number, algosdk.ABIMethod>
+        signers: Map<number, algosdk.TransactionSigner>
+      }>),
   send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
@@ -108,7 +118,7 @@ export async function legacySendAppTransactionBridge<
     accountReferences: appArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
     appReferences: appArgs?.apps?.map((a) => BigInt(a)),
     assetReferences: appArgs?.assets?.map((a) => BigInt(a)),
-    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: r.appIndex, box: r.name })),
+    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
     lease: appArgs?.lease,
     rekeyTo: appArgs?.rekeyTo ? getSenderAddress(appArgs?.rekeyTo) : undefined,
     args: appArgs ? ('methodArgs' in appArgs ? (await _getAppArgsForABICall(appArgs, from)).methodArgs : appArgs?.appArgs) : undefined,
@@ -162,7 +172,7 @@ function _getAccountAddress(account: string | algosdk.Address) {
 }
 
 /** @deprecated */
-export function _getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxReference): algosdk.BoxReference {
+export function _getBoxReference(box: LegacyBoxIdentifier | LegacyBoxReference | algosdk.BoxReference): algosdk.BoxReference {
   const encoder = new TextEncoder()
 
   if (typeof box === 'object' && 'appIndex' in box) {

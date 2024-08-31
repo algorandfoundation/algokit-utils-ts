@@ -518,7 +518,7 @@ const tests = (version: 8 | 9) => () => {
       await appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr] })
     })
 
-    test(`externalLocal: ${hasAssetErrorMsg}`, async () => {
+    test(`externalLocal: has not opted in to app`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(

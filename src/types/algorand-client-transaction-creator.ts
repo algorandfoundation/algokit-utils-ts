@@ -23,9 +23,11 @@ export class AlgorandClientTransactionCreator {
     }
   }
 
-  private _transactions<T>(
-    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
-  ): (params: T) => Promise<{ transactions: Transaction[]; methodCalls: Map<number, algosdk.ABIMethod> }> {
+  private _transactions<T>(c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer): (params: T) => Promise<{
+    transactions: Transaction[]
+    methodCalls: Map<number, algosdk.ABIMethod>
+    signers: Map<number, algosdk.TransactionSigner>
+  }> {
     return async (params: T) => {
       const composer = this._newGroup()
       return await c(composer).apply(composer, [params]).buildTransactions()

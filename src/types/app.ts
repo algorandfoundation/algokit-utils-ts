@@ -121,7 +121,11 @@ export type ABIAppCallArgs = CoreAppCallArgs & {
  **/
 export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
-/** Base interface for common data passed to an app create or update. */
+/**
+ * @deprecated Use `AlgoKitComposer` to construct create app transactions instead.
+ *
+ * Base interface for common data passed to an app create or update.
+ */
 interface CreateOrUpdateAppParams extends SendTransactionParams {
   /** The account (with private key loaded) that will send the transaction */
   from: SendTransactionFrom
@@ -148,13 +152,17 @@ export interface CreateAppParams extends CreateOrUpdateAppParams {
   onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
 }
 
-/** Parameters that are passed in when updating an app. */
+/**
+ * @deprecated Use `AlgoKitComposer` to construct update app transactions instead.
+ *
+ * Parameters that are passed in when updating an app. */
 export interface UpdateAppParams extends CreateOrUpdateAppParams {
   /** The id of the app to update */
   appId: number | bigint
 }
 
-/** @deprecated Use `algosdk.OnApplicationComplete` directly instead.
+/**
+ * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
  *
  * The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
  *
@@ -356,6 +364,7 @@ export interface BoxName {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxValueRequestParams` instead.
  * Parameters to get and decode a box value as an ABI type.
  */
 export interface BoxValueRequestParams {
@@ -368,6 +377,7 @@ export interface BoxValueRequestParams {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxValuesRequestParams` instead.
  * Parameters to get and decode a box value as an ABI type.
  */
 export interface BoxValuesRequestParams {

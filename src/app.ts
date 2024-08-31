@@ -1,15 +1,6 @@
 import algosdk from 'algosdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
-import {
-  controlFees,
-  encodeLease,
-  encodeTransactionNote,
-  getAtomicTransactionComposerTransactions,
-  getSenderAddress,
-  getTransactionParams,
-  sendAtomicTransactionComposer,
-  sendTransaction,
-} from './transaction/transaction'
+import { encodeLease, getSenderAddress } from './transaction/transaction'
 import {
   ABIAppCallArgs,
   ABIReturn,
@@ -31,7 +22,7 @@ import {
   UpdateAppParams,
 } from './types/app'
 import { AppManager } from './types/app-manager'
-import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
+import { SendTransactionFrom } from './types/transaction'
 import { toNumber } from './util'
 import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
@@ -146,15 +137,8 @@ export async function updateApp(
       )
 }
 
-function attachATC(sendParams: SendTransactionParams) {
-  if (sendParams.atc) {
-    sendParams.skipSending = true
-  }
-  sendParams.atc = sendParams.atc ?? new AtomicTransactionComposer()
-  return sendParams.atc
-}
-
-/** @deprecated Use `algosdk.OnApplicationComplete` directly instead.
+/**
+ * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
  *
  * Returns an `algosdk.OnApplicationComplete` for the given onCompleteAction.
  *
@@ -190,84 +174,48 @@ export function getAppOnCompleteAction(onCompletionAction?: AppCallType | OnAppl
 }
 
 /**
+ * @deprecated Use `algorand.send.appUpdate()` / `algorand.transaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
+ * / `algorand.transaction.appUpdateMethodCall()` instead
+ *
  * Issues a call to a given app.
  * @param call The call details.
  * @param algod An algod client
  * @returns The result of the call
  */
 export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
-  const { appId, callType, from, args, note, transactionParams, ...sendParams } = call
-
-  if (args && args.method) {
-    const atc = attachATC(sendParams)
-
-    const before = getAtomicTransactionComposerTransactions(atc)
-
-    atc.addMethodCall({
-      appID: toNumber(appId),
-      suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
-      note: encodeTransactionNote(note),
-      onComplete: getAppOnCompleteAction(callType),
-      ...(await getAppArgsForABICall(args, from)),
-    })
-
-    if (sendParams.skipSending) {
-      const after = atc.clone().buildGroup()
-      return {
-        transaction: after[after.length - 1].txn,
-        transactions: after.slice(before.length).map((t) => t.txn),
-      }
-    }
-
-    const result = await sendAtomicTransactionComposer({ atc, sendParams }, algod)
-    const confirmation = result.confirmations ? result.confirmations[result.confirmations?.length - 1] : undefined
-    return {
-      transactions: result.transactions,
-      confirmations: result.confirmations,
-      return: confirmation ? getABIReturn(args, confirmation) : undefined,
-      transaction: result.transactions[result.transactions.length - 1],
-      confirmation: confirmation,
-    }
+  const onComplete = getAppOnCompleteAction(call.callType)
+  if (onComplete === algosdk.OnApplicationComplete.UpdateApplicationOC) {
+    throw new Error('Cannot execute an app call with on-complete action of Update')
   }
 
-  const appCallParams = {
-    appIndex: toNumber(appId),
-    from: getSenderAddress(from),
-    suggestedParams: await getTransactionParams(transactionParams, algod),
-    ...getAppArgsForTransaction(args),
-    note: encodeTransactionNote(note),
-    rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
-  }
-
-  let transaction: Transaction
-  switch (getAppOnCompleteAction(callType)) {
-    case OnApplicationComplete.OptInOC:
-      transaction = algosdk.makeApplicationOptInTxnFromObject(appCallParams)
-      break
-    case OnApplicationComplete.ClearStateOC:
-      transaction = algosdk.makeApplicationClearStateTxnFromObject(appCallParams)
-      break
-    case OnApplicationComplete.CloseOutOC:
-      transaction = algosdk.makeApplicationCloseOutTxnFromObject(appCallParams)
-      break
-    case OnApplicationComplete.DeleteApplicationOC:
-      transaction = algosdk.makeApplicationDeleteTxnFromObject(appCallParams)
-      break
-    case OnApplicationComplete.NoOpOC:
-      transaction = algosdk.makeApplicationNoOpTxnFromObject(appCallParams)
-      break
-    default:
-      throw new Error(`Received unexpected call type ${callType}`)
-  }
-
-  const result = await sendTransaction({ transaction, from, sendParams }, algod)
-
-  return {
-    ...result,
-    transactions: [result.transaction],
-    confirmations: result.confirmation ? [result.confirmation] : undefined,
-    return: getABIReturn(args, result.confirmation),
-  }
+  return call.args?.method
+    ? await legacySendAppTransactionBridge(
+        algod,
+        call.from,
+        call.args,
+        call,
+        {
+          appId: BigInt(call.appId),
+          sender: getSenderAddress(call.from),
+          onComplete,
+          method: call.args.method instanceof ABIMethod ? call.args.method : new ABIMethod(call.args.method),
+        },
+        (c) => c.appCallMethodCall,
+        (c) => c.appCallMethodCall,
+      )
+    : await legacySendAppTransactionBridge(
+        algod,
+        call.from,
+        call.args,
+        call,
+        {
+          appId: BigInt(call.appId),
+          sender: getSenderAddress(call.from),
+          onComplete,
+        },
+        (c) => c.appCall,
+        (c) => c.appCall,
+      )
 }
 
 /**
