@@ -4,6 +4,8 @@
 
 [types/asset](../modules/types_asset.md).AssetOptOutParams
 
+**`Deprecated`**
+
 Parameters for `assetOptOut` call.
 
 ## Hierarchy

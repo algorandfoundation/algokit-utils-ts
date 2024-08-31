@@ -11,7 +11,7 @@ import {
   ResolveAppByIdBase,
 } from './app-client'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
-import { AlgoClientConfig, AlgoConfig } from './network-client'
+import { AlgoClientConfig, AlgoConfig, genesisIdIsLocalNet } from './network-client'
 import Kmd = algosdk.Kmd
 import Indexer = algosdk.Indexer
 import Algodv2 = algosdk.Algodv2
@@ -129,7 +129,7 @@ export class ClientManager {
    * @returns Whether the given genesis ID is associated with a LocalNet network
    */
   public static genesisIdIsLocalNet(genesisId: string) {
-    return genesisId === 'devnet-v1' || genesisId === 'sandnet-v1' || genesisId === 'dockernet-v1'
+    return genesisIdIsLocalNet(genesisId)
   }
 
   /**
@@ -158,10 +158,10 @@ export class ClientManager {
 
   /**
    * Returns a TestNet Dispenser API client.
+   *
    * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
    *
    * @param params An object containing parameters for the TestNetDispenserApiClient class.
-   *  Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`.
    * @example
    * const client = clientManager.getTestNetDispenser(
    *     {
@@ -172,8 +172,27 @@ export class ClientManager {
    *
    * @returns An instance of the TestNetDispenserApiClient class.
    */
-  public getTestNetDispenser(params: TestNetDispenserApiClientParams | null = null) {
+  public getTestNetDispenser(params: TestNetDispenserApiClientParams) {
     return new TestNetDispenserApiClient(params)
+  }
+
+  /**
+   * Returns a TestNet Dispenser API client, loading the auth token from `process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN`.
+   *
+   * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
+   *
+   * @param params An object containing parameters for the TestNetDispenserApiClient class.
+   * @example
+   * const client = clientManager.getTestNetDispenserFromEnvironment(
+   *     {
+   *       requestTimeout: 15,
+   *     }
+   * )
+   *
+   * @returns An instance of the TestNetDispenserApiClient class.
+   */
+  public getTestNetDispenserFromEnvironment(params?: Omit<TestNetDispenserApiClientParams, 'authToken'>) {
+    return new TestNetDispenserApiClient(params ? { ...params, authToken: '' } : undefined)
   }
 
   /**
@@ -203,6 +222,21 @@ export class ClientManager {
    * @param typedClient The typed client type to use
    * @param details The details to resolve the app by creator address and name
    * @param cachedAppLookup A cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this manager on construction.
+   * @example Use name in ARC-32 app spec
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   *   creatorAddress: "CREATORADDRESS",
+   *   sender: alice,
+   * })
+   * ```
+   * @example Specify name
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   *   creatorAddress: "CREATORADDRESS",
+   *   name: "contract-name",
+   *   sender: alice,
+   * })
+   * ```
    * @returns The typed client instance
    */
   public getTypedAppClientByCreatorAndName<TClient>(
@@ -217,6 +251,13 @@ export class ClientManager {
    * Returns a new typed client, resolving the app by app ID.
    * @param typedClient The typed client type to use
    * @param details The details to resolve the app by ID
+   * @example
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
+   *   id: 12345,
+   *   sender: alice,
+   * })
+   * ```
    * @returns The typed client instance
    */
   public getTypedAppClientById<TClient>(typedClient: TypedAppClient<TClient>, details: TypedAppClientByIdDetails) {

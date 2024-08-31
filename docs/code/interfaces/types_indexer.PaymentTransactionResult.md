@@ -21,7 +21,7 @@ Fields for a payment transaction https://developer.algorand.org/docs/rest-apis/i
 
 • **amount**: `number`
 
-[amt] number of MicroAlgos intended to be transferred.
+[amt] number of µAlgo intended to be transferred.
 
 #### Defined in
 
@@ -33,7 +33,7 @@ ___
 
 • `Optional` **close-amount**: `number`
 
-Number of MicroAlgos that were sent to the close-remainder-to address when closing the sender account.
+Number of µAlgo that were sent to the close-remainder-to address when closing the sender account.
 
 #### Defined in
 

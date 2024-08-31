@@ -427,10 +427,10 @@ describe('application-client', () => {
     })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(rekeyTo, testAccount.addr)
+    const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
     await algokit.transferAlgos(
       {
-        amount: (0).algos(),
+        amount: (0).algo(),
         from: rekeyedAccount,
         to: testAccount,
       },
@@ -547,7 +547,7 @@ describe('application-client', () => {
       {
         from: testAccount,
         to: testAccount.addr,
-        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
+        amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
         skipSending: true,
       },
       algod,
@@ -573,7 +573,7 @@ describe('application-client', () => {
       {
         from: testAccount,
         to: testAccount.addr,
-        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
+        amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
         skipSending: true,
       },
       algod,
@@ -597,13 +597,13 @@ describe('application-client', () => {
 
   test('Sign transaction in group with different signer if provided', async () => {
     const { algod, indexer, testAccount, generateAccount } = localnet.context
-    const signer = await generateAccount({ initialFunds: (1).algos() })
+    const signer = await generateAccount({ initialFunds: (1).algo() })
     const transaction = (
       await algokit.transferAlgos(
         {
           from: signer,
           to: signer.addr,
-          amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
+          amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
           skipSending: true,
         },
         algod,
@@ -746,14 +746,14 @@ describe('application-client', () => {
 
   test('Fund app account', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const fundAmount = algokit.microAlgos(200_000)
+    const fundAmount = algokit.microAlgo(200_000)
     const { client, app } = await deploy(testAccount, algod, indexer)
 
     const result = await client.fundAppAccount({
       amount: fundAmount,
     })
 
-    expect(result.transaction.amount).toBe(fundAmount.microAlgos)
+    expect(result.transaction.amount).toBe(fundAmount.microAlgo)
     expect(result.transaction.type).toBe(TransactionType.pay)
     expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
     expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
@@ -798,7 +798,7 @@ describe('application-client', () => {
     const boxName1Base64 = Buffer.from(boxName1).toString('base64')
     const boxName2 = new Uint8Array([0, 0, 0, 2])
     const boxName2Base64 = Buffer.from(boxName2).toString('base64')
-    await client.fundAppAccount(algokit.algos(1))
+    await client.fundAppAccount(algokit.algo(1))
     await client.call({
       method: 'set_box',
       methodArgs: [boxName1, 'value1'],
