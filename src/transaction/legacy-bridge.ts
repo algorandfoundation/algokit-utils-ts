@@ -28,7 +28,7 @@ import Algodv2 = algosdk.Algodv2
 import Transaction = algosdk.Transaction
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour and new `AlgorandClient` behaviour. */
-export async function legacySendTransactionBridge<T extends CommonTransactionParams>(
+export async function legacySendTransactionBridge<T extends CommonTransactionParams, TResult extends SendSingleTransactionResult>(
   algod: Algodv2,
   from: SendTransactionFrom,
   sendParams: SendTransactionParams,
@@ -38,9 +38,9 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     | ((
         c: AlgorandClientTransactionCreator,
       ) => (params: T) => Promise<{ transactions: Transaction[]; methodCalls: Map<number, algosdk.ABIMethod> }>),
-  send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<SendSingleTransactionResult>,
+  send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
-): Promise<(SendTransactionResult | SendSingleTransactionResult) & { transactions: Transaction[]; appManager: AppManager }> {
+): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
   const appManager = new AppManager(algod)
   const newGroup = () =>
     new AlgoKitComposer({
@@ -49,7 +49,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
       getSuggestedParams: async () => await getTransactionParams(suggestedParams, algod),
       appManager,
     })
-  const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup))
+  const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager)
   const transactionCreator = new AlgorandClientTransactionCreator(newGroup)
 
   if (sendParams.fee) {
@@ -71,10 +71,10 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
         transaction.methodCalls.forEach((m, i) => sendParams.atc!['methodCalls'].set(i + baseIndex, m))
       }
     }
-    return { transaction: txns.at(-1)!, transactions: txns, appManager }
+    return { transaction: txns.at(-1)!, transactions: txns }
   }
 
-  return { ...(await send(transactionSender)({ ...sendParams, ...params })), appManager }
+  return { ...(await send(transactionSender)({ ...sendParams, ...params })) }
 }
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour for app transactions and new `AlgorandClient` behaviour. */
@@ -88,6 +88,7 @@ export async function legacySendAppTransactionBridge<
     | AppUpdateMethodCall
     | AppDeleteMethodCall
     | AppCallMethodCall,
+  TResult extends SendSingleTransactionResult,
 >(
   algod: Algodv2,
   from: SendTransactionFrom,
@@ -99,9 +100,9 @@ export async function legacySendAppTransactionBridge<
     | ((
         c: AlgorandClientTransactionCreator,
       ) => (params: T) => Promise<{ transactions: Transaction[]; methodCalls: Map<number, algosdk.ABIMethod> }>),
-  send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<SendSingleTransactionResult>,
+  send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
-): Promise<(SendTransactionResult | SendSingleTransactionResult) & { transactions: Transaction[]; appManager: AppManager }> {
+): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
   const paramsWithAppArgs = {
     ...params,
     accountReferences: appArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),

@@ -1,23 +1,43 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
+import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
-import AlgoKitComposer, { AppCreateMethodCall, AppCreateParams, AssetCreateParams, AssetOptOutParams, ExecuteParams } from './composer'
-import { SendSingleTransactionResult } from './transaction'
+import AlgoKitComposer, {
+  AppCallMethodCall,
+  AppCallParams,
+  AppCreateMethodCall,
+  AppCreateParams,
+  AppDeleteMethodCall,
+  AppDeleteParams,
+  AppUpdateMethodCall,
+  AppUpdateParams,
+  AssetCreateParams,
+  AssetOptOutParams,
+  ExecuteParams,
+} from './composer'
+import {
+  SendAppCreateTransactionResult,
+  SendAppTransactionResult,
+  SendAppUpdateTransactionResult,
+  SendSingleTransactionResult,
+} from './transaction'
 import Transaction = algosdk.Transaction
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionSender {
   private _newGroup: () => AlgoKitComposer
   private _assetManager: AssetManager
+  private _appManager: AppManager
 
   /**
    * Creates a new `AlgorandClientSender`
    * @param newGroup A lambda that starts a new `AlgoKitComposer` transaction group
    * @param assetManager An `AssetManager` instance
    */
-  constructor(newGroup: () => AlgoKitComposer, assetManager: AssetManager) {
+  constructor(newGroup: () => AlgoKitComposer, assetManager: AssetManager, appManager: AppManager) {
     this._newGroup = newGroup
     this._assetManager = assetManager
+    this._appManager = appManager
   }
 
   private _send<T>(
@@ -52,6 +72,67 @@ export class AlgorandClientTransactionSender {
       }
 
       return result
+    }
+  }
+
+  private _sendAppCall<
+    T extends
+      | AppCreateParams
+      | AppUpdateParams
+      | AppCallParams
+      | AppDeleteParams
+      | AppCreateMethodCall
+      | AppUpdateMethodCall
+      | AppCallMethodCall
+      | AppDeleteMethodCall,
+  >(
+    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    log?: {
+      preLog?: (params: T, transaction: Transaction) => string
+      postLog?: (params: T, result: SendSingleTransactionResult) => string
+    },
+  ): (params: T & ExecuteParams) => Promise<SendAppTransactionResult> {
+    return async (params) => {
+      const result = await this._send(c, log)(params)
+
+      return { ...result, return: AppManager.getABIReturn(result.confirmation, 'method' in params ? params.method : undefined) }
+    }
+  }
+
+  private _sendAppUpdateCall<T extends AppCreateParams | AppUpdateParams | AppCreateMethodCall | AppUpdateMethodCall>(
+    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    log?: {
+      preLog?: (params: T, transaction: Transaction) => string
+      postLog?: (params: T, result: SendSingleTransactionResult) => string
+    },
+  ): (params: T & ExecuteParams) => Promise<SendAppUpdateTransactionResult> {
+    return async (params) => {
+      const result = await this._sendAppCall(c, log)(params)
+
+      const compiledApproval =
+        typeof params.approvalProgram === 'string' ? this._appManager.getCompilationResult(params.approvalProgram) : undefined
+      const compiledClear =
+        typeof params.clearStateProgram === 'string' ? this._appManager.getCompilationResult(params.clearStateProgram) : undefined
+
+      return { ...result, compiledApproval, compiledClear }
+    }
+  }
+
+  private _sendAppCreateCall<T extends AppCreateParams | AppCreateMethodCall>(
+    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    log?: {
+      preLog?: (params: T, transaction: Transaction) => string
+      postLog?: (params: T, result: SendSingleTransactionResult) => string
+    },
+  ): (params: T & ExecuteParams) => Promise<SendAppCreateTransactionResult> {
+    return async (params) => {
+      const result = await this._sendAppUpdateCall(c, log)(params)
+
+      return {
+        ...result,
+        appId: BigInt(result.confirmation.applicationIndex!),
+        appAddress: algosdk.getApplicationAddress(result.confirmation.applicationIndex!),
+      }
     }
   }
 
@@ -441,68 +522,62 @@ export class AlgorandClientTransactionSender {
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appCreate = async (params: AppCreateParams & ExecuteParams) => {
-    const result = await this._send((c) => c.addAppCreate, {
-      postLog: (params, result) =>
-        `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
-    })(params)
-    return { ...result, appId: BigInt(result.confirmation.applicationIndex ?? 0) }
-  }
+  appCreate = this._sendAppCreateCall((c) => c.addAppCreate, {
+    postLog: (params, result) =>
+      `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /**
    * Update a smart contract.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appUpdate = this._send((c) => c.addAppUpdate)
+  appUpdate = this._sendAppUpdateCall((c) => c.addAppUpdate)
 
   /**
    * Delete a smart contract.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appDelete = this._send((c) => c.addAppDelete)
+  appDelete = this._sendAppCall((c) => c.addAppDelete)
 
   /**
    * Call a smart contract.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appCall = this._send((c) => c.addAppCall)
+  appCall = this._sendAppCall((c) => c.addAppCall)
 
   /**
    * Create a smart contract via an ABI method.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appCreateMethodCall = async (params: AppCreateMethodCall & ExecuteParams) => {
-    const result = await this._send((c) => c.addAppCreateMethodCall, {
-      postLog: (params, result) =>
-        `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
-    })(params)
-    return { ...result, appId: BigInt(result.confirmation.applicationIndex ?? 0) }
-  }
+  appCreateMethodCall = this._sendAppCreateCall((c) => c.addAppCreateMethodCall, {
+    postLog: (params, result) =>
+      `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /**
    * Update a smart contract via an ABI method.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appUpdateMethodCall = this._send((c) => c.addAppUpdateMethodCall)
+  appUpdateMethodCall = this._sendAppUpdateCall((c) => c.addAppUpdateMethodCall)
 
   /**
    * Delete a smart contract via an ABI method.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appDeleteMethodCall = this._send((c) => c.addAppDeleteMethodCall)
+  appDeleteMethodCall = this._sendAppCall((c) => c.addAppDeleteMethodCall)
 
   /**
    * Call a smart contract via an ABI method.
    *
    * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
    */
-  appCallMethodCall = this._send((c) => c.addAppCallMethodCall)
+  appCallMethodCall = this._sendAppCall((c) => c.addAppCallMethodCall)
 
   /** Register an online key. */
   onlineKeyRegistration = this._send((c) => c.addOnlineKeyRegistration, {

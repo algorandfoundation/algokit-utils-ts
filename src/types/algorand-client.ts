@@ -33,7 +33,7 @@ export class AlgorandClient {
     this._accountManager = new AccountManager(this._clientManager)
     this._appManager = new AppManager(this._clientManager.algod)
     this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
-    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager)
+    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager, this._appManager)
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
   }
 

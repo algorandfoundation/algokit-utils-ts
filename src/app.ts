@@ -36,14 +36,12 @@ import { SendTransactionFrom, SendTransactionParams } from './types/transaction'
 import { toNumber } from './util'
 import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
-import ABIResult = algosdk.ABIResult
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import modelsv2 = algosdk.modelsv2
 import OnApplicationComplete = algosdk.OnApplicationComplete
-import SourceMap = algosdk.SourceMap
 import Transaction = algosdk.Transaction
 
 /**
@@ -98,19 +96,14 @@ export async function createApp(
         (c) => c.appCreate,
         (c) => c.appCreate,
       )
-  return {
-    ...result,
-    return: result.confirmation ? getABIReturn(create.args, result.confirmation) : undefined,
-    appId: result.confirmation?.applicationIndex ?? 0,
-    appAddress: result.confirmation?.applicationIndex ? algosdk.getApplicationAddress(result.confirmation.applicationIndex) : '',
-    compiledApproval:
-      typeof create.approvalProgram === 'string' ? result.appManager.getCompilationResult(create.approvalProgram) : undefined,
-    compiledClear:
-      typeof create.clearStateProgram === 'string' ? result.appManager.getCompilationResult(create.clearStateProgram) : undefined,
-  }
+
+  return { ...result, appId: 'appId' in result ? Number(result.appId) : 0, appAddress: 'appAddress' in result ? result.appAddress : '' }
 }
 
 /**
+ * @deprecated Use `algorand.send.appUpdate()` / `algorand.transaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
+ * / `algorand.transaction.appUpdateMethodCall()` instead
+ *
  * Updates a smart contract app.
  * @param update The parameters to update the app with
  * @param algod An algod client

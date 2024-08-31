@@ -322,9 +322,9 @@ export interface AppDeploymentParams
 /** The result of compiling the approval and clear TEAL for an app */
 export interface AppCompilationResult {
   /** The compilation result of approval */
-  compiledApproval: CompiledTeal
+  compiledApproval: CompiledTeal | undefined
   /** The compilation result of clear */
-  compiledClear: CompiledTeal
+  compiledClear: CompiledTeal | undefined
 }
 
 /** Object holding app state values */

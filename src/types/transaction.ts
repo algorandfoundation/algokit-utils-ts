@@ -1,7 +1,8 @@
 import algosdk from 'algosdk'
+import { Expand } from '../util'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { ABIReturn } from './app'
+import { ABIReturn, AppCompilationResult } from './app'
 import Account = algosdk.Account
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -46,11 +47,28 @@ export interface SendTransactionParams {
 }
 
 /** Result from sending a single transaction. */
-export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
+export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerResults & ConfirmedTransactionResult>
 
-;Partial<AppCompilationResult> & AppCallTransactionResult & AppReference
-Partial<AppCompilationResult> & AppCallTransactionResult
-AppCallTransactionResult
+/** Result from sending a single app transaction. */
+export type SendAppTransactionResult = Expand<
+  SendSingleTransactionResult & {
+    /** If an ABI method was called the processed return value */
+    return?: ABIReturn
+  }
+>
+
+/** Result from sending a single app transaction. */
+export type SendAppUpdateTransactionResult = Expand<SendAppTransactionResult & AppCompilationResult>
+
+/** Result from sending a single app transaction. */
+export type SendAppCreateTransactionResult = Expand<
+  SendAppUpdateTransactionResult & {
+    /** The id of the app */
+    appId: bigint
+    /** The Algorand address of the account associated with the app */
+    appAddress: string
+  }
+>
 
 /** The result of sending a transaction */
 export interface SendTransactionResult {
