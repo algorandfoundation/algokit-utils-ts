@@ -83,7 +83,7 @@ INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and versio
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
 WARN: App is not updatable but onUpdate=UpdateApp, will attempt to update app, update will most likely fail
 INFO: Updating existing test app for ACCOUNT_1 to version 2.0.
-DEBUG: Updating app APP_1"
+ERROR: Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information | [{"response":{"body":{"data":{"app-index":APP_1,"eval-states":[{"stack":[0]}],"group-index":0,"pc":948},"message":"TransactionPool.Remember: transaction TXID_2: logic eval error: assert failed pc=948. Details: app=APP_1, pc=948, opcodes=assert; intc 4 // 0; assert"},"status":400,"text":"{\\"data\\":{\\"app-index\\":APP_1,\\"eval-states\\":[{\\"stack\\":[0]}],\\"group-index\\":0,\\"pc\\":948},\\"message\\":\\"TransactionPool.Remember: transaction TXID_2: logic eval error: assert failed pc=948. Details: app=APP_1, pc=948, opcodes=assert; intc 4 // 0; assert\\"}\\n","ok":false},"name":"URLTokenBaseHTTPError","status":400,"traces":[]}]"
 `;
 
 exports[`deploy-app Deploy update to updatable updated app 1`] = `
@@ -92,7 +92,6 @@ INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and versio
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
 INFO: App is updatable and onUpdate=UpdateApp, updating app...
 INFO: Updating existing test app for ACCOUNT_1 to version 2.0.
-DEBUG: Updating app APP_1
 VERBOSE: Sent transaction ID TXID_2 appl from ACCOUNT_1"
 `;
 

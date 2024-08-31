@@ -1,5 +1,4 @@
 import algosdk from 'algosdk'
-import { Config } from './config'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import {
   controlFees,
@@ -113,70 +112,38 @@ export async function updateApp(
   update: UpdateAppParams,
   algod: Algodv2,
 ): Promise<Partial<AppCompilationResult> & AppCallTransactionResult> {
-  const { appId, from, approvalProgram: approval, clearStateProgram: clear, note, transactionParams, args, ...sendParams } = update
-
-  const compiledApproval = typeof approval === 'string' ? await compileTeal(approval, algod) : undefined
-  const approvalProgram = compiledApproval ? compiledApproval.compiledBase64ToBytes : approval
-  const compiledClear = typeof clear === 'string' ? await compileTeal(clear, algod) : undefined
-  const clearStateProgram = compiledClear ? compiledClear.compiledBase64ToBytes : clear
-
-  Config.getLogger(sendParams.suppressLog).debug(`Updating app ${appId}`)
-
-  if (args && args.method) {
-    const atc = attachATC(sendParams)
-
-    const before = getAtomicTransactionComposerTransactions(atc)
-
-    atc.addMethodCall({
-      appID: toNumber(appId),
-      onComplete: OnApplicationComplete.UpdateApplicationOC,
-      approvalProgram: approvalProgram as Uint8Array,
-      clearProgram: clearStateProgram as Uint8Array,
-      suggestedParams: controlFees(await getTransactionParams(transactionParams, algod), sendParams),
-      note: encodeTransactionNote(note),
-      ...(await getAppArgsForABICall(args, from)),
-    })
-
-    if (sendParams.skipSending) {
-      const after = atc.clone().buildGroup()
-      return {
-        transaction: after[after.length - 1].txn,
-        transactions: after.slice(before.length).map((t) => t.txn),
-      }
-    }
-
-    const result = await sendAtomicTransactionComposer({ atc, sendParams }, algod)
-    const confirmation = result.confirmations ? result.confirmations[result.confirmations?.length - 1] : undefined
-    return {
-      transactions: result.transactions,
-      confirmations: result.confirmations,
-      return: confirmation ? getABIReturn(args, confirmation) : undefined,
-      transaction: result.transactions[result.transactions.length - 1],
-      confirmation: confirmation,
-    }
-  } else {
-    const transaction = algosdk.makeApplicationUpdateTxnFromObject({
-      appIndex: toNumber(appId),
-      approvalProgram: approvalProgram as Uint8Array,
-      clearProgram: clearStateProgram as Uint8Array,
-      suggestedParams: await getTransactionParams(transactionParams, algod),
-      from: getSenderAddress(from),
-      note: encodeTransactionNote(note),
-      ...getAppArgsForTransaction(args),
-      rekeyTo: args?.rekeyTo ? (typeof args.rekeyTo === 'string' ? args.rekeyTo : getSenderAddress(args.rekeyTo)) : undefined,
-    })
-
-    const result = await sendTransaction({ transaction, from, sendParams }, algod)
-
-    return {
-      ...result,
-      transactions: [result.transaction],
-      confirmations: result.confirmation ? [result.confirmation] : undefined,
-      return: getABIReturn(args, result.confirmation),
-      compiledApproval,
-      compiledClear,
-    }
-  }
+  return update.args?.method
+    ? await legacySendAppTransactionBridge(
+        algod,
+        update.from,
+        update.args,
+        update,
+        {
+          appId: BigInt(update.appId),
+          sender: getSenderAddress(update.from),
+          onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+          approvalProgram: update.approvalProgram,
+          clearStateProgram: update.clearStateProgram,
+          method: update.args.method instanceof ABIMethod ? update.args.method : new ABIMethod(update.args.method),
+        },
+        (c) => c.appUpdateMethodCall,
+        (c) => c.appUpdateMethodCall,
+      )
+    : await legacySendAppTransactionBridge(
+        algod,
+        update.from,
+        update.args,
+        update,
+        {
+          appId: BigInt(update.appId),
+          sender: getSenderAddress(update.from),
+          onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+          approvalProgram: update.approvalProgram,
+          clearStateProgram: update.clearStateProgram,
+        },
+        (c) => c.appUpdate,
+        (c) => c.appUpdate,
+      )
 }
 
 function attachATC(sendParams: SendTransactionParams) {
