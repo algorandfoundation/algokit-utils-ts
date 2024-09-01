@@ -6,7 +6,7 @@ import { APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
-import { SendAtomicTransactionComposerResults } from './transaction'
+import { Arc2TransactionNote, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
@@ -1127,6 +1127,13 @@ export default class AlgoKitComposer {
   }
 
   /**
+   * Get the number of transactions currently added to this composer.
+   */
+  async count() {
+    return (await this.buildTransactions()).transactions.length
+  }
+
+  /**
    * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
    *
    * You can then use the transactions standalone, or use the composer to execute or simulate the transactions.
@@ -1195,5 +1202,11 @@ export default class AlgoKitComposer {
       },
       this.algod,
     )
+  }
+
+  static arc2Note(note: Arc2TransactionNote): Uint8Array {
+    const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : JSON.stringify(note.data)}`
+    const encoder = new TextEncoder()
+    return encoder.encode(arc2Payload)
   }
 }

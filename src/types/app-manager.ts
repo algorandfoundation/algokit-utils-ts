@@ -1,9 +1,16 @@
 import algosdk from 'algosdk'
 import { TransactionSignerAccount } from './account'
-import type { ABIReturn, AppState, BoxName, CompiledTeal } from './app'
+import {
+  BoxName,
+  DELETABLE_TEMPLATE_NAME,
+  UPDATABLE_TEMPLATE_NAME,
+  type ABIReturn,
+  type AppDeployMetadata,
+  type AppState,
+  type CompiledTeal,
+  type TealTemplateParams,
+} from './app'
 import modelsv2 = algosdk.modelsv2
-
-export type { ABIReturn, AppState, BoxName, CompiledTeal } from './app'
 
 /** Information about an app. */
 export interface AppInformation {
@@ -90,12 +97,16 @@ export interface BoxValuesRequestParams {
 /** Allows management of application information. */
 export class AppManager {
   private _algod: algosdk.Algodv2
+  private _compilationResults: Record<string, CompiledTeal> = {}
 
+  /**
+   * Creates an `AppManager`
+   * @param algod An algod instance
+   * @param indexer An optional indexer instance; supply if you want to use the `deploy` method
+   */
   constructor(algod: algosdk.Algodv2) {
     this._algod = algod
   }
-
-  private _compilationResults: Record<string, CompiledTeal> = {}
 
   /**
    * Compiles the given TEAL using algod and returns the result, including source map.
@@ -123,6 +134,36 @@ export class AppManager {
     }
     this._compilationResults[tealCode] = result
     return result
+  }
+
+  /**
+   * Performs template substitution of a teal template and compiles it, returning the compiled result.
+   *
+   * Looks for `TMPL_{parameter}` for template replacements and replaces AlgoKit deploy-time control parameters
+   * if deployment metadata is specified.
+   *
+   * * `TMPL_UPDATABLE` for updatability / immutability control
+   * * `TMPL_DELETABLE` for deletability / permanence control
+   *
+   * @param tealTemplateCode The TEAL logic to compile
+   * @param templateParams Any parameters to replace in the .teal file before compiling
+   * @param deploymentMetadata The deployment metadata the app will be deployed with
+   * @returns The information about the compiled code
+   */
+  async compileTealTemplate(
+    tealTemplateCode: string,
+    templateParams?: TealTemplateParams,
+    deploymentMetadata?: AppDeployMetadata,
+  ): Promise<CompiledTeal> {
+    let tealCode = AppManager.stripTealComments(tealTemplateCode)
+
+    tealCode = AppManager.replaceTealTemplateParams(tealCode, templateParams)
+
+    if (deploymentMetadata) {
+      tealCode = AppManager.replaceTealTemplateDeployTimeControlParams(tealCode, deploymentMetadata)
+    }
+
+    return await this.compileTeal(tealCode)
   }
 
   /**
@@ -340,5 +381,97 @@ export class AppManager {
           returnValue: undefined,
           decodeError: response.decodeError,
         }
+  }
+
+  /**
+   * Replaces AlgoKit deploy-time deployment control parameters within the given TEAL template code.
+   *
+   * * `TMPL_UPDATABLE` for updatability / immutability control
+   * * `TMPL_DELETABLE` for deletability / permanence control
+   *
+   * Note: If these values are defined, but the corresponding `TMPL_*` value
+   *  isn't in the teal code it will throw an exception.
+   *
+   * @param tealTemplateCode The TEAL template code to substitute
+   * @param params The deploy-time deployment control parameter value to replace
+   * @returns The replaced TEAL code
+   */
+  static replaceTealTemplateDeployTimeControlParams(tealTemplateCode: string, params: { updatable?: boolean; deletable?: boolean }) {
+    if (params.updatable !== undefined) {
+      if (!tealTemplateCode.includes(UPDATABLE_TEMPLATE_NAME)) {
+        throw new Error(
+          `Deploy-time updatability control requested for app deployment, but ${UPDATABLE_TEMPLATE_NAME} not present in TEAL code`,
+        )
+      }
+      tealTemplateCode = tealTemplateCode.replace(new RegExp(UPDATABLE_TEMPLATE_NAME, 'g'), (params.updatable ? 1 : 0).toString())
+    }
+
+    if (params.deletable !== undefined) {
+      if (!tealTemplateCode.includes(DELETABLE_TEMPLATE_NAME)) {
+        throw new Error(
+          `Deploy-time deletability control requested for app deployment, but ${DELETABLE_TEMPLATE_NAME} not present in TEAL code`,
+        )
+      }
+      tealTemplateCode = tealTemplateCode.replace(new RegExp(DELETABLE_TEMPLATE_NAME, 'g'), (params.deletable ? 1 : 0).toString())
+    }
+
+    return tealTemplateCode
+  }
+
+  /**
+   * Performs template substitution of a teal file.
+   *
+   * Looks for `TMPL_{parameter}` for template replacements.
+   *
+   * @param tealTemplateCode The TEAL template code to make parameter replacements in
+   * @param templateParams Any parameters to replace in the teal code
+   * @returns The TEAL code with replacements
+   */
+  static replaceTealTemplateParams(tealTemplateCode: string, templateParams?: TealTemplateParams) {
+    if (templateParams !== undefined) {
+      for (const key in templateParams) {
+        const value = templateParams[key]
+        const token = `TMPL_${key.replace(/^TMPL_/, '')}`
+
+        // If this is a number, first replace any byte representations of the number
+        // These may appear in the TEAL in order to circumvent int compression and preserve PC values
+        if (typeof value === 'number' || typeof value === 'boolean') {
+          tealTemplateCode = tealTemplateCode.replace(new RegExp(`(?<=bytes )${token}`, 'g'), `0x${value.toString(16).padStart(16, '0')}`)
+
+          // We could probably return here since mixing pushint and pushbytes is likely not going to happen, but might as well do both
+        }
+
+        tealTemplateCode = tealTemplateCode.replace(
+          new RegExp(token, 'g'),
+          typeof value === 'string'
+            ? `0x${Buffer.from(value, 'utf-8').toString('hex')}`
+            : ArrayBuffer.isView(value)
+              ? `0x${Buffer.from(value).toString('hex')}`
+              : value.toString(),
+        )
+      }
+    }
+
+    return tealTemplateCode
+  }
+
+  /**
+   * Remove comments from TEAL code (useful to reduce code size before compilation).
+   *
+   * @param tealCode The TEAL logic to strip
+   * @returns The TEAL without comments
+   */
+  static stripTealComments(tealCode: string) {
+    // find // outside quotes, i.e. won't pick up "//not a comment"
+    const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
+
+    tealCode = tealCode
+      .split('\n')
+      .map((tealCodeLine) => {
+        return tealCodeLine.split(regex)[0].trim()
+      })
+      .join('\n')
+
+    return tealCode
   }
 }
