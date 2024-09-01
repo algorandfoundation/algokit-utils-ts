@@ -54,7 +54,7 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ### Creating single transactions
 
-You can compose a single transaction via `algorand.transactions...`. Intellisense will guide you on the different options.
+You can compose a single transaction via `algorand.transactions...`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
 
 The signature for the calls to send a single transaction usually look like:
 
@@ -67,7 +67,7 @@ The signature for the calls to send a single transaction usually look like:
 
 ### Sending a single transaction
 
-You can compose a single transaction via `algorand.send...`. Intellisense will guide you on the different options.
+You can compose a single transaction via `algorand.send...`, which gives you an instance of the [`AlgorandClientTransactionSender`](../code/classes/types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md) class. Intellisense will guide you on the different options.
 
 Further documentation is present in the related capabilities:
 

@@ -4,7 +4,8 @@ import invariant from 'tiny-invariant'
 import * as algokit from '.'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
-import { AppDeployMetadata, AppDeploymentParams } from './types/app'
+import { AppDeployMetadata } from './types/app'
+import { AppDeployParams } from './types/app-deployer'
 import { LogicError } from './types/logic-error'
 
 describe('deploy-app', () => {
@@ -18,19 +19,19 @@ describe('deploy-app', () => {
   const name = 'MY_APP'
 
   test('Created app is retrieved by name with deployment metadata', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
     const app1 = await algorand.send.appCreate(await getTestingAppCreateParams(testAccount, creationMetadata))
     await waitForIndexer()
 
-    const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
+    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
 
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps)).toEqual([name])
     const app = apps.apps[name]
-    expect(BigInt(app.appId)).toBe(app1.appId)
+    expect(app.appId).toBe(app1.appId)
     expect(app.appAddress).toBe(app1.appAddress)
-    expect(app.createdRound).toBe(app1.confirmation?.confirmedRound)
+    expect(app.createdRound).toBe(BigInt(app1.confirmation.confirmedRound!))
     expect(app.createdMetadata).toEqual(creationMetadata)
     expect(app.updatedRound).toBe(app.createdRound)
     expect(app.name).toBe(creationMetadata.name)
@@ -40,22 +41,22 @@ describe('deploy-app', () => {
   })
 
   test('Latest created app is retrieved', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
     const app1 = await algorand.send.appCreate({ ...(await getTestingAppCreateParams(testAccount, creationMetadata)), lease: '1' })
     const app2 = await algorand.send.appCreate({ ...(await getTestingAppCreateParams(testAccount, creationMetadata)), lease: '2' })
     const app3 = await algorand.send.appCreate({ ...(await getTestingAppCreateParams(testAccount, creationMetadata)), lease: '3' })
     await waitForIndexer()
 
-    const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
+    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
 
-    expect(BigInt(apps.apps[name].appId)).not.toBe(app1.appId)
-    expect(BigInt(apps.apps[name].appId)).not.toBe(app2.appId)
-    expect(BigInt(apps.apps[name].appId)).toBe(app3.appId)
+    expect(apps.apps[name].appId).not.toBe(app1.appId)
+    expect(apps.apps[name].appId).not.toBe(app2.appId)
+    expect(apps.apps[name].appId).toBe(app3.appId)
   })
 
   test('Created, updated and deleted apps are retrieved by name with deployment metadata', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
     const name3 = 'APP_3'
@@ -69,16 +70,16 @@ describe('deploy-app', () => {
     const delete3 = await algorand.send.appDelete({ appId: app3.appId, sender: testAccount.addr })
     await waitForIndexer()
 
-    const apps = await algokit.getCreatorAppsByName(testAccount, indexer)
+    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
 
     expect(apps.creator).toBe(testAccount.addr)
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
     const app1Data = apps.apps[name]
-    expect(BigInt(app1Data.appId)).toBe(app1.appId)
+    expect(app1Data.appId).toBe(app1.appId)
     expect(app1Data.appAddress).toBe(app1.appAddress)
-    expect(app1Data.createdRound).toBe(app1.confirmation?.confirmedRound)
+    expect(app1Data.createdRound).toBe(BigInt(app1.confirmation.confirmedRound!))
     expect(app1Data.createdMetadata).toEqual(creationMetadata)
-    expect(app1Data.updatedRound).toBe(update1.confirmation?.confirmedRound)
+    expect(app1Data.updatedRound).toBe(BigInt(update1.confirmation.confirmedRound!))
     expect(app1Data.name).toBe(updateMetadata.name)
     expect(app1Data.updatable).toBe(updateMetadata.updatable)
     expect(app1Data.deletable).toBe(updateMetadata.deletable)
@@ -86,28 +87,28 @@ describe('deploy-app', () => {
     expect(app1Data.deleted).toBe(false)
 
     const app2Data = apps.apps[name2]
-    expect(BigInt(app2Data.appId)).toBe(app2.appId)
+    expect(app2Data.appId).toBe(app2.appId)
     expect(app2Data.deleted).toBe(false)
 
     const app3Data = apps.apps[name3]
-    expect(BigInt(app3Data.appId)).toBe(app3.appId)
+    expect(app3Data.appId).toBe(app3.appId)
     expect(app3Data.deleted).toBe(true)
   })
 
   test('Deploy new app', async () => {
-    const { algod, algorand, indexer, testAccount } = localnet.context
+    const { algorand, testAccount } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: getMetadata(),
     })
-    const result = await algokit.deployApp(deployment, algod, indexer)
+    const result = await algorand.appDeployer.deploy(deployment)
 
     invariant('transaction' in result)
     invariant(result.confirmation)
-    expect(result.appId).toBe(result.confirmation.applicationIndex)
+    expect(result.appId).toBe(BigInt(result.confirmation.applicationIndex!))
     expect(result.appAddress).toBe(getApplicationAddress(result.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
-    expect(result.createdRound).toBe(result.confirmation.confirmedRound)
+    expect(result.createdRound).toBe(BigInt(result.confirmation.confirmedRound!))
     expect(result.updatedRound).toBe(result.createdRound)
     expect(result.name).toBe(deployment.metadata.name)
     expect(result.version).toBe(deployment.metadata.version)
@@ -124,47 +125,47 @@ describe('deploy-app', () => {
   })
 
   test('Fail to deploy immutable app without TMPL_UPDATABLE', async () => {
-    const { algod, algorand, indexer, testAccount } = localnet.context
+    const { algorand, testAccount } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: getMetadata({ updatable: true }),
     })
-    deployment.approvalProgram = deployment.approvalProgram.replace(/TMPL_UPDATABLE/g, '0')
-    await expect(async () => await algokit.deployApp(deployment, algod, indexer)).rejects.toThrowError(
+    deployment.createParams.approvalProgram = deployment.createParams.approvalProgram.replace(/TMPL_UPDATABLE/g, '0')
+    await expect(async () => await algorand.appDeployer.deploy(deployment)).rejects.toThrowError(
       'Deploy-time updatability control requested for app deployment, but TMPL_UPDATABLE not present in TEAL code',
     )
   })
 
   test('Fail to deploy permanent app without TMPL_DELETABLE', async () => {
-    const { algod, algorand, indexer, testAccount } = localnet.context
+    const { algorand, testAccount } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: getMetadata({ deletable: true }),
     })
-    deployment.approvalProgram = deployment.approvalProgram.replace(/TMPL_DELETABLE/g, '0')
-    await expect(async () => await algokit.deployApp(deployment, algod, indexer)).rejects.toThrowError(
+    deployment.createParams.approvalProgram = deployment.createParams.approvalProgram.replace(/TMPL_DELETABLE/g, '0')
+    await expect(async () => await algorand.appDeployer.deploy(deployment)).rejects.toThrowError(
       'Deploy-time deletability control requested for app deployment, but TMPL_DELETABLE not present in TEAL code',
     )
   })
 
   test('Deploy update to updatable updated app', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: true })
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'update',
     })
-    const result2 = await algokit.deployApp(deployment2, algod, indexer)
+    const result2 = await algorand.appDeployer.deploy(deployment2)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)
@@ -172,7 +173,7 @@ describe('deploy-app', () => {
     expect(result2.appId).toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment1.metadata)
     expect(result2.createdRound).toBe(result1.createdRound)
-    expect(result2.updatedRound).toBe(result2.confirmation.confirmedRound)
+    expect(result2.updatedRound).toBe(BigInt(result2.confirmation.confirmedRound!))
     expect(result2.name).toBe(deployment2.metadata.name)
     expect(result2.version).toBe(deployment2.metadata.version)
     expect(result2.updatable).toBe(deployment2.metadata.updatable)
@@ -188,25 +189,25 @@ describe('deploy-app', () => {
   })
 
   test('Deploy update to immutable updated app fails', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: false })
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'update',
     })
 
     try {
-      await algokit.deployApp(deployment2, algod, indexer)
+      await algorand.appDeployer.deploy(deployment2)
       invariant(false)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
@@ -224,23 +225,23 @@ describe('deploy-app', () => {
   })
 
   test('Deploy failure for updated app fails if onupdate = Fail', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
       codeInjectionValue: 2,
       onUpdate: 'fail',
     })
-    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(
+    await expect(() => algorand.appDeployer.deploy(deployment2)).rejects.toThrow(
       'Update detected and onUpdate=Fail, stopping deployment. Try a different onUpdate value to not fail.',
     )
 
@@ -255,23 +256,23 @@ describe('deploy-app', () => {
   })
 
   test('Deploy replacement to deletable, updated app', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: true })
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'replace',
     })
-    const result2 = await algokit.deployApp(deployment2, algod, indexer)
+    const result2 = await algorand.appDeployer.deploy(deployment2)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)
@@ -280,8 +281,8 @@ describe('deploy-app', () => {
     invariant(result2.deleteResult)
     expect(result2.appId).not.toBe(result1.appId)
     expect(result2.createdMetadata).toEqual(deployment2.metadata)
-    expect(result2.createdRound).toBe(result2.confirmation.confirmedRound)
-    expect(result2.updatedRound).toBe(result2.confirmation.confirmedRound)
+    expect(result2.createdRound).toBe(BigInt(result2.confirmation.confirmedRound!))
+    expect(result2.updatedRound).toBe(BigInt(result2.confirmation.confirmedRound!))
     expect(result2.name).toBe(deployment2.metadata.name)
     expect(result2.version).toBe(deployment2.metadata.version)
     expect(result2.updatable).toBe(deployment2.metadata.updatable)
@@ -298,26 +299,26 @@ describe('deploy-app', () => {
 
   test('Deploy failure for replacement of permanent, updated app', async () => {
     algokit.Config.configure({ debug: false }) // Remove noise from snapshot
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
-    })) as AppDeploymentParams
+    })) as AppDeployParams
 
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'replace',
-    })) as AppDeploymentParams
+    })) as AppDeployParams
 
     try {
-      await algokit.deployApp(deployment2, algod, indexer)
+      await algorand.appDeployer.deploy(deployment2)
       invariant(false)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
@@ -335,23 +336,23 @@ describe('deploy-app', () => {
   })
 
   test('Deploy replacement of deletable schema broken app', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: true })
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: { ...metadata, version: '2.0' },
       breakSchema: true,
       onSchemaBreak: 'replace',
     })
-    const result2 = await algokit.deployApp(deployment2, algod, indexer)
+    const result2 = await algorand.appDeployer.deploy(deployment2)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)
@@ -378,26 +379,26 @@ describe('deploy-app', () => {
 
   test('Deploy replacement to schema broken, permanent app fails', async () => {
     algokit.Config.configure({ debug: false }) // Remove noise from snapshot
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
-    })) as AppDeploymentParams
+    })) as AppDeployParams
 
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: { ...metadata, version: '2.0' },
       breakSchema: true,
       onSchemaBreak: 'replace',
-    })) as AppDeploymentParams
+    })) as AppDeployParams
 
     try {
-      await algokit.deployApp(deployment2, algod, indexer)
+      await algorand.appDeployer.deploy(deployment2)
       invariant(false)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
@@ -415,23 +416,23 @@ describe('deploy-app', () => {
   })
 
   test('Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
       onSchemaBreak: 'fail',
       breakSchema: true,
     })
-    await expect(() => algokit.deployApp(deployment2, algod, indexer)).rejects.toThrow(
+    await expect(() => algorand.appDeployer.deploy(deployment2)).rejects.toThrow(
       'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. ' +
         'If you want to try deleting and recreating the app then ' +
         're-run with onSchemaBreak=OnSchemaBreak.ReplaceApp',
@@ -448,16 +449,16 @@ describe('deploy-app', () => {
   })
 
   test('Do nothing if deploying app with no changes', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: getMetadata(),
     })
-    const initialDeployment = await algokit.deployApp(deployment, algod, indexer)
+    const initialDeployment = await algorand.appDeployer.deploy(deployment)
     await waitForIndexer()
     logging.testLogger.clear()
 
-    const result = await algokit.deployApp(deployment, algod, indexer)
+    const result = await algorand.appDeployer.deploy(deployment)
 
     invariant('transaction' in initialDeployment)
     invariant(!('transaction' in result))
@@ -481,23 +482,23 @@ describe('deploy-app', () => {
   })
 
   test('Deploy append for schema broken app if onSchemaBreak = AppendApp', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
       onSchemaBreak: 'append',
       breakSchema: true,
     })
-    const result2 = await algokit.deployApp(deployment2, algod, indexer)
+    const result2 = await algorand.appDeployer.deploy(deployment2)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)
@@ -521,23 +522,23 @@ describe('deploy-app', () => {
   })
 
   test('Deploy append for update app if onUpdate = AppendApp', async () => {
-    const { algod, algorand, indexer, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: metadata,
     })
-    const result1 = await algokit.deployApp(deployment1, algod, indexer)
+    const result1 = await algorand.appDeployer.deploy(deployment1)
     await waitForIndexer()
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      from: testAccount,
+      sender: testAccount.addr,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 3,
       onUpdate: 'append',
     })
-    const result2 = await algokit.deployApp(deployment2, algod, indexer)
+    const result2 = await algorand.appDeployer.deploy(deployment2)
 
     invariant('transaction' in result1)
     invariant('transaction' in result2)

@@ -36,6 +36,10 @@ export class AlgorandClientTransactionSender {
     this._appManager = appManager
   }
 
+  newGroup() {
+    return this._newGroup()
+  }
+
   private _send<T>(
     c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
     log?: {

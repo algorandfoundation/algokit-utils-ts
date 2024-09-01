@@ -201,7 +201,7 @@ ___
 
 • `Const` **APP\_DEPLOY\_NOTE\_DAPP**: ``"ALGOKIT_DEPLOYER"``
 
-The app create/update ARC-2 transaction note prefix
+The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note prefix
 
 #### Defined in
 

@@ -92,6 +92,11 @@ export class ClientManager {
     return this._indexer
   }
 
+  /** Returns an algosdk Indexer API client or `undefined` if it's not been provided. */
+  public get indexerIfPresent(): algosdk.Indexer | undefined {
+    return this._indexer
+  }
+
   /** Returns an algosdk KMD API client or throws an error if it's not been provided. */
   public get kmd(): algosdk.Kmd {
     if (!this._kmd) throw new Error('Attempt to use Kmd client in AlgoKit instance with no Kmd configured')

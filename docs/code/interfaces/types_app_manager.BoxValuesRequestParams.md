@@ -24,7 +24,7 @@ The ID of the app return box names for
 
 #### Defined in
 
-[src/types/app-manager.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L83)
+[src/types/app-manager.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L90)
 
 ___
 
@@ -36,7 +36,7 @@ The names of the boxes to return either as a string, binary array or BoxName`
 
 #### Defined in
 
-[src/types/app-manager.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L85)
+[src/types/app-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L92)
 
 ___
 
@@ -48,4 +48,4 @@ The ABI type to decode the value using
 
 #### Defined in
 
-[src/types/app-manager.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L87)
+[src/types/app-manager.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L94)

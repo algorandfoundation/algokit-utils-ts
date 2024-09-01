@@ -26,7 +26,7 @@ export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
 /** The name of the TEAL template variable for deploy-time permanence control */
 export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
 
-/** The app create/update ARC-2 transaction note prefix */
+/** The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note prefix */
 export const APP_DEPLOY_NOTE_DAPP = 'ALGOKIT_DEPLOYER'
 
 /** The maximum number of bytes in a single app code page */

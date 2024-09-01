@@ -20,6 +20,7 @@ Allows management of application information.
 ### Methods
 
 - [compileTeal](types_app_manager.AppManager.md#compileteal)
+- [compileTealTemplate](types_app_manager.AppManager.md#compiletealtemplate)
 - [getBoxNames](types_app_manager.AppManager.md#getboxnames)
 - [getBoxValue](types_app_manager.AppManager.md#getboxvalue)
 - [getBoxValueFromABIType](types_app_manager.AppManager.md#getboxvaluefromabitype)
@@ -31,6 +32,9 @@ Allows management of application information.
 - [decodeAppState](types_app_manager.AppManager.md#decodeappstate)
 - [getABIReturn](types_app_manager.AppManager.md#getabireturn)
 - [getBoxReference](types_app_manager.AppManager.md#getboxreference)
+- [replaceTealTemplateDeployTimeControlParams](types_app_manager.AppManager.md#replacetealtemplatedeploytimecontrolparams)
+- [replaceTealTemplateParams](types_app_manager.AppManager.md#replacetealtemplateparams)
+- [stripTealComments](types_app_manager.AppManager.md#striptealcomments)
 
 ## Constructors
 
@@ -38,11 +42,13 @@ Allows management of application information.
 
 • **new AppManager**(`algod`): [`AppManager`](types_app_manager.AppManager.md)
 
+Creates an `AppManager`
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `algod` | `default` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `algod` | `default` | An algod instance |
 
 #### Returns
 
@@ -50,7 +56,7 @@ Allows management of application information.
 
 #### Defined in
 
-[src/types/app-manager.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L94)
+[src/types/app-manager.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L106)
 
 ## Properties
 
@@ -60,7 +66,7 @@ Allows management of application information.
 
 #### Defined in
 
-[src/types/app-manager.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L92)
+[src/types/app-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L99)
 
 ___
 
@@ -70,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/types/app-manager.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L98)
+[src/types/app-manager.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L100)
 
 ## Methods
 
@@ -99,7 +105,39 @@ The information about the compiled file
 
 #### Defined in
 
-[src/types/app-manager.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L111)
+[src/types/app-manager.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L121)
+
+___
+
+### compileTealTemplate
+
+▸ **compileTealTemplate**(`tealTemplateCode`, `templateParams?`, `deploymentMetadata?`): `Promise`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
+
+Performs template substitution of a teal template and compiles it, returning the compiled result.
+
+Looks for `TMPL_{parameter}` for template replacements and replaces AlgoKit deploy-time control parameters
+if deployment metadata is specified.
+
+* `TMPL_UPDATABLE` for updatability / immutability control
+* `TMPL_DELETABLE` for deletability / permanence control
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tealTemplateCode` | `string` | The TEAL logic to compile |
+| `templateParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Any parameters to replace in the .teal file before compiling |
+| `deploymentMetadata?` | [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) | The deployment metadata the app will be deployed with |
+
+#### Returns
+
+`Promise`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
+
+The information about the compiled code
+
+#### Defined in
+
+[src/types/app-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L152)
 
 ___
 
@@ -123,7 +161,7 @@ The current box names
 
 #### Defined in
 
-[src/types/app-manager.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L190)
+[src/types/app-manager.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L230)
 
 ___
 
@@ -148,7 +186,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/app-manager.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L207)
+[src/types/app-manager.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L247)
 
 ___
 
@@ -172,7 +210,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/types/app-manager.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L228)
+[src/types/app-manager.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L268)
 
 ___
 
@@ -197,7 +235,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/types/app-manager.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L219)
+[src/types/app-manager.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L259)
 
 ___
 
@@ -221,7 +259,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/types/app-manager.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L239)
+[src/types/app-manager.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L279)
 
 ___
 
@@ -251,7 +289,7 @@ const appInfo = await appManager.getById(12353n);
 
 #### Defined in
 
-[src/types/app-manager.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L149)
+[src/types/app-manager.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L189)
 
 ___
 
@@ -276,7 +314,7 @@ The information about the previously compiled file
 
 #### Defined in
 
-[src/types/app-manager.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L134)
+[src/types/app-manager.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L174)
 
 ___
 
@@ -301,7 +339,7 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/types/app-manager.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L173)
+[src/types/app-manager.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L213)
 
 ___
 
@@ -326,7 +364,7 @@ An object keyeed by the UTF-8 representation of the key with various parsings of
 
 #### Defined in
 
-[src/types/app-manager.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L268)
+[src/types/app-manager.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L308)
 
 ___
 
@@ -351,7 +389,7 @@ The return value for the method call
 
 #### Defined in
 
-[src/types/app-manager.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L316)
+[src/types/app-manager.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L356)
 
 ___
 
@@ -375,4 +413,88 @@ The box reference ready to pass into a `algosdk.Transaction`
 
 #### Defined in
 
-[src/types/app-manager.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L249)
+[src/types/app-manager.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L289)
+
+___
+
+### replaceTealTemplateDeployTimeControlParams
+
+▸ **replaceTealTemplateDeployTimeControlParams**(`tealTemplateCode`, `params`): `string`
+
+Replaces AlgoKit deploy-time deployment control parameters within the given TEAL template code.
+
+* `TMPL_UPDATABLE` for updatability / immutability control
+* `TMPL_DELETABLE` for deletability / permanence control
+
+Note: If these values are defined, but the corresponding `TMPL_*` value
+ isn't in the teal code it will throw an exception.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tealTemplateCode` | `string` | The TEAL template code to substitute |
+| `params` | `Object` | The deploy-time deployment control parameter value to replace |
+| `params.deletable?` | `boolean` | - |
+| `params.updatable?` | `boolean` | - |
+
+#### Returns
+
+`string`
+
+The replaced TEAL code
+
+#### Defined in
+
+[src/types/app-manager.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L398)
+
+___
+
+### replaceTealTemplateParams
+
+▸ **replaceTealTemplateParams**(`tealTemplateCode`, `templateParams?`): `string`
+
+Performs template substitution of a teal file.
+
+Looks for `TMPL_{parameter}` for template replacements.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tealTemplateCode` | `string` | The TEAL template code to make parameter replacements in |
+| `templateParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Any parameters to replace in the teal code |
+
+#### Returns
+
+`string`
+
+The TEAL code with replacements
+
+#### Defined in
+
+[src/types/app-manager.ts:429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L429)
+
+___
+
+### stripTealComments
+
+▸ **stripTealComments**(`tealCode`): `string`
+
+Remove comments from TEAL code (useful to reduce code size before compilation).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `tealCode` | `string` | The TEAL logic to strip |
+
+#### Returns
+
+`string`
+
+The TEAL without comments
+
+#### Defined in
+
+[src/types/app-manager.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L463)

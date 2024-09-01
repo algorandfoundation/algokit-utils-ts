@@ -489,7 +489,7 @@ The information about the compiled file
 
 **`Deprecated`**
 
-Use `appManager.compileTeal` instead.
+Use `algorand.app.compileTeal` instead.
 
 Compiles the given TEAL using algod and returns the result, including source map.
 
@@ -628,16 +628,6 @@ ___
 
 ▸ **deployApp**(`deployment`, `algod`, `indexer?`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `operationPerformed`: ``"create"`` \| ``"update"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`ConfirmedTransactionResults`](../interfaces/types_transaction.ConfirmedTransactionResults.md) & [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn?`: [`ABIReturn`](types_app.md#abireturn) ; `operationPerformed`: ``"replace"`` ; `return?`: [`ABIReturn`](types_app.md#abireturn)  } \| [`AppMetadata`](../interfaces/types_app.AppMetadata.md) & \{ `operationPerformed`: ``"nothing"``  }\>
 
-Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
-
-To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
-
-**Note:** When using the return from this function be sure to check `operationPerformed` to get access to various return properties like `transaction`, `confirmation` and `deleteResult`.
-
-**Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
-
-**Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -652,9 +642,23 @@ To understand the architecture decisions behind this functionality please see ht
 
 The app reference of the new/existing app
 
+**`Deprecated`**
+
+Use `algorand.appDeployer.deploy` instead.
+
+Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
+
+To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
+
+**Note:** When using the return from this function be sure to check `operationPerformed` to get access to various return properties like `transaction`, `confirmation` and `deleteResult`.
+
+**Note:** if there is a breaking state schema change to an existing app (and `onSchemaBreak` is set to `'replace'`) the existing app will be deleted and re-created.
+
+**Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
+
 #### Defined in
 
-[src/app-deploy.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L44)
+[src/app-deploy.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L53)
 
 ___
 
@@ -1358,7 +1362,7 @@ The current box names
 
 **`Deprecated`**
 
-Use `appManager.getBoxNames` instead.
+Use `algorand.app.getBoxNames` instead.
 Returns the names of the boxes for the given app.
 
 #### Defined in
@@ -1387,7 +1391,7 @@ The current box value as a byte array
 
 **`Deprecated`**
 
-Use `appManager.getBoxValue` instead.
+Use `algorand.app.getBoxValue` instead.
 Returns the value of the given box name for the given app.
 
 #### Defined in
@@ -1415,7 +1419,7 @@ The current box value as an ABI value
 
 **`Deprecated`**
 
-Use `appManager.getBoxValueFromABIType` instead.
+Use `algorand.app.getBoxValueFromABIType` instead.
 Returns the value of the given box name for the given app decoded based on the given ABI type.
 
 #### Defined in
@@ -1444,7 +1448,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 **`Deprecated`**
 
-Use `appManager.getBoxValues` instead.
+Use `algorand.app.getBoxValues` instead.
 Returns the value of the given box names for the given app.
 
 #### Defined in
@@ -1472,7 +1476,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 **`Deprecated`**
 
-Use `appManager.getBoxValuesFromABIType` instead.
+Use `algorand.app.getBoxValuesFromABIType` instead.
 Returns the value of the given box names for the given app decoded based on the given ABI type.
 
 #### Defined in
@@ -1500,7 +1504,7 @@ The data about the app
 
 **`Deprecated`**
 
-Use `appManager.getById` instead.
+Use `algorand.app.getById` instead.
 
 Gets the current data for the given app from algod.
 
@@ -1647,8 +1651,6 @@ ___
 
 ▸ **getAppDeploymentTransactionNote**(`metadata`): [`Arc2TransactionNote`](types_transaction.md#arc2transactionnote)
 
-Return the transaction note for an app deployment.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -1661,9 +1663,15 @@ Return the transaction note for an app deployment.
 
 The transaction note as a utf-8 string
 
+**`Deprecated`**
+
+Use `{ dAppName: APP_DEPLOY_NOTE_DAPP, data: metadata, format: 'j' }` instead.
+
+Return the transaction note for an app deployment.
+
 #### Defined in
 
-[src/app-deploy.ts:530](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L530)
+[src/app-deploy.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L256)
 
 ___
 
@@ -1716,7 +1724,7 @@ The current local state for the given (app, account) combination
 
 **`Deprecated`**
 
-Use `appManager.getLocalState` instead.
+Use `algorand.app.getLocalState` instead.
 
 Returns the current global state values for the given app ID and account
 
@@ -1834,10 +1842,6 @@ ___
 
 ▸ **getCreatorAppsByName**(`creatorAccount`, `indexer`): `Promise`\<[`AppLookup`](../interfaces/types_app.AppLookup.md)\>
 
-Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have an `AppDeployNote` in the transaction note of the creation transaction.
-
-**Note:** It's recommended this is only called once and then stored since it's a somewhat expensive operation (multiple indexer calls).
-
 #### Parameters
 
 | Name | Type | Description |
@@ -1851,9 +1855,17 @@ Returns a lookup of name => app metadata (id, address, ...metadata) for all apps
 
 A name-based lookup of the app information (id, address)
 
+**`Deprecated`**
+
+Use `algorand.appDeployer.getCreatorAppsByName` instead.
+
+Returns a lookup of name => app metadata (id, address, ...metadata) for all apps created by the given account that have an `AppDeployNote` in the transaction note of the creation transaction.
+
+**Note:** It's recommended this is only called once and then stored since it's a somewhat expensive operation (multiple indexer calls).
+
 #### Defined in
 
-[src/app-deploy.ts:423](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L423)
+[src/app-deploy.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L235)
 
 ___
 
@@ -2231,10 +2243,6 @@ ___
 
 ▸ **isSchemaIsBroken**(`before`, `after`): `boolean`
 
-Returns true is there is a breaking change in the application state schema from before to after.
- i.e. if the schema becomes larger, since applications can't ask for more schema after creation.
- Otherwise, there is no error, the app just doesn't store data in the extra schema :(
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2248,9 +2256,17 @@ Returns true is there is a breaking change in the application state schema from 
 
 Whether or not there is a breaking change
 
+**`Deprecated`**
+
+Use `before.numByteSlice < after.numByteSlice || before.numUint < after.numUint` instead.
+
+Returns true is there is a breaking change in the application state schema from before to after.
+ i.e. if the schema becomes larger, since applications can't ask for more schema after creation.
+ Otherwise, there is no error, the app just doesn't store data in the extra schema :(
+
 #### Defined in
 
-[src/app-deploy.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L410)
+[src/app-deploy.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L220)
 
 ___
 
@@ -2484,10 +2500,6 @@ ___
 
 ▸ **performTemplateSubstitution**(`tealCode`, `templateParams?`): `string`
 
-Performs template substitution of a teal file.
-
-Looks for `TMPL_{parameter}` for template replacements.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2501,19 +2513,23 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 The TEAL code with replacements
 
+**`Deprecated`**
+
+Use `AppManager.replaceTealTemplateParams` instead
+
+Performs template substitution of a teal file.
+
+Looks for `TMPL_{parameter}` for template replacements.
+
 #### Defined in
 
-[src/app-deploy.ts:582](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L582)
+[src/app-deploy.ts:294](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L294)
 
 ___
 
 ### performTemplateSubstitutionAndCompile
 
 ▸ **performTemplateSubstitutionAndCompile**(`tealCode`, `algod`, `templateParams?`, `deploymentMetadata?`): `Promise`\<[`CompiledTeal`](../interfaces/types_app.CompiledTeal.md)\>
-
-Performs template substitution of a teal file and compiles it, returning the compiled result.
-
-Looks for `TMPL_{parameter}` for template replacements.
 
 #### Parameters
 
@@ -2530,9 +2546,17 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 The information about the compiled code
 
+**`Deprecated`**
+
+Use `algorand.appManager.compileTealTemplate` instead.
+
+Performs template substitution of a teal file and compiles it, returning the compiled result.
+
+Looks for `TMPL_{parameter}` for template replacements.
+
 #### Defined in
 
-[src/app-deploy.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L621)
+[src/app-deploy.ts:311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L311)
 
 ___
 
@@ -2678,14 +2702,6 @@ ___
 
 ▸ **replaceDeployTimeControlParams**(`tealCode`, `params`): `string`
 
-Replaces deploy-time deployment control parameters within the given teal code.
-
-* `TMPL_UPDATABLE` for updatability / immutability control
-* `TMPL_DELETABLE` for deletability / permanence control
-
-Note: If these values are not undefined, but the corresponding `TMPL_*` value
- isn't in the teal code it will throw an exception.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2701,9 +2717,21 @@ Note: If these values are not undefined, but the corresponding `TMPL_*` value
 
 The replaced TEAL code
 
+**`Deprecated`**
+
+Use `AppManager.replaceTealTemplateDeployTimeControlParams` instead
+
+Replaces deploy-time deployment control parameters within the given teal code.
+
+* `TMPL_UPDATABLE` for updatability / immutability control
+* `TMPL_DELETABLE` for deletability / permanence control
+
+Note: If these values are not undefined, but the corresponding `TMPL_*` value
+ isn't in the teal code it will throw an exception.
+
 #### Defined in
 
-[src/app-deploy.ts:551](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L551)
+[src/app-deploy.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L279)
 
 ___
 
@@ -2851,8 +2879,6 @@ ___
 
 ▸ **stripTealComments**(`tealCode`): `string`
 
-Remove comments from TEAL Code
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2865,9 +2891,15 @@ Remove comments from TEAL Code
 
 The TEAL without comments
 
+**`Deprecated`**
+
+Use `AppManager.stripTealComments` instead.
+
+Remove comments from TEAL Code
+
 #### Defined in
 
-[src/app-deploy.ts:644](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L644)
+[src/app-deploy.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L336)
 
 ___
 

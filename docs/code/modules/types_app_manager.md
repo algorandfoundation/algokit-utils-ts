@@ -4,13 +4,6 @@
 
 ## Table of contents
 
-### References
-
-- [ABIReturn](types_app_manager.md#abireturn)
-- [AppState](types_app_manager.md#appstate)
-- [BoxName](types_app_manager.md#boxname)
-- [CompiledTeal](types_app_manager.md#compiledteal)
-
 ### Classes
 
 - [AppManager](../classes/types_app_manager.AppManager.md)
@@ -26,30 +19,6 @@
 
 - [BoxIdentifier](types_app_manager.md#boxidentifier)
 
-## References
-
-### ABIReturn
-
-Re-exports [ABIReturn](types_app.md#abireturn)
-
-___
-
-### AppState
-
-Re-exports [AppState](../interfaces/types_app.AppState.md)
-
-___
-
-### BoxName
-
-Re-exports [BoxName](../interfaces/types_app.BoxName.md)
-
-___
-
-### CompiledTeal
-
-Re-exports [CompiledTeal](../interfaces/types_app.CompiledTeal.md)
-
 ## Type Aliases
 
 ### BoxIdentifier
@@ -64,4 +33,4 @@ Something that identifies an app box name - either a:
 
 #### Defined in
 
-[src/types/app-manager.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L50)
+[src/types/app-manager.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L57)

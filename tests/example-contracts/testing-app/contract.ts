@@ -3,9 +3,10 @@ import { readFile } from 'fs/promises'
 import path from 'path'
 import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
 import { APP_DEPLOY_NOTE_DAPP, AppDeployMetadata, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
+import { AppDeployParams } from '../../../src/types/app-deployer'
 import { AppSpec } from '../../../src/types/app-spec'
 import { AppCreateParams } from '../../../src/types/composer'
-import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
+import { Arc2TransactionNote } from '../../../src/types/transaction'
 
 export const getTestingAppContract = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'), 'utf-8')
@@ -40,7 +41,7 @@ export const getTestingAppCreateParams = async (from: algosdk.Account, metadata:
 }
 
 export const getTestingAppDeployParams = async (deployment: {
-  from: SendTransactionFrom
+  sender: string
   metadata: AppDeployMetadata
   codeInjectionValue?: number
   onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
@@ -49,20 +50,28 @@ export const getTestingAppDeployParams = async (deployment: {
 }) => {
   const contract = await getTestingAppContract()
   return {
-    approvalProgram: contract.approvalProgram,
-    clearStateProgram: contract.clearStateProgram,
-    from: deployment.from,
+    createParams: {
+      sender: deployment.sender,
+      approvalProgram: contract.approvalProgram,
+      clearStateProgram: contract.clearStateProgram,
+      schema: deployment.breakSchema
+        ? {
+            ...contract.stateSchema,
+            globalByteSlices: contract.stateSchema.globalByteSlices + 1,
+          }
+        : contract.stateSchema,
+    },
+    updateParams: {
+      sender: deployment.sender,
+    },
+    deleteParams: {
+      sender: deployment.sender,
+    },
     metadata: deployment.metadata,
-    schema: deployment.breakSchema
-      ? {
-          ...contract.stateSchema,
-          globalByteSlices: contract.stateSchema.globalByteSlices + 1,
-        }
-      : contract.stateSchema,
     deployTimeParams: {
       VALUE: deployment.codeInjectionValue ?? 1,
     },
     onSchemaBreak: deployment.onSchemaBreak,
     onUpdate: deployment.onUpdate,
-  }
+  } satisfies AppDeployParams
 }

@@ -107,6 +107,8 @@ export async function legacySendAppTransactionBridge<
   send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
+  const encoder = new TextEncoder()
+
   const paramsWithAppArgs = {
     ...params,
     accountReferences: appArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
@@ -115,7 +117,11 @@ export async function legacySendAppTransactionBridge<
     boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
     lease: appArgs?.lease,
     rekeyTo: appArgs?.rekeyTo ? getSenderAddress(appArgs?.rekeyTo) : undefined,
-    args: appArgs ? ('methodArgs' in appArgs ? (await _getAppArgsForABICall(appArgs, from)).methodArgs : appArgs?.appArgs) : undefined,
+    args: appArgs
+      ? 'methodArgs' in appArgs
+        ? (await _getAppArgsForABICall(appArgs, from)).methodArgs
+        : appArgs?.appArgs?.map((a) => (typeof a === 'string' ? encoder.encode(a) : a))
+      : undefined,
     note: encodeTransactionNote(sendParams?.note),
   } as T
 

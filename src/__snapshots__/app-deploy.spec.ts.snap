@@ -3,7 +3,7 @@
 exports[`deploy-app Deploy append for schema broken app if onSchemaBreak = AppendApp 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 11890 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and version 1.0.
-WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"numUint":3,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}},"to":{"global":{"numUint":3,"numByteSlice":3,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}}}]
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"globalInts":3,"globalByteSlices":2,"localInts":2,"localByteSlices":2},"to":{"globalByteSlices":3,"globalInts":3,"localByteSlices":2,"localInts":2}}]
 INFO: onSchemaBreak=AppendApp, will attempt to create a new app
 VERBOSE: Sent transaction ID TXID_2 appl from ACCOUNT_1
 DEBUG: App created by ACCOUNT_1 with ID APP_2 via transaction TXID_2"
@@ -31,7 +31,7 @@ ERROR: Received error executing Atomic Transaction Composer, for more informatio
 exports[`deploy-app Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 11890 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and version 1.0.
-WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"numUint":3,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}},"to":{"global":{"numUint":3,"numByteSlice":3,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}}}]"
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"globalInts":3,"globalByteSlices":2,"localInts":2,"localByteSlices":2},"to":{"globalByteSlices":3,"globalInts":3,"localByteSlices":2,"localInts":2}}]"
 `;
 
 exports[`deploy-app Deploy failure for updated app fails if onupdate = Fail 1`] = `
@@ -50,7 +50,7 @@ DEBUG: App created by ACCOUNT_1 with ID APP_1 via transaction TXID_1"
 exports[`deploy-app Deploy replacement of deletable schema broken app 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 11890 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and version 1.0.
-WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"numUint":3,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}},"to":{"global":{"numUint":3,"numByteSlice":3,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}}}]
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"globalInts":3,"globalByteSlices":2,"localInts":2,"localByteSlices":2},"to":{"globalByteSlices":3,"globalInts":3,"localByteSlices":2,"localInts":2}}]
 INFO: App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app
 INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
 WARN: Deleting existing test app with id APP_1 from ACCOUNT_1 account.
@@ -70,7 +70,7 @@ WARN: Sent transactions TXID_2 to create app with id APP_2 and TXID_3 to delete 
 exports[`deploy-app Deploy replacement to schema broken, permanent app fails 1`] = `
 "INFO: Idempotently deploying app "test" from creator ACCOUNT_1 using 11890 bytes of teal code and 39 bytes of teal code
 INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and version 1.0.
-WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"global":{"numUint":3,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}},"to":{"global":{"numUint":3,"numByteSlice":3,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}},"local":{"numUint":2,"numByteSlice":2,"attribute_map":{"numUint":"num-uint","numByteSlice":"num-byte-slice"}}}}]
+WARN: Detected a breaking app schema change in app APP_1: | [{"from":{"globalInts":3,"globalByteSlices":2,"localInts":2,"localByteSlices":2},"to":{"globalByteSlices":3,"globalInts":3,"localByteSlices":2,"localInts":2}}]
 INFO: App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail
 INFO: Deploying a new test app for ACCOUNT_1; deploying app with version 2.0.
 WARN: Deleting existing test app with id APP_1 from ACCOUNT_1 account.

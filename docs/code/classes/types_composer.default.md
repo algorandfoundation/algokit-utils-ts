@@ -60,8 +60,10 @@ AlgoKit Composer helps you compose and execute transactions as a transaction gro
 - [buildTxn](types_composer.default.md#buildtxn)
 - [buildTxnWithSigner](types_composer.default.md#buildtxnwithsigner)
 - [commonTxnBuildStep](types_composer.default.md#commontxnbuildstep)
+- [count](types_composer.default.md#count)
 - [execute](types_composer.default.md#execute)
 - [rebuild](types_composer.default.md#rebuild)
+- [arc2Note](types_composer.default.md#arc2note)
 
 ## Constructors
 
@@ -741,7 +743,7 @@ The built atomic transaction composer and the transactions
 
 #### Defined in
 
-[src/types/composer.ts:1138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1138)
+[src/types/composer.ts:1145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1145)
 
 ___
 
@@ -1044,6 +1046,22 @@ ___
 
 ___
 
+### count
+
+▸ **count**(): `Promise`\<`number`\>
+
+Get the number of transactions currently added to this composer.
+
+#### Returns
+
+`Promise`\<`number`\>
+
+#### Defined in
+
+[src/types/composer.ts:1132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1132)
+
+___
+
 ### execute
 
 ▸ **execute**(`params?`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)\>
@@ -1064,7 +1082,7 @@ The execution result
 
 #### Defined in
 
-[src/types/composer.ts:1177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1177)
+[src/types/composer.ts:1184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1184)
 
 ___
 
@@ -1083,4 +1101,24 @@ The newly built atomic transaction composer and the transactions
 
 #### Defined in
 
-[src/types/composer.ts:1167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1167)
+[src/types/composer.ts:1174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1174)
+
+___
+
+### arc2Note
+
+▸ **arc2Note**(`note`): `Uint8Array`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `note` | [`Arc2TransactionNote`](../modules/types_transaction.md#arc2transactionnote) |
+
+#### Returns
+
+`Uint8Array`
+
+#### Defined in
+
+[src/types/composer.ts:1207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1207)

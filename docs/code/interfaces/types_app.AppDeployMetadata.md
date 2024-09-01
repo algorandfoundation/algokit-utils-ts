@@ -10,6 +10,8 @@ The payload of the metadata to add to the transaction note when deploying an app
 
 - **`AppDeployMetadata`**
 
+  ↳ [`AppMetadata`](types_app_deployer.AppMetadata.md)
+
   ↳ [`AppMetadata`](types_app.AppMetadata.md)
 
 ## Table of contents

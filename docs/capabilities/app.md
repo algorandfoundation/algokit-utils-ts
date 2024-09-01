@@ -6,12 +6,12 @@ App management is a higher-order use case capability provided by AlgoKit Utils t
 
 The [`AppManager`](../code/classes/types_app_manager.AppManager.md) is a class that is used to manage app information.
 
-To get an instance of `AppManager` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.app` or instantiate it directly (passing in a [`ClientManager`](./client.md)):
+To get an instance of `AppManager` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.app` or instantiate it directly (passing in an algod client instance):
 
 ```typescript
-import { AssetManager } from '@algorandfoundation/algokit-utils/types/asset-manager'
+import { AppManager } from '@algorandfoundation/algokit-utils/types/app-manager'
 
-const assetManager = new AssetManager(clientManager)
+const appManager = new AppManager(algod)
 ```
 
 ## Calling apps
@@ -29,7 +29,7 @@ When calling an app there are two types of transactions:
 
 Calling an app involves providing some [common parameters](#common-app-parameters) and some parameters that will depend on the type of app call (create vs update vs other) per below sections.
 
-When [sending transactions directly via AlgorandClient](./algorand-client.md#sending-a-single-transaction) the `SingleSendTransactionResult` is expanded with extra fields depending on the type of app call:
+When [sending transactions directly via AlgorandClient](./algorand-client.md#sending-a-single-transaction) the `SingleSendTransactionResult` return value is expanded with extra fields depending on the type of app call:
 
 - All app calls extend [`SendAppTransactionResult`](../code/modules/types_transaction.md#sendapptransactionresult), which has:
   - `return?: ABIReturn` - Which will contain an ABI return value if a non-void ABI method was called:

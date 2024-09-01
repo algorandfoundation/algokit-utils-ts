@@ -15,6 +15,7 @@ A client that brokers easy access to Algorand functionality.
 ### Properties
 
 - [\_accountManager](types_algorand_client.AlgorandClient.md#_accountmanager)
+- [\_appDeployer](types_algorand_client.AlgorandClient.md#_appdeployer)
 - [\_appManager](types_algorand_client.AlgorandClient.md#_appmanager)
 - [\_assetManager](types_algorand_client.AlgorandClient.md#_assetmanager)
 - [\_cachedSuggestedParams](types_algorand_client.AlgorandClient.md#_cachedsuggestedparams)
@@ -29,6 +30,7 @@ A client that brokers easy access to Algorand functionality.
 
 - [account](types_algorand_client.AlgorandClient.md#account)
 - [app](types_algorand_client.AlgorandClient.md#app)
+- [appDeployer](types_algorand_client.AlgorandClient.md#appdeployer)
 - [asset](types_algorand_client.AlgorandClient.md#asset)
 - [client](types_algorand_client.AlgorandClient.md#client)
 - [send](types_algorand_client.AlgorandClient.md#send)
@@ -69,7 +71,7 @@ A client that brokers easy access to Algorand functionality.
 
 #### Defined in
 
-[src/types/algorand-client.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L31)
+[src/types/algorand-client.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L33)
 
 ## Properties
 
@@ -79,7 +81,17 @@ A client that brokers easy access to Algorand functionality.
 
 #### Defined in
 
-[src/types/algorand-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L19)
+[src/types/algorand-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L20)
+
+___
+
+### \_appDeployer
+
+• `Private` **\_appDeployer**: [`AppDeployer`](types_app_deployer.AppDeployer.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L22)
 
 ___
 
@@ -89,7 +101,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L20)
+[src/types/algorand-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L21)
 
 ___
 
@@ -99,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L21)
+[src/types/algorand-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L23)
 
 ___
 
@@ -109,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L25)
+[src/types/algorand-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L27)
 
 ___
 
@@ -119,7 +131,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L26)
+[src/types/algorand-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L28)
 
 ___
 
@@ -129,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L27)
+[src/types/algorand-client.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L29)
 
 ___
 
@@ -139,7 +151,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L18)
+[src/types/algorand-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L19)
 
 ___
 
@@ -149,7 +161,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L29)
+[src/types/algorand-client.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L31)
 
 ___
 
@@ -159,7 +171,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L23)
+[src/types/algorand-client.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L25)
 
 ___
 
@@ -169,7 +181,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L22)
+[src/types/algorand-client.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L24)
 
 ## Accessors
 
@@ -185,7 +197,7 @@ Get or create accounts that can sign transactions.
 
 #### Defined in
 
-[src/types/algorand-client.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L137)
+[src/types/algorand-client.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L140)
 
 ___
 
@@ -201,7 +213,23 @@ Methods for interacting with apps.
 
 #### Defined in
 
-[src/types/algorand-client.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L147)
+[src/types/algorand-client.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L150)
+
+___
+
+### appDeployer
+
+• `get` **appDeployer**(): [`AppDeployer`](types_app_deployer.AppDeployer.md)
+
+Methods for deploying apps and managing app deployment metadata.
+
+#### Returns
+
+[`AppDeployer`](types_app_deployer.AppDeployer.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L155)
 
 ___
 
@@ -217,7 +245,7 @@ Methods for interacting with assets.
 
 #### Defined in
 
-[src/types/algorand-client.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L142)
+[src/types/algorand-client.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L145)
 
 ___
 
@@ -233,7 +261,7 @@ Get clients, including algosdk clients and app clients.
 
 #### Defined in
 
-[src/types/algorand-client.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L132)
+[src/types/algorand-client.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L135)
 
 ___
 
@@ -249,7 +277,7 @@ Methods for sending a single transaction.
 
 #### Defined in
 
-[src/types/algorand-client.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L165)
+[src/types/algorand-client.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L173)
 
 ___
 
@@ -265,7 +293,7 @@ Methods for building transactions
 
 #### Defined in
 
-[src/types/algorand-client.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L172)
+[src/types/algorand-client.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L180)
 
 ## Methods
 
@@ -281,7 +309,7 @@ Get suggested params for a transaction (either cached or from algod if the cache
 
 #### Defined in
 
-[src/types/algorand-client.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L116)
+[src/types/algorand-client.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L119)
 
 ___
 
@@ -297,7 +325,7 @@ Start a new `AlgoKitComposer` transaction group
 
 #### Defined in
 
-[src/types/algorand-client.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L152)
+[src/types/algorand-client.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L160)
 
 ___
 
@@ -321,7 +349,7 @@ The `AlgorandClient` so method calls can be chained
 
 #### Defined in
 
-[src/types/algorand-client.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L55)
+[src/types/algorand-client.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L58)
 
 ___
 
@@ -345,7 +373,7 @@ The `AlgorandClient` so method calls can be chained
 
 #### Defined in
 
-[src/types/algorand-client.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L45)
+[src/types/algorand-client.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L48)
 
 ___
 
@@ -370,7 +398,7 @@ The `AlgorandClient` so method calls can be chained
 
 #### Defined in
 
-[src/types/algorand-client.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L88)
+[src/types/algorand-client.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L91)
 
 ___
 
@@ -405,7 +433,7 @@ const accountManager = AlgorandClient.mainnet()
 
 #### Defined in
 
-[src/types/algorand-client.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L75)
+[src/types/algorand-client.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L78)
 
 ___
 
@@ -430,7 +458,7 @@ The `AlgorandClient` so method calls can be chained
 
 #### Defined in
 
-[src/types/algorand-client.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L99)
+[src/types/algorand-client.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L102)
 
 ___
 
@@ -454,7 +482,7 @@ The `AlgorandClient` so method calls can be chained
 
 #### Defined in
 
-[src/types/algorand-client.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L110)
+[src/types/algorand-client.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L113)
 
 ___
 
@@ -472,7 +500,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L182)
+[src/types/algorand-client.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L190)
 
 ___
 
@@ -496,7 +524,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L219)
+[src/types/algorand-client.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L227)
 
 ___
 
@@ -520,7 +548,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L249)
+[src/types/algorand-client.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L257)
 
 ___
 
@@ -551,7 +579,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L240)
+[src/types/algorand-client.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L248)
 
 ___
 
@@ -569,7 +597,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L206)
+[src/types/algorand-client.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L214)
 
 ___
 
@@ -587,4 +615,4 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L194)
+[src/types/algorand-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L202)

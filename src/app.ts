@@ -248,7 +248,7 @@ export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) 
 }
 
 /**
- * @deprecated Use `appManager.getLocalState` instead.
+ * @deprecated Use `algorand.app.getLocalState` instead.
  *
  * Returns the current global state values for the given app ID and account
  * @param appId The ID of the app return global state for
@@ -261,7 +261,7 @@ export async function getAppLocalState(appId: number | bigint, account: string |
 }
 
 /**
- * @deprecated Use `appManager.getBoxNames` instead.
+ * @deprecated Use `algorand.app.getBoxNames` instead.
  * Returns the names of the boxes for the given app.
  * @param appId The ID of the app return box names for
  * @param algod An algod client instance
@@ -272,7 +272,7 @@ export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Pr
 }
 
 /**
- * @deprecated Use `appManager.getBoxValue` instead.
+ * @deprecated Use `algorand.app.getBoxValue` instead.
  * Returns the value of the given box name for the given app.
  * @param appId The ID of the app return box names for
  * @param boxName The name of the box to return either as a string, binary array or `BoxName`
@@ -284,7 +284,7 @@ export async function getAppBoxValue(appId: number | bigint, boxName: string | U
 }
 
 /**
- * @deprecated Use `appManager.getBoxValues` instead.
+ * @deprecated Use `algorand.app.getBoxValues` instead.
  * Returns the value of the given box names for the given app.
  * @param appId The ID of the app return box names for
  * @param boxNames The names of the boxes to return either as a string, binary array or `BoxName`
@@ -299,7 +299,7 @@ export async function getAppBoxValues(appId: number, boxNames: (string | Uint8Ar
 }
 
 /**
- * @deprecated Use `appManager.getBoxValueFromABIType` instead.
+ * @deprecated Use `algorand.app.getBoxValueFromABIType` instead.
  * Returns the value of the given box name for the given app decoded based on the given ABI type.
  * @param request The parameters for the box value request
  * @param algod An algod client instance
@@ -314,7 +314,7 @@ export async function getAppBoxValueFromABIType(request: BoxValueRequestParams, 
 }
 
 /**
- * @deprecated Use `appManager.getBoxValuesFromABIType` instead.
+ * @deprecated Use `algorand.app.getBoxValuesFromABIType` instead.
  * Returns the value of the given box names for the given app decoded based on the given ABI type.
  * @param request The parameters for the box value request
  * @param algod An algod client instance
@@ -389,7 +389,7 @@ function _getAccountAddress(account: string | Address) {
 }
 
 /**
- * @deprecated Use `appManager.getById` instead.
+ * @deprecated Use `algorand.app.getById` instead.
  *
  * Gets the current data for the given app from algod.
  *
@@ -402,7 +402,7 @@ export async function getAppById(appId: number | bigint, algod: Algodv2) {
 }
 
 /**
- * @deprecated Use `appManager.compileTeal` instead.
+ * @deprecated Use `algorand.app.compileTeal` instead.
  *
  * Compiles the given TEAL using algod and returns the result, including source map.
  *
