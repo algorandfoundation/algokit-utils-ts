@@ -1,5 +1,7 @@
 import algosdk from 'algosdk'
+import { Expand } from './expand'
 import {
+  SendSingleTransactionResult,
   SendTransactionFrom,
   SendTransactionParams,
   SendTransactionResult,
@@ -330,10 +332,31 @@ export interface AppDeploymentParams
 /** The result of compiling the approval and clear TEAL for an app */
 export interface AppCompilationResult {
   /** The compilation result of approval */
-  compiledApproval: CompiledTeal | undefined
+  compiledApproval: CompiledTeal
   /** The compilation result of clear */
-  compiledClear: CompiledTeal | undefined
+  compiledClear: CompiledTeal
 }
+
+/** Result from sending a single app transaction. */
+export type SendAppTransactionResult = Expand<
+  SendSingleTransactionResult & {
+    /** If an ABI method was called the processed return value */
+    return?: ABIReturn
+  }
+>
+
+/** Result from sending a single app transaction. */
+export type SendAppUpdateTransactionResult = Expand<SendAppTransactionResult & Partial<AppCompilationResult>>
+
+/** Result from sending a single app transaction. */
+export type SendAppCreateTransactionResult = Expand<
+  SendAppUpdateTransactionResult & {
+    /** The id of the created app */
+    appId: bigint
+    /** The Algorand address of the account associated with the app */
+    appAddress: string
+  }
+>
 
 /** Object holding app state values */
 export interface AppState {

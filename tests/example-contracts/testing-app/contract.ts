@@ -1,8 +1,10 @@
+import algosdk from 'algosdk'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
 import { APP_DEPLOY_NOTE_DAPP, AppDeployMetadata, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
 import { AppSpec } from '../../../src/types/app-spec'
+import { AppCreateParams } from '../../../src/types/composer'
 import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
 
 export const getTestingAppContract = async () => {
@@ -22,10 +24,10 @@ export const getTestingAppContract = async () => {
   }
 }
 
-export const getTestingAppCreateParams = async (from: SendTransactionFrom, metadata: AppDeployMetadata) => {
+export const getTestingAppCreateParams = async (from: algosdk.Account, metadata: AppDeployMetadata) => {
   const contract = await getTestingAppContract()
   return {
-    from: from,
+    sender: from.addr,
     approvalProgram: replaceDeployTimeControlParams(contract.approvalProgram, metadata).replace('TMPL_VALUE', '1'),
     clearStateProgram: contract.clearStateProgram,
     schema: contract.stateSchema,
@@ -34,7 +36,7 @@ export const getTestingAppCreateParams = async (from: SendTransactionFrom, metad
       data: metadata,
       format: 'j',
     } as Arc2TransactionNote),
-  }
+  } satisfies AppCreateParams
 }
 
 export const getTestingAppDeployParams = async (deployment: {

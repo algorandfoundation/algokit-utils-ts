@@ -1,7 +1,6 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
-import { transferAsset } from '..'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'
@@ -171,27 +170,6 @@ describe('Transfer capability', () => {
       expect((e as Error).name).toEqual('URLTokenBaseHTTPError')
       expect((e as Error).message).toContain('asset 1 missing from')
     }
-  }, 10e6)
-
-  // @deprecated test - remove when removing transferAsset
-  test('Transfer ASA, without sending', async () => {
-    const { algod, testAccount, generateAccount } = localnet.context
-    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
-
-    const response = await transferAsset(
-      {
-        from: testAccount,
-        to: secondAccount.addr,
-        assetId: 1,
-        amount: 5,
-        note: `Transfer asset with wrong id`,
-        skipSending: true,
-      },
-      algod,
-    )
-
-    expect(response.transaction).toBeDefined()
-    expect(response.confirmation).toBeUndefined()
   }, 10e6)
 
   test('Transfer ASA, asset is transfered to another account', async () => {

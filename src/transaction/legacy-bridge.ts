@@ -1,4 +1,4 @@
-import algosdk, { ABIMethod } from 'algosdk'
+import algosdk from 'algosdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
 import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'
@@ -13,6 +13,7 @@ import AlgoKitComposer, {
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
+  BuiltTransactions,
   CommonTransactionParams,
   ExecuteParams,
 } from '../types/composer'
@@ -26,6 +27,7 @@ import {
 import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner, getTransactionParams } from './transaction'
 import Algodv2 = algosdk.Algodv2
 import Transaction = algosdk.Transaction
+import ABIMethod = algosdk.ABIMethod
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour and new `AlgorandClient` behaviour. */
 export async function legacySendTransactionBridge<T extends CommonTransactionParams, TResult extends SendSingleTransactionResult>(
@@ -35,11 +37,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   params: T,
   txn:
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
-    | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<{
-        transactions: Transaction[]
-        methodCalls: Map<number, algosdk.ABIMethod>
-        signers: Map<number, algosdk.TransactionSigner>
-      }>),
+    | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
@@ -105,11 +103,7 @@ export async function legacySendAppTransactionBridge<
   params: Omit<T, 'accountReferences' | 'appReferences' | 'assetReferences' | 'boxReferences' | 'args' | 'lease' | 'rekeyTo' | 'note'>,
   txn:
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
-    | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<{
-        transactions: Transaction[]
-        methodCalls: Map<number, algosdk.ABIMethod>
-        signers: Map<number, algosdk.TransactionSigner>
-      }>),
+    | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {

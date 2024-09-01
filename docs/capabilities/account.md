@@ -6,7 +6,7 @@ Account management is one of the core capabilities provided by AlgoKit Utils. It
 
 The [`AccountManager`](../code/classes/types_account_manager.AccountManager.md) is a class that is used to get, create, and fund accounts and perform account-related actions such as funding. The `AccountManager` also keeps track of signers for each address so when using the [`AlgoKitComposer`](./algokit-composer.md) to send transactions, a signer function does not need to manually be specified for each transaction - instead it can be inferred from the sender address automatically!
 
-To get an instance of `AccountManager`, you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.account` or instantiate it directly (passing in a [`ClientManager`](./client.md)):
+To get an instance of `AccountManager`, you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.account` or instantiate it directly:
 
 ```typescript
 import { AccountManager } from '@algorandfoundation/algokit-utils/types/account-manager'

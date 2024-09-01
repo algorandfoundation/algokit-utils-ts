@@ -84,31 +84,31 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
   const indexer = fixtureConfig.indexer ?? ClientManager.getIndexerClient(fixtureConfig.indexerConfig!)
   const kmd = fixtureConfig.kmd ?? ClientManager.getKmdClient(fixtureConfig.kmdConfig!)
   let context: AlgorandTestAutomationContext
-  let algorandClient: AlgorandClient
+  let algorand: AlgorandClient
 
   const beforeEach = async () => {
     Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
-    algorandClient = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
-    const acc = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorandClient)
-    algorandClient.setSignerFromAccount(acc).setSuggestedParamsTimeout(0)
+    algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+    const acc = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
+    algorand.setSignerFromAccount(acc).setSuggestedParamsTimeout(0)
     // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
     //  otherwise we are more likely to get invalid transactions.
-    if (await algorandClient.client.isLocalNet()) {
-      algorandClient.setDefaultValidityWindow(1000)
+    if (await algorand.client.isLocalNet()) {
+      algorand.setDefaultValidityWindow(1000)
     }
-    const testAccount = { ...acc, signer: algorandClient.account.getSigner(acc.addr) }
+    const testAccount = { ...acc, signer: algorand.account.getSigner(acc.addr) }
     context = {
-      algorand: algorandClient,
+      algorand,
       algod: transactionLoggerAlgod,
       indexer: indexer,
       kmd: kmd,
       testAccount,
       generateAccount: async (params: GetTestAccountParams) => {
-        const account = await getTestAccount(params, algorandClient)
-        algorandClient.setSignerFromAccount(account)
-        return { ...account, signer: algorandClient.account.getSigner(account.addr) }
+        const account = await getTestAccount(params, algorand)
+        algorand.setSignerFromAccount(account)
+        return { ...account, signer: algorand.account.getSigner(account.addr) }
       },
       transactionLogger: transactionLogger,
       waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
@@ -121,7 +121,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       return context
     },
     get algorand() {
-      return algorandClient
+      return algorand
     },
     beforeEach,
   }

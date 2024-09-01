@@ -9,7 +9,7 @@ import { SendTransactionResult } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
 
 /**
- * @deprecated use `algorandClient.send.assetCreate()` / `algorandClient.transaction.assetCreate()` instead
+ * @deprecated use `algorand.send.assetCreate()` / `algorand.transactions.assetCreate()` instead
  *
  * Create an Algorand Standard Asset (ASA).
  * @param create The asset creation definition
@@ -53,7 +53,7 @@ export async function createAsset(
 }
 
 /**
- * @deprecated use `algorandClient.send.assetOptIn()` / `algorandClient.transaction.assetOptIn()` instead
+ * @deprecated use `algorand.send.assetOptIn()` / `algorand.transactions.assetOptIn()` instead
  *
  * Opt-in an account to an asset.
  * @param optIn The opt-in definition
@@ -84,7 +84,7 @@ export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promi
 }
 
 /**
- * @deprecated use `algorandClient.send.assetOptOut()` / `algorandClient.transaction.assetOptOut()` instead
+ * @deprecated use `algorand.send.assetOptOut()` / `algorand.transactions.assetOptOut()` instead
  *
  * Opt-out an account from an asset.
  * @param optOut The opt-in definition
@@ -118,7 +118,7 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
 }
 
 /**
- * @deprecated use `algorandClient.asset.bulkOptIn()` instead
+ * @deprecated use `algorand.asset.bulkOptIn()` instead
  *
  * Opt in to a list of assets on the Algorand blockchain.
  *
@@ -146,7 +146,7 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
 }
 
 /**
- * @deprecated use `algorandClient.asset.bulkOptOut()` instead
+ * @deprecated use `algorand.asset.bulkOptOut()` instead
  *
  * Opt out of multiple assets in Algorand blockchain.
  *

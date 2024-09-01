@@ -54,11 +54,11 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ### Creating single transactions
 
-You can compose a single transaction via `algorand.transaction...`. Intellisense will guide you on the different options.
+You can compose a single transaction via `algorand.transactions...`. Intellisense will guide you on the different options.
 
 The signature for the calls to send a single transaction usually look like:
 
-`algorand.transaction.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Transaction`
+`algorand.transactions.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Transaction`
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)

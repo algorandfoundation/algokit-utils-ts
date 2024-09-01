@@ -4,6 +4,10 @@
 
 [types/app](../modules/types_app.md).BoxReference
 
+**`Deprecated`**
+
+Use `types/app-manager/BoxReference` instead.
+
 A grouping of the app ID and name of the box in an Uint8Array
 
 ## Table of contents
@@ -23,7 +27,7 @@ A unique application id
 
 #### Defined in
 
-[src/types/app.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L51)
+[src/types/app.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L55)
 
 ___
 
@@ -35,4 +39,4 @@ Name of box to reference
 
 #### Defined in
 
-[src/types/app.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L55)
+[src/types/app.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L59)

@@ -4,6 +4,9 @@
 
 [types/app](../modules/types_app.md).BoxValuesRequestParams
 
+**`Deprecated`**
+
+Use `types/app-manager/BoxValuesRequestParams` instead.
 Parameters to get and decode a box value as an ABI type.
 
 ## Table of contents
@@ -24,7 +27,7 @@ The ID of the app return box names for
 
 #### Defined in
 
-[src/types/app.ts:365](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L365)
+[src/types/app.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L408)
 
 ___
 
@@ -36,7 +39,7 @@ The names of the boxes to return either as a string, binary array or BoxName`
 
 #### Defined in
 
-[src/types/app.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L367)
+[src/types/app.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L410)
 
 ___
 
@@ -48,4 +51,4 @@ The ABI type to decode the value using
 
 #### Defined in
 
-[src/types/app.ts:369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L369)
+[src/types/app.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L412)

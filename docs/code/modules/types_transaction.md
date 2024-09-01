@@ -19,6 +19,7 @@
 ### Type Aliases
 
 - [Arc2TransactionNote](types_transaction.md#arc2transactionnote)
+- [SendSingleTransactionResult](types_transaction.md#sendsingletransactionresult)
 - [SendTransactionFrom](types_transaction.md#sendtransactionfrom)
 - [TransactionNote](types_transaction.md#transactionnote)
 - [TransactionNoteData](types_transaction.md#transactionnotedata)
@@ -33,7 +34,19 @@ ARC-0002 compatible transaction note components https://github.com/algorandfound
 
 #### Defined in
 
-[src/types/transaction.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L15)
+[src/types/transaction.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L16)
+
+___
+
+### SendSingleTransactionResult
+
+Ƭ **SendSingleTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md)\>
+
+Result from sending a single transaction.
+
+#### Defined in
+
+[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
 
 ___
 
@@ -53,7 +66,7 @@ many types of accounts, including:
 
 #### Defined in
 
-[src/types/transaction.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L104)
+[src/types/transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L108)
 
 ___
 
@@ -63,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L11)
+[src/types/transaction.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L12)
 
 ___
 
@@ -73,4 +86,4 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L13)
+[src/types/transaction.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L14)

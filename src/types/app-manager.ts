@@ -143,12 +143,11 @@ export class AppManager {
    * const appInfo = await appManager.getById(12353n);
    * ```
    *
-   * @param assetId The ID of the app
+   * @param appId The ID of the app
    * @returns The app information
    */
   public async getById(appId: bigint): Promise<AppInformation> {
     const app = modelsv2.Application.from_obj_for_encoding(await this._algod.getApplicationByID(Number(appId)).do())
-
     return {
       appId: BigInt(app.id),
       appAddress: algosdk.getApplicationAddress(app.id),
@@ -169,7 +168,6 @@ export class AppManager {
    *
    * @param appId The ID of the app to return local state for
    * @param address The string address of the account to get local state for the given app
-   * @param algod An algod client instance
    * @returns The current local state for the given (app, account) combination
    */
   public async getLocalState(appId: bigint, address: string) {
@@ -311,8 +309,8 @@ export class AppManager {
 
   /**
    * Returns any ABI return values for the given app call arguments and transaction confirmation.
-   * @param args The arguments that were used for the call
    * @param confirmation The transaction confirmation from algod
+   * @param method The ABI method
    * @returns The return value for the method call
    */
   public static getABIReturn(

@@ -1,10 +1,10 @@
 import algosdk from 'algosdk'
 import { encodeLease, encodeTransactionNote, sendAtomicTransactionComposer } from '../transaction/transaction'
-import { Expand } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
+import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
 import { SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
@@ -314,46 +314,45 @@ export type OnlineKeyRegistrationParams = CommonTransactionParams & {
 
 /** Common parameters for defining an application call transaction. */
 export type CommonAppCallParams = CommonTransactionParams & {
-  /** ID of the application; 0 if the application is being created */
+  /** ID of the application; 0 if the application is being created. */
   appId: bigint
   /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call. */
   onComplete?: algosdk.OnApplicationComplete
-  /** Application arguments */
+  /** Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/avm/teal/#argument-passing). */
   args?: Uint8Array[]
-  /** Account references */
+  /** Any account addresses to add to the [accounts array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
   accountReferences?: string[]
-  /** App references */
+  /** The ID of any apps to load to the [foreign apps array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
   appReferences?: bigint[]
-  /** Asset references */
+  /** The ID of any assets to load to the [foreign assets array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
   assetReferences?: bigint[]
-  /** Box references - either the name identifier
-   *  (which will be set against app ID of `0` i.e.
-   *  the current app), or a box identifier with the
-   *  name identifier and app ID.
+  /** Any boxes to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays).
+   *
+   * Either the name identifier (which will be set against app ID of `0` i.e.
+   *  the current app), or a box identifier with the name identifier and app ID.
    */
   boxReferences?: (BoxReference | BoxIdentifier)[]
 }
 
 export type AppCreateParams = Expand<
   Omit<CommonAppCallParams, 'appId'> & {
-    /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call; defaults to no-op. */
     onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.ClearStateOC>
-    /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
+    /** The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
     approvalProgram: string | Uint8Array
-    /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
+    /** The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
     clearStateProgram: string | Uint8Array
-    /** The state schema for the app. This is immutable. */
+    /** The state schema for the app. This is immutable once the app is created. */
     schema?: {
-      /** The number of integers saved in global state */
+      /** The number of integers saved in global state. */
       globalInts: number
-      /** The number of byte slices saved in global state */
+      /** The number of byte slices saved in global state. */
       globalByteSlices: number
-      /** The number of integers saved in local state */
+      /** The number of integers saved in local state. */
       localInts: number
-      /** The number of byte slices saved in local state */
+      /** The number of byte slices saved in local state. */
       localByteSlices: number
     }
-    /** Number of extra pages required for the programs */
+    /** Number of extra pages required for the programs. This is immutable once the app is created. */
     extraProgramPages?: number
   }
 >
@@ -370,7 +369,6 @@ export type AppUpdateParams = Expand<
 
 /** Parameters to define an application call transaction. */
 export type AppCallParams = CommonAppCallParams & {
-  /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call; defaults to no-op. */
   onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>
 }
 
@@ -447,6 +445,16 @@ export type AlgoKitComposerParams = {
    * If not specified than an ephemeral one will be created.
    */
   appManager?: AppManager
+}
+
+/** Set of transactions built by `AlgoKitComposer`. */
+export interface BuiltTransactions {
+  /** The built transactions */
+  transactions: algosdk.Transaction[]
+  /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
+  methodCalls: Map<number, algosdk.ABIMethod>
+  /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
+  signers: Map<number, algosdk.TransactionSigner>
 }
 
 /** AlgoKit Composer helps you compose and execute transactions as a transaction group. */
@@ -1081,7 +1089,7 @@ export default class AlgoKitComposer {
    *
    * @returns The array of built transactions and any corresponding method calls
    */
-  async buildTransactions() {
+  async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
 
     const transactions: algosdk.Transaction[] = []
@@ -1122,6 +1130,9 @@ export default class AlgoKitComposer {
    * Compose all of the transactions in a single atomic transaction group and an atomic transaction composer.
    *
    * You can then use the transactions standalone, or use the composer to execute or simulate the transactions.
+   *
+   * Once this method is called, no further transactions will be able to be added.
+   * You can safely call this method multiple times to get the same result.
    * @returns The built atomic transaction composer and the transactions
    */
   async build() {
