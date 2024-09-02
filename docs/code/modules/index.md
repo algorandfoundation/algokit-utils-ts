@@ -1556,7 +1556,7 @@ Create a new ApplicationClient instance
 
 ```ts
 Resolve by creator and name
-const client = algokit.getAppClient(
+const client = getAppClient(
     {
       resolveBy: 'creatorAndName',
       app: {appSpec},
@@ -1572,7 +1572,7 @@ const client = algokit.getAppClient(
 
 ```ts
 Resolve by id:
-const client = algokit.getAppClient(
+const client = getAppClient(
     {
       resolveBy: 'id',
       app: {appSpec},
@@ -1617,7 +1617,7 @@ Create a new ApplicationClient instance by creator and name
 **`Example`**
 
 ```ts
-const client = algokit.getAppClientByCreatorAndName(
+const client = getAppClientByCreatorAndName(
     {
       app: {appSpec},
       sender: {account},
@@ -1662,7 +1662,7 @@ Create a new ApplicationClient instance by id
 **`Example`**
 
 ```ts
-const client = algokit.getAppClientById(
+const client = getAppClientById(
     {
       app: {appSpec},
       sender: {account},
