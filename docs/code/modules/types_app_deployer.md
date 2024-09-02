@@ -26,4 +26,4 @@
 
 #### Defined in
 
-[src/types/app-deployer.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L91)
+[src/types/app-deployer.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L90)

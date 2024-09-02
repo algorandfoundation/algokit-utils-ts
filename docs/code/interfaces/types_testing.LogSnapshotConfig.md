@@ -20,13 +20,13 @@ This helps ensure that the provided configuration items won't appear
 
 ### accounts
 
-• `Optional` **accounts**: (`string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom))[]
+• `Optional` **accounts**: (`string` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| `default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md) \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md) \| `LogicSigAccount`)[]
 
 Any accounts/addresses to replace the address for predictably
 
 #### Defined in
 
-[src/types/testing.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L99)
+[src/types/testing.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L98)
 
 ___
 
@@ -38,7 +38,7 @@ Any app IDs to replace predictably
 
 #### Defined in
 
-[src/types/testing.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L101)
+[src/types/testing.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L100)
 
 ___
 
@@ -50,4 +50,4 @@ Any transaction IDs or transactions to replace the ID for predictably
 
 #### Defined in
 
-[src/types/testing.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L97)
+[src/types/testing.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L96)

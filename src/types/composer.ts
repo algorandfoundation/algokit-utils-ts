@@ -1,12 +1,12 @@
 import algosdk from 'algosdk'
-import { encodeLease, encodeTransactionNote, sendAtomicTransactionComposer } from '../transaction/transaction'
+import { encodeLease, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, SendAtomicTransactionComposerResults } from './transaction'
+import { Arc2TransactionNote, ExecuteParams, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
@@ -418,16 +418,6 @@ type Txn =
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
-/** Parameters to configure transaction execution. */
-export interface ExecuteParams {
-  /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
-  maxRoundsToWaitForConfirmation?: number
-  /** Whether to suppress log messages from transaction send, default: do not suppress. */
-  suppressLog?: boolean
-  /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`. */
-  populateAppCallResources?: boolean
-}
-
 /** Parameters to create an `AlgoKitComposer`. */
 export type AlgoKitComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
@@ -738,7 +728,8 @@ export default class AlgoKitComposer {
   private commonTxnBuildStep(params: CommonTransactionParams, txn: algosdk.Transaction, suggestedParams: algosdk.SuggestedParams) {
     if (params.lease) txn.addLease(encodeLease(params.lease)!)
     if (params.rekeyTo) txn.addRekey(params.rekeyTo)
-    if (params.note) txn.note = encodeTransactionNote(params.note)
+    const encoder = new TextEncoder()
+    if (params.note) txn.note = typeof params.note === 'string' ? encoder.encode(params.note) : params.note
 
     if (params.firstValidRound) {
       txn.firstRound = Number(params.firstValidRound)
@@ -1194,7 +1185,7 @@ export default class AlgoKitComposer {
     return await sendAtomicTransactionComposer(
       {
         atc: this.atc,
-        sendParams: {
+        executeParams: {
           suppressLog: params?.suppressLog,
           maxRoundsToWaitForConfirmation: waitRounds,
           populateAppCallResources: params?.populateAppCallResources,

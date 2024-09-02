@@ -11,7 +11,6 @@
 ### Interfaces
 
 - [BuiltTransactions](../interfaces/types_composer.BuiltTransactions.md)
-- [ExecuteParams](../interfaces/types_composer.ExecuteParams.md)
 
 ### Type Aliases
 
@@ -61,7 +60,7 @@ Parameters to create an `AlgoKitComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:432](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L432)
+[src/types/composer.ts:422](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L422)
 
 ___
 

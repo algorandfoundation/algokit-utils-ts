@@ -2,7 +2,8 @@ import algosdk from 'algosdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation, TransactionSignerAccount } from './account'
-import AlgoKitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import AlgoKitComposer, { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import { ExecuteParams } from './transaction'
 import AssetModel = algosdk.modelsv2.Asset
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */

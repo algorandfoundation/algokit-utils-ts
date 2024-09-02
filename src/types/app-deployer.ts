@@ -20,10 +20,9 @@ import AlgoKitComposer, {
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
-  ExecuteParams,
 } from './composer'
 import { Expand } from './expand'
-import { ConfirmedTransactionResult } from './transaction'
+import { ConfirmedTransactionResult, ExecuteParams } from './transaction'
 
 /** The parameters to idempotently deploy an app */
 export interface AppDeployParams {

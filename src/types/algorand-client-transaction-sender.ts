@@ -14,9 +14,8 @@ import AlgoKitComposer, {
   AppUpdateParams,
   AssetCreateParams,
   AssetOptOutParams,
-  ExecuteParams,
 } from './composer'
-import { SendSingleTransactionResult } from './transaction'
+import { ExecuteParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
 
 /** Orchestrates sending transactions for `AlgorandClient`. */

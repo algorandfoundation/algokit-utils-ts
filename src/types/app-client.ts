@@ -286,11 +286,6 @@ export class ApplicationClient {
   private _approvalSourceMap: SourceMap | undefined
   private _clearSourceMap: SourceMap | undefined
 
-  // todo: process ABI args as needed to make them nicer to deal with like beaker-ts
-  // todo: support readonly, noop method calls
-  // todo: find create, update, delete, etc. methods from app spec and call them by default
-  // todo: intelligent version management when deploying
-
   /**
    * Create a new ApplicationClient instance
    * @param appDetails The details of the app

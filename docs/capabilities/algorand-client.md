@@ -82,7 +82,7 @@ The signature for the calls to send a single transaction usually look like:
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)
 - [`CommonTransactionParams`](../code/modules/types_composer.md#commontransactionparams) are the [common transaction parameters](#transaction-parameters) that can be specified for every single transaction
-- [`ExecuteParams`](../code/interfaces/types_composer.ExecuteParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
+- [`ExecuteParams`](../code/interfaces/types_transaction.ExecuteParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
 - [`SendSingleTransactionResult`](../code/modules/types_algorand_client.md#sendsingletransactionresult) is all of the information that is relevant when [sending a single transaction to the network](./transaction.md#sending-a-transaction)
 
 Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
@@ -121,7 +121,7 @@ There are two common base interfaces that get reused:
     - `validityWindow?: number` - How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used.
     - `firstValidRound?: bigint` - Set the first round this transaction is valid. If left undefined, the value from algod will be used. We recommend you only set this when you intentionally want this to be some time in the future.
     - `lastValidRound?: bigint` - The last round this transaction is valid. It is recommended to use `validityWindow` instead.
-- [`ExecuteParams`](../code/interfaces/types_composer.ExecuteParams.md)
+- [`ExecuteParams`](../code/interfaces/types_transaction.ExecuteParams.md)
   - `maxRoundsToWaitForConfirmation?: number` - The number of rounds to wait for confirmation. By default until the latest lastValid has past.
   - `suppressLog?: boolean` - Whether to suppress log messages from transaction send, default: do not suppress.
 

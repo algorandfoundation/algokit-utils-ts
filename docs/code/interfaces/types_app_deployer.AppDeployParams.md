@@ -31,7 +31,7 @@ Create transaction parameters to use if a create needs to be issued as part of d
 
 #### Defined in
 
-[src/types/app-deployer.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L50)
+[src/types/app-deployer.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L49)
 
 ___
 
@@ -43,7 +43,7 @@ Delete transaction parameters to use if a delete needs to be issued as part of d
 
 #### Defined in
 
-[src/types/app-deployer.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L56)
+[src/types/app-deployer.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L55)
 
 ___
 
@@ -55,19 +55,19 @@ Any deploy-time parameters to replace in the TEAL code before compiling it (used
 
 #### Defined in
 
-[src/types/app-deployer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L33)
+[src/types/app-deployer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L32)
 
 ___
 
 ### executeParams
 
-• `Optional` **executeParams**: [`ExecuteParams`](types_composer.ExecuteParams.md)
+• `Optional` **executeParams**: [`ExecuteParams`](types_transaction.ExecuteParams.md)
 
 Parameters to use for transaction execution
 
 #### Defined in
 
-[src/types/app-deployer.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L58)
+[src/types/app-deployer.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L57)
 
 ___
 
@@ -79,7 +79,7 @@ Optional cached value of the existing apps for the given creator; use this to av
 
 #### Defined in
 
-[src/types/app-deployer.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L60)
+[src/types/app-deployer.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L59)
 
 ___
 
@@ -91,7 +91,7 @@ Whether or not to ignore the app metadata cache and force a lookup, default: use
 
 #### Defined in
 
-[src/types/app-deployer.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L62)
+[src/types/app-deployer.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L61)
 
 ___
 
@@ -103,7 +103,7 @@ The deployment metadata
 
 #### Defined in
 
-[src/types/app-deployer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L31)
+[src/types/app-deployer.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L30)
 
 ___
 
@@ -119,7 +119,7 @@ What action to perform if a schema break (storage schema or extra pages change) 
 
 #### Defined in
 
-[src/types/app-deployer.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L40)
+[src/types/app-deployer.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L39)
 
 ___
 
@@ -136,7 +136,7 @@ What action to perform if a TEAL code update is detected:
 
 #### Defined in
 
-[src/types/app-deployer.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L48)
+[src/types/app-deployer.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L47)
 
 ___
 
@@ -148,4 +148,4 @@ Update transaction parameters to use if an update needs to be issued as part of 
 
 #### Defined in
 
-[src/types/app-deployer.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L52)
+[src/types/app-deployer.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L51)

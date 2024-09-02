@@ -18,28 +18,7 @@ const accountManager = new AccountManager(clientManager)
 
 The core internal type that holds information about a signer/sender pair for a transaction is [`TransactionSignerAccount`](../code/interfaces/types_account.TransactionSignerAccount.md), which represents an `algosdk.TransactionSigner` (`signer`) along with a sender address (`addr`) as the encoded string address.
 
-Many methods in `AccountManager` expose a `TransactionSignerAccount`.
-
-### `SendTransactionFrom`
-
-> [!NOTE]
-> The [legacy functions](../README.md#usage) within AlgoKit Utils make use of a [`SendTransactionFrom`](../code/modules/types_transaction.md#sendtransactionfrom) union type that is slowly being phased out in favour of the simpler `TransactionSignerAccount`. This `SendTransactionFrom` type is still prevalent within the legacy functions though.
-
-`SendTransactionFrom` is a union of the following types that each represent an account that can both sign a transaction and represent a sender address:
-
-- `Account` - An in-built algosdk `Account` object
-- [`SigningAccount`](../code/classes/types_account.SigningAccount.md) - An abstraction around `algosdk.Account` that supports rekeyed accounts
-- `LogicSigAccount` - An in-built algosdk `algosdk.LogicSigAccount` object
-- [`MultisigAccount`](../code/classes/types_account.MultisigAccount.md) - An abstraction around `algosdk.MultisigMetadata`, `algosdk.makeMultiSigAccountTransactionSigner`, `algosdk.multisigAddress`, `algosdk.signMultisigTransaction` and `algosdk.appendSignMultisigTransaction` that supports multisig accounts with one or more signers present
-- [`TransactionSignerAccount`](../code/interfaces/types_account.TransactionSignerAccount.md) - An interface that provides a sender address alongside a transaction signer (e.g. for use with `AtomicTransactionComposer` or [useWallet](https://github.com/TxnLab/use-wallet))
-
-The use of in-built algosdk types like `Account`, `LogicSigAccount` and `TransactionSigner` is aligned to the [Modularity](../README.md#core-principles) principle. Allowing you to co-exist non AlgoKit Utils code with AlgoKit Utils functions.
-
-AlgoKit Utils provides a few helper methods to take one of these `SendTransactionFrom` objects (that to reiterate uses the [legacy imports](../README.md#usage) to access):
-
-- [`algokit.getSenderAddress`](../code/modules/index.md#getsenderaddress) - Returns the public address of the sender the account represents
-- [`algokit.getSenderTransactionSigner`](../code/modules/index.md#getsendertransactionsigner) - Returns a `TransactionSigner` to represent the signer of the account' note: this is memoized so multiple calls to this for the same account will safely return the same `TransactionSigner` instance; this works nicely with `AtomicTransactionComposer`
-- [`algokit.signTransaction`](../code/modules/index.md#signtransaction) - Signs a single `algosdk.Transaction` object with the given account
+Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`AlgoKitComposer`](./algokit-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
 
 ## Accounts
 
@@ -54,6 +33,15 @@ In order to get/register accounts for signing operations you can use the followi
 - [`algorand.account.random()`](../code/classes/types_account_manager.AccountManager.md#random) - Returns a new, cryptographically randomly generated account with private key loaded
 - [`algorand.account.fromKmd()`](../code/classes/types_account_manager.AccountManager.md#fromkmd) - Returns an account with private key loaded from the given KMD wallet (identified by name)
 - [`algorand.account.logicsig(program, args?)`](../code/classes/types_account_manager.AccountManager.md#logicsig) - Returns an account that represents a logic signature
+
+### Underlying account classes
+
+While `TransactionSignerAccount` is the main class used to represent an account that can sign, there are underlying account classes that can underpin the signer withing the transaction signer account.
+
+- `Account` - An in-built `algosdk.Account` object that has an address and private signing key, this can be created
+- [`SigningAccount`](../code/classes/types_account.SigningAccount.md) - An abstraction around `algosdk.Account` that supports rekeyed accounts
+- `LogicSigAccount` - An in-built algosdk `algosdk.LogicSigAccount` object
+- [`MultisigAccount`](../code/classes/types_account.MultisigAccount.md) - An abstraction around `algosdk.MultisigMetadata`, `algosdk.makeMultiSigAccountTransactionSigner`, `algosdk.multisigAddress`, `algosdk.signMultisigTransaction` and `algosdk.appendSignMultisigTransaction` that supports multisig accounts with one or more signers present
 
 ### Dispenser
 

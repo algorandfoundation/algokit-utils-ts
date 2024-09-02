@@ -8,7 +8,7 @@ import Algodv2 = algosdk.Algodv2
  * @param algod An algod instance
  *
  * @example Resolve by creator and name
- * const client = algokit.getAppClient(
+ * const client = getAppClient(
  *     {
  *       resolveBy: 'creatorAndName',
  *       app: {appSpec},
@@ -20,7 +20,7 @@ import Algodv2 = algosdk.Algodv2
  *   )
  *
  * @example Resolve by id:
- * const client = algokit.getAppClient(
+ * const client = getAppClient(
  *     {
  *       resolveBy: 'id',
  *       app: {appSpec},
@@ -42,7 +42,7 @@ export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
  * @param algod An algod instance
  *
  * @example
- * const client = algokit.getAppClientById(
+ * const client = getAppClientById(
  *     {
  *       app: {appSpec},
  *       sender: {account},
@@ -63,7 +63,7 @@ export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algod
  * @param algod An algod instance
  *
  * @example
- * const client = algokit.getAppClientByCreatorAndName(
+ * const client = getAppClientByCreatorAndName(
  *     {
  *       app: {appSpec},
  *       sender: {account},

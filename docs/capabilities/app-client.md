@@ -153,7 +153,7 @@ const result = await appClient.call({
   methodArgs: {
     args: [
       appClient.fundAppAccount({
-        amount: algokit.microAlgo(200_000),
+        amount: microAlgo(200_000),
         sendParams: { skipSending: true },
       }),
     ],
@@ -169,13 +169,13 @@ const result = await appClient.call({
 
 There are various methods defined that let you read state from the smart contract app:
 
-- `getGlobalState()` - Gets the current global state using [`algokit.getAppGlobalState](./app.md#global-state)
-- `getLocalState(account: string | SendTransactionFrom)` - Gets the current local state for the given account address using [`algokit.getAppLocalState](./app.md#local-state).
-- `getBoxNames()` - Gets the current box names using [`algokit.getAppBoxNames`](./app.md#boxes)
-- `getBoxValue(name)` - Gets the current value of the given box using [`algokit.getAppBoxValue](./app.md#boxes)
-- `getBoxValueFromABIType(name)` - Gets the current value of the given box from an ABI type using [`algokit.getAppBoxValueFromABIType](./app.md#boxes)
-- `getBoxValues(filter)` - Gets the current values of the boxes using [`algokit.getAppBoxValues](./app.md#boxes)
-- `getBoxValuesFromABIType(type, filter)` - Gets the current values of the boxes from an ABI type using [`algokit.getAppBoxValuesFromABIType](./app.md#boxes)
+- `getGlobalState()` - Gets the current global state using [`algorand.app.getById(appId).globalState](./app.md#global-state)
+- `getLocalState(account: string | SendTransactionFrom)` - Gets the current local state for the given account address using [`algorand.app.getLocalState](./app.md#local-state).
+- `getBoxNames()` - Gets the current box names using [`algorand.app.getBoxNames`](./app.md#boxes)
+- `getBoxValue(name)` - Gets the current value of the given box using [`algorand.app.getBoxValue](./app.md#boxes)
+- `getBoxValueFromABIType(name)` - Gets the current value of the given box from an ABI type using [`algorand.app.getBoxValueFromABIType](./app.md#boxes)
+- `getBoxValues(filter)` - Gets the current values of the boxes using [`algorand.app.getBoxValues](./app.md#boxes)
+- `getBoxValuesFromABIType(type, filter)` - Gets the current values of the boxes from an ABI type using [`algorand.app.getBoxValuesFromABIType](./app.md#boxes)
 
 These calls will only work if the Application Client knows the ID of the app, which will occur if:
 
@@ -214,7 +214,7 @@ Note: This information will only show if the Application Client has a source map
 If you want to go a step further and automatically issue a [simulated transaction](https://algorand.github.io/js-algorand-sdk/classes/modelsv2.SimulateTransactionResult.html) and get trace information when there is an error when an ABI method is called you can turn on debug mode:
 
 ```typescript
-algokit.Config.configure({ debug: true })
+Config.configure({ debug: true })
 ```
 
 If you do that then the exception will have the `traces` property within the underlying exception will have key information from the simulation within it and this will get populated into the `led.traces` property of the thrown error.

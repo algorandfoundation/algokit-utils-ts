@@ -1,4 +1,3 @@
-import { getSenderAddress } from '../'
 import { Logger } from '../types/logging'
 import { LogSnapshotConfig } from '../types/testing'
 
@@ -52,7 +51,10 @@ export class TestLogger implements Logger {
     )
     accounts?.forEach(
       (sender, id) =>
-        (snapshot = snapshot.replace(new RegExp(typeof sender === 'string' ? sender : getSenderAddress(sender), 'g'), `ACCOUNT_${id + 1}`)),
+        (snapshot = snapshot.replace(
+          new RegExp(typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr : sender.address(), 'g'),
+          `ACCOUNT_${id + 1}`,
+        )),
     )
     apps?.forEach((app, id) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b(?! bytes)`, 'g'), `APP_${id + 1}`)))
     return snapshot

@@ -130,10 +130,24 @@ export interface TransactionGroupToSend {
   signer?: SendTransactionFrom
 }
 
+/** Parameters to configure transaction execution. */
+export interface ExecuteParams {
+  /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
+  maxRoundsToWaitForConfirmation?: number
+  /** Whether to suppress log messages from transaction send, default: do not suppress. */
+  suppressLog?: boolean
+  /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`. */
+  populateAppCallResources?: boolean
+}
+
 /** An `AtomicTransactionComposer` with transactions to send. */
 export interface AtomicTransactionComposerToSend {
   /** The `AtomicTransactionComposer` with transactions loaded to send */
   atc: AtomicTransactionComposer
   /** Any parameters to control the semantics of the send to the network */
+  executeParams?: ExecuteParams
+  /**
+   * @deprecated - use executeParams instead
+   * Any parameters to control the semantics of the send to the network */
   sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
 }
