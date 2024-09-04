@@ -20,6 +20,20 @@ export interface AlgoConfig {
   kmdConfig?: AlgoClientConfig
 }
 
+/** Details of the current network. */
+export interface NetworkDetails {
+  /** Whether or not the network is TestNet. */
+  isTestNet: boolean
+  /** Whether or not the network is MainNet. */
+  isMainNet: boolean
+  /** Whether or not the network is LocalNet. */
+  isLocalNet: boolean
+  /** The genesis ID of the current network. */
+  genesisId: string
+  /** The base64 genesis hash of the current network. */
+  genesisHash: string
+}
+
 /**
  * Returns true if the given network genesisId is associated with a LocalNet network.
  * @param genesisId The network genesis ID

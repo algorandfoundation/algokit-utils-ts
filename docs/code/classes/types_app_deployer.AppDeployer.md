@@ -140,7 +140,7 @@ If the `AppManager` instance wasn't created with an indexer client, this functio
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `creatorAddress` | `string` | The address of the account that is the creator of the apps you want to search for |
-| `ignoreCache?` | `boolean` | Whether ot not to ignore the cache and force a lookup, default: use the cache |
+| `ignoreCache?` | `boolean` | Whether or not to ignore the cache and force a lookup, default: use the cache |
 
 #### Returns
 

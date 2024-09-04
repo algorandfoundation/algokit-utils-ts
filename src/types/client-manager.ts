@@ -1,17 +1,21 @@
 import algosdk from 'algosdk'
 import { SuggestedParamsWithMinFee } from 'algosdk/dist/types/types/transactions/base'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
-import { AppLookup } from './app'
+import { AlgorandClientInterface } from './algorand-client-interface'
+import { AppLookup as LegacyAppLookup } from './app'
 import {
+  AppClient,
+  AppClientParams,
   AppDetails,
   AppDetailsBase,
   AppSpecAppDetailsBase,
-  ApplicationClient,
   ResolveAppByCreatorAndNameBase,
   ResolveAppByIdBase,
 } from './app-client'
+import { AppLookup } from './app-deployer'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
-import { AlgoClientConfig, AlgoConfig, genesisIdIsLocalNet } from './network-client'
+import { Expand } from './expand'
+import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './network-client'
 import Kmd = algosdk.Kmd
 import Indexer = algosdk.Indexer
 import Algodv2 = algosdk.Algodv2
@@ -27,25 +31,12 @@ export interface AlgoSdkClients {
   kmd?: algosdk.Kmd
 }
 
-/** Details of the current network. */
-export interface NetworkDetails {
-  /** Whether or not the network is TestNet. */
-  isTestNet: boolean
-  /** Whether or not the network is MainNet. */
-  isMainNet: boolean
-  /** Whether or not the network is LocalNet. */
-  isLocalNet: boolean
-  /** The genesis ID of the current network. */
-  genesisId: string
-  /** The base64 genesis hash of the current network. */
-  genesisHash: string
-}
-
 /** Exposes access to various API clients. */
 export class ClientManager {
   private _algod: algosdk.Algodv2
   private _indexer?: algosdk.Indexer
   private _kmd?: algosdk.Kmd
+  private _algorand?: AlgorandClientInterface
 
   /**
    * algosdk clients or config for interacting with the official Algorand APIs.
@@ -67,7 +58,7 @@ export class ClientManager {
    * const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig })
    * ```
    */
-  constructor(clientsOrConfig: AlgoConfig | AlgoSdkClients) {
+  constructor(clientsOrConfig: AlgoConfig | AlgoSdkClients, algorandClient?: AlgorandClientInterface) {
     const _clients =
       'algod' in clientsOrConfig
         ? clientsOrConfig
@@ -79,6 +70,7 @@ export class ClientManager {
     this._algod = _clients.algod
     this._indexer = _clients.indexer
     this._kmd = _clients.kmd
+    this._algorand = algorandClient
   }
 
   /** Returns an algosdk Algod API client. */
@@ -201,25 +193,69 @@ export class ClientManager {
   }
 
   /**
-   * Returns a new `ApplicationClient` client, resolving the app by creator address and name.
-   * @param details The details to resolve the app by creator address and name
-   * @param cachedAppLookup A cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this manager on construction.
+   * Returns a new `ApplicationClient` client, resolving the app by creator address and name
+   * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
+   * @param params The parameters to create the app client
    * @returns The `ApplicationClient`
    */
-  public getAppClientByCreatorAndName(details: AppClientByCreatorAndNameDetails, cachedAppLookup?: AppLookup) {
-    return new ApplicationClient(
-      { ...details, resolveBy: 'creatorAndName', findExistingUsing: cachedAppLookup ?? this.indexer },
-      this._algod,
-    )
+  public async getAppClientByCreatorAndName(
+    params: Expand<
+      Omit<AppClientParams, 'algorand'> & {
+        /** The address of the creator account for the app */
+        creatorAddress: string
+        /** The optional name override to use for the app, if not specified then it will use the app spec name */
+        appName?: string
+        /** An optional cached app lookup that matches a name to on-chain details;
+         * either this is needed or indexer is required to be passed in to this `ClientManager` on construction.
+         */
+        appLookupCache?: AppLookup
+        /** Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value */
+        ignoreCache?: boolean
+      }
+    >,
+  ) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+    const appSpec = AppClient.normaliseAppSpec(params.appSpec)
+    const appLookup =
+      params.appLookupCache ?? (await this._algorand.appDeployer.getCreatorAppsByName(params.creatorAddress, params.ignoreCache))
+    const appMetadata = appLookup.apps[params.appName ?? appSpec.name]
+    if (!appMetadata) {
+      throw new Error(`App not found for creator ${params.creatorAddress} and name ${params.appName ?? appSpec.name}`)
+    }
+    return new AppClient({
+      ...params,
+      algorand: this._algorand,
+      appId: appMetadata.appId,
+    })
   }
 
   /**
-   * Returns a new `ApplicationClient` client, resolving the app by app ID.
-   * @param details The details to resolve the app by ID
-   * @returns The `ApplicationClient`
+   * Returns a new `AppClient` client for an app instance of the given ID.
+   * @param params The parameters to create the app client
+   * @returns The `AppClient`
    */
-  public getAppClientById(details: AppClientByIdDetails) {
-    return new ApplicationClient({ ...details, resolveBy: 'id' }, this._algod)
+  public getAppClientById(params: Expand<Omit<AppClientParams, 'algorand'>>) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+    return new AppClient({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns an `AppClient` instance for the current network based on
+   * pre-determined network-specific app IDs specified in the ARC-56 app spec.
+   *
+   * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
+   * @param params The parameters to create the app client
+   * @returns The `AppClient`
+   */
+  public async getAppClientByNetwork(params: Expand<Omit<AppClientParams, 'algorand' | 'appId'>>) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+    return AppClient.fromNetwork(params, this._algorand, await this.network())
   }
 
   /**
@@ -247,7 +283,7 @@ export class ClientManager {
   public getTypedAppClientByCreatorAndName<TClient>(
     typedClient: TypedAppClient<TClient>,
     details: TypedAppClientByCreatorAndNameDetails,
-    cachedAppLookup?: AppLookup,
+    cachedAppLookup?: LegacyAppLookup,
   ) {
     return new typedClient({ ...details, resolveBy: 'creatorAndName', findExistingUsing: cachedAppLookup ?? this.indexer }, this._algod)
   }
@@ -518,11 +554,6 @@ export type AppClientByCreatorAndNameDetails = AppSpecAppDetailsBase &
  * Details to resolve a typed app creator address and name.
  */
 export type TypedAppClientByCreatorAndNameDetails = AppDetailsBase & Omit<ResolveAppByCreatorAndNameBase, 'findExistingUsing'>
-
-/**
- * Details to resolve an app client by app ID.
- */
-export type AppClientByIdDetails = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByIdBase
 
 /**
  * Details to resolve a typed app by app ID.

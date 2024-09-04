@@ -441,7 +441,7 @@ export class AppDeployer {
    * If the `AppManager` instance wasn't created with an indexer client, this function will throw an error.
    *
    * @param creatorAddress The address of the account that is the creator of the apps you want to search for
-   * @param ignoreCache Whether ot not to ignore the cache and force a lookup, default: use the cache
+   * @param ignoreCache Whether or not to ignore the cache and force a lookup, default: use the cache
    * @returns A name-based lookup of the app metadata
    */
   async getCreatorAppsByName(creatorAddress: string, ignoreCache?: boolean): Promise<AppLookup> {

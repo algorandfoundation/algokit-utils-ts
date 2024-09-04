@@ -5,7 +5,6 @@ import {
   DELETABLE_TEMPLATE_NAME,
   UPDATABLE_TEMPLATE_NAME,
   type ABIReturn,
-  type AppDeployMetadata,
   type AppState,
   type CompiledTeal,
   type TealTemplateParams,
@@ -132,6 +131,7 @@ export class AppManager {
       sourceMap: new algosdk.SourceMap(compiled['sourcemap']),
     }
     this._compilationResults[tealCode] = result
+
     return result
   }
 
@@ -152,7 +152,7 @@ export class AppManager {
   async compileTealTemplate(
     tealTemplateCode: string,
     templateParams?: TealTemplateParams,
-    deploymentMetadata?: AppDeployMetadata,
+    deploymentMetadata?: { updatable?: boolean; deletable?: boolean },
   ): Promise<CompiledTeal> {
     let tealCode = AppManager.stripTealComments(tealTemplateCode)
 

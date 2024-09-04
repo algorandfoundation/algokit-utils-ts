@@ -11,13 +11,11 @@
 ### Interfaces
 
 - [AlgoSdkClients](../interfaces/types_client_manager.AlgoSdkClients.md)
-- [NetworkDetails](../interfaces/types_client_manager.NetworkDetails.md)
 - [TypedAppClient](../interfaces/types_client_manager.TypedAppClient.md)
 
 ### Type Aliases
 
 - [AppClientByCreatorAndNameDetails](types_client_manager.md#appclientbycreatorandnamedetails)
-- [AppClientByIdDetails](types_client_manager.md#appclientbyiddetails)
 - [TypedAppClientByCreatorAndNameDetails](types_client_manager.md#typedappclientbycreatorandnamedetails)
 - [TypedAppClientByIdDetails](types_client_manager.md#typedappclientbyiddetails)
 
@@ -31,19 +29,7 @@ Details to resolve an app client by creator address and name.
 
 #### Defined in
 
-[src/types/client-manager.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L513)
-
-___
-
-### AppClientByIdDetails
-
-Ƭ **AppClientByIdDetails**: [`AppSpecAppDetailsBase`](types_app_client.md#appspecappdetailsbase) & [`AppDetailsBase`](types_app_client.md#appdetailsbase) & [`ResolveAppByIdBase`](../interfaces/types_app_client.ResolveAppByIdBase.md)
-
-Details to resolve an app client by app ID.
-
-#### Defined in
-
-[src/types/client-manager.ts:525](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L525)
+[src/types/client-manager.ts:549](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L549)
 
 ___
 
@@ -55,7 +41,7 @@ Details to resolve a typed app creator address and name.
 
 #### Defined in
 
-[src/types/client-manager.ts:520](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L520)
+[src/types/client-manager.ts:556](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L556)
 
 ___
 
@@ -67,4 +53,4 @@ Details to resolve a typed app by app ID.
 
 #### Defined in
 
-[src/types/client-manager.ts:530](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L530)
+[src/types/client-manager.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L561)

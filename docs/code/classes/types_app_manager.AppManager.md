@@ -56,7 +56,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-manager.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L106)
+[src/types/app-manager.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L105)
 
 ## Properties
 
@@ -66,7 +66,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L99)
+[src/types/app-manager.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L98)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/types/app-manager.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L100)
+[src/types/app-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L99)
 
 ## Methods
 
@@ -105,7 +105,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/types/app-manager.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L121)
+[src/types/app-manager.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L120)
 
 ___
 
@@ -127,7 +127,9 @@ if deployment metadata is specified.
 | :------ | :------ | :------ |
 | `tealTemplateCode` | `string` | The TEAL logic to compile |
 | `templateParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Any parameters to replace in the .teal file before compiling |
-| `deploymentMetadata?` | [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) | The deployment metadata the app will be deployed with |
+| `deploymentMetadata?` | `Object` | The deployment metadata the app will be deployed with |
+| `deploymentMetadata.deletable?` | `boolean` | - |
+| `deploymentMetadata.updatable?` | `boolean` | - |
 
 #### Returns
 

@@ -16,6 +16,8 @@ import { Config } from '../config'
 import { persistSourceMaps } from '../debugging/debugging'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
+import { DeepReadonly, binaryStartsWith } from '../util'
+import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
@@ -38,10 +40,25 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import { AppSpec } from './app-spec'
+import { Arc56Contract, Method, StorageKey, StorageMap, StructFields } from './app-arc56'
+import { BoxIdentifier } from './app-manager'
+import { AppSpec, arc32ToArc56 } from './app-spec'
+import {
+  AppCallMethodCall,
+  AppCallParams,
+  AppDeleteMethodCall,
+  AppDeleteParams,
+  AppMethodCall,
+  AppUpdateMethodCall,
+  AppUpdateParams,
+  CommonAppCallParams,
+  PaymentParams,
+} from './composer'
 import { PersistSourceMapInput } from './debugging'
+import { Expand } from './expand'
 import { LogicError } from './logic-error'
-import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
+import { NetworkDetails } from './network-client'
+import { ExecuteParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIType = algosdk.ABIType
@@ -53,6 +70,7 @@ import Indexer = algosdk.Indexer
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.SourceMap
 import SuggestedParams = algosdk.SuggestedParams
+import ABITupleType = algosdk.ABITupleType
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
@@ -268,7 +286,861 @@ function getDeployTimeControl(
   })
 }
 
-/** Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
+/** Parameters to create an app client */
+export interface AppClientParams {
+  /** The ID of the app instance this client should make calls against. */
+  appId: bigint
+
+  /** The ARC-56 or ARC-32 application spec as either:
+   *  * Parsed JSON ARC-56 `Contract`
+   *  * Parsed JSON ARC-32 `AppSpec`
+   *  * Raw JSON string (in either ARC-56 or ARC-32 format)
+   */
+  appSpec: Arc56Contract | AppSpec | string
+
+  algorand: AlgorandClientInterface
+
+  /** Optional address to use for the account to use as the default sender for calls. */
+  defaultSender?: string
+  /** Optional source map for the approval program */
+  approvalSourceMap?: SourceMap
+  /** Optional source map for the clear state program */
+  clearSourceMap?: SourceMap
+}
+
+/** onComplete parameter for a non-update app call */
+export type CallOnComplete = {
+  /** On-complete of the call; defaults to no-op */
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
+}
+
+/** AppClient parameters for a bare app call */
+export type AppClientBareCallParams = Expand<
+  Omit<CommonAppCallParams, 'appId' | 'sender' | 'onComplete'> & {
+    /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
+    sender?: string
+  }
+>
+
+/** AppClient parameters for an ABI method call */
+export type AppClientMethodCallParams = Expand<
+  Omit<AppMethodCall<CommonAppCallParams>, 'appId' | 'sender' | 'method'> & {
+    /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
+    sender?: string
+    /** The method name or method signature to call if an ABI call is being emitted
+     * @example Method name
+     * `my_method`
+     * @example Method signature
+     * `my_method(unit64,string)bytes`
+     */
+    method: string
+  }
+>
+
+/** Parameters for funding an app account */
+export type FundAppParams = Expand<
+  Omit<PaymentParams, 'receiver' | 'sender'> &
+    ExecuteParams & {
+      /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
+      sender?: string
+    }
+>
+
+/** ARC-56/ARC-32 application client that allows you to manage calls and state for a given instance of an app. */
+export class AppClient {
+  private _appId: bigint
+  private _appAddress: string
+  private _appName: string
+  private _appSpec: Arc56Contract
+  private _algorand: AlgorandClientInterface
+  private _defaultSender?: string
+
+  private _approvalSourceMap: SourceMap | undefined
+  private _clearSourceMap: SourceMap | undefined
+
+  private _localStateMethods: (address: string) => ReturnType<AppClient['getStateMethods']>
+  private _globalStateMethods: ReturnType<AppClient['getStateMethods']>
+  private _boxStateMethods: ReturnType<AppClient['getBoxMethods']>
+
+  constructor(params: AppClientParams) {
+    this._appId = params.appId
+    this._appAddress = algosdk.getApplicationAddress(this._appId)
+    this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
+    this._appName = this._appSpec.name
+    this._algorand = params.algorand
+    this._defaultSender = params.defaultSender
+
+    this._approvalSourceMap = params.approvalSourceMap
+    this._clearSourceMap = params.clearSourceMap
+
+    this._localStateMethods = (address: string) =>
+      this.getStateMethods(
+        () => this.getLocalState(address),
+        () => this._appSpec.state.keys.local,
+        () => this._appSpec.state.maps.local,
+      )
+    this._globalStateMethods = this.getStateMethods(
+      () => this.getGlobalState(),
+      () => this._appSpec.state.keys.global,
+      () => this._appSpec.state.maps.global,
+    )
+    this._boxStateMethods = this.getBoxMethods()
+  }
+
+  /**
+   * Returns an `AppClient` instance for the current network based on
+   * pre-determined network-specific app IDs specified in the ARC-56 app spec.
+   *
+   * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
+   * @param params The parameters to create the app client
+   */
+  static async fromNetwork(
+    params: Expand<Omit<AppClientParams, 'algorand' | 'appId'>>,
+    algorand: AlgorandClientInterface,
+    network: NetworkDetails,
+  ): Promise<AppClient> {
+    const appSpec = AppClient.normaliseAppSpec(params.appSpec)
+    const networkNames = [network.genesisHash]
+    if (network.isLocalNet) networkNames.push('localnet')
+    if (network.isTestNet) networkNames.push('testnet')
+    if (network.isMainNet) networkNames.push('mainnet')
+    const availableAppSpecNetworks = Object.keys(appSpec.networks ?? {})
+    const networkIndex = availableAppSpecNetworks.findIndex((n) => networkNames.includes(n))
+
+    if (networkIndex === -1) {
+      throw new Error(`No app ID found for network ${JSON.stringify(networkNames)} in the app spec`)
+    }
+
+    const appId = BigInt(appSpec.networks![networkIndex].appID)
+    return new AppClient({ ...params, appId, algorand, appSpec })
+  }
+
+  /**
+   * Takes a string or parsed JSON object that could be ARC-32 or ARC-56 format and
+   * normalises it into a parsed ARC-56 contract object.
+   * @param spec The spec to normalise
+   * @returns The normalised ARC-56 contract object
+   */
+  static normaliseAppSpec(spec: Arc56Contract | AppSpec | string): Arc56Contract {
+    const parsedSpec = typeof spec === 'string' ? (JSON.parse(spec) as AppSpec | Arc56Contract) : spec
+    const appSpec = 'hints' in parsedSpec ? arc32ToArc56(parsedSpec) : parsedSpec
+    return appSpec
+  }
+
+  /** The ID of the app instance this client is linked to. */
+  get appId() {
+    return this._appId
+  }
+
+  /** The app address of the app instance this client is linked to. */
+  get appAddress() {
+    return this._appAddress
+  }
+
+  /** The name of the app (from the ARC-32 / ARC-56 app spec). */
+  get appName() {
+    return this._appName
+  }
+
+  /** The ARC-56 app spec being used */
+  get appSpec(): DeepReadonly<Arc56Contract> {
+    return this._appSpec
+  }
+
+  /** Interact with bare (non-ABI) call parameters, transactions and calls */
+  get bare() {
+    const that = this
+    return {
+      /** Get parameters to define an app transaction to the current app */
+      get params() {
+        return {
+          /** Return params for an update call, including deploy-time TEAL template replacements and compilation if provided */
+          update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
+            return that.getParams(
+              {
+                ...params,
+                ...(await that.compile(params)),
+              },
+              OnApplicationComplete.UpdateApplicationOC,
+            ) as AppUpdateParams
+          },
+          /** Return params for an opt-in call */
+          optIn: (params?: AppClientBareCallParams) => {
+            return that.getParams(params, OnApplicationComplete.OptInOC) as AppCallParams
+          },
+          /** Return params for a delete call */
+          delete: (params?: AppClientBareCallParams) => {
+            return that.getParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteParams
+          },
+          /** Return params for a clear state call */
+          clearState: (params?: AppClientBareCallParams) => {
+            return that.getParams(params, OnApplicationComplete.ClearStateOC) as AppCallParams
+          },
+          /** Return params for a close out call */
+          closeOut: (params?: AppClientBareCallParams) => {
+            return that.getParams(params, OnApplicationComplete.CloseOutOC) as AppCallParams
+          },
+          /** Return params for a call (defaults to no-op) */
+          call: (params?: AppClientBareCallParams & CallOnComplete) => {
+            return that.getParams(params, params?.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallParams
+          },
+        }
+      },
+
+      /** Get an app transaction to the current app */
+      get transactions() {
+        return {
+          /** Returns a transaction for an update call, including deploy-time TEAL template replacements and compilation if provided */
+          update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
+            return that._algorand.transactions.appUpdate(await this.params.update(params))
+          },
+          /** Returns a transaction for an opt-in call */
+          optIn: (params?: AppClientBareCallParams) => {
+            return that._algorand.transactions.appCall(this.params.optIn(params))
+          },
+          /** Returns a transaction for a delete call */
+          delete: (params?: AppClientBareCallParams) => {
+            return that._algorand.transactions.appDelete(this.params.delete(params))
+          },
+          /** Returns a transaction for a clear state call */
+          clearState: (params?: AppClientBareCallParams) => {
+            return that._algorand.transactions.appCall(this.params.clearState(params))
+          },
+          /** Returns a transaction for a close out call */
+          closeOut: (params?: AppClientBareCallParams) => {
+            return that._algorand.transactions.appCall(this.params.closeOut(params))
+          },
+          /** Returns a transaction for a call (defaults to no-op) */
+          call: (params?: AppClientBareCallParams & CallOnComplete) => {
+            return that._algorand.transactions.appCall(this.params.call(params))
+          },
+        }
+      },
+
+      /** Send an app transaction to the current app */
+      get send() {
+        return {
+          /** Signs and sends an update call, including deploy-time TEAL template replacements and compilation if provided */
+          update: async (params?: AppClientBareCallParams & AppClientCompilationParams & ExecuteParams) => {
+            return await that.handleCallErrors(async () => that._algorand.send.appUpdate(await this.params.update(params)))
+          },
+          /** Signs and sends an opt-in call */
+          optIn: (params?: AppClientBareCallParams & ExecuteParams) => {
+            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.optIn(params)))
+          },
+          /** Signs and sends a delete call */
+          delete: (params?: AppClientBareCallParams & ExecuteParams) => {
+            return that.handleCallErrors(() => that._algorand.send.appDelete(this.params.delete(params)))
+          },
+          /** Signs and sends a clear state call */
+          clearState: (params?: AppClientBareCallParams & ExecuteParams) => {
+            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.clearState(params)))
+          },
+          /** Signs and sends a close out call */
+          closeOut: (params?: AppClientBareCallParams & ExecuteParams) => {
+            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.closeOut(params)))
+          },
+          /** Signs and sends a call (defaults to no-op) */
+          call: (params?: AppClientBareCallParams & CallOnComplete & ExecuteParams) => {
+            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.call(params)))
+          },
+        }
+      },
+    }
+  }
+
+  /** Get parameters to define an ABI call transaction to the current app */
+  get params() {
+    return {
+      /** Return params for an update ABI call, including deploy-time TEAL template replacements and compilation if provided */
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
+        return this.getABIParams(
+          {
+            ...params,
+            ...(await this.compile(params)),
+          },
+          OnApplicationComplete.UpdateApplicationOC,
+        ) satisfies AppUpdateMethodCall
+      },
+      /** Return params for an opt-in ABI call */
+      optIn: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.OptInOC) as AppCallMethodCall
+      },
+      /** Return params for an delete ABI call */
+      delete: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteMethodCall
+      },
+      /** Return params for an clear state ABI call */
+      clearState: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.ClearStateOC) as AppCallMethodCall
+      },
+      /** Return params for an close out ABI call */
+      closeOut: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.CloseOutOC) as AppCallMethodCall
+      },
+      /** Return params for an ABI call */
+      call: (params: AppClientMethodCallParams & CallOnComplete) => {
+        return this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallMethodCall
+      },
+    }
+  }
+
+  /** Get ABI transactions to the current app */
+  get transactions() {
+    return {
+      /**
+       * Return transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       */
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
+        return this._algorand.transactions.appUpdateMethodCall(await this.params.update(params))
+      },
+      /**
+       * Return transactions for an opt-in ABI call
+       */
+      optIn: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.optIn(params))
+      },
+      /**
+       * Return transactions for a delete ABI call
+       */
+      delete: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appDeleteMethodCall(this.params.delete(params))
+      },
+      /**
+       * Return transactions for a clear state ABI call
+       */
+      clearState: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.clearState(params))
+      },
+      /**
+       * Return transactions for a close out ABI call
+       */
+      closeOut: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.closeOut(params))
+      },
+      /**
+       * Return transactions for an ABI call (defaults to no-op)
+       */
+      call: (params: AppClientMethodCallParams & CallOnComplete) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.call(params))
+      },
+    }
+  }
+
+  /** Send ABI method call to the current app */
+  get send() {
+    return {
+      /**
+       * Sign and send transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       */
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & ExecuteParams) => {
+        const compiled = await this.compile(params)
+        return {
+          ...(await this.handleCallErrors(async () => this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })))),
+          ...(compiled satisfies Partial<AppCompilationResult>),
+        } as AppCompilationResult
+      },
+      /**
+       * Sign and send transactions for an opt-in ABI call
+       */
+      optIn: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.optIn(params)))
+      },
+      /**
+       * Sign and send transactions for a delete ABI call
+       */
+      delete: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appDeleteMethodCall(this.params.delete(params)))
+      },
+      /**
+       * Sign and send transactions for a clear state ABI call
+       */
+      clearState: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.clearState(params)))
+      },
+      /**
+       * Sign and send transactions for a close out ABI call
+       */
+      closeOut: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.closeOut(params)))
+      },
+      /**
+       * Sign and send transactions for a call (defaults to no-op)
+       */
+      call: async (params: AppClientMethodCallParams & CallOnComplete & ExecuteParams) => {
+        // Read-only call - do it via simulate
+        if (params.onComplete === OnApplicationComplete.NoOpOC || (!params.onComplete && this.getABIMethod(params.method)[0].readonly)) {
+          const result = await this._algorand.newGroup().addAppCallMethodCall(this.params.call(params)).simulate()
+          return {
+            ...result,
+            transaction: result.transactions.at(-1)!,
+            confirmation: result.confirmations.at(-1)!,
+            return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
+          } satisfies AppCallTransactionResult
+        }
+
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.call(params)))
+      },
+    }
+  }
+
+  /**
+   * Funds Algo into the app account for this app.
+   * @param fund The parameters for the funding
+   * @returns The result of the funding
+   */
+  async fundAppAccount(fund: FundAppParams) {
+    return this._algorand.send.payment({ ...fund, sender: this.getSender(fund.sender), receiver: this.appAddress })
+  }
+
+  get state() {
+    return {
+      /**
+       * Methods to access local state for the current app
+       * @param address The address of the account to get the local state for
+       */
+      local: this._localStateMethods,
+      /**
+       * Methods to access global state for the current app
+       */
+      global: this._globalStateMethods,
+      /**
+       * Methods to access box storage for the current app
+       */
+      box: this._boxStateMethods,
+    }
+  }
+
+  /**
+   * Returns raw global state for the current app.
+   * @returns The global state
+   */
+  async getGlobalState(): Promise<AppState> {
+    return (await this._algorand.app.getById(this.appId)).globalState
+  }
+
+  /**
+   * Returns raw local state for the given account address.
+   * @param address The address of the account to get the local state for
+   * @returns The local state
+   */
+  async getLocalState(address: string): Promise<AppState> {
+    return await this._algorand.app.getLocalState(this.appId, address)
+  }
+
+  /**
+   * Returns the names of all current boxes for the current app.
+   * @returns The names of the boxes
+   */
+  async getBoxNames(): Promise<BoxName[]> {
+    return await this._algorand.app.getBoxNames(this.appId)
+  }
+
+  /**
+   * Returns the value of the given box for the current app.
+   * @param name The identifier of the box to return
+   * @returns The current box value as a byte array
+   */
+  async getBoxValue(name: BoxIdentifier): Promise<Uint8Array> {
+    return await this._algorand.app.getBoxValue(this.appId, name)
+  }
+
+  /**
+   * Returns the value of the given box for the current app.
+   * @param name The identifier of the box to return
+   * @param type
+   * @returns The current box value as a byte array
+   */
+  async getBoxValueFromABIType(name: BoxIdentifier, type: ABIType): Promise<ABIValue> {
+    return await this._algorand.app.getBoxValueFromABIType({
+      appId: this.appId,
+      boxName: name,
+      type,
+    })
+  }
+
+  /**
+   * Returns the values of all current boxes for the current app.
+   * Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
+   * @param filter Optional filter to filter which boxes' values are returned
+   * @returns The (name, value) pair of the boxes with values as raw byte arrays
+   */
+  async getBoxValues(filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: Uint8Array }[]> {
+    const names = (await this.getBoxNames()).filter(filter ?? ((_) => true))
+    const values = await this._algorand.app.getBoxValues(
+      this.appId,
+      names.map((name) => name.nameRaw),
+    )
+    return names.map((name, i) => ({ name, value: values[i] }))
+  }
+
+  /**
+   * Returns the values of all current boxes for the current app decoded using an ABI Type.
+   * Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
+   * @param type The ABI type to decode the values with
+   * @param filter Optional filter to filter which boxes' values are returned
+   * @returns The (name, value) pair of the boxes with values as the ABI Value
+   */
+  async getBoxValuesFromABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
+    const names = (await this.getBoxNames()).filter(filter ?? ((_) => true))
+    const values = await this._algorand.app.getBoxValuesFromABIType({
+      appId: this.appId,
+      boxNames: names.map((name) => name.nameRaw),
+      type,
+    })
+    return names.map((name, i) => ({ name, value: values[i] }))
+  }
+
+  /**
+   * Takes an error that may include a logic error from a call to the current app and re-exposes the
+   * error to include source code information via the source map and ARC-56 spec.
+   * @param e The error to parse
+   * @param isClearStateProgram Whether or not the code was running the clear state program (defaults to approval program)
+   * @returns The new error, or if there was no logic error or source map then the wrapped error with source details
+   */
+  exposeLogicError(e: Error, isClearStateProgram?: boolean): Error {
+    if ((!isClearStateProgram && this._approvalSourceMap == undefined) || (isClearStateProgram && this._clearSourceMap == undefined))
+      return e
+
+    const errorDetails = LogicError.parseLogicError(e)
+
+    const errorMessage = (isClearStateProgram ? this._appSpec.sourceInfo?.clear : this._appSpec.sourceInfo?.approval)?.find((s) =>
+      s?.pc?.includes(errorDetails?.pc ?? -1),
+    )?.errorMessage
+
+    if (errorDetails !== undefined && this.appSpec.source)
+      e = new LogicError(
+        errorDetails,
+        Buffer.from(isClearStateProgram ? this.appSpec.source.clear : this.appSpec.source.approval, 'base64')
+          .toString()
+          .split('\n'),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        isClearStateProgram ? this._clearSourceMap! : this._approvalSourceMap!,
+      )
+    if (errorMessage) {
+      const txId = JSON.stringify(e).match(/(?<=transaction )S+(?=:)/)?.[0]
+      const error = new Error(
+        `Runtime error when executing ${this._appName} (appId: ${this._appId}) in transaction ${txId}: ${errorMessage}`,
+      )
+      ;(error as any).cause = e
+      return error
+    }
+
+    return e
+  }
+
+  /**
+   * Compiles the approval and clear programs (if TEAL templates provided),
+   * performing any provided deploy-time parameter replacement and stores
+   * the source maps.
+   *
+   * If no TEAL templates provided it will use any byte code provided in the app spec.
+   *
+   * Will store any generated source maps for later use in debugging.
+   */
+  private async compile(compilation?: AppClientCompilationParams) {
+    const { deployTimeParams, updatable, deletable } = compilation ?? {}
+
+    if (!this._appSpec.source) {
+      if (!this._appSpec.byteCode?.approval || !this._appSpec.byteCode?.clear) {
+        throw new Error(`Attempt to compile app ${this._appName} without source or byteCode`)
+      }
+
+      return {
+        approvalProgram: Buffer.from(this._appSpec.byteCode.approval, 'base64'),
+        clearStateProgram: Buffer.from(this._appSpec.byteCode.clear, 'base64'),
+      }
+    }
+
+    const approvalTemplate = Buffer.from(this._appSpec.source.approval, 'base64').toString('utf-8')
+    const compiledApproval = await this._algorand.app.compileTealTemplate(approvalTemplate, deployTimeParams, {
+      updatable,
+      deletable,
+    })
+    this._approvalSourceMap = compiledApproval.sourceMap
+
+    const clearTemplate = Buffer.from(this._appSpec.source.clear, 'base64').toString('utf-8')
+    const compiledClear = await this._algorand.app.compileTealTemplate(clearTemplate, deployTimeParams, {
+      updatable,
+      deletable,
+    })
+    this._clearSourceMap = compiledClear.sourceMap
+
+    if (Config.debug && Config.projectRoot) {
+      persistSourceMaps({
+        sources: [
+          PersistSourceMapInput.fromCompiledTeal(compiledApproval, this._appName, 'approval.teal'),
+          PersistSourceMapInput.fromCompiledTeal(compiledClear, this._appName, 'clear.teal'),
+        ],
+        projectRoot: Config.projectRoot,
+        client: this._algorand.client.algod,
+        withSources: true,
+      })
+    }
+
+    return {
+      approvalProgram: compiledApproval.compiledBase64ToBytes,
+      compiledApproval,
+      clearStateProgram: compiledClear.compiledBase64ToBytes,
+      compiledClear,
+    }
+  }
+
+  /** Returns the sender for a call, using the `defaultSender`
+   * if none provided and throws an error if neither provided */
+  private getSender(sender: string | undefined): string {
+    if (!sender && !this._defaultSender) {
+      throw new Error(`No sender provided and no default sender present in app client for call to app ${this._appName}`)
+    }
+    return sender ?? this._defaultSender!
+  }
+
+  private getParams<TParams extends { sender?: string } | undefined, TOnComplete extends OnApplicationComplete>(
+    params: TParams,
+    onComplete: TOnComplete,
+  ) {
+    return {
+      ...params,
+      appId: this._appId,
+      sender: this.getSender(params?.sender),
+      onComplete,
+    }
+  }
+
+  private getABIParams<TParams extends { method: string; sender?: string }, TOnComplete extends OnApplicationComplete>(
+    params: TParams,
+    onComplete: TOnComplete,
+  ) {
+    return {
+      ...params,
+      appId: this._appId,
+      sender: this.getSender(params.sender),
+      method: this.getABIMethod(params.method)[1],
+      onComplete,
+    }
+  }
+
+  /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
+  private async handleCallErrors<TResult>(call: () => Promise<TResult>) {
+    try {
+      return await call()
+    } catch (e) {
+      throw this.exposeLogicError(e as Error)
+    }
+  }
+
+  private getABIMethod(methodNameOrSignature: string) {
+    let method: Method
+    if (!methodNameOrSignature.includes('(')) {
+      const methods = this._appSpec.methods.filter((m) => m.name === methodNameOrSignature)
+      if (methods.length === 0) throw new Error(`Unable to find method ${methodNameOrSignature} in ${this._appName} app.`)
+      if (methods.length > 1) {
+        throw new Error(
+          `Received a call to method ${methodNameOrSignature} in contract ${
+            this._appName
+          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${this._appSpec.methods
+            .map((m) => new ABIMethod(m).getSignature())
+            .join(', ')}`,
+        )
+      }
+      method = methods[0]
+    } else {
+      const m = this._appSpec.methods.find((m) => new ABIMethod(m).getSignature() === methodNameOrSignature)
+      if (!m) throw new Error(`Unable to find method ${methodNameOrSignature} in ${this._appName} app.`)
+      method = m
+    }
+    return [method, new algosdk.ABIMethod(method)] as const
+  }
+
+  private getTupleType(struct: StructFields): ABITupleType {
+    return new ABITupleType(Object.values(struct).map((v) => (typeof v === 'string' ? ABIType.from(v) : (this.getTupleType(v) as ABIType))))
+  }
+
+  private getABIDecodedValue(value: Uint8Array | number | bigint, type: string): ABIValue {
+    if (type === 'bytes' || typeof value !== 'object') return value
+    if (this._appSpec.structs[type]) {
+      return this.getTupleType(this._appSpec.structs[type]).decode(value)
+    }
+    return ABIType.from(type).decode(value)
+  }
+
+  private getABIEncodedValue(value: Uint8Array | ABIValue, type: string): Uint8Array {
+    if (typeof value === 'object' && value instanceof Uint8Array) return value
+    if (type === 'bytes') {
+      if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
+      return value
+    }
+    if (this._appSpec.structs[type]) {
+      return this.getTupleType(this._appSpec.structs[type]).encode(value)
+    }
+    return ABIType.from(type).encode(value)
+  }
+
+  private getBoxMethods() {
+    const that = this
+    const stateMethods = {
+      /**
+       * Returns all single-key state values in a record keyed by the key name and the value a decoded ABI value.
+       */
+      getAll: async () => {
+        return Object.fromEntries(
+          await Promise.all(Object.keys(that._appSpec.state.keys.box).map(async (key) => [key, await stateMethods.getValue(key)])),
+        ) as Record<string, any>
+      },
+      /**
+       * Returns a single state value for the current app with the value a decoded ABI value.
+       * @param name The name of the state value to retrieve the value for
+       * @returns
+       */
+      getValue: async (name: string) => {
+        const metadata = that._appSpec.state.keys.box[name]
+        const value = await that.getBoxValue(Buffer.from(metadata.key, 'base64'))
+        return that.getABIDecodedValue(value, metadata.valueType)
+      },
+      /**
+       *
+       * @param mapName The name of the map to read from
+       * @param key The key within the map (without any map prefix) as either a Buffer with the bytes or a value
+       *  that will be converted to bytes by encoding it using the specified ABI key type
+       *  in the ARC-56 spec
+       */
+      getMapValue: async (mapName: string, key: Buffer | any, appState?: AppState) => {
+        const metadata = that._appSpec.state.maps.box[mapName]
+        const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
+        const encodedKey = Buffer.concat([prefix, that.getABIEncodedValue(key, metadata.keyType)])
+        const base64Key = Buffer.from(encodedKey).toString('base64')
+        const value = await that.getBoxValue(Buffer.from(base64Key, 'base64'))
+        return that.getABIDecodedValue(value, metadata.valueType)
+      },
+
+      /**
+       *
+       * @param mapName The name of the map to read from
+       * @param key The key within the map as either a Buffer with the bytes or a value
+       *  that will be converted to bytes by encoding it using the specified ABI key type
+       *  in the ARC-56 spec
+       * @param appState
+       */
+      getMap: async (mapName: string) => {
+        const metadata = that._appSpec.state.maps.box[mapName]
+        const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
+        const boxNames = await that.getBoxNames()
+
+        return new Map(
+          await Promise.all(
+            boxNames
+              .filter((b) => binaryStartsWith(b.nameRaw, prefix))
+              .map(async (b) => {
+                const encodedKey = Buffer.concat([prefix, b.nameRaw])
+                const base64Key = Buffer.from(encodedKey).toString('base64')
+                return [
+                  that.getABIDecodedValue(b.nameRaw.slice(prefix.length), metadata.keyType),
+                  that.getABIDecodedValue(await that.getBoxValue(Buffer.from(base64Key, 'base64')), metadata.valueType),
+                ] as const
+              }),
+          ),
+        )
+      },
+    }
+    return stateMethods
+  }
+
+  private getStateMethods(
+    stateGetter: () => Promise<AppState>,
+    keyGetter: () => {
+      [name: string]: StorageKey
+    },
+    mapGetter: () => {
+      [name: string]: StorageMap
+    },
+  ) {
+    const that = this
+    const stateMethods = {
+      /**
+       * Returns all single-key state values in a record keyed by the key name and the value a decoded ABI value.
+       */
+      getAll: async () => {
+        const appState = await stateGetter()
+        return Object.fromEntries(
+          await Promise.all(Object.keys(keyGetter()).map(async (key) => [key, await stateMethods.getValue(key, appState)])),
+        ) as Record<string, any>
+      },
+      /**
+       * Returns a single state value for the current app with the value a decoded ABI value.
+       * @param name The name of the state value to retrieve the value for
+       * @param appState Optional cached value of the current state
+       * @returns
+       */
+      getValue: async (name: string, appState?: AppState) => {
+        const state = Object.values(appState ?? (await stateGetter()))
+        const metadata = keyGetter()[name]
+        const value = state.find((s) => s.keyBase64 === metadata.key)
+
+        if (value && 'valueRaw' in value) {
+          return that.getABIDecodedValue(value.valueRaw, metadata.valueType)
+        }
+
+        return value?.value
+      },
+      /**
+       *
+       * @param mapName The name of the map to read from
+       * @param key The key within the map (without any map prefix) as either a Buffer with the bytes or a value
+       *  that will be converted to bytes by encoding it using the specified ABI key type
+       *  in the ARC-56 spec
+       * @param appState Optional cached value of the current state
+       */
+      getMapValue: async (mapName: string, key: Buffer | any, appState?: AppState) => {
+        const state = Object.values(appState ?? (await stateGetter()))
+        const metadata = mapGetter()[mapName]
+
+        const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
+        const encodedKey = Buffer.concat([prefix, that.getABIEncodedValue(key, metadata.keyType)])
+        const base64Key = Buffer.from(encodedKey).toString('base64')
+        const value = state.find((s) => s.keyBase64 === base64Key)
+
+        if (value && 'valueRaw' in value) {
+          return that.getABIDecodedValue(value.valueRaw, metadata.valueType)
+        }
+
+        return value?.value
+      },
+
+      /**
+       *
+       * @param mapName The name of the map to read from
+       * @param key The key within the map as either a Buffer with the bytes or a value
+       *  that will be converted to bytes by encoding it using the specified ABI key type
+       *  in the ARC-56 spec
+       * @param appState
+       */
+      getMap: async (mapName: string) => {
+        const state = Object.values(await stateGetter())
+        const metadata = mapGetter()[mapName]
+
+        const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
+
+        return new Map(
+          state
+            .filter((s) => binaryStartsWith(s.keyRaw, prefix))
+            .map((s) => {
+              const key = s.keyRaw.slice(prefix.length)
+              return [
+                that.getABIDecodedValue(key, metadata.keyType),
+                that.getABIDecodedValue('valueRaw' in s ? s.valueRaw : s.value, metadata.valueType),
+              ]
+            }),
+        )
+      },
+    }
+    return stateMethods
+  }
+}
+
+/**
+ * @deprecated Use `AppClient` instead.
+ *
+ * Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
   private algod: Algodv2
   private indexer?: algosdk.Indexer

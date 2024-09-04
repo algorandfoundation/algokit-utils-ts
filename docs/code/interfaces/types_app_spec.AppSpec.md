@@ -27,7 +27,7 @@ The config of all BARE calls (i.e. non ABI calls with no args)
 
 #### Defined in
 
-[src/types/app-spec.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L18)
+[src/types/app-spec.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L134)
 
 ___
 
@@ -39,7 +39,7 @@ The ABI-0004 contract definition see https://github.com/algorandfoundation/ARCs/
 
 #### Defined in
 
-[src/types/app-spec.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L12)
+[src/types/app-spec.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L128)
 
 ___
 
@@ -51,7 +51,7 @@ Method call hints
 
 #### Defined in
 
-[src/types/app-spec.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L8)
+[src/types/app-spec.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L124)
 
 ___
 
@@ -63,7 +63,7 @@ The values that make up the local and global state
 
 #### Defined in
 
-[src/types/app-spec.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L14)
+[src/types/app-spec.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L130)
 
 ___
 
@@ -75,7 +75,7 @@ The TEAL source
 
 #### Defined in
 
-[src/types/app-spec.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L10)
+[src/types/app-spec.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L126)
 
 ___
 
@@ -87,4 +87,4 @@ The rolled-up schema allocation values for local and global state
 
 #### Defined in
 
-[src/types/app-spec.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L16)
+[src/types/app-spec.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L132)

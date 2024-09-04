@@ -23,7 +23,7 @@ Global storage spec
 
 #### Defined in
 
-[src/types/app-spec.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L166)
+[src/types/app-spec.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L282)
 
 ___
 
@@ -35,4 +35,4 @@ Local storage spec
 
 #### Defined in
 
-[src/types/app-spec.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L168)
+[src/types/app-spec.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L284)

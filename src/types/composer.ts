@@ -1,8 +1,10 @@
 import algosdk from 'algosdk'
+import { Config } from '../config'
+import { simulateAndPersistResponse } from '../debugging'
 import { encodeLease, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { APP_PAGE_MAX_SIZE } from './app'
+import { ABIReturn, APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
@@ -11,6 +13,7 @@ import Transaction = algosdk.Transaction
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import encodeAddress = algosdk.encodeAddress
+import SimulateResponse = algosdk.modelsv2.SimulateResponse
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
@@ -1193,6 +1196,46 @@ export default class AlgoKitComposer {
       },
       this.algod,
     )
+  }
+
+  /**
+   * Compose the atomic transaction group and simulate sending it to the network
+   * @returns The simulation result
+   */
+  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
+    await this.build()
+
+    if (Config.debug && Config.projectRoot && !Config.traceAll) {
+      // Dump the traces to a file for use with AlgoKit AVM debugger
+      // Checks for false on traceAll because it should have been already
+      // executed above
+      await simulateAndPersistResponse({
+        atc: this.atc,
+        projectRoot: Config.projectRoot,
+        algod: this.algod,
+        bufferSizeMb: Config.traceBufferSizeMb,
+      })
+    }
+
+    const { methodResults, simulateResponse } = await this.atc.simulate(this.algod)
+
+    if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
+      const error = new Error(
+        `Transaction failed at transaction(s) ${simulateResponse.txnGroups[0].failedAt.join(', ')} in the group. ${simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage}`,
+      )
+      ;(error as any).simulateResponse = simulateResponse
+      throw error
+    }
+
+    const transactions = this.atc.buildGroup().map((t) => t.txn)
+    return {
+      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
+      transactions: transactions,
+      txIds: transactions.map((t) => t.txID()),
+      groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
+      simulateResponse,
+      returns: methodResults.map((m) => m as ABIReturn),
+    }
   }
 
   static arc2Note(note: Arc2TransactionNote): Uint8Array {

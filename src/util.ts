@@ -73,3 +73,25 @@ export const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
   cached.cache = cache
   return cached as (val: T) => R
 }
+
+export const binaryStartsWith = (base: Uint8Array, startsWith: Uint8Array): boolean => {
+  if (startsWith.length > base.length) return false
+  for (let i = 0; i < startsWith.length; i++) {
+    if (base[i] !== startsWith[i]) return false
+  }
+  return true
+}
+
+export type DeepReadonly<T> = T extends (infer R)[]
+  ? DeepReadonlyArray<R>
+  : T extends Function
+    ? T
+    : T extends object
+      ? DeepReadonlyObject<T>
+      : T
+
+export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {}
+
+export type DeepReadonlyObject<T> = {
+  readonly [P in keyof T]: DeepReadonly<T[P]>
+}
