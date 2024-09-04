@@ -12,7 +12,10 @@ Parameters to create an app client
 
 - [algorand](types_app_client.AppClientParams.md#algorand)
 - [appId](types_app_client.AppClientParams.md#appid)
+<<<<<<< HEAD
 - [appName](types_app_client.AppClientParams.md#appname)
+=======
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 - [appSpec](types_app_client.AppClientParams.md#appspec)
 - [approvalSourceMap](types_app_client.AppClientParams.md#approvalsourcemap)
 - [clearSourceMap](types_app_client.AppClientParams.md#clearsourcemap)
@@ -24,11 +27,17 @@ Parameters to create an app client
 
 • **algorand**: [`AlgorandClientInterface`](types_algorand_client_interface.AlgorandClientInterface.md)
 
+<<<<<<< HEAD
 An `AlgorandClient` instance
 
 #### Defined in
 
 [src/types/app-client.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L315)
+=======
+#### Defined in
+
+[src/types/app-client.ts:301](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L301)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -40,6 +49,7 @@ The ID of the app instance this client should make calls against.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L305)
 
 ___
@@ -54,6 +64,9 @@ Defaults to the ARC-32/ARC-56 app spec name
 #### Defined in
 
 [src/types/app-client.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L321)
+=======
+[src/types/app-client.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L292)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -68,7 +81,11 @@ The ARC-56 or ARC-32 application spec as either:
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L312)
+=======
+[src/types/app-client.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L299)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -80,7 +97,11 @@ Optional source map for the approval program
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L325)
+=======
+[src/types/app-client.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L306)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -92,7 +113,11 @@ Optional source map for the clear state program
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L327)
+=======
+[src/types/app-client.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L308)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -104,4 +129,8 @@ Optional address to use for the account to use as the default sender for calls.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L323)
+=======
+[src/types/app-client.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L304)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)

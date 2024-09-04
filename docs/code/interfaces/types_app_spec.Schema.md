@@ -23,7 +23,11 @@ Declared storage schema
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-spec.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L278)
+=======
+[src/types/app-spec.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L274)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -35,4 +39,8 @@ Reserved storage schema
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-spec.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L280)
+=======
+[src/types/app-spec.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L276)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)

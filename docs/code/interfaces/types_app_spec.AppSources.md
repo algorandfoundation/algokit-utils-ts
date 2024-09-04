@@ -23,7 +23,11 @@ The TEAL source of the approval program
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-spec.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L147)
+=======
+[src/types/app-spec.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L143)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -35,4 +39,8 @@ The TEAL source of the clear program
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-spec.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L149)
+=======
+[src/types/app-spec.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L145)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)

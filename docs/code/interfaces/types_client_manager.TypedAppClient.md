@@ -41,6 +41,7 @@ Interface to identify a typed client that can be used to interact with an applic
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/client-manager.ts:617](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L617)
 
 ## Methods
@@ -82,3 +83,6 @@ ___
 #### Defined in
 
 [src/types/client-manager.ts:618](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L618)
+=======
+[src/types/client-manager.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L543)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)

@@ -63,7 +63,11 @@ Parameters to create an `AlgoKitComposer`.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
+=======
+[src/types/composer.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L425)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -73,7 +77,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L401)
+=======
+[src/types/composer.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L386)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -85,7 +93,11 @@ Parameters to define an application call transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L381)
+=======
+[src/types/composer.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L374)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -95,7 +107,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L398)
+=======
+[src/types/composer.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L383)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -105,7 +121,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L345)
+=======
+[src/types/composer.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L340)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -115,7 +135,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L400)
+=======
+[src/types/composer.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L385)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -127,7 +151,11 @@ Parameters to define an application delete call transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L394)
+=======
+[src/types/composer.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L379)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -143,6 +171,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L412)
 
 ___
@@ -166,6 +195,9 @@ ___
 #### Defined in
 
 [src/types/composer.ts:403](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L403)
+=======
+[src/types/composer.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L388)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -175,7 +207,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L399)
+=======
+[src/types/composer.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L384)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -185,7 +221,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L370)
+=======
+[src/types/composer.ts:363](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L363)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -201,7 +241,11 @@ all fields are immutable from that point forward.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L199)
+=======
+[src/types/composer.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L194)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -215,7 +259,11 @@ The account that sends this transaction will automatically be opted in to the as
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L83)
+=======
+[src/types/composer.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L78)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -229,7 +277,11 @@ Created assets can be destroyed only by the asset manager account. All of the as
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L257)
+=======
+[src/types/composer.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L252)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -241,7 +293,11 @@ Parameters to define an asset freeze transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L244)
+=======
+[src/types/composer.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L239)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -253,7 +309,11 @@ Parameters to define an asset opt-in transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L285)
+=======
+[src/types/composer.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L280)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -265,7 +325,11 @@ Parameters to define an asset opt-out transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L291)
+=======
+[src/types/composer.ts:286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L286)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -277,7 +341,11 @@ Parameters to define an asset transfer transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L263)
+=======
+[src/types/composer.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L258)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -289,7 +357,11 @@ Common parameters for defining an application call transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L324)
+=======
+[src/types/composer.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L319)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -317,7 +389,11 @@ Common parameters for defining a transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L26)
+=======
+[src/types/composer.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L21)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -329,7 +405,11 @@ Parameters to define an online key registration transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L302)
+=======
+[src/types/composer.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L297)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -341,6 +421,7 @@ Parameters to define a payment transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L67)
 
 ___
@@ -354,6 +435,9 @@ Options to control a simulate request
 #### Defined in
 
 [src/types/composer.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L23)
+=======
+[src/types/composer.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L62)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ## Variables
 
@@ -363,4 +447,8 @@ Options to control a simulate request
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L20)
+=======
+[src/types/composer.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L18)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)

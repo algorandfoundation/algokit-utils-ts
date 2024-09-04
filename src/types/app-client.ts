@@ -84,6 +84,7 @@ import Indexer = algosdk.Indexer
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.SourceMap
 import SuggestedParams = algosdk.SuggestedParams
+import ABITupleType = algosdk.ABITupleType
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {

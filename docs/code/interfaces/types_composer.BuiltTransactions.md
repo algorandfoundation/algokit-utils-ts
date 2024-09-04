@@ -24,7 +24,11 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L473)
+=======
+[src/types/composer.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L448)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -36,7 +40,11 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L475)
+=======
+[src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -48,4 +56,8 @@ The built transactions
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
+=======
+[src/types/composer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L446)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)

@@ -4,10 +4,13 @@
 
 ## Table of contents
 
+<<<<<<< HEAD
 ### Classes
 
 - [Arc56Method](../classes/types_app_arc56.Arc56Method.md)
 
+=======
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 ### Interfaces
 
 - [Arc56Contract](../interfaces/types_app_arc56.Arc56Contract.md)
@@ -20,11 +23,15 @@
 
 ### Type Aliases
 
+<<<<<<< HEAD
 - [ABIStruct](types_app_arc56.md#abistruct)
+=======
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 - [ABIType](types_app_arc56.md#abitype)
 - [AVMBytes](types_app_arc56.md#avmbytes)
 - [StructName](types_app_arc56.md#structname)
 
+<<<<<<< HEAD
 ### Functions
 
 - [getABIDecodedValue](types_app_arc56.md#getabidecodedvalue)
@@ -53,6 +60,10 @@ Decoded ARC-56 struct as a struct rather than a tuple.
 
 ___
 
+=======
+## Type Aliases
+
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 ### ABIType
 
 Ƭ **ABIType**: `string`
@@ -61,7 +72,11 @@ An ABI-encoded type
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-arc56.ts:395](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L395)
+=======
+[src/types/app-arc56.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L196)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -73,7 +88,11 @@ Raw byteslice without the length prefixed that is specified in ARC-4
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-arc56.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L401)
+=======
+[src/types/app-arc56.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L202)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
 
 ___
 
@@ -85,6 +104,7 @@ The name of a defined struct
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-arc56.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L398)
 
 ## Functions
@@ -276,3 +296,6 @@ The smart contract response with an updated return value
 #### Defined in
 
 [src/types/app-arc56.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L175)
+=======
+[src/types/app-arc56.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L199)
+>>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
