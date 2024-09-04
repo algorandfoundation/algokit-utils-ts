@@ -140,7 +140,7 @@ export async function updateApp(
 /**
  * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
  *
- * Returns an `algosdk.OnApplicationComplete` for the given onCompleteAction.
+ * Returns a `algosdk.OnApplicationComplete` for the given onCompleteAction.
  *
  * If given `undefined` will return `OnApplicationComplete.NoOpOC`.
  *

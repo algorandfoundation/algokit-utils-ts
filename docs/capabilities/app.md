@@ -38,7 +38,7 @@ When [sending transactions directly via AlgorandClient](./algorand-client.md#sen
     - `decodeError: Error` - If there was a decoding error the above 2 values will be `undefined` and this will have the error
 - Update and create calls extend [`SendAppUpdateTransactionResult`](../code/modules/types_transaction.md#sendappupdatetransactionresult), which has:
   - `compiledApproval: CompiledTeal | undefined` - The compilation result of approval, if approval program was supplied as a string and thus compiled by algod
-  - `compiledClear: CompiledTeal | undefined` - The compilation result of approval, if clear state program was supplied as a string and thus compiled by algod
+  - `compiledClear: CompiledTeal | undefined` - The compilation result of clear state, if clear state program was supplied as a string and thus compiled by algod
 - Create calls extend [`SendAppCreateTransactionResult`](../code/modules/types_transaction.md#sendappcreatetransactionresult), which has:
   - `appId: bigint` - The id of the created app
   - `appAddress: string` - The Algorand address of the account associated with the app
@@ -304,7 +304,7 @@ await algorand.send.appCallMethodCall({
 
 ### Global state
 
-To access and parse global state you can use the following staticc method from [`AppManager`](#appmanager):
+To access and parse global state you can use the following static method from [`AppManager`](#appmanager):
 
 - [`AppManager.decodeAppState(state)`](../code/classes/types_app_manager.AppManager.md#decodeappstate) - Takes the raw response from the algod API for global state and returns a friendly generic object keyed by the UTF-8 value of the key
 
@@ -349,7 +349,7 @@ To access and parse box values and names for an app you can use the following me
 - [`appManager.getBoxValues(appId: bigint, boxNames: BoxIdentifier[])`](../code/modules/index.md#getboxvalues) - Returns the binary values of the given box names for the given app ID
 - [`appManager.getBoxValueFromABIType(request: {appId: bigint, boxName: BoxIdentifier, type: algosdk.ABIType}})`](../code/modules/index.md#getboxvaluefromabitype) - Returns the parsed ABI value of the given box name for the given app ID for the provided ABI type
 - [`appManager.getBoxValuesFromABIType(request: {appId: bigint, boxNames: BoxIdentifier[], type: algosdk.ABIType})`](../code/modules/index.md#getboxvaluesfromabitype) - Returns the parsed ABI values of the given box names for the given app ID for the provided ABI type
-- [`AppManager.getBoxReference(boxId)`](../code/modules/index.md#getboxreference) - Returns an `algosdk.BoxReference` representation of the given [box identifier / reference](#box-references), which is useful when constructing a raw `algosdk.Transaction`
+- [`AppManager.getBoxReference(boxId)`](../code/modules/index.md#getboxreference) - Returns a `algosdk.BoxReference` representation of the given [box identifier / reference](#box-references), which is useful when constructing a raw `algosdk.Transaction`
 
 ```typescript
 const appId = 12345n

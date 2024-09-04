@@ -777,7 +777,7 @@ export default class AlgoKitComposer {
   /**
    * Builds an ABI method call transaction and any other associated transactions represented in the ABI args.
    * @param includeSigner Whether to include the actual signer for the transactions.
-   *  If you are just building transactions without signers yet then set this to `true`.
+   *  If you are just building transactions without signers yet then set this to `false`.
    */
   private async buildMethodCall(
     params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,

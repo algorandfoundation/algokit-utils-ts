@@ -929,7 +929,7 @@ Builds an ABI method call transaction and any other associated transactions repr
 | :------ | :------ | :------ |
 | `params` | [`AppCreateMethodCall`](../modules/types_composer.md#appcreatemethodcall) \| [`AppUpdateMethodCall`](../modules/types_composer.md#appupdatemethodcall) \| [`AppCallMethodCall`](../modules/types_composer.md#appcallmethodcall) | - |
 | `suggestedParams` | `SuggestedParams` | - |
-| `includeSigner` | `boolean` | Whether to include the actual signer for the transactions. If you are just building transactions without signers yet then set this to `true`. |
+| `includeSigner` | `boolean` | Whether to include the actual signer for the transactions. If you are just building transactions without signers yet then set this to `false`. |
 
 #### Returns
 

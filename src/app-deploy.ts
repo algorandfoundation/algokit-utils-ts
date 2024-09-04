@@ -27,11 +27,8 @@ import AlgoKitComposer, {
 } from './types/composer'
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import getApplicationAddress = algosdk.getApplicationAddress
 import Indexer = algosdk.Indexer
 import modelsv2 = algosdk.modelsv2
-import TransactionType = algosdk.TransactionType
 
 /**
  * @deprecated Use `algorand.appDeployer.deploy` instead.
