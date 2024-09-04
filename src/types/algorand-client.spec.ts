@@ -5,7 +5,7 @@ import { algorandFixture } from '../testing'
 import { TransactionSignerAccount } from './account'
 import AlgorandClient from './algorand-client'
 import { AlgoAmount } from './amount'
-import { MethodCallParams } from './composer'
+import { AppCallMethodCall } from './composer'
 
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
   const teal = new Uint8Array(Buffer.from(b64Teal, 'base64'))
@@ -83,7 +83,7 @@ describe('AlgorandClient', () => {
     const methodRes = await algorand
       .newGroup()
       .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgo(1), note: new Uint8Array([1]) })
-      .addMethodCall({
+      .addAppCallMethodCall({
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('doMath')!,
@@ -101,17 +101,15 @@ describe('AlgorandClient', () => {
   })
 
   test('method with txn arg', async () => {
-    const txnArgParams = {
-      sender: alice.addr,
-      appId: appId,
-      method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
-    }
-
     const txnRes = await algorand
       .newGroup()
       .addPayment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0), note: new Uint8Array([1]) })
-      .addMethodCall(txnArgParams)
+      .addAppCallMethodCall({
+        sender: alice.addr,
+        appId: appId,
+        method: appClient.appClient.getABIMethod('txnArg')!,
+        args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: (0).microAlgo() })],
+      })
       .execute()
 
     expect(txnRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
@@ -122,11 +120,11 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('helloWorld')!,
-    } satisfies MethodCallParams
+    } satisfies AppCallMethodCall
 
     const methodArgRes = await algorand
       .newGroup()
-      .addMethodCall({
+      .addAppCallMethodCall({
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('methodArg')!,
@@ -144,11 +142,11 @@ describe('AlgorandClient', () => {
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
       args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
-    } satisfies MethodCallParams
+    } satisfies AppCallMethodCall
 
     const nestedTxnArgRes = await algorand
       .newGroup()
-      .addMethodCall({
+      .addAppCallMethodCall({
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('nestedTxnArg')!,
@@ -166,7 +164,7 @@ describe('AlgorandClient', () => {
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
       args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
-    } satisfies MethodCallParams
+    } satisfies AppCallMethodCall
 
     const secondTxnCall = {
       sender: alice.addr,
@@ -174,11 +172,11 @@ describe('AlgorandClient', () => {
       method: appClient.appClient.getABIMethod('txnArg')!,
       args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(1) })],
       note: new Uint8Array([1]),
-    } satisfies MethodCallParams
+    } satisfies AppCallMethodCall
 
     const doubleNestedTxnArgRes = await algorand
       .newGroup()
-      .addMethodCall({
+      .addAppCallMethodCall({
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('doubleNestedTxnArg')!,
@@ -206,12 +204,11 @@ describe('AlgorandClient', () => {
   test('methodCall create', async () => {
     const contract = new algosdk.ABIContract(APP_SPEC.contract)
 
-    await algorand.send.methodCall({
+    await algorand.send.appCreateMethodCall({
       sender: alice.addr,
-      appId: 0n,
       method: contract.getMethodByName('createApplication'),
       approvalProgram: await compileProgram(algorand, APP_SPEC.source.approval),
-      clearProgram: await compileProgram(algorand, APP_SPEC.source.clear),
+      clearStateProgram: await compileProgram(algorand, APP_SPEC.source.clear),
     })
   })
 

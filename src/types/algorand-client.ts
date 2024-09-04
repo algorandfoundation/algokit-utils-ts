@@ -3,6 +3,8 @@ import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './acc
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
+import { AppDeployer } from './app-deployer'
+import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import AlgoKitComposer from './composer'
@@ -16,6 +18,8 @@ import LogicSigAccount = algosdk.LogicSigAccount
 export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
+  private _appManager: AppManager
+  private _appDeployer: AppDeployer
   private _assetManager: AssetManager
   private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
@@ -29,9 +33,11 @@ export class AlgorandClient {
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config)
     this._accountManager = new AccountManager(this._clientManager)
+    this._appManager = new AppManager(this._clientManager.algod)
     this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
-    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager)
+    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager, this._appManager)
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
+    this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
   /**
@@ -140,6 +146,16 @@ export class AlgorandClient {
     return this._assetManager
   }
 
+  /** Methods for interacting with apps. */
+  public get app() {
+    return this._appManager
+  }
+
+  /** Methods for deploying apps and managing app deployment metadata. */
+  public get appDeployer() {
+    return this._appDeployer
+  }
+
   /** Start a new `AlgoKitComposer` transaction group */
   public newGroup() {
     return new AlgoKitComposer({
@@ -147,6 +163,7 @@ export class AlgorandClient {
       getSigner: (addr: string) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
+      appManager: this._appManager,
     })
   }
 

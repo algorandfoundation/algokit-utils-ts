@@ -1,8 +1,8 @@
 import algosdk from 'algosdk'
 import * as crypto from 'crypto'
-import { compileTeal } from '../app'
 import { Config } from '../config'
 import { CompiledTeal } from '../types/app'
+import { AppManager } from '../types/app-manager'
 import { AVMDebuggerSourceMap, AVMDebuggerSourceMapEntry, PersistSourceMapsParams } from '../types/debugging'
 import { isNode } from '../util'
 
@@ -102,7 +102,7 @@ async function buildAVMSourcemap({
   const path = await import('path')
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const result = rawTeal ? await compileTeal(rawTeal, client) : compiledTeal!
+  const result = rawTeal ? await new AppManager(client).compileTeal(rawTeal) : compiledTeal!
   const programHash = crypto.createHash('SHA-512/256').update(Buffer.from(result.compiled, 'base64')).digest('base64')
   const sourceMap = result.sourceMap
   sourceMap.sources = withSources ? [`${fileName}${TEAL_FILE_EXT}`] : []

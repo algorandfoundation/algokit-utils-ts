@@ -15,6 +15,7 @@ import { getTestingAppContract } from '../../tests/example-contracts/testing-app
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { ABIAppCallArg } from './app'
 import { ApplicationClient } from './app-client'
+import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
 
 describe('application-client', () => {
@@ -428,14 +429,11 @@ describe('application-client', () => {
 
     // If the rekey didn't work this will throw
     const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
-    await algokit.transferAlgos(
-      {
-        amount: (0).algo(),
-        from: rekeyedAccount,
-        to: testAccount,
-      },
-      algod,
-    )
+    await algorand.send.payment({
+      amount: (0).algo(),
+      sender: rekeyedAccount.addr,
+      receiver: testAccount.addr,
+    })
   })
 
   test('Create app with abi', async () => {
@@ -542,42 +540,34 @@ describe('application-client', () => {
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const txn = await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: testAccount.addr,
-        amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
-        skipSending: true,
-      },
-      algod,
-    )
+    const { algod, algorand, indexer, testAccount } = localnet.context
+    const txn = await algorand.transactions.payment({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     const result = await client.call({
       method: 'call_abi_txn',
-      methodArgs: [txn.transaction, 'test'],
+      methodArgs: [txn, 'test'],
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, methodArgs: [] }, result.confirmations[1])
-    expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], client.getABIMethod('call_abi_txn')!)
+    expect(returnValue?.returnValue).toBe(`Sent ${txn.amount}. test`)
   })
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const txn = await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: testAccount.addr,
-        amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
-        skipSending: true,
-      },
-      algod,
-    )
+    const { algod, algorand, indexer, testAccount } = localnet.context
+    const txn = await algorand.transactions.payment({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     let indexes: number[] = []
@@ -588,7 +578,7 @@ describe('application-client', () => {
 
     await client.call({
       method: 'call_abi_txn',
-      methodArgs: [txn.transaction, 'test'],
+      methodArgs: [txn, 'test'],
       sender: { addr: testAccount.addr, signer },
     })
 
@@ -596,19 +586,13 @@ describe('application-client', () => {
   })
 
   test('Sign transaction in group with different signer if provided', async () => {
-    const { algod, indexer, testAccount, generateAccount } = localnet.context
+    const { algod, algorand, indexer, testAccount, generateAccount } = localnet.context
     const signer = await generateAccount({ initialFunds: (1).algo() })
-    const transaction = (
-      await algokit.transferAlgos(
-        {
-          from: signer,
-          to: signer.addr,
-          amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
-          skipSending: true,
-        },
-        algod,
-      )
-    ).transaction
+    const transaction = await algorand.transactions.payment({
+      sender: signer.addr,
+      receiver: signer.addr,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     await client.call({
@@ -633,11 +617,7 @@ describe('application-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    const returnValue = algokit.getABIReturn(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      { method: client.getABIMethod('call_abi_foreign_refs')!, methodArgs: [] },
-      result.confirmations[0],
-    )
+    const returnValue = AppManager.getABIReturn(result.confirmations[0], client.getABIMethod('call_abi_foreign_refs')!)
     const testAccountPublicKey = algosdk.decodeAddress(testAccount.addr).publicKey
     expect(returnValue?.returnValue).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
   })

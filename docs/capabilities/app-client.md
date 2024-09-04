@@ -117,7 +117,7 @@ These calls will only work if the Application Client knows the ID of the app, wh
 
 The input payload for all of these calls is the same as `delete`; [`AppClientCallParams`](#appclientcallparams).
 
-The return payload for all of these is the same as [`callApp`](./app.md#calling-an-app).
+The return payload for all of these is the same as [`callApp`](./app.md#calling).
 
 ## Getting a reference to the app
 

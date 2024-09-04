@@ -11,6 +11,7 @@ Parameters to configure transaction execution.
 ### Properties
 
 - [maxRoundsToWaitForConfirmation](types_composer.ExecuteParams.md#maxroundstowaitforconfirmation)
+- [populateAppCallResources](types_composer.ExecuteParams.md#populateappcallresources)
 - [suppressLog](types_composer.ExecuteParams.md#suppresslog)
 
 ## Properties
@@ -23,7 +24,19 @@ The number of rounds to wait for confirmation. By default until the latest lastV
 
 #### Defined in
 
-[src/types/composer.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L382)
+[src/types/composer.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L424)
+
+___
+
+### populateAppCallResources
+
+• `Optional` **populateAppCallResources**: `boolean`
+
+Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`.
+
+#### Defined in
+
+[src/types/composer.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L428)
 
 ___
 
@@ -35,4 +48,4 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/composer.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L384)
+[src/types/composer.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L426)

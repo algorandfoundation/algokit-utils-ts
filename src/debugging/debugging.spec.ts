@@ -4,7 +4,6 @@ import * as fsSync from 'fs'
 import * as fs from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
-import { compileTeal } from '../app'
 import { algorandFixture } from '../testing'
 import { AVMDebuggerSourceMap, PersistSourceMapInput } from '../types/debugging'
 import { persistSourceMaps } from './debugging'
@@ -77,7 +76,7 @@ int 1
   test(
     'build teal sourceMaps without sources',
     async () => {
-      const { algod } = localnet.context
+      const { algod, algorand } = localnet.context
       const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'cwd'))
 
       const approval = `
@@ -88,8 +87,8 @@ int 1
 #pragma version 9
 int 1
 `
-      const approvalCompiled = await compileTeal(approval, algod)
-      const clearCompiled = await compileTeal(clear, algod)
+      const approvalCompiled = await algorand.app.compileTeal(approval)
+      const clearCompiled = await algorand.app.compileTeal(clear)
       const sources = [
         PersistSourceMapInput.fromCompiledTeal(approvalCompiled, 'cool_app', 'approval.teal'),
         PersistSourceMapInput.fromCompiledTeal(clearCompiled, 'cool_app', 'clear'),

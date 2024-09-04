@@ -41,6 +41,9 @@
 - [AppCallArgs](types_app.md#appcallargs)
 - [AppCallType](types_app.md#appcalltype)
 - [BoxIdentifier](types_app.md#boxidentifier)
+- [SendAppCreateTransactionResult](types_app.md#sendappcreatetransactionresult)
+- [SendAppTransactionResult](types_app.md#sendapptransactionresult)
+- [SendAppUpdateTransactionResult](types_app.md#sendappupdatetransactionresult)
 
 ### Variables
 
@@ -60,7 +63,7 @@ An argument for an ABI method, either a primitive value, or a transaction with o
 
 #### Defined in
 
-[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
+[src/types/app.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L102)
 
 ___
 
@@ -72,7 +75,7 @@ App call args for an ABI call
 
 #### Defined in
 
-[src/types/app.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L107)
+[src/types/app.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L113)
 
 ___
 
@@ -84,7 +87,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L217)
+[src/types/app.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L236)
 
 ___
 
@@ -98,13 +101,17 @@ Arguments to pass to an app call either:
 
 #### Defined in
 
-[src/types/app.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L118)
+[src/types/app.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L124)
 
 ___
 
 ### AppCallType
 
 Ƭ **AppCallType**: ``"no_op"`` \| ``"opt_in"`` \| ``"close_out"`` \| ``"clear_state"`` \| ``"update_application"`` \| ``"delete_application"``
+
+**`Deprecated`**
+
+Use `algosdk.OnApplicationComplete` directly instead.
 
 The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
 
@@ -119,13 +126,17 @@ Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string e
 
 #### Defined in
 
-[src/types/app.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L161)
+[src/types/app.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L180)
 
 ___
 
 ### BoxIdentifier
 
 Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)
+
+**`Deprecated`**
+
+Use `types/app-manager/BoxIdentifier` instead.
 
 Something that identifies a box name - either a:
  * `Uint8Array`
@@ -134,7 +145,43 @@ Something that identifies a box name - either a:
 
 #### Defined in
 
-[src/types/app.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L64)
+[src/types/app.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L70)
+
+___
+
+### SendAppCreateTransactionResult
+
+Ƭ **SendAppCreateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: `string` ; `appId`: `bigint`  }\>
+
+Result from sending a single app transaction.
+
+#### Defined in
+
+[src/types/app.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L352)
+
+___
+
+### SendAppTransactionResult
+
+Ƭ **SendAppTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendSingleTransactionResult`](types_transaction.md#sendsingletransactionresult) & \{ `return?`: [`ABIReturn`](types_app.md#abireturn)  }\>
+
+Result from sending a single app transaction.
+
+#### Defined in
+
+[src/types/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L341)
+
+___
+
+### SendAppUpdateTransactionResult
+
+Ƭ **SendAppUpdateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppTransactionResult`](types_app.md#sendapptransactionresult) & `Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\>\>
+
+Result from sending a single app transaction.
+
+#### Defined in
+
+[src/types/app.ts:349](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L349)
 
 ## Variables
 
@@ -146,7 +193,7 @@ First 4 bytes of SHA-512/256 hash of "return" for retrieving ABI return values
 
 #### Defined in
 
-[src/types/app.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L34)
+[src/types/app.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L36)
 
 ___
 
@@ -154,11 +201,11 @@ ___
 
 • `Const` **APP\_DEPLOY\_NOTE\_DAPP**: ``"ALGOKIT_DEPLOYER"``
 
-The app create/update ARC-2 transaction note prefix
+The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note prefix
 
 #### Defined in
 
-[src/types/app.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L28)
+[src/types/app.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L30)
 
 ___
 
@@ -170,7 +217,7 @@ The maximum number of bytes in a single app code page
 
 #### Defined in
 
-[src/types/app.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L31)
+[src/types/app.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L33)
 
 ___
 
@@ -182,7 +229,7 @@ The name of the TEAL template variable for deploy-time permanence control
 
 #### Defined in
 
-[src/types/app.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L25)
+[src/types/app.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L27)
 
 ___
 
@@ -194,4 +241,4 @@ The name of the TEAL template variable for deploy-time immutability control
 
 #### Defined in
 
-[src/types/app.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L22)
+[src/types/app.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L24)

@@ -1,5 +1,4 @@
 // TODO review exports
-export * from './app'
 export * from './app-client'
 export * from './app-deploy'
 export * from './debugging'
@@ -7,6 +6,7 @@ export * from './transaction'
 
 // Legacy exports - remove after 2 x major version bumps
 export * from './account'
+export * from './app'
 export * from './asset'
 export * from './dispenser-client'
 export * from './indexer-lookup'

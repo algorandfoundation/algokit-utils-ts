@@ -2,6 +2,7 @@ import algosdk from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
+import { Expand } from './expand'
 import Account = algosdk.Account
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -44,6 +45,9 @@ export interface SendTransactionParams {
   /** **WARNING**: Not recommended for production use due to https://github.com/algorand/go-algorand/issues/5914. Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.  */
   populateAppCallResources?: boolean
 }
+
+/** Result from sending a single transaction. */
+export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerResults & ConfirmedTransactionResult>
 
 /** The result of sending a transaction */
 export interface SendTransactionResult {

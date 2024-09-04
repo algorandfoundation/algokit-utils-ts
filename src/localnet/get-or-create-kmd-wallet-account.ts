@@ -7,7 +7,7 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
- * @deprecated use `algorandClient.account.kmd.getOrCreateWalletAccount(name, fundWith)` or `new KMDAccountManager(clientManager).getOrCreateWalletAccount(name, fundWith)` instead.
+ * @deprecated use `algorand.account.kmd.getOrCreateWalletAccount(name, fundWith)` or `new KMDAccountManager(clientManager).getOrCreateWalletAccount(name, fundWith)` instead.
  *
  * Gets an account with private key loaded from a KMD wallet of the given name, or alternatively creates one with funds in it via a KMD wallet of the given name.
  *

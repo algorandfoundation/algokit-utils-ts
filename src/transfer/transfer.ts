@@ -73,7 +73,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
 }
 
 /**
- * @deprecated Use `algorand.send.assetTransfer()` / `algorand.transaction.assetTransfer()` instead
+ * @deprecated Use `algorand.send.assetTransfer()` / `algorand.transactions.assetTransfer()` instead
  *
  * Transfer asset between two accounts.
  * @param transfer The transfer definition
