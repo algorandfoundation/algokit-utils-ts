@@ -304,7 +304,15 @@ await algorand.send.appCallMethodCall({
 
 ### Global state
 
-To access and parse global state you can use the following static method from [`AppManager`](#appmanager):
+To access local state you can use the following method from an [`AppManager`](#appmanager) instance:
+
+- [`appManager.getLocalState(appId, address)`](../code/classes/types_app_manager.AppManager.md#getlocalstate) - Returns the current local state for the given app ID and account address decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
+
+```typescript
+const globalState = await appManager.getGlobalState(12345n)
+```
+
+Global state is parsed from the underlying algod response via the following static method from [`AppManager`](#appmanager):
 
 - [`AppManager.decodeAppState(state)`](../code/classes/types_app_manager.AppManager.md#decodeappstate) - Takes the raw response from the algod API for global state and returns a friendly generic object keyed by the UTF-8 value of the key
 
@@ -321,13 +329,6 @@ if (typeof appState['value1'].value === 'string') {
 } else {
   const valueAsNumberOrBigInt = appState['value1'].value
 }
-```
-
-The easiest way to access a decoded global state is via the `getById` method in an [`AppManager`](#appmanager) instance:
-
-```typescript
-const appData = await appManager.getById(12345n)
-const appState = appData.globalState
 ```
 
 ### Local state

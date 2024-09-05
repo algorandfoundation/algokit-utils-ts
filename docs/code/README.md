@@ -26,6 +26,8 @@
 - [types/app-client](modules/types_app_client.md)
 - [types/app-client.spec](modules/types_app_client_spec.md)
 - [types/app-deployer](modules/types_app_deployer.md)
+- [types/app-factory](modules/types_app_factory.md)
+- [types/app-factory-and-client.spec](modules/types_app_factory_and_client_spec.md)
 - [types/app-manager](modules/types_app_manager.md)
 - [types/app-spec](modules/types_app_spec.md)
 - [types/asset](modules/types_asset.md)

@@ -36,7 +36,7 @@ To use this library simply include the following at the top of your file:
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 ```
 
-As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import withing the {} in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
+As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import within the `{}` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
 
 > [!WARNING]
 > Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as algokit`):

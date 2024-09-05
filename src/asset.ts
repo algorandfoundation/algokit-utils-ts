@@ -3,7 +3,6 @@ import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
 import { AlgorandClient } from './types/algorand-client'
 import { AssetBulkOptInOutParams, AssetOptInParams, AssetOptOutParams, CreateAssetParams } from './types/asset'
-import { ClientManager } from './types/client-manager'
 import { AssetCreateParams, AssetOptInParams as NewAssetOptInParams, AssetOptOutParams as NewAssetOptOutParams } from './types/composer'
 import { SendTransactionResult } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
@@ -129,7 +128,6 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Pr
  * @example algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
  */
 export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
-  const clientManager = new ClientManager({ algod })
   const result = await AlgorandClient.fromClients({ algod })
     .setSignerFromAccount(optIn.account)
     .asset.bulkOptIn(getSenderAddress(optIn.account), optIn.assetIds.map(BigInt), {
@@ -157,7 +155,6 @@ export async function assetBulkOptIn(optIn: AssetBulkOptInOutParams, algod: Algo
  * @example algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
  */
 export async function assetBulkOptOut(optOut: AssetBulkOptInOutParams, algod: Algodv2): Promise<Record<number, string>> {
-  const clientManager = new ClientManager({ algod })
   const result = await AlgorandClient.fromClients({ algod })
     .setSignerFromAccount(optOut.account)
     .asset.bulkOptOut(getSenderAddress(optOut.account), optOut.assetIds.map(BigInt), {

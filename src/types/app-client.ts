@@ -16,7 +16,7 @@ import { Config } from '../config'
 import { persistSourceMaps } from '../debugging/debugging'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
-import { DeepReadonly, binaryStartsWith } from '../util'
+import { binaryStartsWith } from '../util'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgoAmount } from './amount'
 import {
@@ -27,21 +27,22 @@ import {
   AppCallTransactionResult,
   AppCallType,
   AppCompilationResult,
-  AppLookup,
   AppMetadata,
   AppReference,
   AppState,
   AppStorageSchema,
   BoxName,
   DELETABLE_TEMPLATE_NAME,
+  AppLookup as LegacyAppLookup,
   OnSchemaBreak,
   OnUpdate,
   RawAppCallArgs,
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import { Arc56Contract, Method, StorageKey, StorageMap, StructFields } from './app-arc56'
-import { BoxIdentifier } from './app-manager'
+import { Arc56Contract, Method, StorageKey, StorageMap, getABIDecodedValue, getABIEncodedValue } from './app-arc56'
+import { AppLookup } from './app-deployer'
+import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
 import {
   AppCallMethodCall,
@@ -70,7 +71,6 @@ import Indexer = algosdk.Indexer
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.SourceMap
 import SuggestedParams = algosdk.SuggestedParams
-import ABITupleType = algosdk.ABITupleType
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
@@ -82,7 +82,7 @@ export type ResolveAppByCreatorAndNameBase = {
    *  * An indexer instance to search the creator account apps; or
    *  * The cached value of the existing apps for the given creator from `getCreatorAppsByName`
    */
-  findExistingUsing: Indexer | AppLookup
+  findExistingUsing: Indexer | LegacyAppLookup
 }
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
@@ -209,9 +209,9 @@ export type AppClientClearStateParams = AppClientCallRawArgs & AppClientCallCore
 export interface AppClientCompilationParams {
   /** Any deploy-time parameters to replace in the TEAL code */
   deployTimeParams?: TealTemplateParams
-  /* Whether or not the contract should have deploy-time immutability control set, undefined = ignore */
+  /** Whether or not the contract should have deploy-time immutability control set, undefined = ignore */
   updatable?: boolean
-  /* Whether or not the contract should have deploy-time permanence control set, undefined = ignore */
+  /** Whether or not the contract should have deploy-time permanence control set, undefined = ignore */
   deletable?: boolean
 }
 
@@ -298,8 +298,14 @@ export interface AppClientParams {
    */
   appSpec: Arc56Contract | AppSpec | string
 
+  /** An `AlgorandClient` instance */
   algorand: AlgorandClientInterface
 
+  /**
+   * Optional override for the app name; used for on-chain metadata and lookups.
+   * Defaults to the ARC-32/ARC-56 app spec name
+   */
+  appName?: string
   /** Optional address to use for the account to use as the default sender for calls. */
   defaultSender?: string
   /** Optional source map for the approval program */
@@ -346,6 +352,20 @@ export type FundAppParams = Expand<
     }
 >
 
+/** Resolve an app client instance by looking up an app created by the given creator with the given name */
+export type ResolveAppClientByCreatorAndName = Expand<
+  Omit<AppClientParams, 'appId'> & {
+    /** The address of the creator account for the app */
+    creatorAddress: string
+    /** An optional cached app lookup that matches a name to on-chain details;
+     * either this is needed or indexer is required to be passed in to this `ClientManager` on construction.
+     */
+    appLookupCache?: AppLookup
+    /** Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value */
+    ignoreCache?: boolean
+  }
+>
+
 /** ARC-56/ARC-32 application client that allows you to manage calls and state for a given instance of an app. */
 export class AppClient {
   private _appId: bigint
@@ -362,11 +382,21 @@ export class AppClient {
   private _globalStateMethods: ReturnType<AppClient['getStateMethods']>
   private _boxStateMethods: ReturnType<AppClient['getBoxMethods']>
 
+  private _paramsMethods: ReturnType<AppClient['getMethodCallParamsMethods']> & {
+    /** Interact with bare (non-ABI) call parameters */ bare: ReturnType<AppClient['getBareParamsMethods']>
+  }
+  private _transactionsMethods: ReturnType<AppClient['getMethodCallTransactionsMethods']> & {
+    /** Interact with bare (non-ABI) call transactions */ bare: ReturnType<AppClient['getBareTransactionsMethods']>
+  }
+  private _sendMethods: ReturnType<AppClient['getMethodCallSendMethods']> & {
+    /** Interact with bare (non-ABI) calls */ bare: ReturnType<AppClient['getBareSendMethods']>
+  }
+
   constructor(params: AppClientParams) {
     this._appId = params.appId
     this._appAddress = algosdk.getApplicationAddress(this._appId)
     this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
-    this._appName = this._appSpec.name
+    this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
     this._defaultSender = params.defaultSender
 
@@ -385,6 +415,30 @@ export class AppClient {
       () => this._appSpec.state.maps.global,
     )
     this._boxStateMethods = this.getBoxMethods()
+
+    this._paramsMethods = { ...this.getMethodCallParamsMethods(), bare: this.getBareParamsMethods() }
+    this._transactionsMethods = { ...this.getMethodCallTransactionsMethods(), bare: this.getBareTransactionsMethods() }
+    this._sendMethods = { ...this.getMethodCallSendMethods(), bare: this.getBareSendMethods() }
+  }
+
+  /**
+   * Returns a new `AppClient` client, resolving the app by creator address and name
+   * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
+   * @param params The parameters to create the app client
+   */
+  public static async fromCreatorAndName(params: Expand<ResolveAppClientByCreatorAndName>) {
+    const appSpec = AppClient.normaliseAppSpec(params.appSpec)
+    const appLookup =
+      params.appLookupCache ?? (await params.algorand.appDeployer.getCreatorAppsByName(params.creatorAddress, params.ignoreCache))
+    const appMetadata = appLookup.apps[params.appName ?? appSpec.name]
+    if (!appMetadata) {
+      throw new Error(`App not found for creator ${params.creatorAddress} and name ${params.appName ?? appSpec.name}`)
+    }
+    return new AppClient({
+      ...params,
+      algorand: params.algorand,
+      appId: appMetadata.appId,
+    })
   }
 
   /**
@@ -443,254 +497,23 @@ export class AppClient {
   }
 
   /** The ARC-56 app spec being used */
-  get appSpec(): DeepReadonly<Arc56Contract> {
+  get appSpec(): Arc56Contract {
     return this._appSpec
   }
 
-  /** Interact with bare (non-ABI) call parameters, transactions and calls */
-  get bare() {
-    const that = this
-    return {
-      /** Get parameters to define an app transaction to the current app */
-      get params() {
-        return {
-          /** Return params for an update call, including deploy-time TEAL template replacements and compilation if provided */
-          update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
-            return that.getParams(
-              {
-                ...params,
-                ...(await that.compile(params)),
-              },
-              OnApplicationComplete.UpdateApplicationOC,
-            ) as AppUpdateParams
-          },
-          /** Return params for an opt-in call */
-          optIn: (params?: AppClientBareCallParams) => {
-            return that.getParams(params, OnApplicationComplete.OptInOC) as AppCallParams
-          },
-          /** Return params for a delete call */
-          delete: (params?: AppClientBareCallParams) => {
-            return that.getParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteParams
-          },
-          /** Return params for a clear state call */
-          clearState: (params?: AppClientBareCallParams) => {
-            return that.getParams(params, OnApplicationComplete.ClearStateOC) as AppCallParams
-          },
-          /** Return params for a close out call */
-          closeOut: (params?: AppClientBareCallParams) => {
-            return that.getParams(params, OnApplicationComplete.CloseOutOC) as AppCallParams
-          },
-          /** Return params for a call (defaults to no-op) */
-          call: (params?: AppClientBareCallParams & CallOnComplete) => {
-            return that.getParams(params, params?.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallParams
-          },
-        }
-      },
-
-      /** Get an app transaction to the current app */
-      get transactions() {
-        return {
-          /** Returns a transaction for an update call, including deploy-time TEAL template replacements and compilation if provided */
-          update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
-            return that._algorand.transactions.appUpdate(await this.params.update(params))
-          },
-          /** Returns a transaction for an opt-in call */
-          optIn: (params?: AppClientBareCallParams) => {
-            return that._algorand.transactions.appCall(this.params.optIn(params))
-          },
-          /** Returns a transaction for a delete call */
-          delete: (params?: AppClientBareCallParams) => {
-            return that._algorand.transactions.appDelete(this.params.delete(params))
-          },
-          /** Returns a transaction for a clear state call */
-          clearState: (params?: AppClientBareCallParams) => {
-            return that._algorand.transactions.appCall(this.params.clearState(params))
-          },
-          /** Returns a transaction for a close out call */
-          closeOut: (params?: AppClientBareCallParams) => {
-            return that._algorand.transactions.appCall(this.params.closeOut(params))
-          },
-          /** Returns a transaction for a call (defaults to no-op) */
-          call: (params?: AppClientBareCallParams & CallOnComplete) => {
-            return that._algorand.transactions.appCall(this.params.call(params))
-          },
-        }
-      },
-
-      /** Send an app transaction to the current app */
-      get send() {
-        return {
-          /** Signs and sends an update call, including deploy-time TEAL template replacements and compilation if provided */
-          update: async (params?: AppClientBareCallParams & AppClientCompilationParams & ExecuteParams) => {
-            return await that.handleCallErrors(async () => that._algorand.send.appUpdate(await this.params.update(params)))
-          },
-          /** Signs and sends an opt-in call */
-          optIn: (params?: AppClientBareCallParams & ExecuteParams) => {
-            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.optIn(params)))
-          },
-          /** Signs and sends a delete call */
-          delete: (params?: AppClientBareCallParams & ExecuteParams) => {
-            return that.handleCallErrors(() => that._algorand.send.appDelete(this.params.delete(params)))
-          },
-          /** Signs and sends a clear state call */
-          clearState: (params?: AppClientBareCallParams & ExecuteParams) => {
-            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.clearState(params)))
-          },
-          /** Signs and sends a close out call */
-          closeOut: (params?: AppClientBareCallParams & ExecuteParams) => {
-            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.closeOut(params)))
-          },
-          /** Signs and sends a call (defaults to no-op) */
-          call: (params?: AppClientBareCallParams & CallOnComplete & ExecuteParams) => {
-            return that.handleCallErrors(() => that._algorand.send.appCall(this.params.call(params)))
-          },
-        }
-      },
-    }
-  }
-
-  /** Get parameters to define an ABI call transaction to the current app */
+  /** Get parameters to define transactions to the current app */
   get params() {
-    return {
-      /** Return params for an update ABI call, including deploy-time TEAL template replacements and compilation if provided */
-      update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
-        return this.getABIParams(
-          {
-            ...params,
-            ...(await this.compile(params)),
-          },
-          OnApplicationComplete.UpdateApplicationOC,
-        ) satisfies AppUpdateMethodCall
-      },
-      /** Return params for an opt-in ABI call */
-      optIn: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.OptInOC) as AppCallMethodCall
-      },
-      /** Return params for an delete ABI call */
-      delete: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteMethodCall
-      },
-      /** Return params for an clear state ABI call */
-      clearState: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.ClearStateOC) as AppCallMethodCall
-      },
-      /** Return params for an close out ABI call */
-      closeOut: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.CloseOutOC) as AppCallMethodCall
-      },
-      /** Return params for an ABI call */
-      call: (params: AppClientMethodCallParams & CallOnComplete) => {
-        return this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallMethodCall
-      },
-    }
+    return this._paramsMethods
   }
 
-  /** Get ABI transactions to the current app */
+  /** Get transactions for the current app */
   get transactions() {
-    return {
-      /**
-       * Return transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
-       */
-      update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
-        return this._algorand.transactions.appUpdateMethodCall(await this.params.update(params))
-      },
-      /**
-       * Return transactions for an opt-in ABI call
-       */
-      optIn: (params: AppClientMethodCallParams) => {
-        return this._algorand.transactions.appCallMethodCall(this.params.optIn(params))
-      },
-      /**
-       * Return transactions for a delete ABI call
-       */
-      delete: (params: AppClientMethodCallParams) => {
-        return this._algorand.transactions.appDeleteMethodCall(this.params.delete(params))
-      },
-      /**
-       * Return transactions for a clear state ABI call
-       */
-      clearState: (params: AppClientMethodCallParams) => {
-        return this._algorand.transactions.appCallMethodCall(this.params.clearState(params))
-      },
-      /**
-       * Return transactions for a close out ABI call
-       */
-      closeOut: (params: AppClientMethodCallParams) => {
-        return this._algorand.transactions.appCallMethodCall(this.params.closeOut(params))
-      },
-      /**
-       * Return transactions for an ABI call (defaults to no-op)
-       */
-      call: (params: AppClientMethodCallParams & CallOnComplete) => {
-        return this._algorand.transactions.appCallMethodCall(this.params.call(params))
-      },
-    }
+    return this._transactionsMethods
   }
 
-  /** Send ABI method call to the current app */
+  /** Send calls to the current app */
   get send() {
-    return {
-      /**
-       * Sign and send transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
-       */
-      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & ExecuteParams) => {
-        const compiled = await this.compile(params)
-        return {
-          ...(await this.handleCallErrors(async () => this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })))),
-          ...(compiled satisfies Partial<AppCompilationResult>),
-        } as AppCompilationResult
-      },
-      /**
-       * Sign and send transactions for an opt-in ABI call
-       */
-      optIn: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.optIn(params)))
-      },
-      /**
-       * Sign and send transactions for a delete ABI call
-       */
-      delete: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appDeleteMethodCall(this.params.delete(params)))
-      },
-      /**
-       * Sign and send transactions for a clear state ABI call
-       */
-      clearState: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.clearState(params)))
-      },
-      /**
-       * Sign and send transactions for a close out ABI call
-       */
-      closeOut: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.closeOut(params)))
-      },
-      /**
-       * Sign and send transactions for a call (defaults to no-op)
-       */
-      call: async (params: AppClientMethodCallParams & CallOnComplete & ExecuteParams) => {
-        // Read-only call - do it via simulate
-        if (params.onComplete === OnApplicationComplete.NoOpOC || (!params.onComplete && this.getABIMethod(params.method)[0].readonly)) {
-          const result = await this._algorand.newGroup().addAppCallMethodCall(this.params.call(params)).simulate()
-          return {
-            ...result,
-            transaction: result.transactions.at(-1)!,
-            confirmation: result.confirmations.at(-1)!,
-            return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
-          } satisfies AppCallTransactionResult
-        }
-
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.call(params)))
-      },
-    }
-  }
-
-  /**
-   * Funds Algo into the app account for this app.
-   * @param fund The parameters for the funding
-   * @returns The result of the funding
-   */
-  async fundAppAccount(fund: FundAppParams) {
-    return this._algorand.send.payment({ ...fund, sender: this.getSender(fund.sender), receiver: this.appAddress })
+    return this._sendMethods
   }
 
   get state() {
@@ -712,11 +535,20 @@ export class AppClient {
   }
 
   /**
+   * Funds Algo into the app account for this app.
+   * @param fund The parameters for the funding
+   * @returns The result of the funding
+   */
+  async fundAppAccount(fund: FundAppParams) {
+    return this._algorand.send.payment({ ...fund, sender: this.getSender(fund.sender), receiver: this.appAddress })
+  }
+
+  /**
    * Returns raw global state for the current app.
    * @returns The global state
    */
   async getGlobalState(): Promise<AppState> {
-    return (await this._algorand.app.getById(this.appId)).globalState
+    return await this._algorand.app.getGlobalState(this.appId)
   }
 
   /**
@@ -799,29 +631,89 @@ export class AppClient {
    * @returns The new error, or if there was no logic error or source map then the wrapped error with source details
    */
   exposeLogicError(e: Error, isClearStateProgram?: boolean): Error {
-    if ((!isClearStateProgram && this._approvalSourceMap == undefined) || (isClearStateProgram && this._clearSourceMap == undefined))
-      return e
+    return AppClient.exposeLogicError(e, this._appSpec, {
+      isClearStateProgram,
+      approvalSourceMap: this._approvalSourceMap,
+      clearSourceMap: this._clearSourceMap,
+    })
+  }
+
+  /**
+   * Export the current source maps for the app.
+   * @returns The source maps
+   */
+  exportSourceMaps(): AppSourceMaps {
+    if (!this._approvalSourceMap || !this._clearSourceMap) {
+      throw new Error(
+        "Unable to export source maps; they haven't been loaded into this client - you need to call create, update, or deploy first",
+      )
+    }
+
+    return {
+      approvalSourceMap: this._approvalSourceMap,
+      clearSourceMap: this._clearSourceMap,
+    }
+  }
+
+  /**
+   * Import source maps for the app.
+   * @param sourceMaps The source maps to import
+   */
+  importSourceMaps(sourceMaps: AppSourceMaps) {
+    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
+  }
+
+  /**
+   * Returns the ABI Method for the given method name string for the app represented by this application client instance
+   * @param methodNameOrSignature The method name or method signature to call if an ABI call is being emitted.
+   * e.g. `my_method` or `my_method(unit64,string)bytes`
+   * @returns A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
+   */
+  getABIMethod(methodNameOrSignature: string) {
+    return AppClient.getABIMethod(methodNameOrSignature, this._appSpec)
+  }
+
+  /**
+   * Takes an error that may include a logic error from a call to the current app and re-exposes the
+   * error to include source code information via the source map and ARC-56 spec.
+   * @param e The error to parse
+   * @param appSpec The app spec for the app
+   * @param details Additional information to inform the error
+   * @returns The new error, or if there was no logic error or source map then the wrapped error with source details
+   */
+  public static exposeLogicError(
+    e: Error,
+    appSpec: Arc56Contract,
+    details: {
+      /** Whether or not the code was running the clear state program (defaults to approval program) */ isClearStateProgram?: boolean
+      /** Approval program source map */ approvalSourceMap?: SourceMap
+      /** Clear state program source map */ clearSourceMap?: SourceMap
+    },
+  ): Error {
+    const { isClearStateProgram, approvalSourceMap, clearSourceMap } = details
+    if ((!isClearStateProgram && approvalSourceMap == undefined) || (isClearStateProgram && clearSourceMap == undefined)) return e
 
     const errorDetails = LogicError.parseLogicError(e)
 
-    const errorMessage = (isClearStateProgram ? this._appSpec.sourceInfo?.clear : this._appSpec.sourceInfo?.approval)?.find((s) =>
+    const errorMessage = (isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval)?.find((s) =>
       s?.pc?.includes(errorDetails?.pc ?? -1),
     )?.errorMessage
 
-    if (errorDetails !== undefined && this.appSpec.source)
+    if (errorDetails !== undefined && appSpec.source)
       e = new LogicError(
         errorDetails,
-        Buffer.from(isClearStateProgram ? this.appSpec.source.clear : this.appSpec.source.approval, 'base64')
+        Buffer.from(isClearStateProgram ? appSpec.source.clear : appSpec.source.approval, 'base64')
           .toString()
           .split('\n'),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        isClearStateProgram ? this._clearSourceMap! : this._approvalSourceMap!,
+        isClearStateProgram ? clearSourceMap! : approvalSourceMap!,
       )
     if (errorMessage) {
+      const appId = JSON.stringify(e).match(/(?<=app=)d+/)?.[0] || ''
       const txId = JSON.stringify(e).match(/(?<=transaction )S+(?=:)/)?.[0]
-      const error = new Error(
-        `Runtime error when executing ${this._appName} (appId: ${this._appId}) in transaction ${txId}: ${errorMessage}`,
-      )
+      const error = new Error(`Runtime error when executing ${appSpec.name} (appId: ${appId}) in transaction ${txId}: ${errorMessage}`)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(error as any).cause = e
       return error
     }
@@ -831,49 +723,46 @@ export class AppClient {
 
   /**
    * Compiles the approval and clear programs (if TEAL templates provided),
-   * performing any provided deploy-time parameter replacement and stores
-   * the source maps.
+   * performing any provided deploy-time parameter replacement and returns
+   * the compiled code and any compilation results (including source maps).
    *
    * If no TEAL templates provided it will use any byte code provided in the app spec.
    *
    * Will store any generated source maps for later use in debugging.
+   * @param appSpec The app spec for the app
+   * @param compilation Any compilation parameters to use
    */
-  private async compile(compilation?: AppClientCompilationParams) {
+  public static async compile(appSpec: Arc56Contract, appManager: AppManager, compilation?: AppClientCompilationParams) {
     const { deployTimeParams, updatable, deletable } = compilation ?? {}
 
-    if (!this._appSpec.source) {
-      if (!this._appSpec.byteCode?.approval || !this._appSpec.byteCode?.clear) {
-        throw new Error(`Attempt to compile app ${this._appName} without source or byteCode`)
+    if (!appSpec.source) {
+      if (!appSpec.byteCode?.approval || !appSpec.byteCode?.clear) {
+        throw new Error(`Attempt to compile app ${appSpec.name} without source or byteCode`)
       }
 
       return {
-        approvalProgram: Buffer.from(this._appSpec.byteCode.approval, 'base64'),
-        clearStateProgram: Buffer.from(this._appSpec.byteCode.clear, 'base64'),
+        approvalProgram: Buffer.from(appSpec.byteCode.approval, 'base64'),
+        clearStateProgram: Buffer.from(appSpec.byteCode.clear, 'base64'),
       }
     }
 
-    const approvalTemplate = Buffer.from(this._appSpec.source.approval, 'base64').toString('utf-8')
-    const compiledApproval = await this._algorand.app.compileTealTemplate(approvalTemplate, deployTimeParams, {
+    const approvalTemplate = Buffer.from(appSpec.source.approval, 'base64').toString('utf-8')
+    const compiledApproval = await appManager.compileTealTemplate(approvalTemplate, deployTimeParams, {
       updatable,
       deletable,
     })
-    this._approvalSourceMap = compiledApproval.sourceMap
 
-    const clearTemplate = Buffer.from(this._appSpec.source.clear, 'base64').toString('utf-8')
-    const compiledClear = await this._algorand.app.compileTealTemplate(clearTemplate, deployTimeParams, {
-      updatable,
-      deletable,
-    })
-    this._clearSourceMap = compiledClear.sourceMap
+    const clearTemplate = Buffer.from(appSpec.source.clear, 'base64').toString('utf-8')
+    const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
     if (Config.debug && Config.projectRoot) {
       persistSourceMaps({
         sources: [
-          PersistSourceMapInput.fromCompiledTeal(compiledApproval, this._appName, 'approval.teal'),
-          PersistSourceMapInput.fromCompiledTeal(compiledClear, this._appName, 'clear.teal'),
+          PersistSourceMapInput.fromCompiledTeal(compiledApproval, appSpec.name, 'approval.teal'),
+          PersistSourceMapInput.fromCompiledTeal(compiledClear, appSpec.name, 'clear.teal'),
         ],
         projectRoot: Config.projectRoot,
-        client: this._algorand.client.algod,
+        appManager,
         withSources: true,
       })
     }
@@ -886,6 +775,310 @@ export class AppClient {
     }
   }
 
+  /**
+   * Returns the ARC-56 and ABI method for a given method name or signature and ARC-56 app spec.
+   * @param methodNameOrSignature The method name or method signature to call if an ABI call is being emitted.
+   * e.g. `my_method` or `my_method(unit64,string)bytes`
+   * @param appSpec The app spec for the app
+   * @returns A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
+   */
+  public static getABIMethod(methodNameOrSignature: string, appSpec: Arc56Contract) {
+    let method: Method
+    if (!methodNameOrSignature.includes('(')) {
+      const methods = appSpec.methods.filter((m) => m.name === methodNameOrSignature)
+      if (methods.length === 0) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
+      if (methods.length > 1) {
+        throw new Error(
+          `Received a call to method ${methodNameOrSignature} in contract ${
+            appSpec.name
+          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${appSpec.methods
+            .map((m) => new ABIMethod(m).getSignature())
+            .join(', ')}`,
+        )
+      }
+      method = methods[0]
+    } else {
+      const m = appSpec.methods.find((m) => new ABIMethod(m).getSignature() === methodNameOrSignature)
+      if (!m) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
+      method = m
+    }
+    return [method, new algosdk.ABIMethod(method)] as const
+  }
+
+  /**
+   * Returns ABI method arguments ready for a method call params object with default values populated.
+   *
+   * It does this by replacing any `undefined` values with the equivalent default value from the given ARC-56 app spec.
+   * @param methodNameOrSignature The method name or method signature to call if an ABI call is being emitted.
+   * e.g. `my_method` or `my_method(unit64,string)bytes`
+   * @param args The arguments to the method with `undefined` for any that should be populated with a default value
+   * @param appSpec The app spec for the app
+   */
+  public static getABIArgsWithDefaultValues(
+    methodNameOrSignature: string,
+    args: AppMethodCall<CommonAppCallParams>['args'] | undefined,
+    appSpec: Arc56Contract,
+  ) {
+    const m = AppClient.getABIMethod(methodNameOrSignature, appSpec)
+    return args?.map((a, i) => {
+      // todo: expand this to match previous ApplicationClient implementation when ARC-56 spec is updated to support other default value options
+      const defaultValue = m[0].args[i].defaultValue
+      if (a !== undefined || !defaultValue) return a
+      return getABIDecodedValue(Buffer.from(defaultValue, 'base64'), m[0].args[i].type, appSpec.structs)
+    })
+  }
+
+  private getBareParamsMethods() {
+    return {
+      /** Return params for an update call, including deploy-time TEAL template replacements and compilation if provided */
+      update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
+        return this.getBareParams(
+          {
+            ...params,
+            ...(await this.compile(params)),
+          },
+          OnApplicationComplete.UpdateApplicationOC,
+        ) as AppUpdateParams
+      },
+      /** Return params for an opt-in call */
+      optIn: (params?: AppClientBareCallParams) => {
+        return this.getBareParams(params, OnApplicationComplete.OptInOC) as AppCallParams
+      },
+      /** Return params for a delete call */
+      delete: (params?: AppClientBareCallParams) => {
+        return this.getBareParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteParams
+      },
+      /** Return params for a clear state call */
+      clearState: (params?: AppClientBareCallParams) => {
+        return this.getBareParams(params, OnApplicationComplete.ClearStateOC) as AppCallParams
+      },
+      /** Return params for a close out call */
+      closeOut: (params?: AppClientBareCallParams) => {
+        return this.getBareParams(params, OnApplicationComplete.CloseOutOC) as AppCallParams
+      },
+      /** Return params for a call (defaults to no-op) */
+      call: (params?: AppClientBareCallParams & CallOnComplete) => {
+        return this.getBareParams(params, params?.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallParams
+      },
+    }
+  }
+
+  private getBareTransactionsMethods() {
+    return {
+      /** Returns a transaction for an update call, including deploy-time TEAL template replacements and compilation if provided */
+      update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
+        return this._algorand.transactions.appUpdate(await this.params.bare.update(params))
+      },
+      /** Returns a transaction for an opt-in call */
+      optIn: (params?: AppClientBareCallParams) => {
+        return this._algorand.transactions.appCall(this.params.bare.optIn(params))
+      },
+      /** Returns a transaction for a delete call */
+      delete: (params?: AppClientBareCallParams) => {
+        return this._algorand.transactions.appDelete(this.params.bare.delete(params))
+      },
+      /** Returns a transaction for a clear state call */
+      clearState: (params?: AppClientBareCallParams) => {
+        return this._algorand.transactions.appCall(this.params.bare.clearState(params))
+      },
+      /** Returns a transaction for a close out call */
+      closeOut: (params?: AppClientBareCallParams) => {
+        return this._algorand.transactions.appCall(this.params.bare.closeOut(params))
+      },
+      /** Returns a transaction for a call (defaults to no-op) */
+      call: (params?: AppClientBareCallParams & CallOnComplete) => {
+        return this._algorand.transactions.appCall(this.params.bare.call(params))
+      },
+    }
+  }
+
+  private getBareSendMethods() {
+    return {
+      /** Signs and sends an update call, including deploy-time TEAL template replacements and compilation if provided */
+      update: async (params?: AppClientBareCallParams & AppClientCompilationParams & ExecuteParams) => {
+        return await this.handleCallErrors(async () => this._algorand.send.appUpdate(await this.params.bare.update(params)))
+      },
+      /** Signs and sends an opt-in call */
+      optIn: (params?: AppClientBareCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.optIn(params)))
+      },
+      /** Signs and sends a delete call */
+      delete: (params?: AppClientBareCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appDelete(this.params.bare.delete(params)))
+      },
+      /** Signs and sends a clear state call */
+      clearState: (params?: AppClientBareCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.clearState(params)))
+      },
+      /** Signs and sends a close out call */
+      closeOut: (params?: AppClientBareCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.closeOut(params)))
+      },
+      /** Signs and sends a call (defaults to no-op) */
+      call: (params?: AppClientBareCallParams & CallOnComplete & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.call(params)))
+      },
+    }
+  }
+
+  private getMethodCallParamsMethods() {
+    return {
+      /** Return params for an update ABI call, including deploy-time TEAL template replacements and compilation if provided */
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
+        return this.getABIParams(
+          {
+            ...params,
+            ...(await this.compile(params)),
+          },
+          OnApplicationComplete.UpdateApplicationOC,
+        ) satisfies AppUpdateMethodCall
+      },
+      /** Return params for an opt-in ABI call */
+      optIn: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.OptInOC) as AppCallMethodCall
+      },
+      /** Return params for an delete ABI call */
+      delete: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteMethodCall
+      },
+      /** Return params for an clear state ABI call */
+      clearState: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.ClearStateOC) as AppCallMethodCall
+      },
+      /** Return params for an close out ABI call */
+      closeOut: (params: AppClientMethodCallParams) => {
+        return this.getABIParams(params, OnApplicationComplete.CloseOutOC) as AppCallMethodCall
+      },
+      /** Return params for an ABI call */
+      call: (params: AppClientMethodCallParams & CallOnComplete) => {
+        return this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallMethodCall
+      },
+    }
+  }
+
+  private getMethodCallSendMethods() {
+    return {
+      /**
+       * Sign and send transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       */
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams & ExecuteParams) => {
+        const compiled = await this.compile(params)
+        return {
+          ...(await this.handleCallErrors(async () => this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })))),
+          ...(compiled as Partial<AppCompilationResult>),
+        }
+      },
+      /**
+       * Sign and send transactions for an opt-in ABI call
+       */
+      optIn: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.optIn(params)))
+      },
+      /**
+       * Sign and send transactions for a delete ABI call
+       */
+      delete: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appDeleteMethodCall(this.params.delete(params)))
+      },
+      /**
+       * Sign and send transactions for a clear state ABI call
+       */
+      clearState: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.clearState(params)))
+      },
+      /**
+       * Sign and send transactions for a close out ABI call
+       */
+      closeOut: (params: AppClientMethodCallParams & ExecuteParams) => {
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.closeOut(params)))
+      },
+      /**
+       * Sign and send transactions for a call (defaults to no-op)
+       */
+      call: async (params: AppClientMethodCallParams & CallOnComplete & ExecuteParams) => {
+        // Read-only call - do it via simulate
+        if (
+          params.onComplete === OnApplicationComplete.NoOpOC ||
+          (!params.onComplete && AppClient.getABIMethod(params.method, this._appSpec)[0].readonly)
+        ) {
+          const result = await this._algorand.newGroup().addAppCallMethodCall(this.params.call(params)).simulate()
+          return {
+            ...result,
+            transaction: result.transactions.at(-1)!,
+            confirmation: result.confirmations.at(-1)!,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
+          } satisfies AppCallTransactionResult
+        }
+
+        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.call(params)))
+      },
+    }
+  }
+
+  private getMethodCallTransactionsMethods() {
+    return {
+      /**
+       * Return transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       */
+      update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
+        return this._algorand.transactions.appUpdateMethodCall(await this.params.update(params))
+      },
+      /**
+       * Return transactions for an opt-in ABI call
+       */
+      optIn: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.optIn(params))
+      },
+      /**
+       * Return transactions for a delete ABI call
+       */
+      delete: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appDeleteMethodCall(this.params.delete(params))
+      },
+      /**
+       * Return transactions for a clear state ABI call
+       */
+      clearState: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.clearState(params))
+      },
+      /**
+       * Return transactions for a close out ABI call
+       */
+      closeOut: (params: AppClientMethodCallParams) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.closeOut(params))
+      },
+      /**
+       * Return transactions for an ABI call (defaults to no-op)
+       */
+      call: (params: AppClientMethodCallParams & CallOnComplete) => {
+        return this._algorand.transactions.appCallMethodCall(this.params.call(params))
+      },
+    }
+  }
+
+  /**
+   * Compiles the approval and clear programs (if TEAL templates provided),
+   * performing any provided deploy-time parameter replacement and stores
+   * the source maps.
+   *
+   * If no TEAL templates provided it will use any byte code provided in the app spec.
+   *
+   * Will store any generated source maps for later use in debugging.
+   */
+  private async compile(compilation?: AppClientCompilationParams) {
+    const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)
+
+    if (result.compiledApproval) {
+      this._approvalSourceMap = result.compiledApproval.sourceMap
+    }
+    if (result.compiledClear) {
+      this._clearSourceMap = result.compiledClear.sourceMap
+    }
+
+    return result
+  }
+
   /** Returns the sender for a call, using the `defaultSender`
    * if none provided and throws an error if neither provided */
   private getSender(sender: string | undefined): string {
@@ -895,7 +1088,7 @@ export class AppClient {
     return sender ?? this._defaultSender!
   }
 
-  private getParams<TParams extends { sender?: string } | undefined, TOnComplete extends OnApplicationComplete>(
+  private getBareParams<TParams extends { sender?: string } | undefined, TOnComplete extends OnApplicationComplete>(
     params: TParams,
     onComplete: TOnComplete,
   ) {
@@ -907,16 +1100,18 @@ export class AppClient {
     }
   }
 
-  private getABIParams<TParams extends { method: string; sender?: string }, TOnComplete extends OnApplicationComplete>(
-    params: TParams,
-    onComplete: TOnComplete,
-  ) {
+  private getABIParams<
+    TParams extends { method: string; sender?: string; args?: AppMethodCall<CommonAppCallParams>['args'] },
+    TOnComplete extends OnApplicationComplete,
+  >(params: TParams, onComplete: TOnComplete) {
+    const method = AppClient.getABIMethod(params.method, this._appSpec)
     return {
       ...params,
       appId: this._appId,
       sender: this.getSender(params.sender),
-      method: this.getABIMethod(params.method)[1],
+      method: method[1],
       onComplete,
+      args: AppClient.getABIArgsWithDefaultValues(params.method, params.args, this._appSpec),
     }
   }
 
@@ -929,54 +1124,8 @@ export class AppClient {
     }
   }
 
-  private getABIMethod(methodNameOrSignature: string) {
-    let method: Method
-    if (!methodNameOrSignature.includes('(')) {
-      const methods = this._appSpec.methods.filter((m) => m.name === methodNameOrSignature)
-      if (methods.length === 0) throw new Error(`Unable to find method ${methodNameOrSignature} in ${this._appName} app.`)
-      if (methods.length > 1) {
-        throw new Error(
-          `Received a call to method ${methodNameOrSignature} in contract ${
-            this._appName
-          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${this._appSpec.methods
-            .map((m) => new ABIMethod(m).getSignature())
-            .join(', ')}`,
-        )
-      }
-      method = methods[0]
-    } else {
-      const m = this._appSpec.methods.find((m) => new ABIMethod(m).getSignature() === methodNameOrSignature)
-      if (!m) throw new Error(`Unable to find method ${methodNameOrSignature} in ${this._appName} app.`)
-      method = m
-    }
-    return [method, new algosdk.ABIMethod(method)] as const
-  }
-
-  private getTupleType(struct: StructFields): ABITupleType {
-    return new ABITupleType(Object.values(struct).map((v) => (typeof v === 'string' ? ABIType.from(v) : (this.getTupleType(v) as ABIType))))
-  }
-
-  private getABIDecodedValue(value: Uint8Array | number | bigint, type: string): ABIValue {
-    if (type === 'bytes' || typeof value !== 'object') return value
-    if (this._appSpec.structs[type]) {
-      return this.getTupleType(this._appSpec.structs[type]).decode(value)
-    }
-    return ABIType.from(type).decode(value)
-  }
-
-  private getABIEncodedValue(value: Uint8Array | ABIValue, type: string): Uint8Array {
-    if (typeof value === 'object' && value instanceof Uint8Array) return value
-    if (type === 'bytes') {
-      if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
-      return value
-    }
-    if (this._appSpec.structs[type]) {
-      return this.getTupleType(this._appSpec.structs[type]).encode(value)
-    }
-    return ABIType.from(type).encode(value)
-  }
-
   private getBoxMethods() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
     const stateMethods = {
       /**
@@ -985,6 +1134,7 @@ export class AppClient {
       getAll: async () => {
         return Object.fromEntries(
           await Promise.all(Object.keys(that._appSpec.state.keys.box).map(async (key) => [key, await stateMethods.getValue(key)])),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as Record<string, any>
       },
       /**
@@ -995,7 +1145,7 @@ export class AppClient {
       getValue: async (name: string) => {
         const metadata = that._appSpec.state.keys.box[name]
         const value = await that.getBoxValue(Buffer.from(metadata.key, 'base64'))
-        return that.getABIDecodedValue(value, metadata.valueType)
+        return getABIDecodedValue(value, metadata.valueType, that._appSpec.structs)
       },
       /**
        *
@@ -1004,13 +1154,14 @@ export class AppClient {
        *  that will be converted to bytes by encoding it using the specified ABI key type
        *  in the ARC-56 spec
        */
-      getMapValue: async (mapName: string, key: Buffer | any, appState?: AppState) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      getMapValue: async (mapName: string, key: Buffer | any) => {
         const metadata = that._appSpec.state.maps.box[mapName]
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, that.getABIEncodedValue(key, metadata.keyType)])
+        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(key, metadata.keyType, that._appSpec.structs)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = await that.getBoxValue(Buffer.from(base64Key, 'base64'))
-        return that.getABIDecodedValue(value, metadata.valueType)
+        return getABIDecodedValue(value, metadata.valueType, that._appSpec.structs)
       },
 
       /**
@@ -1034,8 +1185,8 @@ export class AppClient {
                 const encodedKey = Buffer.concat([prefix, b.nameRaw])
                 const base64Key = Buffer.from(encodedKey).toString('base64')
                 return [
-                  that.getABIDecodedValue(b.nameRaw.slice(prefix.length), metadata.keyType),
-                  that.getABIDecodedValue(await that.getBoxValue(Buffer.from(base64Key, 'base64')), metadata.valueType),
+                  getABIDecodedValue(b.nameRaw.slice(prefix.length), metadata.keyType, that._appSpec.structs),
+                  getABIDecodedValue(await that.getBoxValue(Buffer.from(base64Key, 'base64')), metadata.valueType, that._appSpec.structs),
                 ] as const
               }),
           ),
@@ -1054,6 +1205,7 @@ export class AppClient {
       [name: string]: StorageMap
     },
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
     const stateMethods = {
       /**
@@ -1063,6 +1215,7 @@ export class AppClient {
         const appState = await stateGetter()
         return Object.fromEntries(
           await Promise.all(Object.keys(keyGetter()).map(async (key) => [key, await stateMethods.getValue(key, appState)])),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ) as Record<string, any>
       },
       /**
@@ -1077,7 +1230,7 @@ export class AppClient {
         const value = state.find((s) => s.keyBase64 === metadata.key)
 
         if (value && 'valueRaw' in value) {
-          return that.getABIDecodedValue(value.valueRaw, metadata.valueType)
+          return getABIDecodedValue(value.valueRaw, metadata.valueType, that._appSpec.structs)
         }
 
         return value?.value
@@ -1090,17 +1243,18 @@ export class AppClient {
        *  in the ARC-56 spec
        * @param appState Optional cached value of the current state
        */
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getMapValue: async (mapName: string, key: Buffer | any, appState?: AppState) => {
         const state = Object.values(appState ?? (await stateGetter()))
         const metadata = mapGetter()[mapName]
 
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
-        const encodedKey = Buffer.concat([prefix, that.getABIEncodedValue(key, metadata.keyType)])
+        const encodedKey = Buffer.concat([prefix, getABIEncodedValue(key, metadata.keyType, that._appSpec.structs)])
         const base64Key = Buffer.from(encodedKey).toString('base64')
         const value = state.find((s) => s.keyBase64 === base64Key)
 
         if (value && 'valueRaw' in value) {
-          return that.getABIDecodedValue(value.valueRaw, metadata.valueType)
+          return getABIDecodedValue(value.valueRaw, metadata.valueType, that._appSpec.structs)
         }
 
         return value?.value
@@ -1126,8 +1280,8 @@ export class AppClient {
             .map((s) => {
               const key = s.keyRaw.slice(prefix.length)
               return [
-                that.getABIDecodedValue(key, metadata.keyType),
-                that.getABIDecodedValue('valueRaw' in s ? s.valueRaw : s.value, metadata.valueType),
+                getABIDecodedValue(key, metadata.keyType, this._appSpec.structs),
+                getABIDecodedValue('valueRaw' in s ? s.valueRaw : s.value, metadata.valueType, this._appSpec.structs),
               ]
             }),
         )
@@ -1138,7 +1292,10 @@ export class AppClient {
 }
 
 /**
- * @deprecated Use `AppClient` instead.
+ * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
+ * `algorand.client.getAppClientByCreatorAndName`.
+ * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+ * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
  *
  * Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
@@ -1147,7 +1304,7 @@ export class ApplicationClient {
   private appSpec: AppSpec
   private sender: SendTransactionFrom | undefined
   private params: SuggestedParams | undefined
-  private existingDeployments: AppLookup | undefined
+  private existingDeployments: LegacyAppLookup | undefined
   private deployTimeParams?: TealTemplateParams
 
   private _appId: number | bigint
@@ -1224,7 +1381,7 @@ export class ApplicationClient {
           PersistSourceMapInput.fromCompiledTeal(clearCompiled, this._appName, 'clear.teal'),
         ],
         projectRoot: Config.projectRoot,
-        client: this.algod,
+        appManager: new AppManager(this.algod),
         withSources: true,
       })
     }

@@ -25,7 +25,7 @@ algod An Algodv2 client to perform the simulation.
 
 #### Defined in
 
-[src/types/debugging.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L158)
+[src/types/debugging.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L159)
 
 ___
 
@@ -37,7 +37,7 @@ The AtomicTransactionComposer with transaction(s) loaded.
 
 #### Defined in
 
-[src/types/debugging.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L160)
+[src/types/debugging.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L161)
 
 ___
 
@@ -49,7 +49,7 @@ bufferSizeMb The buffer size in megabytes.
 
 #### Defined in
 
-[src/types/debugging.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L164)
+[src/types/debugging.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L165)
 
 ___
 
@@ -61,4 +61,4 @@ projectRoot The root directory of the project.
 
 #### Defined in
 
-[src/types/debugging.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L162)
+[src/types/debugging.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L163)

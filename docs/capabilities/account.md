@@ -36,7 +36,7 @@ In order to get/register accounts for signing operations you can use the followi
 
 ### Underlying account classes
 
-While `TransactionSignerAccount` is the main class used to represent an account that can sign, there are underlying account classes that can underpin the signer withing the transaction signer account.
+While `TransactionSignerAccount` is the main class used to represent an account that can sign, there are underlying account classes that can underpin the signer within the transaction signer account.
 
 - `Account` - An in-built `algosdk.Account` object that has an address and private signing key, this can be created
 - [`SigningAccount`](../code/classes/types_account.SigningAccount.md) - An abstraction around `algosdk.Account` that supports rekeyed accounts

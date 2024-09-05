@@ -1,3 +1,39 @@
+import algosdk from 'algosdk'
+
+export function getTupleType(struct: StructFields, structs: Record<string, StructFields>): algosdk.ABITupleType {
+  return new algosdk.ABITupleType(
+    Object.values(struct).map((v) => (typeof v === 'string' ? algosdk.ABIType.from(v) : (getTupleType(v, structs) as algosdk.ABIType))),
+  )
+}
+
+export function getABIDecodedValue(
+  value: Uint8Array | number | bigint,
+  type: string,
+  structs: Record<string, StructFields>,
+): algosdk.ABIValue {
+  if (type === 'bytes' || typeof value !== 'object') return value
+  if (structs[type]) {
+    return getTupleType(structs[type], structs).decode(value)
+  }
+  return algosdk.ABIType.from(type).decode(value)
+}
+
+export function getABIEncodedValue(value: Uint8Array | algosdk.ABIValue, type: string, structs: Record<string, StructFields>): Uint8Array {
+  if (typeof value === 'object' && value instanceof Uint8Array) return value
+  if (type === 'bytes') {
+    if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
+    return value
+  }
+  if (structs[type]) {
+    return getTupleType(structs[type], structs).encode(value)
+  }
+  return algosdk.ABIType.from(type).encode(value)
+}
+
+/****************/
+/** ARC-56 spec */
+/****************/
+
 /** Describes the entire contract. This interface is an extension of the interface described in ARC-4 */
 export interface Arc56Contract {
   /** The ARCs used and/or supported by this contract. All contracts implicity support ARC4 and ARC56 */

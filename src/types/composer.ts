@@ -10,6 +10,7 @@ import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
 import { Arc2TransactionNote, ExecuteParams, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
+import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import encodeAddress = algosdk.encodeAddress
@@ -319,7 +320,7 @@ export type OnlineKeyRegistrationParams = CommonTransactionParams & {
 export type CommonAppCallParams = CommonTransactionParams & {
   /** ID of the application; 0 if the application is being created. */
   appId: bigint
-  /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call. */
+  /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call; defaults to no-op. */
   onComplete?: algosdk.OnApplicationComplete
   /** Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/avm/teal/#argument-passing). */
   args?: Uint8Array[]
@@ -403,6 +404,8 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
     | AppMethodCall<AppCreateParams>
     | AppMethodCall<AppUpdateParams>
     | AppMethodCall<AppCallParams>
+    // This is here to support default args in `AppClient`
+    | undefined
   )[]
 }
 
@@ -493,6 +496,22 @@ export default class AlgoKitComposer {
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
+  }
+
+  /**
+   * Add a pre-built transaction to the transaction group.
+   * @param transaction The pre-built transaction
+   * @param signer Optional signer override for the transaction
+   * @returns The composer so you can chain method calls
+   */
+  addTransaction(transaction: Transaction, signer?: TransactionSigner): AlgoKitComposer {
+    this.txns.push({
+      txn: transaction,
+      signer: signer ?? this.getSigner(algosdk.encodeAddress(transaction.from.publicKey)),
+      type: 'txnWithSigner',
+    })
+
+    return this
   }
 
   /**
@@ -762,7 +781,7 @@ export default class AlgoKitComposer {
     txn.flatFee = true
 
     if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
-      throw Error(`Transaction fee ${txn.fee} is greater than maxFee ${params.maxFee}`)
+      throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
     }
 
     return txn
@@ -785,7 +804,12 @@ export default class AlgoKitComposer {
       return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
     }
 
-    for (const arg of params.args ?? []) {
+    for (let i = 0; i < (params.args ?? []).length; i++) {
+      const arg = params.args![i]
+      if (arg === undefined) {
+        throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
+      }
+
       if (isAbiValue(arg)) {
         methodArgs.push(arg)
         continue
@@ -1223,6 +1247,7 @@ export default class AlgoKitComposer {
       const error = new Error(
         `Transaction failed at transaction(s) ${simulateResponse.txnGroups[0].failedAt.join(', ')} in the group. ${simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage}`,
       )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(error as any).simulateResponse = simulateResponse
       throw error
     }

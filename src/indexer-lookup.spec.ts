@@ -3,7 +3,6 @@ import { getTestingAppContract } from '../tests/example-contracts/testing-app/co
 import { indexer } from './'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 import { AlgoAmount } from './types/amount'
-import { ApplicationClient } from './types/app-client'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()
@@ -66,23 +65,20 @@ describe('indexer-lookup', () => {
     })
 
     const app = await getTestingAppContract()
-    const app1 = await new ApplicationClient(
-      { app: app.appSpec, id: 0, sender: testAccount, resolveBy: 'id' },
-      algorand.client.algod,
-    ).create({ deletable: false, updatable: false, deployTimeParams: { VALUE: 1 } })
-    const app2 = await new ApplicationClient(
-      { app: app.appSpec, id: 0, sender: testAccount, resolveBy: 'id' },
-      algorand.client.algod,
-    ).create({ deletable: false, updatable: false, deployTimeParams: { VALUE: 1 } })
-    await await new ApplicationClient({ app: app.appSpec, id: 0, sender: secondAccount, resolveBy: 'id' }, algorand.client.algod).create({
+    const factory = algorand.client.getAppFactory({
+      appSpec: app.appSpec,
+      defaultSender: testAccount.addr,
       deletable: false,
       updatable: false,
       deployTimeParams: { VALUE: 1 },
     })
+    const { result: app1 } = await factory.create()
+    const { result: app2 } = await factory.create({ deployTimeParams: { VALUE: 2 } })
+    await factory.create({ sender: secondAccount.addr })
     await waitForIndexer()
 
     const apps = await indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, testAccount.addr, true, 1)
 
-    expect(apps.map((a) => a.id).sort()).toEqual([app1.appId, app2.appId].sort())
+    expect(apps.map((a) => BigInt(a.id)).sort()).toEqual([app1.appId, app2.appId].sort())
   }, 20_000)
 })

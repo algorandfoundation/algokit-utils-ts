@@ -20,6 +20,12 @@
 - [AVMBytes](types_app_arc56.md#avmbytes)
 - [StructName](types_app_arc56.md#structname)
 
+### Functions
+
+- [getABIDecodedValue](types_app_arc56.md#getabidecodedvalue)
+- [getABIEncodedValue](types_app_arc56.md#getabiencodedvalue)
+- [getTupleType](types_app_arc56.md#gettupletype)
+
 ## Type Aliases
 
 ### ABIType
@@ -30,7 +36,7 @@ An ABI-encoded type
 
 #### Defined in
 
-[src/types/app-arc56.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L196)
+[src/types/app-arc56.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L232)
 
 ___
 
@@ -42,7 +48,7 @@ Raw byteslice without the length prefixed that is specified in ARC-4
 
 #### Defined in
 
-[src/types/app-arc56.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L202)
+[src/types/app-arc56.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L238)
 
 ___
 
@@ -54,4 +60,69 @@ The name of a defined struct
 
 #### Defined in
 
-[src/types/app-arc56.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L199)
+[src/types/app-arc56.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L235)
+
+## Functions
+
+### getABIDecodedValue
+
+▸ **getABIDecodedValue**(`value`, `type`, `structs`): `algosdk.ABIValue`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `number` \| `bigint` \| `Uint8Array` |
+| `type` | `string` |
+| `structs` | `Record`\<`string`, [`StructFields`](../interfaces/types_app_arc56.StructFields.md)\> |
+
+#### Returns
+
+`algosdk.ABIValue`
+
+#### Defined in
+
+[src/types/app-arc56.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L9)
+
+___
+
+### getABIEncodedValue
+
+▸ **getABIEncodedValue**(`value`, `type`, `structs`): `Uint8Array`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `ABIValue` |
+| `type` | `string` |
+| `structs` | `Record`\<`string`, [`StructFields`](../interfaces/types_app_arc56.StructFields.md)\> |
+
+#### Returns
+
+`Uint8Array`
+
+#### Defined in
+
+[src/types/app-arc56.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L21)
+
+___
+
+### getTupleType
+
+▸ **getTupleType**(`struct`, `structs`): `algosdk.ABITupleType`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `struct` | [`StructFields`](../interfaces/types_app_arc56.StructFields.md) |
+| `structs` | `Record`\<`string`, [`StructFields`](../interfaces/types_app_arc56.StructFields.md)\> |
+
+#### Returns
+
+`algosdk.ABITupleType`
+
+#### Defined in
+
+[src/types/app-arc56.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L3)

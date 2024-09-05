@@ -29,10 +29,8 @@ import ABIMethodParams = algosdk.ABIMethodParams
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
 import Algodv2 = algosdk.Algodv2
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import modelsv2 = algosdk.modelsv2
 import OnApplicationComplete = algosdk.OnApplicationComplete
-import Transaction = algosdk.Transaction
 
 /**
  * @deprecated Use `algorand.send.appCreate()` / `algorand.transactions.appCreate()` / `algorand.send.appCreateMethodCall()`
@@ -236,7 +234,7 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.Pending
 }
 
 /**
- * @deprecated Use `(await appManager.getById(appId)).globalState` instead.
+ * @deprecated Use `algorand.app.getGlobalState` instead.
  *
  * Returns the current global state values for the given app ID
  * @param appId The ID of the app return global state for
@@ -244,7 +242,7 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.Pending
  * @returns The current global state
  */
 export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) {
-  return (await new AppManager(algod).getById(BigInt(appId))).globalState
+  return await new AppManager(algod).getGlobalState(BigInt(appId))
 }
 
 /**

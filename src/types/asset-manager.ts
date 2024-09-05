@@ -299,7 +299,6 @@ export class AssetManager {
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
 
-    const params = await this._algod.getTransactionParams().do()
     const sender = typeof account === 'string' ? account : account.addr
 
     for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {

@@ -3,12 +3,17 @@ import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetails
 import Algodv2 = algosdk.Algodv2
 
 /**
+ * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
+ * `algorand.client.getAppClientByCreatorAndName`.
+ * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+ * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+ *
  * Create a new ApplicationClient instance
  * @param appDetails The details of the app
  * @param algod An algod instance
  *
  * @example Resolve by creator and name
- * const client = getAppClient(
+ * const client = algokit.getAppClient(
  *     {
  *       resolveBy: 'creatorAndName',
  *       app: {appSpec},
@@ -20,7 +25,7 @@ import Algodv2 = algosdk.Algodv2
  *   )
  *
  * @example Resolve by id:
- * const client = getAppClient(
+ * const client = algokit.getAppClient(
  *     {
  *       resolveBy: 'id',
  *       app: {appSpec},
@@ -37,12 +42,17 @@ export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
 }
 
 /**
+ * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById`.
+ * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+ * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+ *
+ *
  * Create a new ApplicationClient instance by id
  * @param appDetails The details of the app
  * @param algod An algod instance
  *
  * @example
- * const client = getAppClientById(
+ * const client = algokit.getAppClientById(
  *     {
  *       app: {appSpec},
  *       sender: {account},
@@ -58,12 +68,17 @@ export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algod
 }
 
 /**
+ * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientByCreatorAndName`.
+ * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+ * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+ *
+ *
  * Create a new ApplicationClient instance by creator and name
  * @param appDetails The details of the app by creator and name
  * @param algod An algod instance
  *
  * @example
- * const client = getAppClientByCreatorAndName(
+ * const client = algokit.getAppClientByCreatorAndName(
  *     {
  *       app: {appSpec},
  *       sender: {account},

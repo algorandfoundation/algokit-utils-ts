@@ -20,4 +20,4 @@ AVM debugger source map format.
 
 #### Defined in
 
-[src/types/debugging.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L8)
+[src/types/debugging.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L9)

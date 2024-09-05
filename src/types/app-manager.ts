@@ -204,6 +204,16 @@ export class AppManager {
   }
 
   /**
+   * Returns the current global state values for the given app ID and account address
+   *
+   * @param appId The ID of the app to return global state for
+   * @returns The current global state for the given app
+   */
+  public async getGlobalState(appId: bigint) {
+    return (await this.getById(appId)).globalState
+  }
+
+  /**
    * Returns the current local state values for the given app ID and account address
    *
    * @param appId The ID of the app to return local state for

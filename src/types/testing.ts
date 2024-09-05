@@ -1,4 +1,4 @@
-import algosdk, { LogicSigAccount } from 'algosdk'
+import algosdk from 'algosdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
@@ -10,6 +10,7 @@ import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
+import LogicSigAccount = algosdk.LogicSigAccount
 import Transaction = algosdk.Transaction
 
 /**

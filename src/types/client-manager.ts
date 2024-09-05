@@ -11,8 +11,9 @@ import {
   AppSpecAppDetailsBase,
   ResolveAppByCreatorAndNameBase,
   ResolveAppByIdBase,
+  ResolveAppClientByCreatorAndName,
 } from './app-client'
-import { AppLookup } from './app-deployer'
+import { AppFactory, AppFactoryParams } from './app-factory'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
 import { Expand } from './expand'
 import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './network-client'
@@ -193,46 +194,38 @@ export class ClientManager {
   }
 
   /**
-   * Returns a new `ApplicationClient` client, resolving the app by creator address and name
+   * Returns a new `AppFactory` client
+   * @param params
+   * @returns
+   */
+  public getAppFactory(params: Expand<Omit<AppFactoryParams, 'algorand'>>) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
+    }
+
+    return new AppFactory({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
+   * This method resolves the app ID by looking up the creator address and name
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
    * @param params The parameters to create the app client
-   * @returns The `ApplicationClient`
+   * @returns The `AppClient`
    */
-  public async getAppClientByCreatorAndName(
-    params: Expand<
-      Omit<AppClientParams, 'algorand'> & {
-        /** The address of the creator account for the app */
-        creatorAddress: string
-        /** The optional name override to use for the app, if not specified then it will use the app spec name */
-        appName?: string
-        /** An optional cached app lookup that matches a name to on-chain details;
-         * either this is needed or indexer is required to be passed in to this `ClientManager` on construction.
-         */
-        appLookupCache?: AppLookup
-        /** Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value */
-        ignoreCache?: boolean
-      }
-    >,
-  ) {
+  public getAppClientByCreatorAndName(params: Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand'>>) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
-    const appSpec = AppClient.normaliseAppSpec(params.appSpec)
-    const appLookup =
-      params.appLookupCache ?? (await this._algorand.appDeployer.getCreatorAppsByName(params.creatorAddress, params.ignoreCache))
-    const appMetadata = appLookup.apps[params.appName ?? appSpec.name]
-    if (!appMetadata) {
-      throw new Error(`App not found for creator ${params.creatorAddress} and name ${params.appName ?? appSpec.name}`)
-    }
-    return new AppClient({
+
+    return AppClient.fromCreatorAndName({
       ...params,
       algorand: this._algorand,
-      appId: appMetadata.appId,
     })
   }
 
   /**
-   * Returns a new `AppClient` client for an app instance of the given ID.
+   * Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
    * @param params The parameters to create the app client
    * @returns The `AppClient`
    */
@@ -244,7 +237,8 @@ export class ClientManager {
   }
 
   /**
-   * Returns an `AppClient` instance for the current network based on
+   * Returns a new `AppClient` client for managing calls and state for an ARC-56 app.
+   * This method resolves the app ID for the current network based on
    * pre-determined network-specific app IDs specified in the ARC-56 app spec.
    *
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.

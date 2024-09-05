@@ -39,7 +39,7 @@ AVM debugger source map class.
 
 #### Defined in
 
-[src/types/debugging.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L47)
+[src/types/debugging.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L48)
 
 ## Properties
 
@@ -49,7 +49,7 @@ AVM debugger source map class.
 
 #### Defined in
 
-[src/types/debugging.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L41)
+[src/types/debugging.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L42)
 
 ## Methods
 
@@ -67,7 +67,7 @@ The dictionary
 
 #### Defined in
 
-[src/types/debugging.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L66)
+[src/types/debugging.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L67)
 
 ___
 
@@ -91,4 +91,4 @@ The source map
 
 #### Defined in
 
-[src/types/debugging.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L56)
+[src/types/debugging.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L57)

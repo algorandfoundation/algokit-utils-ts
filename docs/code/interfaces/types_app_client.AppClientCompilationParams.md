@@ -18,6 +18,8 @@
 
 • `Optional` **deletable**: `boolean`
 
+Whether or not the contract should have deploy-time permanence control set, undefined = ignore
+
 #### Defined in
 
 [src/types/app-client.ts:215](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L215)
@@ -39,6 +41,8 @@ ___
 ### updatable
 
 • `Optional` **updatable**: `boolean`
+
+Whether or not the contract should have deploy-time immutability control set, undefined = ignore
 
 #### Defined in
 

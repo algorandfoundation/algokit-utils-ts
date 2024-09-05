@@ -1,5 +1,5 @@
 import algosdk from 'algosdk'
-import { Arc56Contract, Method as Arc56Method, StorageKey, StructFields } from './app-arc56'
+import { Arc56Contract, Method as Arc56Method, StorageKey, StructFields, getABIEncodedValue } from './app-arc56'
 import ABIContractParams = algosdk.ABIContractParams
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIMethod = algosdk.ABIMethod
@@ -14,6 +14,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
   ) satisfies { [structName: string]: StructFields }
   const hint = (m: ABIMethodParams) => appSpec.hints[new ABIMethod(m).getSignature()] as Hint | undefined
   const actions = (m: ABIMethodParams, type: 'CREATE' | 'CALL') => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     return hint(m)?.call_config !== undefined ? callConfigToActions(hint(m)?.call_config!, type) : []
   }
   const bareActions = (type: 'CREATE' | 'CALL') => {
@@ -44,7 +45,12 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
             type: a.type,
             desc: a.desc,
             struct: a.name ? hint(m)?.structs?.[a.name]?.name : undefined,
-            //todo - pending discussion in ARC-56 pull request: defaultValue: a.name ? appSpec.hints[m.name]?.default_arguments?.[a.name] : undefined,
+            defaultValue:
+              a.name && hint(m)?.default_arguments?.[a.name].source === 'constant'
+                ? Buffer.from(getABIEncodedValue(hint(m)!.default_arguments![a.name].data as string | number, a.type, structs)).toString(
+                    'base64',
+                  )
+                : undefined,
           })),
           returns: {
             type: m.returns.type,

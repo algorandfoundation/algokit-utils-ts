@@ -194,11 +194,9 @@ export async function deployApp(
           ),
         }
       : undefined,
-    executeParams: {
-      maxRoundsToWaitForConfirmation: deployment.maxRoundsToWaitForConfirmation,
-      populateAppCallResources: deployment.populateAppCallResources,
-      suppressLog: deployment.suppressLog,
-    },
+    maxRoundsToWaitForConfirmation: deployment.maxRoundsToWaitForConfirmation,
+    populateAppCallResources: deployment.populateAppCallResources,
+    suppressLog: deployment.suppressLog,
   })
 
   return { ...result, appId: Number(result.appId), createdRound: Number(result.createdRound), updatedRound: Number(result.updatedRound) }
