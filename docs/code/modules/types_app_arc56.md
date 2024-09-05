@@ -32,15 +32,22 @@
 - [StructName](types_app_arc56.md#structname)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 ### Functions
 
 - [getABIDecodedValue](types_app_arc56.md#getabidecodedvalue)
 - [getABIEncodedValue](types_app_arc56.md#getabiencodedvalue)
+<<<<<<< HEAD
 - [getABIStructFromABITuple](types_app_arc56.md#getabistructfromabituple)
 - [getABITupleFromABIStruct](types_app_arc56.md#getabituplefromabistruct)
 - [getABITupleTypeFromABIStructDefinition](types_app_arc56.md#getabitupletypefromabistructdefinition)
 - [getArc56Method](types_app_arc56.md#getarc56method)
 - [getArc56ReturnValue](types_app_arc56.md#getarc56returnvalue)
+=======
+- [getTupleType](types_app_arc56.md#gettupletype)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Type Aliases
 
@@ -73,10 +80,14 @@ An ABI-encoded type
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:395](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L395)
 =======
 [src/types/app-arc56.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L196)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-arc56.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L232)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -89,10 +100,14 @@ Raw byteslice without the length prefixed that is specified in ARC-4
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L401)
 =======
 [src/types/app-arc56.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L202)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-arc56.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L238)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -105,12 +120,17 @@ The name of a defined struct
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L398)
+=======
+[src/types/app-arc56.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L235)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Functions
 
 ### getABIDecodedValue
 
+<<<<<<< HEAD
 ▸ **getABIDecodedValue**(`value`, `type`, `structs`): `algosdk.ABIValue` \| [`ABIStruct`](types_app_arc56.md#abistruct)
 
 Returns the decoded ABI value (or struct for a struct type)
@@ -133,6 +153,25 @@ The decoded ABI value or struct
 #### Defined in
 
 [src/types/app-arc56.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L95)
+=======
+▸ **getABIDecodedValue**(`value`, `type`, `structs`): `algosdk.ABIValue`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `number` \| `bigint` \| `Uint8Array` |
+| `type` | `string` |
+| `structs` | `Record`\<`string`, [`StructFields`](../interfaces/types_app_arc56.StructFields.md)\> |
+
+#### Returns
+
+`algosdk.ABIValue`
+
+#### Defined in
+
+[src/types/app-arc56.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L9)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -140,6 +179,7 @@ ___
 
 ▸ **getABIEncodedValue**(`value`, `type`, `structs`): `Uint8Array`
 
+<<<<<<< HEAD
 Returns the ABI-encoded value for the given value.
 
 #### Parameters
@@ -149,11 +189,21 @@ Returns the ABI-encoded value for the given value.
 | `value` | `ABIValue` \| [`ABIStruct`](types_app_arc56.md#abistruct) | The value to encode either already in encoded binary form (`Uint8Array`), a decoded ABI value or an ARC-56 struct |
 | `type` | `string` | The ARC-56 type - either an ABI Type string or a struct name |
 | `structs` | `Record`\<`string`, [`StructFields`](../interfaces/types_app_arc56.StructFields.md)\> | The defined ARC-56 structs |
+=======
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `ABIValue` |
+| `type` | `string` |
+| `structs` | `Record`\<`string`, [`StructFields`](../interfaces/types_app_arc56.StructFields.md)\> |
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 #### Returns
 
 `Uint8Array`
 
+<<<<<<< HEAD
 The binary ABI-encoded value
 
 #### Defined in
@@ -229,11 +279,30 @@ Returns the `ABITupleType` for the given ARC-56 struct definition
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `struct` | [`StructFields`](../interfaces/types_app_arc56.StructFields.md) | The ARC-56 struct definition |
+=======
+#### Defined in
+
+[src/types/app-arc56.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L21)
+
+___
+
+### getTupleType
+
+▸ **getTupleType**(`struct`, `structs`): `algosdk.ABITupleType`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `struct` | [`StructFields`](../interfaces/types_app_arc56.StructFields.md) |
+| `structs` | `Record`\<`string`, [`StructFields`](../interfaces/types_app_arc56.StructFields.md)\> |
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 #### Returns
 
 `algosdk.ABITupleType`
 
+<<<<<<< HEAD
 The `ABITupleType`
 
 #### Defined in
@@ -299,3 +368,8 @@ The smart contract response with an updated return value
 =======
 [src/types/app-arc56.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L199)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+#### Defined in
+
+[src/types/app-arc56.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L3)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)

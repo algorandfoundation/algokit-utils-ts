@@ -3,7 +3,6 @@ import { getTestingAppContract } from '../tests/example-contracts/testing-app/co
 import { indexer } from './'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 import { AlgoAmount } from './types/amount'
-import { ApplicationClient } from './types/app-client'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()

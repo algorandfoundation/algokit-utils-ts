@@ -25,10 +25,14 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L473)
 =======
 [src/types/composer.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L448)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L451)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -41,10 +45,14 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L475)
 =======
 [src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:453](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L453)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -57,7 +65,11 @@ The built transactions
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
 =======
 [src/types/composer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L446)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:449](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L449)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)

@@ -43,10 +43,14 @@ The string name of an ABI type
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L187)
 =======
 [src/types/app-spec.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L183)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L189)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -59,10 +63,14 @@ AVM data type
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L243)
 =======
 [src/types/app-spec.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L239)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L245)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -79,10 +87,14 @@ The various call configs:
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L158)
 =======
 [src/types/app-spec.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L154)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L160)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -95,10 +107,14 @@ Defines a strategy for obtaining a default value for a given ABI arg.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L203)
 =======
 [src/types/app-spec.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L199)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L205)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -111,10 +127,14 @@ The name of a field
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L184)
 =======
 [src/types/app-spec.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L180)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L186)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -127,10 +147,14 @@ A lookup of encoded method call spec to hint
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L142)
 =======
 [src/types/app-spec.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L138)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L144)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -150,10 +174,14 @@ Schema spec summary for global or local storage
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L292)
 =======
 [src/types/app-spec.ts:288](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L288)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:294](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L294)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -166,10 +194,14 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-spec.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L190)
 =======
 [src/types/app-spec.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L186)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-spec.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L192)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Functions
 

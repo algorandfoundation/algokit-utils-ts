@@ -58,10 +58,14 @@ AppClient parameters for a bare app call
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L337)
 =======
 [src/types/app-client.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L318)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-client.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L324)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -164,10 +168,14 @@ AppClient parameters for an ABI method call
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L345)
 =======
 [src/types/app-client.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L326)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-client.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L332)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -312,10 +320,14 @@ onComplete parameter for a non-update app call
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L331)
 =======
 [src/types/app-client.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L312)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-client.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L318)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -328,10 +340,14 @@ Parameters for funding an app account
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L369)
 =======
 [src/types/app-client.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L341)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/app-client.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L347)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -383,4 +399,19 @@ Resolve an app client instance by looking up an app created by the given creator
 [src/types/app-client.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L378)
 =======
 [src/types/app-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L76)
+<<<<<<< HEAD
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+
+___
+
+### ResolveAppClientByCreatorAndName
+
+Ƭ **ResolveAppClientByCreatorAndName**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"appId"``\> & \{ `appLookupCache?`: [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) ; `creatorAddress`: `string` ; `ignoreCache?`: `boolean`  }\>
+
+Resolve an app client instance by looking up an app created by the given creator with the given name
+
+#### Defined in
+
+[src/types/app-client.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L356)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)

@@ -33,9 +33,13 @@ Exposes access to various API clients.
 - [getAppClientById](types_client_manager.ClientManager.md#getappclientbyid)
 - [getAppClientByNetwork](types_client_manager.ClientManager.md#getappclientbynetwork)
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [getAppFactory](types_client_manager.ClientManager.md#getappfactory)
 =======
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+- [getAppFactory](types_client_manager.ClientManager.md#getappfactory)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 - [getTestNetDispenser](types_client_manager.ClientManager.md#gettestnetdispenser)
 - [getTestNetDispenserFromEnvironment](types_client_manager.ClientManager.md#gettestnetdispenserfromenvironment)
 - [getTypedAppClientByCreatorAndName](types_client_manager.ClientManager.md#gettypedappclientbycreatorandname)
@@ -105,10 +109,14 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L52)
 =======
 [src/types/client-manager.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L61)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L62)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Properties
 
@@ -119,10 +127,14 @@ const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig 
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L27)
 =======
 [src/types/client-manager.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L36)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L37)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -133,10 +145,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L30)
 =======
 [src/types/client-manager.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L39)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L40)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -147,10 +163,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L89)
 =======
 [src/types/client-manager.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L98)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L99)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -161,10 +181,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L28)
 =======
 [src/types/client-manager.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L37)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L38)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -175,10 +199,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L29)
 =======
 [src/types/client-manager.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L38)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L39)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Accessors
 
@@ -195,10 +223,14 @@ Returns an algosdk Algod API client.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L68)
 =======
 [src/types/client-manager.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L77)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L78)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -215,10 +247,14 @@ Returns an algosdk Indexer API client or throws an error if it's not been provid
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L73)
 =======
 [src/types/client-manager.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L82)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L83)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -235,10 +271,14 @@ Returns an algosdk Indexer API client or `undefined` if it's not been provided.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L79)
 =======
 [src/types/client-manager.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L88)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L89)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -255,10 +295,14 @@ Returns an algosdk KMD API client or throws an error if it's not been provided.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L84)
 =======
 [src/types/client-manager.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L93)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L94)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Methods
 
@@ -267,11 +311,16 @@ Returns an algosdk KMD API client or throws an error if it's not been provided.
 ▸ **getAppClientByCreatorAndName**(`params`): `Promise`\<[`AppClient`](types_app_client.AppClient.md)\>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
 This method resolves the app ID by looking up the creator address and name
 =======
 Returns a new `ApplicationClient` client, resolving the app by creator address and name
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
+This method resolves the app ID by looking up the creator address and name
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
 
 #### Parameters
@@ -280,6 +329,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | `params.appLookupCache?` | [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) | An optional cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this `ClientManager` on construction. |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 =======
@@ -287,6 +337,10 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | `params.appLookupCache?` | [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) | An optional cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this `ClientManager` on construction. |
 | `params.appName?` | `string` | The optional name override to use for the app, if not specified then it will use the app spec name |
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+| `params.appLookupCache?` | [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) | An optional cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this `ClientManager` on construction. |
+| `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
@@ -299,6 +353,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 `Promise`\<[`AppClient`](types_app_client.AppClient.md)\>
 
 The `AppClient`
+<<<<<<< HEAD
 
 **`Example`**
 
@@ -318,6 +373,12 @@ const appClient = algorand.client.getAppClientByCreatorAndName({
 =======
 [src/types/client-manager.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L201)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+
+#### Defined in
+
+[src/types/client-manager.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L216)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -326,10 +387,14 @@ ___
 ▸ **getAppClientById**(`params`): [`AppClient`](types_app_client.AppClient.md)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
 =======
 Returns a new `AppClient` client for an app instance of the given ID.
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 #### Parameters
 
@@ -338,9 +403,13 @@ Returns a new `AppClient` client for an app instance of the given ID.
 | `params` | `Object` | The parameters to create the app client |
 | `params.appId` | `bigint` | The ID of the app instance this client should make calls against. |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 =======
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+| `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
@@ -370,8 +439,12 @@ const appClient = algorand.client.getAppClientById({
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/client-manager.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L239)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L232)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -380,11 +453,16 @@ ___
 ▸ **getAppClientByNetwork**(`params`): `Promise`\<[`AppClient`](types_app_client.AppClient.md)\>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Returns a new `AppClient` client for managing calls and state for an ARC-56 app.
 This method resolves the app ID for the current network based on
 =======
 Returns an `AppClient` instance for the current network based on
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+Returns a new `AppClient` client for managing calls and state for an ARC-56 app.
+This method resolves the app ID for the current network based on
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 pre-determined network-specific app IDs specified in the ARC-56 app spec.
 
 If no IDs are in the app spec or the network isn't recognised, an error is thrown.
@@ -395,9 +473,13 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 =======
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+| `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
@@ -477,8 +559,41 @@ const factory = algorand.client.getAppFactory({
 =======
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/client-manager.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L254)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L248)
+
+___
+
+### getAppFactory
+
+▸ **getAppFactory**(`params`): [`AppFactory`](types_app_factory.AppFactory.md)
+
+Returns a new `AppFactory` client
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | `Object` |  |
+| `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name. |
+| `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
+| `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.deletable?` | `boolean` | Whether or not the contract should have deploy-time permanence control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
+| `params.deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optional deploy-time TEAL template replacement parameters. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
+| `params.updatable?` | `boolean` | Whether or not the contract should have deploy-time immutability control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
+| `params.version?` | `string` | The version of app that is / will be deployed; defaults to 1.0 |
+
+#### Returns
+
+[`AppFactory`](types_app_factory.AppFactory.md)
+
+#### Defined in
+
+[src/types/client-manager.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L201)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -516,10 +631,14 @@ const client = clientManager.getTestNetDispenser(
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L163)
 =======
 [src/types/client-manager.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L172)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L173)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -556,10 +675,14 @@ const client = clientManager.getTestNetDispenserFromEnvironment(
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L182)
 =======
 [src/types/client-manager.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L191)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L192)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -617,10 +740,14 @@ const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractCl
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L298)
 =======
 [src/types/client-manager.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L283)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L277)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -757,10 +884,14 @@ const appFactory = algorand.client.getTypedAppFactory(MyContractClient, {
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:371](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L371)
 =======
 [src/types/client-manager.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L304)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:298](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L298)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -779,10 +910,14 @@ True if the current network is LocalNet.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L127)
 =======
 [src/types/client-manager.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L136)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L137)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -801,10 +936,14 @@ True if the current network is MainNet.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L143)
 =======
 [src/types/client-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L152)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L153)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -823,10 +962,14 @@ True if the current network is TestNet.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L135)
 =======
 [src/types/client-manager.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L144)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L145)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -852,10 +995,14 @@ const genesisId = network.genesisId
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L99)
 =======
 [src/types/client-manager.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L108)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L109)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -880,10 +1027,14 @@ Whether the given genesis ID is associated with a LocalNet network
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L119)
 =======
 [src/types/client-manager.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L128)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L129)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -907,10 +1058,14 @@ Returns the Algorand configuration to point to the free tier of the AlgoNode ser
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L470)
 =======
 [src/types/client-manager.ts:396](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L396)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L390)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -954,10 +1109,14 @@ Returns an algod SDK client that automatically retries on idempotent calls.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:509](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L509)
 =======
 [src/types/client-manager.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L435)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L429)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -982,10 +1141,14 @@ Returns an algod SDK client that automatically retries on idempotent calls loade
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:526](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L526)
 =======
 [src/types/client-manager.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L452)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L446)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1004,10 +1167,14 @@ Expects `process.env.ALGOD_SERVER` to be defined, and you can also specify `proc
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L428)
 =======
 [src/types/client-manager.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L354)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L348)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1041,10 +1208,14 @@ const config = ClientManager.getConfigFromEnvironmentOrLocalNet()
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L399)
 =======
 [src/types/client-manager.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L325)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L319)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1067,10 +1238,14 @@ Returns the Algorand configuration to point to the default LocalNet.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L481)
 =======
 [src/types/client-manager.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L407)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L401)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1121,10 +1296,14 @@ Returns an indexer SDK client that automatically retries on idempotent calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L555)
 =======
 [src/types/client-manager.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L481)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L475)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1155,10 +1334,14 @@ Returns an indexer SDK client that automatically retries on idempotent calls loa
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L577)
 =======
 [src/types/client-manager.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L503)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:497](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L497)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1177,10 +1360,14 @@ Expects `process.env.INDEXER_SERVER` to be defined, and you can also specify `pr
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:449](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L449)
 =======
 [src/types/client-manager.ts:375](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L375)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L369)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1211,10 +1398,14 @@ KMD client allows you to export private keys, which is useful to (for instance) 
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L592)
 =======
 [src/types/client-manager.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L518)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:512](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L512)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1238,7 +1429,11 @@ Returns a KMD SDK client that automatically retries on idempotent calls loaded f
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:606](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L606)
 =======
 [src/types/client-manager.ts:532](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L532)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:526](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L526)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)

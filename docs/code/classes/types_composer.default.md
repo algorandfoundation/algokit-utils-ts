@@ -88,10 +88,14 @@ Create an `AlgoKitComposer`.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L513)
 =======
 [src/types/composer.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L488)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L491)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Properties
 
@@ -104,10 +108,14 @@ The algod client used by the composer.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:493](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L493)
 =======
 [src/types/composer.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L468)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -118,10 +126,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L507)
 =======
 [src/types/composer.ts:482](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L482)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L485)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -134,10 +146,14 @@ The ATC used to compose the group
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L484)
 =======
 [src/types/composer.ts:459](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L459)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L462)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -150,10 +166,14 @@ The default transaction validity window
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L502)
 =======
 [src/types/composer.ts:477](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L477)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L480)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -166,10 +186,14 @@ Whether the validity window was explicitly set on construction
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:505](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L505)
 =======
 [src/types/composer.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L480)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:483](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L483)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -196,10 +220,14 @@ A function that takes in an address and return a signer function for that addres
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L499)
 =======
 [src/types/composer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L474)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:477](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L477)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -220,10 +248,14 @@ An async function that will return suggested params for the transaction.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L496)
 =======
 [src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L474)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -236,10 +268,14 @@ Map of txid to ABI method
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L487)
 =======
 [src/types/composer.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L462)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:465](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L465)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -252,10 +288,14 @@ Transactions that have not yet been composed
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:490](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L490)
 =======
 [src/types/composer.ts:465](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L465)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L468)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -268,10 +308,14 @@ Signer used to represent a lack of signer
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L481)
 =======
 [src/types/composer.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L456)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:459](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L459)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ## Methods
 
@@ -300,10 +344,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L675)
 =======
 [src/types/composer.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L634)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L653)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -330,10 +378,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:724](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L724)
 =======
 [src/types/composer.ts:683](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L683)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:702](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L702)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -385,10 +437,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L634)
 =======
 [src/types/composer.ts:593](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L593)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:612](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L612)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -415,10 +471,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:688](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L688)
 =======
 [src/types/composer.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L647)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:666](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L666)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -445,10 +505,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:660](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L660)
 =======
 [src/types/composer.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L619)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:638](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L638)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -475,10 +539,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L712)
 =======
 [src/types/composer.ts:671](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L671)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:690](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L690)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -525,10 +593,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L647)
 =======
 [src/types/composer.ts:606](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L606)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L625)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -555,10 +627,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L700)
 =======
 [src/types/composer.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L659)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:678](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L678)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -583,10 +659,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L566)
 =======
 [src/types/composer.ts:525](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L525)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L544)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -611,10 +691,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L555)
 =======
 [src/types/composer.ts:514](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L514)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L533)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -639,10 +723,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:588](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L588)
 =======
 [src/types/composer.ts:547](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L547)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L566)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -667,10 +755,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L577)
 =======
 [src/types/composer.ts:536](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L536)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L555)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -695,10 +787,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L610)
 =======
 [src/types/composer.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L569)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:588](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L588)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -723,10 +819,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L621)
 =======
 [src/types/composer.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L580)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L599)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -751,10 +851,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L599)
 =======
 [src/types/composer.ts:558](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L558)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L577)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -779,10 +883,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:745](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L745)
 =======
 [src/types/composer.ts:704](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L704)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:723](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L723)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -807,10 +915,14 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L734)
 =======
 [src/types/composer.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L693)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L712)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -835,7 +947,11 @@ The composer so you can chain method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L544)
+=======
+[src/types/composer.ts:522](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L522)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -860,10 +976,14 @@ The composer so you can chain method calls
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L529)
 =======
 [src/types/composer.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L503)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L507)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -887,10 +1007,14 @@ The built atomic transaction composer and the transactions
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1185)
 =======
 [src/types/composer.ts:1139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1139)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1163)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -912,10 +1036,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1008](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1008)
 =======
 [src/types/composer.ts:962](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L962)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:986](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L986)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -937,10 +1065,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:957](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L957)
 =======
 [src/types/composer.ts:911](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L911)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:935](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L935)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -962,10 +1094,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:937](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L937)
 =======
 [src/types/composer.ts:891](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L891)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:915](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L915)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -987,10 +1123,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:972](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L972)
 =======
 [src/types/composer.ts:926](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L926)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:950](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L950)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1012,10 +1152,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:982](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L982)
 =======
 [src/types/composer.ts:936](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L936)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:960](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L960)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1037,10 +1181,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:994](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L994)
 =======
 [src/types/composer.ts:948](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L948)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:972](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L972)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1064,10 +1212,14 @@ Build an ATC and return transactions ready to be incorporated into a broader set
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:751](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L751)
 =======
 [src/types/composer.ts:710](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L710)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:729](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L729)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1089,10 +1241,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1063](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1063)
 =======
 [src/types/composer.ts:1017](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1017)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1041](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1041)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1117,10 +1273,14 @@ Builds an ABI method call transaction and any other associated transactions repr
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:817](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L817)
 =======
 [src/types/composer.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L776)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:795](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L795)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1142,10 +1302,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:925](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L925)
 =======
 [src/types/composer.ts:879](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L879)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:903](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L903)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1164,10 +1328,14 @@ The array of built transactions and any corresponding method calls
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1132)
 =======
 [src/types/composer.ts:1086](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1086)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1110)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1191,10 +1359,14 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1082](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1082)
 =======
 [src/types/composer.ts:1036](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1036)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1060](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1060)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1216,10 +1388,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1109)
 =======
 [src/types/composer.ts:1063](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1063)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1087](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1087)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1242,10 +1418,14 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:772](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L772)
 =======
 [src/types/composer.ts:731](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L731)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:750](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L750)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1262,10 +1442,14 @@ Get the number of transactions currently added to this composer.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1172)
 =======
 [src/types/composer.ts:1126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1126)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1150)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1290,10 +1474,14 @@ The execution result
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1224)
 =======
 [src/types/composer.ts:1178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1178)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1202)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1313,10 +1501,14 @@ The newly built atomic transaction composer and the transactions
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1214)
 =======
 [src/types/composer.ts:1168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1168)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1192)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1354,10 +1546,14 @@ The simulation result
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1251)
 =======
 [src/types/composer.ts:1205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1205)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1229)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1378,7 +1574,11 @@ ___
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1291)
 =======
 [src/types/composer.ts:1241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1241)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/composer.ts:1266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1266)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)

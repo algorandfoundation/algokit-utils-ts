@@ -32,7 +32,7 @@ Details to resolve an app client by creator address and name.
 
 #### Defined in
 
-[src/types/client-manager.ts:549](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L549)
+[src/types/client-manager.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L543)
 
 ___
 
@@ -44,7 +44,7 @@ Details to resolve a typed app creator address and name.
 
 #### Defined in
 
-[src/types/client-manager.ts:556](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L556)
+[src/types/client-manager.ts:550](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L550)
 
 ___
 
@@ -56,5 +56,9 @@ Details to resolve a typed app by app ID.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/client-manager.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L561)
 >>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
+=======
+[src/types/client-manager.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L555)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)

@@ -499,7 +499,11 @@ Compiles the given TEAL using algod and returns the result, including source map
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L415)
+=======
+[src/app.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L411)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -628,7 +632,11 @@ generic object keyed by the UTF-8 value of the key.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L341)
+=======
+[src/app.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L337)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -809,7 +817,11 @@ Returns the encoded ABI spec for a given ABI Method
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L426)
+=======
+[src/app.ts:422](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L422)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -838,7 +850,11 @@ Returns any ABI return values for the given app call arguments and transaction c
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L231)
+=======
+[src/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L227)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1323,7 +1339,11 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L374)
+=======
+[src/app.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L370)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1351,7 +1371,11 @@ Returns the app args ready to load onto an app `Transaction` object
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L352)
+=======
+[src/app.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L348)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1379,7 +1403,11 @@ Returns the names of the boxes for the given app.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L272)
+=======
+[src/app.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L268)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1408,7 +1436,11 @@ Returns the value of the given box name for the given app.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L284)
+=======
+[src/app.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L280)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1436,7 +1468,11 @@ Returns the value of the given box name for the given app decoded based on the g
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L310)
+=======
+[src/app.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L306)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1465,7 +1501,11 @@ Returns the value of the given box names for the given app.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L296)
+=======
+[src/app.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L292)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1493,7 +1533,11 @@ Returns the value of the given box names for the given app decoded based on the 
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L325)
+=======
+[src/app.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L321)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1522,7 +1566,11 @@ Gets the current data for the given app from algod.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L402)
+=======
+[src/app.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L398)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1556,7 +1604,7 @@ Create a new ApplicationClient instance
 
 ```ts
 Resolve by creator and name
-const client = getAppClient(
+const client = algokit.getAppClient(
     {
       resolveBy: 'creatorAndName',
       app: {appSpec},
@@ -1572,7 +1620,7 @@ const client = getAppClient(
 
 ```ts
 Resolve by id:
-const client = getAppClient(
+const client = algokit.getAppClient(
     {
       resolveBy: 'id',
       app: {appSpec},
@@ -1617,7 +1665,7 @@ Create a new ApplicationClient instance by creator and name
 **`Example`**
 
 ```ts
-const client = getAppClientByCreatorAndName(
+const client = algokit.getAppClientByCreatorAndName(
     {
       app: {appSpec},
       sender: {account},
@@ -1662,7 +1710,7 @@ Create a new ApplicationClient instance by id
 **`Example`**
 
 ```ts
-const client = getAppClientById(
+const client = algokit.getAppClientById(
     {
       app: {appSpec},
       sender: {account},
@@ -1731,7 +1779,11 @@ Returns the current global state values for the given app ID
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L248)
+=======
+[src/app.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L244)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1761,7 +1813,11 @@ Returns the current global state values for the given app ID and account
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L261)
+=======
+[src/app.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L257)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -1849,7 +1905,11 @@ Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/app.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L385)
+=======
+[src/app.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L381)
+>>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
