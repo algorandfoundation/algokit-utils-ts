@@ -26,6 +26,7 @@ Algod client, see https://developer.algorand.org/docs/rest-apis/algod/
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L18)
 =======
 [src/types/client-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L27)
@@ -33,6 +34,9 @@ Algod client, see https://developer.algorand.org/docs/rest-apis/algod/
 =======
 [src/types/client-manager.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L28)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/client-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L27)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -46,6 +50,7 @@ Optional indexer client, see https://developer.algorand.org/docs/rest-apis/index
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L20)
 =======
 [src/types/client-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L29)
@@ -53,6 +58,9 @@ Optional indexer client, see https://developer.algorand.org/docs/rest-apis/index
 =======
 [src/types/client-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L30)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/client-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L29)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -66,6 +74,7 @@ Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L22)
 =======
 [src/types/client-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L31)
@@ -73,3 +82,6 @@ Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/
 =======
 [src/types/client-manager.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L32)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/client-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L31)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)

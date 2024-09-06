@@ -65,6 +65,7 @@ Parameters to create an `AlgoKitComposer`.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
 =======
 [src/types/composer.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L425)
@@ -72,6 +73,9 @@ Parameters to create an `AlgoKitComposer`.
 =======
 [src/types/composer.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L428)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L430)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -83,6 +87,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L401)
 =======
 [src/types/composer.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L386)
@@ -90,6 +95,9 @@ ___
 =======
 [src/types/composer.ts:387](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L387)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L389)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -103,6 +111,7 @@ Parameters to define an application call transaction.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L381)
 =======
 [src/types/composer.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L374)
@@ -110,6 +119,9 @@ Parameters to define an application call transaction.
 =======
 [src/types/composer.ts:375](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L375)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L377)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -121,6 +133,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L398)
 =======
 [src/types/composer.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L383)
@@ -128,6 +141,9 @@ ___
 =======
 [src/types/composer.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L384)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L386)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -157,6 +173,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L400)
 =======
 [src/types/composer.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L385)
@@ -164,6 +181,9 @@ ___
 =======
 [src/types/composer.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L386)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L388)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -177,6 +197,7 @@ Parameters to define an application delete call transaction.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L394)
 =======
 [src/types/composer.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L379)
@@ -184,6 +205,9 @@ Parameters to define an application delete call transaction.
 =======
 [src/types/composer.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L380)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L382)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -203,6 +227,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 [src/types/composer.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L412)
@@ -234,6 +259,9 @@ ___
 =======
 [src/types/composer.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L389)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:391](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L391)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -245,6 +273,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L399)
 =======
 [src/types/composer.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L384)
@@ -252,6 +281,9 @@ ___
 =======
 [src/types/composer.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L385)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:387](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L387)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -263,6 +295,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L370)
 =======
 [src/types/composer.ts:363](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L363)
@@ -270,6 +303,9 @@ ___
 =======
 [src/types/composer.ts:364](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L364)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/composer.ts:366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L366)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 

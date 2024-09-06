@@ -4,7 +4,11 @@ Version 7 of AlgoKit Utils moved from a stateless function-based interface to a 
 
 The entry point to the vast majority of functionality in AlgoKit Utils is now available via a single entry-point, the [`AlgorandClient` class](./capabilities/algorand-client.md).
 
+<<<<<<< HEAD
 The old version will still work until the next major version bump (we have been careful to keep those functions working with backwards compatibility), but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
+=======
+The old version will still work until the next major version bump (we have put careful care to keep those functions working with backwards compatibility), but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 A simple example of the before and after follows:
 
@@ -36,7 +40,11 @@ const payment = await algorand.send.payment({
 })
 ```
 
+<<<<<<< HEAD
 If you were following the recommended guidance for AlgoKit Utils then you can easily tell if you are using the old version by looking for this import line (which can act as a good todo checklist if you are migrating):
+=======
+If you were following the recommended guidance for AlgoKitUtils then you can easily tell if you are using the old version by looking for this import line (which can act as a good todo checklist if you are migrating):
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ```typescript
 import * as algokit from '@algorandfoundation/algokit-utils'
@@ -44,10 +52,13 @@ import * as algokit from '@algorandfoundation/algokit-utils'
 
 ## Migrating
 
+<<<<<<< HEAD
 ### Step 1 - Accomodate AlgoAmount change
 
 There is a class in AlgoKit Utils called `AlgoAmount` that wraps the representation of microAlgo / Algo amounts. The `microAlgo` property on that class now returns a `bigint` rather than a `number`, which is a breaking change. This is to align with the new consistent way of representing certain types of values (in this case Algo balances and microAlgo amounts) as bigints.
 
+=======
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 ### Step 1 - Replace sdk clients with `AlgorandClient`
 
 To migrate the first step is to get an `AlgorandClient` instance at the same place(s) you had an algod instance. To do this you can look for anywhere you called the `getAlgoClient` method and replace them with an [equivalent mechanism](./capabilities/algorand-client.md#algorand-client) for getting an `AlgorandClient` instance.
@@ -89,12 +100,20 @@ Other things to note that you may come across:
 - We now restrict the number of valid rounds (10 rounds, except when pointing to LocalNet, which is still 1000 to avoid problems given the round advances for every transaction) to a much smaller window than the default (1000 rounds), but this is configurable [by default](./capabilities/algorand-client.md#transaction-configuration) and [per transaction](./capabilities/algorand-client.md#transaction-parameters) if that's a problem. If you come across this problem it will present as a dead transaction error.
 - Transaction parameters are cached for a period of time to prevent repeated calls to the algod API to get default transaction parameters, but this sometimes means that you can create duplicate transaction IDs when previously that wouldn't happen, you will get an obvious error if that happens though and can adjust it by ensuring one of the parameters in your transaction change slightly (e.g. note, lease, validity window, etc.), you can also [exert control over default transaction parameter caching](./capabilities/algorand-client.md#transaction-configuration)
 - Rather than always passing a signer into transaction calls (which is what the `SendTransactionFrom` instance previously combined with the address), we have decoupled signing and sender address via the `AccountManager` (`algorand.account`), which keeps track of the signer associated with a sender address so the signer can be resolved just in time.
+<<<<<<< HEAD
   - Most of the time you don't need to worry about it since it will magically happen for you, but if you have situations where you are creating a signer outside of the `AccountManager` you will need to [register the signer](./capabilities/account.md#registering-a-signer) with the `AccountManager` first.
+=======
+  - Most of the thing you don't need to worry about it since it will magically happen for you, but if you have situations where you are creating a signer outside of the `AccountManager` you will need to [register the signer](./capabilities/account.md#registering-a-signer) with the `AccountManager` first.
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
   - Note: you can also explicitly [pass a `signer`](./capabilities/algorand-client.md#transaction-parameters) in as well if you want an escape hatch.
 
 ### Step 3 - Replace `ApplicationClient` usage
 
+<<<<<<< HEAD
 The existing `ApplicationClient` (untyped app client) class is still present until the next major version bump, but it's worthwhile migrating to the new [`AppClient` and `AppFactory` classes](./capabilities/app-client.md). These new clients are [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) compatible, but also take an [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) app spec file and will continue to support this indefinitely until such time the community deems they are deprecated.
+=======
+The existing `ApplicationClient` (untyped app client) class is still present until the next major version bump, but it's worthwhile migrating to the new [`AppClient` and `AppFactory` classes](./capabilities/app-client.md). These new clients are [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) compatible, but also take an [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) app spec file and will continue to support this indefinitely until such as time as the community deems they are deprecated.
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 All of the functionality in `ApplicationClient` is available within the new classes, but their interface is slightly different to make it easier to use and more consistent with the new `AlgorandClient` functionality. The key existing methods that have changed all have `@deprecation` notices to help guide you on this, but broadly the changes are:
 
@@ -103,7 +122,11 @@ All of the functionality in `ApplicationClient` is available within the new clas
 - `fundAppAccount` no longer takes an `AlgoAmount` directly - it always expects the params object (more consistent with)
 - `compile` is replaced with static methods on `AppClient` and `getABIMethodParams` is deprecated in favour of `getABIMethod`, which now returns the params _and_ the `ABIMethod`
 - All of the methods that return or execute a transaction (`update`, `call`, `optIn`, etc.) are now exposed in an interface similar to the one in [`AlgorandClient`](./capabilities/algorand-client.md#creating-and-issuing-transactions), namely (where `{callType}` is one of: `update` / `delete` / `optIn` / `closeOut` / `clearState` / `call`):
+<<<<<<< HEAD
   - `appClient.transactions.{callType}` to get a transaction for an ABI method call
+=======
+  - `appClient.transactions.{callType}` to get a transaction for an ABI method c all
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
   - `appClient.send.{callType}` to sign and send a transaction for an ABI method call
   - `appClient.params.{callType}` to get a [params object](./capabilities/algorand-client.md#transaction-parameters) for an ABI method call
   - `appClient.transactions.bare.{callType}` to get a transaction for a bare app call
@@ -116,7 +139,10 @@ All of the functionality in `ApplicationClient` is available within the new clas
   - `apps` -> `appReferences`
   - `assets` -> `assetReferences`
   - `accounts` -> `accountReferences`
+<<<<<<< HEAD
 - The return value for methods that send a transaction will have any ABI return value directly in the `return` property rather than the `ABIReturn` type (this behaviour matches what happened in typed clients, but has now been brought down to the underlying `AppClient`)
+=======
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ### Step 4 - Replace typed app client usage
 

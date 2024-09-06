@@ -104,6 +104,7 @@ Create a new ApplicationClient instance
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1381)
 =======
 [src/types/app-client.ts:1166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1166)
@@ -111,6 +112,9 @@ Create a new ApplicationClient instance
 =======
 [src/types/app-client.ts:1323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1323)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1346)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ## Properties
 
@@ -122,6 +126,7 @@ Create a new ApplicationClient instance
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1364](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1364)
 =======
 [src/types/app-client.ts:1154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1154)
@@ -129,6 +134,9 @@ Create a new ApplicationClient instance
 =======
 [src/types/app-client.ts:1311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1311)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1329)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -140,6 +148,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1363](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1363)
 =======
 [src/types/app-client.ts:1153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1153)
@@ -147,6 +156,9 @@ ___
 =======
 [src/types/app-client.ts:1310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1310)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1328)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -158,6 +170,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1366)
 =======
 [src/types/app-client.ts:1156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1156)
@@ -165,6 +178,9 @@ ___
 =======
 [src/types/app-client.ts:1313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1313)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1331)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -176,6 +192,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1368](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1368)
 =======
 [src/types/app-client.ts:1158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1158)
@@ -183,6 +200,9 @@ ___
 =======
 [src/types/app-client.ts:1315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1315)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1333)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -194,6 +214,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1369)
 =======
 [src/types/app-client.ts:1159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1159)
@@ -201,6 +222,9 @@ ___
 =======
 [src/types/app-client.ts:1316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1316)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1334)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -212,6 +236,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1365](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1365)
 =======
 [src/types/app-client.ts:1155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1155)
@@ -219,6 +244,9 @@ ___
 =======
 [src/types/app-client.ts:1312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1312)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1330)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -230,6 +258,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1355)
 =======
 [src/types/app-client.ts:1145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1145)
@@ -237,6 +266,9 @@ ___
 =======
 [src/types/app-client.ts:1302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1302)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1320)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -248,6 +280,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1357)
 =======
 [src/types/app-client.ts:1147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1147)
@@ -255,6 +288,9 @@ ___
 =======
 [src/types/app-client.ts:1304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1304)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1322)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -266,6 +302,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1361](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1361)
 =======
 [src/types/app-client.ts:1151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1151)
@@ -273,6 +310,9 @@ ___
 =======
 [src/types/app-client.ts:1308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1308)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1326)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -284,6 +324,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1360](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1360)
 =======
 [src/types/app-client.ts:1150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1150)
@@ -291,6 +332,9 @@ ___
 =======
 [src/types/app-client.ts:1307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1307)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1325)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -302,6 +346,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1356)
 =======
 [src/types/app-client.ts:1146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1146)
@@ -309,6 +354,9 @@ ___
 =======
 [src/types/app-client.ts:1303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1303)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1321)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -320,6 +368,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1359](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1359)
 =======
 [src/types/app-client.ts:1149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1149)
@@ -327,6 +376,9 @@ ___
 =======
 [src/types/app-client.ts:1306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1306)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1324)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -338,6 +390,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1358)
 =======
 [src/types/app-client.ts:1148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1148)
@@ -345,6 +398,9 @@ ___
 =======
 [src/types/app-client.ts:1305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1305)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1323)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ## Methods
 
@@ -374,6 +430,7 @@ Issues a no_op (normal) call to the app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1709](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1709)
 =======
 [src/types/app-client.ts:1484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1484)
@@ -381,6 +438,9 @@ Issues a no_op (normal) call to the app.
 =======
 [src/types/app-client.ts:1641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1641)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1674](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1674)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -411,6 +471,7 @@ Issues a call to the app with the given call type.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1792](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1792)
 =======
 [src/types/app-client.ts:1557](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1557)
@@ -418,6 +479,9 @@ Issues a call to the app with the given call type.
 =======
 [src/types/app-client.ts:1714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1714)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1757](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1757)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -447,6 +511,7 @@ Issues a clear_state call to the app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1769)
 =======
 [src/types/app-client.ts:1538](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1538)
@@ -454,6 +519,9 @@ Issues a clear_state call to the app.
 =======
 [src/types/app-client.ts:1695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1695)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1734)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -483,6 +551,7 @@ Issues a close_out call to the app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1758](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1758)
 =======
 [src/types/app-client.ts:1529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1529)
@@ -490,6 +559,9 @@ Issues a close_out call to the app.
 =======
 [src/types/app-client.ts:1686](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1686)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1723](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1723)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -515,8 +587,15 @@ Use `AppClient.compile()` instead.
 
 Compiles the approval and clear state programs and sets up the source map.
 
+**`Deprecated`**
+
+Use `AppClient.compile()` instead.
+
+Compiles the approval and clear programs and sets up the source map.
+
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 [src/types/app-client.ts:1420](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1420)
@@ -526,6 +605,9 @@ Compiles the approval and clear state programs and sets up the source map.
 =======
 [src/types/app-client.ts:1360](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1360)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1385)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -555,6 +637,7 @@ Creates a smart contract app, returns the details of the created app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1603](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1603)
 =======
 [src/types/app-client.ts:1382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1382)
@@ -562,6 +645,9 @@ Creates a smart contract app, returns the details of the created app.
 =======
 [src/types/app-client.ts:1539](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1539)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1568)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -591,6 +677,7 @@ Issues a delete_application call to the app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1780](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1780)
 =======
 [src/types/app-client.ts:1547](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1547)
@@ -598,6 +685,9 @@ Issues a delete_application call to the app.
 =======
 [src/types/app-client.ts:1704](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1704)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1745](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1745)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -633,6 +723,7 @@ To understand the architecture decisions behind this functionality please see ht
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1491)
 =======
 [src/types/app-client.ts:1272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1272)
@@ -640,6 +731,9 @@ To understand the architecture decisions behind this functionality please see ht
 =======
 [src/types/app-client.ts:1429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1429)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1456)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -659,6 +753,7 @@ The source maps
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1456)
 =======
 [src/types/app-client.ts:1239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1239)
@@ -666,6 +761,9 @@ The source maps
 =======
 [src/types/app-client.ts:1396](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1396)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1421)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -694,6 +792,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:2116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2116)
 =======
 [src/types/app-client.ts:1875](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1875)
@@ -701,6 +800,9 @@ The new error, or if there was no logic error or source map then the wrapped err
 =======
 [src/types/app-client.ts:2032](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2032)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:2083](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2083)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -726,6 +828,7 @@ The result of the funding
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1832](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1832)
 =======
 [src/types/app-client.ts:1597](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1597)
@@ -733,14 +836,15 @@ The result of the funding
 =======
 [src/types/app-client.ts:1754](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1754)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1797](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1797)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
 ### getABIMethod
 
 ▸ **getABIMethod**(`method`): `undefined` \| `ABIMethod`
-
-Returns the ABI Method for the given method name string for the app represented by this application client instance
 
 #### Parameters
 
@@ -754,8 +858,15 @@ Returns the ABI Method for the given method name string for the app represented 
 
 The ABI method for the given method
 
+**`Deprecated`**
+
+Use `AppClient.getABIMethod` instead.
+
+Returns the ABI Method for the given method name string for the app represented by this application client instance
+
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 [src/types/app-client.ts:2073](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2073)
@@ -765,6 +876,9 @@ The ABI method for the given method
 =======
 [src/types/app-client.ts:1991](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1991)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:2040](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2040)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -786,12 +900,17 @@ The ABI method params for the given method
 
 **`Deprecated`**
 
+<<<<<<< HEAD
 Use `appClient.getABIMethod` instead.
+=======
+Use `AppClient.getABIMethod` instead.
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 Returns the ABI Method parameters for the given method name string for the app represented by this application client instance
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 [src/types/app-client.ts:2051](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2051)
@@ -801,6 +920,9 @@ Returns the ABI Method parameters for the given method name string for the app r
 =======
 [src/types/app-client.ts:1969](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1969)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:2016](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2016)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -822,6 +944,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:2133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2133)
 =======
 [src/types/app-client.ts:1892](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1892)
@@ -829,6 +952,9 @@ ___
 =======
 [src/types/app-client.ts:2049](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2049)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:2100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2100)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -853,6 +979,7 @@ Gets the reference information for the current application instance.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:2085](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2085)
 =======
 [src/types/app-client.ts:1844](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1844)
@@ -860,6 +987,9 @@ Gets the reference information for the current application instance.
 =======
 [src/types/app-client.ts:2001](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2001)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:2052](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L2052)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -879,6 +1009,7 @@ The names of the boxes
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1888](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1888)
 =======
 [src/types/app-client.ts:1653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1653)
@@ -886,6 +1017,9 @@ The names of the boxes
 =======
 [src/types/app-client.ts:1810](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1810)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1853](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1853)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -911,6 +1045,7 @@ The current box value as a byte array
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1903](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1903)
 =======
 [src/types/app-client.ts:1668](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1668)
@@ -918,6 +1053,9 @@ The current box value as a byte array
 =======
 [src/types/app-client.ts:1825](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1825)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1868](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1868)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -944,6 +1082,7 @@ The current box value as a byte array
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1919](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1919)
 =======
 [src/types/app-client.ts:1684](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1684)
@@ -951,6 +1090,9 @@ The current box value as a byte array
 =======
 [src/types/app-client.ts:1841](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1841)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1884](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1884)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -977,6 +1119,7 @@ The (name, value) pair of the boxes with values as raw byte arrays
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1935](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1935)
 =======
 [src/types/app-client.ts:1700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1700)
@@ -984,6 +1127,9 @@ The (name, value) pair of the boxes with values as raw byte arrays
 =======
 [src/types/app-client.ts:1857](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1857)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1900](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1900)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -1011,6 +1157,7 @@ The (name, value) pair of the boxes with values as the ABI Value
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1957](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1957)
 =======
 [src/types/app-client.ts:1722](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1722)
@@ -1018,6 +1165,9 @@ The (name, value) pair of the boxes with values as the ABI Value
 =======
 [src/types/app-client.ts:1879](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1879)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1922](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1922)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -1048,6 +1198,7 @@ Returns the arguments for an app call for the given ABI method or raw method spe
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1981](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1981)
 =======
 [src/types/app-client.ts:1744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1744)
@@ -1055,6 +1206,9 @@ Returns the arguments for an app call for the given ABI method or raw method spe
 =======
 [src/types/app-client.ts:1901](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1901)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1946](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1946)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -1074,6 +1228,7 @@ The global state
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1860](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1860)
 =======
 [src/types/app-client.ts:1625](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1625)
@@ -1081,6 +1236,9 @@ The global state
 =======
 [src/types/app-client.ts:1782](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1782)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1825](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1825)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -1106,6 +1264,7 @@ The global state
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1874](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1874)
 =======
 [src/types/app-client.ts:1639](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1639)
@@ -1113,6 +1272,9 @@ The global state
 =======
 [src/types/app-client.ts:1796](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1796)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1839](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1839)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -1136,6 +1298,7 @@ Import source maps for the app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1473)
 =======
 [src/types/app-client.ts:1256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1256)
@@ -1143,6 +1306,9 @@ Import source maps for the app.
 =======
 [src/types/app-client.ts:1413](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1413)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1438)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -1172,6 +1338,7 @@ Issues a opt_in call to the app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1747](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1747)
 =======
 [src/types/app-client.ts:1520](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1520)
@@ -1179,6 +1346,9 @@ Issues a opt_in call to the app.
 =======
 [src/types/app-client.ts:1677](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1677)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1712)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -1208,6 +1378,7 @@ Updates the smart contract app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1668](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1668)
 =======
 [src/types/app-client.ts:1445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1445)
@@ -1215,3 +1386,6 @@ Updates the smart contract app.
 =======
 [src/types/app-client.ts:1602](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1602)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-client.ts:1633](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1633)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)

@@ -43,6 +43,7 @@ Interface to identify a typed client that can be used to interact with an applic
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:617](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L617)
 
 ## Methods
@@ -90,3 +91,6 @@ ___
 =======
 [src/types/client-manager.ts:537](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L537)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/client-manager.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L568)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)

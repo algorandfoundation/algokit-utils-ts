@@ -30,10 +30,14 @@ Parameters to define a create call for an `AppFactory`
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
 =======
 [src/types/app-factory.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L100)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L105)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -46,10 +50,14 @@ Parameters to define a deployment for an `AppFactory`
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L118)
 =======
 [src/types/app-factory.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L105)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L110)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 
 ___
 
@@ -84,18 +92,27 @@ ___
 Ƭ **CreateSchema**: `Object`
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Specifies a schema used for creating an app
 
 =======
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+Specifies a schema used for creating an app
+
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 #### Type declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | `extraProgramPages?` | `number` | Number of extra pages required for the programs. Defaults to the number needed for the programs in this call if not specified. This is immutable once the app is created. |
 =======
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+| `extraProgramPages?` | `number` | Number of extra pages required for the programs. Defaults to the number needed for the programs in this call if not specified. This is immutable once the app is created. |
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
 | `schema?` | \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } | The state schema for the app. This is immutable once the app is created. By default uses the ARC32/ARC-56 spec. |
 | `schema.globalByteSlices` | `number` | The number of byte slices saved in global state. |
 | `schema.globalInts` | `number` | The number of integers saved in global state. |
@@ -105,7 +122,11 @@ Specifies a schema used for creating an app
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L94)
 =======
 [src/types/app-factory.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L85)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L86)
+>>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
