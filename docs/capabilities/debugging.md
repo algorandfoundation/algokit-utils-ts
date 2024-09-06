@@ -27,7 +27,6 @@ Config.configure({
 
 Debugging utilities can be used to simplify gathering artifacts to be used with [AlgoKit AVM Debugger](https://github.com/algorandfoundation/algokit-avm-vscode-debugger) in non algokit compliant projects. The following methods are provided:
 
-- `persistSourceMaps`: This method persists the sourcemaps for the given sources as AlgoKit AVM Debugger compliant artifacts. It accepts an array of `PersistSourceMapInput` objects. Each object can either contain `rawTeal`, in which case the function will execute a compile to obtain byte code, or it can accept an object of type `CompiledTeal` provided by algokit, which is used for source codes that have already been compiled and contain the traces. It also accepts the root directory of the project, an `Algodv2` client to perform the compilation, and a boolean indicating whether to include the source files in the output.
 - `simulateAndPersistResponse`: This method simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object, and persists the simulation response to an AlgoKit AVM Debugger compliant JSON file. It accepts the `AtomicTransactionComposer` with transaction(s) loaded, an `Algodv2` client to perform the simulation, the root directory of the project, and the buffer size in megabytes.
 
 To enable debug mode with extra trace persistence for AVM VSCode Debugger, you can configure it as follows:

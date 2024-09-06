@@ -149,6 +149,8 @@ export interface PersistSourceMapsParams {
   appManager: AppManager
   /** A boolean indicating whether to include the source files in the output. */
   withSources?: boolean
+  /** A boolean indicating whether to enable legacy behavior of persisting the `sources.avm.json` mappings to the project root. Default is false, as the AlgoKit AVM VSCode extension manages the mappings. */
+  persistMappings?: boolean
 }
 
 /**

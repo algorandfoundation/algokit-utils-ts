@@ -48,7 +48,7 @@ int 1
       const sourcemapFilePath = path.join(rootPath, 'sources.avm.json')
       const appOutputPath = path.join(rootPath, 'cool_app')
 
-      expect(await fileExists(sourcemapFilePath)).toBeTruthy()
+      expect(await fileExists(sourcemapFilePath)).toBeFalsy()
       expect(await fileExists(path.join(appOutputPath, 'approval.teal'))).toBeTruthy()
       expect(await fileExists(path.join(appOutputPath, 'approval.teal.tok.map'))).toBeTruthy()
       expect(await fileExists(path.join(appOutputPath, 'clear.teal'))).toBeTruthy()
@@ -99,7 +99,7 @@ int 1
       const sourcemapFilePath = path.join(rootPath, 'sources.avm.json')
       const appOutputPath = path.join(rootPath, 'cool_app')
 
-      expect(await fileExists(sourcemapFilePath)).toBeTruthy()
+      expect(await fileExists(sourcemapFilePath)).toBeFalsy()
       expect(await fileExists(path.join(appOutputPath, 'approval.teal'))).toBeFalsy()
       expect(await fileExists(path.join(appOutputPath, 'approval.teal.tok.map'))).toBeTruthy()
       expect(JSON.parse(await fs.readFile(path.join(appOutputPath, 'approval.teal.tok.map'), 'utf8')).sources).toEqual([])

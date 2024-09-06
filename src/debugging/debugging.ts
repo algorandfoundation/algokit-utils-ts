@@ -121,13 +121,21 @@ async function buildAVMSourcemap({
 // === Public facing methods ===
 
 /**
+ * @deprecated Use latest version of `AlgoKit AVM Debugger` VSCode extension instead. It will automatically manage your sourcemaps.
+ *
  * This function persists the source maps for the given sources.
  *
  * @param param0 The parameters to define the persistence
  *
  * @returns A promise that resolves when the source maps have been persisted.
  */
-export async function persistSourceMaps({ sources, projectRoot, appManager, withSources }: PersistSourceMapsParams): Promise<void> {
+export async function persistSourceMaps({
+  sources,
+  projectRoot,
+  client,
+  withSources,
+  persistMappings = false,
+}: PersistSourceMapsParams): Promise<void> {
   if (!isNode()) {
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
   }
@@ -147,7 +155,9 @@ export async function persistSourceMaps({ sources, projectRoot, appManager, with
       ),
     )
 
-    await upsertDebugSourcemaps(sourceMaps, projectRoot)
+    if (persistMappings) {
+      await upsertDebugSourcemaps(sourceMaps, projectRoot)
+    }
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error))
     Config.getLogger().error(`Failed to persist avm sourceMaps: ${err.stack ?? err.message ?? err}.`)
