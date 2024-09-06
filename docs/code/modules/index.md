@@ -2803,7 +2803,7 @@ Signs and sends transactions that have been collected by an `AtomicTransactionCo
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The `AtomicTransactionComposer` * `sendParams` The parameters to control the send behaviour |
+| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The `AtomicTransactionComposer` * `executeParams` The parameters to control the send behaviour |
 | `algod` | `default` | An algod client |
 
 #### Returns
@@ -2837,7 +2837,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` or `AtomicTransactionComposer` to construct and send group transactions instead.
+Use `AlgoKitComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
 
 Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
 

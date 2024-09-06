@@ -573,7 +573,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
  * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
  * @param atcSend The parameters controlling the send, including:
  *  * `atc` The `AtomicTransactionComposer`
- *  * `sendParams` The parameters to control the send behaviour
+ *  * `executeParams` The parameters to control the send behaviour
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
@@ -731,7 +731,7 @@ export async function performAtomicTransactionComposerDryrun(atc: AtomicTransact
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` or `AtomicTransactionComposer` to construct and send group transactions instead.
+ * @deprecated Use `AlgoKitComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
  *
  * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
  *

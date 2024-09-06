@@ -1,187 +1,330 @@
-# App client
-
-Application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker).
+# App client and App factory
 
 > [!NOTE]
-> This page covers the untyped app client, but it's worth exploring the [typed client generation feature in AlgoKit](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
+> This page covers the untyped app client, but we recommend using [typed clients](./typed-app-clients.md), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
 
-App client is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App management](./app.md). It allows you to access a high productivity application client that works with ARC-0032 application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
+App client and App factory are a higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App management](./app.md). They allow you to access high productivity application clients that work with [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) and [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
 
-To see some usage examples check out the [automated tests](../../src/types/app-client.spec.ts).
+## `AppFactory`
 
-## Design
+The [`AppFactory`](../code/classes/types_app_factory.AppFactory.md) is a class that, for a given app spec, allows you to create and deploy one or more app instances and to create one or more app clients to interact with those (or other) app instances.
 
-The design for the app client is based on a wrapper for parsing an [ARC-0032](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec and wrapping the [App deployment](./app-deploy.md) functionality and corresponding [design](./app-deploy.md#design).
-
-## Creating an application client
-
-To create an application client you can do it via [`AlgorandClient`](./algorand-client.md) or directly.
-
-### Via `AlgorandClient`
-
-This is the recommended way to create an application client. To create an application this way you can do:
+To get an instance of `AppFactory` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.client.getAppFactory` or instantiate it directly (passing in an app spec, an `AlgorandClient` instance and other optional parameters):
 
 ```typescript
-// Get by creator address and app name via indexer
-const client = algorand.client.getAppClientByCreatorAndName({
-  app: appSpec,
-  creatorAddress,
+// Minimal example
+const factory = algorand.client.getAppFactory({
+  appSpec: '{/* ARC-56 or ARC-32 compatible JSON */}',
 })
-
-// With optional params
-const client = algorand.client.getAppClientByCreatorAndName({
-  app: appSpec,
-  creatorAddress,
-  name: nameOverride,
-  deployTimeParams,
-  sender: defaultSender,
-})
-
-// Get by app ID
-const client = algorand.client.getAppClientById({
-  id: 12345,
-  app: appSpec,
-})
-
-// With optional params
-const client = algorand.client.getAppClientById({
-  id: 12345,
-  app: appSpec,
-  name: nameOverride,
-  deployTimeParams,
-  sender: defaultSender,
+// Advanced example
+const factory = algorand.client.getAppFactory({
+  appSpec: parsedAppSpec_AppSpec_or_Arc56Contract,
+  defaultSender: 'SENDERADDRESS',
+  appName: 'OverriddenAppName',
+  version: '2.0.0',
+  updatable: true,
+  deletable: false,
+  deployTimeParams: { ONE: 1, TWO: 'value' },
 })
 ```
 
-### Directly
+## `AppClient`
 
-To create an application you can do:
+The [`AppClient`](../code/classes/types_app_client.AppClient.md) is a class that, for a given app spec, allows you to manage calls and state for a specific deployed instance of an app (with a known app ID).
+
+To get an instance of `AppClient` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.client.getAppClient*` or instantiate it directly (passing in an app ID, app spec, `AlgorandClient` instance and other optional parameters):
 
 ```typescript
-import { ApplicationClient } from '@algorandfoundation/algokit-utils/types/app-client'
+// Minimal examples
+const appClient = algorand.client.getAppClientByCreatorAndName({
+  appSpec: '{/* ARC-56 or ARC-32 compatible JSON */}',
+  // appId resolved by looking for app ID of named app by this creator
+  creatorAddress: 'CREATORADDRESS',
+})
+const appClient = algorand.client.getAppClientById({
+  appSpec: '{/* ARC-56 or ARC-32 compatible JSON */}',
+  appId: 12345n,
+})
+const appClient = algorand.client.getAppClientByNetwork({
+  appSpec: '{/* ARC-56 or ARC-32 compatible JSON */}',
+  // appId resolved by using ARC-56 spec to find app ID for current network
+})
 
-const client = new ApplicationClient(appDetails, algod)
+// Advanced example
+const appClient = algorand.client.getAppClientById({
+  appSpec: parsedAppSpec_AppSpec_or_Arc56Contract,
+  appId: 12345n,
+  appName: 'OverriddenAppName',
+  defaultSender: 'SENDERADDRESS',
+  approvalSourceMap: approvalTealSourceMap,
+  clearSourceMap: clearTealSourceMap,
+})
 ```
 
-The `appDetails` parameter is of type [`AppSpecAppDetails`](../code/modules/types_app_client.md#appspecappdetails), which contains some core properties and then one of two key mechanisms to specify the app to target.
+You can get the `appId` and `appAddress` at any time as properties on the `AppClient` along with `appName` and `appSpec`.
 
-- Core parameters - Core parameters that can always be applied
-  - `app: AppSpec | string` - Either the parsed ARC-0032 `AppSpec`, or a raw JSON `string` which will get parsed as an `AppSpec`
-  - `sender?: SendTransactionFrom` - Optional [sender](./account.md#sendtransactionfrom) to send/sign all transactions with (if left out then individual methods must have a sender passed to them)
-  - `params?: SuggestedParams` - Optional [sending parameters](./transaction.md#transaction-params) if you want to avoid an extra call to algod
-- App target - How to resolve an existing app (if one exists), which can either be:
-  1. [`ResolveAppById`](../code/interfaces/types_app_client.ResolveAppById.md) - When you want to resolve an existing app by app ID, which consists of the following parameters:
-     - `id: number` - The app ID, which should be set as `0` if you have yet to deploy the contract
-     - `name? string` - The optional name to mark the contract with if you are deploying it, otherwise `contract.name` is used from the app spec
-  2. [`ResolveAppByCreatorAndName`](../code/modules/types_app_client.md#resolveappbycreatorandname) - When you want to resolve an existing app by name for a given creator account, which consists of the following parameters:
-     - `creatorAddress: string` - The address of the creator account of the app for which to search for the deployed app under
-     - `name?: string` - An overridden name to identify the contract with, otherwise `contract.name` is used from the app spec
-     - And either:
-       1. `indexer: Indexer` - An indexer instance so the existing app deployments can be queried
-       2. `existingDeployments: AppLookup` - The result of an existing indexer lookup to generate an [app lookup](./app-deploy.md#getcreatorappsbyname), which avoids extra indexer calls from being made
+## Dynamically creating clients for a given app spec
 
-## Creating, updating, deploying and deleting the app
+As well as allowing you to control creation and deployment of apps, the `AppFactory` allows you to conveniently create multiple `AppClient` instances on-the-fly with information pre-populated.
 
-Once you have an application client you can perform the following actions related to creating and managing the lifecycle of an app:
+This is possible via two methods on the app factory:
 
-- `compile(compilationParams?)` - Allows you to compile the application (approval and clear program)), including [deploy-time parameter replacements and deploy-time immutability and permanence control](./app-deploy.md#compilation-and-template-substitution); it returns the compiled AVM code and source maps
-- `deploy(deploymentParams?)` - Allows you to perform an idempotent (safely retryable) deployment of the smart contract app per the design of [`deployApp`](app-deploy.md#deployapp)
-- `create(createParams?)` - Allows you to perform a creation of the smart contract app
-- `update(updateParams?)` - Allows you to perform an update of the (existing) smart contract app
-- `delete(deleteParams?)` - Allows you to delete the (existing) smart contract app
+- [`factory.getAppClientById(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbyid) - Returns a new `AppClient` client for an app instance of the given ID. Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
+- [`factory.getAppClientByCreatorAddressAndName(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbycreatoraddressandname) - Returns a new `AppClient` client, resolving the app by creator address and name using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note). Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
 
-The input payload for `create` and `update` are the same and are a union of [`AppClientCallParams`](#appclientcallparams) and [`AppClientCompilationParams`](#appclientcompilationparams). The input payload for `delete` is [`AppClientCallParams`](#appclientcallparams). The input payload for `deploy` is [`AppClientDeployParams`](#appclientdeployparams).
+```typescript
+const app1 = factory.getAppClientById({ appId: 12345n })
+const app2 = factory.getAppClientById({ appId: 12346n })
+const app3 = factory.getAppClientById({ appId: 12345n, defaultSender: 'SENDER2ADDRESS' })
+const app4 = factory.getAppClientByCreatorAddressAndName({
+  creatorAddress: 'CREATORADDRESS',
+})
+const app5 = factory.getAppClientByCreatorAddressAndName({
+  creatorAddress: 'CREATORADDRESS',
+  appName: 'NonDefaultAppName',
+})
+const app6 = factory.getAppClientByCreatorAddressAndName({
+  creatorAddress: 'CREATORADDRESS',
+  appName: 'NonDefaultAppName',
+  ignoreCache: true, // Perform fresh indexer lookups
+  defaultSender: 'SENDER2ADDRESS',
+})
+```
 
-The return payload for these methods directly matches the equivalent underlying [App management](./app.md) / [App deployment](./app-deploy.md) methods (since these methods are wrappers):
+## Creating and deploying an app
 
-- `create` -> [`createApp`](./app.md#createapp)
-- `update` -> [`updateApp`](./app.md#updateapp)
-- `delete` -> [`deleteApp`](./app.md#deleteapp)
-- `deploy` -> [`deployApp`](./app-deploy.md#deployapp)
+Once you have an [app factory](#appfactory) you can perform the following actions:
+
+- [`factory.create(params?)`](../code/classes/types_app_factory.AppFactory.md#create) - Signs and sends a transaction to create an app and returns the [result of that call](./app.md#creation) and an [`AppClient`](#appclient) instance for the created app
+- [`factory.deploy(params)`](../code/classes/types_app_factory.AppFactory.md#deploy) - Uses the [creator address and app name pattern](./app-deploy.md#lookup-deployed-apps-by-name) to find if the app has already been deployed or not and either creates, updates or replaces that app based on the [deployment rules](./app-deploy.md#performing-a-deployment) (i.e. it's an idempotent deployment) and returns the [result of the deployment](./app-deploy.md#return-value) and an [`AppClient`](#appclient) instance for the created/updated/existing app
+
+### Create
+
+The create method is a wrapper over the `appCreate` (bare calls) and `appCreateMethodCall` (ABI method calls) [methods](./app.md#creation), with the following differences:
+
+- You don't need to specify the `approvalProgram`, `clearStateProgram`, or `schema` because these are all specified or calculated from the app spec (noting you can override the `schema`)
+- `sender` is optional and if not specified then the `defaultSender` from the `AppFactory` constructor is used (if it was specified, otherwise an error is thrown)
+- `deployTimeParams`, `updatable` and `deletable` can be passed in to control [deploy-time parameter replacements and deploy-time immutability and permanence control](./app-deploy.md#compilation-and-template-substitution); these values can also be passed into the `AppFactory` constructor instead and if so will be used if not defined in the params to the create call
+
+```typescript
+// Use no-argument bare-call
+const { result, app } = factory.create()
+// Specify parameters for bare-call and override other parameters
+const { result, app } = factory.create({
+  args: [new Uint8Array(1, 2, 3, 4)],
+  staticFee: (3000).microAlgo(),
+  onComplete: algosdk.OnApplicationComplete.OptIn,
+  deployTimeParams: {
+    ONE: 1,
+    TWO: 'two',
+  },
+  updatable: true,
+  deletable: false,
+  populateAppCallResources: true,
+})
+// Specify parameters for ABI method call
+const { result, app } = factory.create({
+  method: 'create_application',
+  args: [1, 'something'],
+})
+```
+
+If you want to construct a custom create call using the underlying [`algorand.send.appCreate` / `algorand.transactions.appCreate` / `algorand.send.appCreateMethodCall` / `algorand.transactions.appCreateMethodCall` methods](./app.md#creation) then you can get params objects:
+
+- `factory.params.create(params)` - ABI method create call for deploy method or an underlying [`appCreateMethodCall` call](./app.md#creation)
+- `factory.params.bare.create(params)` - Bare create call for deploy method or an underlying [`appCreate` call](./app.md#creation)
+
+### Deploy
+
+The deploy method is a wrapper over the [`AppDeployer`'s `deploy` method](./app-deploy.md#performing-a-deployment), with the following differences:
+
+- You don't need to specify the `approvalProgram`, `clearStateProgram`, or `schema` in the `createParams` because these are all specified or calculated from the app spec (noting you can override the `schema`)
+- `sender` is optional for `createParams`, `updateParams` and `deleteParams` and if not specified then the `defaultSender` from the `AppFactory` constructor is used (if it was specified, otherwise an error is thrown)
+- You don't need to pass in `metadata` to the deploy params - it's calculated from:
+  - `updatable` and `deletable`, which you can optionally pass in directly to the method params
+  - `version` and `name`, which are optionally passed into the `AppFactory` constructor
+- `deployTimeParams`, `updatable` and `deletable` can all be passed into the `AppFactory` and if so will be used if not defined in the params to the deploy call for the [deploy-time parameter replacements and deploy-time immutability and permanence control](./app-deploy.md#compilation-and-template-substitution)
+- `createParams`, `updateParams` and `deleteParams` are optional, if they aren't specified then default values are used for everything and a no-argument bare call will be made for any create/update/delete calls
+- If you want to call an ABI method for create/update/delete calls then you can pass in a string for `method` (as opposed to an `ABIMethod` object), which can either be the method name, or if you need to disambiguate between multiple methods of the same name it can be the ABI signature (see example below)
+
+```typescript
+// Use no-argument bare-calls to deploy with default behaviour
+//  for when update or schema break detected (fail the deployment)
+const { result, app } = factory.deploy({})
+// Specify parameters for bare-calls and override the schema break behaviour
+const { result, app } = factory.deploy({
+  createParams: {
+    args: [new Uint8Array(1, 2, 3, 4)],
+    staticFee: (3000).microAlgo(),
+    onComplete: algosdk.OnApplicationComplete.OptIn:
+  },
+  updateParams: {
+    args: [new Uint8Array(1, 2, 3)],
+  },
+  deleteParams: {
+    args: [new Uint8Array(1, 2)],
+  },
+  deployTimeParams: {
+    ONE: 1,
+    TWO: 'two',
+  },
+  onUpdate: 'update',
+  onSchemaBreak: 'replace',
+  updatable: true,
+  deletable: true,
+})
+// Specify parameters for ABI method calls
+const { result, app } = factory.deploy({
+  createParams: {
+    method: "create_application",
+    args: [1, "something"],
+  },
+  updateParams: {
+    method: "update",
+  },
+  deleteParams: {
+    method: "delete_app(uint64,uint64,uint64)uint64",
+    args: [1, 2, 3]
+  }
+})
+```
+
+If you want to construct a custom deploy call using the underlying [`algorand.appDeployer.deploy` method](./app-deploy.md#performing-a-deployment) then you can get params objects for the `createParams`, `updateParams` and `deleteParams`:
+
+- `factory.params.create(params)` - ABI method create call for deploy method or an underlying [`appCreateMethodCall` call](./app.md#creation)
+- `factory.params.deployUpdate(params)` - ABI method update call for deploy method
+- `factory.params.deployDelete(params)` - ABI method delete call for deploy method
+- `factory.params.bare.create(params)` - Bare create call for deploy method or an underlying [`appCreate` call](./app.md#creation)
+- `factory.params.bare.deployUpdate(params)` - Bare update call for deploy method
+- `factory.params.bare.deployDelete(params)` - Bare delete call for deploy method
+
+## Updating and deleting an app
+
+Deploy method aside, the ability to make update and delete calls happens after there is an instance of an app so are done via `AppClient`. The semantics of this are no different than [other calls](#calling-the-app), which the caveat that the update call is a bit different to the others since the code will be compiled when constructing the update params (making it an async method) and the update calls thus optionally takes compilation parameters (`deployTimeParams`, `updatable` and `deletable`) for [deploy-time parameter replacements and deploy-time immutability and permanence control](./app-deploy.md#compilation-and-template-substitution).
 
 ## Calling the app
 
-To make a call to a smart contract you can use the following methods (which determine the [on complete action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) that the call will use):
+You can construct a params object, transaction(s) and sign and send a transaction to call the app that a given `AppClient` instance is pointing to.
 
-- `call(call?)` - A normal (`noop` on completion action) call
-- `optIn(call?)` - An opt-in call
-- `closeOut(call?)` - A close-out call
-- `clearState(call?)` - A clear state call (note: calls the clear program)
-- `callOfType(call, callType)` - Make a call with a specified call type
+This is done via the following properties:
 
-These calls will only work if the Application Client knows the ID of the app, which will occur if:
+- `appClient.params.{onComplete}(params)` - Params for an ABI method call
+- `appClient.params.bare.{onComplete}(params)` - Params for a bare call
+- `appClient.transactions.{onComplete}(params)` - Transaction(s) for an ABI method call
+- `appClient.transactions.bare.{onComplete}(params)` - Transaction for a bare call
+- `appClient.send.{onComplete}(params)` - Sign and send an ABI method call
+- `appClient.send.bare.{onComplete}(params)` - Sign and send a bare call
 
-- The app ID is passed into the constructor;
-- You have passed `creatorAccount` and the smart contract name to the constructor and the contract already exists; or
-- You have called `create` or `deploy` using that Application Client.
+To make one of these calls `{onComplete}` needs to be swapped with the [on complete action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) that should be made:
 
-The input payload for all of these calls is the same as `delete`; [`AppClientCallParams`](#appclientcallparams).
+- `update` - An update call
+- `optIn` - An opt-in call
+- `delete` - A delete application call
+- `clearState` - A clear state call (note: calls the clear program)
+- `closeOut` - A close-out call
+- `call` - A no-op call (or other call if `onComplete` is specified to anything other than update)
 
-The return payload for all of these is the same as [`callApp`](./app.md#calling).
+The input payload for all of these calls is the same as the [underlying app methods](./app.md#calling-apps) with the caveat that the `appId` is not passed in (since the `AppClient` already knows the app ID), `sender` is optional (it uses `defaultSender` from the `AppClient` constructor if it was specified) and `method` (for ABI method calls) is a string rather than an `ABIMethod` object (which can either be the method name, or if you need to disambiguate between multiple methods of the same name it can be the ABI signature).
 
-## Getting a reference to the app
+The return payload for all of these is the same as the [underlying methods](./app.md#calling-apps).
 
-To get reference information for the app from outside the Application Client you can call `getAppReference()`. If you passed the `creatorAddress` and app name to the constructor then this method will return the full [`AppMetadata`](../code/interfaces/types_app.AppMetadata.md) per [`getCreatorAppsByName`](./app-deploy.md#getcreatorappsbyname). If you just passed in the app ID or used `create` rather than `deploy` then you will just receive an [`AppReference`](../code/interfaces/types_app.AppReference.md) (which is also a sub-type of the `AppMetadata`):
+```typescript
+const call1 = await app.send.update({
+  method: 'update_abi',
+  args: ['string_io'],
+  deployTimeParams,
+})
+const call2 = await app.send.delete({
+  method: 'delete_abi',
+  args: ['string_io'],
+})
+const call3 = await client.send.optIn({ method: 'opt_in' })
+const call4 = await client.send.bare.clearState()
 
-- `appId: number` - The id of the app
-- `appAddress: string` - The Algorand address of the account associated with the app
+const transaction = await client.transactions.bare.closeOut({
+  args: [new Uint8Array(1, 2, 3)],
+})
+
+const params = client.params.optIn({ method: 'optin' })
+```
 
 ## Funding the app account
 
-Often there is a need to fund an app account to cover minimum balance requirements for boxes and other scenarios. There is a helper method that will do this for you `fundAppAccount(fundParams)`.
+Often there is a need to fund an app account to cover minimum balance requirements for boxes and other scenarios. There is an app client method that will do this for you `fundAppAccount(params)`.
 
-The input parameters can either be:
+The input parameters are:
 
-- An [`AlgoAmount`](./amount.md) value (note: requires `sender` to be passed into the constructor)
-- A [`FundAppAccountParams`](../code/interfaces/types_app_client.FundAppAccountParams.md), which has the following properties:
-  - `amount: AlgoAmount` - The amount to fund
-  - `sender?: SendTransactionFrom` - The [sender/signer](./account.md#sendtransactionfrom) to use; if unspecified then the sender that was passed into the constructor of the Application Client is used
-  - `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes) to use when issuing the transaction
-  - `sendParams?: SendTransactionParams` - The [transaction sending configuration](./transaction.md#sendtransactionparams)
+- A [`FundAppParams`](../code/modules/types_app_client.md#fundappparams), which has the same properties as a [payment transaction](./transfer.md#payment) except `receiver` is not required and `sender` is optional (if not specified then it will be set to the app client's default sender if configured).
 
-This call will only work if the Application Client knows the ID of the app, which will occur if:
-
-- The app ID is passed into the constructor;
-- You have passed `creatorAccount` and the smart contract name to the constructor and the contract already exists; or
-- You have called `create` or `deploy` using that Application Client.
-
-Note: If you are passing the funding payment in as an ABI argument so it can be validated by the ABI method then you'll want to issue the `skipSending` configuration. That might look something like this as an example:
+Note: If you are passing the funding payment in as an ABI argument so it can be validated by the ABI method then you'll want to get the funding call as a transaction, e.g.:
 
 ```typescript
-const result = await appClient.call({
+const result = await appClient.send.call({
   method: 'bootstrap',
-  methodArgs: {
-    args: [
-      appClient.fundAppAccount({
-        amount: microAlgo(200_000),
-        sendParams: { skipSending: true },
-      }),
-    ],
-    boxes: ['Box1'],
-  },
+  args: [
+    appClient.transactions.fundAppAccount({
+      amount: microAlgo(200_000),
+    }),
+  ],
+  boxReferences: ['Box1'],
 })
 ```
 
+You can also get the funding call as a params object via `appClient.params.fundAppAccount(params)`.
+
 ## Reading state
 
-> [!NOTE]
-> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+`AppClient` has a number of mechanisms to read state (global, local and box storage) from the app instance.
+
+### App spec methods
+
+The ARC-56 app spec can specify detailed information about the encoding format of state values and as such allows for a more advanced ability to automatically read state values and decode them as their high-level language types rather than the limited `bigint` / `bytes` / `string` ability that the [generic methods](#generic-methods) give you.
+
+You can access this functionality via:
+
+- `appClient.state.global.{method}()` - Global state
+- `appClient.state.local(address).{method}()` - Local state
+- `appClient.state.box.{method}()` - Box storage
+
+Where `{method}` is one of:
+
+- `getAll()` - Returns all single-key state values in a record keyed by the key name and the value a decoded ABI value.
+- `getValue(name)` - Returns a single state value for the current app with the value a decoded ABI value.
+- `getMapValue(mapName, key)` - Returns a single value from the given map for the current app with the value a decoded ABI value. Key can either be a `Uint8Array` with the binary value of the key value on-chain (without the map prefix) or the high level (decoded) value that will be encoded to bytes for the app spec specified `keyType`
+- `getMap(mapName)` - Returns all map values for the given map in a key=>value record. It's recommended that this is only done when you have a unique `prefix` for the map otherwise there's a high risk that incorrect values will be included in the map.
+
+```typescript
+const values = appClient.state.global.getAll()
+const value = appClient.state.local('ADDRESS').getValue('value1')
+const mapValue = appClient.state.box.getMapValue('map1', 'mapKey')
+const map = appClient.state.global.getMap('myMap')
+```
+
+### Generic methods
 
 There are various methods defined that let you read state from the smart contract app:
 
-- `getGlobalState()` - Gets the current global state using [`algorand.app.getById(appId).globalState](./app.md#global-state)
-- `getLocalState(account: string | SendTransactionFrom)` - Gets the current local state for the given account address using [`algorand.app.getLocalState](./app.md#local-state).
+- `getGlobalState()` - Gets the current global state using [`algorand.app.getGlobalState`](./app.md#global-state)
+- `getLocalState(address: string)` - Gets the current local state for the given account address using [`algorand.app.getLocalState`](./app.md#local-state).
 - `getBoxNames()` - Gets the current box names using [`algorand.app.getBoxNames`](./app.md#boxes)
-- `getBoxValue(name)` - Gets the current value of the given box using [`algorand.app.getBoxValue](./app.md#boxes)
-- `getBoxValueFromABIType(name)` - Gets the current value of the given box from an ABI type using [`algorand.app.getBoxValueFromABIType](./app.md#boxes)
-- `getBoxValues(filter)` - Gets the current values of the boxes using [`algorand.app.getBoxValues](./app.md#boxes)
-- `getBoxValuesFromABIType(type, filter)` - Gets the current values of the boxes from an ABI type using [`algorand.app.getBoxValuesFromABIType](./app.md#boxes)
+- `getBoxValue(name)` - Gets the current value of the given box using [`algorand.app.getBoxValue`](./app.md#boxes)
+- `getBoxValueFromABIType(name)` - Gets the current value of the given box from an ABI type using [`algorand.app.getBoxValueFromABIType`](./app.md#boxes)
+- `getBoxValues(filter)` - Gets the current values of the boxes using [`algorand.app.getBoxValues`](./app.md#boxes)
+- `getBoxValuesFromABIType(type, filter)` - Gets the current values of the boxes from an ABI type using [`algorand.app.getBoxValuesFromABIType`](./app.md#boxes)
 
-These calls will only work if the Application Client knows the ID of the app, which will occur if:
+```typescript
+const globalState = await appClient.getGlobalState()
+const localState = await appClient.getLocalState('ACCOUNTADDRESS')
 
-- The app ID is passed into the constructor;
-- You have passed `creatorAccount` and the smart contract name to the constructor and the contract already exists; or
-- You have called `create` or `deploy` using that Application Client.
+const boxName: BoxReference = 'my-box'
+const boxName2: BoxReference = 'my-box2'
+
+const boxNames = appClient.getBoxNames()
+const boxValue = appClient.getBoxValue(boxName)
+const boxValues = appClient.getBoxValues([boxName, boxName2])
+const boxABIValue = appClient.getBoxValueFromABIType(boxName, algosdk.ABIStringType)
+const boxABIValues = appClient.getBoxValuesFromABIType([boxName, boxName2], algosdk.ABIStringType)
+```
 
 ## Handling logic errors and diagnosing errors
 
@@ -189,9 +332,9 @@ Often when calling a smart contract during development you will get logic errors
 
 When this occurs, you will generally get an error that looks something like: `TransactionPool.Remember: transaction {TRANSACTION_ID}: logic eval error: {ERROR_MESSAGE}. Details: pc={PROGRAM_COUNTER_VALUE}, opcodes={LIST_OF_OP_CODES}`.
 
-The information in that error message can be parsed and when combined with the [source map from compilation](./app-deploy.md#compilation-and-template-substitution) you can expose debugging information that makes it much easier to understand what's happening.
+The information in that error message can be parsed and when combined with the [source map from compilation](./app-deploy.md#compilation-and-template-substitution) you can expose debugging information that makes it much easier to understand what's happening. The ARC-56 app spec, if provided, can also specify human-readable error messages against certain program counter values and further augment the error message.
 
-The Application Client automatically provides this functionality for all smart contract calls. It also exposes a function that can be used for any custom calls you manually construct and need to add into your own try/catch `exposeLogicError(e: Error, isClear?: boolean)`.
+The app client and ap factory automatically provide this functionality for all smart contract calls. They also expose a function that can be used for any custom calls you manually construct and need to add into your own try/catch `exposeLogicError(e: Error, isClear?: boolean)`.
 
 When an error is thrown then the resulting error that is re-thrown will be a [`LogicError` object](../code/classes/types_logic_error.LogicError.md), which has the following fields:
 
@@ -206,10 +349,11 @@ When an error is thrown then the resulting error that is re-thrown will be a [`L
 - `program: string[]` - The TEAL program split by line
 - `teal_line: number` - The line number in the TEAL program that triggered the error
 
-Note: This information will only show if the Application Client has a source map. This will occur if:
+Note: This information will only show if the app client / app factory has a source map. This will occur if:
 
 - You have called `create`, `update` or `deploy`
-- You have called `importSourceMaps(sourceMaps)` and provided the source maps (which you can get by calling `exportSourceMaps()` after calling `create`, `update` or `deploy` and it returns a serialisable value)
+- You have called `importSourceMaps(sourceMaps)` and provided the source maps (which you can get by calling `exportSourceMaps()` after variously calling `create`, `update`, or `deploy` and it returns a serialisable value)
+- You had source maps present in an app factory and then used it to [create an app client](#dynamically-creating-clients-for-a-given-app-spec) (they are automatically passed through)
 
 If you want to go a step further and automatically issue a [simulated transaction](https://algorand.github.io/js-algorand-sdk/classes/modelsv2.SimulateTransactionResult.html) and get trace information when there is an error when an ABI method is called you can turn on debug mode:
 
@@ -219,51 +363,4 @@ Config.configure({ debug: true })
 
 If you do that then the exception will have the `traces` property within the underlying exception will have key information from the simulation within it and this will get populated into the `led.traces` property of the thrown error.
 
-## `AppClientCallParams`
-
-All methods that call the smart contract apart from `deploy` make use of [this type](../code/modules/types_app_client.md#appclientcallparams). It consists of the following core properties, all of which are optional:
-
-- `sender?: SendTransactionFrom` - The [sender/signer](./account.md#sendtransactionfrom) to use; if unspecified then the sender that was passed into the constructor of the Application Client is used
-- `note?: TransactionNote` - The [transaction note](./transaction.md#transaction-notes) to use when issuing the transaction
-- `sendParams?: SendTransactionParams` - The [transaction sending configuration](./transaction.md#sendtransactionparams)
-
-In addition to these parameters, it may specify [call arguments](#appclientcallargs) parameters (`AppClientCallArgs`).
-
-## `AppClientCallArgs`
-
-Whenever an app call is specified, including within `deploy` [this type](../code/modules/types_app_client.md#appclientcallargs) specifies the arguments. There are two forms you can use:
-
-- **Raw call** - Directly specifies the [values](./app.md#rawappcallargs) that will be populated onto an `algosdk.Transaction`
-- **ABI call** - Specifies a [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/) along with relevant values (like boxes) that will be directly populated onto an `algosdk.Transaction`. Consists of the [ABI app call args type](./app.md#abiappcallargs) with the `method` parameter replaced with a string (since the Application Client only needs it as a string):
-  - `method: string` - The name of the method (e.g. `hello`) or the ABI signature of the method (e.g. `hello(string)string`) for when you have multiple methods with the same name and need to differentiate between them
-  - `methodArgs?: ABIAppCallArg[]` - An array of arguments to pass into the ABI method
-  - `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](./app.md#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-  - `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
-
-If you want to get call args for manually populating into an `algosdk.Transaction` you can use the `getCallArgs` method on Application Client.
-
-Also, if you want to manually construct an ABI call (e.g. to use with AtomicTransactionComposer directly) then you can use `getABIMethod` and/or `getABIMethodParams`
-
-## `AppClientCompilationParams`
-
-When calling `create` or `update` there are extra parameter that need to be passed to facilitate the compilation of the code in addition to the other parameters in [`AppClientCallParams`](#appclientcallparams):
-
-- `deployTimeParams?: TealTemplateParams` - Any [deploy-time parameters](./app-deploy.md#compilation-and-template-substitution) to replace in the TEAL code
-- `updatable?: boolean` - Whether or not the contract should have [deploy-time immutability control](./app-deploy.md#compilation-and-template-substitution) set, undefined = ignore
-- `deletable?: boolean` - Whether or not the contract should have [deploy-time permanence control](./app-deploy.md#compilation-and-template-substitution) set, undefined = ignore
-
-## `AppClientDeployParams`
-
-When calling `deploy` the [`AppClientDeployParams`](../code/interfaces/types_app_client.AppClientDeployParams.md) type defines the input parameters, all of which are optional. This type closely models the semantics of [`deployApp`](./app-deploy.md#deployapp).
-
-- `version?: string` - The version of the contract, uses "1.0" by default
-- `sender?: SendTransactionFrom` - The [sender/signer](./account.md#sendtransactionfrom) to use; if unspecified then the sender that was passed into the constructor of the Application Client is used
-- `sendParams?: SendTransactionParams` - The [transaction sending configuration](./transaction.md#sendtransactionparams)
-- `deployTimeParams?: TealTemplateParams` - Any [deploy-time parameters](./app-deploy.md#compilation-and-template-substitution) to replace in the TEAL code
-- `allowUpdate?: boolean` - Whether or not to allow updates in the contract using the [deploy-time updatability](./app-deploy.md#compilation-and-template-substitution) control if present in your contract; if this is not specified then it will automatically be determined based on the AppSpec definition (if there is an update method)
-- `allowDelete?: boolean` - Whether or not to allow deletes in the contract using the [deploy-time deletability](./app-deploy.md#compilation-and-template-substitution) control if present in your contract; if this is not specified then it will automatically be determined based on the AppSpec definition (if there is a delete method)
-- `onSchemaBreak?: 'replace' | 'fail' | OnSchemaBreak` determines what should happen if a breaking change to the schema is detected (e.g. if you need more global or local state that was previously requested when the contract was originally created)
-- `onUpdate?: 'update' | 'replace' | 'fail' | OnUpdate` determines what should happen if an update to the smart contract is detected (e.g. the TEAL code has changed since last deployment)
-- `createArgs?: AppClientCallArgs` - The args to use if a create is needed
-- `updateArgs?: AppClientCallArgs` - The args to use if an update is needed
-- `deleteArgs?: AppClientCallArgs` - The args to use if a delete is needed
+When this debug flag is set, it will also emit debugging symbols to allow break-point debugging of the calls if the [project root is also configured](./debugging.md).

@@ -45,7 +45,9 @@ As well as `AlgorandClient` and `Config`, you can use intellisense to auto-compl
 > import * as algokit from '@algorandfoundation/algokit-utils'
 > ```
 >
-> This version will still work, but it exposes an older, function-based interface to the functionality that is in the process of being deprecated. The recommended way to use AlgoKit Utils is via the `AlgorandClient` class mentioned below, which is easier and more convenient to use. Some functionality won't yet be migrated to the new approach and this old approach will be needed, but the documentation pages will indicate when this is the case.
+> This version will still work until the next major version bump, but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
+>
+> If you are migrating from the old functions to the new ones then you can follow the [migration guide](v7-migration.md).
 
 The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
 
@@ -163,7 +165,7 @@ The library helps you interact with and develop against the Algorand blockchain 
 - **Higher-order use cases**
   - [**Asset management**](./capabilities/asset.md) - Creation, transfer, destroying, opting in and out and managing Algorand Standard Assets
   - [**Typed application clients**](./capabilities/typed-app-clients.md) - Type-safe application clients that are [generated](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients) from ARC-0032 application spec files and allow you to intuitively and productively interact with a deployed app, which is the recommended way of interacting with apps and builds on top of the following capabilities:
-    - [**ARC-0032 Application Spec client**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts
+    - [**ARC-56 / ARC-32 App client and App factory**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-56 and ARC-32 application spec defined smart contracts
     - [**App management**](./capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
     - [**App deployment**](./capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
   - [**Algo transfers (payments)**](./capabilities/transfer.md) - Ability to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding

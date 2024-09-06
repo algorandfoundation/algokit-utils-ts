@@ -29,7 +29,7 @@ Parameters to define a create call for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L100)
+[src/types/app-factory.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L105)
 
 ___
 
@@ -41,7 +41,7 @@ Parameters to define a deployment for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L105)
+[src/types/app-factory.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L110)
 
 ___
 
@@ -67,10 +67,13 @@ ___
 
 Ƭ **CreateSchema**: `Object`
 
+Specifies a schema used for creating an app
+
 #### Type declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
+| `extraProgramPages?` | `number` | Number of extra pages required for the programs. Defaults to the number needed for the programs in this call if not specified. This is immutable once the app is created. |
 | `schema?` | \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } | The state schema for the app. This is immutable once the app is created. By default uses the ARC32/ARC-56 spec. |
 | `schema.globalByteSlices` | `number` | The number of byte slices saved in global state. |
 | `schema.globalInts` | `number` | The number of integers saved in global state. |
@@ -79,4 +82,4 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L85)
+[src/types/app-factory.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L86)

@@ -20,6 +20,40 @@ The core internal type that holds information about a signer/sender pair for a t
 
 Many methods in `AccountManager` expose a `TransactionSignerAccount`. `TransactionSignerAccount` can be used with `AtomicTransactionComposer`, [`AlgoKitComposer`](./algokit-composer.md) and [useWallet](https://github.com/TxnLab/use-wallet).
 
+## Registering a signer
+
+The `AccountManager` keeps track of which signer is associated with a given sender address. This is used by [`AlgorandClient`](./algorand-client.md) to automatically sign transactions by that sender. Any of the [methods](#accounts) within `AccountManager` that return an account will automatically register the signer with the sender. If however, you are creating a signer external to the `AccountManager`, for instance when using the use-wallet library in a dApp, then you need to register the signer with the `AccountManager` if you want it to be able to automatically sign transactions from that sender.
+
+There are two methods that can be used for this, `setSignerFromAccount`, which takes any number of [account based objects](#underlying-account-classes) that combine signer and sender (`TransactionSignerAccount` | `algosdk.Account` | `algosdk.LogicSigAccount` | `SigningAccount` | `MultisigAccount`), or `setSigner` which takes the sender address and the `TransactionSigner`:
+
+```typescript
+algorand.account
+  .setSignerFromAccount(algosdk.generateAccount())
+  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
+  .setSignerFromAccount(new SigningAccount(mnemonic, sender))
+  .setSignerFromAccount(new MultisigAccount({ version: 1, threshold: 1, addrs: ['ADDRESS1...', 'ADDRESS2...'] }, [account1, account2]))
+  .setSignerFromAccount({ addr: 'SENDERADDRESS', signer: transactionSigner })
+  .setSigner('SENDERADDRESS', transactionSigner)
+```
+
+## Default signer
+
+If you want to have a default signer that is used to sign transactions without a registered signer (rather than throwing an exception) then you can [register a default signer](../code/classes/types_account_manager.AccountManager.md#setdefaultsigner):
+
+```typescript
+algorand.account.setDefaultSigner(myDefaultSigner)
+```
+
+## Get a signer
+
+[`AlgorandClient`](./algorand-client.md) will automatically retrieve a signer when signing a transaction, but if you need to get a `TransactionSigner` externally to do something more custom then you can [retrieve the signer](../code/classes//types_account_manager.AccountManager.md#getsigner) for a given sender address:
+
+```typescript
+const signer = algorand.account.getSigner('SENDER_ADDRESS')
+```
+
+If there is no signer registered for that sender address it will either return the default signer ([if registered](#default-signer)) or throw an exception.
+
 ## Accounts
 
 In order to get/register accounts for signing operations you can use the following methods on [`AccountManager`](#accountmanager) (expressed here as `algorand.account` to denote the syntax via an [`AlgorandClient`](./algorand-client.md)):

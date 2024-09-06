@@ -125,6 +125,8 @@ There are two common base interfaces that get reused:
   - `maxRoundsToWaitForConfirmation?: number` - The number of rounds to wait for confirmation. By default until the latest lastValid has past.
   - `suppressLog?: boolean` - Whether to suppress log messages from transaction send, default: do not suppress.
 
+Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`AlgoKitComposer`](./algokit-composer.md).
+
 ### Transaction configuration
 
 AlgorandClient caches network provided transaction values for you automatically to reduce network traffic. It has a set of default configurations that control this behaviour, but you have the ability to override and change the configuration of this behaviour:

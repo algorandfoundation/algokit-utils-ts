@@ -8,7 +8,6 @@ import {
   AppClientParams,
   AppDetails,
   AppDetailsBase,
-  AppSpecAppDetailsBase,
   ResolveAppByCreatorAndNameBase,
   ResolveAppByIdBase,
   ResolveAppClientByCreatorAndName,
@@ -195,8 +194,24 @@ export class ClientManager {
 
   /**
    * Returns a new `AppFactory` client
-   * @param params
-   * @returns
+   * @example Basic example
+   * ```typescript
+   * const factory = algorand.client.getAppFactory({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\/}',
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const factory = algorand.client.getAppFactory({
+   *   appSpec: parsedAppSpec_AppSpec_or_Arc56Contract,
+   *   defaultSender: "SENDERADDRESS",
+   *   appName: "OverriddenAppName",
+   *   version: "2.0.0",
+   *   updatable: true,
+   *   deletable: false,
+   *   deployTimeParams: { ONE: 1, TWO: 'value' }
+   * })
+   * ```
    */
   public getAppFactory(params: Expand<Omit<AppFactoryParams, 'algorand'>>) {
     if (!this._algorand) {
@@ -211,6 +226,12 @@ export class ClientManager {
    * This method resolves the app ID by looking up the creator address and name
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
    * @param params The parameters to create the app client
+   * @example Basic
+   * const appClient = algorand.client.getAppClientByCreatorAndName({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
+   *   // appId resolved by looking for app ID of named app by this creator
+   *   creatorAddress: 'CREATORADDRESS',
+   * })
    * @returns The `AppClient`
    */
   public getAppClientByCreatorAndName(params: Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand'>>) {
@@ -227,6 +248,11 @@ export class ClientManager {
   /**
    * Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
    * @param params The parameters to create the app client
+   * @example Basic
+   * const appClient = algorand.client.getAppClientByCreatorAndName({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
+   *   appId: 12345n,
+   * })
    * @returns The `AppClient`
    */
   public getAppClientById(params: Expand<Omit<AppClientParams, 'algorand'>>) {
@@ -243,6 +269,11 @@ export class ClientManager {
    *
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
    * @param params The parameters to create the app client
+   * @example Basic
+   * const appClient = algorand.client.getAppClientByCreatorAndName({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
+   *   // appId resolved by using ARC-56 spec to find app ID for current network
+   * })
    * @returns The `AppClient`
    */
   public async getAppClientByNetwork(params: Expand<Omit<AppClientParams, 'algorand' | 'appId'>>) {
@@ -536,13 +567,6 @@ export class ClientManager {
 export interface TypedAppClient<TClient> {
   new (details: AppDetails, algod: algosdk.Algodv2): TClient
 }
-
-/**
- * Details to resolve an app client by creator address and name.
- */
-export type AppClientByCreatorAndNameDetails = AppSpecAppDetailsBase &
-  AppDetailsBase &
-  Omit<ResolveAppByCreatorAndNameBase, 'findExistingUsing'>
 
 /**
  * Details to resolve a typed app creator address and name.

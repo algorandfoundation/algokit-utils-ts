@@ -42,16 +42,16 @@ export type AppDeployParams = Expand<
     deployTimeParams?: TealTemplateParams
     /** What action to perform if a schema break (storage schema or extra pages change) is detected:
      *
+     * * `fail` - Fail the deployment (throw an error, **default**)
      * * `replace` - Delete the old app and create a new one
-     * * `fail` - Fail the deployment (throw an error)
      * * `append` - Deploy a new app and leave the old one as is
      */
     onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
     /** What action to perform if a TEAL code update is detected:
      *
+     * * `fail` - Fail the deployment (throw an error, **default**)
      * * `update` - Update the app with the new TEAL code
      * * `replace` - Delete the old app and create a new one
-     * * `fail` - Fail the deployment (throw an error)
      * * `append` - Deploy a new app and leave the old one as is
      */
     onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate

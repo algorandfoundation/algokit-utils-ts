@@ -18,7 +18,7 @@ const appManager = new AppManager(algod)
 
 ### App Clients
 
-The recommended way of interacting with apps is via [Typed app clients](./typed-app-clients.md). The methods shown on this page are the underlying mechanisms that app clients use and are for advanced use cases when you want more control.
+The recommended way of interacting with apps is via [Typed app clients](./typed-app-clients.md) or if you can't use a typed app client then an [untyped app client](./app-client.md). The methods shown on this page are the underlying mechanisms that app clients use and are for advanced use cases when you want more control.
 
 ### Calling an app
 
@@ -71,7 +71,7 @@ The base type for specifying an app creation transaction is [`AppCreateParams`](
   - `localByteSlices: number` - The number of byte slices saved in local state.
 - `extraProgramPages?: number` - Number of extra pages required for the programs. This is immutable once the app is created.
 
-If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via [`appManager.getCompilationResult`](../code/classes/types_app_manager.AppManager.md#getcompilationresult) (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
+If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via [`algorand.app.getCompilationResult`](../code/classes/types_app_manager.AppManager.md#getcompilationresult) (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 
 ```typescript
 // Basic raw example
@@ -142,7 +142,7 @@ The base type for specifying an app update transaction is [`AppUpdateParams`](..
 - `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
 - `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
 
-If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via [`appManager.getCompilationResult`](../code/classes/types_app_manager.AppManager.md#getcompilationresult) (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
+If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via [`algorand.app.getCompilationResult`](../code/classes/types_app_manager.AppManager.md#getcompilationresult) (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
 
 ```typescript
 // Basic raw example
@@ -306,10 +306,10 @@ await algorand.send.appCallMethodCall({
 
 To access local state you can use the following method from an [`AppManager`](#appmanager) instance:
 
-- [`appManager.getLocalState(appId, address)`](../code/classes/types_app_manager.AppManager.md#getlocalstate) - Returns the current local state for the given app ID and account address decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
+- [`algorand.app.getLocalState(appId, address)`](../code/classes/types_app_manager.AppManager.md#getlocalstate) - Returns the current local state for the given app ID and account address decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
 
 ```typescript
-const globalState = await appManager.getGlobalState(12345n)
+const globalState = await algorand.app.getGlobalState(12345n)
 ```
 
 Global state is parsed from the underlying algod response via the following static method from [`AppManager`](#appmanager):
@@ -335,40 +335,40 @@ if (typeof appState['value1'].value === 'string') {
 
 To access local state you can use the following method from an [`AppManager`](#appmanager) instance:
 
-- [`appManager.getLocalState(appId, address)`](../code/classes/types_app_manager.AppManager.md#getlocalstate) - Returns the current local state for the given app ID and account address decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
+- [`algorand.app.getLocalState(appId, address)`](../code/classes/types_app_manager.AppManager.md#getlocalstate) - Returns the current local state for the given app ID and account address decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
 
 ```typescript
-const localState = await appManager.getLocalState(12345n, 'ACCOUNTADDRESS')
+const localState = await algorand.app.getLocalState(12345n, 'ACCOUNTADDRESS')
 ```
 
 ### Boxes
 
 To access and parse box values and names for an app you can use the following methods from an [`AppManager`](#appmanager) instance:
 
-- [`appManager.getBoxNames(appId: bigint)`](../code/modules/index.md#getboxnames) - Returns the current [box names](#boxname) for the given app ID
-- [`appManager.getBoxValue(appId: bigint, boxName: BoxIdentifier)`](../code/modules/index.md#getboxvalue) - Returns the binary value of the given box name for the given app ID
-- [`appManager.getBoxValues(appId: bigint, boxNames: BoxIdentifier[])`](../code/modules/index.md#getboxvalues) - Returns the binary values of the given box names for the given app ID
-- [`appManager.getBoxValueFromABIType(request: {appId: bigint, boxName: BoxIdentifier, type: algosdk.ABIType}})`](../code/modules/index.md#getboxvaluefromabitype) - Returns the parsed ABI value of the given box name for the given app ID for the provided ABI type
-- [`appManager.getBoxValuesFromABIType(request: {appId: bigint, boxNames: BoxIdentifier[], type: algosdk.ABIType})`](../code/modules/index.md#getboxvaluesfromabitype) - Returns the parsed ABI values of the given box names for the given app ID for the provided ABI type
+- [`algorand.app.getBoxNames(appId: bigint)`](../code/modules/index.md#getboxnames) - Returns the current [box names](#boxname) for the given app ID
+- [`algorand.app.getBoxValue(appId: bigint, boxName: BoxIdentifier)`](../code/modules/index.md#getboxvalue) - Returns the binary value of the given box name for the given app ID
+- [`algorand.app.getBoxValues(appId: bigint, boxNames: BoxIdentifier[])`](../code/modules/index.md#getboxvalues) - Returns the binary values of the given box names for the given app ID
+- [`algorand.app.getBoxValueFromABIType(request: {appId: bigint, boxName: BoxIdentifier, type: algosdk.ABIType}})`](../code/modules/index.md#getboxvaluefromabitype) - Returns the parsed ABI value of the given box name for the given app ID for the provided ABI type
+- [`algorand.app.getBoxValuesFromABIType(request: {appId: bigint, boxNames: BoxIdentifier[], type: algosdk.ABIType})`](../code/modules/index.md#getboxvaluesfromabitype) - Returns the parsed ABI values of the given box names for the given app ID for the provided ABI type
 - [`AppManager.getBoxReference(boxId)`](../code/modules/index.md#getboxreference) - Returns a `algosdk.BoxReference` representation of the given [box identifier / reference](#box-references), which is useful when constructing a raw `algosdk.Transaction`
 
 ```typescript
 const appId = 12345n
 const boxName: BoxReference = 'my-box'
-const boxName2: BoxReference = 'my-box'
+const boxName2: BoxReference = 'my-box2'
 
-const boxNames = appManager.getBoxNames(appId)
-const boxValue = appManager.getBoxValue(appId, boxName)
-const boxValues = appManager.getBoxValues(appId, [boxName, boxName2])
-const boxABIValue = appManager.getBoxValueFromABIType(appId, boxName, algosdk.ABIStringType)
-const boxABIValues = appManager.getBoxValuesFromABIType(appId, [boxName, boxName2], algosdk.ABIStringType)
+const boxNames = algorand.app.getBoxNames(appId)
+const boxValue = algorand.app.getBoxValue(appId, boxName)
+const boxValues = algorand.app.getBoxValues(appId, [boxName, boxName2])
+const boxABIValue = algorand.app.getBoxValueFromABIType(appId, boxName, algosdk.ABIStringType)
+const boxABIValues = algorand.app.getBoxValuesFromABIType(appId, [boxName, boxName2], algosdk.ABIStringType)
 ```
 
 ## Getting app information
 
 To get reference information and metadata about an existing app you can use the following methods:
 
-- [`appManager.getById(appId)`](../code/classes/types_app_manager.AppManager.md#getbyid) - Returns current app information by app ID from an [`AppManager`](#appmanager) instance
+- [`algorand.app.getById(appId)`](../code/classes/types_app_manager.AppManager.md#getbyid) - Returns current app information by app ID from an [`AppManager`](#appmanager) instance
 - [`indexer.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)`](../code/modules/index.indexer.md#lookupaccountcreatedapplicationbyaddress) - Returns all apps created by a given account from [indexer](./indexer.md)
 
 ## Common app parameters
@@ -432,11 +432,11 @@ export interface BoxReference {
 
 The [`AppManager`](#appmanager) class allows you to compile TEAL code with caching semantics that allows you to avoid duplicate compilation and keep track of source maps from compiled code.
 
-If you call `appManager.compileTeal(tealCode)` then the compilation result will be stored and retrievable from `appManager.getCompilationResult(tealCode)`.
+If you call `algorand.app.compileTeal(tealCode)` then the compilation result will be stored and retrievable from `algorand.app.getCompilationResult(tealCode)`.
 
 ```typescript
 const tealCode = 'return 1'
-const compilationResult = await appManager.compileTeal(tealCode)
+const compilationResult = await algorand.app.compileTeal(tealCode)
 // ...
-const previousCompilationResult = appManager.getCompilationResult(tealCode)
+const previousCompilationResult = algorand.app.getCompilationResult(tealCode)
 ```

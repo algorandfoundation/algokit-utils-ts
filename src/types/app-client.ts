@@ -366,7 +366,8 @@ export type ResolveAppClientByCreatorAndName = Expand<
   }
 >
 
-/** ARC-56/ARC-32 application client that allows you to manage calls and state for a given instance of an app. */
+/** ARC-56/ARC-32 application client that allows you to manage calls and
+ * state for a specific deployed instance of an app (with a known app ID). */
 export class AppClient {
   private _appId: bigint
   private _appAddress: string
@@ -416,7 +417,10 @@ export class AppClient {
     )
     this._boxStateMethods = this.getBoxMethods()
 
-    this._paramsMethods = { ...this.getMethodCallParamsMethods(), bare: this.getBareParamsMethods() }
+    this._paramsMethods = {
+      ...this.getMethodCallParamsMethods(),
+      bare: this.getBareParamsMethods(),
+    }
     this._transactionsMethods = { ...this.getMethodCallTransactionsMethods(), bare: this.getBareTransactionsMethods() }
     this._sendMethods = { ...this.getMethodCallSendMethods(), bare: this.getBareSendMethods() }
   }
@@ -536,11 +540,11 @@ export class AppClient {
 
   /**
    * Funds Algo into the app account for this app.
-   * @param fund The parameters for the funding
+   * @param params The parameters for the funding transaction
    * @returns The result of the funding
    */
-  async fundAppAccount(fund: FundAppParams) {
-    return this._algorand.send.payment({ ...fund, sender: this.getSender(fund.sender), receiver: this.appAddress })
+  async fundAppAccount(params: FundAppParams) {
+    return this.send.fundAppAccount(params)
   }
 
   /**
@@ -923,6 +927,14 @@ export class AppClient {
 
   private getMethodCallParamsMethods() {
     return {
+      /** Return params for a payment transaction to fund the app account */
+      fundAppAccount: (params: FundAppParams) => {
+        return {
+          ...params,
+          sender: this.getSender(params.sender),
+          receiver: this.appAddress,
+        } satisfies PaymentParams
+      },
       /** Return params for an update ABI call, including deploy-time TEAL template replacements and compilation if provided */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
         return this.getABIParams(
@@ -958,6 +970,10 @@ export class AppClient {
 
   private getMethodCallSendMethods() {
     return {
+      /** Sign and send transactions for a payment transaction to fund the app account */
+      fundAppAccount: (params: FundAppParams & ExecuteParams) => {
+        return this._algorand.send.payment(this.params.fundAppAccount(params))
+      },
       /**
        * Sign and send transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
        */
@@ -1018,6 +1034,10 @@ export class AppClient {
 
   private getMethodCallTransactionsMethods() {
     return {
+      /** Return transaction for a payment transaction to fund the app account */
+      fundAppAccount: (params: FundAppParams) => {
+        return this._algorand.transactions.payment(this.params.fundAppAccount(params))
+      },
       /**
        * Return transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
        */
@@ -1155,7 +1175,7 @@ export class AppClient {
        *  in the ARC-56 spec
        */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      getMapValue: async (mapName: string, key: Buffer | any) => {
+      getMapValue: async (mapName: string, key: Uint8Array | any) => {
         const metadata = that._appSpec.state.maps.box[mapName]
         const prefix = Buffer.from(metadata.prefix ?? '', 'base64')
         const encodedKey = Buffer.concat([prefix, getABIEncodedValue(key, metadata.keyType, that._appSpec.structs)])
@@ -1236,7 +1256,7 @@ export class AppClient {
         return value?.value
       },
       /**
-       *
+       * Returns a single value from the given map for the current app with the value a decoded ABI value.
        * @param mapName The name of the map to read from
        * @param key The key within the map (without any map prefix) as either a Buffer with the bytes or a value
        *  that will be converted to bytes by encoding it using the specified ABI key type
@@ -1244,7 +1264,7 @@ export class AppClient {
        * @param appState Optional cached value of the current state
        */
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      getMapValue: async (mapName: string, key: Buffer | any, appState?: AppState) => {
+      getMapValue: async (mapName: string, key: Uint8Array | any, appState?: AppState) => {
         const state = Object.values(appState ?? (await stateGetter()))
         const metadata = mapGetter()[mapName]
 
@@ -1261,12 +1281,10 @@ export class AppClient {
       },
 
       /**
-       *
+       * Returns all map values for the given map.
        * @param mapName The name of the map to read from
-       * @param key The key within the map as either a Buffer with the bytes or a value
-       *  that will be converted to bytes by encoding it using the specified ABI key type
-       *  in the ARC-56 spec
-       * @param appState
+       * @param appState Optional cached value of the current state
+       * @returns A map of all key-value pairs in the map as a `Record<string, ABIValue>`
        */
       getMap: async (mapName: string) => {
         const state = Object.values(await stateGetter())
@@ -1316,6 +1334,11 @@ export class ApplicationClient {
   private _clearSourceMap: SourceMap | undefined
 
   /**
+   * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
+   * `algorand.client.getAppClientByCreatorAndName`.
+   * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+   * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+   *
    * Create a new ApplicationClient instance
    * @param appDetails The details of the app
    * @param algod An algod instance
@@ -1353,6 +1376,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `AppClient.compile()` instead.
+   *
    * Compiles the approval and clear programs and sets up the source map.
    * @param compilation The deploy-time parameters for the compilation
    * @returns The compiled approval and clear programs
@@ -1416,6 +1441,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `deploy` from an `AppFactory` instance instead.
+   *
    * Idempotently deploy (create, update/delete if changed) an app against the given name via the given creator account, including deploy-time template placeholder substitutions.
    *
    * To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
@@ -1532,6 +1559,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `create` from an `AppFactory` instance instead.
+   *
    * Creates a smart contract app, returns the details of the created app.
    * @param create The parameters to create the app with
    * @returns The details of the created app, or the transaction to create it if `skipSending` and the compilation result
@@ -1595,6 +1624,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.send.update` or `appClient.transactions.update` from an `AppClient` instance instead.
+   *
    * Updates the smart contract app.
    * @param update The parameters to update the app with
    * @returns The transaction send result and the compilation result
@@ -1634,6 +1665,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.send.call` or `appClient.transactions.call` from an `AppClient` instance instead.
+   *
    * Issues a no_op (normal) call to the app.
    * @param call The call details.
    * @returns The result of the call
@@ -1670,6 +1703,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.send.optIn` or `appClient.transactions.optIn` from an `AppClient` instance instead.
+   *
    * Issues a opt_in call to the app.
    * @param call The call details.
    * @returns The result of the call
@@ -1679,6 +1714,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.send.closeOut` or `appClient.transactions.closeOut` from an `AppClient` instance instead.
+   *
    * Issues a close_out call to the app.
    * @param call The call details.
    * @returns The result of the call
@@ -1688,6 +1725,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.send.clearState` or `appClient.transactions.clearState` from an `AppClient` instance instead.
+   *
    * Issues a clear_state call to the app.
    * @param call The call details.
    * @returns The result of the call
@@ -1697,6 +1736,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.send.delete` or `appClient.transactions.delete` from an `AppClient` instance instead.
+   *
    * Issues a delete_application call to the app.
    * @param call The call details.
    * @returns The result of the call
@@ -1706,6 +1747,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.send.call` or `appClient.transactions.call` from an `AppClient` instance instead.
+   *
    * Issues a call to the app with the given call type.
    * @param call The call details.
    * @param callType The call type
@@ -1893,6 +1936,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.params.*` from an `AppClient` instance instead.
+   *
    * Returns the arguments for an app call for the given ABI method or raw method specification.
    * @param args The call args specific to this application client
    * @param sender The sender of this call. Will be used to fetch any default argument values if applicable
@@ -1962,6 +2007,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `AppClient.getABIMethod` instead.
+   *
    * Returns the ABI Method parameters for the given method name string for the app represented by this application client instance
    * @param method Either the name of the method or the ABI method spec definition string
    * @returns The ABI method params for the given method
@@ -1984,6 +2031,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `AppClient.getABIMethod` instead.
+   *
    * Returns the ABI Method for the given method name string for the app represented by this application client instance
    * @param method Either the name of the method or the ABI method spec definition string
    * @returns The ABI method for the given method
@@ -1994,6 +2043,8 @@ export class ApplicationClient {
   }
 
   /**
+   * @deprecated Use `appClient.appId` and `appClient.appAddress` from an `AppClient` instance instead.
+   *
    * Gets the reference information for the current application instance.
    * `appId` will be 0 if it can't find an app.
    * @returns The app reference, or if deployed using the `deploy` method, the app metadata too

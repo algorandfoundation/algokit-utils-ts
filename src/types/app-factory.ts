@@ -82,6 +82,7 @@ export type CreateOnComplete = {
   onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
 }
 
+/** Specifies a schema used for creating an app */
 export type CreateSchema = {
   /** The state schema for the app. This is immutable once the app is created. By default uses the ARC32/ARC-56 spec. */
   schema?: {
@@ -94,6 +95,10 @@ export type CreateSchema = {
     /** The number of byte slices saved in local state. */
     localByteSlices: number
   }
+  /** Number of extra pages required for the programs.
+   * Defaults to the number needed for the programs in this call if not specified.
+   * This is immutable once the app is created. */
+  extraProgramPages?: number
 }
 
 /** Parameters to define a create call for an `AppFactory` */
@@ -165,6 +170,8 @@ export class AppFactory {
   /**
    * Creates an instance of the app and returns the result of the creation
    * transaction and an app client to interact with that app instance.
+   *
+   * Performs deploy-time TEAL template placeholder substitutions (if specified).
    * @param params The parameters to create the app
    * @returns The app client and the result of the creation transaction
    */
@@ -191,8 +198,6 @@ export class AppFactory {
 
   /**
    * Idempotently deploy (create if not exists, update if changed) an app against the given name for the given creator account, including deploy-time TEAL template placeholder substitutions (if specified).
-   *
-   * To understand the architecture decisions behind this functionality please see https://github.com/algorandfoundation/algokit-cli/blob/main/docs/architecture-decisions/2023-01-12_smart-contract-deployment.md
    *
    * **Note:** When using the return from this function be sure to check `operationPerformed` to get access to various return properties like `transaction`, `confirmation` and `deleteResult`.
    *

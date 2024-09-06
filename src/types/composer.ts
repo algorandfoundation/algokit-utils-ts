@@ -356,7 +356,9 @@ export type AppCreateParams = Expand<
       /** The number of byte slices saved in local state. */
       localByteSlices: number
     }
-    /** Number of extra pages required for the programs. This is immutable once the app is created. */
+    /** Number of extra pages required for the programs.
+     * Defaults to the number needed for the programs in this call if not specified.
+     * This is immutable once the app is created. */
     extraProgramPages?: number
   }
 >
