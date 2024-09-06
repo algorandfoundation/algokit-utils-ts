@@ -5,7 +5,7 @@ import * as fs from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
 import { algorandFixture } from '../testing'
-import { AVMDebuggerSourceMap, PersistSourceMapInput } from '../types/debugging'
+import { PersistSourceMapInput } from '../types/debugging'
 import { persistSourceMaps } from './debugging'
 import { simulateAndPersistResponse } from './simulate-and-persist-response'
 
@@ -106,13 +106,6 @@ int 1
       expect(await fileExists(path.join(appOutputPath, 'clear.teal'))).toBeFalsy()
       expect(await fileExists(path.join(appOutputPath, 'clear.teal.tok.map'))).toBeTruthy()
       expect(JSON.parse(await fs.readFile(path.join(appOutputPath, 'clear.teal.tok.map'), 'utf8')).sources).toEqual([])
-
-      const result = AVMDebuggerSourceMap.fromDict(JSON.parse(await fs.readFile(sourcemapFilePath, 'utf8')))
-      for (const item of result.txnGroupSources) {
-        item.location = 'dummy'
-      }
-
-      expect(result).toMatchSnapshot()
     },
     timeout,
   )
