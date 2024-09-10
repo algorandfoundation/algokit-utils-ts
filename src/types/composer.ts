@@ -378,6 +378,14 @@ export type AppCallParams = CommonAppCallParams & {
   onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>
 }
 
+/** Parameters to define a method call transaction. */
+export type AppMethodCallParams = CommonAppCallParams & {
+  onComplete?: Exclude<
+    algosdk.OnApplicationComplete,
+    algosdk.OnApplicationComplete.UpdateApplicationOC | algosdk.OnApplicationComplete.ClearStateOC
+  >
+}
+
 /** Parameters to define an application delete call transaction. */
 export type AppDeleteParams = CommonAppCallParams & {
   onComplete?: algosdk.OnApplicationComplete.DeleteApplicationOC
@@ -386,7 +394,16 @@ export type AppDeleteParams = CommonAppCallParams & {
 export type AppCreateMethodCall = AppMethodCall<AppCreateParams>
 export type AppUpdateMethodCall = AppMethodCall<AppUpdateParams>
 export type AppDeleteMethodCall = AppMethodCall<AppDeleteParams>
-export type AppCallMethodCall = AppMethodCall<AppCallParams>
+export type AppCallMethodCall = AppMethodCall<AppMethodCallParams>
+
+export type AppMethodCallTransactionArgument =
+  // The following should match the partial `args` types from `AppMethodCall<T>` below
+  | TransactionWithSigner
+  | Transaction
+  | Promise<Transaction>
+  | AppMethodCall<AppCreateParams>
+  | AppMethodCall<AppUpdateParams>
+  | AppMethodCall<AppMethodCallParams>
 
 export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
   /** The ABI method to call */
@@ -400,14 +417,13 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    */
   args?: (
     | algosdk.ABIValue
+    // The following should match the above `AppMethodCallTransactionArgument` type above
     | TransactionWithSigner
     | Transaction
     | Promise<Transaction>
     | AppMethodCall<AppCreateParams>
     | AppMethodCall<AppUpdateParams>
-    | AppMethodCall<AppCallParams>
-    // This is here to support default args in `AppClient`
-    | undefined
+    | AppMethodCall<AppMethodCallParams>
   )[]
 }
 

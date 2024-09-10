@@ -1,7 +1,14 @@
 import algosdk from 'algosdk'
 import { AlgorandClientInterface } from './algorand-client-interface'
-import { AppCompilationResult, DELETABLE_TEMPLATE_NAME, TealTemplateParams, UPDATABLE_TEMPLATE_NAME } from './app'
-import { Arc56Contract } from './app-arc56'
+import {
+  AppCompilationResult,
+  AppReturn,
+  DELETABLE_TEMPLATE_NAME,
+  SendAppTransactionResult,
+  TealTemplateParams,
+  UPDATABLE_TEMPLATE_NAME,
+} from './app'
+import { ABIStruct, Arc56Contract, Arc56Method, getArc56Method, getArc56ReturnValue } from './app-arc56'
 import {
   AppClient,
   AppClientBareCallParams,
@@ -19,11 +26,12 @@ import {
   DeployAppUpdateParams,
 } from './app-deployer'
 import { AppSpec } from './app-spec'
-import { AppCreateMethodCall, AppCreateParams, AppMethodCall, CommonAppCallParams } from './composer'
+import { AppCreateMethodCall, AppCreateParams } from './composer'
 import { Expand } from './expand'
 import { ExecuteParams } from './transaction'
 import SourceMap = algosdk.SourceMap
 import OnApplicationComplete = algosdk.OnApplicationComplete
+import ABIValue = algosdk.ABIValue
 
 /** Parameters to create an app client */
 export interface AppFactoryParams {
@@ -77,7 +85,7 @@ export interface AppFactoryParams {
   deployTimeParams?: TealTemplateParams
 }
 
-/** onComplete parameter for a non-update app call */
+/** onComplete parameter for a create app call */
 export type CreateOnComplete = {
   onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
 }
@@ -182,8 +190,14 @@ export class AppFactory {
     const compiled = await this.compile({ deployTimeParams, updatable, deletable })
     const result = await this.handleCallErrors(async () =>
       params && 'method' in params
-        ? this._algorand.send.appCreateMethodCall(await this.params.create({ ...params, updatable, deletable, deployTimeParams }))
-        : this._algorand.send.appCreate(await this.params.bare.create({ ...params, updatable, deletable, deployTimeParams })),
+        ? this.parseMethodCallReturn(
+            this._algorand.send.appCreateMethodCall(await this.params.create({ ...params, updatable, deletable, deployTimeParams })),
+            getArc56Method(params.method, this._appSpec),
+          )
+        : {
+            ...(await this._algorand.send.appCreate(await this.params.bare.create({ ...params, updatable, deletable, deployTimeParams }))),
+            return: undefined,
+          },
     )
     return {
       app: this.getAppClientById({
@@ -212,7 +226,7 @@ export class AppFactory {
     const deletable = params.deletable ?? this._deletable ?? this.getDeployTimeControl('deletable')
     const deployTimeParams = params.deployTimeParams ?? this._deployTimeParams
     const compiled = await this.compile({ deployTimeParams, updatable, deletable })
-    const result = await this._algorand.appDeployer.deploy({
+    const deployResult = await this._algorand.appDeployer.deploy({
       ...params,
       createParams: await (params.createParams && 'method' in params.createParams
         ? this.params.create({ ...params.createParams, updatable, deletable, deployTimeParams })
@@ -232,11 +246,32 @@ export class AppFactory {
         deletable,
       },
     })
+    const app = this.getAppClientById({
+      appId: deployResult.appId,
+    })
+    const result = {
+      ...deployResult,
+      ...compiled,
+    }
     return {
-      app: this.getAppClientById({
-        appId: result.appId,
-      }),
-      result: { ...result, ...compiled },
+      app,
+      result: {
+        ...result,
+        return:
+          'return' in result
+            ? result.operationPerformed === 'update'
+              ? params.updateParams && 'method' in params.updateParams
+                ? getArc56ReturnValue(result.return, getArc56Method(params.updateParams.method, this._appSpec), this._appSpec.structs)
+                : undefined
+              : params.createParams && 'method' in params.createParams
+                ? getArc56ReturnValue(result.return, getArc56Method(params.createParams.method, this._appSpec), this._appSpec.structs)
+                : undefined
+            : undefined,
+        deleteReturn:
+          'deleteReturn' in result && params.deleteParams && 'method' in params.deleteParams
+            ? getArc56ReturnValue(result.deleteReturn, getArc56Method(params.deleteParams.method, this._appSpec), this._appSpec.structs)
+            : undefined,
+      },
     }
   }
 
@@ -438,13 +473,13 @@ export class AppFactory {
   }
 
   private getABIParams<
-    TParams extends { method: string; sender?: string; args?: AppMethodCall<CommonAppCallParams>['args'] },
+    TParams extends { method: string; sender?: string; args?: AppClientMethodCallParams['args'] },
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
       ...params,
       sender: this.getSender(params.sender),
-      method: AppClient.getABIMethod(params.method, this._appSpec)[1],
+      method: getArc56Method(params.method, this._appSpec),
       args: AppClient.getABIArgsWithDefaultValues(params.method, params.args, this._appSpec),
       onComplete,
     }
@@ -457,5 +492,25 @@ export class AppFactory {
       throw new Error(`No sender provided and no default sender present in app client for call to app ${this._appName}`)
     }
     return sender ?? this._defaultSender!
+  }
+
+  /**
+   * Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
+   * on the ARC-56 method.
+   *
+   * If the return type is a struct then the struct will be returned.
+   *
+   * @param result The SendAppTransactionResult to be mapped
+   * @param method The method that was called
+   * @returns The smart contract response with an updated return value
+   */
+  async parseMethodCallReturn<
+    TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
+    TResult extends SendAppTransactionResult = SendAppTransactionResult,
+  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
+    const resultValue = await result
+    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) } as unknown as Expand<
+      Omit<TResult, 'return'> & AppReturn<TReturn>
+    >
   }
 }

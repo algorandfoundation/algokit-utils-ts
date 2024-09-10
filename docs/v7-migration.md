@@ -99,7 +99,7 @@ All of the functionality in `ApplicationClient` is available within the new clas
 - `fundAppAccount` no longer takes an `AlgoAmount` directly - it always expects the params object (more consistent with)
 - `compile` is replaced with static methods on `AppClient` and `getABIMethodParams` is deprecated in favour of `getABIMethod`, which now returns the params _and_ the `ABIMethod`
 - All of the methods that return or execute a transaction (`update`, `call`, `optIn`, etc.) are now exposed in an interface similar to the one in [`AlgorandClient`](./capabilities/algorand-client.md#creating-and-issuing-transactions), namely (where `{callType}` is one of: `update` / `delete` / `optIn` / `closeOut` / `clearState` / `call`):
-  - `appClient.transactions.{callType}` to get a transaction for an ABI method c all
+  - `appClient.transactions.{callType}` to get a transaction for an ABI method call
   - `appClient.send.{callType}` to sign and send a transaction for an ABI method call
   - `appClient.params.{callType}` to get a [params object](./capabilities/algorand-client.md#transaction-parameters) for an ABI method call
   - `appClient.transactions.bare.{callType}` to get a transaction for a bare app call
@@ -112,6 +112,7 @@ All of the functionality in `ApplicationClient` is available within the new clas
   - `apps` -> `appReferences`
   - `assets` -> `assetReferences`
   - `accounts` -> `accountReferences`
+- The return value for methods that send a transaction will have any ABI return value directly in the `return` property rather than the `ABIReturn` type (this behaviour matches what happened in typed clients, but has now been brought down to the underlying `AppClient`)
 
 ### Step 4 - Replace typed app client usage
 

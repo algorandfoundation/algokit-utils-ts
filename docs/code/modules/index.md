@@ -499,7 +499,7 @@ Compiles the given TEAL using algod and returns the result, including source map
 
 #### Defined in
 
-[src/app.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L411)
+[src/app.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L414)
 
 ___
 
@@ -628,7 +628,7 @@ generic object keyed by the UTF-8 value of the key.
 
 #### Defined in
 
-[src/app.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L337)
+[src/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L340)
 
 ___
 
@@ -809,7 +809,7 @@ Returns the encoded ABI spec for a given ABI Method
 
 #### Defined in
 
-[src/app.ts:422](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L422)
+[src/app.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L425)
 
 ___
 
@@ -838,7 +838,7 @@ Returns any ABI return values for the given app call arguments and transaction c
 
 #### Defined in
 
-[src/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L227)
+[src/app.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L230)
 
 ___
 
@@ -1323,7 +1323,7 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 
 #### Defined in
 
-[src/app.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L370)
+[src/app.ts:373](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L373)
 
 ___
 
@@ -1351,7 +1351,7 @@ Returns the app args ready to load onto an app `Transaction` object
 
 #### Defined in
 
-[src/app.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L348)
+[src/app.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L351)
 
 ___
 
@@ -1379,7 +1379,7 @@ Returns the names of the boxes for the given app.
 
 #### Defined in
 
-[src/app.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L268)
+[src/app.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L271)
 
 ___
 
@@ -1408,7 +1408,7 @@ Returns the value of the given box name for the given app.
 
 #### Defined in
 
-[src/app.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L280)
+[src/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L283)
 
 ___
 
@@ -1436,7 +1436,7 @@ Returns the value of the given box name for the given app decoded based on the g
 
 #### Defined in
 
-[src/app.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L306)
+[src/app.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L309)
 
 ___
 
@@ -1465,7 +1465,7 @@ Returns the value of the given box names for the given app.
 
 #### Defined in
 
-[src/app.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L292)
+[src/app.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L295)
 
 ___
 
@@ -1493,7 +1493,7 @@ Returns the value of the given box names for the given app decoded based on the 
 
 #### Defined in
 
-[src/app.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L321)
+[src/app.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L324)
 
 ___
 
@@ -1522,7 +1522,7 @@ Gets the current data for the given app from algod.
 
 #### Defined in
 
-[src/app.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L398)
+[src/app.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L401)
 
 ___
 
@@ -1731,7 +1731,7 @@ Returns the current global state values for the given app ID
 
 #### Defined in
 
-[src/app.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L244)
+[src/app.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L247)
 
 ___
 
@@ -1761,7 +1761,7 @@ Returns the current global state values for the given app ID and account
 
 #### Defined in
 
-[src/app.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L257)
+[src/app.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L260)
 
 ___
 
@@ -1849,7 +1849,7 @@ Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
 
 #### Defined in
 
-[src/app.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L381)
+[src/app.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L384)
 
 ___
 

@@ -29,6 +29,7 @@ import {
   AppCompilationResult,
   AppMetadata,
   AppReference,
+  AppReturn,
   AppState,
   AppStorageSchema,
   BoxName,
@@ -37,10 +38,22 @@ import {
   OnSchemaBreak,
   OnUpdate,
   RawAppCallArgs,
+  SendAppTransactionResult,
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import { Arc56Contract, Method, StorageKey, StorageMap, getABIDecodedValue, getABIEncodedValue } from './app-arc56'
+import {
+  ABIStruct,
+  Arc56Contract,
+  Arc56Method,
+  StorageKey,
+  StorageMap,
+  getABIDecodedValue,
+  getABIEncodedValue,
+  getABITupleFromABIStruct,
+  getArc56Method,
+  getArc56ReturnValue,
+} from './app-arc56'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
@@ -50,6 +63,7 @@ import {
   AppDeleteMethodCall,
   AppDeleteParams,
   AppMethodCall,
+  AppMethodCallTransactionArgument,
   AppUpdateMethodCall,
   AppUpdateParams,
   CommonAppCallParams,
@@ -330,7 +344,7 @@ export type AppClientBareCallParams = Expand<
 
 /** AppClient parameters for an ABI method call */
 export type AppClientMethodCallParams = Expand<
-  Omit<AppMethodCall<CommonAppCallParams>, 'appId' | 'sender' | 'method'> & {
+  Omit<CommonAppCallParams, 'appId' | 'sender' | 'method' | 'args'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
     sender?: string
     /** The method name or method signature to call if an ABI call is being emitted
@@ -340,6 +354,15 @@ export type AppClientMethodCallParams = Expand<
      * `my_method(unit64,string)bytes`
      */
     method: string
+    /** Arguments to the ABI method, either:
+     * * An ABI value
+     * * An ARC-56 struct
+     * * A transaction with explicit signer
+     * * A transaction (where the signer will be automatically assigned)
+     * * An unawaited transaction (e.g. from algorand.transactions.transactionType())
+     * * Another method call (via method call params object)
+     */
+    args?: (ABIValue | ABIStruct | AppMethodCallTransactionArgument | undefined)[]
   }
 >
 
@@ -675,7 +698,27 @@ export class AppClient {
    * @returns A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
    */
   getABIMethod(methodNameOrSignature: string) {
-    return AppClient.getABIMethod(methodNameOrSignature, this._appSpec)
+    return getArc56Method(methodNameOrSignature, this._appSpec)
+  }
+
+  /**
+   * Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
+   * on the ARC-56 method.
+   *
+   * If the return type is a struct then the struct will be returned.
+   *
+   * @param result The SendAppTransactionResult to be mapped
+   * @param method The method that was called
+   * @returns The smart contract response with an updated return value
+   */
+  async parseMethodCallReturn<
+    TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
+    TResult extends SendAppTransactionResult = SendAppTransactionResult,
+  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
+    const resultValue = await result
+    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) } as unknown as Expand<
+      Omit<TResult, 'return'> & AppReturn<TReturn>
+    >
   }
 
   /**
@@ -780,37 +823,8 @@ export class AppClient {
   }
 
   /**
-   * Returns the ARC-56 and ABI method for a given method name or signature and ARC-56 app spec.
-   * @param methodNameOrSignature The method name or method signature to call if an ABI call is being emitted.
-   * e.g. `my_method` or `my_method(unit64,string)bytes`
-   * @param appSpec The app spec for the app
-   * @returns A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
-   */
-  public static getABIMethod(methodNameOrSignature: string, appSpec: Arc56Contract) {
-    let method: Method
-    if (!methodNameOrSignature.includes('(')) {
-      const methods = appSpec.methods.filter((m) => m.name === methodNameOrSignature)
-      if (methods.length === 0) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
-      if (methods.length > 1) {
-        throw new Error(
-          `Received a call to method ${methodNameOrSignature} in contract ${
-            appSpec.name
-          }, but this resolved to multiple methods; please pass in an ABI signature instead: ${appSpec.methods
-            .map((m) => new ABIMethod(m).getSignature())
-            .join(', ')}`,
-        )
-      }
-      method = methods[0]
-    } else {
-      const m = appSpec.methods.find((m) => new ABIMethod(m).getSignature() === methodNameOrSignature)
-      if (!m) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
-      method = m
-    }
-    return [method, new algosdk.ABIMethod(method)] as const
-  }
-
-  /**
-   * Returns ABI method arguments ready for a method call params object with default values populated.
+   * Returns ABI method arguments ready for a method call params object with default values populated
+   * and structs replaced with tuples.
    *
    * It does this by replacing any `undefined` values with the equivalent default value from the given ARC-56 app spec.
    * @param methodNameOrSignature The method name or method signature to call if an ABI call is being emitted.
@@ -820,15 +834,22 @@ export class AppClient {
    */
   public static getABIArgsWithDefaultValues(
     methodNameOrSignature: string,
-    args: AppMethodCall<CommonAppCallParams>['args'] | undefined,
+    args: AppClientMethodCallParams['args'] | undefined,
     appSpec: Arc56Contract,
-  ) {
-    const m = AppClient.getABIMethod(methodNameOrSignature, appSpec)
+  ): AppMethodCall<CommonAppCallParams>['args'] {
+    const m = getArc56Method(methodNameOrSignature, appSpec)
     return args?.map((a, i) => {
+      const arg = m.args[i]
+      if (a !== undefined) {
+        // If a struct then convert to tuple for the underlying call
+        return arg.struct
+          ? getABITupleFromABIStruct(a as ABIStruct, appSpec.structs[arg.struct])
+          : (a as ABIValue | AppMethodCallTransactionArgument)
+      }
       // todo: expand this to match previous ApplicationClient implementation when ARC-56 spec is updated to support other default value options
-      const defaultValue = m[0].args[i].defaultValue
-      if (a !== undefined || !defaultValue) return a
-      return getABIDecodedValue(Buffer.from(defaultValue, 'base64'), m[0].args[i].type, appSpec.structs)
+      const defaultValue = arg.defaultValue
+      if (defaultValue) return getABIDecodedValue(Buffer.from(defaultValue, 'base64'), m.method.args[i].type, {}) as ABIValue
+      throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
     })
   }
 
@@ -953,10 +974,6 @@ export class AppClient {
       delete: (params: AppClientMethodCallParams) => {
         return this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteMethodCall
       },
-      /** Return params for an clear state ABI call */
-      clearState: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.ClearStateOC) as AppCallMethodCall
-      },
       /** Return params for an close out ABI call */
       closeOut: (params: AppClientMethodCallParams) => {
         return this.getABIParams(params, OnApplicationComplete.CloseOutOC) as AppCallMethodCall
@@ -980,7 +997,12 @@ export class AppClient {
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & ExecuteParams) => {
         const compiled = await this.compile(params)
         return {
-          ...(await this.handleCallErrors(async () => this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })))),
+          ...(await this.handleCallErrors(async () =>
+            this.parseMethodCallReturn(
+              this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })),
+              getArc56Method(params.method, this._appSpec),
+            ),
+          )),
           ...(compiled as Partial<AppCompilationResult>),
         }
       },
@@ -988,25 +1010,34 @@ export class AppClient {
        * Sign and send transactions for an opt-in ABI call
        */
       optIn: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.optIn(params)))
+        return this.handleCallErrors(() =>
+          this.parseMethodCallReturn(
+            this._algorand.send.appCallMethodCall(this.params.optIn(params)),
+            getArc56Method(params.method, this._appSpec),
+          ),
+        )
       },
       /**
        * Sign and send transactions for a delete ABI call
        */
       delete: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appDeleteMethodCall(this.params.delete(params)))
-      },
-      /**
-       * Sign and send transactions for a clear state ABI call
-       */
-      clearState: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.clearState(params)))
+        return this.handleCallErrors(() =>
+          this.parseMethodCallReturn(
+            this._algorand.send.appDeleteMethodCall(this.params.delete(params)),
+            getArc56Method(params.method, this._appSpec),
+          ),
+        )
       },
       /**
        * Sign and send transactions for a close out ABI call
        */
       closeOut: (params: AppClientMethodCallParams & ExecuteParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.closeOut(params)))
+        return this.handleCallErrors(() =>
+          this.parseMethodCallReturn(
+            this._algorand.send.appCallMethodCall(this.params.closeOut(params)),
+            getArc56Method(params.method, this._appSpec),
+          ),
+        )
       },
       /**
        * Sign and send transactions for a call (defaults to no-op)
@@ -1015,19 +1046,27 @@ export class AppClient {
         // Read-only call - do it via simulate
         if (
           params.onComplete === OnApplicationComplete.NoOpOC ||
-          (!params.onComplete && AppClient.getABIMethod(params.method, this._appSpec)[0].readonly)
+          (!params.onComplete && getArc56Method(params.method, this._appSpec).method.readonly)
         ) {
           const result = await this._algorand.newGroup().addAppCallMethodCall(this.params.call(params)).simulate()
-          return {
-            ...result,
-            transaction: result.transactions.at(-1)!,
-            confirmation: result.confirmations.at(-1)!,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
-          } satisfies AppCallTransactionResult
+          return this.parseMethodCallReturn(
+            {
+              ...result,
+              transaction: result.transactions.at(-1)!,
+              confirmation: result.confirmations.at(-1)!,
+              // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+              return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
+            } satisfies SendAppTransactionResult,
+            getArc56Method(params.method, this._appSpec),
+          )
         }
 
-        return this.handleCallErrors(() => this._algorand.send.appCallMethodCall(this.params.call(params)))
+        return this.handleCallErrors(() =>
+          this.parseMethodCallReturn(
+            this._algorand.send.appCallMethodCall(this.params.call(params)),
+            getArc56Method(params.method, this._appSpec),
+          ),
+        )
       },
     }
   }
@@ -1055,12 +1094,6 @@ export class AppClient {
        */
       delete: (params: AppClientMethodCallParams) => {
         return this._algorand.transactions.appDeleteMethodCall(this.params.delete(params))
-      },
-      /**
-       * Return transactions for a clear state ABI call
-       */
-      clearState: (params: AppClientMethodCallParams) => {
-        return this._algorand.transactions.appCallMethodCall(this.params.clearState(params))
       },
       /**
        * Return transactions for a close out ABI call
@@ -1121,15 +1154,15 @@ export class AppClient {
   }
 
   private getABIParams<
-    TParams extends { method: string; sender?: string; args?: AppMethodCall<CommonAppCallParams>['args'] },
+    TParams extends { method: string; sender?: string; args?: AppClientMethodCallParams['args'] },
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
-    const method = AppClient.getABIMethod(params.method, this._appSpec)
+    const method = getArc56Method(params.method, this._appSpec)
     return {
       ...params,
       appId: this._appId,
       sender: this.getSender(params.sender),
-      method: method[1],
+      method,
       onComplete,
       args: AppClient.getABIArgsWithDefaultValues(params.method, params.args, this._appSpec),
     }
@@ -2007,7 +2040,7 @@ export class ApplicationClient {
   }
 
   /**
-   * @deprecated Use `AppClient.getABIMethod` instead.
+   * @deprecated Use `appClient.getABIMethod` instead.
    *
    * Returns the ABI Method parameters for the given method name string for the app represented by this application client instance
    * @param method Either the name of the method or the ABI method spec definition string
@@ -2031,8 +2064,6 @@ export class ApplicationClient {
   }
 
   /**
-   * @deprecated Use `AppClient.getABIMethod` instead.
-   *
    * Returns the ABI Method for the given method name string for the app represented by this application client instance
    * @param method Either the name of the method or the ABI method spec definition string
    * @returns The ABI method for the given method

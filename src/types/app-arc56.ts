@@ -1,33 +1,196 @@
-import algosdk from 'algosdk'
+import algosdk, { ABIValue } from 'algosdk'
+import { ABIReturn } from './app'
+import { Expand } from './expand'
 
-export function getTupleType(struct: StructFields, structs: Record<string, StructFields>): algosdk.ABITupleType {
+/**
+ * Wrapper around `algosdk.ABIMethod` that represents an ARC-56 ABI method.
+ */
+export class Arc56Method extends algosdk.ABIMethod {
+  override readonly args: Array<
+    Expand<
+      Omit<Method['args'][number], 'type'> & {
+        type: algosdk.ABIArgumentType
+      }
+    >
+  >
+  override readonly returns: Expand<
+    Omit<Method['returns'], 'type'> & {
+      type: algosdk.ABIReturnType
+    }
+  >
+
+  constructor(public method: Method) {
+    super(method)
+    this.args = method.args.map((arg) => ({
+      ...arg,
+      type: algosdk.abiTypeIsTransaction(arg.type) || algosdk.abiTypeIsReference(arg.type) ? arg.type : algosdk.ABIType.from(arg.type),
+    }))
+    this.returns = {
+      ...this.method.returns,
+      type: this.method.returns.type === 'void' ? 'void' : algosdk.ABIType.from(this.method.returns.type),
+    }
+  }
+
+  override toJSON(): Method {
+    return this.method
+  }
+}
+
+/**
+ * Returns the `ABITupleType` for the given ARC-56 struct definition
+ * @param struct The ARC-56 struct definition
+ * @returns The `ABITupleType`
+ */
+export function getABITupleTypeFromABIStructDefinition(struct: StructFields): algosdk.ABITupleType {
   return new algosdk.ABITupleType(
-    Object.values(struct).map((v) => (typeof v === 'string' ? algosdk.ABIType.from(v) : (getTupleType(v, structs) as algosdk.ABIType))),
+    Object.values(struct).map((v) =>
+      typeof v === 'string' ? algosdk.ABIType.from(v) : (getABITupleTypeFromABIStructDefinition(v) as algosdk.ABIType),
+    ),
   )
 }
 
+/**
+ * Converts a decoded ABI tuple as a struct.
+ * @param decodedABITuple The decoded ABI tuple value
+ * @param structFields The struct fields from an ARC-56 app spec
+ * @returns The struct as a Record<string, any>
+ */
+export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<string, any>>(
+  decodedABITuple: algosdk.ABIValue[],
+  structFields: StructFields,
+): TReturn {
+  return Object.fromEntries(
+    Object.entries(structFields).map(([key, type], i) => {
+      const abiValue = decodedABITuple[i]
+      return [key, typeof type === 'string' || !Array.isArray(abiValue) ? decodedABITuple[i] : getABIStructFromABITuple(abiValue, type)]
+    }),
+  ) as TReturn
+}
+
+/**
+ * Converts an ARC-56 struct as an ABI tuple.
+ * @param struct The struct to convert
+ * @param structFields The struct fields from an ARC-56 app spec
+ * @returns The struct as a decoded ABI tuple
+ */
+export function getABITupleFromABIStruct(struct: ABIStruct, structFields: StructFields): algosdk.ABIValue[] {
+  return Object.entries(structFields).map(([key, type]) => {
+    const value = struct[key]
+
+    return typeof type === 'string' ? getABIEncodedValue(value, type, {}) : getABITupleFromABIStruct(value as ABIStruct, type)
+  })
+}
+
+/** Decoded ARC-56 struct as a struct rather than a tuple. */
+export type ABIStruct = {
+  [key: string]: ABIStruct | algosdk.ABIValue
+}
+
+/**
+ * Returns the decoded ABI value (or struct for a struct type)
+ * for the given raw Algorand value given an ARC-56 type and defined ARC-56 structs.
+ * @param value The raw Algorand value (bytes or uint64)
+ * @param type The ARC-56 type - either an ABI Type string or a struct name
+ * @param structs The defined ARC-56 structs
+ * @returns The decoded ABI value or struct
+ */
 export function getABIDecodedValue(
   value: Uint8Array | number | bigint,
   type: string,
   structs: Record<string, StructFields>,
-): algosdk.ABIValue {
+): algosdk.ABIValue | ABIStruct {
   if (type === 'bytes' || typeof value !== 'object') return value
   if (structs[type]) {
-    return getTupleType(structs[type], structs).decode(value)
+    const tupleValue = getABITupleTypeFromABIStructDefinition(structs[type]).decode(value)
+    return getABIStructFromABITuple(tupleValue, structs[type])
   }
   return algosdk.ABIType.from(type).decode(value)
 }
 
-export function getABIEncodedValue(value: Uint8Array | algosdk.ABIValue, type: string, structs: Record<string, StructFields>): Uint8Array {
+/**
+ * Returns the ABI-encoded value for the given value.
+ * @param value The value to encode either already in encoded binary form (`Uint8Array`), an decoded ABI value or an ARC-56 struct
+ * @param type The ARC-56 type - either an ABI Type string or a struct name
+ * @param structs The defined ARC-56 structs
+ * @returns The binary ABI-encoded value
+ */
+export function getABIEncodedValue(
+  value: Uint8Array | algosdk.ABIValue | ABIStruct,
+  type: string,
+  structs: Record<string, StructFields>,
+): Uint8Array {
   if (typeof value === 'object' && value instanceof Uint8Array) return value
   if (type === 'bytes') {
+    if (typeof value === 'string') return Buffer.from(value, 'base64')
     if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
     return value
   }
   if (structs[type]) {
-    return getTupleType(structs[type], structs).encode(value)
+    const tupleType = getABITupleTypeFromABIStructDefinition(structs[type])
+    if (Array.isArray(value)) {
+      tupleType.encode(value as ABIValue[])
+    } else {
+      return tupleType.encode(getABITupleFromABIStruct(value as ABIStruct, structs[type]))
+    }
   }
-  return algosdk.ABIType.from(type).encode(value)
+  return algosdk.ABIType.from(type).encode(value as algosdk.ABIValue)
+}
+
+/**
+ * Returns the ARC-56 ABI method object for a given method name or signature and ARC-56 app spec.
+ * @param methodNameOrSignature The method name or method signature to call if an ABI call is being emitted.
+ * e.g. `my_method` or `my_method(unit64,string)bytes`
+ * @param appSpec The app spec for the app
+ * @returns The `Arc56Method`
+ */
+export function getArc56Method(methodNameOrSignature: string, appSpec: Arc56Contract): Arc56Method {
+  let method: Method
+  if (!methodNameOrSignature.includes('(')) {
+    const methods = appSpec.methods.filter((m) => m.name === methodNameOrSignature)
+    if (methods.length === 0) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
+    if (methods.length > 1) {
+      throw new Error(
+        `Received a call to method ${methodNameOrSignature} in contract ${
+          appSpec.name
+        }, but this resolved to multiple methods; please pass in an ABI signature instead: ${appSpec.methods
+          .map((m) => new algosdk.ABIMethod(m).getSignature())
+          .join(', ')}`,
+      )
+    }
+    method = methods[0]
+  } else {
+    const m = appSpec.methods.find((m) => new algosdk.ABIMethod(m).getSignature() === methodNameOrSignature)
+    if (!m) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
+    method = m
+  }
+  return new Arc56Method(method)
+}
+
+/**
+ * Checks for decode errors on the AppCallTransactionResult and maps the return value to the specified generic type
+ *
+ * @param result The AppCallTransactionResult to be mapped
+ * @returns The smart contract response with an updated return value
+ */
+export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValue | ABIStruct | undefined>(
+  returnValue: ABIReturn | undefined,
+  method: Method | Arc56Method,
+  structs: StructFields,
+): TReturn {
+  const m = 'method' in method ? method.method : method
+  const type = m.returns.struct ?? m.returns.type
+  if (returnValue?.decodeError) {
+    throw returnValue.decodeError
+  }
+  if (type === undefined || type === 'void' || returnValue?.returnValue === undefined) return undefined as TReturn
+
+  if (type === 'bytes') return returnValue.rawReturnValue as TReturn
+
+  if (structs[type]) {
+    return getABIStructFromABITuple(returnValue.returnValue as algosdk.ABIValue[], structs[type] as StructFields) as TReturn
+  }
+
+  return returnValue.returnValue as TReturn
 }
 
 /****************/

@@ -4,6 +4,7 @@ import invariant from 'tiny-invariant'
 import * as algokit from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
+import { getArc56Method } from './app-arc56'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
@@ -125,7 +126,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
     expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
-    expect(app.return?.returnValue).toBe('arg_io')
+    expect(app.return).toBe('arg_io')
   })
 
   test('Deploy app - update', async () => {
@@ -177,7 +178,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(BigInt(app.confirmation.confirmedRound ?? 0))
     expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
-    expect(app.return?.returnValue).toBe('arg_io')
+    expect(app.return).toBe('arg_io')
   })
 
   test('Deploy app - replace', async () => {
@@ -236,8 +237,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.deleteResult.confirmation)
     expect(BigInt(app.deleteResult.transaction.appIndex)).toBe(createdApp.appId)
     expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
-    expect(app.return?.returnValue).toBe('arg_io')
-    expect(app.deleteReturn?.returnValue).toBe('arg2_io')
+    expect(app.return).toBe('arg_io')
+    expect(app.deleteReturn).toBe('arg2_io')
   })
 
   test('Create then call app', async () => {
@@ -255,8 +256,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('Hello, test')
+    expect(call.return).toBe('Hello, test')
   })
 
   test('Call app with rekey', async () => {
@@ -296,8 +296,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('string_io')
+    expect(call.return).toBe('string_io')
   })
 
   test('Update app with abi', async () => {
@@ -317,8 +316,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('string_io')
+    expect(call.return).toBe('string_io')
     expect(call.compiledApproval).toBeTruthy()
   })
 
@@ -337,8 +335,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     invariant(call.return)
-    expect(call.return.decodeError).toBeUndefined()
-    expect(call.return.returnValue).toBe('string_io')
+    expect(call.return).toBe('string_io')
   })
 
   test('Construct transaction with boxes', async () => {
@@ -380,8 +377,9 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnValue = AppManager.getABIReturn(result.confirmations[1], AppClient.getABIMethod('call_abi_txn', client.appSpec)[1])
-    expect(returnValue?.returnValue).toBe(`Sent ${txn.amount}. test`)
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], getArc56Method('call_abi_txn', client.appSpec))
+    expect(result.return).toBe(`Sent ${txn.amount}. test`)
+    expect(returnValue?.returnValue).toBe(result.return)
   })
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
@@ -439,9 +437,10 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    const returnValue = AppManager.getABIReturn(result.confirmations[0], AppClient.getABIMethod('call_abi_foreign_refs', client.appSpec)[1])
+    const expectedReturnValue = AppManager.getABIReturn(result.confirmations[0], getArc56Method('call_abi_foreign_refs', client.appSpec))
     const testAccountPublicKey = algosdk.decodeAddress(testAccount.addr).publicKey
-    expect(returnValue?.returnValue).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
+    expect(result.return).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
+    expect(expectedReturnValue?.returnValue).toBe(result.return)
   })
 
   describe('Errors', () => {
@@ -676,12 +675,12 @@ describe('ARC32: app-factory-and-app-client', () => {
         method: methodSignature,
         args: [definedValue],
       })
-      expect(definedValueResult.return?.returnValue).toBe(definedValueReturnValue)
+      expect(definedValueResult.return).toBe(definedValueReturnValue)
       const defaultValueResult = await client.send.call({
         method: methodSignature,
         args: [undefined],
       })
-      expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
+      expect(defaultValueResult.return).toBe(defaultValueReturnValue)
     }
   })
 })

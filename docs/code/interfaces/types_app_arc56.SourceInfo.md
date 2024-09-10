@@ -23,7 +23,7 @@ The line of the dissasembled TEAL this line of pre-compiled TEAL corresponds to
 
 #### Defined in
 
-[src/types/app-arc56.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L278)
+[src/types/app-arc56.ts:441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L441)
 
 ___
 
@@ -35,7 +35,7 @@ A human-readable string that describes the error when the program fails at this 
 
 #### Defined in
 
-[src/types/app-arc56.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L276)
+[src/types/app-arc56.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L439)
 
 ___
 
@@ -47,7 +47,7 @@ The program counter offset(s) that correspond to this line of TEAL
 
 #### Defined in
 
-[src/types/app-arc56.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L274)
+[src/types/app-arc56.ts:437](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L437)
 
 ___
 
@@ -59,4 +59,4 @@ The line of pre-compiled TEAL
 
 #### Defined in
 
-[src/types/app-arc56.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L272)
+[src/types/app-arc56.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L435)

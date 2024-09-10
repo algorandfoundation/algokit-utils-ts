@@ -29,7 +29,7 @@ Parameters to define a create call for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L105)
+[src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
 
 ___
 
@@ -41,7 +41,7 @@ Parameters to define a deployment for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L110)
+[src/types/app-factory.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L118)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 Ƭ **CreateOnComplete**: `Object`
 
-onComplete parameter for a non-update app call
+onComplete parameter for a create app call
 
 #### Type declaration
 
@@ -59,7 +59,7 @@ onComplete parameter for a non-update app call
 
 #### Defined in
 
-[src/types/app-factory.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L81)
+[src/types/app-factory.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L89)
 
 ___
 
@@ -82,4 +82,4 @@ Specifies a schema used for creating an app
 
 #### Defined in
 
-[src/types/app-factory.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L86)
+[src/types/app-factory.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L94)

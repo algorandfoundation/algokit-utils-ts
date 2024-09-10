@@ -185,6 +185,9 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
   if (onComplete === algosdk.OnApplicationComplete.UpdateApplicationOC) {
     throw new Error('Cannot execute an app call with on-complete action of Update')
   }
+  if (call.args?.method && onComplete === algosdk.OnApplicationComplete.ClearStateOC) {
+    throw new Error('Cannot execute an ABI method call with on-complete action of ClearState')
+  }
 
   return call.args?.method
     ? await legacySendAppTransactionBridge(
@@ -195,7 +198,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
         {
           appId: BigInt(call.appId),
           sender: getSenderAddress(call.from),
-          onComplete,
+          onComplete: onComplete as any,
           method: call.args.method instanceof ABIMethod ? call.args.method : new ABIMethod(call.args.method),
         },
         (c) => c.appCallMethodCall,

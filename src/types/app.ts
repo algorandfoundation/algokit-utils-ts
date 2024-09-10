@@ -337,6 +337,11 @@ export interface AppCompilationResult {
   compiledClear: CompiledTeal
 }
 
+export type AppReturn<TReturn> = {
+  /** The ABI method call return value */
+  return?: TReturn
+}
+
 /** Result from sending a single app transaction. */
 export type SendAppTransactionResult = Expand<
   SendSingleTransactionResult & {

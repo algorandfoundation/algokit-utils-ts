@@ -220,7 +220,7 @@ To make one of these calls `{onComplete}` needs to be swapped with the [on compl
 - `update` - An update call
 - `optIn` - An opt-in call
 - `delete` - A delete application call
-- `clearState` - A clear state call (note: calls the clear program)
+- `clearState` - A clear state call (note: calls the clear program and only applies to bare calls)
 - `closeOut` - A close-out call
 - `call` - A no-op call (or other call if `onComplete` is specified to anything other than update)
 
