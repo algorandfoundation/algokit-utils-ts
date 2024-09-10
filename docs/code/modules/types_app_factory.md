@@ -31,6 +31,7 @@ Parameters to define a create call for an `AppFactory`
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
 =======
 [src/types/app-factory.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L100)
@@ -38,6 +39,9 @@ Parameters to define a create call for an `AppFactory`
 =======
 [src/types/app-factory.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L105)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -51,6 +55,7 @@ Parameters to define a deployment for an `AppFactory`
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L118)
 =======
 [src/types/app-factory.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L105)
@@ -58,6 +63,9 @@ Parameters to define a deployment for an `AppFactory`
 =======
 [src/types/app-factory.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L110)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/app-factory.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L118)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -66,10 +74,14 @@ ___
 Ƭ **CreateOnComplete**: `Object`
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 onComplete parameter for a create app call
 =======
 onComplete parameter for a non-update app call
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+onComplete parameter for a create app call
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 #### Type declaration
 
@@ -80,10 +92,14 @@ onComplete parameter for a non-update app call
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L89)
 =======
 [src/types/app-factory.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L81)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L89)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -123,6 +139,7 @@ Specifies a schema used for creating an app
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L94)
 =======
 [src/types/app-factory.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L85)
@@ -130,3 +147,6 @@ Specifies a schema used for creating an app
 =======
 [src/types/app-factory.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L86)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/app-factory.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L94)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)

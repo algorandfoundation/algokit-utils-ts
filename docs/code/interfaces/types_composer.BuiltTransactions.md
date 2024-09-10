@@ -27,6 +27,7 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L473)
 =======
 [src/types/composer.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L448)
@@ -37,6 +38,9 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 =======
 [src/types/composer.ts:453](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L453)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:469](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L469)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -51,6 +55,7 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L475)
 =======
 [src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
@@ -61,6 +66,9 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 =======
 [src/types/composer.ts:455](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L455)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -75,6 +83,7 @@ The built transactions
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
 =======
 [src/types/composer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L446)
@@ -85,3 +94,6 @@ The built transactions
 =======
 [src/types/composer.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L451)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:467](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L467)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)

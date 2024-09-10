@@ -2066,8 +2066,6 @@ export class ApplicationClient {
   }
 
   /**
-   * @deprecated Use `AppClient.getABIMethod` instead.
-   *
    * Returns the ABI Method for the given method name string for the app represented by this application client instance
    * @param method Either the name of the method or the ABI method spec definition string
    * @returns The ABI method for the given method

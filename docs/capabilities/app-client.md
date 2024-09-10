@@ -241,10 +241,14 @@ To make one of these calls `{onComplete}` needs to be swapped with the [on compl
 - `optIn` - An opt-in call
 - `delete` - A delete application call
 <<<<<<< HEAD
+<<<<<<< HEAD
 - `clearState` - A clear state call (note: calls the clear program and only applies to bare calls)
 =======
 - `clearState` - A clear state call (note: calls the clear program)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+- `clearState` - A clear state call (note: calls the clear program and only applies to bare calls)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 - `closeOut` - A close-out call
 - `call` - A no-op call (or other call if `onComplete` is specified to anything other than update)
 

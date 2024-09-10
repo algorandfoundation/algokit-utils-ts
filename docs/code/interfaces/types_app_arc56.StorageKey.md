@@ -27,6 +27,7 @@ Description of what this storage key holds
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L411)
 =======
 [src/types/app-arc56.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L212)
@@ -34,6 +35,9 @@ Description of what this storage key holds
 =======
 [src/types/app-arc56.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L248)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L411)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -47,6 +51,7 @@ The bytes of the key encoded as base64
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:418](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L418)
 =======
 [src/types/app-arc56.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L219)
@@ -54,6 +59,9 @@ The bytes of the key encoded as base64
 =======
 [src/types/app-arc56.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L255)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:418](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L418)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -67,6 +75,7 @@ The type of the key
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:413](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L413)
 =======
 [src/types/app-arc56.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L214)
@@ -74,6 +83,9 @@ The type of the key
 =======
 [src/types/app-arc56.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L250)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:413](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L413)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -87,6 +99,7 @@ The type of the value
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:416](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L416)
 =======
 [src/types/app-arc56.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L217)
@@ -94,3 +107,6 @@ The type of the value
 =======
 [src/types/app-arc56.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L253)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:416](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L416)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)

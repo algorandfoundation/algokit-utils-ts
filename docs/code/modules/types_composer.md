@@ -66,6 +66,7 @@ Parameters to create an `AlgoKitComposer`.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
 =======
 [src/types/composer.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L425)
@@ -76,6 +77,9 @@ Parameters to create an `AlgoKitComposer`.
 =======
 [src/types/composer.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L430)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L446)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -85,6 +89,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -98,6 +103,9 @@ ___
 =======
 [src/types/composer.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L389)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L397)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -134,6 +142,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L398)
 =======
 [src/types/composer.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L383)
@@ -144,6 +153,9 @@ ___
 =======
 [src/types/composer.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L386)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L394)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -174,6 +186,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L400)
 =======
 [src/types/composer.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L385)
@@ -184,6 +197,9 @@ ___
 =======
 [src/types/composer.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L388)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:396](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L396)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -198,6 +214,7 @@ Parameters to define an application delete call transaction.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L394)
 =======
 [src/types/composer.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L379)
@@ -208,16 +225,23 @@ Parameters to define an application delete call transaction.
 =======
 [src/types/composer.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L382)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L390)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
 ### AppMethodCall
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`algosdk.ABIValue` \| `TransactionWithSigner` \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\>)[] ; `method`: `algosdk.ABIMethod`  }
 =======
 Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`algosdk.ABIValue` \| `TransactionWithSigner` \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCallParams`](types_composer.md#appcallparams)\> \| `undefined`)[] ; `method`: `algosdk.ABIMethod`  }
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`algosdk.ABIValue` \| `TransactionWithSigner` \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\>)[] ; `method`: `algosdk.ABIMethod`  }
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 #### Type parameters
 
@@ -230,7 +254,11 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L412)
+=======
+[src/types/composer.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L408)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -242,7 +270,11 @@ Parameters to define a method call transaction.
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L386)
+=======
+[src/types/composer.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L382)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -252,6 +284,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/composer.ts:403](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L403)
 =======
 [src/types/composer.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L388)
@@ -262,6 +295,9 @@ ___
 =======
 [src/types/composer.ts:391](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L391)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L399)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -271,6 +307,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -284,6 +321,9 @@ ___
 =======
 [src/types/composer.ts:387](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L387)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/composer.ts:395](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L395)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 

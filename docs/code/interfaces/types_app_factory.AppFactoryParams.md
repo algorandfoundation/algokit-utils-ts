@@ -30,10 +30,14 @@ Parameters to create an app client
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L46)
 =======
 [src/types/app-factory.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L38)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L46)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -47,10 +51,14 @@ Defaults to the ARC-32/ARC-56 app spec name.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L52)
 =======
 [src/types/app-factory.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L44)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L52)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -66,10 +74,14 @@ The ARC-56 or ARC-32 application spec as either:
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L43)
 =======
 [src/types/app-factory.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L35)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L43)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -82,10 +94,14 @@ Optional address to use for the account to use as the default sender for calls.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L55)
 =======
 [src/types/app-factory.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L47)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L55)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -102,10 +118,14 @@ for each call.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L76)
 =======
 [src/types/app-factory.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L68)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L76)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -122,10 +142,14 @@ for each call.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L85)
 =======
 [src/types/app-factory.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L77)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L85)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -142,10 +166,14 @@ for each call.
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L67)
 =======
 [src/types/app-factory.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L59)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L67)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -158,7 +186,11 @@ The version of app that is / will be deployed; defaults to 1.0
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-factory.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L58)
 =======
 [src/types/app-factory.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L50)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-factory.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L58)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)

@@ -38,6 +38,7 @@ The ARCs used and/or supported by this contract. All contracts implicity support
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L203)
 =======
 [src/types/app-arc56.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L4)
@@ -45,6 +46,9 @@ The ARCs used and/or supported by this contract. All contracts implicity support
 =======
 [src/types/app-arc56.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L40)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L203)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -65,6 +69,7 @@ Supported bare actions for the contract. An action is a combination of call/crea
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L253)
 =======
 [src/types/app-arc56.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L54)
@@ -72,6 +77,9 @@ Supported bare actions for the contract. An action is a combination of call/crea
 =======
 [src/types/app-arc56.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L90)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L253)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -92,6 +100,7 @@ The compiled bytecode for the application. MUST be omitted if included as part o
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L274)
 =======
 [src/types/app-arc56.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L75)
@@ -99,6 +108,9 @@ The compiled bytecode for the application. MUST be omitted if included as part o
 =======
 [src/types/app-arc56.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L111)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L274)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -123,6 +135,7 @@ Information used to get the given byteCode and/or PC values in sourceInfo. MUST 
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L281)
 =======
 [src/types/app-arc56.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L82)
@@ -130,6 +143,9 @@ Information used to get the given byteCode and/or PC values in sourceInfo. MUST 
 =======
 [src/types/app-arc56.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L118)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L281)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -143,6 +159,7 @@ Optional, user-friendly description for the interface
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L207)
 =======
 [src/types/app-arc56.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L8)
@@ -150,6 +167,9 @@ Optional, user-friendly description for the interface
 =======
 [src/types/app-arc56.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L44)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L207)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -163,6 +183,7 @@ ARC-28 events that MAY be emitted by this contract
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L293)
 =======
 [src/types/app-arc56.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L94)
@@ -170,6 +191,9 @@ ARC-28 events that MAY be emitted by this contract
 =======
 [src/types/app-arc56.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L130)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L293)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -183,6 +207,7 @@ All of the methods that the contract implements
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L226)
 =======
 [src/types/app-arc56.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L27)
@@ -190,6 +215,9 @@ All of the methods that the contract implements
 =======
 [src/types/app-arc56.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L63)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L226)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -203,6 +231,7 @@ A user-friendly name for the contract
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L205)
 =======
 [src/types/app-arc56.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L6)
@@ -210,6 +239,9 @@ A user-friendly name for the contract
 =======
 [src/types/app-arc56.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L42)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L205)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -232,6 +264,7 @@ included, but the corresponding genesis hash key MUST also be defined
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L211)
 =======
 [src/types/app-arc56.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L12)
@@ -239,6 +272,9 @@ included, but the corresponding genesis hash key MUST also be defined
 =======
 [src/types/app-arc56.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L48)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L211)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -256,6 +292,7 @@ The scratch variables used during runtime
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L304)
 =======
 [src/types/app-arc56.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L105)
@@ -263,6 +300,9 @@ The scratch variables used during runtime
 =======
 [src/types/app-arc56.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L141)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L304)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -283,6 +323,7 @@ The pre-compiled TEAL that may contain template variables. MUST be omitted if in
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L267)
 =======
 [src/types/app-arc56.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L68)
@@ -290,6 +331,9 @@ The pre-compiled TEAL that may contain template variables. MUST be omitted if in
 =======
 [src/types/app-arc56.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L104)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L267)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -310,6 +354,7 @@ Information about the TEAL programs
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L260)
 =======
 [src/types/app-arc56.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L61)
@@ -317,6 +362,9 @@ Information about the TEAL programs
 =======
 [src/types/app-arc56.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L97)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L260)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -348,6 +396,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L227)
 =======
 [src/types/app-arc56.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L28)
@@ -355,6 +404,9 @@ ___
 =======
 [src/types/app-arc56.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L64)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L227)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -372,6 +424,7 @@ Named structs use by the application
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L224)
 =======
 [src/types/app-arc56.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L25)
@@ -379,6 +432,9 @@ Named structs use by the application
 =======
 [src/types/app-arc56.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L61)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L224)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
 
 ___
 
@@ -396,6 +452,7 @@ A mapping of template variable names as they appear in the teal (not including T
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L295)
 =======
 [src/types/app-arc56.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L96)
@@ -403,3 +460,6 @@ A mapping of template variable names as they appear in the teal (not including T
 =======
 [src/types/app-arc56.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L132)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
+=======
+[src/types/app-arc56.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L295)
+>>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
