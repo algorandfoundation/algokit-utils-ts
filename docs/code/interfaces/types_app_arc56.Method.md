@@ -39,6 +39,7 @@ an action is a combination of call/create and an OnComplete
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L341)
 =======
 [src/types/app-arc56.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L142)
@@ -49,6 +50,9 @@ an action is a combination of call/create and an OnComplete
 =======
 [src/types/app-arc56.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L341)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L340)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -63,6 +67,7 @@ The arguments of the method, in order
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L319)
 =======
 [src/types/app-arc56.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L120)
@@ -73,6 +78,9 @@ The arguments of the method, in order
 =======
 [src/types/app-arc56.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L319)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L318)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -87,6 +95,7 @@ Optional, user-friendly description for the method
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L317)
 =======
 [src/types/app-arc56.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L118)
@@ -97,6 +106,9 @@ Optional, user-friendly description for the method
 =======
 [src/types/app-arc56.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L317)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L316)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -111,6 +123,7 @@ ARC-28 events that MAY be emitted by this method
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L350)
 =======
 [src/types/app-arc56.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L151)
@@ -121,6 +134,9 @@ ARC-28 events that MAY be emitted by this method
 =======
 [src/types/app-arc56.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L350)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:349](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L349)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -135,6 +151,7 @@ The name of the method
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L315)
 =======
 [src/types/app-arc56.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L116)
@@ -145,6 +162,9 @@ The name of the method
 =======
 [src/types/app-arc56.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L315)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L314)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -159,6 +179,7 @@ If this method does not write anything to the ledger (ARC-22)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L348)
 =======
 [src/types/app-arc56.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L149)
@@ -169,6 +190,9 @@ If this method does not write anything to the ledger (ARC-22)
 =======
 [src/types/app-arc56.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L348)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L347)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -197,6 +221,7 @@ Information that clients can use when calling the method
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L352)
 =======
 [src/types/app-arc56.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L153)
@@ -207,6 +232,9 @@ Information that clients can use when calling the method
 =======
 [src/types/app-arc56.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L352)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L351)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -229,6 +257,7 @@ Information about the method's return value
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L332)
 =======
 [src/types/app-arc56.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L133)
@@ -239,3 +268,6 @@ Information about the method's return value
 =======
 [src/types/app-arc56.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L332)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L331)
+>>>>>>> 2504c82 (Linting and PR review)

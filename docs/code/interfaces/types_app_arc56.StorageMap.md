@@ -28,6 +28,7 @@ Description of what the key-value pairs in this mapping hold
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L424)
 =======
 [src/types/app-arc56.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L225)
@@ -38,6 +39,9 @@ Description of what the key-value pairs in this mapping hold
 =======
 [src/types/app-arc56.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L424)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:423](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L423)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -52,6 +56,7 @@ The type of the keys in the map
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L426)
 =======
 [src/types/app-arc56.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L227)
@@ -62,6 +67,9 @@ The type of the keys in the map
 =======
 [src/types/app-arc56.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L426)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L425)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -76,6 +84,7 @@ The base64-encoded prefix of the map keys
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L430)
 =======
 [src/types/app-arc56.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L231)
@@ -86,6 +95,9 @@ The base64-encoded prefix of the map keys
 =======
 [src/types/app-arc56.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L430)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L429)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -100,6 +112,7 @@ The type of the values in the map
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L428)
 =======
 [src/types/app-arc56.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L229)
@@ -110,3 +123,6 @@ The type of the values in the map
 =======
 [src/types/app-arc56.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L428)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:427](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L427)
+>>>>>>> 2504c82 (Linting and PR review)

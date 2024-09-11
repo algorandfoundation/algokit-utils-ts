@@ -27,6 +27,7 @@ The arguments of the event, in order
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L382)
 =======
 [src/types/app-arc56.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L183)
@@ -37,6 +38,9 @@ The arguments of the event, in order
 =======
 [src/types/app-arc56.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L382)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L381)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -51,6 +55,7 @@ Optional, user-friendly description for the event
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L380)
 =======
 [src/types/app-arc56.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L181)
@@ -61,6 +66,9 @@ Optional, user-friendly description for the event
 =======
 [src/types/app-arc56.ts:380](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L380)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L379)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -75,6 +83,7 @@ The name of the event
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-arc56.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L378)
 =======
 [src/types/app-arc56.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L179)
@@ -85,3 +94,6 @@ The name of the event
 =======
 [src/types/app-arc56.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L378)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-arc56.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L377)
+>>>>>>> 2504c82 (Linting and PR review)

@@ -501,6 +501,7 @@ Compiles the given TEAL using algod and returns the result, including source map
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L415)
 =======
 [src/app.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L411)
@@ -508,6 +509,9 @@ Compiles the given TEAL using algod and returns the result, including source map
 =======
 [src/app.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L414)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L415)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -638,6 +642,7 @@ generic object keyed by the UTF-8 value of the key.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L341)
 =======
 [src/app.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L337)
@@ -645,6 +650,9 @@ generic object keyed by the UTF-8 value of the key.
 =======
 [src/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L340)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L341)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -827,6 +835,7 @@ Returns the encoded ABI spec for a given ABI Method
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L426)
 =======
 [src/app.ts:422](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L422)
@@ -834,6 +843,9 @@ Returns the encoded ABI spec for a given ABI Method
 =======
 [src/app.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L425)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L426)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -864,6 +876,7 @@ Returns any ABI return values for the given app call arguments and transaction c
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L231)
 =======
 [src/app.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L227)
@@ -871,6 +884,9 @@ Returns any ABI return values for the given app call arguments and transaction c
 =======
 [src/app.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L230)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L231)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1357,6 +1373,7 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L374)
 =======
 [src/app.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L370)
@@ -1364,6 +1381,9 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 =======
 [src/app.ts:373](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L373)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L374)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1393,6 +1413,7 @@ Returns the app args ready to load onto an app `Transaction` object
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L352)
 =======
 [src/app.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L348)
@@ -1400,6 +1421,9 @@ Returns the app args ready to load onto an app `Transaction` object
 =======
 [src/app.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L351)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L352)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1429,6 +1453,7 @@ Returns the names of the boxes for the given app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L272)
 =======
 [src/app.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L268)
@@ -1436,6 +1461,9 @@ Returns the names of the boxes for the given app.
 =======
 [src/app.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L271)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L272)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1466,6 +1494,7 @@ Returns the value of the given box name for the given app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L284)
 =======
 [src/app.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L280)
@@ -1473,6 +1502,9 @@ Returns the value of the given box name for the given app.
 =======
 [src/app.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L283)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L284)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1502,6 +1534,7 @@ Returns the value of the given box name for the given app decoded based on the g
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L310)
 =======
 [src/app.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L306)
@@ -1509,6 +1542,9 @@ Returns the value of the given box name for the given app decoded based on the g
 =======
 [src/app.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L309)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L310)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1539,6 +1575,7 @@ Returns the value of the given box names for the given app.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L296)
 =======
 [src/app.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L292)
@@ -1546,6 +1583,9 @@ Returns the value of the given box names for the given app.
 =======
 [src/app.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L295)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L296)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1575,6 +1615,7 @@ Returns the value of the given box names for the given app decoded based on the 
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L325)
 =======
 [src/app.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L321)
@@ -1582,6 +1623,9 @@ Returns the value of the given box names for the given app decoded based on the 
 =======
 [src/app.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L324)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L325)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1612,6 +1656,7 @@ Gets the current data for the given app from algod.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L402)
 =======
 [src/app.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L398)
@@ -1619,6 +1664,9 @@ Gets the current data for the given app from algod.
 =======
 [src/app.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L401)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L402)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1829,6 +1877,7 @@ Returns the current global state values for the given app ID
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L248)
 =======
 [src/app.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L244)
@@ -1836,6 +1885,9 @@ Returns the current global state values for the given app ID
 =======
 [src/app.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L247)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L248)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1867,6 +1919,7 @@ Returns the current global state values for the given app ID and account
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L261)
 =======
 [src/app.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L257)
@@ -1874,6 +1927,9 @@ Returns the current global state values for the given app ID and account
 =======
 [src/app.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L260)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L261)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
@@ -1963,6 +2019,7 @@ Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/app.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L385)
 =======
 [src/app.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L381)
@@ -1970,6 +2027,9 @@ Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
 =======
 [src/app.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L384)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/app.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L385)
+>>>>>>> 2504c82 (Linting and PR review)
 
 ___
 
