@@ -185,7 +185,7 @@ const tests = (version: 8 | 9) => () => {
   beforeAll(async () => {
     Config.configure({ populateAppCallResources: true })
     await fixture.beforeEach()
-    const { algorand, algod, testAccount } = fixture.context
+    const { algorand, testAccount } = fixture.context
 
     const appFactory = algorand.client.getAppFactory({
       appSpec: JSON.stringify(version === 8 ? v8ARC32 : v9ARC32),

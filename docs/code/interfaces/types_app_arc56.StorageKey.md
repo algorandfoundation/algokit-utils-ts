@@ -25,7 +25,7 @@ Description of what this storage key holds
 
 #### Defined in
 
-[src/types/app-arc56.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L411)
+[src/types/app-arc56.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L410)
 
 ___
 
@@ -37,7 +37,7 @@ The bytes of the key encoded as base64
 
 #### Defined in
 
-[src/types/app-arc56.ts:418](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L418)
+[src/types/app-arc56.ts:417](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L417)
 
 ___
 
@@ -49,7 +49,7 @@ The type of the key
 
 #### Defined in
 
-[src/types/app-arc56.ts:413](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L413)
+[src/types/app-arc56.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L412)
 
 ___
 
@@ -61,4 +61,4 @@ The type of the value
 
 #### Defined in
 
-[src/types/app-arc56.ts:416](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L416)
+[src/types/app-arc56.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L415)

@@ -36,7 +36,7 @@ an action is a combination of call/create and an OnComplete
 
 #### Defined in
 
-[src/types/app-arc56.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L341)
+[src/types/app-arc56.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L340)
 
 ___
 
@@ -48,7 +48,7 @@ The arguments of the method, in order
 
 #### Defined in
 
-[src/types/app-arc56.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L319)
+[src/types/app-arc56.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L318)
 
 ___
 
@@ -60,7 +60,7 @@ Optional, user-friendly description for the method
 
 #### Defined in
 
-[src/types/app-arc56.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L317)
+[src/types/app-arc56.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L316)
 
 ___
 
@@ -72,7 +72,7 @@ ARC-28 events that MAY be emitted by this method
 
 #### Defined in
 
-[src/types/app-arc56.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L350)
+[src/types/app-arc56.ts:349](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L349)
 
 ___
 
@@ -84,7 +84,7 @@ The name of the method
 
 #### Defined in
 
-[src/types/app-arc56.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L315)
+[src/types/app-arc56.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L314)
 
 ___
 
@@ -96,7 +96,7 @@ If this method does not write anything to the ledger (ARC-22)
 
 #### Defined in
 
-[src/types/app-arc56.ts:348](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L348)
+[src/types/app-arc56.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L347)
 
 ___
 
@@ -122,7 +122,7 @@ Information that clients can use when calling the method
 
 #### Defined in
 
-[src/types/app-arc56.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L352)
+[src/types/app-arc56.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L351)
 
 ___
 
@@ -142,4 +142,4 @@ Information about the method's return value
 
 #### Defined in
 
-[src/types/app-arc56.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L332)
+[src/types/app-arc56.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L331)

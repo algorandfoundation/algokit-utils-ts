@@ -1,4 +1,4 @@
-import algosdk, { ABIValue } from 'algosdk'
+import algosdk from 'algosdk'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
 
@@ -43,9 +43,7 @@ export class Arc56Method extends algosdk.ABIMethod {
  */
 export function getABITupleTypeFromABIStructDefinition(struct: StructFields): algosdk.ABITupleType {
   return new algosdk.ABITupleType(
-    Object.values(struct).map((v) =>
-      typeof v === 'string' ? algosdk.ABIType.from(v) : (getABITupleTypeFromABIStructDefinition(v) as algosdk.ABIType),
-    ),
+    Object.values(struct).map((v) => (typeof v === 'string' ? algosdk.ABIType.from(v) : getABITupleTypeFromABIStructDefinition(v))),
   )
 }
 
@@ -55,6 +53,7 @@ export function getABITupleTypeFromABIStructDefinition(struct: StructFields): al
  * @param structFields The struct fields from an ARC-56 app spec
  * @returns The struct as a Record<string, any>
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<string, any>>(
   decodedABITuple: algosdk.ABIValue[],
   structFields: StructFields,
@@ -109,7 +108,7 @@ export function getABIDecodedValue(
 
 /**
  * Returns the ABI-encoded value for the given value.
- * @param value The value to encode either already in encoded binary form (`Uint8Array`), an decoded ABI value or an ARC-56 struct
+ * @param value The value to encode either already in encoded binary form (`Uint8Array`), a decoded ABI value or an ARC-56 struct
  * @param type The ARC-56 type - either an ABI Type string or a struct name
  * @param structs The defined ARC-56 structs
  * @returns The binary ABI-encoded value
@@ -128,7 +127,7 @@ export function getABIEncodedValue(
   if (structs[type]) {
     const tupleType = getABITupleTypeFromABIStructDefinition(structs[type])
     if (Array.isArray(value)) {
-      tupleType.encode(value as ABIValue[])
+      tupleType.encode(value as algosdk.ABIValue[])
     } else {
       return tupleType.encode(getABITupleFromABIStruct(value as ABIStruct, structs[type]))
     }

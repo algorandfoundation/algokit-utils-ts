@@ -198,6 +198,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
         {
           appId: BigInt(call.appId),
           sender: getSenderAddress(call.from),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onComplete: onComplete as any,
           method: call.args.method instanceof ABIMethod ? call.args.method : new ABIMethod(call.args.method),
         },
