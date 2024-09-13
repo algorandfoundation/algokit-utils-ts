@@ -345,7 +345,7 @@ export class AppManager {
           stateValues[key] = {
             keyRaw,
             keyBase64,
-            value,
+            value: BigInt(value),
           }
           break
         }

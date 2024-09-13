@@ -15,8 +15,12 @@ import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import encodeAddress = algosdk.encodeAddress
 import SimulateResponse = algosdk.modelsv2.SimulateResponse
+import modelsv2 = algosdk.modelsv2
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
+
+/** Options to control a simulate request */
+export type SimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
@@ -1244,7 +1248,7 @@ export default class AlgoKitComposer {
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
    */
-  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
+  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
     await this.build()
 
     if (Config.debug && Config.projectRoot && !Config.traceAll) {
@@ -1259,7 +1263,10 @@ export default class AlgoKitComposer {
       })
     }
 
-    const { methodResults, simulateResponse } = await this.atc.simulate(this.algod)
+    const { methodResults, simulateResponse } = await this.atc.simulate(
+      this.algod,
+      new modelsv2.SimulateRequest({ txnGroups: [], ...options }),
+    )
 
     if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
       const error = new Error(

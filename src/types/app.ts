@@ -367,7 +367,7 @@ export type SendAppCreateTransactionResult = Expand<
 export interface AppState {
   [key: string]:
     | {
-        value: number | bigint
+        value: bigint
         keyRaw: Uint8Array
         keyBase64: string
       }

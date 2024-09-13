@@ -2,16 +2,7 @@ import algosdk from 'algosdk'
 import { SuggestedParamsWithMinFee } from 'algosdk/dist/types/types/transactions/base'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { AlgorandClientInterface } from './algorand-client-interface'
-import { AppLookup as LegacyAppLookup } from './app'
-import {
-  AppClient,
-  AppClientParams,
-  AppDetails,
-  AppDetailsBase,
-  ResolveAppByCreatorAndNameBase,
-  ResolveAppByIdBase,
-  ResolveAppClientByCreatorAndName,
-} from './app-client'
+import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
 import { AppFactory, AppFactoryParams } from './app-factory'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
 import { Expand } from './expand'
@@ -286,9 +277,8 @@ export class ClientManager {
   /**
    * Returns a new typed client, resolving the app by creator address and name.
    * @param typedClient The typed client type to use
-   * @param details The details to resolve the app by creator address and name
-   * @param cachedAppLookup A cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this manager on construction.
-   * @example Use name in ARC-32 app spec
+   * @param params The params to resolve the app by creator address and name
+   * @example Use name in ARC-32 / ARC-56 app spec
    * ```typescript
    * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
    *   creatorAddress: "CREATORADDRESS",
@@ -305,29 +295,63 @@ export class ClientManager {
    * ```
    * @returns The typed client instance
    */
-  public getTypedAppClientByCreatorAndName<TClient>(
+  public async getTypedAppClientByCreatorAndName<TClient>(
     typedClient: TypedAppClient<TClient>,
-    details: TypedAppClientByCreatorAndNameDetails,
-    cachedAppLookup?: LegacyAppLookup,
+    params: Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>,
   ) {
-    return new typedClient({ ...details, resolveBy: 'creatorAndName', findExistingUsing: cachedAppLookup ?? this.indexer }, this._algod)
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+
+    const tempClient = await this.getAppClientByCreatorAndName({ ...params, appSpec: '{}' })
+    return new typedClient({ ...params, appId: tempClient.appId, algorand: this._algorand })
   }
 
   /**
    * Returns a new typed client, resolving the app by app ID.
    * @param typedClient The typed client type to use
-   * @param details The details to resolve the app by ID
+   * @param params The params to resolve the app by ID
    * @example
    * ```typescript
    * const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
-   *   id: 12345,
+   *   appId: 12345n,
    *   sender: alice,
    * })
    * ```
    * @returns The typed client instance
    */
-  public getTypedAppClientById<TClient>(typedClient: TypedAppClient<TClient>, details: TypedAppClientByIdDetails) {
-    return new typedClient({ ...details, resolveBy: 'id' }, this._algod)
+  public getTypedAppClientById<TClient>(
+    typedClient: TypedAppClient<TClient>,
+    params: Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>,
+  ) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+
+    return new typedClient({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns a new typed app factory.
+   * @param typedFactory The typed factory type to use
+   * @param params The params to resolve the factory by
+   * @example
+   * ```typescript
+   * const appFactory = algorand.client.getTypedAppFactory(MyContractClient, {
+   *   sender: alice,
+   * })
+   * ```
+   * @returns The typed client instance
+   */
+  public getTypedAppFactory<TClient>(
+    typedFactory: TypedAppFactory<TClient>,
+    params: Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>,
+  ) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
+    }
+
+    return new typedFactory({ ...params, algorand: this._algorand })
   }
 
   /**
@@ -565,15 +589,12 @@ export class ClientManager {
  * Interface to identify a typed client that can be used to interact with an application.
  */
 export interface TypedAppClient<TClient> {
-  new (details: AppDetails, algod: algosdk.Algodv2): TClient
+  new (params: Omit<AppClientParams, 'appSpec'>): TClient
 }
 
 /**
- * Details to resolve a typed app creator address and name.
+ * Interface to identify a typed factory that can be used to create and deploy an application.
  */
-export type TypedAppClientByCreatorAndNameDetails = AppDetailsBase & Omit<ResolveAppByCreatorAndNameBase, 'findExistingUsing'>
-
-/**
- * Details to resolve a typed app by app ID.
- */
-export type TypedAppClientByIdDetails = AppDetailsBase & ResolveAppByIdBase
+export interface TypedAppFactory<TClient> {
+  new (params: Omit<AppFactoryParams, 'appSpec'>): TClient
+}

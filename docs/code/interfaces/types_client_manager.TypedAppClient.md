@@ -22,14 +22,13 @@ Interface to identify a typed client that can be used to interact with an applic
 
 ### constructor
 
-• **new TypedAppClient**(`details`, `algod`): `TClient`
+• **new TypedAppClient**(`params`): `TClient`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `details` | [`AppDetails`](../modules/types_app_client.md#appdetails) |
-| `algod` | `default` |
+| `params` | `Omit`\<[`AppClientParams`](types_app_client.AppClientParams.md), ``"appSpec"``\> |
 
 #### Returns
 
@@ -37,4 +36,4 @@ Interface to identify a typed client that can be used to interact with an applic
 
 #### Defined in
 
-[src/types/client-manager.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L568)
+[src/types/client-manager.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L592)

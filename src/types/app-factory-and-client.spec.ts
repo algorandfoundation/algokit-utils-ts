@@ -568,8 +568,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(globalState.bytes2)
     invariant('valueRaw' in globalState.bytes2)
     expect(Object.keys(globalState).sort()).toEqual(['bytes1', 'bytes2', 'int1', 'int2', 'value'])
-    expect(globalState.int1.value).toBe(1)
-    expect(globalState.int2.value).toBe(2)
+    expect(globalState.int1.value).toBe(1n)
+    expect(globalState.int2.value).toBe(2n)
     expect(globalState.bytes1.value).toBe('asdf')
     expect(globalState.bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
 
@@ -583,8 +583,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(localState.local_bytes2)
     invariant('valueRaw' in localState.local_bytes2)
     expect(Object.keys(localState).sort()).toEqual(['local_bytes1', 'local_bytes2', 'local_int1', 'local_int2'])
-    expect(localState.local_int1.value).toBe(1)
-    expect(localState.local_int2.value).toBe(2)
+    expect(localState.local_int1.value).toBe(1n)
+    expect(localState.local_int2.value).toBe(2n)
     expect(localState.local_bytes1.value).toBe('asdf')
     expect(localState.local_bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
 

@@ -57,7 +57,7 @@ import {
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
-import {
+import AlgoKitComposer, {
   AppCallMethodCall,
   AppCallParams,
   AppDeleteMethodCall,
@@ -446,6 +446,11 @@ export class AppClient {
     }
     this._transactionsMethods = { ...this.getMethodCallTransactionsMethods(), bare: this.getBareTransactionsMethods() }
     this._sendMethods = { ...this.getMethodCallSendMethods(), bare: this.getBareSendMethods() }
+  }
+
+  /** Start a new `AlgoKitComposer` transaction group */
+  newGroup(): AlgoKitComposer {
+    return this._algorand.newGroup()
   }
 
   /**

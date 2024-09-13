@@ -39,7 +39,7 @@ const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractCl
 })
 const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
   creatorAddress: 'CREATORADDRESS',
-  // Override the name (by default uses the name in the ARC-32 app spec)
+  // Override the name (by default uses the name in the ARC-32 / ARC-56 app spec)
   name: 'contract-name',
 })
 

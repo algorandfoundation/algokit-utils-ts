@@ -30,10 +30,14 @@ describe('AlgorandClient', () => {
     bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.MicroAlgo(100_000) })
 
     algorand = fixture.algorand
-    appClient = algorand.client.getTypedAppClientById(TestContractClient, {
-      id: 0,
-      sender: alice,
-    })
+    appClient = new TestContractClient(
+      {
+        sender: alice,
+        resolveBy: 'id',
+        id: 0,
+      },
+      algorand.client.algod,
+    )
 
     const app = await appClient.create.createApplication({})
     appId = BigInt(app.appId)
