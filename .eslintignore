@@ -13,3 +13,4 @@ coverage
 # don't lint ide files
 .idea
 .vscode
+debug-utils

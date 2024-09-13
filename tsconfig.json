@@ -13,5 +13,5 @@
     "resolveJsonModule": true
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "rollup-multi-plugin.ts", "rollup.config.ts"],
-  "exclude": ["**/*.algo.ts"]
+  "exclude": ["**/*.algo.ts", "debug-utils"]
 }
