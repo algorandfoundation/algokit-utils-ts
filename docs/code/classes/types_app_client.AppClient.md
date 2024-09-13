@@ -114,6 +114,9 @@ state for a specific deployed instance of an app (with a known app ID).
 - [handleCallErrors](types_app_client.AppClient.md#handlecallerrors)
 - [importSourceMaps](types_app_client.AppClient.md#importsourcemaps)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 - [newGroup](types_app_client.AppClient.md#newgroup)
 - [parseMethodCallReturn](types_app_client.AppClient.md#parsemethodcallreturn)
 - [compile](types_app_client.AppClient.md#compile-1)
@@ -641,6 +644,7 @@ The app address of the app instance this client is linked to.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L518)
 =======
 [src/types/app-client.ts:436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L436)
@@ -654,6 +658,9 @@ The app address of the app instance this client is linked to.
 =======
 [src/types/app-client.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L517)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:522](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L522)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -673,6 +680,7 @@ The ID of the app instance this client is linked to.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L513)
 =======
 [src/types/app-client.ts:431](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L431)
@@ -686,6 +694,9 @@ The ID of the app instance this client is linked to.
 =======
 [src/types/app-client.ts:512](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L512)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L517)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -705,6 +716,7 @@ The name of the app (from the ARC-32 / ARC-56 app spec).
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:523](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L523)
 =======
 [src/types/app-client.ts:441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L441)
@@ -718,6 +730,9 @@ The name of the app (from the ARC-32 / ARC-56 app spec).
 =======
 [src/types/app-client.ts:522](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L522)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:527](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L527)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -743,6 +758,7 @@ The ARC-56 app spec being used
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 [src/types/app-client.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L528)
 =======
@@ -788,6 +804,9 @@ Interact with bare (non-ABI) call parameters, transactions and calls
 =======
 [src/types/app-client.ts:527](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L527)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:532](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L532)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -807,6 +826,7 @@ Get parameters to define transactions to the current app
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L533)
 =======
 • `get` **params**(): `Object`
@@ -842,6 +862,9 @@ Get parameters to define transactions to the current app
 =======
 [src/types/app-client.ts:532](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L532)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:537](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L537)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -861,6 +884,7 @@ Send calls to the current app
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L543)
 =======
 • `get` **send**(): `Object`
@@ -896,6 +920,9 @@ Send calls to the current app
 =======
 [src/types/app-client.ts:542](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L542)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:547](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L547)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -926,6 +953,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:547](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L547)
 =======
 | `box` | \{ `getAll`: () => `Promise`\<`Record`\<`string`, `any`\>\> ; `getMap`: (`mapName`: `string`) => `Promise`\<`Map`\<`ABIValue`, `ABIValue`\>\> ; `getMapValue`: (`mapName`: `string`, `key`: `any`, `appState?`: [`AppState`](../interfaces/types_app.AppState.md)) => `Promise`\<`ABIValue`\> ; `getValue`: (`name`: `string`) => `Promise`\<`ABIValue`\>  } | Methods to access box storage for the current app |
@@ -962,6 +990,9 @@ ___
 =======
 [src/types/app-client.ts:546](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L546)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:551](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L551)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -981,6 +1012,7 @@ Get transactions for the current app
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:538](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L538)
 =======
 • `get` **transactions**(): `Object`
@@ -1016,6 +1048,9 @@ Get transactions for the current app
 =======
 [src/types/app-client.ts:537](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L537)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:542](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L542)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ## Methods
 
@@ -1051,6 +1086,7 @@ Will store any generated source maps for later use in debugging.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1123)
 =======
 [src/types/app-client.ts:1069](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1069)
@@ -1061,6 +1097,9 @@ Will store any generated source maps for later use in debugging.
 =======
 [src/types/app-client.ts:1122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1122)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:1127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1127)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1081,6 +1120,7 @@ The source maps
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:673](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L673)
 =======
 [src/types/app-client.ts:841](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L841)
@@ -1094,6 +1134,9 @@ The source maps
 =======
 [src/types/app-client.ts:672](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L672)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:677](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L677)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1123,6 +1166,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:661](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L661)
 =======
 [src/types/app-client.ts:801](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L801)
@@ -1136,6 +1180,9 @@ The new error, or if there was no logic error or source map then the wrapped err
 =======
 [src/types/app-client.ts:660](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L660)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:665](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L665)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1213,6 +1260,7 @@ The result of the funding
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:570](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L570)
 =======
 [src/types/app-client.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L692)
@@ -1268,6 +1316,9 @@ ___
 =======
 [src/types/app-client.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L569)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:574](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L574)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1293,6 +1344,7 @@ A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:701](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L701)
 =======
 ▸ **getABIMethod**(`methodNameOrSignature`): readonly [[`Method`](../interfaces/types_app_arc56.Method.md), `ABIMethod`]
@@ -1330,6 +1382,9 @@ A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
 =======
 [src/types/app-client.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L700)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:705](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L705)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1372,6 +1427,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:1157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1157)
 
 ___
@@ -1486,6 +1542,9 @@ ___
 #### Defined in
 
 [src/types/app-client.ts:1156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1156)
+=======
+[src/types/app-client.ts:1161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1161)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1513,7 +1572,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1144)
+[src/types/app-client.ts:1149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1149)
 
 ___
 
@@ -1536,7 +1595,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:856](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L856)
+[src/types/app-client.ts:861](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L861)
 
 ___
 
@@ -1559,7 +1618,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:920](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L920)
+[src/types/app-client.ts:925](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L925)
 
 ___
 
@@ -1584,6 +1643,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:866](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L866)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 =======
@@ -1592,6 +1652,9 @@ ___
 =======
 [src/types/app-client.ts:891](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L891)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:896](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L896)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1639,8 +1702,12 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:1180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1180)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:1185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1185)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1662,6 +1729,7 @@ The names of the boxes
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:595](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L595)
 =======
 [src/types/app-client.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L735)
@@ -1675,6 +1743,9 @@ The names of the boxes
 =======
 [src/types/app-client.ts:594](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L594)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L599)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1702,6 +1773,7 @@ The current box value as a byte array
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:604](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L604)
 =======
 [src/types/app-client.ts:744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L744)
@@ -1715,6 +1787,9 @@ The current box value as a byte array
 =======
 [src/types/app-client.ts:603](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L603)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:608](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L608)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1743,6 +1818,7 @@ The current box value as a byte array
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:614](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L614)
 =======
 [src/types/app-client.ts:754](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L754)
@@ -1756,6 +1832,9 @@ The current box value as a byte array
 =======
 [src/types/app-client.ts:613](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L613)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:618](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L618)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1784,6 +1863,7 @@ The (name, value) pair of the boxes with values as raw byte arrays
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:628](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L628)
 =======
 [src/types/app-client.ts:768](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L768)
@@ -1797,6 +1877,9 @@ The (name, value) pair of the boxes with values as raw byte arrays
 =======
 [src/types/app-client.ts:627](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L627)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:632](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L632)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1826,6 +1909,7 @@ The (name, value) pair of the boxes with values as the ABI Value
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:644](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L644)
 =======
 [src/types/app-client.ts:784](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L784)
@@ -1839,6 +1923,9 @@ The (name, value) pair of the boxes with values as the ABI Value
 =======
 [src/types/app-client.ts:643](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L643)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:648](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L648)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1860,6 +1947,7 @@ The global state
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:578](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L578)
 =======
 [src/types/app-client.ts:718](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L718)
@@ -1873,6 +1961,9 @@ The global state
 =======
 [src/types/app-client.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L577)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:582](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L582)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1900,7 +1991,11 @@ The local state
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:587](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L587)
+=======
+[src/types/app-client.ts:591](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L591)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -1923,6 +2018,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:950](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L950)
 
 ___
@@ -2016,6 +2112,9 @@ ___
 =======
 [src/types/app-client.ts:949](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L949)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:954](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L954)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2038,7 +2137,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:988](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L988)
+[src/types/app-client.ts:993](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L993)
 
 ___
 
@@ -2063,6 +2162,7 @@ ___
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1019](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1019)
 >>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 =======
@@ -2071,6 +2171,9 @@ ___
 =======
 [src/types/app-client.ts:1074](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1074)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:1079](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1079)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2097,6 +2200,7 @@ if none provided and throws an error if neither provided
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1138)
 =======
 [src/types/app-client.ts:891](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L891)
@@ -2110,6 +2214,9 @@ if none provided and throws an error if neither provided
 =======
 [src/types/app-client.ts:1137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1137)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:1142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1142)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2185,8 +2292,12 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:1252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1252)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:1257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1257)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2218,6 +2329,7 @@ Make the given call and catch any errors, augmenting with debugging information 
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:1174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1174)
 =======
 [src/types/app-client.ts:1119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1119)
@@ -2228,6 +2340,9 @@ Make the given call and catch any errors, augmenting with debugging information 
 =======
 [src/types/app-client.ts:1172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1172)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:1177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1177)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2252,7 +2367,11 @@ Import source maps for the app.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:690](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L690)
+=======
+[src/types/app-client.ts:694](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L694)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2268,10 +2387,14 @@ Start a new `AlgoKitComposer` transaction group
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L451)
 =======
 [src/types/app-client.ts:689](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L689)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L452)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2307,6 +2430,7 @@ The smart contract response with an updated return value
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:715](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L715)
 =======
 [src/types/app-client.ts:662](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L662)
@@ -2317,6 +2441,9 @@ The smart contract response with an updated return value
 =======
 [src/types/app-client.ts:714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L714)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:719](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L719)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2353,6 +2480,7 @@ Will store any generated source maps for later use in debugging.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:783](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L783)
 =======
 [src/types/app-client.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L735)
@@ -2363,6 +2491,9 @@ Will store any generated source maps for later use in debugging.
 =======
 [src/types/app-client.ts:782](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L782)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:787](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L787)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2395,6 +2526,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:733](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L733)
 =======
 [src/types/app-client.ts:685](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L685)
@@ -2405,6 +2537,9 @@ The new error, or if there was no logic error or source map then the wrapped err
 =======
 [src/types/app-client.ts:732](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L732)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:737](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L737)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2439,6 +2574,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:460](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L460)
 =======
 [src/types/app-client.ts:924](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L924)
@@ -2452,6 +2588,9 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 =======
 [src/types/app-client.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L456)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:461](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L461)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2502,6 +2641,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:482](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L482)
 =======
 [src/types/app-client.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L451)
@@ -2512,6 +2652,9 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 =======
 [src/types/app-client.ts:478](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L478)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:483](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L483)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2606,8 +2749,12 @@ A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:835](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L835)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:840](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L840)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -2636,6 +2783,7 @@ The normalised ARC-56 contract object
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:506](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L506)
 =======
 [src/types/app-client.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L424)
@@ -2649,3 +2797,6 @@ The normalised ARC-56 contract object
 =======
 [src/types/app-client.ts:505](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L505)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L510)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)

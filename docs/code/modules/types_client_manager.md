@@ -13,6 +13,7 @@
 - [AlgoSdkClients](../interfaces/types_client_manager.AlgoSdkClients.md)
 - [TypedAppClient](../interfaces/types_client_manager.TypedAppClient.md)
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [TypedAppFactory](../interfaces/types_client_manager.TypedAppFactory.md)
 =======
 
@@ -53,3 +54,6 @@ Details to resolve a typed app by app ID.
 =======
 [src/types/client-manager.ts:579](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L579)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+- [TypedAppFactory](../interfaces/types_client_manager.TypedAppFactory.md)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)

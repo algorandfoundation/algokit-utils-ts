@@ -380,6 +380,29 @@ export class ClientManager {
   }
 
   /**
+   * Returns a new typed app factory.
+   * @param typedFactory The typed factory type to use
+   * @param params The params to resolve the factory by
+   * @example
+   * ```typescript
+   * const appFactory = algorand.client.getTypedAppFactory(MyContractClient, {
+   *   sender: alice,
+   * })
+   * ```
+   * @returns The typed client instance
+   */
+  public getTypedAppFactory<TClient>(
+    typedFactory: TypedAppFactory<TClient>,
+    params: Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>,
+  ) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
+    }
+
+    return new typedFactory({ ...params, algorand: this._algorand })
+  }
+
+  /**
    * Retrieve client configurations from environment variables when defined or get defaults (expects to be called from a Node.js environment)
    *
    * If both `process.env.INDEXER_SERVER` and `process.env.ALGOD_SERVER` is defined it will use both along with optional `process.env.ALGOD_PORT`, `process.env.ALGOD_TOKEN`, `process.env.INDEXER_PORT` and `process.env.INDEXER_TOKEN`.

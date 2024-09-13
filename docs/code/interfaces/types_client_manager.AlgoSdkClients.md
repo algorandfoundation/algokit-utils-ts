@@ -27,6 +27,7 @@ Algod client, see https://developer.algorand.org/docs/rest-apis/algod/
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L18)
 =======
 [src/types/client-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L27)
@@ -37,6 +38,9 @@ Algod client, see https://developer.algorand.org/docs/rest-apis/algod/
 =======
 [src/types/client-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L27)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/client-manager.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L18)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -51,6 +55,7 @@ Optional indexer client, see https://developer.algorand.org/docs/rest-apis/index
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L20)
 =======
 [src/types/client-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L29)
@@ -61,6 +66,9 @@ Optional indexer client, see https://developer.algorand.org/docs/rest-apis/index
 =======
 [src/types/client-manager.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L29)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/client-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L20)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
 
 ___
 
@@ -75,6 +83,7 @@ Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L22)
 =======
 [src/types/client-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L31)
@@ -85,3 +94,6 @@ Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/
 =======
 [src/types/client-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L31)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/client-manager.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L22)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)

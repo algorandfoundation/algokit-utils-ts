@@ -44,6 +44,7 @@ Interface to identify a typed client that can be used to interact with an applic
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/client-manager.ts:617](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L617)
 
 ## Methods
@@ -94,3 +95,6 @@ ___
 =======
 [src/types/client-manager.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L568)
 >>>>>>> c8daa04 (docs: Added migration guide and app-client documentation)
+=======
+[src/types/client-manager.ts:592](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L592)
+>>>>>>> b95895f (feat: ARC-56 Typed client support)
