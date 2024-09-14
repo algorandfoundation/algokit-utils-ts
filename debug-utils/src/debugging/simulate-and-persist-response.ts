@@ -1,5 +1,8 @@
-import { Config } from '../config'
-import { performAtomicTransactionComposerSimulate } from '../transaction/perform-atomic-transaction-composer-simulate'
+import algosdk from 'algosdk'
+import Algodv2 = algosdk.Algodv2
+import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
+import EncodedSignedTransaction = algosdk.EncodedSignedTransaction
+import modelsv2 = algosdk.modelsv2
 import { SimulateAndPersistResponseParams } from '../types/debugging'
 import { isNode } from '../utils'
 
@@ -11,6 +14,35 @@ interface ErrnoException extends Error {
   code?: string
   path?: string
   syscall?: string
+}
+
+/**
+ * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
+ * @param atc The AtomicTransactionComposer with transaction(s) loaded.
+ * @param algod An Algod client to perform the simulation.
+ * @returns The simulation result, which includes various details about how the transactions would be processed.
+ */
+export async function performAtomicTransactionComposerSimulate(atc: AtomicTransactionComposer, algod: Algodv2) {
+  const unsignedTransactionsSigners = atc.buildGroup()
+  const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
+
+  const simulateRequest = new modelsv2.SimulateRequest({
+    allowEmptySignatures: true,
+    allowMoreLogging: true,
+    execTraceConfig: new modelsv2.SimulateTraceConfig({
+      enable: true,
+      scratchChange: true,
+      stackChange: true,
+      stateChange: true,
+    }),
+    txnGroups: [
+      new modelsv2.SimulateRequestTransactionGroup({
+        txns: decodedSignedTransactions.map((txn) => algosdk.decodeObj(txn)) as EncodedSignedTransaction[],
+      }),
+    ],
+  })
+  const simulateResult = await algod.simulateTransactions(simulateRequest).do()
+  return simulateResult
 }
 
 /**
@@ -104,7 +136,6 @@ export async function simulateAndPersistResponse({ atc, projectRoot, algod, buff
     return simulateResult
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error))
-    Config.getLogger().error(`Failed to simulate and persist avm traces: ${err.stack ?? err.message ?? err}.`)
     throw err
   }
 }

@@ -13,7 +13,6 @@ import {
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
 import { Config } from '../config'
-import { persistSourceMaps } from '../debugging/debugging'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { binaryStartsWith } from '../util'
@@ -69,7 +68,6 @@ import AlgoKitComposer, {
   CommonAppCallParams,
   PaymentParams,
 } from './composer'
-import { PersistSourceMapInput } from './debugging'
 import { Expand } from './expand'
 import { LogicError } from './logic-error'
 import { ExecuteParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
@@ -804,14 +802,17 @@ export class AppClient {
     const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
     if (Config.debug && Config.projectRoot) {
-      persistSourceMaps({
-        sources: [
-          PersistSourceMapInput.fromCompiledTeal(compiledApproval, appSpec.name, 'approval.teal'),
-          PersistSourceMapInput.fromCompiledTeal(compiledClear, appSpec.name, 'clear.teal'),
-        ],
-        projectRoot: Config.projectRoot,
-        appManager,
-        withSources: true,
+      Config.invokeDebugHandlers({
+        message: 'persistSourceMaps',
+        data: {
+          sources: [
+            { compiledTeal: compiledApproval, sourceMap: appSpec.name, name: 'approval.teal' },
+            { compiledTeal: compiledClear, sourceMap: appSpec.name, name: 'clear.teal' },
+          ],
+          projectRoot: Config.projectRoot,
+          appManager,
+          withSources: true,
+        },
       })
     }
 
@@ -1435,14 +1436,17 @@ export class ApplicationClient {
     this._clearSourceMap = clearCompiled?.sourceMap
 
     if (Config.debug && Config.projectRoot) {
-      persistSourceMaps({
-        sources: [
-          PersistSourceMapInput.fromCompiledTeal(approvalCompiled, this._appName, 'approval.teal'),
-          PersistSourceMapInput.fromCompiledTeal(clearCompiled, this._appName, 'clear.teal'),
-        ],
-        projectRoot: Config.projectRoot,
-        appManager: new AppManager(this.algod),
-        withSources: true,
+      await Config.invokeDebugHandlers({
+        message: 'persistSourceMaps',
+        data: {
+          sources: [
+            { compiledTeal: approvalCompiled?.compiledBase64ToBytes, sourceMap: this._approvalSourceMap, name: 'approval.teal' },
+            { compiledTeal: clearCompiled?.compiledBase64ToBytes, sourceMap: this._clearSourceMap, name: 'clear.teal' },
+          ],
+          projectRoot: Config.projectRoot,
+          appManager: new AppManager(this.algod),
+          withSources: true,
+        },
       })
     }
 

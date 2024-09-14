@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import AlgodClient from 'algosdk/dist/types/client/v2/algod/algod'
 
 export interface CompiledTeal {
   /** Original TEAL code */
@@ -157,7 +158,7 @@ export interface PersistSourceMapsParams {
   /** The root directory of the project. */
   projectRoot: string
   /** An Algodv2 client to perform the compilation. */
-  client: algosdk.Algodv2
+  client: algosdk.Algodv2 | AlgodClient
   /** A boolean indicating whether to include the source files in the output. */
   withSources?: boolean
 }

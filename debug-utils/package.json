@@ -1,5 +1,5 @@
 {
-  "name": "@algorandfoundation/algokit-utils",
+  "name": "@algorandfoundation/algokit-utils-debug",
   "version": "0.1.0",
   "private": false,
   "description": "A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand.",
@@ -37,7 +37,7 @@
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
-    "build:1-compile": "rollup -c --configPlugin typescript",
+    "build:1-compile": "rollup -c --configPlugin typescript --verbose",
     "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --custom-sections module main type types exports",
     "build:4-copy-readme": "cpy README.md dist",
     "test": "dotenv -e .env -- jest --coverage --passWithNoTests",
@@ -49,7 +49,8 @@
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
     "generate:code-docs": "typedoc",
-    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs"
+    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs",
+    "preinstall": "cd .. && npm i && npm run build"
   },
   "overrides": {
     "semver": "7.5.2",
@@ -65,11 +66,13 @@
     "@algorandfoundation/algokit-utils": "*"
   },
   "devDependencies": {
+    "@algorandfoundation/algokit-utils": "file:../dist",
     "@commitlint/cli": "^18.4.2",
     "@commitlint/config-conventional": "^17.7.0",
     "@makerx/eslint-config": "^3.1.0",
     "@makerx/prettier-config": "^2.0.0",
     "@makerx/ts-config": "^1.0.1",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@tsconfig/node18": "^18.2.2",
@@ -88,7 +91,7 @@
     "prettier": "^3.0.2",
     "replace-in-files-cli": "^2.2.0",
     "rimraf": "^5.0.1",
-    "rollup": "^4.9.6",
+    "rollup": "^4.21.3",
     "semantic-release": "^23.0.8",
     "tiny-invariant": "^1.3.1",
     "ts-jest": "^29.1.0",

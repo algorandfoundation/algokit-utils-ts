@@ -35,6 +35,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
+    "prepare": "npm run build",
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
     "build:1-compile": "rollup -c --configPlugin typescript",

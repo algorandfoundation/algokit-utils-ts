@@ -88,3 +88,11 @@ export interface PersistSourceMapsParams {
   /** A boolean indicating whether to include the source files in the output. */
   withSources?: boolean
 }
+
+export type DebugHandler = (params: DebugParams) => Promise<void> | void
+
+export interface DebugParams {
+  message: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any
+}

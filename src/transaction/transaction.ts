@@ -1,7 +1,6 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
-import { simulateAndPersistResponse } from '../debugging/simulate-and-persist-response'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
 import {
@@ -622,11 +621,14 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
     if (Config.debug && Config.projectRoot && Config.traceAll) {
       // Dump the traces to a file for use with AlgoKit AVM debugger
-      await simulateAndPersistResponse({
-        atc,
-        projectRoot: Config.projectRoot,
-        algod,
-        bufferSizeMb: Config.traceBufferSizeMb,
+      await Config.invokeDebugHandlers({
+        message: 'simulateAndPersistResponse',
+        data: {
+          atc,
+          projectRoot: Config.projectRoot,
+          algod,
+          bufferSizeMb: Config.traceBufferSizeMb,
+        },
       })
     }
     const result = await atc.execute(
@@ -685,11 +687,14 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         // Dump the traces to a file for use with AlgoKit AVM debugger
         // Checks for false on traceAll because it should have been already
         // executed above
-        simulate = await simulateAndPersistResponse({
-          atc,
-          projectRoot: Config.projectRoot,
-          algod,
-          bufferSizeMb: Config.traceBufferSizeMb,
+        simulate = await Config.invokeDebugHandlers({
+          message: 'simulateAndPersistResponse',
+          data: {
+            atc,
+            projectRoot: Config.projectRoot,
+            algod,
+            bufferSizeMb: Config.traceBufferSizeMb,
+          },
         })
       } else {
         simulate = await performAtomicTransactionComposerSimulate(atc, algod)

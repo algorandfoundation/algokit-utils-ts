@@ -1,4 +1,5 @@
 import { isNode } from '../util'
+import { DebugHandler, DebugParams } from './debugging'
 import { Logger, consoleLogger, nullLogger } from './logging'
 
 /** The AlgoKit configuration type */
@@ -29,6 +30,7 @@ export interface Config {
 /** Updatable AlgoKit config */
 export class UpdatableConfig implements Readonly<Config> {
   private config: Config
+  private debugHandlers: DebugHandler[] = []
 
   get populateAppCallResources() {
     return this.config.populateAppCallResources
@@ -56,6 +58,28 @@ export class UpdatableConfig implements Readonly<Config> {
 
   get maxSearchDepth() {
     return this.config.maxSearchDepth
+  }
+
+  /**
+   * Register a debug handler function.
+   * @param handler A function that handles debug events.
+   */
+  registerDebugHandler(handler: DebugHandler): void {
+    this.debugHandlers.push(handler)
+  }
+
+  /**
+   * Invoke all registered debug handlers with the given parameters.
+   * @param params Debug parameters containing a message and optional data.
+   */
+  async invokeDebugHandlers(params: DebugParams): Promise<void> {
+    for (const handler of this.debugHandlers) {
+      try {
+        await handler(params)
+      } catch (error) {
+        this.config.logger.error('Debug handler error:', error)
+      }
+    }
   }
 
   /**
