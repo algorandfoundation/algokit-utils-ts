@@ -154,7 +154,7 @@ export class PersistSourceMapInput {
 /** Parameters to a call that persists source maps */
 export interface PersistSourceMapsParams {
   /** An array of PersistSourceMapInput objects. Each object can either contain rawTeal, in which case the function will execute a compile to obtain byte code, or it can accept an object of type CompiledTeal provided by algokit, which is used for source codes that have already been compiled and contain the traces. */
-  sources: PersistSourceMapInput[]
+  sources: { compiledTeal: String; appName: String; name: String }
   /** The root directory of the project. */
   projectRoot: string
   /** An Algodv2 client to perform the compilation. */

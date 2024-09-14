@@ -1,6 +1,6 @@
 import algosdk from 'algosdk'
 import * as crypto from 'crypto'
-import { AVMDebuggerSourceMapEntry, CompiledTeal, PersistSourceMapsParams } from '../types/debugging'
+import { AVMDebuggerSourceMapEntry, CompiledTeal, PersistSourceMapInput, PersistSourceMapsParams } from '../types/debugging'
 import { isNode } from '../utils'
 
 const ALGOKIT_DIR = '.algokit'
@@ -80,28 +80,35 @@ async function buildAVMSourcemap({
  *
  * @returns A promise that resolves when the source maps have been persisted.
  */
-export async function persistSourceMaps({ sources, projectRoot, client, withSources }: PersistSourceMapsParams): Promise<void> {
+export async function persistSourceMaps(params: PersistSourceMapsParams): Promise<void> {
   if (!isNode()) {
-    throw new Error('Sourcemaps can only be persisted in Node.js environment.')
+    throw new Error('Sourcemaps can only be persisted in a Node.js environment.')
   }
 
   try {
+    // Adjust the destructuring to match the new format
+    const { sources, projectRoot, client, withSources } = params
+    const compiledTeal = await compileTeal(client, sources[0].rawTeal)
+    // { compiledTeal: approvalCompiled?.compiledBase64ToBytes, sourceMap: this._approvalSourceMap, name: 'approval.teal' },
+
+    const approval = PersistSourceMapInput.fromCompiledTeal(sources[0].compiledTeal, sources[0].appName, sources[0].name),
+
     await Promise.all(
       sources.map((source) =>
         buildAVMSourcemap({
+          // Update property access to match new format
           rawTeal: source.rawTeal,
           compiledTeal: source.compiledTeal,
           appName: source.appName,
           fileName: source.fileName,
           outputPath: projectRoot,
-          client: client,
-          withSources: withSources,
+          client,
+          withSources,
         }),
       ),
     )
   } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error))
-    // Config.getLogger().error(`Failed to persist avm sourceMaps: ${err.stack ?? err.message ?? err}.`)
     throw err
   }
 }
