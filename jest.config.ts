@@ -20,5 +20,6 @@ const config: Config.InitialOptions = {
     ],
   },
   coveragePathIgnorePatterns: ['tests'],
+  testPathIgnorePatterns: ['<rootDir>/debug-utils/'],
 }
 export default config

@@ -21,6 +21,19 @@ jobs:
         npx --yes wait-on tcp:4001 -t 30000
       audit-script: |
         npm run audit
+  pull_request_debug_package:
+    uses: makerxstudio/shared-config/.github/workflows/node-ci.yml@main
+    with:
+      node-version: 18.x
+      working-directory: ./debug-utils
+      run-commit-lint: true
+      run-build: true
+      pre-test-script: |
+        pipx install algokit
+        algokit localnet start
+        npx --yes wait-on tcp:4001 -t 30000
+      audit-script: |
+        npm run audit
   check_docs:
     runs-on: ubuntu-latest
     steps:

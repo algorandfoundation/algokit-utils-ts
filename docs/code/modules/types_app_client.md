@@ -60,6 +60,7 @@ AppClient parameters for a bare app call
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L337)
 =======
 [src/types/app-client.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L318)
@@ -70,6 +71,9 @@ AppClient parameters for a bare app call
 =======
 [src/types/app-client.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L338)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L336)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -83,6 +87,7 @@ The arguments to pass to an Application Client smart contract call
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L204)
 =======
 [src/types/app-client.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L191)
@@ -90,6 +95,9 @@ The arguments to pass to an Application Client smart contract call
 =======
 [src/types/app-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L205)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L203)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -103,6 +111,7 @@ Parameters to construct a ApplicationClient contract call
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L217)
 =======
 [src/types/app-client.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L204)
@@ -110,6 +119,9 @@ Parameters to construct a ApplicationClient contract call
 =======
 [src/types/app-client.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L218)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L216)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -123,6 +135,7 @@ Parameters to construct a ApplicationClient clear state contract call
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L220)
 =======
 [src/types/app-client.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L207)
@@ -130,6 +143,9 @@ Parameters to construct a ApplicationClient clear state contract call
 =======
 [src/types/app-client.ts:221](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L221)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L219)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -149,6 +165,7 @@ On-complete action parameter for creating a contract using ApplicationClient
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L232)
 =======
 [src/types/app-client.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L219)
@@ -156,6 +173,9 @@ On-complete action parameter for creating a contract using ApplicationClient
 =======
 [src/types/app-client.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L233)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L231)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -169,6 +189,7 @@ Parameters for creating a contract using ApplicationClient
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:238](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L238)
 =======
 [src/types/app-client.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L225)
@@ -176,6 +197,9 @@ Parameters for creating a contract using ApplicationClient
 =======
 [src/types/app-client.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L239)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L237)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -198,6 +222,7 @@ AppClient parameters for an ABI method call
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L345)
 =======
 [src/types/app-client.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L326)
@@ -208,6 +233,9 @@ AppClient parameters for an ABI method call
 =======
 [src/types/app-client.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L346)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L344)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -221,6 +249,7 @@ Parameters for updating a contract using ApplicationClient
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:246](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L246)
 =======
 [src/types/app-client.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L233)
@@ -228,6 +257,9 @@ Parameters for updating a contract using ApplicationClient
 =======
 [src/types/app-client.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L247)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L245)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -241,6 +273,7 @@ The details of an AlgoKit Utils deployed app
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L133)
 =======
 [src/types/app-client.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L120)
@@ -248,6 +281,9 @@ The details of an AlgoKit Utils deployed app
 =======
 [src/types/app-client.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L134)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L132)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -269,6 +305,7 @@ The details of an AlgoKit Utils deployed app
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L121)
 =======
 [src/types/app-client.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L108)
@@ -276,6 +313,9 @@ The details of an AlgoKit Utils deployed app
 =======
 [src/types/app-client.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L122)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L120)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -289,6 +329,7 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L151)
 =======
 [src/types/app-client.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L138)
@@ -296,6 +337,9 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 =======
 [src/types/app-client.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L152)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L150)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -315,6 +359,7 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L136)
 =======
 [src/types/app-client.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L123)
@@ -322,6 +367,9 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 =======
 [src/types/app-client.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L137)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L135)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -335,6 +383,7 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by cre
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L148)
 =======
 [src/types/app-client.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L135)
@@ -342,6 +391,9 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by cre
 =======
 [src/types/app-client.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L149)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L147)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -355,6 +407,7 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by id
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L145)
 =======
 [src/types/app-client.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L132)
@@ -362,6 +415,9 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by id
 =======
 [src/types/app-client.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L146)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L144)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -382,6 +438,7 @@ onComplete parameter for a non-update app call
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L331)
 =======
 [src/types/app-client.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L312)
@@ -392,6 +449,9 @@ onComplete parameter for a non-update app call
 =======
 [src/types/app-client.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L332)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L330)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -406,6 +466,7 @@ Parameters for funding an app account
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L369)
 =======
 [src/types/app-client.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L341)
@@ -416,6 +477,9 @@ Parameters for funding an app account
 =======
 [src/types/app-client.ts:370](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L370)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:368](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L368)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -429,6 +493,7 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L102)
 =======
 [src/types/app-client.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L89)
@@ -436,6 +501,9 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 =======
 [src/types/app-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L103)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L101)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -457,7 +525,11 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L89)
+=======
+[src/types/app-client.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L88)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -469,6 +541,7 @@ Resolve an app client instance by looking up an app created by the given creator
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L378)
 =======
 [src/types/app-client.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L76)
@@ -495,3 +568,6 @@ Resolve an app client instance by looking up an app created by the given creator
 =======
 [src/types/app-client.ts:379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L379)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L377)
+>>>>>>> de5873b (chore: draft tests)

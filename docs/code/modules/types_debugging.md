@@ -6,12 +6,37 @@
 
 ### Classes
 
-- [AVMDebuggerSourceMap](../classes/types_debugging.AVMDebuggerSourceMap.md)
-- [AVMDebuggerSourceMapEntry](../classes/types_debugging.AVMDebuggerSourceMapEntry.md)
 - [PersistSourceMapInput](../classes/types_debugging.PersistSourceMapInput.md)
 
 ### Interfaces
 
-- [AVMDebuggerSourceMapDict](../interfaces/types_debugging.AVMDebuggerSourceMapDict.md)
+- [DebugParams](../interfaces/types_debugging.DebugParams.md)
 - [PersistSourceMapsParams](../interfaces/types_debugging.PersistSourceMapsParams.md)
-- [SimulateAndPersistResponseParams](../interfaces/types_debugging.SimulateAndPersistResponseParams.md)
+
+### Type Aliases
+
+- [DebugHandler](types_debugging.md#debughandler)
+
+## Type Aliases
+
+### DebugHandler
+
+Ƭ **DebugHandler**: (`params`: [`DebugParams`](../interfaces/types_debugging.DebugParams.md)) => `Promise`\<`void`\> \| `void`
+
+#### Type declaration
+
+▸ (`params`): `Promise`\<`void`\> \| `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `params` | [`DebugParams`](../interfaces/types_debugging.DebugParams.md) |
+
+##### Returns
+
+`Promise`\<`void`\> \| `void`
+
+#### Defined in
+
+[src/types/debugging.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L92)

@@ -92,6 +92,7 @@ Create an `AlgoKitComposer`.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L513)
 =======
 [src/types/composer.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L488)
@@ -108,6 +109,9 @@ Create an `AlgoKitComposer`.
 =======
 [src/types/composer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L513)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:512](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L512)
+>>>>>>> de5873b (chore: draft tests)
 
 ## Properties
 
@@ -119,6 +123,7 @@ The algod client used by the composer.
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -140,6 +145,9 @@ The algod client used by the composer.
 =======
 [src/types/composer.ts:493](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L493)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:492](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L492)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -149,6 +157,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -170,6 +179,9 @@ ___
 =======
 [src/types/composer.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L507)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:506](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L506)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -181,6 +193,7 @@ The ATC used to compose the group
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -202,6 +215,9 @@ The ATC used to compose the group
 =======
 [src/types/composer.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L484)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:483](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L483)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -213,6 +229,7 @@ The default transaction validity window
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -234,6 +251,9 @@ The default transaction validity window
 =======
 [src/types/composer.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L502)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:501](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L501)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -245,6 +265,7 @@ Whether the validity window was explicitly set on construction
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -266,6 +287,9 @@ Whether the validity window was explicitly set on construction
 =======
 [src/types/composer.ts:505](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L505)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:504](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L504)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -296,6 +320,7 @@ A function that takes in an address and return a signer function for that addres
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L499)
 =======
 [src/types/composer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L474)
@@ -312,6 +337,9 @@ A function that takes in an address and return a signer function for that addres
 =======
 [src/types/composer.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L499)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L498)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -336,6 +364,7 @@ An async function that will return suggested params for the transaction.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L496)
 =======
 [src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
@@ -352,6 +381,9 @@ An async function that will return suggested params for the transaction.
 =======
 [src/types/composer.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L496)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L495)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -363,6 +395,7 @@ Map of txid to ABI method
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -384,6 +417,9 @@ Map of txid to ABI method
 =======
 [src/types/composer.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L487)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:486](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L486)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -395,6 +431,7 @@ Transactions that have not yet been composed
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -416,6 +453,9 @@ Transactions that have not yet been composed
 =======
 [src/types/composer.ts:490](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L490)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:489](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L489)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -427,6 +467,7 @@ Signer used to represent a lack of signer
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -448,6 +489,9 @@ Signer used to represent a lack of signer
 =======
 [src/types/composer.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L481)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L480)
+>>>>>>> de5873b (chore: draft tests)
 
 ## Methods
 
@@ -480,6 +524,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L675)
 =======
 [src/types/composer.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L634)
@@ -496,6 +541,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L675)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:674](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L674)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -526,6 +574,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:724](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L724)
 =======
 [src/types/composer.ts:683](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L683)
@@ -542,6 +591,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:724](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L724)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:723](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L723)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -597,6 +649,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L634)
 =======
 [src/types/composer.ts:593](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L593)
@@ -613,6 +666,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L634)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:633](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L633)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -643,6 +699,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:688](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L688)
 =======
 [src/types/composer.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L647)
@@ -659,6 +716,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:688](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L688)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:687](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L687)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -689,6 +749,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:660](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L660)
 =======
 [src/types/composer.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L619)
@@ -705,6 +766,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:660](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L660)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L659)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -735,6 +799,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L712)
 =======
 [src/types/composer.ts:671](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L671)
@@ -751,6 +816,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L712)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:711](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L711)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -801,6 +869,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L647)
 =======
 [src/types/composer.ts:606](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L606)
@@ -817,6 +886,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:647](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L647)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:646](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L646)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -847,6 +919,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L700)
 =======
 [src/types/composer.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L659)
@@ -863,6 +936,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L700)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:699](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L699)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -891,6 +967,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L566)
 =======
 [src/types/composer.ts:525](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L525)
@@ -907,6 +984,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:566](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L566)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L565)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -935,6 +1015,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L555)
 =======
 [src/types/composer.ts:514](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L514)
@@ -951,6 +1032,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L555)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:554](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L554)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -979,6 +1063,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:588](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L588)
 =======
 [src/types/composer.ts:547](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L547)
@@ -995,6 +1080,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:588](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L588)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:587](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L587)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1023,6 +1111,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L577)
 =======
 [src/types/composer.ts:536](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L536)
@@ -1039,6 +1128,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:577](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L577)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:576](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L576)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1067,6 +1159,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L610)
 =======
 [src/types/composer.ts:569](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L569)
@@ -1083,6 +1176,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L610)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:609](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L609)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1111,6 +1207,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L621)
 =======
 [src/types/composer.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L580)
@@ -1127,6 +1224,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L621)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:620](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L620)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1155,6 +1255,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L599)
 =======
 [src/types/composer.ts:558](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L558)
@@ -1171,6 +1272,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L599)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:598](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L598)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1199,6 +1303,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:745](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L745)
 =======
 [src/types/composer.ts:704](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L704)
@@ -1215,6 +1320,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:745](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L745)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L744)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1243,6 +1351,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L734)
 =======
 [src/types/composer.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L693)
@@ -1259,6 +1368,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L734)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:733](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L733)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1287,6 +1399,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L544)
 =======
 [src/types/composer.ts:522](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L522)
@@ -1300,6 +1413,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L544)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:543](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L543)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1328,6 +1444,7 @@ The composer so you can chain method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L529)
 =======
 [src/types/composer.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L503)
@@ -1344,6 +1461,9 @@ The composer so you can chain method calls
 =======
 [src/types/composer.ts:529](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L529)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:528](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L528)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1371,6 +1491,7 @@ The built atomic transaction composer and the transactions
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1185)
 =======
 [src/types/composer.ts:1139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1139)
@@ -1387,6 +1508,9 @@ The built atomic transaction composer and the transactions
 =======
 [src/types/composer.ts:1185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1185)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1184)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1412,6 +1536,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1008](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1008)
 =======
 [src/types/composer.ts:962](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L962)
@@ -1428,6 +1553,9 @@ ___
 =======
 [src/types/composer.ts:1008](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1008)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1007](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1007)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1453,6 +1581,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:957](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L957)
 =======
 [src/types/composer.ts:911](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L911)
@@ -1469,6 +1598,9 @@ ___
 =======
 [src/types/composer.ts:957](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L957)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:956](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L956)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1494,6 +1626,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:937](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L937)
 =======
 [src/types/composer.ts:891](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L891)
@@ -1510,6 +1643,9 @@ ___
 =======
 [src/types/composer.ts:937](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L937)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:936](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L936)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1535,6 +1671,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:972](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L972)
 =======
 [src/types/composer.ts:926](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L926)
@@ -1551,6 +1688,9 @@ ___
 =======
 [src/types/composer.ts:972](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L972)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:971](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L971)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1576,6 +1716,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:982](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L982)
 =======
 [src/types/composer.ts:936](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L936)
@@ -1592,6 +1733,9 @@ ___
 =======
 [src/types/composer.ts:982](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L982)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:981](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L981)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1617,6 +1761,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:994](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L994)
 =======
 [src/types/composer.ts:948](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L948)
@@ -1633,6 +1778,9 @@ ___
 =======
 [src/types/composer.ts:994](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L994)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:993](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L993)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1660,6 +1808,7 @@ Build an ATC and return transactions ready to be incorporated into a broader set
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:751](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L751)
 =======
 [src/types/composer.ts:710](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L710)
@@ -1676,6 +1825,9 @@ Build an ATC and return transactions ready to be incorporated into a broader set
 =======
 [src/types/composer.ts:751](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L751)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:750](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L750)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1701,6 +1853,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1063](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1063)
 =======
 [src/types/composer.ts:1017](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1017)
@@ -1717,6 +1870,9 @@ ___
 =======
 [src/types/composer.ts:1063](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1063)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1062](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1062)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1745,6 +1901,7 @@ Builds an ABI method call transaction and any other associated transactions repr
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:817](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L817)
 =======
 [src/types/composer.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L776)
@@ -1761,6 +1918,9 @@ Builds an ABI method call transaction and any other associated transactions repr
 =======
 [src/types/composer.ts:817](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L817)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:816](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L816)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1786,6 +1946,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:925](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L925)
 =======
 [src/types/composer.ts:879](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L879)
@@ -1802,6 +1963,9 @@ ___
 =======
 [src/types/composer.ts:925](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L925)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:924](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L924)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1824,6 +1988,7 @@ The array of built transactions and any corresponding method calls
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1132)
 =======
 [src/types/composer.ts:1086](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1086)
@@ -1840,6 +2005,9 @@ The array of built transactions and any corresponding method calls
 =======
 [src/types/composer.ts:1132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1132)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1131)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1867,6 +2035,7 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1082](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1082)
 =======
 [src/types/composer.ts:1036](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1036)
@@ -1883,6 +2052,9 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 =======
 [src/types/composer.ts:1082](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1082)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1081](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1081)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1908,6 +2080,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1109)
 =======
 [src/types/composer.ts:1063](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1063)
@@ -1924,6 +2097,9 @@ ___
 =======
 [src/types/composer.ts:1109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1109)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1108)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1950,6 +2126,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:772](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L772)
 =======
 [src/types/composer.ts:731](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L731)
@@ -1966,6 +2143,9 @@ ___
 =======
 [src/types/composer.ts:772](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L772)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:771](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L771)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -1981,6 +2161,7 @@ Get the number of transactions currently added to this composer.
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2002,6 +2183,9 @@ Get the number of transactions currently added to this composer.
 =======
 [src/types/composer.ts:1172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1172)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1171)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -2030,6 +2214,7 @@ The execution result
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1224)
 =======
 [src/types/composer.ts:1178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1178)
@@ -2046,6 +2231,9 @@ The execution result
 =======
 [src/types/composer.ts:1224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1224)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1223)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -2069,6 +2257,7 @@ The newly built atomic transaction composer and the transactions
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1214)
 =======
 [src/types/composer.ts:1168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1168)
@@ -2085,6 +2274,9 @@ The newly built atomic transaction composer and the transactions
 =======
 [src/types/composer.ts:1214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1214)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1213)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -2145,6 +2337,7 @@ The simulation result
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1251)
 =======
 [src/types/composer.ts:1205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1205)
@@ -2161,6 +2354,9 @@ The simulation result
 =======
 [src/types/composer.ts:1251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1251)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1250)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -2185,6 +2381,7 @@ ___
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:1291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1291)
 =======
 [src/types/composer.ts:1241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1241)
@@ -2201,3 +2398,6 @@ ___
 =======
 [src/types/composer.ts:1291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1291)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:1293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1293)
+>>>>>>> de5873b (chore: draft tests)

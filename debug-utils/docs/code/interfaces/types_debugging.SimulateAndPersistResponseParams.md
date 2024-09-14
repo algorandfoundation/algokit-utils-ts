@@ -1,4 +1,4 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/debugging](../modules/types_debugging.md) / SimulateAndPersistResponseParams
+[@algorandfoundation/algokit-utils-debug](../README.md) / [types/debugging](../modules/types_debugging.md) / SimulateAndPersistResponseParams
 
 # Interface: SimulateAndPersistResponseParams
 
@@ -25,9 +25,9 @@ algod An Algodv2 client to perform the simulation.
 
 #### Defined in
 
-[src/types/debugging.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L159)
+[types/debugging.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L171)
 
-___
+---
 
 ### atc
 
@@ -37,9 +37,9 @@ The AtomicTransactionComposer with transaction(s) loaded.
 
 #### Defined in
 
-[src/types/debugging.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L161)
+[types/debugging.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L173)
 
-___
+---
 
 ### bufferSizeMb
 
@@ -49,9 +49,9 @@ bufferSizeMb The buffer size in megabytes.
 
 #### Defined in
 
-[src/types/debugging.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L165)
+[types/debugging.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L177)
 
-___
+---
 
 ### projectRoot
 
@@ -61,4 +61,4 @@ projectRoot The root directory of the project.
 
 #### Defined in
 
-[src/types/debugging.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L163)
+[types/debugging.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L175)

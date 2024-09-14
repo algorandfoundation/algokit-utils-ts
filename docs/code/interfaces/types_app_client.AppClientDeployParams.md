@@ -49,6 +49,7 @@ If this is not specified then it will automatically be determined based on the A
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L168)
 =======
 [src/types/app-client.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L155)
@@ -56,6 +57,9 @@ If this is not specified then it will automatically be determined based on the A
 =======
 [src/types/app-client.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L169)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L167)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -74,6 +78,7 @@ If this is not specified then it will automatically be determined based on the A
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L164)
 =======
 [src/types/app-client.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L151)
@@ -81,6 +86,9 @@ If this is not specified then it will automatically be determined based on the A
 =======
 [src/types/app-client.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L165)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L163)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -98,6 +106,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L180)
 =======
 [src/types/app-client.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L167)
@@ -105,6 +114,9 @@ Any args to pass to any create transaction that is issued as part of deployment
 =======
 [src/types/app-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L181)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L179)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -122,6 +134,7 @@ Override the on-completion action for the create call; defaults to NoOp
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L182)
 =======
 [src/types/app-client.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L169)
@@ -129,6 +142,9 @@ Override the on-completion action for the create call; defaults to NoOp
 =======
 [src/types/app-client.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L183)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L181)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -146,6 +162,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L186)
 =======
 [src/types/app-client.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L173)
@@ -153,6 +170,9 @@ Any args to pass to any delete transaction that is issued as part of deployment
 =======
 [src/types/app-client.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L187)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L185)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -170,6 +190,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L178)
 =======
 [src/types/app-client.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L165)
@@ -177,6 +198,9 @@ Any deploy-time parameters to replace in the TEAL code
 =======
 [src/types/app-client.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L179)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L177)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -194,6 +218,7 @@ What action to perform if a schema break is detected
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L170)
 =======
 [src/types/app-client.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L157)
@@ -201,6 +226,9 @@ What action to perform if a schema break is detected
 =======
 [src/types/app-client.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L171)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L169)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -218,6 +246,7 @@ What action to perform if a TEAL update is detected
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L172)
 =======
 [src/types/app-client.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L159)
@@ -225,6 +254,9 @@ What action to perform if a TEAL update is detected
 =======
 [src/types/app-client.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L173)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L171)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -238,6 +270,7 @@ Any overrides for the storage schema to request for the created app; by default 
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L192)
 =======
 [src/types/app-client.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L179)
@@ -245,6 +278,9 @@ Any overrides for the storage schema to request for the created app; by default 
 =======
 [src/types/app-client.ts:193](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L193)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L191)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -262,6 +298,7 @@ Parameters to control transaction sending
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L160)
 =======
 [src/types/app-client.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L147)
@@ -269,6 +306,9 @@ Parameters to control transaction sending
 =======
 [src/types/app-client.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L161)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L159)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -286,6 +326,7 @@ The optional sender to send the transaction from, will use the application clien
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L158)
 =======
 [src/types/app-client.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L145)
@@ -293,6 +334,9 @@ The optional sender to send the transaction from, will use the application clien
 =======
 [src/types/app-client.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L159)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L157)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -310,6 +354,7 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L184)
 =======
 [src/types/app-client.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L171)
@@ -317,6 +362,9 @@ Any args to pass to any update transaction that is issued as part of deployment
 =======
 [src/types/app-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L185)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L183)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -334,6 +382,7 @@ The version of the contract, uses "1.0" by default
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L156)
 =======
 [src/types/app-client.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L143)
@@ -341,3 +390,6 @@ The version of the contract, uses "1.0" by default
 =======
 [src/types/app-client.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L157)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L155)
+>>>>>>> de5873b (chore: draft tests)

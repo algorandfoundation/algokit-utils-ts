@@ -37,6 +37,7 @@ An `AlgorandClient` instance
 
 #### Defined in
 
+<<<<<<< HEAD
 [src/types/app-client.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L315)
 =======
 #### Defined in
@@ -54,6 +55,9 @@ An `AlgorandClient` instance
 =======
 [src/types/app-client.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L316)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L314)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -65,6 +69,7 @@ The ID of the app instance this client should make calls against.
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 [src/types/app-client.ts:305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L305)
@@ -87,6 +92,9 @@ Defaults to the ARC-32/ARC-56 app spec name
 =======
 [src/types/app-client.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L306)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L304)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -99,7 +107,7 @@ Defaults to the ARC-32/ARC-56 app spec name
 
 #### Defined in
 
-[src/types/app-client.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L322)
+[src/types/app-client.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L320)
 
 ___
 
@@ -116,6 +124,7 @@ The ARC-56 or ARC-32 application spec as either:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L312)
 =======
 [src/types/app-client.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L299)
@@ -123,6 +132,9 @@ The ARC-56 or ARC-32 application spec as either:
 =======
 [src/types/app-client.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L313)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L311)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -137,6 +149,7 @@ Optional source map for the approval program
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L325)
 =======
 [src/types/app-client.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L306)
@@ -147,6 +160,9 @@ Optional source map for the approval program
 =======
 [src/types/app-client.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L326)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L324)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -161,6 +177,7 @@ Optional source map for the clear state program
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L327)
 =======
 [src/types/app-client.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L308)
@@ -171,6 +188,9 @@ Optional source map for the clear state program
 =======
 [src/types/app-client.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L328)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L326)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -185,6 +205,7 @@ Optional address to use for the account to use as the default sender for calls.
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L323)
 =======
 [src/types/app-client.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L304)
@@ -195,3 +216,6 @@ Optional address to use for the account to use as the default sender for calls.
 =======
 [src/types/app-client.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L324)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L322)
+>>>>>>> de5873b (chore: draft tests)

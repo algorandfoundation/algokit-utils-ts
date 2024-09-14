@@ -19,6 +19,7 @@ Updatable AlgoKit config
 ### Properties
 
 - [config](types_config.UpdatableConfig.md#config)
+- [debugHandlers](types_config.UpdatableConfig.md#debughandlers)
 
 ### Accessors
 
@@ -35,6 +36,8 @@ Updatable AlgoKit config
 - [configure](types_config.UpdatableConfig.md#configure)
 - [configureProjectRoot](types_config.UpdatableConfig.md#configureprojectroot)
 - [getLogger](types_config.UpdatableConfig.md#getlogger)
+- [invokeDebugHandlers](types_config.UpdatableConfig.md#invokedebughandlers)
+- [registerDebugHandler](types_config.UpdatableConfig.md#registerdebughandler)
 - [withDebug](types_config.UpdatableConfig.md#withdebug)
 
 ## Constructors
@@ -49,7 +52,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L88)
+[src/types/config.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L112)
 
 ## Properties
 
@@ -59,7 +62,17 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L31)
+[src/types/config.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L32)
+
+___
+
+### debugHandlers
+
+• `Private` **debugHandlers**: [`DebugHandler`](../modules/types_debugging.md#debughandler)[] = `[]`
+
+#### Defined in
+
+[src/types/config.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L33)
 
 ## Accessors
 
@@ -77,7 +90,7 @@ Readonly.debug
 
 #### Defined in
 
-[src/types/config.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L41)
+[src/types/config.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L43)
 
 ___
 
@@ -95,7 +108,7 @@ Readonly.logger
 
 #### Defined in
 
-[src/types/config.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L37)
+[src/types/config.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L39)
 
 ___
 
@@ -113,7 +126,7 @@ Readonly.maxSearchDepth
 
 #### Defined in
 
-[src/types/config.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L57)
+[src/types/config.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L59)
 
 ___
 
@@ -131,7 +144,7 @@ Readonly.populateAppCallResources
 
 #### Defined in
 
-[src/types/config.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L33)
+[src/types/config.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L35)
 
 ___
 
@@ -149,7 +162,7 @@ Readonly.projectRoot
 
 #### Defined in
 
-[src/types/config.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L45)
+[src/types/config.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L47)
 
 ___
 
@@ -167,7 +180,7 @@ Readonly.traceAll
 
 #### Defined in
 
-[src/types/config.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L49)
+[src/types/config.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L51)
 
 ___
 
@@ -185,7 +198,7 @@ Readonly.traceBufferSizeMb
 
 #### Defined in
 
-[src/types/config.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L53)
+[src/types/config.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L55)
 
 ## Methods
 
@@ -207,7 +220,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-[src/types/config.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L135)
+[src/types/config.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L159)
 
 ___
 
@@ -224,7 +237,7 @@ This is only supported in a Node environment.
 
 #### Defined in
 
-[src/types/config.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L108)
+[src/types/config.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L132)
 
 ___
 
@@ -248,7 +261,51 @@ The requested logger
 
 #### Defined in
 
-[src/types/config.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L66)
+[src/types/config.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L90)
+
+___
+
+### invokeDebugHandlers
+
+▸ **invokeDebugHandlers**(`params`): `Promise`\<`void`\>
+
+Invoke all registered debug handlers with the given parameters.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`DebugParams`](../interfaces/types_debugging.DebugParams.md) | Debug parameters containing a message and optional data. |
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Defined in
+
+[src/types/config.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L75)
+
+___
+
+### registerDebugHandler
+
+▸ **registerDebugHandler**(`handler`): `void`
+
+Register a debug handler function.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `handler` | [`DebugHandler`](../modules/types_debugging.md#debughandler) | A function that handles debug events. |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/types/config.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L67)
 
 ___
 
@@ -270,4 +327,4 @@ Temporarily run with debug set to true.
 
 #### Defined in
 
-[src/types/config.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L78)
+[src/types/config.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L102)

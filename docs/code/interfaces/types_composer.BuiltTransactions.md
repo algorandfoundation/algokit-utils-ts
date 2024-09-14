@@ -29,6 +29,7 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/composer.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L473)
 =======
 [src/types/composer.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L448)
@@ -45,6 +46,9 @@ Any `ABIMethod` objects associated with any of the transactions in a map keyed b
 =======
 [src/types/composer.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L473)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L472)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -56,6 +60,7 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -77,6 +82,9 @@ Any `TransactionSigner` objects associated with any of the transactions in a map
 =======
 [src/types/composer.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L475)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L474)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -88,6 +96,7 @@ The built transactions
 
 #### Defined in
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -109,3 +118,6 @@ The built transactions
 =======
 [src/types/composer.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L471)
 >>>>>>> b95895f (feat: ARC-56 Typed client support)
+=======
+[src/types/composer.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L470)
+>>>>>>> de5873b (chore: draft tests)

@@ -1,4 +1,4 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/debugging](../modules/types_debugging.md) / AVMDebuggerSourceMap
+[@algorandfoundation/algokit-utils-debug](../README.md) / [types/debugging](../modules/types_debugging.md) / AVMDebuggerSourceMap
 
 # Class: AVMDebuggerSourceMap
 
@@ -29,8 +29,8 @@ AVM debugger source map class.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name              | Type                                                                          |
+| :---------------- | :---------------------------------------------------------------------------- |
 | `txnGroupSources` | [`AVMDebuggerSourceMapEntry`](types_debugging.AVMDebuggerSourceMapEntry.md)[] |
 
 #### Returns
@@ -39,7 +39,7 @@ AVM debugger source map class.
 
 #### Defined in
 
-[src/types/debugging.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L48)
+[types/debugging.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L60)
 
 ## Properties
 
@@ -49,7 +49,7 @@ AVM debugger source map class.
 
 #### Defined in
 
-[src/types/debugging.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L42)
+[types/debugging.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L54)
 
 ## Methods
 
@@ -67,9 +67,9 @@ The dictionary
 
 #### Defined in
 
-[src/types/debugging.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L67)
+[types/debugging.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L79)
 
-___
+---
 
 ### fromDict
 
@@ -79,9 +79,9 @@ Creates a source map from a dictionary of source map data.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `data` | [`AVMDebuggerSourceMapDict`](../interfaces/types_debugging.AVMDebuggerSourceMapDict.md) | The data |
+| Name   | Type                                                                                    | Description |
+| :----- | :-------------------------------------------------------------------------------------- | :---------- |
+| `data` | [`AVMDebuggerSourceMapDict`](../interfaces/types_debugging.AVMDebuggerSourceMapDict.md) | The data    |
 
 #### Returns
 
@@ -91,4 +91,4 @@ The source map
 
 #### Defined in
 
-[src/types/debugging.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L57)
+[types/debugging.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L69)

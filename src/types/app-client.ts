@@ -806,8 +806,8 @@ export class AppClient {
         message: 'persistSourceMaps',
         data: {
           sources: [
-            { compiledTeal: compiledApproval, appName: appSpec.name, name: 'approval.teal' },
-            { compiledTeal: compiledClear, appName: appSpec.name, name: 'clear.teal' },
+            { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
+            { compiledTeal: compiledClear, appName: appSpec.name, fileName: 'clear' },
           ],
           projectRoot: Config.projectRoot,
           appManager,
@@ -1440,8 +1440,8 @@ export class ApplicationClient {
         message: 'persistSourceMaps',
         data: {
           sources: [
-            { compiledTeal: approvalCompiled?.compiledBase64ToBytes, appName: this._appName, name: 'approval.teal' },
-            { compiledTeal: clearCompiled?.compiledBase64ToBytes, appName: this._appName, name: 'clear.teal' },
+            { compiledTeal: approvalCompiled, appName: this._appName, fileName: 'approval' },
+            { compiledTeal: clearCompiled, appName: this._appName, fileName: 'clear' },
           ],
           projectRoot: Config.projectRoot,
           appManager: new AppManager(this.algod),

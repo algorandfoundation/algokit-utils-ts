@@ -1,4 +1,4 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/debugging](../modules/types_debugging.md) / AVMDebuggerSourceMapEntry
+[@algorandfoundation/algokit-utils-debug](../README.md) / [types/debugging](../modules/types_debugging.md) / AVMDebuggerSourceMapEntry
 
 # Class: AVMDebuggerSourceMapEntry
 
@@ -32,10 +32,10 @@ Create an AVM debugger source map entry.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `location` | `string` | The location of the file the source map is for. |
-| `programHash` | `string` | The hash of the TEAL binary. |
+| Name          | Type     | Description                                     |
+| :------------ | :------- | :---------------------------------------------- |
+| `location`    | `string` | The location of the file the source map is for. |
+| `programHash` | `string` | The hash of the TEAL binary.                    |
 
 #### Returns
 
@@ -43,7 +43,7 @@ Create an AVM debugger source map entry.
 
 #### Defined in
 
-[src/types/debugging.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L24)
+[types/debugging.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L36)
 
 ## Properties
 
@@ -55,9 +55,9 @@ The location of the file the source map is for.
 
 #### Defined in
 
-[src/types/debugging.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L25)
+[types/debugging.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L37)
 
-___
+---
 
 ### programHash
 
@@ -67,7 +67,7 @@ The hash of the TEAL binary.
 
 #### Defined in
 
-[src/types/debugging.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L26)
+[types/debugging.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L38)
 
 ## Methods
 
@@ -77,8 +77,8 @@ The hash of the TEAL binary.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
+| Name    | Type                                                                        |
+| :------ | :-------------------------------------------------------------------------- |
 | `other` | [`AVMDebuggerSourceMapEntry`](types_debugging.AVMDebuggerSourceMapEntry.md) |
 
 #### Returns
@@ -87,9 +87,9 @@ The hash of the TEAL binary.
 
 #### Defined in
 
-[src/types/debugging.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L29)
+[types/debugging.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L41)
 
-___
+---
 
 ### toString
 
@@ -101,4 +101,4 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L33)
+[types/debugging.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/debug-utils/src/types/debugging.ts#L45)

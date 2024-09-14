@@ -1,6 +1,7 @@
-import algosdk from 'algosdk'
+import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { ClientManager } from '@algorandfoundation/algokit-utils/types/client-manager'
 import * as crypto from 'crypto'
-import { AVMDebuggerSourceMapEntry, CompiledTeal, PersistSourceMapInput, PersistSourceMapsParams } from '../types/debugging'
+import { AVMDebuggerSourceMapEntry, CompiledTeal, PersistSourceMapsParams } from '../types/debugging'
 import { isNode } from '../utils'
 
 const ALGOKIT_DIR = '.algokit'
@@ -9,18 +10,6 @@ const TEAL_FILE_EXT = '.teal'
 const TEAL_SOURCEMAP_EXT = '.teal.tok.map'
 
 // === Internal methods ===
-
-async function compileTeal(algod: algosdk.Algodv2, tealCode: string): Promise<CompiledTeal> {
-  const compiled = await algod.compile(tealCode).sourcemap(true).do()
-  const result = {
-    teal: tealCode,
-    compiled: compiled.result,
-    compiledHash: compiled.hash,
-    compiledBase64ToBytes: new Uint8Array(Buffer.from(compiled.result, 'base64')),
-    sourceMap: new algosdk.SourceMap(compiled['sourcemap']),
-  }
-  return result
-}
 
 async function writeToFile(filePath: string, content: string): Promise<void> {
   const path = await import('path')
@@ -36,7 +25,7 @@ async function buildAVMSourcemap({
   appName,
   fileName,
   outputPath,
-  client,
+  algorandClient,
   withSources = true,
 }: {
   rawTeal?: string
@@ -44,7 +33,7 @@ async function buildAVMSourcemap({
   appName: string
   fileName: string
   outputPath: string
-  client: algosdk.Algodv2
+  algorandClient: AlgorandClient
   withSources?: boolean
 }): Promise<AVMDebuggerSourceMapEntry> {
   if (!rawTeal && !compiledTeal) {
@@ -53,7 +42,7 @@ async function buildAVMSourcemap({
   const path = await import('path')
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const result = rawTeal ? await compileTeal(client, rawTeal) : compiledTeal!
+  const result = rawTeal ? await algorandClient.app.compileTeal(rawTeal) : compiledTeal!
   const programHash = crypto.createHash('SHA-512/256').update(Buffer.from(result.compiled, 'base64')).digest('base64')
   const sourceMap = result.sourceMap
   sourceMap.sources = withSources ? [`${fileName}${TEAL_FILE_EXT}`] : []
@@ -85,24 +74,22 @@ export async function persistSourceMaps(params: PersistSourceMapsParams): Promis
     throw new Error('Sourcemaps can only be persisted in a Node.js environment.')
   }
 
+  const algorandClient = AlgorandClient.fromConfig({
+    algodConfig: ClientManager.getDefaultLocalNetConfig('algod'),
+  })
+
   try {
-    // Adjust the destructuring to match the new format
-    const { sources, projectRoot, client, withSources } = params
-    const compiledTeal = await compileTeal(client, sources[0].rawTeal)
-    // { compiledTeal: approvalCompiled?.compiledBase64ToBytes, sourceMap: this._approvalSourceMap, name: 'approval.teal' },
-
-    const approval = PersistSourceMapInput.fromCompiledTeal(sources[0].compiledTeal, sources[0].appName, sources[0].name),
-
+    const { sources, projectRoot, withSources } = params
     await Promise.all(
       sources.map((source) =>
         buildAVMSourcemap({
           // Update property access to match new format
-          rawTeal: source.rawTeal,
+          rawTeal: source.compiledTeal.teal,
           compiledTeal: source.compiledTeal,
           appName: source.appName,
           fileName: source.fileName,
           outputPath: projectRoot,
-          client,
+          algorandClient,
           withSources,
         }),
       ),

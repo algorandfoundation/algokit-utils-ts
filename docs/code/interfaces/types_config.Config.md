@@ -28,7 +28,7 @@ Whether or not debug mode is enabled
 
 #### Defined in
 
-[src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
+[src/types/config.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L10)
 
 ___
 
@@ -40,7 +40,7 @@ Logger
 
 #### Defined in
 
-[src/types/config.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L7)
+[src/types/config.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L8)
 
 ___
 
@@ -52,7 +52,7 @@ The maximum depth to search for a specific file
 
 #### Defined in
 
-[src/types/config.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L17)
+[src/types/config.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L18)
 
 ___
 
@@ -69,7 +69,7 @@ Default value is false.
 
 #### Defined in
 
-[src/types/config.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L26)
+[src/types/config.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L27)
 
 ___
 
@@ -81,7 +81,7 @@ The path to the project root directory
 
 #### Defined in
 
-[src/types/config.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L11)
+[src/types/config.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L12)
 
 ___
 
@@ -93,7 +93,7 @@ Indicates whether to trace all operations
 
 #### Defined in
 
-[src/types/config.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L13)
+[src/types/config.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L14)
 
 ___
 
@@ -105,4 +105,4 @@ The size of the trace buffer in megabytes
 
 #### Defined in
 
-[src/types/config.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L15)
+[src/types/config.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L16)

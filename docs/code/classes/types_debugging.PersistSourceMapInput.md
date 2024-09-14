@@ -4,6 +4,10 @@
 
 [types/debugging](../modules/types_debugging.md).PersistSourceMapInput
 
+**`Deprecated`**
+
+Use latest version of `AlgoKit AVM Debugger` VSCode extension instead. It will automatically manage your sourcemaps.
+
 Class representing a debugger source maps input for persistence.
 
 Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should be provided.
@@ -53,7 +57,7 @@ Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should b
 
 #### Defined in
 
-[src/types/debugging.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L83)
+[src/types/debugging.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L17)
 
 ## Properties
 
@@ -63,7 +67,7 @@ Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should b
 
 #### Defined in
 
-[src/types/debugging.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L80)
+[src/types/debugging.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L14)
 
 ___
 
@@ -73,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L81)
+[src/types/debugging.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L15)
 
 ___
 
@@ -83,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L78)
+[src/types/debugging.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L12)
 
 ___
 
@@ -93,7 +97,7 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L79)
+[src/types/debugging.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L13)
 
 ## Accessors
 
@@ -109,7 +113,7 @@ Get the file name
 
 #### Defined in
 
-[src/types/debugging.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L124)
+[src/types/debugging.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L58)
 
 ___
 
@@ -125,7 +129,7 @@ Get the underlying raw teal
 
 #### Defined in
 
-[src/types/debugging.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L113)
+[src/types/debugging.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L47)
 
 ## Methods
 
@@ -149,7 +153,7 @@ The filename without the '.teal' extension.
 
 #### Defined in
 
-[src/types/debugging.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L134)
+[src/types/debugging.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L68)
 
 ___
 
@@ -175,7 +179,7 @@ The persist source map input
 
 #### Defined in
 
-[src/types/debugging.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L108)
+[src/types/debugging.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L42)
 
 ___
 
@@ -201,4 +205,4 @@ The persist source map input
 
 #### Defined in
 
-[src/types/debugging.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L97)
+[src/types/debugging.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L31)

@@ -115,6 +115,7 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L200)
 =======
 [src/types/app-client.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L187)
@@ -122,6 +123,9 @@ If calling an ABI method then either the name of the method, or the ABI signatur
 =======
 [src/types/app-client.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L201)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L199)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 

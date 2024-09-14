@@ -36,6 +36,7 @@ The id of an existing app to call using this client, or 0 if the app hasn't been
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L110)
 =======
 [src/types/app-client.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L97)
@@ -43,6 +44,9 @@ The id of an existing app to call using this client, or 0 if the app hasn't been
 =======
 [src/types/app-client.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L111)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L109)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -60,6 +64,7 @@ The optional name to use to mark the app when deploying `ApplicationClient.deplo
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L112)
 =======
 [src/types/app-client.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L99)
@@ -67,6 +72,9 @@ The optional name to use to mark the app when deploying `ApplicationClient.deplo
 =======
 [src/types/app-client.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L113)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L111)
+>>>>>>> de5873b (chore: draft tests)
 
 ___
 
@@ -80,6 +88,7 @@ How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'cr
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 [src/types/app-client.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L117)
 =======
 [src/types/app-client.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L104)
@@ -87,3 +96,6 @@ How the app ID is resolved, either by `'id'` or `'creatorAndName'`; must be `'cr
 =======
 [src/types/app-client.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L118)
 >>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
+=======
+[src/types/app-client.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L116)
+>>>>>>> de5873b (chore: draft tests)
