@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
@@ -17,6 +18,10 @@ import AlgoKitComposer, {
 } from './composer'
 import { ExecuteParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
+
+const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
+  return `${method.name}(${(args ?? []).map((a) => (typeof a === 'object' ? JSON.stringify(a, (_, v) => (typeof v === 'bigint' ? Number(v) : v)) : a))})`
+}
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionSender {
@@ -611,7 +616,10 @@ export class AlgorandClientTransactionSender {
    *})
    * ```
    */
-  appUpdate = this._sendAppUpdateCall((c) => c.addAppUpdate)
+  appUpdate = this._sendAppUpdateCall((c) => c.addAppUpdate, {
+    postLog: (params, result) =>
+      `App ${params.appId} updated ${params.args ? ` with ${params.args.map((a) => Buffer.from(a).toString('base64'))}` : ''} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /**
    * Delete a smart contract.
@@ -652,7 +660,10 @@ export class AlgorandClientTransactionSender {
    *})
    * ```
    */
-  appDelete = this._sendAppCall((c) => c.addAppDelete)
+  appDelete = this._sendAppCall((c) => c.addAppDelete, {
+    postLog: (params, result) =>
+      `App ${params.appId} deleted ${params.args ? ` with ${params.args.map((a) => Buffer.from(a).toString('base64'))}` : ''} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /**
    * Call a smart contract.
@@ -693,7 +704,10 @@ export class AlgorandClientTransactionSender {
    *})
    * ```
    */
-  appCall = this._sendAppCall((c) => c.addAppCall)
+  appCall = this._sendAppCall((c) => c.addAppCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} called ${params.args ? ` with ${params.args.map((a) => Buffer.from(a).toString('base64'))}` : ''} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /**
    * Create a smart contract via an ABI method.
@@ -814,7 +828,10 @@ export class AlgorandClientTransactionSender {
    *})
    * ```
    */
-  appUpdateMethodCall = this._sendAppUpdateCall((c) => c.addAppUpdateMethodCall)
+  appUpdateMethodCall = this._sendAppUpdateCall((c) => c.addAppUpdateMethodCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} updated with ${getMethodCallForLog(params)} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /**
    * Delete a smart contract via an ABI method.
@@ -867,7 +884,10 @@ export class AlgorandClientTransactionSender {
    *})
    * ```
    */
-  appDeleteMethodCall = this._sendAppCall((c) => c.addAppDeleteMethodCall)
+  appDeleteMethodCall = this._sendAppCall((c) => c.addAppDeleteMethodCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} deleted with ${getMethodCallForLog(params)} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /**
    * Call a smart contract via an ABI method.
@@ -920,7 +940,10 @@ export class AlgorandClientTransactionSender {
    *})
    * ```
    */
-  appCallMethodCall = this._sendAppCall((c) => c.addAppCallMethodCall)
+  appCallMethodCall = this._sendAppCall((c) => c.addAppCallMethodCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} called with ${getMethodCallForLog(params)} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
 
   /** Register an online key. */
   onlineKeyRegistration = this._send((c) => c.addOnlineKeyRegistration, {
