@@ -345,7 +345,7 @@ export class ClientManager {
    */
   public getTypedAppFactory<TClient>(
     typedFactory: TypedAppFactory<TClient>,
-    params: Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>,
+    params?: Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>,
   ) {
     if (!this._algorand) {
       throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')

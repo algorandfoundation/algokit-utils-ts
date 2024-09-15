@@ -7,9 +7,9 @@ import ABIMethod = algosdk.ABIMethod
 export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
   const arc32Structs = Object.values(appSpec.hints).flatMap((hint) => Object.entries(hint.structs ?? {}))
   const structs = Object.fromEntries(
-    arc32Structs.map(([name, struct]) => {
+    arc32Structs.map(([_, struct]) => {
       const fields = Object.fromEntries(struct.elements.map((e) => [e[0], e[1]]))
-      return [name, fields satisfies StructFields]
+      return [struct.name, fields satisfies StructFields]
     }),
   ) satisfies { [structName: string]: StructFields }
   const hint = (m: ABIMethodParams) => appSpec.hints[new ABIMethod(m).getSignature()] as Hint | undefined

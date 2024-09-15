@@ -75,8 +75,7 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
 export function getABITupleFromABIStruct(struct: ABIStruct, structFields: StructFields): algosdk.ABIValue[] {
   return Object.entries(structFields).map(([key, type]) => {
     const value = struct[key]
-
-    return typeof type === 'string' ? getABIEncodedValue(value, type, {}) : getABITupleFromABIStruct(value as ABIStruct, type)
+    return typeof type === 'string' ? (value as algosdk.ABIValue) : getABITupleFromABIStruct(value as ABIStruct, type)
   })
 }
 
@@ -120,7 +119,7 @@ export function getABIEncodedValue(
 ): Uint8Array {
   if (typeof value === 'object' && value instanceof Uint8Array) return value
   if (type === 'bytes') {
-    if (typeof value === 'string') return Buffer.from(value, 'base64')
+    if (typeof value === 'string') return Buffer.from(value, 'utf-8')
     if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
     return value
   }
@@ -168,7 +167,9 @@ export function getArc56Method(methodNameOrSignature: string, appSpec: Arc56Cont
 /**
  * Checks for decode errors on the AppCallTransactionResult and maps the return value to the specified generic type
  *
- * @param result The AppCallTransactionResult to be mapped
+ * @param returnValue The smart contract response
+ * @param method The method that was called
+ * @param structs The struct fields from the app spec
  * @returns The smart contract response with an updated return value
  */
 export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValue | ABIStruct | undefined>(
