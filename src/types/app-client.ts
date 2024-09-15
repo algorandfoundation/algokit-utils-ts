@@ -762,8 +762,8 @@ export class AppClient {
         isClearStateProgram ? clearSourceMap! : approvalSourceMap!,
       )
     if (errorMessage) {
-      const appId = JSON.stringify(e).match(/(?<=app=)d+/)?.[0] || ''
-      const txId = JSON.stringify(e).match(/(?<=transaction )S+(?=:)/)?.[0]
+      const appId = JSON.stringify(e).match(/(?<=app=)\d+/)?.[0] || ''
+      const txId = JSON.stringify(e).match(/(?<=transaction )\S+(?=:)/)?.[0]
       const error = new Error(`Runtime error when executing ${appSpec.name} (appId: ${appId}) in transaction ${txId}: ${errorMessage}`)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(error as any).cause = e
@@ -847,7 +847,7 @@ export class AppClient {
       const arg = m.args[i]
       if (a !== undefined) {
         // If a struct then convert to tuple for the underlying call
-        return arg.struct
+        return arg.struct && typeof a === 'object' && !Array.isArray(a)
           ? getABITupleFromABIStruct(a as ABIStruct, appSpec.structs[arg.struct])
           : (a as ABIValue | AppMethodCallTransactionArgument)
       }
@@ -1163,13 +1163,14 @@ export class AppClient {
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     const method = getArc56Method(params.method, this._appSpec)
+    const args = AppClient.getABIArgsWithDefaultValues(params.method, params.args, this._appSpec)
     return {
       ...params,
       appId: this._appId,
       sender: this.getSender(params.sender),
       method,
       onComplete,
-      args: AppClient.getABIArgsWithDefaultValues(params.method, params.args, this._appSpec),
+      args,
     }
   }
 
@@ -1338,7 +1339,7 @@ export class AppClient {
               return [
                 getABIDecodedValue(key, metadata.keyType, this._appSpec.structs),
                 getABIDecodedValue('valueRaw' in s ? s.valueRaw : s.value, metadata.valueType, this._appSpec.structs),
-              ]
+              ] as const
             }),
         )
       },
