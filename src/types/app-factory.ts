@@ -1,6 +1,7 @@
 import algosdk from 'algosdk'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import {
+  ABIReturn,
   AppCompilationResult,
   AppReturn,
   DELETABLE_TEMPLATE_NAME,
@@ -261,15 +262,21 @@ export class AppFactory {
           'return' in result
             ? result.operationPerformed === 'update'
               ? params.updateParams && 'method' in params.updateParams
-                ? getArc56ReturnValue(result.return, getArc56Method(params.updateParams.method, this._appSpec), this._appSpec.structs)
+                ? params.updateParams.returnValueFormatter
+                  ? params.updateParams.returnValueFormatter(result.return)
+                  : getArc56ReturnValue(result.return, getArc56Method(params.updateParams.method, this._appSpec), this._appSpec.structs)
                 : undefined
               : params.createParams && 'method' in params.createParams
-                ? getArc56ReturnValue(result.return, getArc56Method(params.createParams.method, this._appSpec), this._appSpec.structs)
+                ? params.createParams.returnValueFormatter
+                  ? params.createParams.returnValueFormatter(result.return)
+                  : getArc56ReturnValue(result.return, getArc56Method(params.createParams.method, this._appSpec), this._appSpec.structs)
                 : undefined
             : undefined,
         deleteReturn:
           'deleteReturn' in result && params.deleteParams && 'method' in params.deleteParams
-            ? getArc56ReturnValue(result.deleteReturn, getArc56Method(params.deleteParams.method, this._appSpec), this._appSpec.structs)
+            ? params.deleteParams.returnValueFormatter
+              ? params.deleteParams.returnValueFormatter(result.return)
+              : getArc56ReturnValue(result.deleteReturn, getArc56Method(params.deleteParams.method, this._appSpec), this._appSpec.structs)
             : undefined,
       },
     }
@@ -502,15 +509,23 @@ export class AppFactory {
    *
    * @param result The SendAppTransactionResult to be mapped
    * @param method The method that was called
+   * @param returnValueFormatter Optional function to format the return value of any method calls and override default semantics
    * @returns The smart contract response with an updated return value
    */
   async parseMethodCallReturn<
     TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
     TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
+  >(
+    result: Promise<TResult> | TResult,
+    method: Arc56Method,
+    returnValueFormatter?: (value: ABIReturn | undefined) => TReturn,
+  ): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
     const resultValue = await result
-    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) } as unknown as Expand<
-      Omit<TResult, 'return'> & AppReturn<TReturn>
-    >
+    return {
+      ...resultValue,
+      return: returnValueFormatter
+        ? returnValueFormatter(resultValue.return)
+        : getArc56ReturnValue(resultValue.return, method, this._appSpec.structs),
+    } as unknown as Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>
   }
 }
