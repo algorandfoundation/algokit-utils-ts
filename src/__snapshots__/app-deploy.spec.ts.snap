@@ -92,7 +92,8 @@ INFO: Existing app test found by creator ACCOUNT_1, with app id APP_1 and versio
 INFO: Detected a TEAL update in app APP_1 for creator ACCOUNT_1
 INFO: App is updatable and onUpdate=UpdateApp, updating app...
 INFO: Updating existing test app for ACCOUNT_1 to version 2.0.
-VERBOSE: Sent transaction ID TXID_2 appl from ACCOUNT_1"
+VERBOSE: Sent transaction ID TXID_2 appl from ACCOUNT_1
+DEBUG: App APP_1 updated  by ACCOUNT_1 via transaction TXID_2"
 `;
 
 exports[`deploy-app Do nothing if deploying app with no changes 1`] = `

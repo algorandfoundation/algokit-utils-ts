@@ -72,7 +72,6 @@ import AlgoKitComposer, {
 import { PersistSourceMapInput } from './debugging'
 import { Expand } from './expand'
 import { LogicError } from './logic-error'
-import { NetworkDetails } from './network-client'
 import { ExecuteParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
@@ -485,11 +484,8 @@ export class AppClient {
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
    * @param params The parameters to create the app client
    */
-  static async fromNetwork(
-    params: Expand<Omit<AppClientParams, 'algorand' | 'appId'>>,
-    algorand: AlgorandClientInterface,
-    network: NetworkDetails,
-  ): Promise<AppClient> {
+  static async fromNetwork(params: Expand<Omit<AppClientParams, 'appId'>>): Promise<AppClient> {
+    const network = await params.algorand.client.network()
     const appSpec = AppClient.normaliseAppSpec(params.appSpec)
     const networkNames = [network.genesisHash]
     if (network.isLocalNet) networkNames.push('localnet')
@@ -503,7 +499,7 @@ export class AppClient {
     }
 
     const appId = BigInt(appSpec.networks![networkIndex].appID)
-    return new AppClient({ ...params, appId, algorand, appSpec })
+    return new AppClient({ ...params, appId, appSpec })
   }
 
   /**

@@ -271,7 +271,7 @@ export class ClientManager {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
-    return AppClient.fromNetwork(params, this._algorand, await this.network())
+    return AppClient.fromNetwork({ ...params, algorand: this._algorand })
   }
 
   /**
@@ -282,7 +282,7 @@ export class ClientManager {
    * ```typescript
    * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
    *   creatorAddress: "CREATORADDRESS",
-   *   sender: alice,
+   *   defaultSender: alice,
    * })
    * ```
    * @example Specify name
@@ -290,21 +290,20 @@ export class ClientManager {
    * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
    *   creatorAddress: "CREATORADDRESS",
    *   name: "contract-name",
-   *   sender: alice,
+   *   defaultSender: alice,
    * })
    * ```
    * @returns The typed client instance
    */
-  public async getTypedAppClientByCreatorAndName<TClient>(
-    typedClient: TypedAppClient<TClient>,
+  public async getTypedAppClientByCreatorAndName<TClient extends TypedAppClient<InstanceType<TClient>>>(
+    typedClient: TClient,
     params: Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>,
   ) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
 
-    const tempClient = await this.getAppClientByCreatorAndName({ ...params, appSpec: '{}' })
-    return new typedClient({ ...params, appId: tempClient.appId, algorand: this._algorand })
+    return typedClient.fromCreatorAndName({ ...params, algorand: this._algorand })
   }
 
   /**
@@ -315,12 +314,12 @@ export class ClientManager {
    * ```typescript
    * const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
    *   appId: 12345n,
-   *   sender: alice,
+   *   defaultSender: alice,
    * })
    * ```
    * @returns The typed client instance
    */
-  public getTypedAppClientById<TClient>(
+  public getTypedAppClientById<TClient extends TypedAppClient<InstanceType<TClient>>>(
     typedClient: TypedAppClient<TClient>,
     params: Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>,
   ) {
@@ -329,6 +328,32 @@ export class ClientManager {
     }
 
     return new typedClient({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns a new typed client, resolves the app ID for the current network based on
+   * pre-determined network-specific app IDs specified in the ARC-56 app spec.
+   *
+   * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
+   * @param typedClient The typed client type to use
+   * @param params The params to resolve the app by network
+   * @example
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByNetwork(MyContractClient, {
+   *   defaultSender: alice,
+   * })
+   * ```
+   * @returns The typed client instance
+   */
+  public getTypedAppClientByNetwork<TClient extends TypedAppClient<InstanceType<TClient>>>(
+    typedClient: TClient,
+    params?: Expand<Omit<AppClientParams, 'algorand' | 'appSpec' | 'appId'>>,
+  ) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+
+    return typedClient.fromNetwork({ ...params, algorand: this._algorand })
   }
 
   /**
@@ -590,6 +615,8 @@ export class ClientManager {
  */
 export interface TypedAppClient<TClient> {
   new (params: Omit<AppClientParams, 'appSpec'>): TClient
+  fromNetwork(params: Omit<AppClientParams, 'appId' | 'appSpec'>): Promise<TClient>
+  fromCreatorAndName(params: Omit<ResolveAppClientByCreatorAndName, 'appSpec'>): Promise<TClient>
 }
 
 /**
