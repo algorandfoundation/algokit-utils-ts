@@ -13,7 +13,7 @@ Note: If you prefer Python there's an equivalent [Python utility library](https:
 This library can be installed from NPM using your favourite npm client, e.g.:
 
 ```
-npm install @algorandfoundation/algokit-utils
+npm install algosdk@2 @algorandfoundation/algokit-utils
 ```
 
 Then to import it:
