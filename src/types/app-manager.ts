@@ -434,7 +434,7 @@ export class AppManager {
 
         // If this is a number, first replace any byte representations of the number
         // These may appear in the TEAL in order to circumvent int compression and preserve PC values
-        if (typeof value === 'number' || typeof value === 'boolean') {
+        if (typeof value === 'number' || typeof value === 'bigint') {
           tealTemplateCode = tealTemplateCode.replace(new RegExp(`(?<=bytes )${token}`, 'g'), `0x${value.toString(16).padStart(16, '0')}`)
 
           // We could probably return here since mixing pushint and pushbytes is likely not going to happen, but might as well do both
