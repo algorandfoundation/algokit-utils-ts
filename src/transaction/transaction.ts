@@ -876,7 +876,7 @@ export function controlFees<T extends SuggestedParams | Transaction>(
 ) {
   const { fee, maxFee } = feeControl
   if (fee) {
-    transaction.fee = fee.microAlgo
+    transaction.fee = Number(fee.microAlgo)
     transaction.flatFee = true
   }
 

@@ -42,7 +42,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbe
 
 | Name | Type |
 | :------ | :------ |
-| `amount` | \{ `algos`: `number`  } \| \{ `algo`: `number`  } \| \{ `microAlgos`: `number`  } \| \{ `microAlgo`: `number`  } |
+| `amount` | \{ `algos`: `number` \| `bigint`  } \| \{ `algo`: `number` \| `bigint`  } \| \{ `microAlgos`: `number` \| `bigint`  } \| \{ `microAlgo`: `number` \| `bigint`  } |
 
 #### Returns
 
@@ -56,7 +56,7 @@ Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbe
 
 ### amountInMicroAlgo
 
-• `Private` **amountInMicroAlgo**: `number`
+• `Private` **amountInMicroAlgo**: `bigint`
 
 #### Defined in
 
@@ -98,13 +98,13 @@ ___
 
 ### microAlgo
 
-• `get` **microAlgo**(): `number`
+• `get` **microAlgo**(): `bigint`
 
 Return the amount as a number in µAlgo
 
 #### Returns
 
-`number`
+`bigint`
 
 #### Defined in
 
@@ -114,13 +114,13 @@ ___
 
 ### microAlgos
 
-• `get` **microAlgos**(): `number`
+• `get` **microAlgos**(): `bigint`
 
 Return the amount as a number in µAlgo
 
 #### Returns
 
-`number`
+`bigint`
 
 #### Defined in
 
@@ -138,7 +138,7 @@ Return the amount as a number in µAlgo
 
 #### Defined in
 
-[src/types/amount.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L38)
+[src/types/amount.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L40)
 
 ___
 
@@ -156,7 +156,7 @@ the algos or microAlgos properties
 
 #### Defined in
 
-[src/types/amount.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L46)
+[src/types/amount.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L48)
 
 ___
 
@@ -170,7 +170,7 @@ Create a `AlgoAmount` object representing the given number of Algo
 
 | Name | Type |
 | :------ | :------ |
-| `amount` | `number` |
+| `amount` | `number` \| `bigint` |
 
 #### Returns
 
@@ -178,7 +178,7 @@ Create a `AlgoAmount` object representing the given number of Algo
 
 #### Defined in
 
-[src/types/amount.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L56)
+[src/types/amount.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L58)
 
 ___
 
@@ -192,7 +192,7 @@ Create a `AlgoAmount` object representing the given number of Algo
 
 | Name | Type |
 | :------ | :------ |
-| `amount` | `number` |
+| `amount` | `number` \| `bigint` |
 
 #### Returns
 
@@ -200,7 +200,7 @@ Create a `AlgoAmount` object representing the given number of Algo
 
 #### Defined in
 
-[src/types/amount.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L51)
+[src/types/amount.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L53)
 
 ___
 
@@ -214,7 +214,7 @@ Create a `AlgoAmount` object representing the given number of µAlgo
 
 | Name | Type |
 | :------ | :------ |
-| `amount` | `number` |
+| `amount` | `number` \| `bigint` |
 
 #### Returns
 
@@ -222,7 +222,7 @@ Create a `AlgoAmount` object representing the given number of µAlgo
 
 #### Defined in
 
-[src/types/amount.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L66)
+[src/types/amount.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L68)
 
 ___
 
@@ -236,7 +236,7 @@ Create a `AlgoAmount` object representing the given number of µAlgo
 
 | Name | Type |
 | :------ | :------ |
-| `amount` | `number` |
+| `amount` | `number` \| `bigint` |
 
 #### Returns
 
@@ -244,4 +244,4 @@ Create a `AlgoAmount` object representing the given number of µAlgo
 
 #### Defined in
 
-[src/types/amount.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L61)
+[src/types/amount.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/amount.ts#L63)

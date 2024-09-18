@@ -44,7 +44,7 @@ describe('transaction', () => {
     const fee = (1).algo()
     const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), staticFee: fee })
 
-    expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
+    expect(confirmation.txn.txn.fee).toBe(Number(fee.microAlgo))
   })
 
   test('Transaction group is sent', async () => {

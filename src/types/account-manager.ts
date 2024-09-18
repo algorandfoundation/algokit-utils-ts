@@ -481,7 +481,7 @@ export class AccountManager {
     const accountInfo = await this.getInformation(sender)
     const currentSpendingBalance = accountInfo.balance.microAlgo - accountInfo.minBalance.microAlgo
 
-    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgo, currentSpendingBalance, minFundingIncrement?.microAlgo ?? 0)
+    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgo, currentSpendingBalance, minFundingIncrement?.microAlgo ?? 0n)
 
     return amountFunded === null ? undefined : AlgoAmount.MicroAlgo(amountFunded)
   }

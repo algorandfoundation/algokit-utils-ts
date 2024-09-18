@@ -530,7 +530,7 @@ ___
 
 ### getTypedAppClientById
 
-▸ **getTypedAppClientById**\<`TClient`\>(`typedClient`, `params`): `TClient`
+▸ **getTypedAppClientById**\<`TClient`\>(`typedClient`, `params`): `InstanceType`\<`TClient`\>
 
 Returns a new typed client, resolving the app by app ID.
 
@@ -544,7 +544,7 @@ Returns a new typed client, resolving the app by app ID.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `typedClient` | [`TypedAppClient`](../interfaces/types_client_manager.TypedAppClient.md)\<`TClient`\> | The typed client type to use |
+| `typedClient` | `TClient` | The typed client type to use |
 | `params` | `Object` | The params to resolve the app by ID |
 | `params.appId` | `bigint` | The ID of the app instance this client should make calls against. |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
@@ -554,7 +554,7 @@ Returns a new typed client, resolving the app by app ID.
 
 #### Returns
 
-`TClient`
+`InstanceType`\<`TClient`\>
 
 The typed client instance
 

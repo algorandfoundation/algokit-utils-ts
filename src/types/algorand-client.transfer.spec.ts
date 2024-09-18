@@ -37,14 +37,14 @@ describe('Transfer capability', () => {
     expect(result.transaction.type).toBe(TransactionType.pay)
     expect(result.confirmation.txn.txn.type).toBe('pay')
 
-    expect(result.transaction.amount).toBe(5_000_000)
+    expect(result.transaction.amount).toBe(5_000_000n)
     expect(result.confirmation.txn.txn.amt).toBe(5_000_000)
 
     expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(algosdk.encodeAddress(result.confirmation.txn.txn.snd)).toBe(testAccount.addr)
 
-    expect(accountInfo.balance.microAlgo).toBe(5_000_000)
+    expect(accountInfo.balance.microAlgo).toBe(5_000_000n)
   })
 
   test('Transfer Algo respects string lease', async () => {
@@ -243,8 +243,8 @@ describe('Transfer capability', () => {
 
     invariant(result)
     expect(result.transactionId).toBe(result.transaction.txID())
-    expect(result.amountFunded.microAlgo).toBe(100_001)
-    expect(accountInfo.balance.microAlgo).toBe(100_001)
+    expect(result.amountFunded.microAlgo).toBe(100_001n)
+    expect(accountInfo.balance.microAlgo).toBe(100_001n)
   })
 
   test('ensureFunded respects minimum funding increment', async () => {
@@ -258,7 +258,7 @@ describe('Transfer capability', () => {
     invariant(result)
     expect(result.amountFunded.algo).toBe(1)
     const accountInfo = await algorand.account.getInformation(secondAccount.addr)
-    expect(accountInfo.balance.microAlgo).toBe(1_100_000)
+    expect(accountInfo.balance.microAlgo).toBe(1_100_000n)
   })
 
   test('ensureFunded uses dispenser account by default', async () => {

@@ -233,7 +233,7 @@ Returns an amount of Algo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algos` | `number` | The amount of Algo |
+| `algos` | `number` \| `bigint` | The amount of Algo |
 
 #### Returns
 
@@ -241,7 +241,7 @@ Returns an amount of Algo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L51)
+[src/amount.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L69)
 
 ___
 
@@ -255,7 +255,7 @@ Returns an amount of Algo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algos` | `number` | The amount of Algo |
+| `algos` | `number` \| `bigint` | The amount of Algo |
 
 #### Returns
 
@@ -263,7 +263,7 @@ Returns an amount of Algo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L44)
+[src/amount.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L62)
 
 ___
 
@@ -2358,7 +2358,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `microAlgos` | `number` | The amount of µAlgo |
+| `microAlgos` | `number` \| `bigint` | The amount of µAlgo |
 
 #### Returns
 
@@ -2366,7 +2366,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L65)
+[src/amount.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L83)
 
 ___
 
@@ -2380,7 +2380,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `microAlgos` | `number` | The amount of µAlgo |
+| `microAlgos` | `number` \| `bigint` | The amount of µAlgo |
 
 #### Returns
 
@@ -2388,7 +2388,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L58)
+[src/amount.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L76)
 
 ___
 
@@ -2993,7 +2993,7 @@ Returns an amount of µAlgo to cover standard fees for the given number of trans
 
 #### Defined in
 
-[src/amount.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L72)
+[src/amount.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L90)
 
 ___
 

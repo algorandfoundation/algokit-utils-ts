@@ -44,6 +44,10 @@ import * as algokit from '@algorandfoundation/algokit-utils'
 
 ## Migrating
 
+### Step 1 - Accomodate AlgoAmount change
+
+There is a class in AlgoKit Utils called `AlgoAmount` that wraps the representation of microAlgo / Algo amounts. The `microAlgo` property on that class now returns a `bigint` rather than a `number`, which is a breaking change. This is to align with the new consistent way of representing certain types of values (in this case Algo balances and microAlgo amounts) as bigints.
+
 ### Step 1 - Replace sdk clients with `AlgorandClient`
 
 To migrate the first step is to get an `AlgorandClient` instance at the same place(s) you had an algod instance. To do this you can look for anywhere you called the `getAlgoClient` method and replace them with an [equivalent mechanism](./capabilities/algorand-client.md#algorand-client) for getting an `AlgorandClient` instance.

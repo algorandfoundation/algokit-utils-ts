@@ -29,13 +29,13 @@ export class UnsafeConversionError extends Error {}
  * @returns The amount of funds to add to the wallet or null if the wallet is already above the minimum spending balance
  */
 export const calculateFundAmount = (
-  minSpendingBalance: number,
-  currentSpendingBalance: number,
-  minFundingIncrement: number,
-): number | null => {
+  minSpendingBalance: bigint,
+  currentSpendingBalance: bigint,
+  minFundingIncrement: bigint,
+): bigint | null => {
   if (minSpendingBalance > currentSpendingBalance) {
     const minFundAmount = minSpendingBalance - currentSpendingBalance
-    return Math.max(minFundAmount, minFundingIncrement)
+    return BigInt(Math.max(Number(minFundAmount), Number(minFundingIncrement)))
   } else {
     return null
   }

@@ -50,8 +50,8 @@ describe('AlgorandClient', () => {
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
-    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 1001)
-    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1)
+    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 1001n)
+    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1n)
   })
 
   test('sendAssetCreate', async () => {
@@ -74,8 +74,8 @@ describe('AlgorandClient', () => {
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
-    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 2001)
-    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1)
+    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 2001n)
+    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1n)
 
     expect(result.returns?.[0].returnValue?.valueOf()).toBe(3n)
   })
@@ -98,8 +98,8 @@ describe('AlgorandClient', () => {
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
-    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 2001)
-    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1)
+    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 2001n)
+    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1n)
 
     expect(methodRes.returns?.[0].returnValue?.valueOf()).toBe(3n)
   })

@@ -795,10 +795,10 @@ export default class AlgoKitComposer {
     }
 
     if (params.staticFee !== undefined) {
-      txn.fee = params.staticFee.microAlgo
+      txn.fee = Number(params.staticFee.microAlgo)
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
-      if (params.extraFee) txn.fee += params.extraFee.microAlgo
+      if (params.extraFee) txn.fee += Number(params.extraFee.microAlgo)
     }
     txn.flatFee = true
 

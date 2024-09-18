@@ -320,7 +320,7 @@ export class ClientManager {
    * @returns The typed client instance
    */
   public getTypedAppClientById<TClient extends TypedAppClient<InstanceType<TClient>>>(
-    typedClient: TypedAppClient<TClient>,
+    typedClient: TClient,
     params: Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>,
   ) {
     if (!this._algorand) {

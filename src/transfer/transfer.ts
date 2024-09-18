@@ -41,7 +41,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
     )
     if (!result) return undefined
     return {
-      amount: result.amountFunded.microAlgo,
+      amount: Number(result.amountFunded.microAlgo),
       transactionId: result.transactionId,
     }
   } else {
@@ -65,7 +65,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
 
     return result
       ? {
-          amount: result.amountFunded.microAlgo,
+          amount: Number(result.amountFunded.microAlgo),
           transactionId: result.txIds[0],
         }
       : undefined
