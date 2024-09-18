@@ -770,7 +770,7 @@ export class AppClient {
   }
 
   /**
-   * Compiles the approval and clear programs (if TEAL templates provided),
+   * Compiles the approval and clear state programs (if TEAL templates provided),
    * performing any provided deploy-time parameter replacement and returns
    * the compiled code and any compilation results (including source maps).
    *
@@ -1112,7 +1112,7 @@ export class AppClient {
   }
 
   /**
-   * Compiles the approval and clear programs (if TEAL templates provided),
+   * Compiles the approval and clear state programs (if TEAL templates provided),
    * performing any provided deploy-time parameter replacement and stores
    * the source maps.
    *
@@ -1413,9 +1413,9 @@ export class ApplicationClient {
   /**
    * @deprecated Use `AppClient.compile()` instead.
    *
-   * Compiles the approval and clear programs and sets up the source map.
+   * Compiles the approval and clear state programs and sets up the source map.
    * @param compilation The deploy-time parameters for the compilation
-   * @returns The compiled approval and clear programs
+   * @returns The compiled approval and clear state programs
    */
   async compile(compilation?: AppClientCompilationParams) {
     const { deployTimeParams, updatable, deletable } = compilation ?? {}

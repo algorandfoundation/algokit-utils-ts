@@ -4,7 +4,7 @@ Version 7 of AlgoKit Utils moved from a stateless function-based interface to a 
 
 The entry point to the vast majority of functionality in AlgoKit Utils is now available via a single entry-point, the [`AlgorandClient` class](./capabilities/algorand-client.md).
 
-The old version will still work until the next major version bump (we have put careful care to keep those functions working with backwards compatibility), but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
+The old version will still work until the next major version bump (we have been careful to keep those functions working with backwards compatibility), but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
 
 A simple example of the before and after follows:
 
@@ -36,7 +36,7 @@ const payment = await algorand.send.payment({
 })
 ```
 
-If you were following the recommended guidance for AlgoKitUtils then you can easily tell if you are using the old version by looking for this import line (which can act as a good todo checklist if you are migrating):
+If you were following the recommended guidance for AlgoKit Utils then you can easily tell if you are using the old version by looking for this import line (which can act as a good todo checklist if you are migrating):
 
 ```typescript
 import * as algokit from '@algorandfoundation/algokit-utils'
@@ -85,12 +85,12 @@ Other things to note that you may come across:
 - We now restrict the number of valid rounds (10 rounds, except when pointing to LocalNet, which is still 1000 to avoid problems given the round advances for every transaction) to a much smaller window than the default (1000 rounds), but this is configurable [by default](./capabilities/algorand-client.md#transaction-configuration) and [per transaction](./capabilities/algorand-client.md#transaction-parameters) if that's a problem. If you come across this problem it will present as a dead transaction error.
 - Transaction parameters are cached for a period of time to prevent repeated calls to the algod API to get default transaction parameters, but this sometimes means that you can create duplicate transaction IDs when previously that wouldn't happen, you will get an obvious error if that happens though and can adjust it by ensuring one of the parameters in your transaction change slightly (e.g. note, lease, validity window, etc.), you can also [exert control over default transaction parameter caching](./capabilities/algorand-client.md#transaction-configuration)
 - Rather than always passing a signer into transaction calls (which is what the `SendTransactionFrom` instance previously combined with the address), we have decoupled signing and sender address via the `AccountManager` (`algorand.account`), which keeps track of the signer associated with a sender address so the signer can be resolved just in time.
-  - Most of the thing you don't need to worry about it since it will magically happen for you, but if you have situations where you are creating a signer outside of the `AccountManager` you will need to [register the signer](./capabilities/account.md#registering-a-signer) with the `AccountManager` first.
+  - Most of the time you don't need to worry about it since it will magically happen for you, but if you have situations where you are creating a signer outside of the `AccountManager` you will need to [register the signer](./capabilities/account.md#registering-a-signer) with the `AccountManager` first.
   - Note: you can also explicitly [pass a `signer`](./capabilities/algorand-client.md#transaction-parameters) in as well if you want an escape hatch.
 
 ### Step 3 - Replace `ApplicationClient` usage
 
-The existing `ApplicationClient` (untyped app client) class is still present until the next major version bump, but it's worthwhile migrating to the new [`AppClient` and `AppFactory` classes](./capabilities/app-client.md). These new clients are [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) compatible, but also take an [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) app spec file and will continue to support this indefinitely until such as time as the community deems they are deprecated.
+The existing `ApplicationClient` (untyped app client) class is still present until the next major version bump, but it's worthwhile migrating to the new [`AppClient` and `AppFactory` classes](./capabilities/app-client.md). These new clients are [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) compatible, but also take an [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) app spec file and will continue to support this indefinitely until such time the community deems they are deprecated.
 
 All of the functionality in `ApplicationClient` is available within the new classes, but their interface is slightly different to make it easier to use and more consistent with the new `AlgorandClient` functionality. The key existing methods that have changed all have `@deprecation` notices to help guide you on this, but broadly the changes are:
 

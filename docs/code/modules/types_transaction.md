@@ -63,7 +63,7 @@ many types of accounts, including:
 * `SigningAccount` - An AlgoKit Utils class that wraps Account to provide support for rekeyed accounts
 * `LogicSigAccount` - The in-built `algosdk.LogicSigAccount` type for logic signatures
 * `MultisigAccount` - An AlgoKit Utils class that wraps a multisig account and provides mechanisms to get a multisig account
-* `TransactionSignerAccount` - An AlgoKitUtils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
+* `TransactionSignerAccount` - An AlgoKit Utils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
 
 #### Defined in
 

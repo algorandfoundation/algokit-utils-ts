@@ -240,7 +240,7 @@ export class ClientManager {
    * Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
    * @param params The parameters to create the app client
    * @example Basic
-   * const appClient = algorand.client.getAppClientByCreatorAndName({
+   * const appClient = algorand.client.getAppClientById({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   appId: 12345n,
    * })
@@ -261,7 +261,7 @@ export class ClientManager {
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
    * @param params The parameters to create the app client
    * @example Basic
-   * const appClient = algorand.client.getAppClientByCreatorAndName({
+   * const appClient = algorand.client.getAppClientByNetwork({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   // appId resolved by using ARC-56 spec to find app ID for current network
    * })

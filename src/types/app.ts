@@ -329,7 +329,7 @@ export interface AppDeploymentParams
   deleteArgs?: AppCallArgs
 }
 
-/** The result of compiling the approval and clear TEAL for an app */
+/** The result of compiling the approval and clear state TEAL programs for an app */
 export interface AppCompilationResult {
   /** The compilation result of approval */
   compiledApproval: CompiledTeal

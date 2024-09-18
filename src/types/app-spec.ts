@@ -78,7 +78,6 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
       },
       keys: {
         global: Object.fromEntries(
-          // todo: appSpec.schema.global/local.reserved not used - is that ok?
           Object.entries(appSpec.schema.global.declared).map((s) => [
             s[0],
             {
@@ -86,7 +85,6 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
               keyType: 'bytes',
               valueType: s[1].type,
               desc: s[1].descr,
-              // todo: s[1].static not used - is that ok?
             } satisfies StorageKey,
           ]),
         ),

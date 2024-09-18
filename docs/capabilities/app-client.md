@@ -3,7 +3,7 @@
 > [!NOTE]
 > This page covers the untyped app client, but we recommend using [typed clients](./typed-app-clients.md), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
 
-App client and App factory are a higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App management](./app.md). They allow you to access high productivity application clients that work with [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) and [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
+App client and App factory are higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App management](./app.md). They allow you to access high productivity application clients that work with [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) and [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
 
 ## `AppFactory`
 
@@ -18,7 +18,7 @@ const factory = algorand.client.getAppFactory({
 })
 // Advanced example
 const factory = algorand.client.getAppFactory({
-  appSpec: parsedAppSpec_AppSpec_or_Arc56Contract,
+  appSpec: parsedArc32OrArc56AppSpec,
   defaultSender: 'SENDERADDRESS',
   appName: 'OverriddenAppName',
   version: '2.0.0',
@@ -129,7 +129,7 @@ const { result, app } = factory.create({
 })
 ```
 
-If you want to construct a custom create call using the underlying [`algorand.send.appCreate` / `algorand.transactions.appCreate` / `algorand.send.appCreateMethodCall` / `algorand.transactions.appCreateMethodCall` methods](./app.md#creation) then you can get params objects:
+If you want to construct a custom create call, use the underlying [`algorand.send.appCreate` / `algorand.transactions.appCreate` / `algorand.send.appCreateMethodCall` / `algorand.transactions.appCreateMethodCall` methods](./app.md#creation) then you can get params objects:
 
 - `factory.params.create(params)` - ABI method create call for deploy method or an underlying [`appCreateMethodCall` call](./app.md#creation)
 - `factory.params.bare.create(params)` - Bare create call for deploy method or an underlying [`appCreate` call](./app.md#creation)
@@ -189,7 +189,7 @@ const { result, app } = factory.deploy({
 })
 ```
 
-If you want to construct a custom deploy call using the underlying [`algorand.appDeployer.deploy` method](./app-deploy.md#performing-a-deployment) then you can get params objects for the `createParams`, `updateParams` and `deleteParams`:
+If you want to construct a custom deploy call, use the underlying [`algorand.appDeployer.deploy` method](./app-deploy.md#performing-a-deployment) then you can get params objects for the `createParams`, `updateParams` and `deleteParams`:
 
 - `factory.params.create(params)` - ABI method create call for deploy method or an underlying [`appCreateMethodCall` call](./app.md#creation)
 - `factory.params.deployUpdate(params)` - ABI method update call for deploy method
@@ -200,7 +200,7 @@ If you want to construct a custom deploy call using the underlying [`algorand.ap
 
 ## Updating and deleting an app
 
-Deploy method aside, the ability to make update and delete calls happens after there is an instance of an app so are done via `AppClient`. The semantics of this are no different than [other calls](#calling-the-app), which the caveat that the update call is a bit different to the others since the code will be compiled when constructing the update params (making it an async method) and the update calls thus optionally takes compilation parameters (`deployTimeParams`, `updatable` and `deletable`) for [deploy-time parameter replacements and deploy-time immutability and permanence control](./app-deploy.md#compilation-and-template-substitution).
+Deploy method aside, the ability to make update and delete calls happens after there is an instance of an app so are done via `AppClient`. The semantics of this are no different than [other calls](#calling-the-app), with the caveat that the update call is a bit different to the others since the code will be compiled when constructing the update params (making it an async method) and the update calls thus optionally takes compilation parameters (`deployTimeParams`, `updatable` and `deletable`) for [deploy-time parameter replacements and deploy-time immutability and permanence control](./app-deploy.md#compilation-and-template-substitution).
 
 ## Calling the app
 
@@ -238,14 +238,14 @@ const call2 = await app.send.delete({
   method: 'delete_abi',
   args: ['string_io'],
 })
-const call3 = await client.send.optIn({ method: 'opt_in' })
-const call4 = await client.send.bare.clearState()
+const call3 = await app.send.optIn({ method: 'opt_in' })
+const call4 = await app.send.bare.clearState()
 
-const transaction = await client.transactions.bare.closeOut({
+const transaction = await app.transactions.bare.closeOut({
   args: [new Uint8Array(1, 2, 3)],
 })
 
-const params = client.params.optIn({ method: 'optin' })
+const params = app.params.optIn({ method: 'optin' })
 ```
 
 ## Funding the app account
@@ -259,10 +259,10 @@ The input parameters are:
 Note: If you are passing the funding payment in as an ABI argument so it can be validated by the ABI method then you'll want to get the funding call as a transaction, e.g.:
 
 ```typescript
-const result = await appClient.send.call({
+const result = await app.send.call({
   method: 'bootstrap',
   args: [
-    appClient.transactions.fundAppAccount({
+    app.transactions.fundAppAccount({
       amount: microAlgo(200_000),
     }),
   ],
@@ -270,7 +270,7 @@ const result = await appClient.send.call({
 })
 ```
 
-You can also get the funding call as a params object via `appClient.params.fundAppAccount(params)`.
+You can also get the funding call as a params object via `app.params.fundAppAccount(params)`.
 
 ## Reading state
 
@@ -282,9 +282,9 @@ The ARC-56 app spec can specify detailed information about the encoding format o
 
 You can access this functionality via:
 
-- `appClient.state.global.{method}()` - Global state
-- `appClient.state.local(address).{method}()` - Local state
-- `appClient.state.box.{method}()` - Box storage
+- `app.state.global.{method}()` - Global state
+- `app.state.local(address).{method}()` - Local state
+- `app.state.box.{method}()` - Box storage
 
 Where `{method}` is one of:
 
@@ -294,10 +294,10 @@ Where `{method}` is one of:
 - `getMap(mapName)` - Returns all map values for the given map in a key=>value record. It's recommended that this is only done when you have a unique `prefix` for the map otherwise there's a high risk that incorrect values will be included in the map.
 
 ```typescript
-const values = appClient.state.global.getAll()
-const value = appClient.state.local('ADDRESS').getValue('value1')
-const mapValue = appClient.state.box.getMapValue('map1', 'mapKey')
-const map = appClient.state.global.getMap('myMap')
+const values = app.state.global.getAll()
+const value = app.state.local('ADDRESS').getValue('value1')
+const mapValue = app.state.box.getMapValue('map1', 'mapKey')
+const map = app.state.global.getMap('myMap')
 ```
 
 ### Generic methods
@@ -313,17 +313,17 @@ There are various methods defined that let you read state from the smart contrac
 - `getBoxValuesFromABIType(type, filter)` - Gets the current values of the boxes from an ABI type using [`algorand.app.getBoxValuesFromABIType`](./app.md#boxes)
 
 ```typescript
-const globalState = await appClient.getGlobalState()
-const localState = await appClient.getLocalState('ACCOUNTADDRESS')
+const globalState = await app.getGlobalState()
+const localState = await app.getLocalState('ACCOUNTADDRESS')
 
 const boxName: BoxReference = 'my-box'
 const boxName2: BoxReference = 'my-box2'
 
-const boxNames = appClient.getBoxNames()
-const boxValue = appClient.getBoxValue(boxName)
-const boxValues = appClient.getBoxValues([boxName, boxName2])
-const boxABIValue = appClient.getBoxValueFromABIType(boxName, algosdk.ABIStringType)
-const boxABIValues = appClient.getBoxValuesFromABIType([boxName, boxName2], algosdk.ABIStringType)
+const boxNames = app.getBoxNames()
+const boxValue = app.getBoxValue(boxName)
+const boxValues = app.getBoxValues([boxName, boxName2])
+const boxABIValue = app.getBoxValueFromABIType(boxName, algosdk.ABIStringType)
+const boxABIValues = app.getBoxValuesFromABIType([boxName, boxName2], algosdk.ABIStringType)
 ```
 
 ## Handling logic errors and diagnosing errors
@@ -334,7 +334,7 @@ When this occurs, you will generally get an error that looks something like: `Tr
 
 The information in that error message can be parsed and when combined with the [source map from compilation](./app-deploy.md#compilation-and-template-substitution) you can expose debugging information that makes it much easier to understand what's happening. The ARC-56 app spec, if provided, can also specify human-readable error messages against certain program counter values and further augment the error message.
 
-The app client and ap factory automatically provide this functionality for all smart contract calls. They also expose a function that can be used for any custom calls you manually construct and need to add into your own try/catch `exposeLogicError(e: Error, isClear?: boolean)`.
+The app client and app factory automatically provide this functionality for all smart contract calls. They also expose a function that can be used for any custom calls you manually construct and need to add into your own try/catch `exposeLogicError(e: Error, isClear?: boolean)`.
 
 When an error is thrown then the resulting error that is re-thrown will be a [`LogicError` object](../code/classes/types_logic_error.LogicError.md), which has the following fields:
 

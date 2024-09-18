@@ -440,7 +440,7 @@ export class AppFactory {
   }
 
   /**
-   * Compiles the approval and clear programs (if TEAL templates provided),
+   * Compiles the approval and clear state programs (if TEAL templates provided),
    * performing any provided deploy-time parameter replacement and stores
    * the source maps.
    *

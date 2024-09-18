@@ -50,20 +50,43 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ## Creating and issuing transactions
 
-`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions:
+`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`AlgoKitComposer`](./algokit-composer.md)).
 
-### Creating single transactions
+### Creating transactions
 
-You can compose a single transaction via `algorand.transactions...`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
+You can compose a transaction via `algorand.transactions...`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
 
 The signature for the calls to send a single transaction usually look like:
 
-`algorand.transactions.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Transaction`
+```
+algorand.transactions.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<Transaction>
+```
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)
 - [`CommonTransactionParams`](../code/modules/types_composer.md#commontransactionparams) are the [common transaction parameters](#transaction-parameters) that can be specified for every single transaction
-- `Transaction` is an `algosdk.Transaction` object
+- `Transaction` is an unsigned `algosdk.Transaction` object, ready to be signed and sent
+
+The return type for the ABI method call methods are slightly different:
+
+```
+algorand.transactions.app{callType}MethodCall(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<BuiltTransactions>
+```
+
+Where `BuiltTransactions` looks like this:
+
+```typescript
+export interface BuiltTransactions {
+  /** The built transactions */
+  transactions: algosdk.Transaction[]
+  /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
+  methodCalls: Map<number, algosdk.ABIMethod>
+  /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
+  signers: Map<number, algosdk.TransactionSigner>
+}
+```
+
+This signifies the fact that an ABI method call can actually result in multiple transactions (which in turn may have different signers), that you need ABI metadata to be able to extract the return value from the transaction result.
 
 ### Sending a single transaction
 
@@ -77,11 +100,11 @@ Further documentation is present in the related capabilities:
 
 The signature for the calls to send a single transaction usually look like:
 
-`algorand.send.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams & ExecuteParams): SingleSendTransactionResult`
+`algorand.send.{method}(params: {ComposerTransactionTypeParams} & CommonAppCallParams & ExecuteParams): SingleSendTransactionResult`
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)
-- [`CommonTransactionParams`](../code/modules/types_composer.md#commontransactionparams) are the [common transaction parameters](#transaction-parameters) that can be specified for every single transaction
+- [`CommonAppCallParams`](../code/modules/types_composer.md#commonappcallparams) are the [common app call transaction parameters](./app.md#common-app-parameters) that can be specified for every single app transaction
 - [`ExecuteParams`](../code/interfaces/types_transaction.ExecuteParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
 - [`SendSingleTransactionResult`](../code/modules/types_algorand_client.md#sendsingletransactionresult) is all of the information that is relevant when [sending a single transaction to the network](./transaction.md#sending-a-transaction)
 
@@ -89,7 +112,7 @@ Generally, the functions to immediately send a single transaction will emit log 
 
 ### Composing a group of transactions
 
-You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods to add a series of transactions.
+You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`AlgoKitComposer`](./algokit-composer.md) to add a series of transactions.
 
 ```typescript
 const result = algorand

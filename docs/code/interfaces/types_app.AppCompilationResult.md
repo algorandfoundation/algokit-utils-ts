@@ -4,7 +4,7 @@
 
 [types/app](../modules/types_app.md).AppCompilationResult
 
-The result of compiling the approval and clear TEAL for an app
+The result of compiling the approval and clear state TEAL programs for an app
 
 ## Table of contents
 

@@ -292,7 +292,7 @@ The `AppClient`
 
 ```ts
 Basic
-const appClient = algorand.client.getAppClientByCreatorAndName({
+const appClient = algorand.client.getAppClientById({
   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *}',
   appId: 12345n,
 })
@@ -335,7 +335,7 @@ The `AppClient`
 
 ```ts
 Basic
-const appClient = algorand.client.getAppClientByCreatorAndName({
+const appClient = algorand.client.getAppClientByNetwork({
   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *}',
   // appId resolved by using ARC-56 spec to find app ID for current network
 })
