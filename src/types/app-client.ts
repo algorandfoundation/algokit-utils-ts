@@ -362,11 +362,6 @@ export type AppClientMethodCallParams = Expand<
      * * Another method call (via method call params object)
      */
     args?: (ABIValue | ABIStruct | AppMethodCallTransactionArgument | undefined)[]
-    /**
-     * Optional function to format the return value of any method calls and override default semantics.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    returnValueFormatter?: (value: ABIReturn | undefined) => any
   }
 >
 
@@ -715,24 +710,16 @@ export class AppClient {
    *
    * @param result The SendAppTransactionResult to be mapped
    * @param method The method that was called
-   * @param returnValueFormatter An optional function to format the return value and override default semantics
    * @returns The smart contract response with an updated return value
    */
   async parseMethodCallReturn<
     TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
     TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(
-    result: Promise<TResult> | TResult,
-    method: Arc56Method,
-    returnValueFormatter?: (value: ABIReturn | undefined) => TReturn,
-  ): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
+  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
     const resultValue = await result
-    return {
-      ...resultValue,
-      return: returnValueFormatter
-        ? returnValueFormatter(resultValue.return)
-        : getArc56ReturnValue(resultValue.return, method, this._appSpec.structs),
-    } as unknown as Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>
+    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) } as unknown as Expand<
+      Omit<TResult, 'return'> & AppReturn<TReturn>
+    >
   }
 
   /**
@@ -1015,7 +1002,6 @@ export class AppClient {
             this.parseMethodCallReturn(
               this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })),
               getArc56Method(params.method, this._appSpec),
-              params.returnValueFormatter,
             ),
           )),
           ...(compiled as Partial<AppCompilationResult>),
@@ -1029,7 +1015,6 @@ export class AppClient {
           this.parseMethodCallReturn(
             this._algorand.send.appCallMethodCall(this.params.optIn(params)),
             getArc56Method(params.method, this._appSpec),
-            params.returnValueFormatter,
           ),
         )
       },
@@ -1041,7 +1026,6 @@ export class AppClient {
           this.parseMethodCallReturn(
             this._algorand.send.appDeleteMethodCall(this.params.delete(params)),
             getArc56Method(params.method, this._appSpec),
-            params.returnValueFormatter,
           ),
         )
       },
@@ -1053,7 +1037,6 @@ export class AppClient {
           this.parseMethodCallReturn(
             this._algorand.send.appCallMethodCall(this.params.closeOut(params)),
             getArc56Method(params.method, this._appSpec),
-            params.returnValueFormatter,
           ),
         )
       },
@@ -1076,7 +1059,6 @@ export class AppClient {
               return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
             } satisfies SendAppTransactionResult,
             getArc56Method(params.method, this._appSpec),
-            params.returnValueFormatter,
           )
         }
 
@@ -1084,7 +1066,6 @@ export class AppClient {
           this.parseMethodCallReturn(
             this._algorand.send.appCallMethodCall(this.params.call(params)),
             getArc56Method(params.method, this._appSpec),
-            params.returnValueFormatter,
           ),
         )
       },
