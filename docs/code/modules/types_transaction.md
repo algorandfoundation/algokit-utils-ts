@@ -9,6 +9,7 @@
 - [AtomicTransactionComposerToSend](../interfaces/types_transaction.AtomicTransactionComposerToSend.md)
 - [ConfirmedTransactionResult](../interfaces/types_transaction.ConfirmedTransactionResult.md)
 - [ConfirmedTransactionResults](../interfaces/types_transaction.ConfirmedTransactionResults.md)
+- [ExecuteParams](../interfaces/types_transaction.ExecuteParams.md)
 - [SendAtomicTransactionComposerResults](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md)
 - [SendTransactionParams](../interfaces/types_transaction.SendTransactionParams.md)
 - [SendTransactionResult](../interfaces/types_transaction.SendTransactionResult.md)
@@ -62,7 +63,7 @@ many types of accounts, including:
 * `SigningAccount` - An AlgoKit Utils class that wraps Account to provide support for rekeyed accounts
 * `LogicSigAccount` - The in-built `algosdk.LogicSigAccount` type for logic signatures
 * `MultisigAccount` - An AlgoKit Utils class that wraps a multisig account and provides mechanisms to get a multisig account
-* `TransactionSignerAccount` - An AlgoKitUtils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
+* `TransactionSignerAccount` - An AlgoKit Utils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
 
 #### Defined in
 

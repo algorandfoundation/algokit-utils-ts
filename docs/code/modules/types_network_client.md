@@ -8,6 +8,7 @@
 
 - [AlgoClientConfig](../interfaces/types_network_client.AlgoClientConfig.md)
 - [AlgoConfig](../interfaces/types_network_client.AlgoConfig.md)
+- [NetworkDetails](../interfaces/types_network_client.NetworkDetails.md)
 
 ### Functions
 
@@ -35,4 +36,4 @@ Whether the given genesis ID is associated with a LocalNet network
 
 #### Defined in
 
-[src/types/network-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L28)
+[src/types/network-client.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L42)

@@ -5,7 +5,6 @@ import {
   DELETABLE_TEMPLATE_NAME,
   UPDATABLE_TEMPLATE_NAME,
   type ABIReturn,
-  type AppDeployMetadata,
   type AppState,
   type CompiledTeal,
   type TealTemplateParams,
@@ -132,6 +131,7 @@ export class AppManager {
       sourceMap: new algosdk.SourceMap(compiled['sourcemap']),
     }
     this._compilationResults[tealCode] = result
+
     return result
   }
 
@@ -152,7 +152,7 @@ export class AppManager {
   async compileTealTemplate(
     tealTemplateCode: string,
     templateParams?: TealTemplateParams,
-    deploymentMetadata?: AppDeployMetadata,
+    deploymentMetadata?: { updatable?: boolean; deletable?: boolean },
   ): Promise<CompiledTeal> {
     let tealCode = AppManager.stripTealComments(tealTemplateCode)
 
@@ -201,6 +201,16 @@ export class AppManager {
       extraProgramPages: Number(app.params.extraProgramPages ?? 0),
       globalState: AppManager.decodeAppState(app.params.globalState ?? []),
     }
+  }
+
+  /**
+   * Returns the current global state values for the given app ID and account address
+   *
+   * @param appId The ID of the app to return global state for
+   * @returns The current global state for the given app
+   */
+  public async getGlobalState(appId: bigint) {
+    return (await this.getById(appId)).globalState
   }
 
   /**
@@ -335,7 +345,7 @@ export class AppManager {
           stateValues[key] = {
             keyRaw,
             keyBase64,
-            value,
+            value: BigInt(value),
           }
           break
         }

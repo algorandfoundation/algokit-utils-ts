@@ -145,7 +145,7 @@ Sends a funding request to the dispenser API to fund the specified address with 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `address` | `string` | The address to fund. |
-| `amount` | `number` | The amount of µAlgo to fund. |
+| `amount` | `number` \| `bigint` | The amount of µAlgo to fund. |
 
 #### Returns
 

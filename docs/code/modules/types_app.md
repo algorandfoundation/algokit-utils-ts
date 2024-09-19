@@ -40,6 +40,7 @@
 - [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
 - [AppCallType](types_app.md#appcalltype)
+- [AppReturn](types_app.md#appreturn)
 - [BoxIdentifier](types_app.md#boxidentifier)
 - [SendAppCreateTransactionResult](types_app.md#sendappcreatetransactionresult)
 - [SendAppTransactionResult](types_app.md#sendapptransactionresult)
@@ -130,6 +131,28 @@ Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string e
 
 ___
 
+### AppReturn
+
+Ƭ **AppReturn**\<`TReturn`\>: `Object`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `TReturn` |
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `return?` | `TReturn` | The ABI method call return value |
+
+#### Defined in
+
+[src/types/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L340)
+
+___
+
 ### BoxIdentifier
 
 Ƭ **BoxIdentifier**: `string` \| `Uint8Array` \| [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom)
@@ -157,7 +180,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L352)
+[src/types/app.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L357)
 
 ___
 
@@ -169,7 +192,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L341)
+[src/types/app.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L346)
 
 ___
 
@@ -181,7 +204,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:349](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L349)
+[src/types/app.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L354)
 
 ## Variables
 

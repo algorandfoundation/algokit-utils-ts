@@ -1,6 +1,7 @@
 import algosdk from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
+import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AppDeployer } from './app-deployer'
@@ -15,7 +16,7 @@ import LogicSigAccount = algosdk.LogicSigAccount
 /**
  * A client that brokers easy access to Algorand functionality.
  */
-export class AlgorandClient {
+export class AlgorandClient implements AlgorandClientInterface {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
   private _appManager: AppManager
@@ -31,7 +32,7 @@ export class AlgorandClient {
   private _defaultValidityWindow: number | undefined = undefined
 
   private constructor(config: AlgoConfig | AlgoSdkClients) {
-    this._clientManager = new ClientManager(config)
+    this._clientManager = new ClientManager(config, this)
     this._accountManager = new AccountManager(this._clientManager)
     this._appManager = new AppManager(this._clientManager.algod)
     this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())

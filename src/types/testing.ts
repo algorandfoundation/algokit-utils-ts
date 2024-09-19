@@ -2,8 +2,7 @@ import algosdk from 'algosdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
-import { SendTransactionFrom } from '../types/transaction'
-import { TransactionSignerAccount } from './account'
+import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import AlgorandClient from './algorand-client'
 import { TransactionLookupResult } from './indexer'
 import { AlgoConfig } from './network-client'
@@ -11,6 +10,7 @@ import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
+import LogicSigAccount = algosdk.LogicSigAccount
 import Transaction = algosdk.Transaction
 
 /**
@@ -96,7 +96,7 @@ export interface LogSnapshotConfig {
   /** Any transaction IDs or transactions to replace the ID for predictably */
   transactions?: (string | Transaction)[]
   /** Any accounts/addresses to replace the address for predictably */
-  accounts?: (string | SendTransactionFrom)[]
+  accounts?: (string | Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount)[]
   /** Any app IDs to replace predictably */
   apps?: (string | number | bigint)[]
 }

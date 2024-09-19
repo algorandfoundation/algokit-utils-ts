@@ -1,4 +1,3 @@
-import algosdk from 'algosdk'
 import * as crypto from 'crypto'
 import { Config } from '../config'
 import { CompiledTeal } from '../types/app'
@@ -85,7 +84,7 @@ async function buildAVMSourcemap({
   appName,
   fileName,
   outputPath,
-  client,
+  appManager,
   withSources = true,
 }: {
   rawTeal?: string
@@ -93,7 +92,7 @@ async function buildAVMSourcemap({
   appName: string
   fileName: string
   outputPath: string
-  client: algosdk.Algodv2
+  appManager: AppManager
   withSources?: boolean
 }): Promise<AVMDebuggerSourceMapEntry> {
   if (!rawTeal && !compiledTeal) {
@@ -102,7 +101,7 @@ async function buildAVMSourcemap({
   const path = await import('path')
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const result = rawTeal ? await new AppManager(client).compileTeal(rawTeal) : compiledTeal!
+  const result = rawTeal ? await appManager.compileTeal(rawTeal) : compiledTeal!
   const programHash = crypto.createHash('SHA-512/256').update(Buffer.from(result.compiled, 'base64')).digest('base64')
   const sourceMap = result.sourceMap
   sourceMap.sources = withSources ? [`${fileName}${TEAL_FILE_EXT}`] : []
@@ -128,7 +127,7 @@ async function buildAVMSourcemap({
  *
  * @returns A promise that resolves when the source maps have been persisted.
  */
-export async function persistSourceMaps({ sources, projectRoot, client, withSources }: PersistSourceMapsParams): Promise<void> {
+export async function persistSourceMaps({ sources, projectRoot, appManager, withSources }: PersistSourceMapsParams): Promise<void> {
   if (!isNode()) {
     throw new Error('Sourcemaps can only be persisted in Node.js environment.')
   }
@@ -142,7 +141,7 @@ export async function persistSourceMaps({ sources, projectRoot, client, withSour
           appName: source.appName,
           fileName: source.fileName,
           outputPath: projectRoot,
-          client: client,
+          appManager: appManager,
           withSources: withSources,
         }),
       ),

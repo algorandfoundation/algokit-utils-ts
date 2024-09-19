@@ -65,19 +65,20 @@ describe('indexer-lookup', () => {
     })
 
     const app = await getTestingAppContract()
-    const app1 = await algorand.client
-      .getAppClientById({ app: app.appSpec, id: 0, sender: testAccount })
-      .create({ deletable: false, updatable: false, deployTimeParams: { VALUE: 1 } })
-    const app2 = await algorand.client
-      .getAppClientById({ app: app.appSpec, id: 0, sender: testAccount })
-      .create({ deletable: false, updatable: false, deployTimeParams: { VALUE: 1 } })
-    await algorand.client
-      .getAppClientById({ app: app.appSpec, id: 0, sender: secondAccount })
-      .create({ deletable: false, updatable: false, deployTimeParams: { VALUE: 1 } })
+    const factory = algorand.client.getAppFactory({
+      appSpec: app.appSpec,
+      defaultSender: testAccount.addr,
+      deletable: false,
+      updatable: false,
+      deployTimeParams: { VALUE: 1 },
+    })
+    const { result: app1 } = await factory.create()
+    const { result: app2 } = await factory.create({ deployTimeParams: { VALUE: 2 } })
+    await factory.create({ sender: secondAccount.addr })
     await waitForIndexer()
 
     const apps = await indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, testAccount.addr, true, 1)
 
-    expect(apps.map((a) => a.id).sort()).toEqual([app1.appId, app2.appId].sort())
+    expect(apps.map((a) => BigInt(a.id)).sort()).toEqual([app1.appId, app2.appId].sort())
   }, 20_000)
 })

@@ -1,11 +1,12 @@
 import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
-import * as algokit from '.'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
+import { Config } from './config'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './types/app'
 import { AppDeployParams } from './types/app-deployer'
+import { AppManager } from './types/app-manager'
 import { LogicError } from './types/logic-error'
 
 describe('deploy-app', () => {
@@ -298,7 +299,7 @@ describe('deploy-app', () => {
   })
 
   test('Deploy failure for replacement of permanent, updated app', async () => {
-    algokit.Config.configure({ debug: false }) // Remove noise from snapshot
+    Config.configure({ debug: false }) // Remove noise from snapshot
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
@@ -378,7 +379,7 @@ describe('deploy-app', () => {
   })
 
   test('Deploy replacement to schema broken, permanent app fails', async () => {
-    algokit.Config.configure({ debug: false }) // Remove noise from snapshot
+    Config.configure({ debug: false }) // Remove noise from snapshot
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
@@ -567,7 +568,7 @@ test('Strip comments remove comments without removing commands', async () => {
     '//comment\nop arg //comment\nop "arg" //comment\nop "//" //comment\nop "  //comment  " //comment\nop "" //" //comment\nop "" //comment\n//\nop 123\nop 123 // something\nop "" // more comments\nop "//" //op "//"\nop "//"'
   const tealCodeResult = '\nop arg\nop "arg"\nop "//"\nop "  //comment  "\nop "" //"\nop ""\n\nop 123\nop 123\nop ""\nop "//"\nop "//"'
 
-  const result = algokit.stripTealComments(tealCode)
+  const result = AppManager.stripTealComments(tealCode)
 
   expect(result).toBe(tealCodeResult)
 })
@@ -580,7 +581,7 @@ test('Can substitute template variable with multiple underscores', async () => {
   const test_params = {
     SOME_VALUE: 123,
   }
-  const substituted = algokit.performTemplateSubstitution(test_teal, test_params)
+  const substituted = AppManager.replaceTealTemplateParams(test_teal, test_params)
   expect(substituted).toBe(`
   int 123
   return
@@ -598,7 +599,7 @@ test('Can substitue both bytes and int uint64', async () => {
   const test_params = {
     SOME_VALUE: 123,
   }
-  const substituted = algokit.performTemplateSubstitution(test_teal, test_params)
+  const substituted = AppManager.replaceTealTemplateParams(test_teal, test_params)
   expect(substituted).toBe(`
   int 123
   pushint 123

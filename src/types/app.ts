@@ -329,12 +329,17 @@ export interface AppDeploymentParams
   deleteArgs?: AppCallArgs
 }
 
-/** The result of compiling the approval and clear TEAL for an app */
+/** The result of compiling the approval and clear state TEAL programs for an app */
 export interface AppCompilationResult {
   /** The compilation result of approval */
   compiledApproval: CompiledTeal
   /** The compilation result of clear */
   compiledClear: CompiledTeal
+}
+
+export type AppReturn<TReturn> = {
+  /** The ABI method call return value */
+  return?: TReturn
 }
 
 /** Result from sending a single app transaction. */
@@ -362,7 +367,7 @@ export type SendAppCreateTransactionResult = Expand<
 export interface AppState {
   [key: string]:
     | {
-        value: number | bigint
+        value: bigint
         keyRaw: Uint8Array
         keyBase64: string
       }

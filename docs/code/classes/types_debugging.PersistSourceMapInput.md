@@ -53,7 +53,7 @@ Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should b
 
 #### Defined in
 
-[src/types/debugging.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L82)
+[src/types/debugging.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L83)
 
 ## Properties
 
@@ -63,7 +63,7 @@ Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should b
 
 #### Defined in
 
-[src/types/debugging.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L79)
+[src/types/debugging.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L80)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L80)
+[src/types/debugging.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L81)
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L77)
+[src/types/debugging.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L78)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L78)
+[src/types/debugging.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L79)
 
 ## Accessors
 
@@ -109,7 +109,7 @@ Get the file name
 
 #### Defined in
 
-[src/types/debugging.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L123)
+[src/types/debugging.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L124)
 
 ___
 
@@ -125,7 +125,7 @@ Get the underlying raw teal
 
 #### Defined in
 
-[src/types/debugging.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L112)
+[src/types/debugging.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L113)
 
 ## Methods
 
@@ -149,7 +149,7 @@ The filename without the '.teal' extension.
 
 #### Defined in
 
-[src/types/debugging.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L133)
+[src/types/debugging.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L134)
 
 ___
 
@@ -175,7 +175,7 @@ The persist source map input
 
 #### Defined in
 
-[src/types/debugging.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L107)
+[src/types/debugging.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L108)
 
 ___
 
@@ -201,4 +201,4 @@ The persist source map input
 
 #### Defined in
 
-[src/types/debugging.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L96)
+[src/types/debugging.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L97)

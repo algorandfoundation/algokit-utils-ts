@@ -147,11 +147,11 @@ export class TestNetDispenserApiClient {
    *
    * @returns DispenserFundResponse: An object containing the transaction ID and funded amount.
    */
-  async fund(address: string, amount: number): Promise<DispenserFundResponse> {
+  async fund(address: string, amount: number | bigint): Promise<DispenserFundResponse> {
     const response = await this.processDispenserRequest(
       this.authToken,
       `fund/${dispenserAssets[DispenserAssetName.Algo].assetId}`,
-      { receiver: address, amount: amount, assetID: dispenserAssets[DispenserAssetName.Algo].assetId },
+      { receiver: address, amount: Number(amount), assetID: dispenserAssets[DispenserAssetName.Algo].assetId },
       'POST',
     )
 

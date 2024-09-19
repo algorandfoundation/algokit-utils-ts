@@ -20,47 +20,53 @@ import AlgoKitComposer, {
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
-  ExecuteParams,
 } from './composer'
 import { Expand } from './expand'
-import { ConfirmedTransactionResult } from './transaction'
+import { ConfirmedTransactionResult, ExecuteParams } from './transaction'
+
+/** Params to specify an update transaction for an app deployment */
+export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
+/** Params to specify an update method call for an app deployment */
+export type DeployAppUpdateMethodCall = Expand<Omit<AppUpdateMethodCall, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
+/** Params to specify a transaction for an app deployment */
+export type DeployAppDeleteParams = Expand<Omit<AppDeleteParams, 'appId'>>
+/** Params to specify a delete method call for an app deployment */
+export type DeployAppDeleteMethodCall = Expand<Omit<AppDeleteMethodCall, 'appId'>>
 
 /** The parameters to idempotently deploy an app */
-export interface AppDeployParams {
-  /** The deployment metadata */
-  metadata: AppDeployMetadata
-  /** Any deploy-time parameters to replace in the TEAL code before compiling it (used if teal code is passed in as a string) */
-  deployTimeParams?: TealTemplateParams
-  /** What action to perform if a schema break (storage schema or extra pages change) is detected:
-   *
-   * * `replace` - Delete the old app and create a new one
-   * * `fail` - Fail the deployment (throw an error)
-   * * `append` - Deploy a new app and leave the old one as is
-   */
-  onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
-  /** What action to perform if a TEAL code update is detected:
-   *
-   * * `update` - Update the app with the new TEAL code
-   * * `replace` - Delete the old app and create a new one
-   * * `fail` - Fail the deployment (throw an error)
-   * * `append` - Deploy a new app and leave the old one as is
-   */
-  onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate
-  /** Create transaction parameters to use if a create needs to be issued as part of deployment */
-  createParams: AppCreateParams | AppCreateMethodCall
-  /** Update transaction parameters to use if an update needs to be issued as part of deployment */
-  updateParams:
-    | Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
-    | Expand<Omit<AppUpdateMethodCall, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
-  /** Delete transaction parameters to use if a delete needs to be issued as part of deployment */
-  deleteParams: Expand<Omit<AppDeleteParams, 'appId'>> | Expand<Omit<AppDeleteMethodCall, 'appId'>>
-  /** Parameters to use for transaction execution */
-  executeParams?: ExecuteParams
-  /** Optional cached value of the existing apps for the given creator; use this to avoid an indexer lookup */
-  existingDeployments?: AppLookup
-  /** Whether or not to ignore the app metadata cache and force a lookup, default: use the cache **/
-  ignoreCache?: boolean
-}
+export type AppDeployParams = Expand<
+  ExecuteParams & {
+    /** The deployment metadata */
+    metadata: AppDeployMetadata
+    /** Any deploy-time parameters to replace in the TEAL code before compiling it (used if teal code is passed in as a string) */
+    deployTimeParams?: TealTemplateParams
+    /** What action to perform if a schema break (storage schema or extra pages change) is detected:
+     *
+     * * `fail` - Fail the deployment (throw an error, **default**)
+     * * `replace` - Delete the old app and create a new one
+     * * `append` - Deploy a new app and leave the old one as is
+     */
+    onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
+    /** What action to perform if a TEAL code update is detected:
+     *
+     * * `fail` - Fail the deployment (throw an error, **default**)
+     * * `update` - Update the app with the new TEAL code
+     * * `replace` - Delete the old app and create a new one
+     * * `append` - Deploy a new app and leave the old one as is
+     */
+    onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate
+    /** Create transaction parameters to use if a create needs to be issued as part of deployment */
+    createParams: AppCreateParams | AppCreateMethodCall
+    /** Update transaction parameters to use if an update needs to be issued as part of deployment */
+    updateParams: DeployAppUpdateParams | DeployAppUpdateMethodCall
+    /** Delete transaction parameters to use if a delete needs to be issued as part of deployment */
+    deleteParams: DeployAppDeleteParams | DeployAppDeleteMethodCall
+    /** Optional cached value of the existing apps for the given creator; use this to avoid an indexer lookup */
+    existingDeployments?: AppLookup
+    /** Whether or not to ignore the app metadata cache and force a lookup, default: use the cache **/
+    ignoreCache?: boolean
+  }
+>
 
 /** The metadata that can be collected about a deployed app */
 export interface AppMetadata extends AppDeployMetadata {
@@ -89,10 +95,10 @@ export interface AppLookup {
 }
 
 export type AppDeployResult =
-  | Expand<{ operationPerformed: 'create' } & AppMetadata & SendAppCreateTransactionResult>
+  | Expand<{ operationPerformed: 'create' } & Omit<AppMetadata, 'appId' | 'appAddress'> & SendAppCreateTransactionResult>
   | Expand<{ operationPerformed: 'update' } & AppMetadata & SendAppUpdateTransactionResult>
   | Expand<
-      { operationPerformed: 'replace' } & AppMetadata &
+      { operationPerformed: 'replace' } & Omit<AppMetadata, 'appId' | 'appAddress'> &
         SendAppCreateTransactionResult & {
           deleteReturn?: ABIReturn
           deleteResult: ConfirmedTransactionResult
@@ -141,9 +147,9 @@ export class AppDeployer {
       createParams,
       updateParams,
       deleteParams,
-      executeParams,
       existingDeployments,
       ignoreCache,
+      ...executeParams
     } = deployment
 
     // Set creation note
@@ -442,7 +448,7 @@ export class AppDeployer {
    * If the `AppManager` instance wasn't created with an indexer client, this function will throw an error.
    *
    * @param creatorAddress The address of the account that is the creator of the apps you want to search for
-   * @param ignoreCache Whether ot not to ignore the cache and force a lookup, default: use the cache
+   * @param ignoreCache Whether or not to ignore the cache and force a lookup, default: use the cache
    * @returns A name-based lookup of the app metadata
    */
   async getCreatorAppsByName(creatorAddress: string, ignoreCache?: boolean): Promise<AppLookup> {

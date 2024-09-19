@@ -4,10 +4,10 @@ import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import AlgoKitComposer, { CommonTransactionParams, ExecuteParams } from './composer'
+import AlgoKitComposer, { CommonTransactionParams } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
-import { SendSingleTransactionResult } from './transaction'
+import { ExecuteParams, SendSingleTransactionResult } from './transaction'
 import LogicSigAccount = algosdk.LogicSigAccount
 import Account = algosdk.Account
 import TransactionSigner = algosdk.TransactionSigner
@@ -481,7 +481,7 @@ export class AccountManager {
     const accountInfo = await this.getInformation(sender)
     const currentSpendingBalance = accountInfo.balance.microAlgo - accountInfo.minBalance.microAlgo
 
-    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgo, currentSpendingBalance, minFundingIncrement?.microAlgo ?? 0)
+    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgo, currentSpendingBalance, minFundingIncrement?.microAlgo ?? 0n)
 
     return amountFunded === null ? undefined : AlgoAmount.MicroAlgo(amountFunded)
   }

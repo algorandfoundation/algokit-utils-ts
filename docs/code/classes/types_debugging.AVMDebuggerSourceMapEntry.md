@@ -43,7 +43,7 @@ Create an AVM debugger source map entry.
 
 #### Defined in
 
-[src/types/debugging.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L23)
+[src/types/debugging.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L24)
 
 ## Properties
 
@@ -55,7 +55,7 @@ The location of the file the source map is for.
 
 #### Defined in
 
-[src/types/debugging.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L24)
+[src/types/debugging.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L25)
 
 ___
 
@@ -67,7 +67,7 @@ The hash of the TEAL binary.
 
 #### Defined in
 
-[src/types/debugging.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L25)
+[src/types/debugging.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L26)
 
 ## Methods
 
@@ -87,7 +87,7 @@ The hash of the TEAL binary.
 
 #### Defined in
 
-[src/types/debugging.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L28)
+[src/types/debugging.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L29)
 
 ___
 
@@ -101,4 +101,4 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L32)
+[src/types/debugging.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L33)

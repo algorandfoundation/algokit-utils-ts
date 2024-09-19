@@ -1,18 +1,26 @@
 import algosdk from 'algosdk'
-import { encodeLease, encodeTransactionNote, sendAtomicTransactionComposer } from '../transaction/transaction'
+import { Config } from '../config'
+import { simulateAndPersistResponse } from '../debugging'
+import { encodeLease, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { APP_PAGE_MAX_SIZE } from './app'
+import { ABIReturn, APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, SendAtomicTransactionComposerResults } from './transaction'
+import { Arc2TransactionNote, ExecuteParams, SendAtomicTransactionComposerResults } from './transaction'
 import Transaction = algosdk.Transaction
+import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
 import encodeAddress = algosdk.encodeAddress
+import SimulateResponse = algosdk.modelsv2.SimulateResponse
+import modelsv2 = algosdk.modelsv2
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
+
+/** Options to control a simulate request */
+export type SimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
@@ -316,7 +324,7 @@ export type OnlineKeyRegistrationParams = CommonTransactionParams & {
 export type CommonAppCallParams = CommonTransactionParams & {
   /** ID of the application; 0 if the application is being created. */
   appId: bigint
-  /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call. */
+  /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call; defaults to no-op. */
   onComplete?: algosdk.OnApplicationComplete
   /** Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/avm/teal/#argument-passing). */
   args?: Uint8Array[]
@@ -352,7 +360,9 @@ export type AppCreateParams = Expand<
       /** The number of byte slices saved in local state. */
       localByteSlices: number
     }
-    /** Number of extra pages required for the programs. This is immutable once the app is created. */
+    /** Number of extra pages required for the programs.
+     * Defaults to the number needed for the programs in this call if not specified.
+     * This is immutable once the app is created. */
     extraProgramPages?: number
   }
 >
@@ -372,6 +382,14 @@ export type AppCallParams = CommonAppCallParams & {
   onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>
 }
 
+/** Parameters to define a method call transaction. */
+export type AppMethodCallParams = CommonAppCallParams & {
+  onComplete?: Exclude<
+    algosdk.OnApplicationComplete,
+    algosdk.OnApplicationComplete.UpdateApplicationOC | algosdk.OnApplicationComplete.ClearStateOC
+  >
+}
+
 /** Parameters to define an application delete call transaction. */
 export type AppDeleteParams = CommonAppCallParams & {
   onComplete?: algosdk.OnApplicationComplete.DeleteApplicationOC
@@ -380,7 +398,16 @@ export type AppDeleteParams = CommonAppCallParams & {
 export type AppCreateMethodCall = AppMethodCall<AppCreateParams>
 export type AppUpdateMethodCall = AppMethodCall<AppUpdateParams>
 export type AppDeleteMethodCall = AppMethodCall<AppDeleteParams>
-export type AppCallMethodCall = AppMethodCall<AppCallParams>
+export type AppCallMethodCall = AppMethodCall<AppMethodCallParams>
+
+export type AppMethodCallTransactionArgument =
+  // The following should match the partial `args` types from `AppMethodCall<T>` below
+  | TransactionWithSigner
+  | Transaction
+  | Promise<Transaction>
+  | AppMethodCall<AppCreateParams>
+  | AppMethodCall<AppUpdateParams>
+  | AppMethodCall<AppMethodCallParams>
 
 export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
   /** The ABI method to call */
@@ -394,12 +421,13 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    */
   args?: (
     | algosdk.ABIValue
+    // The following should match the above `AppMethodCallTransactionArgument` type above
     | TransactionWithSigner
     | Transaction
     | Promise<Transaction>
     | AppMethodCall<AppCreateParams>
     | AppMethodCall<AppUpdateParams>
-    | AppMethodCall<AppCallParams>
+    | AppMethodCall<AppMethodCallParams>
   )[]
 }
 
@@ -417,16 +445,6 @@ type Txn =
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
-
-/** Parameters to configure transaction execution. */
-export interface ExecuteParams {
-  /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
-  maxRoundsToWaitForConfirmation?: number
-  /** Whether to suppress log messages from transaction send, default: do not suppress. */
-  suppressLog?: boolean
-  /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`. */
-  populateAppCallResources?: boolean
-}
 
 /** Parameters to create an `AlgoKitComposer`. */
 export type AlgoKitComposerParams = {
@@ -500,6 +518,22 @@ export default class AlgoKitComposer {
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
+  }
+
+  /**
+   * Add a pre-built transaction to the transaction group.
+   * @param transaction The pre-built transaction
+   * @param signer Optional signer override for the transaction
+   * @returns The composer so you can chain method calls
+   */
+  addTransaction(transaction: Transaction, signer?: TransactionSigner): AlgoKitComposer {
+    this.txns.push({
+      txn: transaction,
+      signer: signer ?? this.getSigner(algosdk.encodeAddress(transaction.from.publicKey)),
+      type: 'txnWithSigner',
+    })
+
+    return this
   }
 
   /**
@@ -738,7 +772,8 @@ export default class AlgoKitComposer {
   private commonTxnBuildStep(params: CommonTransactionParams, txn: algosdk.Transaction, suggestedParams: algosdk.SuggestedParams) {
     if (params.lease) txn.addLease(encodeLease(params.lease)!)
     if (params.rekeyTo) txn.addRekey(params.rekeyTo)
-    if (params.note) txn.note = encodeTransactionNote(params.note)
+    const encoder = new TextEncoder()
+    if (params.note) txn.note = typeof params.note === 'string' ? encoder.encode(params.note) : params.note
 
     if (params.firstValidRound) {
       txn.firstRound = Number(params.firstValidRound)
@@ -760,15 +795,15 @@ export default class AlgoKitComposer {
     }
 
     if (params.staticFee !== undefined) {
-      txn.fee = params.staticFee.microAlgo
+      txn.fee = Number(params.staticFee.microAlgo)
     } else {
       txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
-      if (params.extraFee) txn.fee += params.extraFee.microAlgo
+      if (params.extraFee) txn.fee += Number(params.extraFee.microAlgo)
     }
     txn.flatFee = true
 
     if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
-      throw Error(`Transaction fee ${txn.fee} is greater than maxFee ${params.maxFee}`)
+      throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
     }
 
     return txn
@@ -791,7 +826,12 @@ export default class AlgoKitComposer {
       return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
     }
 
-    for (const arg of params.args ?? []) {
+    for (let i = 0; i < (params.args ?? []).length; i++) {
+      const arg = params.args![i]
+      if (arg === undefined) {
+        throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
+      }
+
       if (isAbiValue(arg)) {
         methodArgs.push(arg)
         continue
@@ -1194,7 +1234,7 @@ export default class AlgoKitComposer {
     return await sendAtomicTransactionComposer(
       {
         atc: this.atc,
-        sendParams: {
+        executeParams: {
           suppressLog: params?.suppressLog,
           maxRoundsToWaitForConfirmation: waitRounds,
           populateAppCallResources: params?.populateAppCallResources,
@@ -1202,6 +1242,50 @@ export default class AlgoKitComposer {
       },
       this.algod,
     )
+  }
+
+  /**
+   * Compose the atomic transaction group and simulate sending it to the network
+   * @returns The simulation result
+   */
+  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
+    await this.build()
+
+    if (Config.debug && Config.projectRoot && !Config.traceAll) {
+      // Dump the traces to a file for use with AlgoKit AVM debugger
+      // Checks for false on traceAll because it should have been already
+      // executed above
+      await simulateAndPersistResponse({
+        atc: this.atc,
+        projectRoot: Config.projectRoot,
+        algod: this.algod,
+        bufferSizeMb: Config.traceBufferSizeMb,
+      })
+    }
+
+    const { methodResults, simulateResponse } = await this.atc.simulate(
+      this.algod,
+      new modelsv2.SimulateRequest({ txnGroups: [], ...options }),
+    )
+
+    if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
+      const error = new Error(
+        `Transaction failed at transaction(s) ${simulateResponse.txnGroups[0].failedAt.join(', ')} in the group. ${simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage}`,
+      )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(error as any).simulateResponse = simulateResponse
+      throw error
+    }
+
+    const transactions = this.atc.buildGroup().map((t) => t.txn)
+    return {
+      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
+      transactions: transactions,
+      txIds: transactions.map((t) => t.txID()),
+      groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
+      simulateResponse,
+      returns: methodResults.map((m) => m as ABIReturn),
+    }
   }
 
   static arc2Note(note: Arc2TransactionNote): Uint8Array {

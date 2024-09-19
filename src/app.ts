@@ -29,10 +29,8 @@ import ABIMethodParams = algosdk.ABIMethodParams
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
 import Algodv2 = algosdk.Algodv2
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import modelsv2 = algosdk.modelsv2
 import OnApplicationComplete = algosdk.OnApplicationComplete
-import Transaction = algosdk.Transaction
 
 /**
  * @deprecated Use `algorand.send.appCreate()` / `algorand.transactions.appCreate()` / `algorand.send.appCreateMethodCall()`
@@ -187,6 +185,9 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
   if (onComplete === algosdk.OnApplicationComplete.UpdateApplicationOC) {
     throw new Error('Cannot execute an app call with on-complete action of Update')
   }
+  if (call.args?.method && onComplete === algosdk.OnApplicationComplete.ClearStateOC) {
+    throw new Error('Cannot execute an ABI method call with on-complete action of ClearState')
+  }
 
   return call.args?.method
     ? await legacySendAppTransactionBridge(
@@ -197,7 +198,8 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
         {
           appId: BigInt(call.appId),
           sender: getSenderAddress(call.from),
-          onComplete,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onComplete: onComplete as any,
           method: call.args.method instanceof ABIMethod ? call.args.method : new ABIMethod(call.args.method),
         },
         (c) => c.appCallMethodCall,
@@ -236,7 +238,7 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.Pending
 }
 
 /**
- * @deprecated Use `(await appManager.getById(appId)).globalState` instead.
+ * @deprecated Use `algorand.app.getGlobalState` instead.
  *
  * Returns the current global state values for the given app ID
  * @param appId The ID of the app return global state for
@@ -244,7 +246,7 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.Pending
  * @returns The current global state
  */
 export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) {
-  return (await new AppManager(algod).getById(BigInt(appId))).globalState
+  return await new AppManager(algod).getGlobalState(BigInt(appId))
 }
 
 /**

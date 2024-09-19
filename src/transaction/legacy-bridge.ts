@@ -15,16 +15,16 @@ import AlgoKitComposer, {
   AppUpdateParams,
   BuiltTransactions,
   CommonTransactionParams,
-  ExecuteParams,
 } from '../types/composer'
 import {
+  ExecuteParams,
   SendSingleTransactionResult,
   SendTransactionFrom,
   SendTransactionParams,
   SendTransactionResult,
   TransactionNote,
 } from '../types/transaction'
-import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner, getTransactionParams } from './transaction'
+import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
 import Algodv2 = algosdk.Algodv2
 import Transaction = algosdk.Transaction
 import ABIMethod = algosdk.ABIMethod
@@ -46,7 +46,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     new AlgoKitComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(from),
-      getSuggestedParams: async () => await getTransactionParams(suggestedParams, algod),
+      getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.getTransactionParams().do()),
       appManager,
     })
   const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager)

@@ -1,7 +1,7 @@
 import algosdk from 'algosdk'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-bridge'
-import { getSenderAddress, getSenderTransactionSigner, getTransactionParams } from './transaction/transaction'
+import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'
 import { AlgorandClientTransactionSender } from './types/algorand-client-transaction-sender'
 import {
   ABIReturn,
@@ -70,7 +70,8 @@ export async function deployApp(
     new AlgoKitComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(deployment.from),
-      getSuggestedParams: async () => await getTransactionParams(deployment.transactionParams, algod),
+      getSuggestedParams: async () =>
+        deployment.transactionParams ? { ...deployment.transactionParams } : await algod.getTransactionParams().do(),
       appManager,
     })
   const deployer = new AppDeployer(
@@ -193,11 +194,9 @@ export async function deployApp(
           ),
         }
       : undefined,
-    executeParams: {
-      maxRoundsToWaitForConfirmation: deployment.maxRoundsToWaitForConfirmation,
-      populateAppCallResources: deployment.populateAppCallResources,
-      suppressLog: deployment.suppressLog,
-    },
+    maxRoundsToWaitForConfirmation: deployment.maxRoundsToWaitForConfirmation,
+    populateAppCallResources: deployment.populateAppCallResources,
+    suppressLog: deployment.suppressLog,
   })
 
   return { ...result, appId: Number(result.appId), createdRound: Number(result.createdRound), updatedRound: Number(result.updatedRound) }

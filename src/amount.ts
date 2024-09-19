@@ -20,6 +20,16 @@ declare global {
      */
     algo(this: number): AlgoAmount
   }
+  interface BigInt {
+    /**
+     * Returns an `AlgoAmount` using this number of microAlgo.
+     */
+    microAlgo(this: bigint): AlgoAmount
+    /**
+     * Returns an `AlgoAmount` using this number of Algo.
+     */
+    algo(this: bigint): AlgoAmount
+  }
 }
 
 Number.prototype.microAlgos = function () {
@@ -38,31 +48,39 @@ Number.prototype.algo = function () {
   return AlgoAmount.Algo(this)
 }
 
+BigInt.prototype.microAlgo = function () {
+  return AlgoAmount.MicroAlgo(this)
+}
+
+BigInt.prototype.algo = function () {
+  return AlgoAmount.Algo(this)
+}
+
 /** Returns an amount of Algo using AlgoAmount
  * @param algos The amount of Algo
  */
-export const algos = (algos: number) => {
+export const algos = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
 }
 
 /** Returns an amount of Algo using AlgoAmount
  * @param algos The amount of Algo
  */
-export const algo = (algos: number) => {
+export const algo = (algos: number | bigint) => {
   return AlgoAmount.Algo(algos)
 }
 
 /** Returns an amount of µAlgo using AlgoAmount
  * @param microAlgos The amount of µAlgo
  */
-export const microAlgos = (microAlgos: number) => {
+export const microAlgos = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)
 }
 
 /** Returns an amount of µAlgo using AlgoAmount
  * @param microAlgos The amount of µAlgo
  */
-export const microAlgo = (microAlgos: number) => {
+export const microAlgo = (microAlgos: number | bigint) => {
   return AlgoAmount.MicroAlgo(microAlgos)
 }
 

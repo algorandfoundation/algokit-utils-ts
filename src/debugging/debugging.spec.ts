@@ -27,7 +27,6 @@ describe('debug utils tests', () => {
   test(
     'build teal sourceMaps',
     async () => {
-      const { algod } = localnet.context
       const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'cwd'))
 
       const approval = `
@@ -43,7 +42,7 @@ int 1
         PersistSourceMapInput.fromRawTeal(clear, 'cool_app', 'clear'),
       ]
 
-      await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod })
+      await persistSourceMaps({ sources: sources, projectRoot: cwd, appManager: localnet.algorand.app })
 
       const rootPath = path.join(cwd, '.algokit', 'sources')
       const sourcemapFilePath = path.join(rootPath, 'sources.avm.json')
@@ -64,7 +63,7 @@ int 1
       expect(result).toMatchSnapshot()
 
       // check for updates in case of multiple runs
-      await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod })
+      await persistSourceMaps({ sources: sources, projectRoot: cwd, appManager: localnet.algorand.app })
       const resultAfterUpdate = AVMDebuggerSourceMap.fromDict(JSON.parse(await fs.readFile(sourcemapFilePath, 'utf8')))
       for (const item of resultAfterUpdate.txnGroupSources) {
         expect(item.location).not.toBe('dummy')
@@ -76,7 +75,7 @@ int 1
   test(
     'build teal sourceMaps without sources',
     async () => {
-      const { algod, algorand } = localnet.context
+      const { algorand } = localnet.context
       const cwd = await fs.mkdtemp(path.join(os.tmpdir(), 'cwd'))
 
       const approval = `
@@ -94,7 +93,7 @@ int 1
         PersistSourceMapInput.fromCompiledTeal(clearCompiled, 'cool_app', 'clear'),
       ]
 
-      await persistSourceMaps({ sources: sources, projectRoot: cwd, client: algod, withSources: false })
+      await persistSourceMaps({ sources: sources, projectRoot: cwd, appManager: localnet.algorand.app, withSources: false })
 
       const rootPath = path.join(cwd, '.algokit', 'sources')
       const sourcemapFilePath = path.join(rootPath, 'sources.avm.json')

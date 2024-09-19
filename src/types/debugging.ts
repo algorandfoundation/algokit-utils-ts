@@ -1,5 +1,6 @@
 import algosdk from 'algosdk'
 import { CompiledTeal } from './app'
+import { AppManager } from './app-manager'
 
 /**
  * AVM debugger source map format.
@@ -144,8 +145,8 @@ export interface PersistSourceMapsParams {
   sources: PersistSourceMapInput[]
   /** The root directory of the project. */
   projectRoot: string
-  /** An Algodv2 client to perform the compilation. */
-  client: algosdk.Algodv2
+  /** An `AppManager` to perform the compilation. */
+  appManager: AppManager
   /** A boolean indicating whether to include the source files in the output. */
   withSources?: boolean
 }

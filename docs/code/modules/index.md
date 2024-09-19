@@ -233,7 +233,7 @@ Returns an amount of Algo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algos` | `number` | The amount of Algo |
+| `algos` | `number` \| `bigint` | The amount of Algo |
 
 #### Returns
 
@@ -241,7 +241,7 @@ Returns an amount of Algo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L51)
+[src/amount.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L69)
 
 ___
 
@@ -255,7 +255,7 @@ Returns an amount of Algo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algos` | `number` | The amount of Algo |
+| `algos` | `number` \| `bigint` | The amount of Algo |
 
 #### Returns
 
@@ -263,7 +263,7 @@ Returns an amount of Algo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L44)
+[src/amount.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L62)
 
 ___
 
@@ -302,7 +302,7 @@ algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L131)
+[src/asset.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L130)
 
 ___
 
@@ -341,7 +341,7 @@ algokit.bulkOptOut({ account: account, assetIds: [12345, 67890] }, algod)
 
 #### Defined in
 
-[src/asset.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L159)
+[src/asset.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L157)
 
 ___
 
@@ -376,7 +376,7 @@ await algokit.assetOptIn({ account, assetId }, algod)
 
 #### Defined in
 
-[src/asset.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L68)
+[src/asset.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L67)
 
 ___
 
@@ -411,7 +411,7 @@ await algokit.assetOptOut({ account, assetId, assetCreatorAddress }, algod)
 
 #### Defined in
 
-[src/asset.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L99)
+[src/asset.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L98)
 
 ___
 
@@ -441,17 +441,13 @@ Issues a call to a given app.
 
 #### Defined in
 
-[src/app.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L185)
+[src/app.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L183)
 
 ___
 
 ### capTransactionFee
 
 ▸ **capTransactionFee**(`transaction`, `maxAcceptableFee`): `void`
-
-Limit the acceptable fee to a defined amount of µAlgo.
-This also sets the transaction to be flatFee to ensure the transaction only succeeds at
-the estimated rate.
 
 #### Parameters
 
@@ -464,9 +460,17 @@ the estimated rate.
 
 `void`
 
+**`Deprecated`**
+
+Use `AlgoKitComposer` and the `maxFee` field in the transaction params instead.
+
+Limit the acceptable fee to a defined amount of µAlgo.
+This also sets the transaction to be flatFee to ensure the transaction only succeeds at
+the estimated rate.
+
 #### Defined in
 
-[src/transaction/transaction.ts:816](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L816)
+[src/transaction/transaction.ts:848](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L848)
 
 ___
 
@@ -495,15 +499,13 @@ Compiles the given TEAL using algod and returns the result, including source map
 
 #### Defined in
 
-[src/app.ts:413](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L413)
+[src/app.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L415)
 
 ___
 
 ### controlFees
 
 ▸ **controlFees**\<`T`\>(`transaction`, `feeControl`): `T`
-
-Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Type parameters
 
@@ -524,9 +526,15 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 `T`
 
+**`Deprecated`**
+
+Use `AlgoKitComposer` and the `maxFee` and `staticFee` fields in the transaction params instead.
+
+Allows for control of fees on a `Transaction` or `SuggestedParams` object
+
 #### Defined in
 
-[src/transaction/transaction.ts:839](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L839)
+[src/transaction/transaction.ts:873](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L873)
 
 ___
 
@@ -556,7 +564,7 @@ Creates a smart contract app, returns the details of the created app.
 
 #### Defined in
 
-[src/app.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L46)
+[src/app.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L44)
 
 ___
 
@@ -591,7 +599,7 @@ await algokit.createAsset({ creator: account, total: 1, decimals: 0, name: 'My a
 
 #### Defined in
 
-[src/asset.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L24)
+[src/asset.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/asset.ts#L23)
 
 ___
 
@@ -620,7 +628,7 @@ generic object keyed by the UTF-8 value of the key.
 
 #### Defined in
 
-[src/app.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L339)
+[src/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L341)
 
 ___
 
@@ -698,15 +706,13 @@ algokit.encodeLease(new Uint8Array([1, 2, 3]))
 
 #### Defined in
 
-[src/transaction/transaction.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L67)
+[src/transaction/transaction.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L70)
 
 ___
 
 ### encodeTransactionNote
 
 ▸ **encodeTransactionNote**(`note?`): `Uint8Array` \| `undefined`
-
-Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
 
 #### Parameters
 
@@ -727,9 +733,15 @@ the transaction note ready for inclusion in a transaction
   * Arc2TransactionNote object: ARC-0002 compatible transaction note
   * Else: The object/value converted into a JSON string representation
 
+**`Deprecated`**
+
+Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `AlgoKitComposer.arc2Note`.
+
+Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
+
 #### Defined in
 
-[src/transaction/transaction.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L43)
+[src/transaction/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L46)
 
 ___
 
@@ -797,7 +809,7 @@ Returns the encoded ABI spec for a given ABI Method
 
 #### Defined in
 
-[src/app.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L424)
+[src/app.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L426)
 
 ___
 
@@ -826,7 +838,7 @@ Returns any ABI return values for the given app call arguments and transaction c
 
 #### Defined in
 
-[src/app.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L229)
+[src/app.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L231)
 
 ___
 
@@ -1288,7 +1300,7 @@ ___
 
 ### getAppArgsForABICall
 
-▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `TransactionWithSigner` \| `Uint8Array` \| `ABIValue`[])[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 #### Parameters
 
@@ -1299,7 +1311,7 @@ ___
 
 #### Returns
 
-`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `TransactionWithSigner` \| `Uint8Array` \| `ABIValue`[])[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
 
@@ -1311,7 +1323,7 @@ Returns the app args ready to load onto an ABI method call in `AtomicTransaction
 
 #### Defined in
 
-[src/app.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L372)
+[src/app.ts:374](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L374)
 
 ___
 
@@ -1339,7 +1351,7 @@ Returns the app args ready to load onto an app `Transaction` object
 
 #### Defined in
 
-[src/app.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L350)
+[src/app.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L352)
 
 ___
 
@@ -1367,7 +1379,7 @@ Returns the names of the boxes for the given app.
 
 #### Defined in
 
-[src/app.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L270)
+[src/app.ts:272](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L272)
 
 ___
 
@@ -1396,7 +1408,7 @@ Returns the value of the given box name for the given app.
 
 #### Defined in
 
-[src/app.ts:282](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L282)
+[src/app.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L284)
 
 ___
 
@@ -1424,7 +1436,7 @@ Returns the value of the given box name for the given app decoded based on the g
 
 #### Defined in
 
-[src/app.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L308)
+[src/app.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L310)
 
 ___
 
@@ -1453,7 +1465,7 @@ Returns the value of the given box names for the given app.
 
 #### Defined in
 
-[src/app.ts:294](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L294)
+[src/app.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L296)
 
 ___
 
@@ -1481,7 +1493,7 @@ Returns the value of the given box names for the given app decoded based on the 
 
 #### Defined in
 
-[src/app.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L323)
+[src/app.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L325)
 
 ___
 
@@ -1510,15 +1522,13 @@ Gets the current data for the given app from algod.
 
 #### Defined in
 
-[src/app.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L400)
+[src/app.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L402)
 
 ___
 
 ### getAppClient
 
 ▸ **getAppClient**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
-
-Create a new ApplicationClient instance
 
 #### Parameters
 
@@ -1532,6 +1542,15 @@ Create a new ApplicationClient instance
 [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
 
 The application client
+
+**`Deprecated`**
+
+Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
+`algorand.client.getAppClientByCreatorAndName`.
+If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+
+Create a new ApplicationClient instance
 
 **`Example`**
 
@@ -1566,15 +1585,13 @@ const client = algokit.getAppClient(
 
 #### Defined in
 
-[src/app-client.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L35)
+[src/app-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L40)
 
 ___
 
 ### getAppClientByCreatorAndName
 
 ▸ **getAppClientByCreatorAndName**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
-
-Create a new ApplicationClient instance by creator and name
 
 #### Parameters
 
@@ -1588,6 +1605,14 @@ Create a new ApplicationClient instance by creator and name
 [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
 
 The application client
+
+**`Deprecated`**
+
+Use `AppClient` instead e.g. via `algorand.client.getAppClientByCreatorAndName`.
+If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+
+Create a new ApplicationClient instance by creator and name
 
 **`Example`**
 
@@ -1605,15 +1630,13 @@ const client = algokit.getAppClientByCreatorAndName(
 
 #### Defined in
 
-[src/app-client.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L78)
+[src/app-client.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L93)
 
 ___
 
 ### getAppClientById
 
 ▸ **getAppClientById**(`appDetails`, `algod`): [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
-
-Create a new ApplicationClient instance by id
 
 #### Parameters
 
@@ -1627,6 +1650,14 @@ Create a new ApplicationClient instance by id
 [`ApplicationClient`](../classes/types_app_client.ApplicationClient.md)
 
 The application client
+
+**`Deprecated`**
+
+Use `AppClient` instead e.g. via `algorand.client.getAppClientById`.
+If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+
+Create a new ApplicationClient instance by id
 
 **`Example`**
 
@@ -1643,7 +1674,7 @@ const client = algokit.getAppClientById(
 
 #### Defined in
 
-[src/app-client.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L56)
+[src/app-client.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-client.ts#L66)
 
 ___
 
@@ -1671,7 +1702,7 @@ Return the transaction note for an app deployment.
 
 #### Defined in
 
-[src/app-deploy.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L253)
+[src/app-deploy.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L252)
 
 ___
 
@@ -1694,13 +1725,13 @@ The current global state
 
 **`Deprecated`**
 
-Use `(await appManager.getById(appId)).globalState` instead.
+Use `algorand.app.getGlobalState` instead.
 
 Returns the current global state values for the given app ID
 
 #### Defined in
 
-[src/app.ts:246](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L246)
+[src/app.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L248)
 
 ___
 
@@ -1730,7 +1761,7 @@ Returns the current global state values for the given app ID and account
 
 #### Defined in
 
-[src/app.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L259)
+[src/app.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L261)
 
 ___
 
@@ -1762,15 +1793,13 @@ If given an `AppCallType` will convert the string enum to the correct underlying
 
 #### Defined in
 
-[src/app.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L152)
+[src/app.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L150)
 
 ___
 
 ### getAtomicTransactionComposerTransactions
 
 ▸ **getAtomicTransactionComposerTransactions**(`atc`): `TransactionWithSigner`[]
-
-Returns the array of transactions currently present in the given `AtomicTransactionComposer`
 
 #### Parameters
 
@@ -1784,9 +1813,15 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 The array of transactions with signers
 
+**`Deprecated`**
+
+Use `atc.clone().buildGroup()` instead.
+
+Returns the array of transactions currently present in the given `AtomicTransactionComposer`
+
 #### Defined in
 
-[src/transaction/transaction.ts:871](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L871)
+[src/transaction/transaction.ts:909](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L909)
 
 ___
 
@@ -1814,7 +1849,7 @@ Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
 
 #### Defined in
 
-[src/app.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L383)
+[src/app.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L385)
 
 ___
 
@@ -1865,7 +1900,7 @@ Returns a lookup of name => app metadata (id, address, ...metadata) for all apps
 
 #### Defined in
 
-[src/app-deploy.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L232)
+[src/app-deploy.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L231)
 
 ___
 
@@ -2053,8 +2088,6 @@ ___
 
 ▸ **getSenderAddress**(`sender`): `string`
 
-Returns the public address of the given transaction sender.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2067,18 +2100,22 @@ Returns the public address of the given transaction sender.
 
 The public address
 
+**`Deprecated`**
+
+Use `algorand.client` to interact with accounts, and use `.addr` to get the address
+and/or move from using `SendTransactionFrom` to `TransactionSignerAccount` and use `.addr` instead.
+
+Returns the public address of the given transaction sender.
+
 #### Defined in
 
-[src/transaction/transaction.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L100)
+[src/transaction/transaction.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L106)
 
 ___
 
 ### getSenderTransactionSigner
 
 ▸ **getSenderTransactionSigner**(`val`): `TransactionSigner`
-
-Returns a `TransactionSigner` for the given transaction sender.
-This function has memoization, so will return the same transaction signer for a given sender.
 
 #### Parameters
 
@@ -2092,9 +2129,17 @@ This function has memoization, so will return the same transaction signer for a 
 
 A transaction signer
 
+**`Deprecated`**
+
+Use `TransactionSignerAccount` instead of `SendTransactionFrom` or use
+`algosdk.makeBasicAccountTransactionSigner` / `algosdk.makeLogicSigAccountTransactionSigner`.
+
+Returns a `TransactionSigner` for the given transaction sender.
+This function has memoization, so will return the same transaction signer for a given sender.
+
 #### Defined in
 
-[src/transaction/transaction.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L152)
+[src/transaction/transaction.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L164)
 
 ___
 
@@ -2142,8 +2187,6 @@ ___
 
 ▸ **getTransactionParams**(`params`, `algod`): `Promise`\<`SuggestedParamsWithMinFee` \| \{ `fee`: `number` ; `firstRound`: `number` ; `flatFee?`: `boolean` ; `genesisHash`: `string` ; `genesisID`: `string` ; `lastRound`: `number`  }\>
 
-Returns suggested transaction parameters from algod unless some are already provided.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2157,9 +2200,15 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 The suggested transaction parameters
 
+**`Deprecated`**
+
+Use `suggestedParams ? { ...suggestedParams } : await algod.getTransactionParams().do()` instead
+
+Returns suggested transaction parameters from algod unless some are already provided.
+
 #### Defined in
 
-[src/transaction/transaction.ts:862](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L862)
+[src/transaction/transaction.ts:898](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L898)
 
 ___
 
@@ -2167,14 +2216,11 @@ ___
 
 ▸ **getTransactionWithSigner**(`transaction`, `defaultSender?`): `Promise`\<`TransactionWithSigner`\>
 
-Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
-AtomicTransactionComposer's addTransaction method.
-
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `transaction` | `TransactionWithSigner` \| `Transaction` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> | One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils' helpers (signer is obtained from the defaultSender parameter) |
+| `transaction` | `Transaction` \| [`TransactionToSign`](../interfaces/types_transaction.TransactionToSign.md) \| `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\> \| `TransactionWithSigner` | One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the signer property), a Transaction object (signer is extracted from the defaultSender parameter), an async SendTransactionResult returned by one of algokit utils' helpers (signer is obtained from the defaultSender parameter) |
 | `defaultSender?` | [`SendTransactionFrom`](types_transaction.md#sendtransactionfrom) | The default sender to be used to obtain a signer where the object provided to the transaction parameter does not include a signer. |
 
 #### Returns
@@ -2183,9 +2229,17 @@ AtomicTransactionComposer's addTransaction method.
 
 A TransactionWithSigner object.
 
+**`Deprecated`**
+
+Use `AlgorandClient` / `AlgoKitComposer` to construct transactions instead or
+construct an `algosdk.TransactionWithSigner` manually instead.
+
+Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
+AtomicTransactionComposer's addTransaction method.
+
 #### Defined in
 
-[src/transaction/transaction.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L114)
+[src/transaction/transaction.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L123)
 
 ___
 
@@ -2266,7 +2320,7 @@ Returns true is there is a breaking change in the application state schema from 
 
 #### Defined in
 
-[src/app-deploy.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L217)
+[src/app-deploy.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L216)
 
 ___
 
@@ -2304,7 +2358,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `microAlgos` | `number` | The amount of µAlgo |
+| `microAlgos` | `number` \| `bigint` | The amount of µAlgo |
 
 #### Returns
 
@@ -2312,7 +2366,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L65)
+[src/amount.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L83)
 
 ___
 
@@ -2326,7 +2380,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `microAlgos` | `number` | The amount of µAlgo |
+| `microAlgos` | `number` \| `bigint` | The amount of µAlgo |
 
 #### Returns
 
@@ -2334,7 +2388,7 @@ Returns an amount of µAlgo using AlgoAmount
 
 #### Defined in
 
-[src/amount.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L58)
+[src/amount.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L76)
 
 ___
 
@@ -2449,9 +2503,6 @@ ___
 
 ▸ **performAtomicTransactionComposerDryrun**(`atc`, `algod`): `Promise`\<`DryrunResult`\>
 
-Performs a dry run of the transactions loaded into the given AtomicTransactionComposer`
-@param atc The AtomicTransactionComposer` with transaction(s) loaded
-
 #### Parameters
 
 | Name | Type | Description |
@@ -2465,9 +2516,16 @@ Performs a dry run of the transactions loaded into the given AtomicTransactionCo
 
 The dryrun result
 
+**`Deprecated`**
+
+Use `performAtomicTransactionComposerSimulate`, dry-run is a deprecated Algorand feature.
+
+Performs a dry run of the transactions loaded into the given AtomicTransactionComposer`
+@param atc The AtomicTransactionComposer` with transaction(s) loaded
+
 #### Defined in
 
-[src/transaction/transaction.ts:696](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L696)
+[src/transaction/transaction.ts:724](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L724)
 
 ___
 
@@ -2523,7 +2581,7 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 #### Defined in
 
-[src/app-deploy.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L291)
+[src/app-deploy.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L290)
 
 ___
 
@@ -2556,7 +2614,7 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 #### Defined in
 
-[src/app-deploy.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L308)
+[src/app-deploy.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L307)
 
 ___
 
@@ -2580,7 +2638,7 @@ A promise that resolves when the source maps have been persisted.
 
 #### Defined in
 
-[src/debugging/debugging.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L131)
+[src/debugging/debugging.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L130)
 
 ___
 
@@ -2606,7 +2664,7 @@ A new ATC with the resources packed into the transactions
 
 #### Defined in
 
-[src/transaction/transaction.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L308)
+[src/transaction/transaction.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L327)
 
 ___
 
@@ -2731,7 +2789,7 @@ Note: If these values are not undefined, but the corresponding `TMPL_*` value
 
 #### Defined in
 
-[src/app-deploy.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L276)
+[src/app-deploy.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L275)
 
 ___
 
@@ -2745,7 +2803,7 @@ Signs and sends transactions that have been collected by an `AtomicTransactionCo
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The `AtomicTransactionComposer` * `sendParams` The parameters to control the send behaviour |
+| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The `AtomicTransactionComposer` * `executeParams` The parameters to control the send behaviour |
 | `algod` | `default` | An algod client |
 
 #### Returns
@@ -2756,15 +2814,13 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L561)
+[src/transaction/transaction.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L580)
 
 ___
 
 ### sendGroupOfTransactions
 
 ▸ **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`\<`Omit`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md), ``"returns"``\>\>
-
-Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
 
 #### Parameters
 
@@ -2779,17 +2835,21 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
 
+**`Deprecated`**
+
+Use `AlgoKitComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
+
+Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
+
 #### Defined in
 
-[src/transaction/transaction.ts:714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L714)
+[src/transaction/transaction.ts:744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L744)
 
 ___
 
 ### sendTransaction
 
 ▸ **sendTransaction**(`send`, `algod`): `Promise`\<[`SendTransactionResult`](../interfaces/types_transaction.SendTransactionResult.md)\>
-
-Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
 
 #### Parameters
 
@@ -2807,17 +2867,21 @@ Prepares a transaction for sending and then (if instructed) signs and sends the 
 
 An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `undefined`) confirmation (`confirmation`)
 
+**`Deprecated`**
+
+Use `AlgorandClient` / `AlgoKitComposer` to send transactions.
+
+Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
+
 #### Defined in
 
-[src/transaction/transaction.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L186)
+[src/transaction/transaction.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L205)
 
 ___
 
 ### signTransaction
 
 ▸ **signTransaction**(`transaction`, `signer`): `Promise`\<`Uint8Array`\>
-
-Signs a single transaction by the given signer.
 
 #### Parameters
 
@@ -2832,9 +2896,17 @@ Signs a single transaction by the given signer.
 
 The signed transaction as a `Uint8Array`
 
+**`Deprecated`**
+
+Use `AlgorandClient` / `AlgoKitComposer` to sign transactions
+or use the relevant underlying `account.signTxn` / `algosdk.signLogicSigTransactionObject`
+/ `multiSigAccount.sign` / `TransactionSigner` methods directly.
+
+Signs a single transaction by the given signer.
+
 #### Defined in
 
-[src/transaction/transaction.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L166)
+[src/transaction/transaction.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L182)
 
 ___
 
@@ -2899,7 +2971,7 @@ Remove comments from TEAL Code
 
 #### Defined in
 
-[src/app-deploy.ts:333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L333)
+[src/app-deploy.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L332)
 
 ___
 
@@ -2921,7 +2993,7 @@ Returns an amount of µAlgo to cover standard fees for the given number of trans
 
 #### Defined in
 
-[src/amount.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L72)
+[src/amount.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/amount.ts#L90)
 
 ___
 
@@ -3050,7 +3122,7 @@ Updates a smart contract app.
 
 #### Defined in
 
-[src/app.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L102)
+[src/app.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app.ts#L100)
 
 ___
 
@@ -3081,4 +3153,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:759](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L759)
+[src/transaction/transaction.ts:789](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L789)
