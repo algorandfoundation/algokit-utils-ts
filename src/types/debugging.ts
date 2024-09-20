@@ -1,6 +1,4 @@
-import algosdk from 'algosdk'
 import { CompiledTeal } from './app'
-import { AppManager } from './app-manager'
 
 /**
  * AVM debugger source map format.
@@ -139,28 +137,10 @@ export class PersistSourceMapInput {
   }
 }
 
-/** Parameters to a call that persists source maps */
-export interface PersistSourceMapsParams {
-  /** An array of PersistSourceMapInput objects. Each object can either contain rawTeal, in which case the function will execute a compile to obtain byte code, or it can accept an object of type CompiledTeal provided by algokit, which is used for source codes that have already been compiled and contain the traces. */
-  sources: PersistSourceMapInput[]
-  /** The root directory of the project. */
-  projectRoot: string
-  /** An `AppManager` to perform the compilation. */
-  appManager: AppManager
-  /** A boolean indicating whether to include the source files in the output. */
-  withSources?: boolean
-}
+export type DebugHandler = (params: DebugParams) => Promise<void> | void
 
-/**
- * Parameters to a call that simulates a transaction and persists the response.
- */
-export interface SimulateAndPersistResponseParams {
-  /** algod An Algodv2 client to perform the simulation. */
-  algod: algosdk.Algodv2
-  /** The AtomicTransactionComposer with transaction(s) loaded. */
-  atc: algosdk.AtomicTransactionComposer
-  /** projectRoot The root directory of the project. */
-  projectRoot: string
-  /** bufferSizeMb The buffer size in megabytes. */
-  bufferSizeMb: number
+export interface DebugParams {
+  message: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any
 }

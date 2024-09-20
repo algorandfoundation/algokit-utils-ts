@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import { Config } from '../config'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import {
   AppCompilationResult,
@@ -25,6 +26,7 @@ import {
   DeployAppUpdateMethodCall,
   DeployAppUpdateParams,
 } from './app-deployer'
+import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams } from './composer'
 import { Expand } from './expand'
@@ -456,6 +458,22 @@ export class AppFactory {
     }
     if (result.compiledClear) {
       this._clearSourceMap = result.compiledClear.sourceMap
+    }
+
+    // Add source map persistence logic
+    if (Config.debug && Config.projectRoot) {
+      await Config.invokeDebugHandlers({
+        message: 'persistSourceMaps',
+        data: {
+          sources: [
+            { compiledTeal: result.compiledApproval, appName: this._appName, fileName: 'approval' },
+            { compiledTeal: result.compiledClear, appName: this._appName, fileName: 'clear' },
+          ],
+          projectRoot: Config.projectRoot,
+          appManager: new AppManager(this._algorand.client.algod),
+          withSources: true,
+        },
+      })
     }
 
     return result

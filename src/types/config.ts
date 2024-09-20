@@ -1,4 +1,5 @@
 import { isNode } from '../util'
+import { DebugHandler, DebugParams } from './debugging'
 import { Logger, consoleLogger, nullLogger } from './logging'
 
 /** The AlgoKit configuration type */
@@ -24,11 +25,14 @@ export interface Config {
    * Default value is false.
    */
   populateAppCallResources: boolean
+
+  registerDebugHandler: (handler: DebugHandler) => void
 }
 
 /** Updatable AlgoKit config */
 export class UpdatableConfig implements Readonly<Config> {
   private config: Config
+  private debugHandlers: DebugHandler[] = []
 
   get populateAppCallResources() {
     return this.config.populateAppCallResources
@@ -94,10 +98,30 @@ export class UpdatableConfig implements Readonly<Config> {
       traceBufferSizeMb: 256,
       maxSearchDepth: 10,
       populateAppCallResources: false,
+      registerDebugHandler: (handler: DebugHandler) => {
+        this.registerDebugHandler(handler)
+      },
     }
 
     if (isNode()) {
+      this.setupDebugHandlers().catch((error) => {
+        this.config.logger.error('Failed to setup debug handlers', error)
+      })
       this.configureProjectRoot()
+    }
+  }
+
+  private async setupDebugHandlers() {
+    if (!isNode()) {
+      return // Debug handlers are only supported in Node.js environment
+    }
+
+    try {
+      const { activateDebugHandlers } = await import('@aorumbayev/test-utils')
+      activateDebugHandlers()
+    } catch (error) {
+      // Package is not installed or there was an error importing it
+      // We'll silently ignore this as the debug package is optional
     }
   }
 
@@ -134,5 +158,27 @@ export class UpdatableConfig implements Readonly<Config> {
    */
   configure(newConfig: Partial<Config>) {
     this.config = { ...this.config, ...newConfig }
+  }
+
+  /**
+   * Register a debug handler function.
+   * @param handler A function that handles debug events.
+   */
+  registerDebugHandler(handler: DebugHandler): void {
+    this.debugHandlers.push(handler)
+  }
+
+  /**
+   * Invoke all registered debug handlers with the given parameters.
+   * @param params Debug parameters containing a message and optional data.
+   */
+  async invokeDebugHandlers(params: DebugParams): Promise<void> {
+    for (const handler of this.debugHandlers) {
+      try {
+        await handler(params)
+      } catch (error) {
+        this.config.logger.error('Debug handler error:', error)
+      }
+    }
   }
 }
