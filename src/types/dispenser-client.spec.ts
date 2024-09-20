@@ -1,5 +1,4 @@
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock'
-import { Config } from '../config'
 import { TestNetDispenserApiClient } from './dispenser-client'
 enableFetchMocks()
 
@@ -9,10 +8,6 @@ describe('TestNetDispenserApiClient', () => {
   beforeEach(async () => {
     jest.resetModules()
     process.env = { ...env }
-
-    Config.configure({
-      debug: true,
-    })
   })
 
   afterEach(() => {
