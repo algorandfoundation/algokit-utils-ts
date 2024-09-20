@@ -23,19 +23,7 @@ The source map of the approval program
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[src/types/app-client.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L262)
-=======
-[src/types/app-client.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L249)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-client.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L263)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L261)
->>>>>>> de5873b (chore: draft tests)
+[src/types/app-client.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L260)
 
 ___
 
@@ -47,16 +35,4 @@ The source map of the clear program
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[src/types/app-client.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L264)
-=======
-[src/types/app-client.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L251)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-client.ts:265](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L265)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L263)
->>>>>>> de5873b (chore: draft tests)
+[src/types/app-client.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L262)

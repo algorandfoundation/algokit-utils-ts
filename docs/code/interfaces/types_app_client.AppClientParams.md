@@ -12,14 +12,7 @@ Parameters to create an app client
 
 - [algorand](types_app_client.AppClientParams.md#algorand)
 - [appId](types_app_client.AppClientParams.md#appid)
-<<<<<<< HEAD
-<<<<<<< HEAD
 - [appName](types_app_client.AppClientParams.md#appname)
-=======
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-- [appName](types_app_client.AppClientParams.md#appname)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 - [appSpec](types_app_client.AppClientParams.md#appspec)
 - [approvalSourceMap](types_app_client.AppClientParams.md#approvalsourcemap)
 - [clearSourceMap](types_app_client.AppClientParams.md#clearsourcemap)
@@ -31,33 +24,11 @@ Parameters to create an app client
 
 • **algorand**: [`AlgorandClientInterface`](types_algorand_client_interface.AlgorandClientInterface.md)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 An `AlgorandClient` instance
 
 #### Defined in
 
-<<<<<<< HEAD
-[src/types/app-client.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L315)
-=======
-#### Defined in
-
-[src/types/app-client.ts:301](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L301)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-An `AlgorandClient` instance
-
-#### Defined in
-
-<<<<<<< HEAD
-[src/types/app-client.ts:302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L302)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
-=======
-[src/types/app-client.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L316)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L314)
->>>>>>> de5873b (chore: draft tests)
+[src/types/app-client.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L313)
 
 ___
 
@@ -69,10 +40,7 @@ The ID of the app instance this client should make calls against.
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[src/types/app-client.ts:305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L305)
+[src/types/app-client.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L303)
 
 ___
 
@@ -85,29 +53,7 @@ Defaults to the ARC-32/ARC-56 app spec name
 
 #### Defined in
 
-[src/types/app-client.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L321)
-=======
-[src/types/app-client.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L292)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-client.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L306)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L304)
->>>>>>> de5873b (chore: draft tests)
-
-___
-
-### appName
-
-• `Optional` **appName**: `string`
-
-Optional override for the app name; used for on-chain metadata and lookups.
-Defaults to the ARC-32/ARC-56 app spec name
-
-#### Defined in
-
-[src/types/app-client.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L320)
+[src/types/app-client.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L319)
 
 ___
 
@@ -122,19 +68,7 @@ The ARC-56 or ARC-32 application spec as either:
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[src/types/app-client.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L312)
-=======
-[src/types/app-client.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L299)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-client.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L313)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L311)
->>>>>>> de5873b (chore: draft tests)
+[src/types/app-client.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L310)
 
 ___
 
@@ -146,23 +80,7 @@ Optional source map for the approval program
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[src/types/app-client.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L325)
-=======
-[src/types/app-client.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L306)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-client.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L312)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
-=======
-[src/types/app-client.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L326)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L324)
->>>>>>> de5873b (chore: draft tests)
+[src/types/app-client.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L323)
 
 ___
 
@@ -174,23 +92,7 @@ Optional source map for the clear state program
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[src/types/app-client.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L327)
-=======
-[src/types/app-client.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L308)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-client.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L314)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
-=======
-[src/types/app-client.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L328)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L326)
->>>>>>> de5873b (chore: draft tests)
+[src/types/app-client.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L325)
 
 ___
 
@@ -202,20 +104,4 @@ Optional address to use for the account to use as the default sender for calls.
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[src/types/app-client.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L323)
-=======
-[src/types/app-client.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L304)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-client.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L310)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
-=======
-[src/types/app-client.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L324)
->>>>>>> 5dd8a6c (feat: Proper ARC-56 struct support)
-=======
-[src/types/app-client.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L322)
->>>>>>> de5873b (chore: draft tests)
+[src/types/app-client.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L321)

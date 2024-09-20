@@ -370,29 +370,6 @@ export class ClientManager {
    */
   public getTypedAppFactory<TClient>(
     typedFactory: TypedAppFactory<TClient>,
-    params?: Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>,
-  ) {
-    if (!this._algorand) {
-      throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
-    }
-
-    return new typedFactory({ ...params, algorand: this._algorand })
-  }
-
-  /**
-   * Returns a new typed app factory.
-   * @param typedFactory The typed factory type to use
-   * @param params The params to resolve the factory by
-   * @example
-   * ```typescript
-   * const appFactory = algorand.client.getTypedAppFactory(MyContractClient, {
-   *   sender: alice,
-   * })
-   * ```
-   * @returns The typed client instance
-   */
-  public getTypedAppFactory<TClient>(
-    typedFactory: TypedAppFactory<TClient>,
     params: Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>,
   ) {
     if (!this._algorand) {

@@ -36,8 +36,4 @@ Interface to identify a typed factory that can be used to create and deploy an a
 
 #### Defined in
 
-<<<<<<< HEAD
 [src/types/client-manager.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L626)
-=======
-[src/types/client-manager.ts:599](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L599)
->>>>>>> b95895f (feat: ARC-56 Typed client support)

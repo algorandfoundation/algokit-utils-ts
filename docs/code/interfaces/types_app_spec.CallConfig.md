@@ -26,15 +26,7 @@ Close out call config
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 [src/types/app-spec.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L167)
-=======
-[src/types/app-spec.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L163)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-spec.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L169)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -46,15 +38,7 @@ Delete call config
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 [src/types/app-spec.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L171)
-=======
-[src/types/app-spec.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L167)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-spec.ts:173](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L173)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -66,15 +50,7 @@ NoOp call config
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 [src/types/app-spec.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L163)
-=======
-[src/types/app-spec.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L159)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-spec.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L165)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -86,15 +62,7 @@ Opt-in call config
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 [src/types/app-spec.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L165)
-=======
-[src/types/app-spec.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L161)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-spec.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L167)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
 
 ___
 
@@ -106,12 +74,4 @@ Update call config
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 [src/types/app-spec.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L169)
-=======
-[src/types/app-spec.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L165)
->>>>>>> e7c345f (feat: Added `AppClient` as an ARC-56 compatible non-typed application client)
-=======
-[src/types/app-spec.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L171)
->>>>>>> 35253a5 (feat: Added `AppFactory` as an ARC-32/ARC-56 compatible mechanism to create and deploy apps and create app clients)
