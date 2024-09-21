@@ -136,11 +136,3 @@ export class PersistSourceMapInput {
     return fileName
   }
 }
-
-export type DebugHandler = (params: DebugParams) => Promise<void> | void
-
-export interface DebugParams {
-  message: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data?: any
-}

@@ -802,17 +802,14 @@ export class AppClient {
     const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
     if (Config.debug && Config.projectRoot) {
-      Config.invokeDebugHandlers({
-        message: 'persistSourceMaps',
-        data: {
-          sources: [
-            { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
-            { compiledTeal: compiledClear, appName: appSpec.name, fileName: 'clear' },
-          ],
-          projectRoot: Config.projectRoot,
-          appManager,
-          withSources: true,
-        },
+      await Config.events.emitAsync('persistSourceMaps', {
+        sources: [
+          { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
+          { compiledTeal: compiledClear, appName: appSpec.name, fileName: 'clear' },
+        ],
+        projectRoot: Config.projectRoot,
+        appManager,
+        withSources: true,
       })
     }
 
@@ -1436,17 +1433,14 @@ export class ApplicationClient {
     this._clearSourceMap = clearCompiled?.sourceMap
 
     if (Config.debug && Config.projectRoot) {
-      await Config.invokeDebugHandlers({
-        message: 'persistSourceMaps',
-        data: {
-          sources: [
-            { compiledTeal: approvalCompiled, appName: this._appName, fileName: 'approval' },
-            { compiledTeal: clearCompiled, appName: this._appName, fileName: 'clear' },
-          ],
-          projectRoot: Config.projectRoot,
-          appManager: new AppManager(this.algod),
-          withSources: true,
-        },
+      await Config.events.emitAsync('persistSourceMaps', {
+        sources: [
+          { compiledTeal: approvalCompiled, appName: this._appName, fileName: 'approval' },
+          { compiledTeal: clearCompiled, appName: this._appName, fileName: 'clear' },
+        ],
+        projectRoot: Config.projectRoot,
+        appManager: new AppManager(this.algod),
+        withSources: true,
       })
     }
 

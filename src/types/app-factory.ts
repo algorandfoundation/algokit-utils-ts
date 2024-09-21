@@ -462,17 +462,14 @@ export class AppFactory {
 
     // Add source map persistence logic
     if (Config.debug && Config.projectRoot) {
-      await Config.invokeDebugHandlers({
-        message: 'persistSourceMaps',
-        data: {
-          sources: [
-            { compiledTeal: result.compiledApproval, appName: this._appName, fileName: 'approval' },
-            { compiledTeal: result.compiledClear, appName: this._appName, fileName: 'clear' },
-          ],
-          projectRoot: Config.projectRoot,
-          appManager: new AppManager(this._algorand.client.algod),
-          withSources: true,
-        },
+      await Config.events.emitAsync('persistSourceMaps', {
+        sources: [
+          { compiledTeal: result.compiledApproval, appName: this._appName, fileName: 'approval' },
+          { compiledTeal: result.compiledClear, appName: this._appName, fileName: 'clear' },
+        ],
+        projectRoot: Config.projectRoot,
+        appManager: new AppManager(this._algorand.client.algod),
+        withSources: true,
       })
     }
 
