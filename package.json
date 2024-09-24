@@ -58,7 +58,6 @@
     "micromatch": "4.0.8"
   },
   "dependencies": {
-    "@algorandfoundation/algokit-utils-debug": "file:../algokit-utils-ts-debug/dist/algorandfoundation-algokit-utils-debug-0.1.0.tgz",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
@@ -80,7 +79,6 @@
     "better-npm-audit": "^3.7.3",
     "conventional-changelog-conventionalcommits": "6.1.0",
     "cpy-cli": "^5.0.0",
-    "del-cli": "^5.1.0",
     "dotenv-cli": "^7.3.0",
     "eslint": "^8.47.0",
     "fast-glob": "^3.3.2",
@@ -95,9 +93,9 @@
     "tiny-invariant": "^1.3.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.25.4",
+    "typedoc": "^0.26.7",
     "typedoc-plugin-markdown": "^3.17.1",
-    "typescript": ">=5.1.6 <=5.4.x",
+    "typescript": "^5.1.6",
     "uuid": "^9.0.0"
   },
   "release": {

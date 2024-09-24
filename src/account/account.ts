@@ -170,6 +170,8 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
     rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
     totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
     totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
+    lastHeartbeat: Number(account.lastHeartbeat),
+    lastProposed: Number(account.lastProposed),
   }
 }
 

@@ -19,7 +19,7 @@ export class KmdAccountManager {
     this._clientManager = clientManager
     try {
       this._kmd = clientManager.kmd
-    } catch (e) {
+    } catch {
       this._kmd = undefined
     }
   }
