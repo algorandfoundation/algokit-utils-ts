@@ -1,3 +1,4 @@
+import { isNode } from '../util'
 import { AsyncEventEmitter } from './async-event-emitter'
 import { Logger, consoleLogger, nullLogger } from './logging'
 
@@ -110,5 +111,9 @@ export class UpdatableConfig implements Readonly<Config> {
    */
   configure(newConfig: Partial<Config>) {
     this.config = { ...this.config, ...newConfig }
+
+    if (isNode()) {
+      this.events.emitAsync('configureProjectRoot', { maxSearchDepth: this.maxSearchDepth })
+    }
   }
 }

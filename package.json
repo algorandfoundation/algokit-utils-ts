@@ -58,15 +58,14 @@
     "micromatch": "4.0.8"
   },
   "dependencies": {
+    "@algorandfoundation/algokit-utils-debug": "file:../algokit-utils-ts-debug/dist/algorandfoundation-algokit-utils-debug-0.1.0.tgz",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
-    "@aorumbayev/test-utils": "*",
     "algosdk": "^2.7.0"
   },
   "devDependencies": {
     "@algorandfoundation/tealscript": "^0.90.3",
-    "@aorumbayev/test-utils": "^0.1.0-beta.1",
     "@commitlint/cli": "^18.4.2",
     "@commitlint/config-conventional": "^17.7.0",
     "@makerx/eslint-config": "^3.1.0",
@@ -98,7 +97,7 @@
     "ts-node": "^10.9.1",
     "typedoc": "^0.25.4",
     "typedoc-plugin-markdown": "^3.17.1",
-    "typescript": "^5.1.6",
+    "typescript": ">=5.1.6 <=5.4.x",
     "uuid": "^9.0.0"
   },
   "release": {
