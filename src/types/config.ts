@@ -1,5 +1,4 @@
-import { isNode } from '../util'
-import { DebugHandler, DebugParams } from './debugging'
+import { AsyncEventEmitter } from './async-event-emitter'
 import { Logger, consoleLogger, nullLogger } from './logging'
 
 /** The AlgoKit configuration type */
@@ -26,13 +25,12 @@ export interface Config {
    */
   populateAppCallResources: boolean
 
-  registerDebugHandler: (handler: DebugHandler) => void
+  events: AsyncEventEmitter
 }
 
 /** Updatable AlgoKit config */
 export class UpdatableConfig implements Readonly<Config> {
   private config: Config
-  private debugHandlers: DebugHandler[] = []
 
   get populateAppCallResources() {
     return this.config.populateAppCallResources
@@ -60,6 +58,10 @@ export class UpdatableConfig implements Readonly<Config> {
 
   get maxSearchDepth() {
     return this.config.maxSearchDepth
+  }
+
+  get events() {
+    return this.config.events
   }
 
   /**
@@ -98,57 +100,7 @@ export class UpdatableConfig implements Readonly<Config> {
       traceBufferSizeMb: 256,
       maxSearchDepth: 10,
       populateAppCallResources: false,
-      registerDebugHandler: (handler: DebugHandler) => {
-        this.registerDebugHandler(handler)
-      },
-    }
-
-    if (isNode()) {
-      this.setupDebugHandlers().catch((error) => {
-        this.config.logger.error('Failed to setup debug handlers', error)
-      })
-      this.configureProjectRoot()
-    }
-  }
-
-  private async setupDebugHandlers() {
-    if (!isNode()) {
-      return // Debug handlers are only supported in Node.js environment
-    }
-
-    try {
-      const { activateDebugHandlers } = await import('@aorumbayev/test-utils')
-      activateDebugHandlers()
-    } catch (error) {
-      // Package is not installed or there was an error importing it
-      // We'll silently ignore this as the debug package is optional
-    }
-  }
-
-  /**
-   * Configures the project root by searching for a specific file within a depth limit.
-   * This is only supported in a Node environment.
-   */
-  private async configureProjectRoot() {
-    if (!isNode()) {
-      throw new Error('`configureProjectRoot` can only be called in Node.js environment.')
-    }
-
-    const fs = await import('fs')
-    const path = await import('path')
-    const _dirname = __dirname
-
-    if (!_dirname) {
-      return
-    }
-
-    let currentPath = path.resolve(_dirname)
-    for (let i = 0; i < this.config.maxSearchDepth; i++) {
-      if (fs.existsSync(`${currentPath}/.algokit.toml`)) {
-        this.config.projectRoot = currentPath
-        break
-      }
-      currentPath = path.dirname(currentPath)
+      events: new AsyncEventEmitter(),
     }
   }
 
@@ -158,27 +110,5 @@ export class UpdatableConfig implements Readonly<Config> {
    */
   configure(newConfig: Partial<Config>) {
     this.config = { ...this.config, ...newConfig }
-  }
-
-  /**
-   * Register a debug handler function.
-   * @param handler A function that handles debug events.
-   */
-  registerDebugHandler(handler: DebugHandler): void {
-    this.debugHandlers.push(handler)
-  }
-
-  /**
-   * Invoke all registered debug handlers with the given parameters.
-   * @param params Debug parameters containing a message and optional data.
-   */
-  async invokeDebugHandlers(params: DebugParams): Promise<void> {
-    for (const handler of this.debugHandlers) {
-      try {
-        await handler(params)
-      } catch (error) {
-        this.config.logger.error('Debug handler error:', error)
-      }
-    }
   }
 }

@@ -1254,14 +1254,11 @@ export default class AlgoKitComposer {
       // Dump the traces to a file for use with AlgoKit AVM debugger
       // Checks for false on traceAll because it should have been already
       // executed above
-      await Config.invokeDebugHandlers({
-        message: 'simulateAndPersistResponse',
-        data: {
-          atc: this.atc,
-          projectRoot: Config.projectRoot,
-          algod: this.algod,
-          bufferSizeMb: Config.traceBufferSizeMb,
-        },
+      await Config.events.emitAsync('simulateAndPersistResponse', {
+        atc: this.atc,
+        projectRoot: Config.projectRoot,
+        algod: this.algod,
+        bufferSizeMb: Config.traceBufferSizeMb,
       })
     }
 
