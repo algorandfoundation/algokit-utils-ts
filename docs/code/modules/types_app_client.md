@@ -13,7 +13,6 @@
 
 - [AppClientCallABIArgs](../interfaces/types_app_client.AppClientCallABIArgs.md)
 - [AppClientCallCoreParams](../interfaces/types_app_client.AppClientCallCoreParams.md)
-- [AppClientCallRawArgs](../interfaces/types_app_client.AppClientCallRawArgs.md)
 - [AppClientCompilationParams](../interfaces/types_app_client.AppClientCompilationParams.md)
 - [AppClientDeployCallInterfaceParams](../interfaces/types_app_client.AppClientDeployCallInterfaceParams.md)
 - [AppClientDeployCoreParams](../interfaces/types_app_client.AppClientDeployCoreParams.md)
@@ -30,6 +29,7 @@
 - [AppClientBareCallParams](types_app_client.md#appclientbarecallparams)
 - [AppClientCallArgs](types_app_client.md#appclientcallargs)
 - [AppClientCallParams](types_app_client.md#appclientcallparams)
+- [AppClientCallRawArgs](types_app_client.md#appclientcallrawargs)
 - [AppClientClearStateParams](types_app_client.md#appclientclearstateparams)
 - [AppClientCreateOnComplete](types_app_client.md#appclientcreateoncomplete)
 - [AppClientCreateParams](types_app_client.md#appclientcreateparams)
@@ -57,19 +57,19 @@ AppClient parameters for a bare app call
 
 #### Defined in
 
-[src/types/app-client.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L336)
+[src/types/app-client.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L335)
 
 ___
 
 ### AppClientCallArgs
 
-Ƭ **AppClientCallArgs**: [`AppClientCallRawArgs`](../interfaces/types_app_client.AppClientCallRawArgs.md) \| [`AppClientCallABIArgs`](../interfaces/types_app_client.AppClientCallABIArgs.md)
+Ƭ **AppClientCallArgs**: [`AppClientCallRawArgs`](types_app_client.md#appclientcallrawargs) \| [`AppClientCallABIArgs`](../interfaces/types_app_client.AppClientCallABIArgs.md)
 
 The arguments to pass to an Application Client smart contract call
 
 #### Defined in
 
-[src/types/app-client.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L203)
+[src/types/app-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L202)
 
 ___
 
@@ -81,19 +81,29 @@ Parameters to construct a ApplicationClient contract call
 
 #### Defined in
 
-[src/types/app-client.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L216)
+[src/types/app-client.ts:215](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L215)
+
+___
+
+### AppClientCallRawArgs
+
+Ƭ **AppClientCallRawArgs**: [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md)
+
+#### Defined in
+
+[src/types/app-client.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L194)
 
 ___
 
 ### AppClientClearStateParams
 
-Ƭ **AppClientClearStateParams**: [`AppClientCallRawArgs`](../interfaces/types_app_client.AppClientCallRawArgs.md) & [`AppClientCallCoreParams`](../interfaces/types_app_client.AppClientCallCoreParams.md)
+Ƭ **AppClientClearStateParams**: [`AppClientCallRawArgs`](types_app_client.md#appclientcallrawargs) & [`AppClientCallCoreParams`](../interfaces/types_app_client.AppClientCallCoreParams.md)
 
 Parameters to construct a ApplicationClient clear state contract call
 
 #### Defined in
 
-[src/types/app-client.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L219)
+[src/types/app-client.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L218)
 
 ___
 
@@ -111,7 +121,7 @@ On-complete action parameter for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L231)
+[src/types/app-client.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L230)
 
 ___
 
@@ -123,7 +133,7 @@ Parameters for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L237)
+[src/types/app-client.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L236)
 
 ___
 
@@ -135,7 +145,7 @@ AppClient parameters for an ABI method call
 
 #### Defined in
 
-[src/types/app-client.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L344)
+[src/types/app-client.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L343)
 
 ___
 
@@ -147,7 +157,7 @@ Parameters for updating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L245)
+[src/types/app-client.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L244)
 
 ___
 
@@ -251,7 +261,7 @@ onComplete parameter for a non-update app call
 
 #### Defined in
 
-[src/types/app-client.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L330)
+[src/types/app-client.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L329)
 
 ___
 
@@ -263,7 +273,7 @@ Parameters for funding an app account
 
 #### Defined in
 
-[src/types/app-client.ts:368](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L368)
+[src/types/app-client.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L367)
 
 ___
 
@@ -307,4 +317,4 @@ Resolve an app client instance by looking up an app created by the given creator
 
 #### Defined in
 
-[src/types/app-client.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L377)
+[src/types/app-client.ts:376](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L376)

@@ -257,6 +257,16 @@ export type AccountInformation = {
    * The number of existing boxes created by this account's app.
    */
   totalBoxes?: number
+
+  /**
+   * The last heartbeat round for this account.
+   */
+  lastHeartbeat?: bigint | number | undefined
+
+  /**
+   * The last proposed round for this account.
+   */
+  lastProposed?: bigint | number | undefined
 }
 
 /** Account asset holding information at a given round. */

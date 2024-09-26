@@ -12,8 +12,6 @@ App call args with non-ABI (raw) values (minus some processing like encoding str
 
   ↳ **`RawAppCallArgs`**
 
-  ↳↳ [`AppClientCallRawArgs`](types_app_client.AppClientCallRawArgs.md)
-
 ## Table of contents
 
 ### Properties

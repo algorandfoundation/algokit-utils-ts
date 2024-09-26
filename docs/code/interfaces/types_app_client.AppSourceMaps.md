@@ -23,7 +23,7 @@ The source map of the approval program
 
 #### Defined in
 
-[src/types/app-client.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L261)
+[src/types/app-client.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L260)
 
 ___
 
@@ -35,4 +35,4 @@ The source map of the clear program
 
 #### Defined in
 
-[src/types/app-client.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L263)
+[src/types/app-client.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L262)
