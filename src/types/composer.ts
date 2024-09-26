@@ -1023,10 +1023,11 @@ export default class AlgoKitComposer {
     const sdkParams = {
       from: params.sender,
       suggestedParams,
+      appArgs: params.args,
       onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
-      appAccounts: params.accountReferences,
-      appForeignApps: params.appReferences?.map((x) => Number(x)),
-      appForeignAssets: params.assetReferences?.map((x) => Number(x)),
+      accounts: params.accountReferences,
+      foreignApps: params.appReferences?.map((x) => Number(x)),
+      foreignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
       approvalProgram,
       clearProgram: clearStateProgram,
@@ -1041,7 +1042,6 @@ export default class AlgoKitComposer {
 
       txn = algosdk.makeApplicationCreateTxnFromObject({
         ...sdkParams,
-        onComplete: sdkParams.onComplete,
         extraPages:
           'extraProgramPages' in params
             ? params.extraProgramPages ?? Math.floor((approvalProgram!.length + clearStateProgram!.length) / APP_PAGE_MAX_SIZE)

@@ -80,7 +80,7 @@ describe('AlgorandClient', () => {
     expect(result.returns?.[0].returnValue?.valueOf()).toBe(3n)
   })
 
-  test('addMethodCall', async () => {
+  test('addAppCallMethodCall', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).balance
     const bobPreBalance = (await algorand.account.getInformation(bob)).balance
 
@@ -92,6 +92,7 @@ describe('AlgorandClient', () => {
         appId: appId,
         method: appClient.appClient.getABIMethod('doMath')!,
         args: [1, 2, 'sum'],
+        note: 'addAppCallMethodCall',
       })
       .execute()
 
@@ -102,6 +103,34 @@ describe('AlgorandClient', () => {
     expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1n)
 
     expect(methodRes.returns?.[0].returnValue?.valueOf()).toBe(3n)
+  })
+
+  test('addAppCall', async () => {
+    const alicePreBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPreBalance = (await algorand.account.getInformation(bob)).balance
+
+    const res = await algorand
+      .newGroup()
+      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgo(1), note: new Uint8Array([1]) })
+      .addAppCall({
+        sender: alice.addr,
+        appId: appId,
+        args: [
+          appClient.appClient.getABIMethod('doMath')!.getSelector(),
+          algosdk.encodeUint64(1),
+          algosdk.encodeUint64(2),
+          Uint8Array.from(Buffer.from('AANzdW0=', 'base64')), //sum
+        ],
+        note: 'addAppCall',
+      })
+      .execute()
+
+    const alicePostBalance = (await algorand.account.getInformation(alice)).balance
+    const bobPostBalance = (await algorand.account.getInformation(bob)).balance
+
+    expect(alicePostBalance.microAlgo).toBe(alicePreBalance.microAlgo - 2001n)
+    expect(bobPostBalance.microAlgo).toBe(bobPreBalance.microAlgo + 1n)
+    expect(Buffer.from(res.confirmations[1].logs![0]).toString('hex')).toBe('151f7c750000000000000003')
   })
 
   test('method with txn arg', async () => {
