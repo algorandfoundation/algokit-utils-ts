@@ -20,6 +20,7 @@ Wraps key functionality around processing logic errors
 
 ### Properties
 
+- [cause](types_logic_error.LogicError.md#cause)
 - [led](types_logic_error.LogicError.md#led)
 - [lines](types_logic_error.LogicError.md#lines)
 - [message](types_logic_error.LogicError.md#message)
@@ -64,6 +65,20 @@ Error.constructor
 [src/types/logic-error.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L54)
 
 ## Properties
+
+### cause
+
+• `Optional` **cause**: `unknown`
+
+#### Inherited from
+
+Error.cause
+
+#### Defined in
+
+node_modules/typescript/lib/lib.es2022.error.d.ts:24
+
+___
 
 ### led
 
@@ -178,7 +193,7 @@ Error.prepareStackTrace
 
 #### Defined in
 
-node_modules/@types/node/globals.d.ts:143
+node_modules/@types/node/globals.d.ts:28
 
 ___
 
@@ -192,7 +207,7 @@ Error.stackTraceLimit
 
 #### Defined in
 
-node_modules/@types/node/globals.d.ts:145
+node_modules/@types/node/globals.d.ts:30
 
 ## Methods
 
@@ -219,7 +234,7 @@ Error.captureStackTrace
 
 #### Defined in
 
-node_modules/@types/node/globals.d.ts:136
+node_modules/@types/node/globals.d.ts:21
 
 ___
 

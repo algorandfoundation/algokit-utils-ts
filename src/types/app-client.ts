@@ -1051,7 +1051,7 @@ export class AppClient {
               transaction: result.transactions.at(-1)!,
               confirmation: result.confirmations.at(-1)!,
               // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-              return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
+              return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
             } satisfies SendAppTransactionResult,
             getArc56Method(params.method, this._appSpec),
           )
@@ -1722,7 +1722,7 @@ export class ApplicationClient {
         confirmation: result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult,
         confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
         transactions: txns.map((t) => t.txn),
-        return: (result.methodResults?.length ?? 0 > 0) ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
+        return: result.methodResults?.length ?? 0 > 0 ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
       } satisfies AppCallTransactionResult
     }
 

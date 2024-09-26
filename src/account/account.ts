@@ -129,7 +129,7 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
   return algosdk.encodeAddress(Buffer.from(addressEncodedInB64, 'base64'))
 }
 
-type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
+export type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
 type ToNumberIfExtends<K, E> = K extends E ? number : K
 /** @deprecated Account information at a given round. */
 export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'get_obj_for_encoding'>
@@ -170,8 +170,6 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
     rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
     totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
     totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
-    lastHeartbeat: account.lastHeartbeat ? Number(account.lastHeartbeat) : undefined,
-    lastProposed: account.lastProposed ? Number(account.lastProposed) : undefined,
   }
 }
 

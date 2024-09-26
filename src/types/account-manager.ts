@@ -219,8 +219,6 @@ export class AccountManager {
       rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
       totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
       totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
-      lastHeartbeat: account.lastHeartbeat ? Number(account.lastHeartbeat) : undefined,
-      lastProposed: account.lastProposed ? Number(account.lastProposed) : undefined,
     }
   }
 

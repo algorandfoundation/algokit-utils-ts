@@ -21,6 +21,7 @@
 ### Type Aliases
 
 - [AccountInformation](index.md#accountinformation)
+- [NumberConverter](index.md#numberconverter)
 
 ### Variables
 
@@ -168,7 +169,7 @@ Re-exports [searchTransactions](index.indexer.md#searchtransactions)
 
 ### AccountInformation
 
-Ƭ **AccountInformation**: `Omit`\<`NumberConverter`\<`AccountInformationModel`\>, ``"get_obj_for_encoding"``\>
+Ƭ **AccountInformation**: `Omit`\<[`NumberConverter`](index.md#numberconverter)\<`AccountInformationModel`\>, ``"get_obj_for_encoding"``\>
 
 **`Deprecated`**
 
@@ -177,6 +178,22 @@ Account information at a given round.
 #### Defined in
 
 [src/account/account.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L135)
+
+___
+
+### NumberConverter
+
+Ƭ **NumberConverter**\<`T`\>: \{ [key in keyof T]: ToNumberIfExtends\<T[key], number \| bigint\> }
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `AccountInformationModel` |
+
+#### Defined in
+
+[src/account/account.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L132)
 
 ## Variables
 
@@ -1016,7 +1033,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L196)
+[src/account/account.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L194)
 
 ___
 
@@ -2641,7 +2658,7 @@ This function persists the source maps for the given sources.
 
 #### Defined in
 
-[src/debugging/debugging.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L10)
+[src/debugging/debugging.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L8)
 
 ___
 

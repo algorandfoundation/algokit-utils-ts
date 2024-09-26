@@ -3,8 +3,6 @@
  *
  * This function persists the source maps for the given sources.
  *
- * @param param0 The parameters to define the persistence
- *
  * @returns A promise that resolves when the source maps have been persisted.
  */
 export async function persistSourceMaps(_params: unknown): Promise<void> {

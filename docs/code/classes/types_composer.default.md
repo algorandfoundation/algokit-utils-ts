@@ -209,7 +209,7 @@ ___
 
 ### txns
 
-• `Private` **txns**: `Txn`[] = `[]`
+• `Private` **txns**: [`Txn`](../modules/types_composer.md#txn)[] = `[]`
 
 Transactions that have not yet been composed
 
@@ -1017,7 +1017,7 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 
 | Name | Type |
 | :------ | :------ |
-| `txn` | `Txn` |
+| `txn` | [`Txn`](../modules/types_composer.md#txn) |
 | `suggestedParams` | `SuggestedParams` |
 
 #### Returns
@@ -1038,7 +1038,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `txn` | `Txn` |
+| `txn` | [`Txn`](../modules/types_composer.md#txn) |
 | `suggestedParams` | `SuggestedParams` |
 
 #### Returns
@@ -1148,7 +1148,6 @@ Compose the atomic transaction group and simulate sending it to the network
 | `options.allowUnnamedResources?` | `boolean` |
 | `options.execTraceConfig?` | `SimulateTraceConfig` |
 | `options.extraOpcodeBudget?` | `number` \| `bigint` |
-| `options.fixSigners?` | `boolean` |
 | `options.round?` | `number` \| `bigint` |
 
 #### Returns

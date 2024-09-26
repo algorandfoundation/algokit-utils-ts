@@ -42,7 +42,7 @@ Account asset holding information at a given round.
 
 #### Defined in
 
-[src/types/account.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L273)
+[src/types/account.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L263)
 
 ___
 
@@ -66,8 +66,6 @@ Account information at a given round.
 | `balance` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | The balance of Algo currently held by the account. |
 | `createdApps?` | `Application`[] | Parameters of applications created by this account including app global data. |
 | `createdAssets?` | `Asset`[] | (apar) parameters of assets created by this account. Note: the raw account uses `map[int] -> Asset` for this type. |
-| `lastHeartbeat?` | `bigint` \| `number` | The last heartbeat round for this account. |
-| `lastProposed?` | `bigint` \| `number` | The last proposed round for this account. |
 | `minBalance` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | Algo balance required to be held by the account. The requirement grows based on asset and application usage. |
 | `participation?` | `AccountParticipation` | AccountParticipation describes the parameters used by this account in consensus protocol. |
 | `pendingRewards` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | Amount of Algo of pending rewards in this account. |
