@@ -1,10 +1,12 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
+import { performAtomicTransactionComposerSimulate } from '../transaction/perform-atomic-transaction-composer-simulate'
 import { encodeLease, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn, APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
+import { EventType } from './async-event-emitter'
 import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
 import { Arc2TransactionNote, ExecuteParams, SendAtomicTransactionComposerResults } from './transaction'
@@ -1254,11 +1256,9 @@ export default class AlgoKitComposer {
       // Dump the traces to a file for use with AlgoKit AVM debugger
       // Checks for false on traceAll because it should have been already
       // executed above
-      await Config.events.emitAsync('simulateAndPersistResponse', {
-        atc: this.atc,
-        projectRoot: Config.projectRoot,
-        algod: this.algod,
-        bufferSizeMb: Config.traceBufferSizeMb,
+      const simulateResponse = await performAtomicTransactionComposerSimulate(this.atc, this.algod)
+      await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+        simulateResponse,
       })
     }
 

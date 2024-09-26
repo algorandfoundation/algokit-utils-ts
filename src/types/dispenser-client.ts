@@ -124,7 +124,7 @@ export class TestNetDispenserApiClient {
       let error_response = null
       try {
         error_response = await response.json()
-      } catch (err) {
+      } catch {
         // suppress exception
       }
 

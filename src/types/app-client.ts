@@ -56,6 +56,7 @@ import {
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
+import { EventType } from './async-event-emitter'
 import AlgoKitComposer, {
   AppCallMethodCall,
   AppCallParams,
@@ -190,7 +191,7 @@ export interface AppClientDeployParams extends AppClientDeployCoreParams, AppCli
   schema?: Partial<AppStorageSchema>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
 export interface AppClientCallRawArgs extends RawAppCallArgs {}
 
 export interface AppClientCallABIArgs extends Omit<ABIAppCallArgs, 'method'> {
@@ -802,14 +803,11 @@ export class AppClient {
     const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
     if (Config.debug && Config.projectRoot) {
-      await Config.events.emitAsync('persistSourceMaps', {
+      await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
           { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
           { compiledTeal: compiledClear, appName: appSpec.name, fileName: 'clear' },
         ],
-        projectRoot: Config.projectRoot,
-        appManager,
-        withSources: true,
       })
     }
 
@@ -1433,14 +1431,11 @@ export class ApplicationClient {
     this._clearSourceMap = clearCompiled?.sourceMap
 
     if (Config.debug && Config.projectRoot) {
-      await Config.events.emitAsync('persistSourceMaps', {
+      await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
           { compiledTeal: approvalCompiled, appName: this._appName, fileName: 'approval' },
           { compiledTeal: clearCompiled, appName: this._appName, fileName: 'clear' },
         ],
-        projectRoot: Config.projectRoot,
-        appManager: new AppManager(this.algod),
-        withSources: true,
       })
     }
 

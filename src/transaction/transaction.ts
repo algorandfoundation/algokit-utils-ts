@@ -3,6 +3,7 @@ import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
+import { EventType } from '../types/async-event-emitter'
 import {
   AtomicTransactionComposerToSend,
   SendAtomicTransactionComposerResults,
@@ -621,11 +622,9 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
     if (Config.debug && Config.projectRoot && Config.traceAll) {
       // Dump the traces to a file for use with AlgoKit AVM debugger
-      await Config.events.emitAsync('simulateAndPersistResponse', {
-        atc,
-        projectRoot: Config.projectRoot,
-        algod,
-        bufferSizeMb: Config.traceBufferSizeMb,
+      const simulateResponse = await performAtomicTransactionComposerSimulate(atc, algod)
+      await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+        simulateResponse,
       })
     }
     const result = await atc.execute(
@@ -679,19 +678,11 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
         e,
       )
-      let simulate = undefined
+      const simulate = await performAtomicTransactionComposerSimulate(atc, algod)
       if (Config.debug && Config.projectRoot && !Config.traceAll) {
-        // Dump the traces to a file for use with AlgoKit AVM debugger
-        // Checks for false on traceAll because it should have been already
-        // executed above
-        await Config.events.emitAsync('simulateAndPersistResponse', {
-          atc,
-          projectRoot: Config.projectRoot,
-          algod,
-          bufferSizeMb: Config.traceBufferSizeMb,
+        await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+          simulateResponse: simulate,
         })
-      } else {
-        simulate = await performAtomicTransactionComposerSimulate(atc, algod)
       }
 
       if (simulate && simulate.txnGroups[0].failedAt) {

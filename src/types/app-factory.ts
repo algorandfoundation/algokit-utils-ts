@@ -26,8 +26,8 @@ import {
   DeployAppUpdateMethodCall,
   DeployAppUpdateParams,
 } from './app-deployer'
-import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
+import { EventType } from './async-event-emitter'
 import { AppCreateMethodCall, AppCreateParams } from './composer'
 import { Expand } from './expand'
 import { ExecuteParams } from './transaction'
@@ -462,14 +462,11 @@ export class AppFactory {
 
     // Add source map persistence logic
     if (Config.debug && Config.projectRoot) {
-      await Config.events.emitAsync('persistSourceMaps', {
+      await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
           { compiledTeal: result.compiledApproval, appName: this._appName, fileName: 'approval' },
           { compiledTeal: result.compiledClear, appName: this._appName, fileName: 'clear' },
         ],
-        projectRoot: Config.projectRoot,
-        appManager: new AppManager(this._algorand.client.algod),
-        withSources: true,
       })
     }
 
