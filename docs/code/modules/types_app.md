@@ -12,6 +12,7 @@
 ### Interfaces
 
 - [AppCallParams](../interfaces/types_app.AppCallParams.md)
+- [AppCallTransactionResult](../interfaces/types_app.AppCallTransactionResult.md)
 - [AppCallTransactionResultOfType](../interfaces/types_app.AppCallTransactionResultOfType.md)
 - [AppCompilationResult](../interfaces/types_app.AppCompilationResult.md)
 - [AppDeployMetadata](../interfaces/types_app.AppDeployMetadata.md)
@@ -38,7 +39,6 @@
 - [ABIAppCallArgs](types_app.md#abiappcallargs)
 - [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
-- [AppCallTransactionResult](types_app.md#appcalltransactionresult)
 - [AppCallType](types_app.md#appcalltype)
 - [AppReturn](types_app.md#appreturn)
 - [BoxIdentifier](types_app.md#boxidentifier)
@@ -88,7 +88,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L235)
+[src/types/app.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L236)
 
 ___
 
@@ -103,18 +103,6 @@ Arguments to pass to an app call either:
 #### Defined in
 
 [src/types/app.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L124)
-
-___
-
-### AppCallTransactionResult
-
-Ƭ **AppCallTransactionResult**: [`AppCallTransactionResultOfType`](../interfaces/types_app.AppCallTransactionResultOfType.md)\<[`ABIReturn`](types_app.md#abireturn)\>
-
-Result from calling an app
-
-#### Defined in
-
-[src/types/app.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L232)
 
 ___
 
@@ -161,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L339)
+[src/types/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L340)
 
 ___
 
@@ -192,7 +180,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L356)
+[src/types/app.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L357)
 
 ___
 
@@ -204,7 +192,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L345)
+[src/types/app.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L346)
 
 ___
 
@@ -216,7 +204,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:353](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L353)
+[src/types/app.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L354)
 
 ## Variables
 

@@ -5,8 +5,6 @@
 import algosdk from 'algosdk'
 import { CompiledTeal } from './app'
 
-// change event listener https://github.com/algorandfoundation/algokit-subscriber-ts/blob/main/src/subscriber.ts#L259
-
 export const ALGOKIT_DIR = '.algokit'
 export const SOURCES_DIR = 'sources'
 export const TEAL_FILE_EXT = '.teal'
@@ -21,7 +19,7 @@ export const DEFAULT_MAX_SEARCH_DEPTH = 10
 export interface TealSourceDebugEventData {
   appName: string
   fileName: string
-  compiledTeal?: CompiledTeal
+  compiledTeal: CompiledTeal
 }
 
 /**

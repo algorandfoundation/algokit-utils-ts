@@ -22,4 +22,4 @@ An array of PersistSourceMapInput objects. Each object can either contain rawTea
 
 #### Defined in
 
-[src/types/debugging.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L32)
+[src/types/debugging.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L30)

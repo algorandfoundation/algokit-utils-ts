@@ -13,6 +13,7 @@
 
 - [AppClientCallABIArgs](../interfaces/types_app_client.AppClientCallABIArgs.md)
 - [AppClientCallCoreParams](../interfaces/types_app_client.AppClientCallCoreParams.md)
+- [AppClientCallRawArgs](../interfaces/types_app_client.AppClientCallRawArgs.md)
 - [AppClientCompilationParams](../interfaces/types_app_client.AppClientCompilationParams.md)
 - [AppClientDeployCallInterfaceParams](../interfaces/types_app_client.AppClientDeployCallInterfaceParams.md)
 - [AppClientDeployCoreParams](../interfaces/types_app_client.AppClientDeployCoreParams.md)
@@ -29,7 +30,6 @@
 - [AppClientBareCallParams](types_app_client.md#appclientbarecallparams)
 - [AppClientCallArgs](types_app_client.md#appclientcallargs)
 - [AppClientCallParams](types_app_client.md#appclientcallparams)
-- [AppClientCallRawArgs](types_app_client.md#appclientcallrawargs)
 - [AppClientClearStateParams](types_app_client.md#appclientclearstateparams)
 - [AppClientCreateOnComplete](types_app_client.md#appclientcreateoncomplete)
 - [AppClientCreateParams](types_app_client.md#appclientcreateparams)
@@ -63,7 +63,7 @@ ___
 
 ### AppClientCallArgs
 
-Ƭ **AppClientCallArgs**: [`AppClientCallRawArgs`](types_app_client.md#appclientcallrawargs) \| [`AppClientCallABIArgs`](../interfaces/types_app_client.AppClientCallABIArgs.md)
+Ƭ **AppClientCallArgs**: [`AppClientCallRawArgs`](../interfaces/types_app_client.AppClientCallRawArgs.md) \| [`AppClientCallABIArgs`](../interfaces/types_app_client.AppClientCallABIArgs.md)
 
 The arguments to pass to an Application Client smart contract call
 
@@ -85,19 +85,9 @@ Parameters to construct a ApplicationClient contract call
 
 ___
 
-### AppClientCallRawArgs
-
-Ƭ **AppClientCallRawArgs**: [`RawAppCallArgs`](../interfaces/types_app.RawAppCallArgs.md)
-
-#### Defined in
-
-[src/types/app-client.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L194)
-
-___
-
 ### AppClientClearStateParams
 
-Ƭ **AppClientClearStateParams**: [`AppClientCallRawArgs`](types_app_client.md#appclientcallrawargs) & [`AppClientCallCoreParams`](../interfaces/types_app_client.AppClientCallCoreParams.md)
+Ƭ **AppClientClearStateParams**: [`AppClientCallRawArgs`](../interfaces/types_app_client.AppClientCallRawArgs.md) & [`AppClientCallCoreParams`](../interfaces/types_app_client.AppClientCallCoreParams.md)
 
 Parameters to construct a ApplicationClient clear state contract call
 

@@ -1252,7 +1252,7 @@ export default class AlgoKitComposer {
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
     await this.build()
 
-    if (Config.debug && Config.projectRoot && !Config.traceAll) {
+    if (Config.debug && !Config.traceAll) {
       // Dump the traces to a file for use with AlgoKit AVM debugger
       // Checks for false on traceAll because it should have been already
       // executed above

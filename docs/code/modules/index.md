@@ -6,7 +6,15 @@
 
 ### References
 
+- [ALGOKIT\_DIR](index.md#algokit_dir)
+- [AVMTracesEventData](index.md#avmtraceseventdata)
 - [AlgorandClient](index.md#algorandclient)
+- [DEFAULT\_MAX\_SEARCH\_DEPTH](index.md#default_max_search_depth)
+- [SOURCES\_DIR](index.md#sources_dir)
+- [TEAL\_FILE\_EXT](index.md#teal_file_ext)
+- [TEAL\_SOURCEMAP\_EXT](index.md#teal_sourcemap_ext)
+- [TealSourceDebugEventData](index.md#tealsourcedebugeventdata)
+- [TealSourcesDebugEventData](index.md#tealsourcesdebugeventdata)
 - [executePaginatedRequest](index.md#executepaginatedrequest)
 - [lookupAccountByAddress](index.md#lookupaccountbyaddress)
 - [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
@@ -125,9 +133,57 @@
 
 ## References
 
+### ALGOKIT\_DIR
+
+Re-exports [ALGOKIT_DIR](types_debugging.md#algokit_dir)
+
+___
+
+### AVMTracesEventData
+
+Re-exports [AVMTracesEventData](../interfaces/types_debugging.AVMTracesEventData.md)
+
+___
+
 ### AlgorandClient
 
 Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+
+___
+
+### DEFAULT\_MAX\_SEARCH\_DEPTH
+
+Re-exports [DEFAULT_MAX_SEARCH_DEPTH](types_debugging.md#default_max_search_depth)
+
+___
+
+### SOURCES\_DIR
+
+Re-exports [SOURCES_DIR](types_debugging.md#sources_dir)
+
+___
+
+### TEAL\_FILE\_EXT
+
+Re-exports [TEAL_FILE_EXT](types_debugging.md#teal_file_ext)
+
+___
+
+### TEAL\_SOURCEMAP\_EXT
+
+Re-exports [TEAL_SOURCEMAP_EXT](types_debugging.md#teal_sourcemap_ext)
+
+___
+
+### TealSourceDebugEventData
+
+Re-exports [TealSourceDebugEventData](../interfaces/types_debugging.TealSourceDebugEventData.md)
+
+___
+
+### TealSourcesDebugEventData
+
+Re-exports [TealSourcesDebugEventData](../interfaces/types_debugging.TealSourcesDebugEventData.md)
 
 ___
 
@@ -433,7 +489,7 @@ ___
 
 ### callApp
 
-▸ **callApp**(`call`, `algod`): `Promise`\<[`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
+▸ **callApp**(`call`, `algod`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -444,7 +500,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 
@@ -556,7 +612,7 @@ ___
 
 ### createApp
 
-▸ **createApp**(`create`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+▸ **createApp**(`create`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 #### Parameters
 
@@ -567,7 +623,7 @@ ___
 
 #### Returns
 
-`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 The details of the created app, or the transaction to create it if `skipSending` and the compilation result
 
@@ -3081,7 +3137,7 @@ ___
 
 ### updateApp
 
-▸ **updateApp**(`update`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
+▸ **updateApp**(`update`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -3092,7 +3148,7 @@ ___
 
 #### Returns
 
-`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
+`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The transaction send result and the compilation result
 

@@ -620,7 +620,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
     }
 
-    if (Config.debug && Config.projectRoot && Config.traceAll) {
+    if (Config.debug && Config.traceAll) {
       // Dump the traces to a file for use with AlgoKit AVM debugger
       const simulateResponse = await performAtomicTransactionComposerSimulate(atc, algod)
       await Config.events.emitAsync(EventType.TxnGroupSimulated, {
@@ -679,7 +679,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         e,
       )
       const simulate = await performAtomicTransactionComposerSimulate(atc, algod)
-      if (Config.debug && Config.projectRoot && !Config.traceAll) {
+      if (Config.debug && !Config.traceAll) {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
           simulateResponse: simulate,
         })

@@ -22,4 +22,4 @@ algod An Algodv2 client to perform the simulation.
 
 #### Defined in
 
-[src/types/debugging.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L40)
+[src/types/debugging.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L38)

@@ -1,5 +1,4 @@
 import algosdk from 'algosdk'
-import { Config } from '../config'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import {
   AppCompilationResult,
@@ -27,7 +26,6 @@ import {
   DeployAppUpdateParams,
 } from './app-deployer'
 import { AppSpec } from './app-spec'
-import { EventType } from './async-event-emitter'
 import { AppCreateMethodCall, AppCreateParams } from './composer'
 import { Expand } from './expand'
 import { ExecuteParams } from './transaction'
@@ -458,16 +456,6 @@ export class AppFactory {
     }
     if (result.compiledClear) {
       this._clearSourceMap = result.compiledClear.sourceMap
-    }
-
-    // Add source map persistence logic
-    if (Config.debug && Config.projectRoot) {
-      await Config.events.emitAsync(EventType.AppCompiled, {
-        sources: [
-          { compiledTeal: result.compiledApproval, appName: this._appName, fileName: 'approval' },
-          { compiledTeal: result.compiledClear, appName: this._appName, fileName: 'clear' },
-        ],
-      })
     }
 
     return result

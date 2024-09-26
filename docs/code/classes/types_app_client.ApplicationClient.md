@@ -228,7 +228,7 @@ ___
 
 ### call
 
-▸ **call**(`call?`): `Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+▸ **call**(`call?`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -238,7 +238,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 
@@ -256,7 +256,7 @@ ___
 
 ### callOfType
 
-▸ **callOfType**(`call?`, `callType`): `Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+▸ **callOfType**(`call?`, `callType`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -267,7 +267,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 
@@ -285,7 +285,7 @@ ___
 
 ### clearState
 
-▸ **clearState**(`call?`): `Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+▸ **clearState**(`call?`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -295,7 +295,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 
@@ -313,7 +313,7 @@ ___
 
 ### closeOut
 
-▸ **closeOut**(`call?`): `Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+▸ **closeOut**(`call?`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -323,7 +323,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 
@@ -397,7 +397,7 @@ ___
 
 ### delete
 
-▸ **delete**(`call?`): `Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+▸ **delete**(`call?`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -407,7 +407,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 
@@ -834,7 +834,7 @@ ___
 
 ### optIn
 
-▸ **optIn**(`call?`): `Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+▸ **optIn**(`call?`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 #### Parameters
 
@@ -844,7 +844,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](../modules/types_app.md#appcalltransactionresult)\>
+`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
 
 The result of the call
 

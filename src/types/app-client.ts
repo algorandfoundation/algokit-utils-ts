@@ -191,7 +191,7 @@ export interface AppClientDeployParams extends AppClientDeployCoreParams, AppCli
   schema?: Partial<AppStorageSchema>
 }
 
-export type AppClientCallRawArgs = RawAppCallArgs
+export interface AppClientCallRawArgs extends RawAppCallArgs {}
 
 export interface AppClientCallABIArgs extends Omit<ABIAppCallArgs, 'method'> {
   /** If calling an ABI method then either the name of the method, or the ABI signature */
@@ -801,7 +801,7 @@ export class AppClient {
     const clearTemplate = Buffer.from(appSpec.source.clear, 'base64').toString('utf-8')
     const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
-    if (Config.debug && Config.projectRoot) {
+    if (Config.debug) {
       await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
           { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
@@ -1429,7 +1429,7 @@ export class ApplicationClient {
     const clearCompiled = await compileTeal(clear, this.algod)
     this._clearSourceMap = clearCompiled?.sourceMap
 
-    if (Config.debug && Config.projectRoot) {
+    if (Config.debug) {
       await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
           { compiledTeal: approvalCompiled, appName: this._appName, fileName: 'approval' },

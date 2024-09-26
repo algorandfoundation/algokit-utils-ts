@@ -24,17 +24,17 @@ Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should b
 
 #### Defined in
 
-[src/types/debugging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L22)
+[src/types/debugging.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L20)
 
 ___
 
 ### compiledTeal
 
-• `Optional` **compiledTeal**: [`CompiledTeal`](types_app.CompiledTeal.md)
+• **compiledTeal**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
 #### Defined in
 
-[src/types/debugging.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L24)
+[src/types/debugging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L22)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[src/types/debugging.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L23)
+[src/types/debugging.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L21)
