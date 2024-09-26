@@ -4,14 +4,66 @@
 
 ## Table of contents
 
-### Classes
-
-- [AVMDebuggerSourceMap](../classes/types_debugging.AVMDebuggerSourceMap.md)
-- [AVMDebuggerSourceMapEntry](../classes/types_debugging.AVMDebuggerSourceMapEntry.md)
-- [PersistSourceMapInput](../classes/types_debugging.PersistSourceMapInput.md)
-
 ### Interfaces
 
-- [AVMDebuggerSourceMapDict](../interfaces/types_debugging.AVMDebuggerSourceMapDict.md)
-- [PersistSourceMapsParams](../interfaces/types_debugging.PersistSourceMapsParams.md)
-- [SimulateAndPersistResponseParams](../interfaces/types_debugging.SimulateAndPersistResponseParams.md)
+- [AVMTracesEventData](../interfaces/types_debugging.AVMTracesEventData.md)
+- [TealSourceDebugEventData](../interfaces/types_debugging.TealSourceDebugEventData.md)
+- [TealSourcesDebugEventData](../interfaces/types_debugging.TealSourcesDebugEventData.md)
+
+### Variables
+
+- [ALGOKIT\_DIR](types_debugging.md#algokit_dir)
+- [DEFAULT\_MAX\_SEARCH\_DEPTH](types_debugging.md#default_max_search_depth)
+- [SOURCES\_DIR](types_debugging.md#sources_dir)
+- [TEAL\_FILE\_EXT](types_debugging.md#teal_file_ext)
+- [TEAL\_SOURCEMAP\_EXT](types_debugging.md#teal_sourcemap_ext)
+
+## Variables
+
+### ALGOKIT\_DIR
+
+• `Const` **ALGOKIT\_DIR**: ``".algokit"``
+
+#### Defined in
+
+[src/types/debugging.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L10)
+
+___
+
+### DEFAULT\_MAX\_SEARCH\_DEPTH
+
+• `Const` **DEFAULT\_MAX\_SEARCH\_DEPTH**: ``10``
+
+#### Defined in
+
+[src/types/debugging.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L14)
+
+___
+
+### SOURCES\_DIR
+
+• `Const` **SOURCES\_DIR**: ``"sources"``
+
+#### Defined in
+
+[src/types/debugging.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L11)
+
+___
+
+### TEAL\_FILE\_EXT
+
+• `Const` **TEAL\_FILE\_EXT**: ``".teal"``
+
+#### Defined in
+
+[src/types/debugging.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L12)
+
+___
+
+### TEAL\_SOURCEMAP\_EXT
+
+• `Const` **TEAL\_SOURCEMAP\_EXT**: ``".teal.tok.map"``
+
+#### Defined in
+
+[src/types/debugging.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L13)

@@ -114,7 +114,6 @@
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
 - [signTransaction](index.md#signtransaction)
-- [simulateAndPersistResponse](index.md#simulateandpersistresponse)
 - [stripTealComments](index.md#striptealcomments)
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
@@ -470,7 +469,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:848](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L848)
+[src/transaction/transaction.ts:838](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L838)
 
 ___
 
@@ -534,7 +533,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:873](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L873)
+[src/transaction/transaction.ts:863](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L863)
 
 ___
 
@@ -1017,7 +1016,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L194)
+[src/account/account.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L196)
 
 ___
 
@@ -1821,7 +1820,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:909](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L909)
+[src/transaction/transaction.ts:899](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L899)
 
 ___
 
@@ -2208,7 +2207,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:898](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L898)
+[src/transaction/transaction.ts:888](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L888)
 
 ___
 
@@ -2525,7 +2524,7 @@ Performs a dry run of the transactions loaded into the given AtomicTransactionCo
 
 #### Defined in
 
-[src/transaction/transaction.ts:724](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L724)
+[src/transaction/transaction.ts:714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L714)
 
 ___
 
@@ -2620,15 +2619,13 @@ ___
 
 ### persistSourceMaps
 
-▸ **persistSourceMaps**(`param0`): `Promise`\<`void`\>
-
-This function persists the source maps for the given sources.
+▸ **persistSourceMaps**(`_params`): `Promise`\<`void`\>
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `param0` | [`PersistSourceMapsParams`](../interfaces/types_debugging.PersistSourceMapsParams.md) | The parameters to define the persistence |
+| Name | Type |
+| :------ | :------ |
+| `_params` | `unknown` |
 
 #### Returns
 
@@ -2636,9 +2633,15 @@ This function persists the source maps for the given sources.
 
 A promise that resolves when the source maps have been persisted.
 
+**`Deprecated`**
+
+Use latest version of `AlgoKit AVM Debugger` VSCode extension instead. It will automatically manage your sourcemaps.
+
+This function persists the source maps for the given sources.
+
 #### Defined in
 
-[src/debugging/debugging.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L130)
+[src/debugging/debugging.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L10)
 
 ___
 
@@ -2843,7 +2846,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Defined in
 
-[src/transaction/transaction.ts:744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L744)
+[src/transaction/transaction.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L734)
 
 ___
 
@@ -2907,43 +2910,6 @@ Signs a single transaction by the given signer.
 #### Defined in
 
 [src/transaction/transaction.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L182)
-
-___
-
-### simulateAndPersistResponse
-
-▸ **simulateAndPersistResponse**(`param0`): `Promise`\<`SimulateResponse`\>
-
-This function simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object,
-and persists the simulation response to an AlgoKit AVM Debugger compliant JSON file.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `param0` | [`SimulateAndPersistResponseParams`](../interfaces/types_debugging.SimulateAndPersistResponseParams.md) | The parameters to control the simulation and persistence. |
-
-#### Returns
-
-`Promise`\<`SimulateResponse`\>
-
-The simulation result, which includes various details about how the transactions would be processed.
-
-**`Example`**
-
-```ts
-const atc = new AtomicTransactionComposer();
-const algod = new algosdk.Algodv2(token, server, port);
-const projectRoot = '/path/to/project';
-const bufferSizeMb = 10;
-
-const result = await simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb });
-console.log(result);
-```
-
-#### Defined in
-
-[src/debugging/simulate-and-persist-response.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/simulate-and-persist-response.ts#L33)
 
 ___
 
@@ -3153,4 +3119,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:789](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L789)
+[src/transaction/transaction.ts:779](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L779)
