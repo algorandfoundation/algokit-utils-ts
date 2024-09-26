@@ -18,6 +18,7 @@ export class AsyncEventEmitter {
   private listenerMap: Record<string | symbol, AsyncEventListener[]> = {}
 
   async emitAsync<K extends EventType>(eventName: K, event: EventDataMap[K]): Promise<void>
+  async emitAsync(eventName: string | symbol, event: unknown): Promise<void>
   async emitAsync(eventName: string | symbol, event: unknown): Promise<void> {
     for (const listener of this.listenerMap[eventName] ?? []) {
       await listener(event, eventName)

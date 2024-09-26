@@ -24,25 +24,7 @@
 
 • `Const` **ALGOKIT\_DIR**: ``".algokit"``
 
-#### Defined in
-
-[src/types/debugging.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L8)
-
-___
-
-### DEFAULT\_MAX\_SEARCH\_DEPTH
-
-• `Const` **DEFAULT\_MAX\_SEARCH\_DEPTH**: ``10``
-
-#### Defined in
-
-[src/types/debugging.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L12)
-
-___
-
-### SOURCES\_DIR
-
-• `Const` **SOURCES\_DIR**: ``"sources"``
+The directory name for AlgoKit project related files
 
 #### Defined in
 
@@ -50,13 +32,39 @@ ___
 
 ___
 
+### DEFAULT\_MAX\_SEARCH\_DEPTH
+
+• `Const` **DEFAULT\_MAX\_SEARCH\_DEPTH**: ``10``
+
+The default maximum search depth for file operations
+
+#### Defined in
+
+[src/types/debugging.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L21)
+
+___
+
+### SOURCES\_DIR
+
+• `Const` **SOURCES\_DIR**: ``"sources"``
+
+The directory name for debug source files
+
+#### Defined in
+
+[src/types/debugging.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L12)
+
+___
+
 ### TEAL\_FILE\_EXT
 
 • `Const` **TEAL\_FILE\_EXT**: ``".teal"``
 
+The file extension for TEAL files
+
 #### Defined in
 
-[src/types/debugging.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L10)
+[src/types/debugging.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L15)
 
 ___
 
@@ -64,6 +72,8 @@ ___
 
 • `Const` **TEAL\_SOURCEMAP\_EXT**: ``".teal.tok.map"``
 
+The file extension for TEAL source map files
+
 #### Defined in
 
-[src/types/debugging.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L11)
+[src/types/debugging.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L18)

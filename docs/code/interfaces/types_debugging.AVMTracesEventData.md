@@ -4,7 +4,7 @@
 
 [types/debugging](../modules/types_debugging.md).AVMTracesEventData
 
-Parameters to a call that simulates a transaction and persists the response.
+Represents the data for AVM traces debug events emitted whenever a transaction is simulated in debug mode
 
 ## Table of contents
 
@@ -18,8 +18,8 @@ Parameters to a call that simulates a transaction and persists the response.
 
 • **simulateResponse**: `SimulateResponse`
 
-algod An Algodv2 client to perform the simulation.
+The simulation response from Algod
 
 #### Defined in
 
-[src/types/debugging.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L38)
+[src/types/debugging.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L48)

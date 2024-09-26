@@ -4,9 +4,7 @@
 
 [types/debugging](../modules/types_debugging.md).TealSourceDebugEventData
 
-Class representing a debugger source maps input for persistence.
-
-Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should be provided.
+Represents the data for a single TEAL source
 
 ## Table of contents
 
@@ -22,9 +20,11 @@ Note: rawTeal and compiledTeal are mutually exclusive. Only one of them should b
 
 • **appName**: `string`
 
+The name of the application
+
 #### Defined in
 
-[src/types/debugging.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L20)
+[src/types/debugging.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L28)
 
 ___
 
@@ -32,9 +32,11 @@ ___
 
 • **compiledTeal**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
+The compiled TEAL code
+
 #### Defined in
 
-[src/types/debugging.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L22)
+[src/types/debugging.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L32)
 
 ___
 
@@ -42,6 +44,8 @@ ___
 
 • **fileName**: `string`
 
+The name of the file
+
 #### Defined in
 
-[src/types/debugging.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L21)
+[src/types/debugging.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/debugging.ts#L30)

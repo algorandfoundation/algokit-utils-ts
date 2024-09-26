@@ -28,28 +28,6 @@ See [usage](./docs/README.md#usage) for more.
 
 This library follows the [Guiding Principles of AlgoKit](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/algokit.md#guiding-principles).
 
-## NextJS compatibility
-
-`algokit-utils-ts` has a set of `node` specific utilities used for simplifying aggregation of artifacts for [AlgoKit VSCode Debugger Extension](https://github.com/algorandfoundation/algokit-avm-vscode-debugger). Which causes Next.js based projects to fail on `fs` module not found. To fix this issue, you can add the following to your `next.config.js` file:
-
-```js
-  webpack: (config, { isServer }) => {
-    // Fix for Module not found: Can't resolve 'fs'
-    if (!isServer) {
-      config.resolve.fallback.fs = false;
-    }
-    return config;
-  },
-```
-
-The root cause is due to the fact that, unlike many frameworks, Next.js allows you to import server-only (Node.js APIs that don't work in a browser) code into your page files. When Next.js builds your project, it removes server only code from your client-side bundle by checking which code exists inside one any of the following built-in methods (code splitting):
-
-- getServerSideProps
-- getStaticProps
-- getStaticPaths
-
-The Module not found: can't resolve 'xyz' error happens when you try to use server only code outside of these methods. Despite `algokit-utils` lazy loading the node specific code dynamically, Next.js does not seem to correctly identify whether a dynamic import is specific to server or client side. Hence the above fix disables the fallback for `fs` module so it ignores polyfilling it on client side.
-
 ## Contributing
 
 This is an open source project managed by the Algorand Foundation. See the [AlgoKit contributing page](https://github.com/algorandfoundation/algokit-cli/blob/main/CONTRIBUTING.md) to learn about making improvements.
