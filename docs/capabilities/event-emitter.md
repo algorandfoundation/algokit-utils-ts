@@ -25,8 +25,6 @@ enum EventType {
 }
 ```
 
-These events are primarily used for debugging purposes and are handled by the [`algokit-utils-ts-debug`](https://github.com/algorandfoundation/algokit-utils-ts-debug) package. However, the `AsyncEventEmitter` is designed to be generic and can be extended to handle custom event types as well.
-
 ## Emitting Events
 
 To emit an event, use the `emitAsync` method:

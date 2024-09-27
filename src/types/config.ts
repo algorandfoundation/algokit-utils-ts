@@ -112,6 +112,3 @@ export class UpdatableConfig implements Readonly<Config> {
     this.config = { ...this.config, ...newConfig }
   }
 }
-
-/** The AlgoKit config. To update it use the configure method. */
-export const Config = new UpdatableConfig()
