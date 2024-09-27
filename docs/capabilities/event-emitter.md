@@ -1,6 +1,6 @@
 # Event Emitter
 
-The Event Emitter is a capability provided by AlgoKit Utils that allows for asynchronous event handling. It provides a flexible mechanism for emitting and listening to custom events, which can be particularly useful for debugging and extending functionality not available in the `algokit-utils-ts` package.
+The Event Emitter is a capability provided by AlgoKit Utils that allows for asynchronous event handling of lifecycle events. It provides a flexible mechanism for emitting and listening to custom events, which can be particularly useful for debugging and extending functionality not available in the `algokit-utils-ts` package.
 
 ## `AsyncEventEmitter`
 

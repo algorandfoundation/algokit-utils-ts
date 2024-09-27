@@ -21,6 +21,6 @@ Refer to the [algokit-utils-ts-debug](https://github.com/algorandfoundation/algo
 
 > Note: Config also contains a set flags that affect behaviour of [algokit-utils-ts-debug](https://github.com/algorandfoundation/algokit-utils-ts-debug). Those include `projectRoot`, `traceAll`, `traceBufferSizeMb`, and `maxSearchDepth`. Refer to addon package documentation for details.
 
-### Why debug utilities are in a separate package?
+### Why are the debug utilities in a separate package?
 
 To keep the `algokit-utils-ts` package lean and isomporphic, the debugging utilities are located in a separate package. This eliminates various error cases with bundlers (e.g. `webpack`, `esbuild`) when building for the browser.

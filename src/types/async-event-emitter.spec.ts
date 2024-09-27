@@ -8,8 +8,6 @@ describe('async-event-emitter', () => {
   afterEach(logging.afterEach)
 
   const mockRegisterNodeDebugHandlers = () => {
-    // TODO: Define types for the events
-    // TODO: Question - Would this be the package we'd use to surface the UI widget for downloading a simulate trace?
     Config.events.on('event_a', (data: unknown) => {
       logging.testLogger.info('event_a', data)
     })
