@@ -23,6 +23,8 @@
 - [ABIStruct](types_app_arc56.md#abistruct)
 - [ABIType](types_app_arc56.md#abitype)
 - [AVMBytes](types_app_arc56.md#avmbytes)
+- [Arc56MethodArg](types_app_arc56.md#arc56methodarg)
+- [Arc56MethodReturnType](types_app_arc56.md#arc56methodreturntype)
 - [StructName](types_app_arc56.md#structname)
 
 ### Functions
@@ -49,7 +51,7 @@ Decoded ARC-56 struct as a struct rather than a tuple.
 
 #### Defined in
 
-[src/types/app-arc56.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L83)
+[src/types/app-arc56.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L87)
 
 ___
 
@@ -61,7 +63,7 @@ An ABI-encoded type
 
 #### Defined in
 
-[src/types/app-arc56.ts:395](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L395)
+[src/types/app-arc56.ts:399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L399)
 
 ___
 
@@ -73,7 +75,31 @@ Raw byteslice without the length prefixed that is specified in ARC-4
 
 #### Defined in
 
-[src/types/app-arc56.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L401)
+[src/types/app-arc56.ts:405](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L405)
+
+___
+
+### Arc56MethodArg
+
+Ƭ **Arc56MethodArg**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`Method`](../interfaces/types_app_arc56.Method.md)[``"args"``][`number`], ``"type"``\> & \{ `type`: `algosdk.ABIArgumentType`  }\>
+
+Type to describe an argument within an `Arc56Method`.
+
+#### Defined in
+
+[src/types/app-arc56.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L6)
+
+___
+
+### Arc56MethodReturnType
+
+Ƭ **Arc56MethodReturnType**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`Method`](../interfaces/types_app_arc56.Method.md)[``"returns"``], ``"type"``\> & \{ `type`: `algosdk.ABIReturnType`  }\>
+
+Type to describe a return type within an `Arc56Method`.
+
+#### Defined in
+
+[src/types/app-arc56.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L13)
 
 ___
 
@@ -85,7 +111,7 @@ The name of a defined struct
 
 #### Defined in
 
-[src/types/app-arc56.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L398)
+[src/types/app-arc56.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L402)
 
 ## Functions
 
@@ -112,7 +138,7 @@ The decoded ABI value or struct
 
 #### Defined in
 
-[src/types/app-arc56.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L95)
+[src/types/app-arc56.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L99)
 
 ___
 
@@ -138,7 +164,7 @@ The binary ABI-encoded value
 
 #### Defined in
 
-[src/types/app-arc56.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L115)
+[src/types/app-arc56.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L119)
 
 ___
 
@@ -169,7 +195,7 @@ The struct as a Record<string, any>
 
 #### Defined in
 
-[src/types/app-arc56.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L57)
+[src/types/app-arc56.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L61)
 
 ___
 
@@ -194,7 +220,7 @@ The struct as a decoded ABI tuple
 
 #### Defined in
 
-[src/types/app-arc56.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L75)
+[src/types/app-arc56.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L79)
 
 ___
 
@@ -218,7 +244,7 @@ The `ABITupleType`
 
 #### Defined in
 
-[src/types/app-arc56.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L44)
+[src/types/app-arc56.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L48)
 
 ___
 
@@ -243,7 +269,7 @@ The `Arc56Method`
 
 #### Defined in
 
-[src/types/app-arc56.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L144)
+[src/types/app-arc56.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L148)
 
 ___
 
@@ -264,7 +290,7 @@ Checks for decode errors on the AppCallTransactionResult and maps the return val
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `returnValue` | `undefined` \| [`ABIReturn`](types_app.md#abireturn) | The smart contract response |
-| `method` | [`Arc56Method`](../classes/types_app_arc56.Arc56Method.md) \| [`Method`](../interfaces/types_app_arc56.Method.md) | The method that was called |
+| `method` | [`Method`](../interfaces/types_app_arc56.Method.md) \| [`Arc56Method`](../classes/types_app_arc56.Arc56Method.md) | The method that was called |
 | `structs` | [`StructFields`](../interfaces/types_app_arc56.StructFields.md) | The struct fields from the app spec |
 
 #### Returns
@@ -275,4 +301,4 @@ The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-arc56.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L175)
+[src/types/app-arc56.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L179)

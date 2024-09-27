@@ -2,22 +2,26 @@ import algosdk from 'algosdk'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
 
+/** Type to describe an argument within an `Arc56Method`. */
+export type Arc56MethodArg = Expand<
+  Omit<Method['args'][number], 'type'> & {
+    type: algosdk.ABIArgumentType
+  }
+>
+
+/** Type to describe a return type within an `Arc56Method`. */
+export type Arc56MethodReturnType = Expand<
+  Omit<Method['returns'], 'type'> & {
+    type: algosdk.ABIReturnType
+  }
+>
+
 /**
  * Wrapper around `algosdk.ABIMethod` that represents an ARC-56 ABI method.
  */
 export class Arc56Method extends algosdk.ABIMethod {
-  override readonly args: Array<
-    Expand<
-      Omit<Method['args'][number], 'type'> & {
-        type: algosdk.ABIArgumentType
-      }
-    >
-  >
-  override readonly returns: Expand<
-    Omit<Method['returns'], 'type'> & {
-      type: algosdk.ABIReturnType
-    }
-  >
+  override readonly args: Array<Arc56MethodArg>
+  override readonly returns: Arc56MethodReturnType
 
   constructor(public method: Method) {
     super(method)

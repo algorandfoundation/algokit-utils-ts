@@ -14,11 +14,51 @@
 
 ### Type Aliases
 
+- [AppFactoryAppClientParams](types_app_factory.md#appfactoryappclientparams)
+- [AppFactoryCreateMethodCallParams](types_app_factory.md#appfactorycreatemethodcallparams)
+- [AppFactoryCreateParams](types_app_factory.md#appfactorycreateparams)
 - [AppFactoryDeployParams](types_app_factory.md#appfactorydeployparams)
+- [AppFactoryResolveAppClientByCreatorAndNameParams](types_app_factory.md#appfactoryresolveappclientbycreatorandnameparams)
 - [CreateOnComplete](types_app_factory.md#createoncomplete)
 - [CreateSchema](types_app_factory.md#createschema)
 
 ## Type Aliases
+
+### AppFactoryAppClientParams
+
+Ƭ **AppFactoryAppClientParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"algorand"`` \| ``"appSpec"``\>\>
+
+Params to get an app client by ID from an app factory.
+
+#### Defined in
+
+[src/types/app-factory.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L121)
+
+___
+
+### AppFactoryCreateMethodCallParams
+
+Ƭ **AppFactoryCreateMethodCallParams**: [`Expand`](types_expand.md#expand)\<[`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) & [`AppClientCompilationParams`](../interfaces/types_app_client.AppClientCompilationParams.md) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\>
+
+Params to specify a create method call for an app
+
+#### Defined in
+
+[src/types/app-factory.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L116)
+
+___
+
+### AppFactoryCreateParams
+
+Ƭ **AppFactoryCreateParams**: [`Expand`](types_expand.md#expand)\<[`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) & [`AppClientCompilationParams`](../interfaces/types_app_client.AppClientCompilationParams.md) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\>
+
+Params to specify a bare (raw) create call for an app
+
+#### Defined in
+
+[src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
+
+___
 
 ### AppFactoryDeployParams
 
@@ -28,7 +68,19 @@ Parameters to define a deployment for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
+[src/types/app-factory.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L127)
+
+___
+
+### AppFactoryResolveAppClientByCreatorAndNameParams
+
+Ƭ **AppFactoryResolveAppClientByCreatorAndNameParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`ResolveAppClientByCreatorAndName`](types_app_client.md#resolveappclientbycreatorandname), ``"algorand"`` \| ``"appSpec"``\>\>
+
+Params to get an app client by creator address and name from an app factory.
+
+#### Defined in
+
+[src/types/app-factory.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L124)
 
 ___
 

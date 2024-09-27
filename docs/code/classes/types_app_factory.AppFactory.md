@@ -41,7 +41,7 @@ to interact with those (or other) app instances.
 - [exportSourceMaps](types_app_factory.AppFactory.md#exportsourcemaps)
 - [exposeLogicError](types_app_factory.AppFactory.md#exposelogicerror)
 - [getABIParams](types_app_factory.AppFactory.md#getabiparams)
-- [getAppClientByCreatorAddressAndName](types_app_factory.AppFactory.md#getappclientbycreatoraddressandname)
+- [getAppClientByCreatorAndName](types_app_factory.AppFactory.md#getappclientbycreatorandname)
 - [getAppClientById](types_app_factory.AppFactory.md#getappclientbyid)
 - [getBareParams](types_app_factory.AppFactory.md#getbareparams)
 - [getDeployTimeControl](types_app_factory.AppFactory.md#getdeploytimecontrol)
@@ -69,7 +69,7 @@ to interact with those (or other) app instances.
 
 #### Defined in
 
-[src/types/app-factory.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L156)
+[src/types/app-factory.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L170)
 
 ## Properties
 
@@ -79,7 +79,7 @@ to interact with those (or other) app instances.
 
 #### Defined in
 
-[src/types/app-factory.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L144)
+[src/types/app-factory.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L158)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L143)
+[src/types/app-factory.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L157)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L142)
+[src/types/app-factory.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L156)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L151)
+[src/types/app-factory.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L165)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L152)
+[src/types/app-factory.ts:166](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L166)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L146)
+[src/types/app-factory.ts:160](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L160)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L149)
+[src/types/app-factory.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L163)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L147)
+[src/types/app-factory.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L161)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L154)
+[src/types/app-factory.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L168)
 
 ___
 
@@ -181,7 +181,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L148)
+[src/types/app-factory.ts:162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L162)
 
 ___
 
@@ -191,13 +191,13 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L145)
+[src/types/app-factory.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L159)
 
 ___
 
 ### createTransaction
 
-• **createTransaction**: `Object`
+• `Readonly` **createTransaction**: `Object`
 
 Create transactions for the current app
 
@@ -211,13 +211,13 @@ Create transactions for the current app
 
 #### Defined in
 
-[src/types/app-factory.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L188)
+[src/types/app-factory.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L202)
 
 ___
 
 ### send
 
-• **send**: `Object`
+• `Readonly` **send**: `Object`
 
 Send transactions to the current app
 
@@ -225,13 +225,13 @@ Send transactions to the current app
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `bare` | \{ `create`: (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `maxRoundsToWaitForConfirmation?`: `number` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `populateAppCallResources?`: `boolean` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `suppressLog?`: `boolean` ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\>  } | Send bare (raw) transactions for the current app |
-| `bare.create` | (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `maxRoundsToWaitForConfirmation?`: `number` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `populateAppCallResources?`: `boolean` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `suppressLog?`: `boolean` ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\> | - |
-| `create` | (`params`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `maxRoundsToWaitForConfirmation?`: `number` ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `populateAppCallResources?`: `boolean` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `suppressLog?`: `boolean` ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return?`: `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\> | - |
+| `bare` | \{ `create`: (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `updatable?`: `boolean` ; `validityWindow?`: `number`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\>  } | Send bare (raw) transactions for the current app |
+| `bare.create` | (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `updatable?`: `boolean` ; `validityWindow?`: `number`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\> | - |
+| `create` | (`params`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `updatable?`: `boolean` ; `validityWindow?`: `number`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return?`: `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\> | - |
 
 #### Defined in
 
-[src/types/app-factory.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L204)
+[src/types/app-factory.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L218)
 
 ## Accessors
 
@@ -274,7 +274,7 @@ await appClient.send.call({method: 'my_method', args: [createAppParams]})
 
 #### Defined in
 
-[src/types/app-factory.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L183)
+[src/types/app-factory.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L197)
 
 ## Methods
 
@@ -302,7 +302,7 @@ Will store any generated source maps for later use in debugging.
 
 #### Defined in
 
-[src/types/app-factory.ts:501](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L501)
+[src/types/app-factory.ts:509](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L509)
 
 ___
 
@@ -345,7 +345,7 @@ The app client and the result of the deployment
 
 #### Defined in
 
-[src/types/app-factory.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L274)
+[src/types/app-factory.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L284)
 
 ___
 
@@ -363,7 +363,7 @@ The source maps
 
 #### Defined in
 
-[src/types/app-factory.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L390)
+[src/types/app-factory.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L398)
 
 ___
 
@@ -389,7 +389,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-factory.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L378)
+[src/types/app-factory.ts:386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L386)
 
 ___
 
@@ -417,13 +417,13 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:525](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L525)
+[src/types/app-factory.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L533)
 
 ___
 
-### getAppClientByCreatorAddressAndName
+### getAppClientByCreatorAndName
 
-▸ **getAppClientByCreatorAddressAndName**(`params`): `Promise`\<[`AppClient`](types_app_client.AppClient.md)\>
+▸ **getAppClientByCreatorAndName**(`params`): `Promise`\<[`AppClient`](types_app_client.AppClient.md)\>
 
 Returns a new `AppClient` client, resolving the app by creator address and name
 using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
@@ -436,10 +436,8 @@ if not specified in the params.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
-| `params.algorand` | [`AlgorandClientInterface`](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md) | An `AlgorandClient` instance |
 | `params.appLookupCache?` | [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) | An optional cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this `ClientManager` on construction. |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
-| `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
 | `params.creatorAddress` | `string` | The address of the creator account for the app |
@@ -454,7 +452,7 @@ The `AppClient`
 
 #### Defined in
 
-[src/types/app-factory.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L357)
+[src/types/app-factory.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L367)
 
 ___
 
@@ -486,7 +484,7 @@ The `AppClient`
 
 #### Defined in
 
-[src/types/app-factory.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L336)
+[src/types/app-factory.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L346)
 
 ___
 
@@ -514,7 +512,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:514](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L514)
+[src/types/app-factory.ts:522](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L522)
 
 ___
 
@@ -534,7 +532,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L412)
+[src/types/app-factory.ts:420](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L420)
 
 ___
 
@@ -558,7 +556,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L426)
+[src/types/app-factory.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L434)
 
 ___
 
@@ -581,7 +579,7 @@ if none provided and throws an error if neither provided
 
 #### Defined in
 
-[src/types/app-factory.ts:540](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L540)
+[src/types/app-factory.ts:548](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L548)
 
 ___
 
@@ -609,7 +607,7 @@ Make the given call and catch any errors, augmenting with debugging information 
 
 #### Defined in
 
-[src/types/app-factory.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L484)
+[src/types/app-factory.ts:492](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L492)
 
 ___
 
@@ -631,13 +629,13 @@ Import source maps for the app.
 
 #### Defined in
 
-[src/types/app-factory.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L407)
+[src/types/app-factory.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L415)
 
 ___
 
 ### parseMethodCallReturn
 
-▸ **parseMethodCallReturn**\<`TReturn`, `TResult`\>(`result`, `method`): `Promise`\<[`Expand`](../modules/types_expand.md#expand)\<`Omit`\<`TResult`, ``"return"``\> & [`AppReturn`](../modules/types_app.md#appreturn)\<`TReturn`\>\>\>
+▸ **parseMethodCallReturn**\<`TReturn`, `TResult`\>(`result`, `method`): `Promise`\<`Omit`\<`TResult`, ``"return"``\> & [`AppReturn`](../modules/types_app.md#appreturn)\<`TReturn`\>\>
 
 Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
 on the ARC-56 method.
@@ -660,10 +658,10 @@ If the return type is a struct then the struct will be returned.
 
 #### Returns
 
-`Promise`\<[`Expand`](../modules/types_expand.md#expand)\<`Omit`\<`TResult`, ``"return"``\> & [`AppReturn`](../modules/types_app.md#appreturn)\<`TReturn`\>\>\>
+`Promise`\<`Omit`\<`TResult`, ``"return"``\> & [`AppReturn`](../modules/types_app.md#appreturn)\<`TReturn`\>\>
 
 The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-factory.ts:557](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L557)
+[src/types/app-factory.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L565)

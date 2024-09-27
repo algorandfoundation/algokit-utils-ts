@@ -36,7 +36,7 @@ The ARCs used and/or supported by this contract. All contracts implicity support
 
 #### Defined in
 
-[src/types/app-arc56.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L203)
+[src/types/app-arc56.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L207)
 
 ___
 
@@ -55,7 +55,7 @@ Supported bare actions for the contract. An action is a combination of call/crea
 
 #### Defined in
 
-[src/types/app-arc56.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L253)
+[src/types/app-arc56.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L257)
 
 ___
 
@@ -74,7 +74,7 @@ The compiled bytecode for the application. MUST be omitted if included as part o
 
 #### Defined in
 
-[src/types/app-arc56.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L274)
+[src/types/app-arc56.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L278)
 
 ___
 
@@ -97,7 +97,7 @@ Information used to get the given byteCode and/or PC values in sourceInfo. MUST 
 
 #### Defined in
 
-[src/types/app-arc56.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L281)
+[src/types/app-arc56.ts:285](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L285)
 
 ___
 
@@ -109,7 +109,7 @@ Optional, user-friendly description for the interface
 
 #### Defined in
 
-[src/types/app-arc56.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L207)
+[src/types/app-arc56.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L211)
 
 ___
 
@@ -121,7 +121,7 @@ ARC-28 events that MAY be emitted by this contract
 
 #### Defined in
 
-[src/types/app-arc56.ts:293](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L293)
+[src/types/app-arc56.ts:297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L297)
 
 ___
 
@@ -133,7 +133,7 @@ All of the methods that the contract implements
 
 #### Defined in
 
-[src/types/app-arc56.ts:226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L226)
+[src/types/app-arc56.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L230)
 
 ___
 
@@ -145,7 +145,7 @@ A user-friendly name for the contract
 
 #### Defined in
 
-[src/types/app-arc56.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L205)
+[src/types/app-arc56.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L209)
 
 ___
 
@@ -166,7 +166,7 @@ included, but the corresponding genesis hash key MUST also be defined
 
 #### Defined in
 
-[src/types/app-arc56.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L211)
+[src/types/app-arc56.ts:215](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L215)
 
 ___
 
@@ -182,7 +182,7 @@ The scratch variables used during runtime
 
 #### Defined in
 
-[src/types/app-arc56.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L304)
+[src/types/app-arc56.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L308)
 
 ___
 
@@ -201,7 +201,7 @@ The pre-compiled TEAL that may contain template variables. MUST be omitted if in
 
 #### Defined in
 
-[src/types/app-arc56.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L267)
+[src/types/app-arc56.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L271)
 
 ___
 
@@ -220,7 +220,7 @@ Information about the TEAL programs
 
 #### Defined in
 
-[src/types/app-arc56.ts:260](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L260)
+[src/types/app-arc56.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L264)
 
 ___
 
@@ -250,7 +250,7 @@ ___
 
 #### Defined in
 
-[src/types/app-arc56.ts:227](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L227)
+[src/types/app-arc56.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L231)
 
 ___
 
@@ -266,7 +266,7 @@ Named structs use by the application
 
 #### Defined in
 
-[src/types/app-arc56.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L224)
+[src/types/app-arc56.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L228)
 
 ___
 
@@ -282,4 +282,4 @@ A mapping of template variable names as they appear in the teal (not including T
 
 #### Defined in
 
-[src/types/app-arc56.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L295)
+[src/types/app-arc56.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L299)

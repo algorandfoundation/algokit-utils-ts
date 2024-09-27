@@ -109,6 +109,20 @@ export type CreateSchema = {
   extraProgramPages?: number
 }
 
+/** Params to specify a bare (raw) create call for an app */
+export type AppFactoryCreateParams = Expand<AppClientBareCallParams & AppClientCompilationParams & CreateOnComplete & CreateSchema>
+
+/** Params to specify a create method call for an app */
+export type AppFactoryCreateMethodCallParams = Expand<
+  AppClientMethodCallParams & AppClientCompilationParams & CreateOnComplete & CreateSchema
+>
+
+/** Params to get an app client by ID from an app factory. */
+export type AppFactoryAppClientParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>
+
+/** Params to get an app client by creator address and name from an app factory. */
+export type AppFactoryResolveAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>
+
 /** Parameters to define a deployment for an `AppFactory` */
 export type AppFactoryDeployParams = Expand<
   Omit<AppDeployParams, 'createParams' | 'updateParams' | 'deleteParams' | 'metadata'> & {
@@ -185,28 +199,26 @@ export class AppFactory {
   }
 
   /** Create transactions for the current app */
-  createTransaction = {
+  readonly createTransaction = {
     /** Create bare (raw) transactions for the current app */
     bare: {
       /** Create a create call transaction, including deploy-time TEAL template replacements and compilation if provided */
-      create: async (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateOnComplete & CreateSchema>) => {
+      create: async (params?: AppFactoryCreateParams) => {
         return this._algorand.createTransaction.appCreate(await this.params.bare.create(params))
       },
     },
 
     /** Create a create ABI call transaction, including deploy-time TEAL template replacements and compilation if provided */
-    create: async (params: Expand<AppClientMethodCallParams & AppClientCompilationParams & CreateOnComplete & CreateSchema>) => {
+    create: async (params: AppFactoryCreateMethodCallParams) => {
       return this._algorand.createTransaction.appCreateMethodCall(await this.params.create(params))
     },
   }
 
   /** Send transactions to the current app */
-  send = {
+  readonly send = {
     /** Send bare (raw) transactions for the current app */
     bare: {
-      create: async (
-        params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateOnComplete & SendParams & CreateSchema>,
-      ) => {
+      create: async (params?: AppFactoryCreateParams & SendParams) => {
         const updatable = params?.updatable ?? this._updatable
         const deletable = params?.deletable ?? this._deletable
         const deployTimeParams = params?.deployTimeParams ?? this._deployTimeParams
@@ -235,9 +247,7 @@ export class AppFactory {
      * @param params The parameters to create the app
      * @returns The app client and the result of the creation transaction
      */
-    create: async (
-      params: Expand<AppClientMethodCallParams & AppClientCompilationParams & CreateOnComplete & SendParams & CreateSchema>,
-    ) => {
+    create: async (params: AppFactoryCreateMethodCallParams & SendParams) => {
       const updatable = params?.updatable ?? this._updatable
       const deletable = params?.deletable ?? this._deletable
       const deployTimeParams = params?.deployTimeParams ?? this._deployTimeParams
@@ -333,7 +343,7 @@ export class AppFactory {
    * @param params The parameters to create the app client
    * @returns The `AppClient`
    */
-  public getAppClientById(params: Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>) {
+  public getAppClientById(params: AppFactoryAppClientParams) {
     return new AppClient({
       ...params,
       algorand: this._algorand,
@@ -354,9 +364,7 @@ export class AppFactory {
    * @param params The parameters to create the app client
    * @returns The `AppClient`
    */
-  public getAppClientByCreatorAddressAndName(
-    params: Expand<Omit<AppClientParams, 'algorand' | 'appSpec' | 'appId'> & ResolveAppClientByCreatorAndName>,
-  ) {
+  public getAppClientByCreatorAndName(params: AppFactoryResolveAppClientByCreatorAndNameParams) {
     return AppClient.fromCreatorAndName({
       ...params,
       algorand: this._algorand,
@@ -426,7 +434,7 @@ export class AppFactory {
   private getParamsMethods() {
     return {
       /** Return params for a create ABI call, including deploy-time TEAL template replacements and compilation if provided */
-      create: async (params: Expand<AppClientMethodCallParams & AppClientCompilationParams & CreateOnComplete & CreateSchema>) => {
+      create: async (params: AppFactoryCreateMethodCallParams) => {
         return this.getABIParams(
           {
             ...params,
@@ -443,7 +451,7 @@ export class AppFactory {
         ) satisfies AppCreateMethodCall
       },
       /** Return params for a deployment update ABI call */
-      deployUpdate: (params: Expand<AppClientMethodCallParams>) => {
+      deployUpdate: (params: AppClientMethodCallParams) => {
         return this.getABIParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateMethodCall
       },
       /** Return params for a deployment delete ABI call */
@@ -452,7 +460,7 @@ export class AppFactory {
       },
       bare: {
         /** Return params for a create bare call, including deploy-time TEAL template replacements and compilation if provided */
-        create: async (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateOnComplete & CreateSchema>) => {
+        create: async (params?: AppFactoryCreateParams) => {
           return this.getBareParams(
             {
               ...params,
@@ -469,7 +477,7 @@ export class AppFactory {
           ) satisfies AppCreateParams
         },
         /** Return params for a deployment update bare call */
-        deployUpdate: (params?: Expand<AppClientBareCallParams>) => {
+        deployUpdate: (params?: AppClientBareCallParams) => {
           return this.getBareParams(params, OnApplicationComplete.UpdateApplicationOC) satisfies DeployAppUpdateParams
         },
         /** Return params for a deployment delete bare call */
@@ -557,10 +565,8 @@ export class AppFactory {
   async parseMethodCallReturn<
     TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
     TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
+  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
     const resultValue = await result
-    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) } as unknown as Expand<
-      Omit<TResult, 'return'> & AppReturn<TReturn>
-    >
+    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) }
   }
 }

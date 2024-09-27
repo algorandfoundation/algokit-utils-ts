@@ -386,6 +386,9 @@ export type ResolveAppClientByCreatorAndName = Expand<
   }
 >
 
+/** Resolve an app client instance by looking up the current network. */
+export type ResolveAppClientByNetwork = Expand<Omit<AppClientParams, 'appId'>>
+
 /** ARC-56/ARC-32 application client that allows you to manage calls and
  * state for a specific deployed instance of an app (with a known app ID). */
 export class AppClient {
@@ -465,7 +468,7 @@ export class AppClient {
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
    * @param params The parameters to create the app client
    */
-  public static async fromCreatorAndName(params: Expand<ResolveAppClientByCreatorAndName>) {
+  public static async fromCreatorAndName(params: ResolveAppClientByCreatorAndName) {
     const appSpec = AppClient.normaliseAppSpec(params.appSpec)
     const appLookup =
       params.appLookupCache ?? (await params.algorand.appDeployer.getCreatorAppsByName(params.creatorAddress, params.ignoreCache))
@@ -487,7 +490,7 @@ export class AppClient {
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
    * @param params The parameters to create the app client
    */
-  public static async fromNetwork(params: Expand<Omit<AppClientParams, 'appId'>>): Promise<AppClient> {
+  public static async fromNetwork(params: ResolveAppClientByNetwork): Promise<AppClient> {
     const network = await params.algorand.client.network()
     const appSpec = AppClient.normaliseAppSpec(params.appSpec)
     const networkNames = [network.genesisHash]
@@ -740,11 +743,9 @@ export class AppClient {
   public async processMethodCallReturn<
     TReturn extends Uint8Array | ABIValue | ABIStruct | undefined,
     TResult extends SendAppTransactionResult = SendAppTransactionResult,
-  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Expand<Omit<TResult, 'return'> & AppReturn<TReturn>>> {
+  >(result: Promise<TResult> | TResult, method: Arc56Method): Promise<Omit<TResult, 'return'> & AppReturn<TReturn>> {
     const resultValue = await result
-    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) } as unknown as Expand<
-      Omit<TResult, 'return'> & AppReturn<TReturn>
-    >
+    return { ...resultValue, return: getArc56ReturnValue(resultValue.return, method, this._appSpec.structs) }
   }
 
   /**
