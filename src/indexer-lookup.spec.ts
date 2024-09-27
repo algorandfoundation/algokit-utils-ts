@@ -72,9 +72,9 @@ describe('indexer-lookup', () => {
       updatable: false,
       deployTimeParams: { VALUE: 1 },
     })
-    const { result: app1 } = await factory.create()
-    const { result: app2 } = await factory.create({ deployTimeParams: { VALUE: 2 } })
-    await factory.create({ sender: secondAccount.addr })
+    const { result: app1 } = await factory.send.bare.create()
+    const { result: app2 } = await factory.send.bare.create({ deployTimeParams: { VALUE: 2 } })
+    await factory.send.bare.create({ sender: secondAccount.addr })
     await waitForIndexer()
 
     const apps = await indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, testAccount.addr, true, 1)

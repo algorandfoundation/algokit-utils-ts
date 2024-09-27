@@ -37,8 +37,8 @@ A client that brokers easy access to Algorand functionality.
 - [appDeployer](types_algorand_client.AlgorandClient.md#appdeployer)
 - [asset](types_algorand_client.AlgorandClient.md#asset)
 - [client](types_algorand_client.AlgorandClient.md#client)
+- [createTransaction](types_algorand_client.AlgorandClient.md#createtransaction)
 - [send](types_algorand_client.AlgorandClient.md#send)
-- [transactions](types_algorand_client.AlgorandClient.md#transactions)
 
 ### Methods
 
@@ -48,8 +48,8 @@ A client that brokers easy access to Algorand functionality.
 - [setDefaultValidityWindow](types_algorand_client.AlgorandClient.md#setdefaultvaliditywindow)
 - [setSigner](types_algorand_client.AlgorandClient.md#setsigner)
 - [setSignerFromAccount](types_algorand_client.AlgorandClient.md#setsignerfromaccount)
-- [setSuggestedParams](types_algorand_client.AlgorandClient.md#setsuggestedparams)
-- [setSuggestedParamsTimeout](types_algorand_client.AlgorandClient.md#setsuggestedparamstimeout)
+- [setSuggestedParamsCache](types_algorand_client.AlgorandClient.md#setsuggestedparamscache)
+- [setSuggestedParamsCacheTimeout](types_algorand_client.AlgorandClient.md#setsuggestedparamscachetimeout)
 - [defaultLocalNet](types_algorand_client.AlgorandClient.md#defaultlocalnet)
 - [fromClients](types_algorand_client.AlgorandClient.md#fromclients)
 - [fromConfig](types_algorand_client.AlgorandClient.md#fromconfig)
@@ -281,11 +281,31 @@ Get clients, including algosdk clients and app clients.
 
 ___
 
+### createTransaction
+
+• `get` **createTransaction**(): [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
+
+Methods for creating a transaction.
+
+#### Returns
+
+[`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
+
+#### Implementation of
+
+[AlgorandClientInterface](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md).[createTransaction](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md#createtransaction)
+
+#### Defined in
+
+[src/types/algorand-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L181)
+
+___
+
 ### send
 
 • `get` **send**(): [`AlgorandClientTransactionSender`](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
 
-Methods for sending a single transaction.
+Methods for sending a transaction.
 
 #### Returns
 
@@ -298,26 +318,6 @@ Methods for sending a single transaction.
 #### Defined in
 
 [src/types/algorand-client.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L174)
-
-___
-
-### transactions
-
-• `get` **transactions**(): [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
-
-Methods for building transactions
-
-#### Returns
-
-[`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
-
-#### Implementation of
-
-[AlgorandClientInterface](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md).[transactions](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md#transactions)
-
-#### Defined in
-
-[src/types/algorand-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L181)
 
 ## Methods
 
@@ -409,7 +409,7 @@ ___
 
 ▸ **setSigner**(`sender`, `signer`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Tracks the given account for later signing.
+Tracks the given signer against the given sender for later signing.
 
 #### Parameters
 
@@ -434,7 +434,7 @@ ___
 
 ▸ **setSignerFromAccount**(`account`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Tracks the given account for later signing.
+Tracks the given account (object that encapsulates an address and a signer) for later signing.
 
 #### Parameters
 
@@ -465,11 +465,11 @@ const accountManager = AlgorandClient.mainnet()
 
 ___
 
-### setSuggestedParams
+### setSuggestedParamsCache
 
-▸ **setSuggestedParams**(`suggestedParams`, `until?`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
+▸ **setSuggestedParamsCache**(`suggestedParams`, `until?`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Sets a cache value to use for suggested params.
+Sets a cache value to use for suggested transaction params.
 
 #### Parameters
 
@@ -490,9 +490,9 @@ The `AlgorandClient` so method calls can be chained
 
 ___
 
-### setSuggestedParamsTimeout
+### setSuggestedParamsCacheTimeout
 
-▸ **setSuggestedParamsTimeout**(`timeout`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
+▸ **setSuggestedParamsCacheTimeout**(`timeout`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 Sets the timeout for caching suggested params.
 

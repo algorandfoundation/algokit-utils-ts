@@ -17,7 +17,7 @@ import AlgoKitComposer, {
   CommonTransactionParams,
 } from '../types/composer'
 import {
-  ExecuteParams,
+  SendParams,
   SendSingleTransactionResult,
   SendTransactionFrom,
   SendTransactionParams,
@@ -38,7 +38,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
   txn:
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
-  send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
+  send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
   const appManager = new AppManager(algod)
@@ -104,7 +104,7 @@ export async function legacySendAppTransactionBridge<
   txn:
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
-  send: (c: AlgorandClientTransactionSender) => (params: T & ExecuteParams) => Promise<TResult>,
+  send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
   suggestedParams?: algosdk.SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
   const encoder = new TextEncoder()

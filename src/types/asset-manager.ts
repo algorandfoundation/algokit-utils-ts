@@ -3,7 +3,7 @@ import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation, TransactionSignerAccount } from './account'
 import AlgoKitComposer, { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
-import { ExecuteParams } from './transaction'
+import { SendParams } from './transaction'
 import AssetModel = algosdk.modelsv2.Asset
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
@@ -234,7 +234,7 @@ export class AssetManager {
   async bulkOptIn(
     account: string | TransactionSignerAccount,
     assetIds: bigint[],
-    options?: Omit<CommonTransactionParams, 'sender'> & ExecuteParams,
+    options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
 
@@ -249,7 +249,7 @@ export class AssetManager {
         })
       }
 
-      const result = await composer.execute(options)
+      const result = await composer.send(options)
 
       Config.getLogger(options?.suppressLog).info(
         `Successfully opted in ${account} for assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +
@@ -285,7 +285,7 @@ export class AssetManager {
     account: string | TransactionSignerAccount,
     assetIds: bigint[],
     options?: Omit<CommonTransactionParams, 'sender'> &
-      ExecuteParams & {
+      SendParams & {
         /** Whether or not to check if the account has a zero balance for each asset first or not.
          *
          * Defaults to `true`.
@@ -338,7 +338,7 @@ export class AssetManager {
         })
       }
 
-      const result = await composer.execute(options)
+      const result = await composer.send(options)
 
       Config.getLogger(options?.suppressLog).info(
         `Successfully opted ${account} out of assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +

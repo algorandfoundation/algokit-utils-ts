@@ -33,8 +33,8 @@ import modelsv2 = algosdk.modelsv2
 import OnApplicationComplete = algosdk.OnApplicationComplete
 
 /**
- * @deprecated Use `algorand.send.appCreate()` / `algorand.transactions.appCreate()` / `algorand.send.appCreateMethodCall()`
- * / `algorand.transactions.appCreateMethodCall()` instead
+ * @deprecated Use `algorand.send.appCreate()` / `algorand.createTransaction.appCreate()` / `algorand.send.appCreateMethodCall()`
+ * / `algorand.createTransaction.appCreateMethodCall()` instead
  *
  * Creates a smart contract app, returns the details of the created app.
  * @param create The parameters to create the app with
@@ -89,8 +89,8 @@ export async function createApp(
 }
 
 /**
- * @deprecated Use `algorand.send.appUpdate()` / `algorand.transactions.appUpdate()` / `algorand.send.appUpdateMethodCall()`
- * / `algorand.transactions.appUpdateMethodCall()` instead
+ * @deprecated Use `algorand.send.appUpdate()` / `algorand.createTransaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
+ * / `algorand.createTransaction.appUpdateMethodCall()` instead
  *
  * Updates a smart contract app.
  * @param update The parameters to update the app with
@@ -172,8 +172,8 @@ export function getAppOnCompleteAction(onCompletionAction?: AppCallType | OnAppl
 }
 
 /**
- * @deprecated Use `algorand.send.appUpdate()` / `algorand.transactions.appUpdate()` / `algorand.send.appUpdateMethodCall()`
- * / `algorand.transactions.appUpdateMethodCall()` instead
+ * @deprecated Use `algorand.send.appUpdate()` / `algorand.createTransaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
+ * / `algorand.createTransaction.appUpdateMethodCall()` instead
  *
  * Issues a call to a given app.
  * @param call The call details.

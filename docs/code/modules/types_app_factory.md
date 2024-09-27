@@ -14,24 +14,11 @@
 
 ### Type Aliases
 
-- [AppFactoryCreateParams](types_app_factory.md#appfactorycreateparams)
 - [AppFactoryDeployParams](types_app_factory.md#appfactorydeployparams)
 - [CreateOnComplete](types_app_factory.md#createoncomplete)
 - [CreateSchema](types_app_factory.md#createschema)
 
 ## Type Aliases
-
-### AppFactoryCreateParams
-
-Ƭ **AppFactoryCreateParams**: [`Expand`](types_expand.md#expand)\<[`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) & [`AppClientCompilationParams`](../interfaces/types_app_client.AppClientCompilationParams.md) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`ExecuteParams`](../interfaces/types_transaction.ExecuteParams.md) & [`CreateSchema`](types_app_factory.md#createschema)\> \| [`Expand`](types_expand.md#expand)\<[`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) & [`AppClientCompilationParams`](../interfaces/types_app_client.AppClientCompilationParams.md) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`ExecuteParams`](../interfaces/types_transaction.ExecuteParams.md) & [`CreateSchema`](types_app_factory.md#createschema)\>
-
-Parameters to define a create call for an `AppFactory`
-
-#### Defined in
-
-[src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
-
-___
 
 ### AppFactoryDeployParams
 
@@ -41,7 +28,7 @@ Parameters to define a deployment for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L118)
+[src/types/app-factory.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L113)
 
 ___
 

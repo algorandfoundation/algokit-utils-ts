@@ -62,7 +62,7 @@ export class AlgorandClient implements AlgorandClientInterface {
   }
 
   /**
-   * Tracks the given account for later signing.
+   * Tracks the given account (object that encapsulates an address and a signer) for later signing.
    * @param account The account to register, which can be a `TransactionSignerAccount` or
    *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
    * @example
@@ -84,7 +84,7 @@ export class AlgorandClient implements AlgorandClientInterface {
   }
 
   /**
-   * Tracks the given account for later signing.
+   * Tracks the given signer against the given sender for later signing.
    * @param sender The sender address to use this signer for
    * @param signer The signer to sign transactions with for the given sender
    * @returns The `AlgorandClient` so method calls can be chained
@@ -95,12 +95,12 @@ export class AlgorandClient implements AlgorandClientInterface {
   }
 
   /**
-   * Sets a cache value to use for suggested params.
+   * Sets a cache value to use for suggested transaction params.
    * @param suggestedParams The suggested params to use
    * @param until A date until which to cache, or if not specified then the timeout is used
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSuggestedParams(suggestedParams: algosdk.SuggestedParams, until?: Date) {
+  public setSuggestedParamsCache(suggestedParams: algosdk.SuggestedParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
     this._cachedSuggestedParamsExpiry = until ?? new Date(+new Date() + this._cachedSuggestedParamsTimeout)
     return this
@@ -111,7 +111,7 @@ export class AlgorandClient implements AlgorandClientInterface {
    * @param timeout The timeout in milliseconds
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSuggestedParamsTimeout(timeout: number) {
+  public setSuggestedParamsCacheTimeout(timeout: number) {
     this._cachedSuggestedParamsTimeout = timeout
     return this
   }
@@ -169,16 +169,16 @@ export class AlgorandClient implements AlgorandClientInterface {
   }
 
   /**
-   * Methods for sending a single transaction.
+   * Methods for sending a transaction.
    */
   public get send() {
     return this._transactionSender
   }
 
   /**
-   * Methods for building transactions
+   * Methods for creating a transaction.
    */
-  public get transactions() {
+  public get createTransaction() {
     return this._transactionCreator
   }
 

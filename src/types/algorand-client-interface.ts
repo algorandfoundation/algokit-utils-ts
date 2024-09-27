@@ -16,7 +16,7 @@ export interface AlgorandClientInterface {
   app: AppManager
   appDeployer: AppDeployer
   send: AlgorandClientTransactionSender
-  transactions: AlgorandClientTransactionCreator
+  createTransaction: AlgorandClientTransactionCreator
   newGroup(): AlgoKitComposer
   client: {
     algod: Algodv2

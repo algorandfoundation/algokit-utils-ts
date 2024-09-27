@@ -76,11 +76,11 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.assetCreate({sender: "CREATORADDRESS", total: 100n})
+   * await algorand.createTransaction.assetCreate({sender: "CREATORADDRESS", total: 100n})
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.assetCreate({
+   * await algorand.createTransaction.assetCreate({
    *   sender: 'CREATORADDRESS',
    *   total: 100n,
    *   decimals: 2,
@@ -118,11 +118,11 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.assetConfig({sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+   * await algorand.createTransaction.assetConfig({sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.assetConfig({
+   * await algorand.createTransaction.assetConfig({
    *   sender: 'MANAGERADDRESS',
    *   assetId: 123456n,
    *   manager: 'MANAGERADDRESS',
@@ -150,11 +150,11 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.assetFreeze({sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+   * await algorand.createTransaction.assetFreeze({sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.assetFreeze({
+   * await algorand.createTransaction.assetFreeze({
    *   sender: 'MANAGERADDRESS',
    *   assetId: 123456n,
    *   account: 'ACCOUNTADDRESS',
@@ -184,11 +184,11 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.assetDestroy({sender: "MANAGERADDRESS", assetId: 123456n })
+   * await algorand.createTransaction.assetDestroy({sender: "MANAGERADDRESS", assetId: 123456n })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.assetDestroy({
+   * await algorand.createTransaction.assetDestroy({
    *   sender: 'MANAGERADDRESS',
    *   assetId: 123456n,
    *   lease: 'lease',
@@ -212,11 +212,11 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.assetTransfer({sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+   * await algorand.createTransaction.assetTransfer({sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
    * ```
    * @example Advanced example (with clawback)
    * ```typescript
-   * await algorand.transactions.assetTransfer({
+   * await algorand.createTransaction.assetTransfer({
    *   sender: 'CLAWBACKADDRESS',
    *   assetId: 123456n,
    *   amount: 1n,
@@ -245,11 +245,11 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.assetOptIn({sender: "SENDERADDRESS", assetId: 123456n })
+   * await algorand.createTransaction.assetOptIn({sender: "SENDERADDRESS", assetId: 123456n })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.assetOptIn({
+   * await algorand.createTransaction.assetOptIn({
    *   sender: 'SENDERADDRESS',
    *   assetId: 123456n,
    *   lease: 'lease',
@@ -276,11 +276,11 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.assetOptOut({sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n })
+   * await algorand.createTransaction.assetOptOut({sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.assetOptIn({
+   * await algorand.createTransaction.assetOptIn({
    *   sender: 'SENDERADDRESS',
    *   assetId: 123456n,
    *   creator: 'CREATORADDRESS',
@@ -307,12 +307,12 @@ export class AlgorandClientTransactionCreator {
    * @param params The parameters for the app creation transaction
    * @example Basic example
    * ```typescript
-   * const result = await algorand.transactions.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+   * const result = await algorand.createTransaction.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
    * const createdAppId = result.appId
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.appCreate({
+   * await algorand.createTransaction.appCreate({
    *  sender: 'CREATORADDRESS',
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
@@ -356,11 +356,11 @@ export class AlgorandClientTransactionCreator {
    * @param params The parameters for the app update transaction
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.appUpdate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+   * await algorand.createTransaction.appUpdate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.appUpdate({
+   * await algorand.createTransaction.appUpdate({
    *  sender: 'CREATORADDRESS',
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
@@ -397,11 +397,11 @@ export class AlgorandClientTransactionCreator {
    * @param params The parameters for the app deletion transaction
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.appDelete({ sender: 'CREATORADDRESS' })
+   * await algorand.createTransaction.appDelete({ sender: 'CREATORADDRESS' })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.appDelete({
+   * await algorand.createTransaction.appDelete({
    *  sender: 'CREATORADDRESS',
    *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
    *  args: [new Uint8Array(1, 2, 3, 4)]
@@ -436,11 +436,11 @@ export class AlgorandClientTransactionCreator {
    * @param params The parameters for the app call transaction
    * @example Basic example
    * ```typescript
-   * await algorand.transactions.appCall({ sender: 'CREATORADDRESS' })
+   * await algorand.createTransaction.appCall({ sender: 'CREATORADDRESS' })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.transactions.appCall({
+   * await algorand.createTransaction.appCall({
    *  sender: 'CREATORADDRESS',
    *  onComplete: algosdk.OnApplicationComplete.OptInOC,
    *  args: [new Uint8Array(1, 2, 3, 4)]
@@ -480,7 +480,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * const result = await algorand.transactions.appCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+   * const result = await algorand.createTransaction.appCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
    * const createdAppId = result.appId
    * ```
    * @example Advanced example
@@ -490,7 +490,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.transactions.appCreate({
+   * await algorand.createTransaction.appCreate({
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
@@ -541,7 +541,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.transactions.appUpdateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+   * await algorand.createTransaction.appUpdateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
    * ```
    * @example Advanced example
    * ```typescript
@@ -550,7 +550,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.transactions.appUpdateMethodCall({
+   * await algorand.createTransaction.appUpdateMethodCall({
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
@@ -594,7 +594,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.transactions.appDeleteMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+   * await algorand.createTransaction.appDeleteMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
    * ```
    * @example Advanced example
    * ```typescript
@@ -603,7 +603,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.transactions.appDeleteMethodCall({
+   * await algorand.createTransaction.appDeleteMethodCall({
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
@@ -645,7 +645,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.transactions.appCallMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+   * await algorand.createTransaction.appCallMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
    * ```
    * @example Advanced example
    * ```typescript
@@ -654,7 +654,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.transactions.appCallMethodCall({
+   * await algorand.createTransaction.appCallMethodCall({
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],

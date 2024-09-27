@@ -571,14 +571,12 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 
 /**
  * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
- * @param atcSend The parameters controlling the send, including:
- *  * `atc` The `AtomicTransactionComposer`
- *  * `executeParams` The parameters to control the send behaviour
+ * @param atcSend The parameters controlling the send, including `atc` The `AtomicTransactionComposer` and params to control send behaviour
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: Algodv2) {
-  const { atc: givenAtc, sendParams, executeParams } = atcSend
+  const { atc: givenAtc, sendParams, ...executeParams } = atcSend
 
   let atc: AtomicTransactionComposer
 

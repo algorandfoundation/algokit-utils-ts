@@ -9,7 +9,7 @@ import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { EventType } from './async-event-emitter'
 import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, ExecuteParams, SendAtomicTransactionComposerResults } from './transaction'
+import { Arc2TransactionNote, SendAtomicTransactionComposerResults, SendParams } from './transaction'
 import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
@@ -425,7 +425,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    * * An ABI value
    * * A transaction with explicit signer
    * * A transaction (where the signer will be automatically assigned)
-   * * An unawaited transaction (e.g. from algorand.transactions.transactionType())
+   * * An unawaited transaction (e.g. from algorand.createTransaction.{transactionType}())
    * * Another method call (via method call params object)
    */
   args?: (
@@ -1226,11 +1226,11 @@ export default class AlgoKitComposer {
   }
 
   /**
-   * Compose the atomic transaction group and send it to the network
+   * Compose the atomic transaction group and send it to the network.
    * @param params The parameters to control execution with
    * @returns The execution result
    */
-  async execute(params?: ExecuteParams): Promise<SendAtomicTransactionComposerResults> {
+  async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
     const group = (await this.build()).transactions
 
     let waitRounds = params?.maxRoundsToWaitForConfirmation
@@ -1243,14 +1243,25 @@ export default class AlgoKitComposer {
     return await sendAtomicTransactionComposer(
       {
         atc: this.atc,
-        executeParams: {
-          suppressLog: params?.suppressLog,
-          maxRoundsToWaitForConfirmation: waitRounds,
-          populateAppCallResources: params?.populateAppCallResources,
-        },
+        suppressLog: params?.suppressLog,
+        maxRoundsToWaitForConfirmation: waitRounds,
+        populateAppCallResources: params?.populateAppCallResources,
       },
       this.algod,
     )
+  }
+
+  /**
+   * @deprecated Use `send` instead.
+   *
+   * Compose the atomic transaction group and send it to the network
+   *
+   * An alias for `composer.send(params)`.
+   * @param params The parameters to control execution with
+   * @returns The execution result
+   */
+  async execute(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
+    return this.send(params)
   }
 
   /**
@@ -1295,6 +1306,13 @@ export default class AlgoKitComposer {
     }
   }
 
+  /**
+   * Create an encoded transaction note that follows the ARC-2 spec.
+   *
+   * https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md
+   * @param note The ARC-2 transaction note data
+   * @returns The binary encoded transaction note
+   */
   static arc2Note(note: Arc2TransactionNote): Uint8Array {
     const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : JSON.stringify(note.data)}`
     const encoder = new TextEncoder()

@@ -53,7 +53,7 @@
 
 Ƭ **AppClientBareCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"onComplete"``\> & \{ `sender?`: `string`  }\>
 
-AppClient parameters for a bare app call
+AppClient common parameters for a bare app call
 
 #### Defined in
 
@@ -131,7 +131,7 @@ ___
 
 Ƭ **AppClientMethodCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"method"`` \| ``"args"``\> & \{ `args?`: (`ABIValue` \| [`ABIStruct`](types_app_arc56.md#abistruct) \| [`AppMethodCallTransactionArgument`](types_composer.md#appmethodcalltransactionargument) \| `undefined`)[] ; `method`: `string` ; `sender?`: `string`  }\>
 
-AppClient parameters for an ABI method call
+AppClient common parameters for an ABI method call
 
 #### Defined in
 
@@ -257,7 +257,7 @@ ___
 
 ### FundAppParams
 
-Ƭ **FundAppParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`PaymentParams`](types_composer.md#paymentparams), ``"receiver"`` \| ``"sender"``\> & [`ExecuteParams`](../interfaces/types_transaction.ExecuteParams.md) & \{ `sender?`: `string`  }\>
+Ƭ **FundAppParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`PaymentParams`](types_composer.md#paymentparams), ``"receiver"`` \| ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `sender?`: `string`  }\>
 
 Parameters for funding an app account
 

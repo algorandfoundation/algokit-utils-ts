@@ -27,6 +27,8 @@ to interact with those (or other) app instances.
 - [\_paramsMethods](types_app_factory.AppFactory.md#_paramsmethods)
 - [\_updatable](types_app_factory.AppFactory.md#_updatable)
 - [\_version](types_app_factory.AppFactory.md#_version)
+- [createTransaction](types_app_factory.AppFactory.md#createtransaction)
+- [send](types_app_factory.AppFactory.md#send)
 
 ### Accessors
 
@@ -35,7 +37,6 @@ to interact with those (or other) app instances.
 ### Methods
 
 - [compile](types_app_factory.AppFactory.md#compile)
-- [create](types_app_factory.AppFactory.md#create)
 - [deploy](types_app_factory.AppFactory.md#deploy)
 - [exportSourceMaps](types_app_factory.AppFactory.md#exportsourcemaps)
 - [exposeLogicError](types_app_factory.AppFactory.md#exposelogicerror)
@@ -68,7 +69,7 @@ to interact with those (or other) app instances.
 
 #### Defined in
 
-[src/types/app-factory.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L161)
+[src/types/app-factory.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L156)
 
 ## Properties
 
@@ -78,7 +79,7 @@ to interact with those (or other) app instances.
 
 #### Defined in
 
-[src/types/app-factory.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L149)
+[src/types/app-factory.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L144)
 
 ___
 
@@ -88,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L148)
+[src/types/app-factory.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L143)
 
 ___
 
@@ -98,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L147)
+[src/types/app-factory.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L142)
 
 ___
 
@@ -108,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L156)
+[src/types/app-factory.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L151)
 
 ___
 
@@ -118,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L157)
+[src/types/app-factory.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L152)
 
 ___
 
@@ -128,7 +129,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L151)
+[src/types/app-factory.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L146)
 
 ___
 
@@ -138,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L154)
+[src/types/app-factory.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L149)
 
 ___
 
@@ -148,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L152)
+[src/types/app-factory.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L147)
 
 ___
 
@@ -170,7 +171,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:159](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L159)
+[src/types/app-factory.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L154)
 
 ___
 
@@ -180,7 +181,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L153)
+[src/types/app-factory.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L148)
 
 ___
 
@@ -190,7 +191,47 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L150)
+[src/types/app-factory.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L145)
+
+___
+
+### createTransaction
+
+• **createTransaction**: `Object`
+
+Create transactions for the current app
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `bare` | \{ `create`: (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<`Transaction`\>  } | Create bare (raw) transactions for the current app |
+| `bare.create` | (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<`Transaction`\> | - |
+| `create` | (`params`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<\{ `methodCalls`: `Map`\<`number`, `ABIMethod`\> ; `signers`: `Map`\<`number`, `TransactionSigner`\> ; `transactions`: `Transaction`[]  }\> | - |
+
+#### Defined in
+
+[src/types/app-factory.ts:188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L188)
+
+___
+
+### send
+
+• **send**: `Object`
+
+Send transactions to the current app
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `bare` | \{ `create`: (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `maxRoundsToWaitForConfirmation?`: `number` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `populateAppCallResources?`: `boolean` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `suppressLog?`: `boolean` ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\>  } | Send bare (raw) transactions for the current app |
+| `bare.create` | (`params?`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `maxRoundsToWaitForConfirmation?`: `number` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `populateAppCallResources?`: `boolean` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `suppressLog?`: `boolean` ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\> | - |
+| `create` | (`params`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `deletable?`: `boolean` ; `deployTimeParams?`: [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `maxRoundsToWaitForConfirmation?`: `number` ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `populateAppCallResources?`: `boolean` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `suppressLog?`: `boolean` ; `updatable?`: `boolean` ; `validityWindow?`: `number`  }) => `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return?`: `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\> | - |
+
+#### Defined in
+
+[src/types/app-factory.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L204)
 
 ## Accessors
 
@@ -198,7 +239,9 @@ ___
 
 • `get` **params**(): `Object`
 
-Get parameters to define create and deploy related calls to the current app
+Get parameters to create transactions (create and deploy related calls) for the current app.
+
+A good mental model for this is that these parameters represent a deferred transaction creation.
 
 #### Returns
 
@@ -214,9 +257,24 @@ Get parameters to define create and deploy related calls to the current app
 | `deployDelete` | (`params`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `OnApplicationComplete` ; `rekeyTo?`: `string` ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  }) => \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `OnApplicationComplete` ; `rekeyTo?`: `string` ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  } & \{ `args`: `undefined` \| (`Transaction` \| `ABIValue` \| `TransactionWithSigner` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accountReferences?`: ...[] ; `appReferences?`: ...[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: ...[] ; `assetReferences?`: ...[] ; `boxReferences?`: ...[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: ... ; `globalInts`: ... ; `localByteSlices`: ... ; `localInts`: ...  } ; `sender`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accountReferences?`: ...[] ; `appId`: `bigint` ; `appReferences?`: ...[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: ...[] ; `assetReferences?`: ...[] ; `boxReferences?`: ...[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplicationOC` ; `rekeyTo?`: `string` ; `sender`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `method`: [`Arc56Method`](types_app_arc56.Arc56Method.md) ; `onComplete`: `DeleteApplicationOC` ; `sender`: `string`  } | - |
 | `deployUpdate` | (`params`: \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `OnApplicationComplete` ; `rekeyTo?`: `string` ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  }) => \{ `accountReferences?`: `string`[] ; `appReferences?`: `bigint`[] ; `args?`: (`undefined` \| `ABIValue` \| [`AppMethodCallTransactionArgument`](../modules/types_composer.md#appmethodcalltransactionargument) \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct))[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `method`: `string` ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `OnApplicationComplete` ; `rekeyTo?`: `string` ; `sender?`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  } & \{ `args`: `undefined` \| (`Transaction` \| `ABIValue` \| `TransactionWithSigner` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accountReferences?`: ...[] ; `appReferences?`: ...[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: ...[] ; `assetReferences?`: ...[] ; `boxReferences?`: ...[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` ; `schema?`: \{ `globalByteSlices`: ... ; `globalInts`: ... ; `localByteSlices`: ... ; `localInts`: ...  } ; `sender`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<\{ `accountReferences?`: ...[] ; `appId`: `bigint` ; `appReferences?`: ...[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: ...[] ; `assetReferences?`: ...[] ; `boxReferences?`: ...[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplicationOC` ; `rekeyTo?`: `string` ; `sender`: `string` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number`  }\> \| [`AppMethodCall`](../modules/types_composer.md#appmethodcall)\<[`AppMethodCallParams`](../modules/types_composer.md#appmethodcallparams)\>)[] ; `method`: [`Arc56Method`](types_app_arc56.Arc56Method.md) ; `onComplete`: `UpdateApplicationOC` ; `sender`: `string`  } | - |
 
+**`Example`**
+
+```typescript
+const createAppParams = appFactory.params.create({method: 'create_method', args: [123, 'hello']})
+// ...
+await algorand.send.AppCreateMethodCall(createAppParams)
+```
+
+**`Example`**
+
+```typescript
+const createAppParams = appFactory.params.create({method: 'create_method', args: [123, 'hello']})
+await appClient.send.call({method: 'my_method', args: [createAppParams]})
+```
+
 #### Defined in
 
-[src/types/app-factory.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L174)
+[src/types/app-factory.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L183)
 
 ## Methods
 
@@ -244,40 +302,13 @@ Will store any generated source maps for later use in debugging.
 
 #### Defined in
 
-[src/types/app-factory.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L451)
-
-___
-
-### create
-
-▸ **create**(`params?`): `Promise`\<\{ `app`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return?`: `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\>
-
-Creates an instance of the app and returns the result of the creation
-transaction and an app client to interact with that app instance.
-
-Performs deploy-time TEAL template placeholder substitutions (if specified).
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `params?` | [`AppFactoryCreateParams`](../modules/types_app_factory.md#appfactorycreateparams) | The parameters to create the app |
-
-#### Returns
-
-`Promise`\<\{ `app`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return?`: `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `return`: `undefined` = undefined; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }  }\>
-
-The app client and the result of the creation transaction
-
-#### Defined in
-
-[src/types/app-factory.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L186)
+[src/types/app-factory.ts:501](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L501)
 
 ___
 
 ### deploy
 
-▸ **deploy**(`params`): `Promise`\<\{ `app`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval`: `undefined` ; `compiledClear`: `undefined` ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  }  }\>
+▸ **deploy**(`params`): `Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval`: `undefined` ; `compiledClear`: `undefined` ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  }  }\>
 
 Idempotently deploy (create if not exists, update if changed) an app against the given name for the given creator account, including deploy-time TEAL template placeholder substitutions (if specified).
 
@@ -308,13 +339,13 @@ Idempotently deploy (create if not exists, update if changed) an app against the
 
 #### Returns
 
-`Promise`\<\{ `app`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval`: `undefined` ; `compiledClear`: `undefined` ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  }  }\>
+`Promise`\<\{ `appClient`: [`AppClient`](types_app_client.AppClient.md) ; `result`: \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"create"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"update"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear?`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteResult`: [`ConfirmedTransactionResult`](../interfaces/types_transaction.ConfirmedTransactionResult.md) ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `groupId`: `string` ; `name`: `string` ; `operationPerformed`: ``"replace"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[] ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Buffer` ; `clearStateProgram`: `Buffer` ; `compiledApproval`: `undefined` ; `compiledClear`: `undefined` ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  } \| \{ `appAddress`: `string` ; `appId`: `bigint` ; `approvalProgram`: `Uint8Array` = compiledApproval.compiledBase64ToBytes; `clearStateProgram`: `Uint8Array` = compiledClear.compiledBase64ToBytes; `compiledApproval`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `compiledClear`: [`CompiledTeal`](../interfaces/types_app.CompiledTeal.md) ; `createdMetadata`: [`AppDeployMetadata`](../interfaces/types_app.AppDeployMetadata.md) ; `createdRound`: `bigint` ; `deletable?`: `boolean` ; `deleteReturn`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `deleted`: `boolean` ; `name`: `string` ; `operationPerformed`: ``"nothing"`` ; `return`: `undefined` \| `ABIValue` \| [`ABIStruct`](../modules/types_app_arc56.md#abistruct) ; `updatable?`: `boolean` ; `updatedRound`: `bigint` ; `version`: `string`  }  }\>
 
 The app client and the result of the deployment
 
 #### Defined in
 
-[src/types/app-factory.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L224)
+[src/types/app-factory.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L274)
 
 ___
 
@@ -332,7 +363,7 @@ The source maps
 
 #### Defined in
 
-[src/types/app-factory.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L340)
+[src/types/app-factory.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L390)
 
 ___
 
@@ -358,7 +389,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-factory.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L328)
+[src/types/app-factory.ts:378](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L378)
 
 ___
 
@@ -386,7 +417,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L475)
+[src/types/app-factory.ts:525](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L525)
 
 ___
 
@@ -423,7 +454,7 @@ The `AppClient`
 
 #### Defined in
 
-[src/types/app-factory.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L307)
+[src/types/app-factory.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L357)
 
 ___
 
@@ -455,7 +486,7 @@ The `AppClient`
 
 #### Defined in
 
-[src/types/app-factory.ts:286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L286)
+[src/types/app-factory.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L336)
 
 ___
 
@@ -483,7 +514,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L464)
+[src/types/app-factory.ts:514](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L514)
 
 ___
 
@@ -503,7 +534,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L362)
+[src/types/app-factory.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L412)
 
 ___
 
@@ -527,7 +558,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:376](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L376)
+[src/types/app-factory.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L426)
 
 ___
 
@@ -550,7 +581,7 @@ if none provided and throws an error if neither provided
 
 #### Defined in
 
-[src/types/app-factory.ts:490](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L490)
+[src/types/app-factory.ts:540](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L540)
 
 ___
 
@@ -578,7 +609,7 @@ Make the given call and catch any errors, augmenting with debugging information 
 
 #### Defined in
 
-[src/types/app-factory.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L434)
+[src/types/app-factory.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L484)
 
 ___
 
@@ -600,7 +631,7 @@ Import source maps for the app.
 
 #### Defined in
 
-[src/types/app-factory.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L357)
+[src/types/app-factory.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L407)
 
 ___
 
@@ -635,4 +666,4 @@ The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-factory.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L507)
+[src/types/app-factory.ts:557](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L557)

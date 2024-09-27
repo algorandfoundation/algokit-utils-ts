@@ -19,8 +19,8 @@ Used to take a dependency on AlgorandClient without generating a circular depend
 - [app](types_algorand_client_interface.AlgorandClientInterface.md#app)
 - [appDeployer](types_algorand_client_interface.AlgorandClientInterface.md#appdeployer)
 - [client](types_algorand_client_interface.AlgorandClientInterface.md#client)
+- [createTransaction](types_algorand_client_interface.AlgorandClientInterface.md#createtransaction)
 - [send](types_algorand_client_interface.AlgorandClientInterface.md#send)
-- [transactions](types_algorand_client_interface.AlgorandClientInterface.md#transactions)
 
 ### Methods
 
@@ -69,6 +69,16 @@ ___
 
 ___
 
+### createTransaction
+
+• **createTransaction**: [`AlgorandClientTransactionCreator`](../classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
+
+#### Defined in
+
+[src/types/algorand-client-interface.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-interface.ts#L19)
+
+___
+
 ### send
 
 • **send**: [`AlgorandClientTransactionSender`](../classes/types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
@@ -76,16 +86,6 @@ ___
 #### Defined in
 
 [src/types/algorand-client-interface.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-interface.ts#L18)
-
-___
-
-### transactions
-
-• **transactions**: [`AlgorandClientTransactionCreator`](../classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
-
-#### Defined in
-
-[src/types/algorand-client-interface.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-interface.ts#L19)
 
 ## Methods
 

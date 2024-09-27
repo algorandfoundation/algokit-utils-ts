@@ -16,7 +16,7 @@ import AlgoKitComposer, {
   AssetCreateParams,
   AssetOptOutParams,
 } from './composer'
-import { ExecuteParams, SendSingleTransactionResult } from './transaction'
+import { SendParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
 
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
@@ -50,7 +50,7 @@ export class AlgorandClientTransactionSender {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
     },
-  ): (params: T & ExecuteParams) => Promise<SendSingleTransactionResult> {
+  ): (params: T & SendParams) => Promise<SendSingleTransactionResult> {
     return async (params) => {
       const composer = this._newGroup()
 
@@ -62,7 +62,7 @@ export class AlgorandClientTransactionSender {
         Config.getLogger(params?.suppressLog).debug(log.preLog(params, transaction))
       }
 
-      const rawResult = await composer.execute(params)
+      const rawResult = await composer.send(params)
       const result = {
         // Last item covers when a group is created by an app call with ABI transaction parameters
         transaction: rawResult.transactions.at(-1)!,
@@ -95,7 +95,7 @@ export class AlgorandClientTransactionSender {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
     },
-  ): (params: T & ExecuteParams) => Promise<SendAppTransactionResult> {
+  ): (params: T & SendParams) => Promise<SendAppTransactionResult> {
     return async (params) => {
       const result = await this._send(c, log)(params)
 
@@ -109,7 +109,7 @@ export class AlgorandClientTransactionSender {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
     },
-  ): (params: T & ExecuteParams) => Promise<SendAppUpdateTransactionResult> {
+  ): (params: T & SendParams) => Promise<SendAppUpdateTransactionResult> {
     return async (params) => {
       const result = await this._sendAppCall(c, log)(params)
 
@@ -128,7 +128,7 @@ export class AlgorandClientTransactionSender {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
     },
-  ): (params: T & ExecuteParams) => Promise<SendAppCreateTransactionResult> {
+  ): (params: T & SendParams) => Promise<SendAppCreateTransactionResult> {
     return async (params) => {
       const result = await this._sendAppUpdateCall(c, log)(params)
 
@@ -232,7 +232,7 @@ export class AlgorandClientTransactionSender {
    * ```
    * @returns The result of the transaction and the transaction that was sent
    */
-  assetCreate = async (params: AssetCreateParams & ExecuteParams) => {
+  assetCreate = async (params: AssetCreateParams & SendParams) => {
     const result = await this._send((c) => c.addAssetCreate, {
       postLog: (params, result) =>
         `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
@@ -499,7 +499,7 @@ export class AlgorandClientTransactionSender {
        * If this is set to `false` and the account has an asset balance it will lose those assets to the asset creator.
        */
       ensureZeroBalance: boolean
-    } & ExecuteParams,
+    } & SendParams,
   ) => {
     if (params.ensureZeroBalance) {
       let balance = 0n
@@ -519,7 +519,7 @@ export class AlgorandClientTransactionSender {
     return await this._send((c) => c.addAssetOptOut, {
       preLog: (params, transaction) =>
         `Opting ${params.sender} out of asset with ID ${params.assetId} to creator ${params.creator} via transaction ${transaction.txID()}`,
-    })(params as AssetOptOutParams & ExecuteParams)
+    })(params as AssetOptOutParams & SendParams)
   }
   /**
    * Create a smart contract.

@@ -70,7 +70,7 @@ Now you can replace the function calls one-by-one. Almost every call should have
 
 For instance, the `algokit.transferAlgos` call shown in the above example has the following deprecation notice:
 
-> @deprecated Use `algorand.send.payment()` / `algorand.transactions.payment()` instead
+> @deprecated Use `algorand.send.payment()` / `algorand.createTransaction.payment()` instead
 
 These deprecation notices should largely let you follow the bouncing ball and make quick work of the migration. Largely the old vs new calls are fairly equivalent with some naming changes to improve consistency within AlgoKit Utils and more broadly to align to the core Algorand protocol (e.g. using `payment` rather than `transferAlgos` since it's a payment transaction on the Algorand blockchain). In saying that, there are some key differences that you will need to tweak:
 
@@ -80,7 +80,7 @@ These deprecation notices should largely let you follow the bouncing ball and ma
 - `clearProgram` parameter is renamed to `clearStateProgram` and `extraPages` to `extraProgramPages` for create and update app calls (to align with Algorand protocol names).
 - `extraProgramPages` appears as a top-level params property rather than nested in a `schema` property.
 - Round numbers, app IDs and asset IDs are now consistently `BigInt`'s rather than `number` or `number | bigint`
-- If you previously used `skipSending: true` that no longer exists; the new equivalent of that is to use `algorand.transactions...`, but otherwise you should use `algorand.send...` to immediately sign and send.
+- If you previously used `skipSending: true` that no longer exists; the new equivalent of that is to use `algorand.createTransaction...`, but otherwise you should use `algorand.send...` to immediately sign and send.
 - If you previously used `atc` as a parameter when constructing a transaction that no longer exists; the new equivalent of that is to use `algorand.newGroup()` to get an [`AlgoKitComposer`](./capabilities/algokit-composer.md) and chain method calls to build up a group of transactions and then call `execute()` to execute the group.
 - Functions that took multiple params objects largely only take a single, combined object now (intellisense is your friend, ctrl+space or your IDE's equivalent auto-complete keyboard shortcut will help you see all of the options!).
 
@@ -103,10 +103,10 @@ All of the functionality in `ApplicationClient` is available within the new clas
 - `fundAppAccount` no longer takes an `AlgoAmount` directly - it always expects the params object (more consistent with)
 - `compile` is replaced with static methods on `AppClient` and `getABIMethodParams` is deprecated in favour of `getABIMethod`, which now returns the params _and_ the `ABIMethod`
 - All of the methods that return or execute a transaction (`update`, `call`, `optIn`, etc.) are now exposed in an interface similar to the one in [`AlgorandClient`](./capabilities/algorand-client.md#creating-and-issuing-transactions), namely (where `{callType}` is one of: `update` / `delete` / `optIn` / `closeOut` / `clearState` / `call`):
-  - `appClient.transactions.{callType}` to get a transaction for an ABI method call
+  - `appClient.createTransaction.{callType}` to get a transaction for an ABI method call
   - `appClient.send.{callType}` to sign and send a transaction for an ABI method call
   - `appClient.params.{callType}` to get a [params object](./capabilities/algorand-client.md#transaction-parameters) for an ABI method call
-  - `appClient.transactions.bare.{callType}` to get a transaction for a bare app call
+  - `appClient.createTransaction.bare.{callType}` to get a transaction for a bare app call
   - `appClient.send.bare.{callType}` to sign and send a transaction for a bare app call
   - `appClient.params.bare.{callType}` to get a [params object](./capabilities/algorand-client.md#transaction-parameters) for a bare app call
 - The `resolveBy` functionality has disappeared in favour of [much simpler entrypoints within `algorand.client`](./capabilities/app-client.md#appclient)

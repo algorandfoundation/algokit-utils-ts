@@ -436,7 +436,7 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 **`Deprecated`**
 
-use `algorand.send.assetOptIn()` / `algorand.transactions.assetOptIn()` instead
+use `algorand.send.assetOptIn()` / `algorand.createTransaction.assetOptIn()` instead
 
 Opt-in an account to an asset.
 
@@ -471,7 +471,7 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 **`Deprecated`**
 
-use `algorand.send.assetOptOut()` / `algorand.transactions.assetOptOut()` instead
+use `algorand.send.assetOptOut()` / `algorand.createTransaction.assetOptOut()` instead
 
 Opt-out an account from an asset.
 
@@ -506,8 +506,8 @@ The result of the call
 
 **`Deprecated`**
 
-Use `algorand.send.appUpdate()` / `algorand.transactions.appUpdate()` / `algorand.send.appUpdateMethodCall()`
-/ `algorand.transactions.appUpdateMethodCall()` instead
+Use `algorand.send.appUpdate()` / `algorand.createTransaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
+/ `algorand.createTransaction.appUpdateMethodCall()` instead
 
 Issues a call to a given app.
 
@@ -542,7 +542,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:838](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L838)
+[src/transaction/transaction.ts:836](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L836)
 
 ___
 
@@ -606,7 +606,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:863](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L863)
+[src/transaction/transaction.ts:861](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L861)
 
 ___
 
@@ -629,8 +629,8 @@ The details of the created app, or the transaction to create it if `skipSending`
 
 **`Deprecated`**
 
-Use `algorand.send.appCreate()` / `algorand.transactions.appCreate()` / `algorand.send.appCreateMethodCall()`
-/ `algorand.transactions.appCreateMethodCall()` instead
+Use `algorand.send.appCreate()` / `algorand.createTransaction.appCreate()` / `algorand.send.appCreateMethodCall()`
+/ `algorand.createTransaction.appCreateMethodCall()` instead
 
 Creates a smart contract app, returns the details of the created app.
 
@@ -659,7 +659,7 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 **`Deprecated`**
 
-use `algorand.send.assetCreate()` / `algorand.transactions.assetCreate()` instead
+use `algorand.send.assetCreate()` / `algorand.createTransaction.assetCreate()` instead
 
 Create an Algorand Standard Asset (ASA).
 
@@ -1893,7 +1893,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:899](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L899)
+[src/transaction/transaction.ts:897](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L897)
 
 ___
 
@@ -2280,7 +2280,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:888](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L888)
+[src/transaction/transaction.ts:886](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L886)
 
 ___
 
@@ -2597,7 +2597,7 @@ Performs a dry run of the transactions loaded into the given AtomicTransactionCo
 
 #### Defined in
 
-[src/transaction/transaction.ts:714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L714)
+[src/transaction/transaction.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L712)
 
 ___
 
@@ -2879,7 +2879,7 @@ Signs and sends transactions that have been collected by an `AtomicTransactionCo
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including: * `atc` The `AtomicTransactionComposer` * `executeParams` The parameters to control the send behaviour |
+| `atcSend` | [`AtomicTransactionComposerToSend`](../interfaces/types_transaction.AtomicTransactionComposerToSend.md) | The parameters controlling the send, including `atc` The `AtomicTransactionComposer` and params to control send behaviour |
 | `algod` | `default` | An algod client |
 
 #### Returns
@@ -2890,7 +2890,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L580)
+[src/transaction/transaction.ts:578](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L578)
 
 ___
 
@@ -2919,7 +2919,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Defined in
 
-[src/transaction/transaction.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L734)
+[src/transaction/transaction.ts:732](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L732)
 
 ___
 
@@ -3084,7 +3084,7 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 **`Deprecated`**
 
-Use `algorand.send.payment()` / `algorand.transactions.payment()` instead
+Use `algorand.send.payment()` / `algorand.createTransaction.payment()` instead
 
 Transfer Algo between two accounts.
 
@@ -3119,7 +3119,7 @@ The transaction object and optionally the confirmation if it was sent to the cha
 
 **`Deprecated`**
 
-Use `algorand.send.assetTransfer()` / `algorand.transactions.assetTransfer()` instead
+Use `algorand.send.assetTransfer()` / `algorand.createTransaction.assetTransfer()` instead
 
 Transfer asset between two accounts.
 
@@ -3154,8 +3154,8 @@ The transaction send result and the compilation result
 
 **`Deprecated`**
 
-Use `algorand.send.appUpdate()` / `algorand.transactions.appUpdate()` / `algorand.send.appUpdateMethodCall()`
-/ `algorand.transactions.appUpdateMethodCall()` instead
+Use `algorand.send.appUpdate()` / `algorand.createTransaction.appUpdate()` / `algorand.send.appUpdateMethodCall()`
+/ `algorand.createTransaction.appUpdateMethodCall()` instead
 
 Updates a smart contract app.
 
@@ -3192,4 +3192,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:779](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L779)
+[src/transaction/transaction.ts:777](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L777)

@@ -8,7 +8,7 @@ import { SendTransactionResult } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
 
 /**
- * @deprecated use `algorand.send.assetCreate()` / `algorand.transactions.assetCreate()` instead
+ * @deprecated use `algorand.send.assetCreate()` / `algorand.createTransaction.assetCreate()` instead
  *
  * Create an Algorand Standard Asset (ASA).
  * @param create The asset creation definition
@@ -52,7 +52,7 @@ export async function createAsset(
 }
 
 /**
- * @deprecated use `algorand.send.assetOptIn()` / `algorand.transactions.assetOptIn()` instead
+ * @deprecated use `algorand.send.assetOptIn()` / `algorand.createTransaction.assetOptIn()` instead
  *
  * Opt-in an account to an asset.
  * @param optIn The opt-in definition
@@ -83,7 +83,7 @@ export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promi
 }
 
 /**
- * @deprecated use `algorand.send.assetOptOut()` / `algorand.transactions.assetOptOut()` instead
+ * @deprecated use `algorand.send.assetOptOut()` / `algorand.createTransaction.assetOptOut()` instead
  *
  * Opt-out an account from an asset.
  * @param optOut The opt-in definition
