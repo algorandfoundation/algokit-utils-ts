@@ -62,7 +62,7 @@ algosdk.ABIMethod.constructor
 
 ### args
 
-• `Readonly` **args**: \{ `defaultValue?`: `string` ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `ABIArgumentType`  }[]
+• `Readonly` **args**: \{ `defaultValue?`: \{ `data`: `string` \| `number` ; `source`: ``"box"`` \| ``"global"`` \| ``"local"`` \| ``"literal"`` ; `type`: `string`  } ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `ABIArgumentType`  }[]
 
 #### Overrides
 

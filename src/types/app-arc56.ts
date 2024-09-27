@@ -45,9 +45,18 @@ export class Arc56Method extends algosdk.ABIMethod {
  * @param struct The ARC-56 struct definition
  * @returns The `ABITupleType`
  */
-export function getABITupleTypeFromABIStructDefinition(struct: StructFields): algosdk.ABITupleType {
+export function getABITupleTypeFromABIStructDefinition(
+  struct: StructField[],
+  structs: Record<string, StructField[]>,
+): algosdk.ABITupleType {
   return new algosdk.ABITupleType(
-    Object.values(struct).map((v) => (typeof v === 'string' ? algosdk.ABIType.from(v) : getABITupleTypeFromABIStructDefinition(v))),
+    struct.map((v) =>
+      typeof v.type === 'string'
+        ? structs[v.type]
+          ? getABITupleTypeFromABIStructDefinition(structs[v.type], structs)
+          : algosdk.ABIType.from(v.type)
+        : getABITupleTypeFromABIStructDefinition(v.type, structs),
+    ),
   )
 }
 
@@ -60,12 +69,18 @@ export function getABITupleTypeFromABIStructDefinition(struct: StructFields): al
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<string, any>>(
   decodedABITuple: algosdk.ABIValue[],
-  structFields: StructFields,
+  structFields: StructField[],
+  structs: Record<string, StructField[]>,
 ): TReturn {
   return Object.fromEntries(
-    Object.entries(structFields).map(([key, type], i) => {
+    structFields.map(({ name: key, type }, i) => {
       const abiValue = decodedABITuple[i]
-      return [key, typeof type === 'string' || !Array.isArray(abiValue) ? decodedABITuple[i] : getABIStructFromABITuple(abiValue, type)]
+      return [
+        key,
+        (typeof type === 'string' && !structs[type]) || !Array.isArray(abiValue)
+          ? decodedABITuple[i]
+          : getABIStructFromABITuple(abiValue, typeof type === 'string' ? structs[type] : type, structs),
+      ]
     }),
   ) as TReturn
 }
@@ -76,10 +91,16 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
  * @param structFields The struct fields from an ARC-56 app spec
  * @returns The struct as a decoded ABI tuple
  */
-export function getABITupleFromABIStruct(struct: ABIStruct, structFields: StructFields): algosdk.ABIValue[] {
-  return Object.entries(structFields).map(([key, type]) => {
+export function getABITupleFromABIStruct(
+  struct: ABIStruct,
+  structFields: StructField[],
+  structs: Record<string, StructField[]>,
+): algosdk.ABIValue[] {
+  return structFields.map(({ name: key, type }) => {
     const value = struct[key]
-    return typeof type === 'string' ? (value as algosdk.ABIValue) : getABITupleFromABIStruct(value as ABIStruct, type)
+    return typeof type === 'string' && !structs[type]
+      ? (value as algosdk.ABIValue)
+      : getABITupleFromABIStruct(value as ABIStruct, typeof type === 'string' ? structs[type] : type, structs)
   })
 }
 
@@ -99,12 +120,14 @@ export type ABIStruct = {
 export function getABIDecodedValue(
   value: Uint8Array | number | bigint,
   type: string,
-  structs: Record<string, StructFields>,
+  structs: Record<string, StructField[]>,
 ): algosdk.ABIValue | ABIStruct {
-  if (type === 'bytes' || typeof value !== 'object') return value
+  if (type === 'AVMBytes' || typeof value !== 'object') return value
+  if (type === 'AVMString') return Buffer.from(value).toString('utf-8')
+  if (type === 'AVMUint64') return algosdk.ABIType.from('uint64').decode(value)
   if (structs[type]) {
-    const tupleValue = getABITupleTypeFromABIStructDefinition(structs[type]).decode(value)
-    return getABIStructFromABITuple(tupleValue, structs[type])
+    const tupleValue = getABITupleTypeFromABIStructDefinition(structs[type], structs).decode(value)
+    return getABIStructFromABITuple(tupleValue, structs[type], structs)
   }
   return algosdk.ABIType.from(type).decode(value)
 }
@@ -119,20 +142,21 @@ export function getABIDecodedValue(
 export function getABIEncodedValue(
   value: Uint8Array | algosdk.ABIValue | ABIStruct,
   type: string,
-  structs: Record<string, StructFields>,
+  structs: Record<string, StructField[]>,
 ): Uint8Array {
   if (typeof value === 'object' && value instanceof Uint8Array) return value
-  if (type === 'bytes') {
+  if (type === 'AVMUint64') return algosdk.ABIType.from('uint64').encode(value as bigint | number)
+  if (type === 'AVMBytes' || type === 'AVMString') {
     if (typeof value === 'string') return Buffer.from(value, 'utf-8')
     if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
     return value
   }
   if (structs[type]) {
-    const tupleType = getABITupleTypeFromABIStructDefinition(structs[type])
+    const tupleType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
     if (Array.isArray(value)) {
       tupleType.encode(value as algosdk.ABIValue[])
     } else {
-      return tupleType.encode(getABITupleFromABIStruct(value as ABIStruct, structs[type]))
+      return tupleType.encode(getABITupleFromABIStruct(value as ABIStruct, structs[type], structs))
     }
   }
   return algosdk.ABIType.from(type).encode(value as algosdk.ABIValue)
@@ -179,7 +203,7 @@ export function getArc56Method(methodNameOrSignature: string, appSpec: Arc56Cont
 export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValue | ABIStruct | undefined>(
   returnValue: ABIReturn | undefined,
   method: Method | Arc56Method,
-  structs: StructFields,
+  structs: Record<string, StructField[]>,
 ): TReturn {
   const m = 'method' in method ? method.method : method
   const type = m.returns.struct ?? m.returns.type
@@ -188,10 +212,12 @@ export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValu
   }
   if (type === undefined || type === 'void' || returnValue?.returnValue === undefined) return undefined as TReturn
 
-  if (type === 'bytes') return returnValue.rawReturnValue as TReturn
+  if (type === 'AVMBytes') return returnValue.rawReturnValue as TReturn
+  if (type === 'AVMString') return Buffer.from(returnValue.rawReturnValue).toString('utf-8') as TReturn
+  if (type === 'AVMUint64') return algosdk.ABIType.from('uint64').decode(returnValue.rawReturnValue) as TReturn
 
   if (structs[type]) {
-    return getABIStructFromABITuple(returnValue.returnValue as algosdk.ABIValue[], structs[type] as StructFields) as TReturn
+    return getABIStructFromABITuple(returnValue.returnValue as algosdk.ABIValue[], structs[type], structs) as TReturn
   }
 
   return returnValue.returnValue as TReturn
@@ -210,22 +236,20 @@ export interface Arc56Contract {
   /** Optional, user-friendly description for the interface */
   desc?: string
   /**
-   * Optional object listing the contract instances across different networks
+   * Optional object listing the contract instances across different networks.
+   * The key is the base64 genesis hash of the network, and the value contains
+   * information about the deployed contract in the network indicated by the
+   * key. A key containing the human-readable name of the network MAY be
+   * included, but the corresponding genesis hash key MUST also be define
    */
   networks?: {
-    /**
-     * The key is the base64 genesis hash of the network, and the value contains
-     * information about the deployed contract in the network indicated by the
-     * key. A key containing the human-readable name of the network MAY be
-     * included, but the corresponding genesis hash key MUST also be defined
-     */
     [network: string]: {
       /** The app ID of the deployed contract in this network */
       appID: number
     }
   }
-  /** Named structs use by the application */
-  structs: { [structName: StructName]: StructFields }
+  /** Named structs use by the application. Each struct field appears in the same order as ABI encoding. */
+  structs: { [structName: StructName]: StructField[] }
   /** All of the methods that the contract implements */
   methods: Method[]
   state: {
@@ -290,7 +314,7 @@ export interface Arc56Contract {
       major: number
       minor: number
       patch: number
-      commit?: string
+      commitHash?: string
     }
   }
   /** ARC-28 events that MAY be emitted by this contract */
@@ -299,7 +323,7 @@ export interface Arc56Contract {
   templateVariables?: {
     [name: string]: {
       /** The type of the template variable */
-      type: ABIType | AVMBytes | StructName
+      type: ABIType | AVMType | StructName
       /** If given, the the base64 encoded value used for the given app/program */
       value?: string
     }
@@ -308,7 +332,7 @@ export interface Arc56Contract {
   scratchVariables?: {
     [name: string]: {
       slot: number
-      type: ABIType | AVMBytes | StructName
+      type: ABIType | AVMType | StructName
     }
   }
 }
@@ -321,7 +345,7 @@ export interface Method {
   desc?: string
   /** The arguments of the method, in order */
   args: Array<{
-    /** The type of the argument */
+    /** The type of the argument. The `struct` field should also be checked to determine if this arg is a struct. */
     type: ABIType
     /** If the type is a struct, the name of the struct */
     struct?: StructName
@@ -329,12 +353,24 @@ export interface Method {
     name?: string
     /** Optional, user-friendly description for the argument */
     desc?: string
-    /** The default value that clients should use. MUST be base64 encoded bytes */
-    defaultValue?: string
+    /** The default value that clients should use. */
+    defaultValue?: {
+      /** Base64 encoded bytes or uint64 */
+      data: string | number
+      /** How the data is encoded. This is the encoding for the data provided here, not the arg type */
+      type: ABIType | AVMType
+      /** Where the default value is coming from
+       * - box: The data key signifies the box key to read the value from
+       * - global: The data key signifies the global state key to read the value from
+       * - local: The data key signifies the local state key to read the value from (for the sender)
+       * - literal: the value is a literal and should be passed directly as the argument
+       */
+      source: 'box' | 'global' | 'local' | 'literal'
+    }
   }>
   /** Information about the method's return value */
   returns: {
-    /** The type of the return value, or "void" to indicate no return value. */
+    /** The type of the return value, or "void" to indicate no return value. The `struct` field should also be checked to determine if this return value is a struct. */
     type: ABIType
     /** If the type is a struct, the name of the struct */
     struct?: StructName
@@ -384,7 +420,7 @@ export interface Event {
   desc?: string
   /** The arguments of the event, in order */
   args: Array<{
-    /** The type of the argument */
+    /** The type of the argument. The `struct` field should also be checked to determine if this return value is a struct. */
     type: ABIType
     /** Optional, user-friendly name for the argument */
     name?: string
@@ -402,11 +438,23 @@ export type ABIType = string
 export type StructName = string
 
 /** Raw byteslice without the length prefixed that is specified in ARC-4 */
-export type AVMBytes = 'bytes'
+export type AVMBytes = 'AVMBytes'
 
-/** Mapping of named structs to the ABI type of their fields */
-export interface StructFields {
-  [fieldName: string]: ABIType | StructFields
+/** A utf-8 string without the length prefix that is specified in ARC-4 */
+export type AVMString = 'AVMString'
+
+/** A 64-bit unsigned integer */
+export type AVMUint64 = 'AVMUint64'
+
+/** A native AVM type */
+export type AVMType = AVMBytes | AVMString | AVMUint64
+
+/** Information about a single field in a struct */
+export interface StructField {
+  /** The name of the struct field */
+  name: string
+  /** The type of the struct field's value */
+  type: ABIType | StructName | StructField[]
 }
 
 /** Describes a single key in app storage */
@@ -414,10 +462,10 @@ export interface StorageKey {
   /** Description of what this storage key holds */
   desc?: string
   /** The type of the key */
-  keyType: ABIType | AVMBytes | StructName
+  keyType: ABIType | AVMType | StructName
 
   /** The type of the value */
-  valueType: ABIType | AVMBytes | StructName
+  valueType: ABIType | AVMType | StructName
   /** The bytes of the key encoded as base64 */
   key: string
 }
@@ -427,9 +475,9 @@ export interface StorageMap {
   /** Description of what the key-value pairs in this mapping hold */
   desc?: string
   /** The type of the keys in the map */
-  keyType: ABIType | AVMBytes | StructName
+  keyType: ABIType | AVMType | StructName
   /** The type of the values in the map */
-  valueType: ABIType | AVMBytes | StructName
+  valueType: ABIType | AVMType | StructName
   /** The base64-encoded prefix of the map keys*/
   prefix?: string
 }

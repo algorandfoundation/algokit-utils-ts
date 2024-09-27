@@ -876,27 +876,72 @@ export class AppClient {
    * @param methodNameOrSignature The method name or method signature to call if an ABI call is being emitted.
    * e.g. `my_method` or `my_method(unit64,string)bytes`
    * @param args The arguments to the method with `undefined` for any that should be populated with a default value
-   * @param appSpec The app spec for the app
    */
-  public static getABIArgsWithDefaultValues(
+  private async getABIArgsWithDefaultValues(
     methodNameOrSignature: string,
     args: AppClientMethodCallParams['args'] | undefined,
-    appSpec: Arc56Contract,
-  ): AppMethodCall<CommonAppCallParams>['args'] {
-    const m = getArc56Method(methodNameOrSignature, appSpec)
-    return args?.map((a, i) => {
-      const arg = m.args[i]
-      if (a !== undefined) {
-        // If a struct then convert to tuple for the underlying call
-        return arg.struct && typeof a === 'object' && !Array.isArray(a)
-          ? getABITupleFromABIStruct(a as ABIStruct, appSpec.structs[arg.struct])
-          : (a as ABIValue | AppMethodCallTransactionArgument)
-      }
-      // todo: expand this to match previous ApplicationClient implementation when ARC-56 spec is updated to support other default value options
-      const defaultValue = arg.defaultValue
-      if (defaultValue) return getABIDecodedValue(Buffer.from(defaultValue, 'base64'), m.method.args[i].type, {}) as ABIValue
-      throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
-    })
+    sender: string,
+  ): Promise<AppMethodCall<CommonAppCallParams>['args']> {
+    const m = getArc56Method(methodNameOrSignature, this._appSpec)
+    return await Promise.all(
+      args?.map(async (a, i) => {
+        const arg = m.args[i]
+        if (a !== undefined) {
+          // If a struct then convert to tuple for the underlying call
+          return arg.struct && typeof a === 'object' && !Array.isArray(a)
+            ? getABITupleFromABIStruct(a as ABIStruct, this._appSpec.structs[arg.struct], this._appSpec.structs)
+            : (a as ABIValue | AppMethodCallTransactionArgument)
+        }
+        const defaultValue = arg.defaultValue
+        if (defaultValue) {
+          switch (defaultValue.source) {
+            case 'literal':
+              if (typeof defaultValue.data === 'number') return defaultValue.data
+              return getABIDecodedValue(
+                Buffer.from(defaultValue.data, 'base64'),
+                m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
+                this._appSpec.structs,
+              ) as ABIValue
+            // todo: When ARC-56 supports ABI calls as default args
+            // case 'abi': {
+            //   const method = this.getABIMethod(defaultValue.data as string)
+            //   const result = await this.send.call({
+            //     method: defaultValue.data as string,
+            //     methodArgs: method.args.map(() => undefined),
+            //     sender,
+            //   })
+            //   return result.return!
+            // }
+            case 'local':
+            case 'global': {
+              const state = defaultValue.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
+              const value = Object.values(state).find((s) => s.keyBase64 === (defaultValue.data as string))
+              if (!value) {
+                throw new Error(
+                  `Preparing default value for argument ${arg.name ?? `arg${i + 1}`} resulted in the failure: The key '${defaultValue.data}' could not be found in ${defaultValue.source} storage`,
+                )
+              }
+              return 'valueRaw' in value
+                ? (getABIDecodedValue(
+                    value.valueRaw,
+                    m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
+                    this._appSpec.structs,
+                  ) as ABIValue)
+                : value.value
+            }
+            case 'box': {
+              const value = await this.getBoxValue(Buffer.from(defaultValue.data as string, 'base64'))
+              return getABIDecodedValue(
+                value,
+                m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
+                this._appSpec.structs,
+              ) as ABIValue
+            }
+          }
+        }
+        throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
+      }) ?? [],
+    )
   }
 
   private getBareParamsMethods() {
@@ -1004,29 +1049,29 @@ export class AppClient {
       },
       /** Return params for an update ABI call, including deploy-time TEAL template replacements and compilation if provided */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
-        return this.getABIParams(
+        return (await this.getABIParams(
           {
             ...params,
             ...(await this.compile(params)),
           },
           OnApplicationComplete.UpdateApplicationOC,
-        ) satisfies AppUpdateMethodCall
+        )) satisfies AppUpdateMethodCall
       },
       /** Return params for an opt-in ABI call */
-      optIn: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.OptInOC) as AppCallMethodCall
+      optIn: async (params: AppClientMethodCallParams) => {
+        return (await this.getABIParams(params, OnApplicationComplete.OptInOC)) as AppCallMethodCall
       },
       /** Return params for an delete ABI call */
-      delete: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteMethodCall
+      delete: async (params: AppClientMethodCallParams) => {
+        return (await this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC)) as AppDeleteMethodCall
       },
       /** Return params for an close out ABI call */
-      closeOut: (params: AppClientMethodCallParams) => {
-        return this.getABIParams(params, OnApplicationComplete.CloseOutOC) as AppCallMethodCall
+      closeOut: async (params: AppClientMethodCallParams) => {
+        return (await this.getABIParams(params, OnApplicationComplete.CloseOutOC)) as AppCallMethodCall
       },
       /** Return params for an ABI call */
-      call: (params: AppClientMethodCallParams & CallOnComplete) => {
-        return this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallMethodCall
+      call: async (params: AppClientMethodCallParams & CallOnComplete) => {
+        return (await this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC)) as AppCallMethodCall
       },
     }
   }
@@ -1056,9 +1101,9 @@ export class AppClient {
        * Sign and send transactions for an opt-in ABI call
        */
       optIn: (params: AppClientMethodCallParams & SendParams) => {
-        return this.handleCallErrors(() =>
+        return this.handleCallErrors(async () =>
           this.processMethodCallReturn(
-            this._algorand.send.appCallMethodCall(this.params.optIn(params)),
+            this._algorand.send.appCallMethodCall(await this.params.optIn(params)),
             getArc56Method(params.method, this._appSpec),
           ),
         )
@@ -1067,9 +1112,9 @@ export class AppClient {
        * Sign and send transactions for a delete ABI call
        */
       delete: (params: AppClientMethodCallParams & SendParams) => {
-        return this.handleCallErrors(() =>
+        return this.handleCallErrors(async () =>
           this.processMethodCallReturn(
-            this._algorand.send.appDeleteMethodCall(this.params.delete(params)),
+            this._algorand.send.appDeleteMethodCall(await this.params.delete(params)),
             getArc56Method(params.method, this._appSpec),
           ),
         )
@@ -1078,9 +1123,9 @@ export class AppClient {
        * Sign and send transactions for a close out ABI call
        */
       closeOut: (params: AppClientMethodCallParams & SendParams) => {
-        return this.handleCallErrors(() =>
+        return this.handleCallErrors(async () =>
           this.processMethodCallReturn(
-            this._algorand.send.appCallMethodCall(this.params.closeOut(params)),
+            this._algorand.send.appCallMethodCall(await this.params.closeOut(params)),
             getArc56Method(params.method, this._appSpec),
           ),
         )
@@ -1094,7 +1139,10 @@ export class AppClient {
           params.onComplete === OnApplicationComplete.NoOpOC ||
           (!params.onComplete && getArc56Method(params.method, this._appSpec).method.readonly)
         ) {
-          const result = await this._algorand.newGroup().addAppCallMethodCall(this.params.call(params)).simulate()
+          const result = await this._algorand
+            .newGroup()
+            .addAppCallMethodCall(await this.params.call(params))
+            .simulate()
           return this.processMethodCallReturn(
             {
               ...result,
@@ -1107,9 +1155,9 @@ export class AppClient {
           )
         }
 
-        return this.handleCallErrors(() =>
+        return this.handleCallErrors(async () =>
           this.processMethodCallReturn(
-            this._algorand.send.appCallMethodCall(this.params.call(params)),
+            this._algorand.send.appCallMethodCall(await this.params.call(params)),
             getArc56Method(params.method, this._appSpec),
           ),
         )
@@ -1132,26 +1180,26 @@ export class AppClient {
       /**
        * Return transactions for an opt-in ABI call
        */
-      optIn: (params: AppClientMethodCallParams) => {
-        return this._algorand.createTransaction.appCallMethodCall(this.params.optIn(params))
+      optIn: async (params: AppClientMethodCallParams) => {
+        return this._algorand.createTransaction.appCallMethodCall(await this.params.optIn(params))
       },
       /**
        * Return transactions for a delete ABI call
        */
-      delete: (params: AppClientMethodCallParams) => {
-        return this._algorand.createTransaction.appDeleteMethodCall(this.params.delete(params))
+      delete: async (params: AppClientMethodCallParams) => {
+        return this._algorand.createTransaction.appDeleteMethodCall(await this.params.delete(params))
       },
       /**
        * Return transactions for a close out ABI call
        */
-      closeOut: (params: AppClientMethodCallParams) => {
-        return this._algorand.createTransaction.appCallMethodCall(this.params.closeOut(params))
+      closeOut: async (params: AppClientMethodCallParams) => {
+        return this._algorand.createTransaction.appCallMethodCall(await this.params.closeOut(params))
       },
       /**
        * Return transactions for an ABI call (defaults to no-op)
        */
-      call: (params: AppClientMethodCallParams & CallOnComplete) => {
-        return this._algorand.createTransaction.appCallMethodCall(this.params.call(params))
+      call: async (params: AppClientMethodCallParams & CallOnComplete) => {
+        return this._algorand.createTransaction.appCallMethodCall(await this.params.call(params))
       },
     }
   }
@@ -1177,16 +1225,17 @@ export class AppClient {
     }
   }
 
-  private getABIParams<
+  private async getABIParams<
     TParams extends { method: string; sender?: string; args?: AppClientMethodCallParams['args'] },
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
+    const sender = this.getSender(params.sender)
     const method = getArc56Method(params.method, this._appSpec)
-    const args = AppClient.getABIArgsWithDefaultValues(params.method, params.args, this._appSpec)
+    const args = await this.getABIArgsWithDefaultValues(params.method, params.args, sender)
     return {
       ...params,
       appId: this._appId,
-      sender: this.getSender(params.sender),
+      sender: sender,
       method,
       onComplete,
       args,

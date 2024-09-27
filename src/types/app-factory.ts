@@ -8,7 +8,15 @@ import {
   TealTemplateParams,
   UPDATABLE_TEMPLATE_NAME,
 } from './app'
-import { ABIStruct, Arc56Contract, Arc56Method, getArc56Method, getArc56ReturnValue } from './app-arc56'
+import {
+  ABIStruct,
+  Arc56Contract,
+  Arc56Method,
+  getABIDecodedValue,
+  getABITupleFromABIStruct,
+  getArc56Method,
+  getArc56ReturnValue,
+} from './app-arc56'
 import {
   AppClient,
   AppClientBareCallParams,
@@ -26,7 +34,7 @@ import {
   DeployAppUpdateParams,
 } from './app-deployer'
 import { AppSpec } from './app-spec'
-import { AppCreateMethodCall, AppCreateParams } from './composer'
+import { AppCreateMethodCall, AppCreateParams, AppMethodCall, AppMethodCallTransactionArgument, CommonAppCallParams } from './composer'
 import { Expand } from './expand'
 import { SendParams } from './transaction'
 import SourceMap = algosdk.SourceMap
@@ -538,9 +546,36 @@ export class AppFactory {
       ...params,
       sender: this.getSender(params.sender),
       method: getArc56Method(params.method, this._appSpec),
-      args: AppClient.getABIArgsWithDefaultValues(params.method, params.args, this._appSpec),
+      args: this.getCreateABIArgsWithDefaultValues(params.method, params.args),
       onComplete,
     }
+  }
+
+  private getCreateABIArgsWithDefaultValues(
+    methodNameOrSignature: string,
+    args: AppClientMethodCallParams['args'] | undefined,
+  ): AppMethodCall<CommonAppCallParams>['args'] {
+    const m = getArc56Method(methodNameOrSignature, this._appSpec)
+    return args?.map((a, i) => {
+      const arg = m.args[i]
+      if (a !== undefined) {
+        // If a struct then convert to tuple for the underlying call
+        return arg.struct && typeof a === 'object' && !Array.isArray(a)
+          ? getABITupleFromABIStruct(a as ABIStruct, this._appSpec.structs[arg.struct], this._appSpec.structs)
+          : (a as ABIValue | AppMethodCallTransactionArgument)
+      }
+      const defaultValue = arg.defaultValue
+      if (defaultValue) {
+        switch (defaultValue.source) {
+          case 'literal':
+            if (typeof defaultValue.data === 'number') return defaultValue.data
+            return getABIDecodedValue(Buffer.from(defaultValue.data, 'base64'), m.method.args[i].type, this._appSpec.structs) as ABIValue
+          default:
+            throw new Error(`Can't provide default value for ${defaultValue.source} for a contract creation call`)
+        }
+      }
+      throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
+    })
   }
 
   /** Returns the sender for a call, using the `defaultSender`

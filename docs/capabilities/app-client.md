@@ -70,20 +70,20 @@ As well as allowing you to control creation and deployment of apps, the `AppFact
 This is possible via two methods on the app factory:
 
 - [`factory.getAppClientById(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbyid) - Returns a new `AppClient` client for an app instance of the given ID. Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
-- [`factory.getAppClientByCreatorAddressAndName(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbycreatoraddressandname) - Returns a new `AppClient` client, resolving the app by creator address and name using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note). Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
+- [`factory.getAppClientByCreatorAndName(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbycreatorandname) - Returns a new `AppClient` client, resolving the app by creator address and name using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note). Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
 
 ```typescript
 const appClient1 = factory.getAppClientById({ appId: 12345n })
 const appClient2 = factory.getAppClientById({ appId: 12346n })
 const appClient3 = factory.getAppClientById({ appId: 12345n, defaultSender: 'SENDER2ADDRESS' })
-const appClient4 = factory.getAppClientByCreatorAddressAndName({
+const appClient4 = factory.getAppClientByCreatorAndName({
   creatorAddress: 'CREATORADDRESS',
 })
-const appClient5 = factory.getAppClientByCreatorAddressAndName({
+const appClient5 = factory.getAppClientByCreatorAndName({
   creatorAddress: 'CREATORADDRESS',
   appName: 'NonDefaultAppName',
 })
-const appClient6 = factory.getAppClientByCreatorAddressAndName({
+const appClient6 = factory.getAppClientByCreatorAndName({
   creatorAddress: 'CREATORADDRESS',
   appName: 'NonDefaultAppName',
   ignoreCache: true, // Perform fresh indexer lookups

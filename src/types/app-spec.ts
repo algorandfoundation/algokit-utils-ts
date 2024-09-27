@@ -1,5 +1,5 @@
 import algosdk from 'algosdk'
-import { Arc56Contract, Method as Arc56Method, StorageKey, StructFields, getABIEncodedValue } from './app-arc56'
+import { Arc56Contract, Method as Arc56Method, StorageKey, StructField } from './app-arc56'
 import ABIContractParams = algosdk.ABIContractParams
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIMethod = algosdk.ABIMethod
@@ -8,10 +8,10 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
   const arc32Structs = Object.values(appSpec.hints).flatMap((hint) => Object.entries(hint.structs ?? {}))
   const structs = Object.fromEntries(
     arc32Structs.map(([_, struct]) => {
-      const fields = Object.fromEntries(struct.elements.map((e) => [e[0], e[1]]))
-      return [struct.name, fields satisfies StructFields]
+      const fields = struct.elements.map((e) => ({ name: e[0], type: e[1] }))
+      return [struct.name, fields]
     }),
-  ) satisfies { [structName: string]: StructFields }
+  ) satisfies { [structName: string]: StructField[] }
   const hint = (m: ABIMethodParams) => appSpec.hints[new ABIMethod(m).getSignature()] as Hint | undefined
   const actions = (m: ABIMethodParams, type: 'CREATE' | 'CALL') => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
@@ -29,6 +29,18 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
     if (c.update_application && ['ALL', type].includes(c.update_application)) actions.push('UpdateApplication')
     return actions
   }
+  const getDefaultArgValue = (
+    type: string,
+    defaultArg: DefaultArgument | undefined,
+  ): Arc56Contract['methods'][0]['args'][0]['defaultValue'] => {
+    if (!defaultArg || defaultArg.source === 'abi-method') return undefined
+
+    return {
+      source: defaultArg.source === 'constant' ? 'literal' : defaultArg.source === 'global-state' ? 'global' : 'local',
+      data: typeof defaultArg.data === 'string' ? Buffer.from(defaultArg.data).toString('base64') : defaultArg.data,
+      type: type === 'string' ? 'AVMString' : type,
+    }
+  }
 
   return {
     arcs: [],
@@ -45,12 +57,7 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
             type: a.type,
             desc: a.desc,
             struct: a.name ? hint(m)?.structs?.[a.name]?.name : undefined,
-            defaultValue:
-              a.name && hint(m)?.default_arguments?.[a.name].source === 'constant'
-                ? Buffer.from(getABIEncodedValue(hint(m)!.default_arguments![a.name].data as string | number, a.type, structs)).toString(
-                    'base64',
-                  )
-                : undefined,
+            defaultValue: getDefaultArgValue(a.type, !a.name ? undefined : hint(m)?.default_arguments?.[a.name]),
           })),
           returns: {
             type: m.returns.type,
@@ -82,8 +89,8 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
             s[0],
             {
               key: Buffer.from(s[1].key, 'utf-8').toString('base64'),
-              keyType: 'bytes',
-              valueType: s[1].type,
+              keyType: 'AVMString',
+              valueType: s[1].type === 'uint64' ? 'AVMUint64' : 'AVMBytes',
               desc: s[1].descr,
             } satisfies StorageKey,
           ]),
@@ -93,8 +100,8 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
             s[0],
             {
               key: Buffer.from(s[1].key, 'utf-8').toString('base64'),
-              keyType: 'bytes',
-              valueType: s[1].type,
+              keyType: 'AVMString',
+              valueType: s[1].type === 'uint64' ? 'AVMUint64' : 'AVMBytes',
               desc: s[1].descr,
             } satisfies StorageKey,
           ]),

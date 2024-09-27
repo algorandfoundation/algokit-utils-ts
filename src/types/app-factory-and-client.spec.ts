@@ -633,11 +633,12 @@ describe('ARC32: app-factory-and-app-client', () => {
     test('from const', async () => {
       await testAbiWithDefaultArgMethod('default_value(string)string', 'defined value', 'defined value', 'default value')
     })
-    /*
-    todo: This needs to be supported by ARC-56
-    test('from abi method', async () => {
+
+    // todo: Waiting for ABI support in ARC-56
+    test.skip('from abi method', async () => {
       await testAbiWithDefaultArgMethod('default_value_from_abi(string)string', 'defined value', 'ABI, defined value', 'ABI, default value')
     })
+
     test('from global state', async () => {
       const globalInt1 = 456n
 
@@ -645,6 +646,7 @@ describe('ARC32: app-factory-and-app-client', () => {
         await client.send.call({ method: 'set_global', args: [globalInt1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
       })
     })
+
     test('from local state', async () => {
       const localBytes1 = 'bananas'
       await testAbiWithDefaultArgMethod(
@@ -658,7 +660,6 @@ describe('ARC32: app-factory-and-app-client', () => {
         },
       )
     })
-    */
 
     async function testAbiWithDefaultArgMethod<TArg extends algosdk.ABIValue, TResult>(
       methodSignature: string,

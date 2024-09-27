@@ -42,7 +42,7 @@ The string name of an ABI type
 
 #### Defined in
 
-[src/types/app-spec.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L187)
+[src/types/app-spec.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L194)
 
 ___
 
@@ -54,7 +54,7 @@ AVM data type
 
 #### Defined in
 
-[src/types/app-spec.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L243)
+[src/types/app-spec.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L250)
 
 ___
 
@@ -70,7 +70,7 @@ The various call configs:
 
 #### Defined in
 
-[src/types/app-spec.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L158)
+[src/types/app-spec.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L165)
 
 ___
 
@@ -82,7 +82,7 @@ Defines a strategy for obtaining a default value for a given ABI arg.
 
 #### Defined in
 
-[src/types/app-spec.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L203)
+[src/types/app-spec.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L210)
 
 ___
 
@@ -94,7 +94,7 @@ The name of a field
 
 #### Defined in
 
-[src/types/app-spec.ts:184](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L184)
+[src/types/app-spec.ts:191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L191)
 
 ___
 
@@ -106,7 +106,7 @@ A lookup of encoded method call spec to hint
 
 #### Defined in
 
-[src/types/app-spec.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L142)
+[src/types/app-spec.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L149)
 
 ___
 
@@ -125,7 +125,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-[src/types/app-spec.ts:292](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L292)
+[src/types/app-spec.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L299)
 
 ___
 
@@ -137,7 +137,7 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 #### Defined in
 
-[src/types/app-spec.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L190)
+[src/types/app-spec.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L197)
 
 ## Functions
 

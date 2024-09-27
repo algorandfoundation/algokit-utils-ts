@@ -36,19 +36,19 @@ an action is a combination of call/create and an OnComplete
 
 #### Defined in
 
-[src/types/app-arc56.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L345)
+[src/types/app-arc56.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L381)
 
 ___
 
 ### args
 
-• **args**: \{ `defaultValue?`: `string` ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `string`  }[]
+• **args**: \{ `defaultValue?`: \{ `data`: `string` \| `number` ; `source`: ``"box"`` \| ``"global"`` \| ``"local"`` \| ``"literal"`` ; `type`: `string`  } ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `string`  }[]
 
 The arguments of the method, in order
 
 #### Defined in
 
-[src/types/app-arc56.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L323)
+[src/types/app-arc56.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L347)
 
 ___
 
@@ -60,7 +60,7 @@ Optional, user-friendly description for the method
 
 #### Defined in
 
-[src/types/app-arc56.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L321)
+[src/types/app-arc56.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L345)
 
 ___
 
@@ -72,7 +72,7 @@ ARC-28 events that MAY be emitted by this method
 
 #### Defined in
 
-[src/types/app-arc56.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L354)
+[src/types/app-arc56.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L390)
 
 ___
 
@@ -84,7 +84,7 @@ The name of the method
 
 #### Defined in
 
-[src/types/app-arc56.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L319)
+[src/types/app-arc56.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L343)
 
 ___
 
@@ -96,7 +96,7 @@ If this method does not write anything to the ledger (ARC-22)
 
 #### Defined in
 
-[src/types/app-arc56.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L352)
+[src/types/app-arc56.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L388)
 
 ___
 
@@ -122,7 +122,7 @@ Information that clients can use when calling the method
 
 #### Defined in
 
-[src/types/app-arc56.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L356)
+[src/types/app-arc56.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L392)
 
 ___
 
@@ -138,8 +138,8 @@ Information about the method's return value
 | :------ | :------ | :------ |
 | `desc?` | `string` | Optional, user-friendly description for the return value |
 | `struct?` | `string` | If the type is a struct, the name of the struct |
-| `type` | `string` | The type of the return value, or "void" to indicate no return value. |
+| `type` | `string` | The type of the return value, or "void" to indicate no return value. The `struct` field should also be checked to determine if this return value is a struct. |
 
 #### Defined in
 
-[src/types/app-arc56.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L336)
+[src/types/app-arc56.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L372)

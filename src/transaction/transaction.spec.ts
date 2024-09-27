@@ -297,7 +297,7 @@ const tests = (version: 8 | 9) => () => {
     test('externalLocal', async () => {
       const { algorand, testAccount } = fixture.context
 
-      await algorand.send.appCallMethodCall(externalClient.params.optIn({ method: 'optInToApplication', sender: testAccount.addr }))
+      await algorand.send.appCallMethodCall(await externalClient.params.optIn({ method: 'optInToApplication', sender: testAccount.addr }))
 
       await algorand.send.appCallMethodCall(
         await appClient.params.call({
@@ -376,8 +376,8 @@ describe('Resource Packer: Mixed', () => {
 
     const { transactions } = await algorand.send
       .newGroup()
-      .addAppCallMethodCall(v8Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
-      .addAppCallMethodCall(v9Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
+      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
+      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
       .send({ populateAppCallResources: true })
 
     const v8CallAccts = transactions[0].appAccounts
@@ -397,9 +397,15 @@ describe('Resource Packer: Mixed', () => {
 
     const { transactions } = await algorand.send
       .newGroup()
-      .addAppCallMethodCall(v8Client.params.call({ method: 'externalAppCall', staticFee: (2_000).microAlgo(), sender: testAccount.addr }))
       .addAppCallMethodCall(
-        v9Client.params.call({ method: 'addressBalance', args: [algosdk.getApplicationAddress(externalAppID)], sender: testAccount.addr }),
+        await v8Client.params.call({ method: 'externalAppCall', staticFee: (2_000).microAlgo(), sender: testAccount.addr }),
+      )
+      .addAppCallMethodCall(
+        await v9Client.params.call({
+          method: 'addressBalance',
+          args: [algosdk.getApplicationAddress(externalAppID)],
+          sender: testAccount.addr,
+        }),
       )
       .send({ populateAppCallResources: true })
 
