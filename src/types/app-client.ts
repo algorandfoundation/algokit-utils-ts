@@ -1115,7 +1115,7 @@ export class AppClient {
    *
    * Will store any generated source maps for later use in debugging.
    */
-  private async compile(compilation?: AppClientCompilationParams) {
+  public async compile(compilation?: AppClientCompilationParams) {
     const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)
 
     if (result.compiledApproval) {
