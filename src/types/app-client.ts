@@ -331,7 +331,7 @@ export type CallOnComplete = {
   onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
 }
 
-/** AppClient parameters for a bare app call */
+/** AppClient common parameters for a bare app call */
 export type AppClientBareCallParams = Expand<
   Omit<CommonAppCallParams, 'appId' | 'sender' | 'onComplete'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
@@ -339,7 +339,7 @@ export type AppClientBareCallParams = Expand<
   }
 >
 
-/** AppClient parameters for an ABI method call */
+/** AppClient common parameters for an ABI method call */
 export type AppClientMethodCallParams = Expand<
   Omit<CommonAppCallParams, 'appId' | 'sender' | 'method' | 'args'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
@@ -404,13 +404,13 @@ export class AppClient {
   private _boxStateMethods: ReturnType<AppClient['getBoxMethods']>
 
   private _paramsMethods: ReturnType<AppClient['getMethodCallParamsMethods']> & {
-    /** Interact with bare (non-ABI) call parameters */ bare: ReturnType<AppClient['getBareParamsMethods']>
+    /** Interact with bare (raw) call parameters */ bare: ReturnType<AppClient['getBareParamsMethods']>
   }
   private _transactionsMethods: ReturnType<AppClient['getMethodCallTransactionsMethods']> & {
-    /** Interact with bare (non-ABI) call transactions */ bare: ReturnType<AppClient['getBareTransactionsMethods']>
+    /** Interact with bare (raw) call transactions */ bare: ReturnType<AppClient['getBareTransactionsMethods']>
   }
   private _sendMethods: ReturnType<AppClient['getMethodCallSendMethods']> & {
-    /** Interact with bare (non-ABI) calls */ bare: ReturnType<AppClient['getBareSendMethods']>
+    /** Interact with bare (raw) calls */ bare: ReturnType<AppClient['getBareSendMethods']>
   }
 
   constructor(params: AppClientParams) {

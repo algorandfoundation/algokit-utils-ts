@@ -343,6 +343,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   boxReferences?: (BoxReference | BoxIdentifier)[]
 }
 
+/** Parameters to define an app create transaction */
 export type AppCreateParams = Expand<
   Omit<CommonAppCallParams, 'appId'> & {
     onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.ClearStateOC>
@@ -368,6 +369,7 @@ export type AppCreateParams = Expand<
   }
 >
 
+/** Parameters to define an app update transaction */
 export type AppUpdateParams = Expand<
   CommonAppCallParams & {
     onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC
@@ -383,7 +385,7 @@ export type AppCallParams = CommonAppCallParams & {
   onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>
 }
 
-/** Parameters to define a method call transaction. */
+/** Common parameters to define an ABI method call transaction. */
 export type AppMethodCallParams = CommonAppCallParams & {
   onComplete?: Exclude<
     algosdk.OnApplicationComplete,
@@ -396,11 +398,16 @@ export type AppDeleteParams = CommonAppCallParams & {
   onComplete?: algosdk.OnApplicationComplete.DeleteApplicationOC
 }
 
+/** Parameters to define an ABI method call create transaction. */
 export type AppCreateMethodCall = AppMethodCall<AppCreateParams>
+/** Parameters to define an ABI method call update transaction. */
 export type AppUpdateMethodCall = AppMethodCall<AppUpdateParams>
+/** Parameters to define an ABI method call delete transaction. */
 export type AppDeleteMethodCall = AppMethodCall<AppDeleteParams>
+/** Parameters to define an ABI method call transaction. */
 export type AppCallMethodCall = AppMethodCall<AppMethodCallParams>
 
+/** Types that can be used to define a transaction argument for an ABI call transaction. */
 export type AppMethodCallTransactionArgument =
   // The following should match the partial `args` types from `AppMethodCall<T>` below
   | TransactionWithSigner
@@ -410,6 +417,7 @@ export type AppMethodCallTransactionArgument =
   | AppMethodCall<AppUpdateParams>
   | AppMethodCall<AppMethodCallParams>
 
+/** Parameters to define an ABI method call. */
 export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
   /** The ABI method to call */
   method: algosdk.ABIMethod
