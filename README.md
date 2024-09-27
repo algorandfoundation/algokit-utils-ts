@@ -1,4 +1,4 @@
-﻿# AlgoKit TypeScript Utilities
+# AlgoKit TypeScript Utilities
 
 A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand. This project is part of [AlgoKit](https://github.com/algorandfoundation/algokit-cli).
 
@@ -22,7 +22,7 @@ Then to import it:
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 ```
 
-See [usage](./docs/README.md#usage) for more.
+See [usage](./docs/README.md#usage) for more details.
 
 ## Guiding principles
 
