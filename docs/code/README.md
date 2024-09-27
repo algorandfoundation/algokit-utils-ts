@@ -32,6 +32,8 @@
 - [types/app-spec](modules/types_app_spec.md)
 - [types/asset](modules/types_asset.md)
 - [types/asset-manager](modules/types_asset_manager.md)
+- [types/async-event-emitter](modules/types_async_event_emitter.md)
+- [types/async-event-emitter.spec](modules/types_async_event_emitter_spec.md)
 - [types/client-manager](modules/types_client_manager.md)
 - [types/client-manager.spec](modules/types_client_manager_spec.md)
 - [types/composer](modules/types_composer.md)

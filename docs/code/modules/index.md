@@ -6,7 +6,15 @@
 
 ### References
 
+- [ALGOKIT\_DIR](index.md#algokit_dir)
+- [AVMTracesEventData](index.md#avmtraceseventdata)
 - [AlgorandClient](index.md#algorandclient)
+- [DEFAULT\_MAX\_SEARCH\_DEPTH](index.md#default_max_search_depth)
+- [SOURCES\_DIR](index.md#sources_dir)
+- [TEAL\_FILE\_EXT](index.md#teal_file_ext)
+- [TEAL\_SOURCEMAP\_EXT](index.md#teal_sourcemap_ext)
+- [TealSourceDebugEventData](index.md#tealsourcedebugeventdata)
+- [TealSourcesDebugEventData](index.md#tealsourcesdebugeventdata)
 - [executePaginatedRequest](index.md#executepaginatedrequest)
 - [lookupAccountByAddress](index.md#lookupaccountbyaddress)
 - [lookupAccountCreatedApplicationByAddress](index.md#lookupaccountcreatedapplicationbyaddress)
@@ -21,6 +29,7 @@
 ### Type Aliases
 
 - [AccountInformation](index.md#accountinformation)
+- [NumberConverter](index.md#numberconverter)
 
 ### Variables
 
@@ -114,7 +123,6 @@
 - [sendGroupOfTransactions](index.md#sendgroupoftransactions)
 - [sendTransaction](index.md#sendtransaction)
 - [signTransaction](index.md#signtransaction)
-- [simulateAndPersistResponse](index.md#simulateandpersistresponse)
 - [stripTealComments](index.md#striptealcomments)
 - [transactionFees](index.md#transactionfees)
 - [transactionSignerAccount](index.md#transactionsigneraccount)
@@ -125,9 +133,57 @@
 
 ## References
 
+### ALGOKIT\_DIR
+
+Re-exports [ALGOKIT_DIR](types_debugging.md#algokit_dir)
+
+___
+
+### AVMTracesEventData
+
+Re-exports [AVMTracesEventData](../interfaces/types_debugging.AVMTracesEventData.md)
+
+___
+
 ### AlgorandClient
 
 Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
+
+___
+
+### DEFAULT\_MAX\_SEARCH\_DEPTH
+
+Re-exports [DEFAULT_MAX_SEARCH_DEPTH](types_debugging.md#default_max_search_depth)
+
+___
+
+### SOURCES\_DIR
+
+Re-exports [SOURCES_DIR](types_debugging.md#sources_dir)
+
+___
+
+### TEAL\_FILE\_EXT
+
+Re-exports [TEAL_FILE_EXT](types_debugging.md#teal_file_ext)
+
+___
+
+### TEAL\_SOURCEMAP\_EXT
+
+Re-exports [TEAL_SOURCEMAP_EXT](types_debugging.md#teal_sourcemap_ext)
+
+___
+
+### TealSourceDebugEventData
+
+Re-exports [TealSourceDebugEventData](../interfaces/types_debugging.TealSourceDebugEventData.md)
+
+___
+
+### TealSourcesDebugEventData
+
+Re-exports [TealSourcesDebugEventData](../interfaces/types_debugging.TealSourcesDebugEventData.md)
 
 ___
 
@@ -169,7 +225,7 @@ Re-exports [searchTransactions](index.indexer.md#searchtransactions)
 
 ### AccountInformation
 
-Ƭ **AccountInformation**: `Omit`\<`NumberConverter`\<`AccountInformationModel`\>, ``"get_obj_for_encoding"``\>
+Ƭ **AccountInformation**: `Omit`\<[`NumberConverter`](index.md#numberconverter)\<`AccountInformationModel`\>, ``"get_obj_for_encoding"``\>
 
 **`Deprecated`**
 
@@ -178,6 +234,22 @@ Account information at a given round.
 #### Defined in
 
 [src/account/account.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L135)
+
+___
+
+### NumberConverter
+
+Ƭ **NumberConverter**\<`T`\>: \{ [key in keyof T]: ToNumberIfExtends\<T[key], number \| bigint\> }
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `AccountInformationModel` |
+
+#### Defined in
+
+[src/account/account.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L132)
 
 ## Variables
 
@@ -470,7 +542,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:848](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L848)
+[src/transaction/transaction.ts:838](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L838)
 
 ___
 
@@ -534,7 +606,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:873](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L873)
+[src/transaction/transaction.ts:863](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L863)
 
 ___
 
@@ -1821,7 +1893,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:909](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L909)
+[src/transaction/transaction.ts:899](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L899)
 
 ___
 
@@ -2208,7 +2280,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:898](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L898)
+[src/transaction/transaction.ts:888](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L888)
 
 ___
 
@@ -2525,7 +2597,7 @@ Performs a dry run of the transactions loaded into the given AtomicTransactionCo
 
 #### Defined in
 
-[src/transaction/transaction.ts:724](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L724)
+[src/transaction/transaction.ts:714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L714)
 
 ___
 
@@ -2620,15 +2692,13 @@ ___
 
 ### persistSourceMaps
 
-▸ **persistSourceMaps**(`param0`): `Promise`\<`void`\>
-
-This function persists the source maps for the given sources.
+▸ **persistSourceMaps**(`_params`): `Promise`\<`void`\>
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `param0` | [`PersistSourceMapsParams`](../interfaces/types_debugging.PersistSourceMapsParams.md) | The parameters to define the persistence |
+| Name | Type |
+| :------ | :------ |
+| `_params` | `unknown` |
 
 #### Returns
 
@@ -2636,9 +2706,15 @@ This function persists the source maps for the given sources.
 
 A promise that resolves when the source maps have been persisted.
 
+**`Deprecated`**
+
+Use latest version of `AlgoKit AVM Debugger` VSCode extension instead. It will automatically manage your sourcemaps.
+
+This function persists the source maps for the given sources.
+
 #### Defined in
 
-[src/debugging/debugging.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L130)
+[src/debugging/debugging.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/debugging.ts#L8)
 
 ___
 
@@ -2843,7 +2919,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Defined in
 
-[src/transaction/transaction.ts:744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L744)
+[src/transaction/transaction.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L734)
 
 ___
 
@@ -2907,43 +2983,6 @@ Signs a single transaction by the given signer.
 #### Defined in
 
 [src/transaction/transaction.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L182)
-
-___
-
-### simulateAndPersistResponse
-
-▸ **simulateAndPersistResponse**(`param0`): `Promise`\<`SimulateResponse`\>
-
-This function simulates the atomic transactions using the provided `AtomicTransactionComposer` object and `Algodv2` object,
-and persists the simulation response to an AlgoKit AVM Debugger compliant JSON file.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `param0` | [`SimulateAndPersistResponseParams`](../interfaces/types_debugging.SimulateAndPersistResponseParams.md) | The parameters to control the simulation and persistence. |
-
-#### Returns
-
-`Promise`\<`SimulateResponse`\>
-
-The simulation result, which includes various details about how the transactions would be processed.
-
-**`Example`**
-
-```ts
-const atc = new AtomicTransactionComposer();
-const algod = new algosdk.Algodv2(token, server, port);
-const projectRoot = '/path/to/project';
-const bufferSizeMb = 10;
-
-const result = await simulateAndPersistResponse({ atc, projectRoot, algod, bufferSizeMb });
-console.log(result);
-```
-
-#### Defined in
-
-[src/debugging/simulate-and-persist-response.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/debugging/simulate-and-persist-response.ts#L33)
 
 ___
 
@@ -3153,4 +3192,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:789](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L789)
+[src/transaction/transaction.ts:779](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L779)

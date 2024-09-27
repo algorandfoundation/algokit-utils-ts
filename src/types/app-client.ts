@@ -13,7 +13,6 @@ import {
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
 import { Config } from '../config'
-import { persistSourceMaps } from '../debugging/debugging'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { binaryStartsWith } from '../util'
@@ -57,6 +56,7 @@ import {
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
+import { EventType } from './async-event-emitter'
 import AlgoKitComposer, {
   AppCallMethodCall,
   AppCallParams,
@@ -69,7 +69,6 @@ import AlgoKitComposer, {
   CommonAppCallParams,
   PaymentParams,
 } from './composer'
-import { PersistSourceMapInput } from './debugging'
 import { Expand } from './expand'
 import { LogicError } from './logic-error'
 import { ExecuteParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
@@ -192,7 +191,6 @@ export interface AppClientDeployParams extends AppClientDeployCoreParams, AppCli
   schema?: Partial<AppStorageSchema>
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AppClientCallRawArgs extends RawAppCallArgs {}
 
 export interface AppClientCallABIArgs extends Omit<ABIAppCallArgs, 'method'> {
@@ -803,15 +801,12 @@ export class AppClient {
     const clearTemplate = Buffer.from(appSpec.source.clear, 'base64').toString('utf-8')
     const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
-    if (Config.debug && Config.projectRoot) {
-      persistSourceMaps({
+    if (Config.debug) {
+      await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
-          PersistSourceMapInput.fromCompiledTeal(compiledApproval, appSpec.name, 'approval.teal'),
-          PersistSourceMapInput.fromCompiledTeal(compiledClear, appSpec.name, 'clear.teal'),
+          { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
+          { compiledTeal: compiledClear, appName: appSpec.name, fileName: 'clear' },
         ],
-        projectRoot: Config.projectRoot,
-        appManager,
-        withSources: true,
       })
     }
 
@@ -1434,15 +1429,12 @@ export class ApplicationClient {
     const clearCompiled = await compileTeal(clear, this.algod)
     this._clearSourceMap = clearCompiled?.sourceMap
 
-    if (Config.debug && Config.projectRoot) {
-      persistSourceMaps({
+    if (Config.debug) {
+      await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
-          PersistSourceMapInput.fromCompiledTeal(approvalCompiled, this._appName, 'approval.teal'),
-          PersistSourceMapInput.fromCompiledTeal(clearCompiled, this._appName, 'clear.teal'),
+          { compiledTeal: approvalCompiled, appName: this._appName, fileName: 'approval' },
+          { compiledTeal: clearCompiled, appName: this._appName, fileName: 'clear' },
         ],
-        projectRoot: Config.projectRoot,
-        appManager: new AppManager(this.algod),
-        withSources: true,
       })
     }
 

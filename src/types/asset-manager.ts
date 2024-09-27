@@ -313,7 +313,7 @@ export class AssetManager {
             if (accountAssetInfo.balance !== 0n) {
               nonZeroBalanceAssetIds.push(BigInt(assetId))
             }
-          } catch (e) {
+          } catch {
             notOptedInAssetIds.push(BigInt(assetId))
           }
         }

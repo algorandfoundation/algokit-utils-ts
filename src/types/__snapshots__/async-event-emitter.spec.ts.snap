@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`async-event-emitter users code would looks like this 1`] = `
+[
+  "INFO: event_a | [{"hello":"world"}]",
+]
+`;

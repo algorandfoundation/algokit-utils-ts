@@ -22,7 +22,7 @@ Whether or not the contract should have deploy-time permanence control set, unde
 
 #### Defined in
 
-[src/types/app-client.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L228)
+[src/types/app-client.ts:226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L226)
 
 ___
 
@@ -34,7 +34,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/app-client.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L224)
+[src/types/app-client.ts:222](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L222)
 
 ___
 
@@ -46,4 +46,4 @@ Whether or not the contract should have deploy-time immutability control set, un
 
 #### Defined in
 
-[src/types/app-client.ts:226](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L226)
+[src/types/app-client.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L224)

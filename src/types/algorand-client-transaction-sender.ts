@@ -506,7 +506,7 @@ export class AlgorandClientTransactionSender {
       try {
         const accountAssetInfo = await this._assetManager.getAccountInformation(params.sender, params.assetId)
         balance = accountAssetInfo.balance
-      } catch (e) {
+      } catch {
         throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)
       }
       if (balance !== 0n) {
