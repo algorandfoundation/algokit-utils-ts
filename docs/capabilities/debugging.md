@@ -19,7 +19,7 @@ Config.configure({
 
 Refer to the [algokit-utils-ts-debug](https://github.com/algorandfoundation/algokit-utils-ts-debug) for more details on how to activate the addon package with `algokit-utils` in your project.
 
-> Note: Config also contains a set flags that affect behaviour of [algokit-utils-ts-debug](https://github.com/algorandfoundation/algokit-utils-ts-debug). Those include `projectRoot`, `traceAll`, `traceBufferSizeMb`, and `maxSearchDepth`. Refer to addon package documentation for details.
+> Note: Config also contains a set of flags that affect behaviour of [algokit-utils-ts-debug](https://github.com/algorandfoundation/algokit-utils-ts-debug). Those include `projectRoot`, `traceAll`, `traceBufferSizeMb`, and `maxSearchDepth`. Refer to addon package documentation for details.
 
 ### Why are the debug utilities in a separate package?
 
