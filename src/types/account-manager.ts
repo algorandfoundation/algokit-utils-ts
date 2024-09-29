@@ -146,6 +146,21 @@ export class AccountManager {
   }
 
   /**
+   * Takes all registered signers from the given `AccountManager` and adds them to this `AccountManager`.
+   *
+   * This is useful for situations where you have multiple contexts you are building accounts in such as unit tests.
+   * @param anotherAccountManager Another account manager with signers registered
+   * @param overwriteExisting Whether or not to overwrite any signers that have the same sender address with the ones in the other account manager or not (default: true)
+   * @returns The `AccountManager` instance for method chaining
+   */
+  public setSigners(anotherAccountManager: AccountManager, overwriteExisting = true) {
+    this._accounts = overwriteExisting
+      ? { ...this._accounts, ...anotherAccountManager._accounts }
+      : { ...anotherAccountManager._accounts, ...this._accounts }
+    return
+  }
+
+  /**
    * Returns the `TransactionSigner` for the given sender address, ready to sign a transaction for that sender.
    *
    * If no signer has been registered for that address then the default signer is used if registered and
