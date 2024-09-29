@@ -542,7 +542,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:836](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L836)
+[src/transaction/transaction.ts:841](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L841)
 
 ___
 
@@ -606,7 +606,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:861](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L861)
+[src/transaction/transaction.ts:866](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L866)
 
 ___
 
@@ -1893,7 +1893,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:897](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L897)
+[src/transaction/transaction.ts:902](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L902)
 
 ___
 
@@ -2280,7 +2280,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:886](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L886)
+[src/transaction/transaction.ts:891](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L891)
 
 ___
 
@@ -2597,7 +2597,7 @@ Performs a dry run of the transactions loaded into the given AtomicTransactionCo
 
 #### Defined in
 
-[src/transaction/transaction.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L712)
+[src/transaction/transaction.ts:717](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L717)
 
 ___
 
@@ -2919,7 +2919,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Defined in
 
-[src/transaction/transaction.ts:732](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L732)
+[src/transaction/transaction.ts:737](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L737)
 
 ___
 
@@ -3192,4 +3192,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:777](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L777)
+[src/transaction/transaction.ts:782](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L782)
