@@ -7,7 +7,7 @@ import { ClientManager } from './client-manager'
 import AlgoKitComposer, { CommonTransactionParams } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
-import { ExecuteParams, SendSingleTransactionResult } from './transaction'
+import { SendParams, SendSingleTransactionResult } from './transaction'
 import LogicSigAccount = algosdk.LogicSigAccount
 import Account = algosdk.Account
 import TransactionSigner = algosdk.TransactionSigner
@@ -143,6 +143,21 @@ export class AccountManager {
   public setSigner(sender: string, signer: algosdk.TransactionSigner) {
     this._accounts[sender] = { addr: sender, signer }
     return this
+  }
+
+  /**
+   * Takes all registered signers from the given `AccountManager` and adds them to this `AccountManager`.
+   *
+   * This is useful for situations where you have multiple contexts you are building accounts in such as unit tests.
+   * @param anotherAccountManager Another account manager with signers registered
+   * @param overwriteExisting Whether or not to overwrite any signers that have the same sender address with the ones in the other account manager or not (default: true)
+   * @returns The `AccountManager` instance for method chaining
+   */
+  public setSigners(anotherAccountManager: AccountManager, overwriteExisting = true) {
+    this._accounts = overwriteExisting
+      ? { ...this._accounts, ...anotherAccountManager._accounts }
+      : { ...anotherAccountManager._accounts, ...this._accounts }
+    return
   }
 
   /**
@@ -455,7 +470,7 @@ export class AccountManager {
   async rekeyAccount(
     account: string | TransactionSignerAccount,
     rekeyTo: string | TransactionSignerAccount,
-    options?: Omit<CommonTransactionParams, 'sender'> & ExecuteParams,
+    options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
   ): Promise<SendSingleTransactionResult> {
     const result = await this._getComposer()
       .addPayment({
@@ -465,7 +480,7 @@ export class AccountManager {
         amount: AlgoAmount.MicroAlgo(0),
         rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : rekeyTo.addr,
       })
-      .execute(options)
+      .send(options)
 
     // If the rekey is a signing account set it as the signer for this account
     if (typeof rekeyTo !== 'string') {
@@ -516,7 +531,7 @@ export class AccountManager {
     minSpendingBalance: AlgoAmount,
     options?: {
       minFundingIncrement?: AlgoAmount
-    } & ExecuteParams &
+    } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
     const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
@@ -531,7 +546,7 @@ export class AccountManager {
         receiver: addressToFund,
         amount: amountFunded,
       })
-      .execute(options)
+      .send(options)
 
     return {
       ...result,
@@ -577,7 +592,7 @@ export class AccountManager {
     minSpendingBalance: AlgoAmount,
     options?: {
       minFundingIncrement?: AlgoAmount
-    } & ExecuteParams &
+    } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
     const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
@@ -593,7 +608,7 @@ export class AccountManager {
         receiver: addressToFund,
         amount: amountFunded,
       })
-      .execute(options)
+      .send(options)
 
     return {
       ...result,

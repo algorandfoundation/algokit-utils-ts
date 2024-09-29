@@ -171,7 +171,7 @@ export class KmdAccountManager {
         receiver: account.addr,
         sender: dispenser.addr,
       })
-      .execute()
+      .send()
 
     return account
   }

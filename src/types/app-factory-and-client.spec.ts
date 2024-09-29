@@ -29,12 +29,12 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
     return {
       app: result.result,
-      client: result.app,
+      client: result.appClient,
     }
   }
 
   test('Create app', async () => {
-    const { result: app } = await factory.create({
+    const { result: app } = await factory.send.bare.create({
       deployTimeParams: {
         // It should strip off the TMPL_
         TMPL_UPDATABLE: 0,
@@ -62,14 +62,14 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
     })
 
-    const app = await factory.create()
+    const app = await factory.send.bare.create()
 
     expect(app.result.appId).toBeGreaterThan(0n)
-    expect(app.app.appId).toBe(app.result.appId)
+    expect(app.appClient.appId).toBe(app.result.appId)
   })
 
   test('Create app with oncomplete overload', async () => {
-    const { result: app } = await factory.create({
+    const { result: app } = await factory.send.bare.create({
       onComplete: OnApplicationComplete.OptInOC,
       updatable: true,
       deletable: true,
@@ -242,7 +242,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   })
 
   test('Create then call app', async () => {
-    const { app } = await factory.create({
+    const { appClient } = await factory.send.bare.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 0,
@@ -250,7 +250,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
     })
 
-    const call = await app.send.call({
+    const call = await appClient.send.call({
       method: 'call_abi',
       args: ['test'],
     })
@@ -263,14 +263,14 @@ describe('ARC32: app-factory-and-app-client', () => {
     const { testAccount, algorand } = localnet.context
     const rekeyTo = algorand.account.random()
 
-    const { app } = await factory.create({
+    const { appClient } = await factory.send.bare.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 0,
         VALUE: 1,
       },
     })
-    await app.send.optIn({
+    await appClient.send.optIn({
       method: 'opt_in',
       rekeyTo: rekeyTo.addr,
     })
@@ -285,7 +285,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   })
 
   test('Create app with abi', async () => {
-    const { result: call } = await factory.create({
+    const { result: call } = await factory.send.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 0,
@@ -305,11 +305,11 @@ describe('ARC32: app-factory-and-app-client', () => {
       DELETABLE: 0,
       VALUE: 1,
     }
-    const { app } = await factory.create({
+    const { appClient } = await factory.send.bare.create({
       deployTimeParams,
     })
 
-    const call = await app.send.update({
+    const call = await appClient.send.update({
       method: 'update_abi',
       args: ['string_io'],
       deployTimeParams,
@@ -321,7 +321,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   })
 
   test('Delete app with abi', async () => {
-    const { app } = await factory.create({
+    const { appClient } = await factory.send.bare.create({
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 1,
@@ -329,7 +329,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
     })
 
-    const call = await app.send.delete({
+    const call = await appClient.send.delete({
       method: 'delete_abi',
       args: ['string_io'],
     })
@@ -341,7 +341,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   test('Construct transaction with boxes', async () => {
     const { client } = await deploy()
 
-    const call = await client.transactions.call({
+    const call = await client.createTransaction.call({
       method: 'call_abi',
       args: ['test'],
       boxReferences: [{ appId: 0n, name: '1' }],
@@ -350,7 +350,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     const encoder = new TextEncoder()
     expect(call.transactions[0].boxes).toEqual([{ appIndex: 0, name: encoder.encode('1') }])
 
-    const call2 = await client.transactions.call({
+    const call2 = await client.createTransaction.call({
       method: 'call_abi',
       args: ['test'],
       boxReferences: ['1'],
@@ -361,7 +361,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
   test('Construct transaction with abi encoding including transaction', async () => {
     const { algorand, testAccount } = localnet.context
-    const txn = await algorand.transactions.payment({
+    const txn = await algorand.createTransaction.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
@@ -384,7 +384,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
     const { algorand, testAccount } = localnet.context
-    const txn = await algorand.transactions.payment({
+    const txn = await algorand.createTransaction.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
@@ -410,7 +410,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   test('Sign transaction in group with different signer if provided', async () => {
     const { algorand, generateAccount } = localnet.context
     const signer = await generateAccount({ initialFunds: (1).algo() })
-    const txn = await algorand.transactions.payment({
+    const txn = await algorand.createTransaction.payment({
       sender: signer.addr,
       receiver: signer.addr,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
@@ -633,11 +633,12 @@ describe('ARC32: app-factory-and-app-client', () => {
     test('from const', async () => {
       await testAbiWithDefaultArgMethod('default_value(string)string', 'defined value', 'defined value', 'default value')
     })
-    /*
-    todo: This needs to be supported by ARC-56
-    test('from abi method', async () => {
+
+    // todo: Waiting for ABI support in ARC-56
+    test.skip('from abi method', async () => {
       await testAbiWithDefaultArgMethod('default_value_from_abi(string)string', 'defined value', 'ABI, defined value', 'ABI, default value')
     })
+
     test('from global state', async () => {
       const globalInt1 = 456n
 
@@ -645,6 +646,7 @@ describe('ARC32: app-factory-and-app-client', () => {
         await client.send.call({ method: 'set_global', args: [globalInt1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
       })
     })
+
     test('from local state', async () => {
       const localBytes1 = 'bananas'
       await testAbiWithDefaultArgMethod(
@@ -658,7 +660,6 @@ describe('ARC32: app-factory-and-app-client', () => {
         },
       )
     })
-    */
 
     async function testAbiWithDefaultArgMethod<TArg extends algosdk.ABIValue, TResult>(
       methodSignature: string,

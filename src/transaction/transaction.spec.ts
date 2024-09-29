@@ -53,7 +53,7 @@ describe('transaction', () => {
     const {
       transactions: [txn1, txn2],
       confirmations,
-    } = await algorand.newGroup().addPayment(getTestTransaction((1).microAlgo())).addPayment(getTestTransaction((2).microAlgo())).execute()
+    } = await algorand.newGroup().addPayment(getTestTransaction((1).microAlgo())).addPayment(getTestTransaction((2).microAlgo())).send()
 
     invariant(confirmations[0].txn.txn.grp)
     invariant(confirmations[1].txn.txn.grp)
@@ -128,7 +128,7 @@ describe('transaction', () => {
 
   test('Transaction wait for confirmation http error', async () => {
     const { algorand, algod } = localnet.context
-    const txn = await algorand.transactions.payment(getTestTransaction())
+    const txn = await algorand.createTransaction.payment(getTestTransaction())
     try {
       await waitForConfirmation(txn.txID(), 5, algod)
     } catch (e: unknown) {
@@ -138,11 +138,11 @@ describe('transaction', () => {
 
   test('Transaction fails in debug mode, error is enriched using simulate', async () => {
     const { algorand, testAccount } = localnet.context
-    const txn1 = await algorand.transactions.payment(getTestTransaction((1).microAlgo()))
+    const txn1 = await algorand.createTransaction.payment(getTestTransaction((1).microAlgo()))
     // This will fail due to fee being too high
-    const txn2 = await algorand.transactions.payment(getTestTransaction((9999999999999).microAlgo()))
+    const txn2 = await algorand.createTransaction.payment(getTestTransaction((9999999999999).microAlgo()))
     try {
-      await algorand.newGroup().addTransaction(txn1).addTransaction(txn2).execute()
+      await algorand.newGroup().addTransaction(txn1).addTransaction(txn2).send()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const messageRegex = new RegExp(
@@ -192,8 +192,7 @@ const tests = (version: 8 | 9) => () => {
       defaultSender: testAccount.addr,
     })
 
-    const { app } = await appFactory.create({ method: 'createApplication' })
-    appClient = app
+    appClient = (await appFactory.send.create({ method: 'createApplication' })).appClient
 
     await appClient.fundAppAccount({ amount: (2334300).microAlgo() })
 
@@ -201,7 +200,7 @@ const tests = (version: 8 | 9) => () => {
 
     externalClient = algorand.client.getAppClientById({
       appSpec: JSON.stringify(externalARC32),
-      appId: (await app.getGlobalState()).externalAppID.value as bigint,
+      appId: (await appClient.getGlobalState()).externalAppID.value as bigint,
       defaultSender: testAccount.addr,
     })
   })
@@ -298,7 +297,7 @@ const tests = (version: 8 | 9) => () => {
     test('externalLocal', async () => {
       const { algorand, testAccount } = fixture.context
 
-      await algorand.send.appCallMethodCall(externalClient.params.optIn({ method: 'optInToApplication', sender: testAccount.addr }))
+      await algorand.send.appCallMethodCall(await externalClient.params.optIn({ method: 'optInToApplication', sender: testAccount.addr }))
 
       await algorand.send.appCallMethodCall(
         await appClient.params.call({
@@ -357,10 +356,10 @@ describe('Resource Packer: Mixed', () => {
       defaultSender: testAccount.addr,
     })
 
-    const v8Result = await v8AppFactory.create({ method: 'createApplication' })
-    const v9Result = await v9AppFactory.create({ method: 'createApplication' })
-    v8Client = v8Result.app
-    v9Client = v9Result.app
+    const v8Result = await v8AppFactory.send.create({ method: 'createApplication' })
+    const v9Result = await v9AppFactory.send.create({ method: 'createApplication' })
+    v8Client = v8Result.appClient
+    v9Client = v9Result.appClient
   })
 
   afterAll(() => {
@@ -377,9 +376,9 @@ describe('Resource Packer: Mixed', () => {
 
     const { transactions } = await algorand.send
       .newGroup()
-      .addAppCallMethodCall(v8Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
-      .addAppCallMethodCall(v9Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
-      .execute({ populateAppCallResources: true })
+      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
+      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
+      .send({ populateAppCallResources: true })
 
     const v8CallAccts = transactions[0].appAccounts
     const v9CallAccts = transactions[1].appAccounts
@@ -398,11 +397,17 @@ describe('Resource Packer: Mixed', () => {
 
     const { transactions } = await algorand.send
       .newGroup()
-      .addAppCallMethodCall(v8Client.params.call({ method: 'externalAppCall', staticFee: (2_000).microAlgo(), sender: testAccount.addr }))
       .addAppCallMethodCall(
-        v9Client.params.call({ method: 'addressBalance', args: [algosdk.getApplicationAddress(externalAppID)], sender: testAccount.addr }),
+        await v8Client.params.call({ method: 'externalAppCall', staticFee: (2_000).microAlgo(), sender: testAccount.addr }),
       )
-      .execute({ populateAppCallResources: true })
+      .addAppCallMethodCall(
+        await v9Client.params.call({
+          method: 'addressBalance',
+          args: [algosdk.getApplicationAddress(externalAppID)],
+          sender: testAccount.addr,
+        }),
+      )
+      .send({ populateAppCallResources: true })
 
     const v8CallApps = transactions[0].appForeignApps
     const v9CallAccts = transactions[1].appAccounts
@@ -428,8 +433,8 @@ describe('Resource Packer: meta', () => {
       defaultSender: testAccount.addr,
     })
 
-    const result = await factory.create({ method: 'createApplication' })
-    externalClient = result.app
+    const result = await factory.send.create({ method: 'createApplication' })
+    externalClient = result.appClient
   })
 
   afterAll(() => {
@@ -445,7 +450,7 @@ describe('Resource Packer: meta', () => {
   test('box with txn arg', async () => {
     const { testAccount, algorand } = fixture.context
 
-    const payment = await algorand.transactions.payment({
+    const payment = await algorand.createTransaction.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,
       amount: (0).microAlgo(),

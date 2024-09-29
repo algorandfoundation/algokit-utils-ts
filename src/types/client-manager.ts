@@ -22,6 +22,30 @@ export interface AlgoSdkClients {
   kmd?: algosdk.Kmd
 }
 
+/** Params to get an app factory from `ClientManager`. */
+export type ClientAppFactoryParams = Expand<Omit<AppFactoryParams, 'algorand'>>
+
+/** Params to get an app client by creator address and name from `ClientManager`. */
+export type ClientResolveAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand'>>
+
+/** Params to get an app client by ID from `ClientManager`. */
+export type ClientAppClientParams = Expand<Omit<AppClientParams, 'algorand'>>
+
+/** Params to get an app client by network from `ClientManager`. */
+export type ClientAppClientByNetworkParams = Expand<Omit<AppClientParams, 'algorand' | 'appId'>>
+
+/** Params to get a typed app client by creator address and name from `ClientManager`. */
+export type ClientTypedAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>
+
+/** Params to get a typed app client by ID from `ClientManager`. */
+export type ClientTypedAppClientParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>
+
+/** Params to get a typed app client by network from `ClientManager`. */
+export type ClientTypedAppClientByNetworkParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec' | 'appId'>>
+
+/** Params to get a typed app factory from `ClientManager`. */
+export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>
+
 /** Exposes access to various API clients. */
 export class ClientManager {
   private _algod: algosdk.Algodv2
@@ -204,7 +228,7 @@ export class ClientManager {
    * })
    * ```
    */
-  public getAppFactory(params: Expand<Omit<AppFactoryParams, 'algorand'>>) {
+  public getAppFactory(params: ClientAppFactoryParams) {
     if (!this._algorand) {
       throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
     }
@@ -218,14 +242,16 @@ export class ClientManager {
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
    * @param params The parameters to create the app client
    * @example Basic
+   * ```typescript
    * const appClient = algorand.client.getAppClientByCreatorAndName({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   // appId resolved by looking for app ID of named app by this creator
    *   creatorAddress: 'CREATORADDRESS',
    * })
+   * ```
    * @returns The `AppClient`
    */
-  public getAppClientByCreatorAndName(params: Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand'>>) {
+  public getAppClientByCreatorAndName(params: ClientResolveAppClientByCreatorAndNameParams) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
@@ -240,13 +266,15 @@ export class ClientManager {
    * Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
    * @param params The parameters to create the app client
    * @example Basic
+   * ```typescript
    * const appClient = algorand.client.getAppClientById({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   appId: 12345n,
    * })
+   * ```
    * @returns The `AppClient`
    */
-  public getAppClientById(params: Expand<Omit<AppClientParams, 'algorand'>>) {
+  public getAppClientById(params: ClientAppClientParams) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
@@ -261,13 +289,15 @@ export class ClientManager {
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
    * @param params The parameters to create the app client
    * @example Basic
+   * ```typescript
    * const appClient = algorand.client.getAppClientByNetwork({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   // appId resolved by using ARC-56 spec to find app ID for current network
    * })
+   * ```
    * @returns The `AppClient`
    */
-  public async getAppClientByNetwork(params: Expand<Omit<AppClientParams, 'algorand' | 'appId'>>) {
+  public async getAppClientByNetwork(params: ClientAppClientByNetworkParams) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
@@ -297,7 +327,7 @@ export class ClientManager {
    */
   public async getTypedAppClientByCreatorAndName<TClient extends TypedAppClient<InstanceType<TClient>>>(
     typedClient: TClient,
-    params: Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>,
+    params: ClientTypedAppClientByCreatorAndNameParams,
   ) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
@@ -321,7 +351,7 @@ export class ClientManager {
    */
   public getTypedAppClientById<TClient extends TypedAppClient<InstanceType<TClient>>>(
     typedClient: TClient,
-    params: Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>,
+    params: ClientTypedAppClientParams,
   ) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
@@ -347,7 +377,7 @@ export class ClientManager {
    */
   public getTypedAppClientByNetwork<TClient extends TypedAppClient<InstanceType<TClient>>>(
     typedClient: TClient,
-    params?: Expand<Omit<AppClientParams, 'algorand' | 'appSpec' | 'appId'>>,
+    params?: ClientTypedAppClientByNetworkParams,
   ) {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
@@ -368,10 +398,7 @@ export class ClientManager {
    * ```
    * @returns The typed client instance
    */
-  public getTypedAppFactory<TClient>(
-    typedFactory: TypedAppFactory<TClient>,
-    params?: Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>,
-  ) {
+  public getTypedAppFactory<TClient>(typedFactory: TypedAppFactory<TClient>, params?: ClientTypedAppFactoryParams) {
     if (!this._algorand) {
       throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
     }

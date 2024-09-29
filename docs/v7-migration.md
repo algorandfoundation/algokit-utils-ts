@@ -64,13 +64,26 @@ const kmd = algorand.client.kmd
 
 Once you have fully migrated you will likely find you wont need these sdk client instances and can delete those variables.
 
+Note: If you used the beta version of `AlgorandClient` in v6 of AlgoKit Utils then you will find a few breaking changes within it you will need to accomodate. Namely:
+
+- `algorand.transactions.*` has been renamed to `algorand.createTransaction.*`
+- `AlgokitComposer` class has been renamed to `AlgoKitComposer`
+- `algorand.send.*(params, executeOptions)` has had the second `executeOptions` object collapsed into the first `params` object
+- The order of the `algorand.account.rekeyed()` parameters has been switched to `(sender, signer)`
+- All microAlgo return values from `algorand.account.getInformation()` now return an `AlgoAmount` and `amount` is renamed to `balance` and `round` to `validAsOfRound` (which is now a bigint for broader consistency)
+- Renamed `algorand.account.getAssetInformation` to `algorand.asset.getAccountInformation`
+- Renamed `clearProgram` to `clearStateProgram` and `extraPages` to `extraProgramPages` in AlgoKitComposer params to match algod api
+- Moved `ExecuteParams` type from `/types/composer` to `/types/transaction` and renamed to `SendParams`
+- Renamed `algorand.setSuggestedParamsTimeout` to `algorand.setSuggestedParamsCacheTimeout`
+- `AlgoKitComposer`'s `addMethodCall` and `addAppCall` methods are expanded into the various different types of app calls
+
 ### Step 2 - Replace function calls
 
 Now you can replace the function calls one-by-one. Almost every call should have a `@deprecation` notice that will show up in intellisense for your IDE (e.g. VS Code). The method call will show up with ~~strikethrough~~ and if you hover over it then the deprecation notice will show the new functionality.
 
 For instance, the `algokit.transferAlgos` call shown in the above example has the following deprecation notice:
 
-> @deprecated Use `algorand.send.payment()` / `algorand.transactions.payment()` instead
+> @deprecated Use `algorand.send.payment()` / `algorand.createTransaction.payment()` instead
 
 These deprecation notices should largely let you follow the bouncing ball and make quick work of the migration. Largely the old vs new calls are fairly equivalent with some naming changes to improve consistency within AlgoKit Utils and more broadly to align to the core Algorand protocol (e.g. using `payment` rather than `transferAlgos` since it's a payment transaction on the Algorand blockchain). In saying that, there are some key differences that you will need to tweak:
 
@@ -80,7 +93,7 @@ These deprecation notices should largely let you follow the bouncing ball and ma
 - `clearProgram` parameter is renamed to `clearStateProgram` and `extraPages` to `extraProgramPages` for create and update app calls (to align with Algorand protocol names).
 - `extraProgramPages` appears as a top-level params property rather than nested in a `schema` property.
 - Round numbers, app IDs and asset IDs are now consistently `BigInt`'s rather than `number` or `number | bigint`
-- If you previously used `skipSending: true` that no longer exists; the new equivalent of that is to use `algorand.transactions...`, but otherwise you should use `algorand.send...` to immediately sign and send.
+- If you previously used `skipSending: true` that no longer exists; the new equivalent of that is to use `algorand.createTransaction...`, but otherwise you should use `algorand.send...` to immediately sign and send.
 - If you previously used `atc` as a parameter when constructing a transaction that no longer exists; the new equivalent of that is to use `algorand.newGroup()` to get an [`AlgoKitComposer`](./capabilities/algokit-composer.md) and chain method calls to build up a group of transactions and then call `execute()` to execute the group.
 - Functions that took multiple params objects largely only take a single, combined object now (intellisense is your friend, ctrl+space or your IDE's equivalent auto-complete keyboard shortcut will help you see all of the options!).
 
@@ -91,6 +104,7 @@ Other things to note that you may come across:
 - Rather than always passing a signer into transaction calls (which is what the `SendTransactionFrom` instance previously combined with the address), we have decoupled signing and sender address via the `AccountManager` (`algorand.account`), which keeps track of the signer associated with a sender address so the signer can be resolved just in time.
   - Most of the time you don't need to worry about it since it will magically happen for you, but if you have situations where you are creating a signer outside of the `AccountManager` you will need to [register the signer](./capabilities/account.md#registering-a-signer) with the `AccountManager` first.
   - Note: you can also explicitly [pass a `signer`](./capabilities/algorand-client.md#transaction-parameters) in as well if you want an escape hatch.
+- Things that were previously nested in a `sendParams` property are now collapsed into the parent params object
 
 ### Step 3 - Replace `ApplicationClient` usage
 
@@ -98,15 +112,16 @@ The existing `ApplicationClient` (untyped app client) class is still present unt
 
 All of the functionality in `ApplicationClient` is available within the new classes, but their interface is slightly different to make it easier to use and more consistent with the new `AlgorandClient` functionality. The key existing methods that have changed all have `@deprecation` notices to help guide you on this, but broadly the changes are:
 
+- The constructor no longer has the confusing `resolveBy` semantics, instead there are static methods that determine different ways of constructing a client and the constructor itself is very simple (requiring `appId`)
 - If you want to call `create` or `deploy` then you need an `AppFactory` to do that, and then it will in turn give you an `AppClient` instance that is connected to the app you just created / deployed. This significantly simplifies the app client because now the app client has a clear operating purpose: allow for calls and state management for an _instance_ of an app, whereas the app factory handles all of the calls when you don't have an instance yet (or may or may not have an instance in the case of `deploy`).
 - This means that you can simply access `client.appId` and `client.appAddress` on `AppClient` since these values are known statically and won't change (previously you had to awkwardly call `await client.getAppReference()` since these values weren't always available and potentially required an API call to resolve).
 - `fundAppAccount` no longer takes an `AlgoAmount` directly - it always expects the params object (more consistent with)
 - `compile` is replaced with static methods on `AppClient` and `getABIMethodParams` is deprecated in favour of `getABIMethod`, which now returns the params _and_ the `ABIMethod`
 - All of the methods that return or execute a transaction (`update`, `call`, `optIn`, etc.) are now exposed in an interface similar to the one in [`AlgorandClient`](./capabilities/algorand-client.md#creating-and-issuing-transactions), namely (where `{callType}` is one of: `update` / `delete` / `optIn` / `closeOut` / `clearState` / `call`):
-  - `appClient.transactions.{callType}` to get a transaction for an ABI method call
+  - `appClient.createTransaction.{callType}` to get a transaction for an ABI method call
   - `appClient.send.{callType}` to sign and send a transaction for an ABI method call
   - `appClient.params.{callType}` to get a [params object](./capabilities/algorand-client.md#transaction-parameters) for an ABI method call
-  - `appClient.transactions.bare.{callType}` to get a transaction for a bare app call
+  - `appClient.createTransaction.bare.{callType}` to get a transaction for a bare app call
   - `appClient.send.bare.{callType}` to sign and send a transaction for a bare app call
   - `appClient.params.bare.{callType}` to get a [params object](./capabilities/algorand-client.md#transaction-parameters) for a bare app call
 - The `resolveBy` functionality has disappeared in favour of [much simpler entrypoints within `algorand.client`](./capabilities/app-client.md#appclient)
@@ -120,4 +135,15 @@ All of the functionality in `ApplicationClient` is available within the new clas
 
 ### Step 4 - Replace typed app client usage
 
-TODO
+Version 4 of the TypeScript typed app client generator introduces breaking changes to the generated client that support the new `AppFactory` and `AppClient` functionality along with adding ARC-56 support. The generated client has better typing support for things like state commensurate with the new capabilities within ARC-56.
+
+If you are converting from an older typed client to a new one you will need to make the following changes:
+
+- The constructor parameters for a client are different per the above notes about `AppClient`, the recommended way of constructing a client / factory is via `algorand.client.getTyped*()` for a terse creation experience
+- The app client no longer creates or deploys contracts, you need to use the factory for that, which will in turn give you a typed client instance
+- Method calls are no longer directly on the typed client, instead they are nested via `appClient.send.` and `appClient.createTransaction.`
+- Method calls take a single params object (rather than (args, params)) and the args are nested in an `args` property within that object
+- The `compile` method returns `{approvalProgram, clearStateProgram, compiledApproval, compiledClear}` rather than `{approvalCompiled, clearCompiled}`
+- `extraPages` is no longer nested within a `schema` property, instead it's directly on the method call params as `extraProgramPages`
+- `client.compose()` is now `client.newGroup()`
+- `client.compose()....execute()` is now `client.compose()....send()`

@@ -25,7 +25,7 @@ Description of what the key-value pairs in this mapping hold
 
 #### Defined in
 
-[src/types/app-arc56.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L424)
+[src/types/app-arc56.ts:476](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L476)
 
 ___
 
@@ -37,7 +37,7 @@ The type of the keys in the map
 
 #### Defined in
 
-[src/types/app-arc56.ts:426](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L426)
+[src/types/app-arc56.ts:478](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L478)
 
 ___
 
@@ -49,7 +49,7 @@ The base64-encoded prefix of the map keys
 
 #### Defined in
 
-[src/types/app-arc56.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L430)
+[src/types/app-arc56.ts:482](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L482)
 
 ___
 
@@ -61,4 +61,4 @@ The type of the values in the map
 
 #### Defined in
 
-[src/types/app-arc56.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L428)
+[src/types/app-arc56.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L480)

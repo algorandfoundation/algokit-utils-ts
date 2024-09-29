@@ -69,7 +69,7 @@ describe('AlgorandClient', () => {
       .newGroup()
       .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgo(1) })
       .addAtc(doMathAtc)
-      .execute()
+      .send()
 
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
@@ -94,7 +94,7 @@ describe('AlgorandClient', () => {
         args: [1, 2, 'sum'],
         note: 'addAppCallMethodCall',
       })
-      .execute()
+      .send()
 
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
@@ -141,9 +141,9 @@ describe('AlgorandClient', () => {
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('txnArg')!,
-        args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: (0).microAlgo() })],
+        args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: (0).microAlgo() })],
       })
-      .execute()
+      .send()
 
     expect(txnRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
   })
@@ -163,7 +163,7 @@ describe('AlgorandClient', () => {
         method: appClient.appClient.getABIMethod('methodArg')!,
         args: [helloWorldCall],
       })
-      .execute()
+      .send()
 
     expect(methodArgRes.returns?.[0].returnValue?.valueOf()).toBe('Hello, World!')
     expect(methodArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
@@ -174,7 +174,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
+      args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
     } satisfies AppCallMethodCall
 
     const nestedTxnArgRes = await algorand
@@ -185,7 +185,7 @@ describe('AlgorandClient', () => {
         method: appClient.appClient.getABIMethod('nestedTxnArg')!,
         args: [txnArgCall],
       })
-      .execute()
+      .send()
 
     expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
@@ -196,14 +196,14 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
+      args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
     } satisfies AppCallMethodCall
 
     const secondTxnCall = {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.transactions.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(1) })],
+      args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(1) })],
       note: new Uint8Array([1]),
     } satisfies AppCallMethodCall
 
@@ -215,7 +215,7 @@ describe('AlgorandClient', () => {
         method: appClient.appClient.getABIMethod('doubleNestedTxnArg')!,
         args: [firstTxnCall, secondTxnCall],
       })
-      .execute()
+      .send()
 
     expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
     expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(alice.addr)

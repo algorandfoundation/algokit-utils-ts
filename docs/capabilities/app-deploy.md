@@ -202,9 +202,7 @@ const deploymentResult = algorand.appDeployer.deploy({
   // How to handle a contract code update
   onUpdate: OnUpdate.Update,
   // Optional execution control parameters
-  executeParams: {
-    populateAppCallResources: true,
-  },
+  populateAppCallResources: true,
 })
 ```
 
@@ -229,9 +227,9 @@ The first parameter `deployment` is an [`AppDeployParams`](../code/interfaces/ty
   - [`TealTemplateParams`](../code/interfaces/types_app.TealTemplateParams.md) is a `key => value` object that will result in `TMPL_{key}` being replaced with `value` (where a string or `Uint8Array` will be appropriately encoded as bytes within the TEAL code)
 - `onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak` - determines [what should happen](../code/enums/types_app.OnSchemaBreak.md) if a breaking change to the schema is detected (e.g. if you need more global or local state that was previously requested when the contract was originally created)
 - `onUpdate?: 'update' | 'replace' | 'fail' | 'append' | OnUpdate` - determines [what should happen](../code/enums/types_app.OnUpdate.md) if an update to the smart contract is detected (e.g. the TEAL code has changed since last deployment)
-- `executeParams?: ExecuteParams` - [transaction execution control parameters](./algorand-client.md#transaction-parameters)
 - `existingDeployments?: AppLookup` - optionally allows the [app lookup retrieval](#lookup-deployed-apps-by-name) to be skipped if it's already been retrieved outside of this `AppDeployer` instance
 - `ignoreCache?: boolean` - optionally allows the [lookup cache](#lookup-deployed-apps-by-name) to be ignored and force retrieval of fresh deployment metadata from indexer
+- Everything from [`SendParams`](../code/interfaces/types_transaction.SendParams.md) - [transaction execution control parameters](./algorand-client.md#transaction-parameters)
 
 ### Idempotency
 

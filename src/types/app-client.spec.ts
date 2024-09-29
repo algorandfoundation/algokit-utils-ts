@@ -541,7 +541,7 @@ describe('application-client', () => {
 
   test('Construct transaction with abi encoding including transaction', async () => {
     const { algod, algorand, indexer, testAccount } = localnet.context
-    const txn = await algorand.transactions.payment({
+    const txn = await algorand.createTransaction.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
@@ -563,7 +563,7 @@ describe('application-client', () => {
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
     const { algod, algorand, indexer, testAccount } = localnet.context
-    const txn = await algorand.transactions.payment({
+    const txn = await algorand.createTransaction.payment({
       sender: testAccount.addr,
       receiver: testAccount.addr,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
@@ -588,7 +588,7 @@ describe('application-client', () => {
   test('Sign transaction in group with different signer if provided', async () => {
     const { algod, algorand, indexer, testAccount, generateAccount } = localnet.context
     const signer = await generateAccount({ initialFunds: (1).algo() })
-    const transaction = await algorand.transactions.payment({
+    const transaction = await algorand.createTransaction.payment({
       sender: signer.addr,
       receiver: signer.addr,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),

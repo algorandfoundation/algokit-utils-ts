@@ -54,12 +54,12 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ### Creating transactions
 
-You can compose a transaction via `algorand.transactions...`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
+You can compose a transaction via `algorand.createTransaction...`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
 
 The signature for the calls to send a single transaction usually look like:
 
 ```
-algorand.transactions.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<Transaction>
+algorand.createTransaction.{method}(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<Transaction>
 ```
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
@@ -70,7 +70,7 @@ algorand.transactions.{method}(params: {ComposerTransactionTypeParams} & CommonT
 The return type for the ABI method call methods are slightly different:
 
 ```
-algorand.transactions.app{callType}MethodCall(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<BuiltTransactions>
+algorand.createTransaction.app{callType}MethodCall(params: {ComposerTransactionTypeParams} & CommonTransactionParams): Promise<BuiltTransactions>
 ```
 
 Where `BuiltTransactions` looks like this:
@@ -100,12 +100,12 @@ Further documentation is present in the related capabilities:
 
 The signature for the calls to send a single transaction usually look like:
 
-`algorand.send.{method}(params: {ComposerTransactionTypeParams} & CommonAppCallParams & ExecuteParams): SingleSendTransactionResult`
+`algorand.send.{method}(params: {ComposerTransactionTypeParams} & CommonAppCallParams & SendParams): SingleSendTransactionResult`
 
 - To get intellisense on the params, open an object parenthesis (`{`) and use your IDE's intellisense keyboard shortcut (e.g. ctrl+space).
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)
 - [`CommonAppCallParams`](../code/modules/types_composer.md#commonappcallparams) are the [common app call transaction parameters](./app.md#common-app-parameters) that can be specified for every single app transaction
-- [`ExecuteParams`](../code/interfaces/types_transaction.ExecuteParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
+- [`SendParams`](../code/interfaces/types_transaction.SendParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
 - [`SendSingleTransactionResult`](../code/modules/types_algorand_client.md#sendsingletransactionresult) is all of the information that is relevant when [sending a single transaction to the network](./transaction.md#sending-a-transaction)
 
 Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
@@ -119,7 +119,7 @@ const result = algorand
   .newGroup()
   .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: (1).microAlgo() })
   .addAssetOptIn({ sender: 'SENDERADDRESS', assetId: 12345n })
-  .execute()
+  .send()
 ```
 
 `newGroup()` returns a new [`AlgoKitComposer`](./algokit-composer.md) instance, which can also return the group of transactions, simulate them and other things.
@@ -144,7 +144,7 @@ There are two common base interfaces that get reused:
     - `validityWindow?: number` - How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used.
     - `firstValidRound?: bigint` - Set the first round this transaction is valid. If left undefined, the value from algod will be used. We recommend you only set this when you intentionally want this to be some time in the future.
     - `lastValidRound?: bigint` - The last round this transaction is valid. It is recommended to use `validityWindow` instead.
-- [`ExecuteParams`](../code/interfaces/types_transaction.ExecuteParams.md)
+- [`SendParams`](../code/interfaces/types_transaction.SendParams.md)
   - `maxRoundsToWaitForConfirmation?: number` - The number of rounds to wait for confirmation. By default until the latest lastValid has past.
   - `suppressLog?: boolean` - Whether to suppress log messages from transaction send, default: do not suppress.
 

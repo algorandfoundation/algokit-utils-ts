@@ -22,7 +22,7 @@ import AlgoKitComposer, {
   AppUpdateParams,
 } from './composer'
 import { Expand } from './expand'
-import { ConfirmedTransactionResult, ExecuteParams } from './transaction'
+import { ConfirmedTransactionResult, SendParams } from './transaction'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
@@ -35,7 +35,7 @@ export type DeployAppDeleteMethodCall = Expand<Omit<AppDeleteMethodCall, 'appId'
 
 /** The parameters to idempotently deploy an app */
 export type AppDeployParams = Expand<
-  ExecuteParams & {
+  SendParams & {
     /** The deployment metadata */
     metadata: AppDeployMetadata
     /** Any deploy-time parameters to replace in the TEAL code before compiling it (used if teal code is passed in as a string) */
@@ -149,7 +149,7 @@ export class AppDeployer {
       deleteParams,
       existingDeployments,
       ignoreCache,
-      ...executeParams
+      ...sendParams
     } = deployment
 
     // Set creation note
@@ -173,7 +173,7 @@ export class AppDeployer {
       )
     }
 
-    Config.getLogger(executeParams?.suppressLog).info(
+    Config.getLogger(sendParams?.suppressLog).info(
       `Idempotently deploying app "${metadata.name}" from creator ${createParams.sender} using ${createParams.approvalProgram.length} bytes of ${typeof createParams.approvalProgram === 'string' ? 'teal code' : 'AVM bytecode'} and ${createParams.clearStateProgram.length} bytes of ${typeof createParams.approvalProgram === 'string' ? 'teal code' : 'AVM bytecode'}`,
     )
 
@@ -195,8 +195,8 @@ export class AppDeployer {
 
     const createApp = async () => {
       const result = await ('method' in createParams
-        ? this._transactionSender.appCreateMethodCall({ ...createParams, approvalProgram, clearStateProgram, ...executeParams })
-        : this._transactionSender.appCreate({ ...createParams, approvalProgram, clearStateProgram, ...executeParams }))
+        ? this._transactionSender.appCreateMethodCall({ ...createParams, approvalProgram, clearStateProgram, ...sendParams })
+        : this._transactionSender.appCreate({ ...createParams, approvalProgram, clearStateProgram, ...sendParams }))
       const appMetadata: AppMetadata = {
         appId: result.appId,
         appAddress: result.appAddress,
@@ -216,7 +216,7 @@ export class AppDeployer {
       } satisfies SendAppCreateTransactionResult & AppMetadata & { operationPerformed: 'create' }
     }
     const updateApp = async (existingApp: AppMetadata) => {
-      Config.getLogger(executeParams?.suppressLog).info(
+      Config.getLogger(sendParams?.suppressLog).info(
         `Updating existing ${metadata.name} app for ${createParams.sender} to version ${metadata.version}.`,
       )
       const result = await ('method' in updateParams
@@ -225,14 +225,14 @@ export class AppDeployer {
             approvalProgram,
             clearStateProgram,
             ...updateParams,
-            ...executeParams,
+            ...sendParams,
           })
         : this._transactionSender.appUpdate({
             appId: existingApp.appId,
             approvalProgram,
             clearStateProgram,
             ...updateParams,
-            ...executeParams,
+            ...sendParams,
           }))
       const appMetadata: AppMetadata = {
         appId: existingApp.appId,
@@ -253,11 +253,11 @@ export class AppDeployer {
       } satisfies SendAppUpdateTransactionResult & AppMetadata & { operationPerformed: 'update' }
     }
     const replaceApp = async (existingApp: AppMetadata) => {
-      Config.getLogger(executeParams?.suppressLog).info(
+      Config.getLogger(sendParams?.suppressLog).info(
         `Deploying a new ${metadata.name} app for ${createParams.sender}; deploying app with version ${metadata.version}.`,
       )
 
-      Config.getLogger(executeParams?.suppressLog).warn(
+      Config.getLogger(sendParams?.suppressLog).warn(
         `Deleting existing ${metadata.name} app with id ${existingApp.appId} from ${deleteParams.sender} account.`,
       )
 
@@ -273,12 +273,12 @@ export class AppDeployer {
       } else {
         composer.addAppDelete({ appId: existingApp.appId, ...deleteParams })
       }
-      const result = await composer.execute({ ...executeParams, suppressLog: true })
+      const result = await composer.send({ ...sendParams, suppressLog: true })
       const confirmation = result.confirmations.at(createIndex - 1)!
       const transaction = result.transactions.at(createIndex - 1)!
       const deleteTransaction = result.transactions.at(-1)!
 
-      Config.getLogger(executeParams?.suppressLog).warn(
+      Config.getLogger(sendParams?.suppressLog).warn(
         `Sent transactions ${transaction.txID()} to create app with id ${confirmation.applicationIndex} and ${deleteTransaction.txID()} to delete app with id ${
           existingApp.appId
         } from ${createParams.sender} account.`,
@@ -319,14 +319,14 @@ export class AppDeployer {
 
     const existingApp = apps.apps[metadata.name]
     if (!existingApp || existingApp.deleted) {
-      Config.getLogger(executeParams?.suppressLog).info(
+      Config.getLogger(sendParams?.suppressLog).info(
         `App ${metadata.name} not found in apps created by ${createParams.sender}; deploying app with version ${metadata.version}.`,
       )
 
       return await createApp()
     }
 
-    Config.getLogger(executeParams?.suppressLog).info(
+    Config.getLogger(sendParams?.suppressLog).info(
       `Existing app ${metadata.name} found by creator ${createParams.sender}, with app id ${existingApp.appId} and version ${existingApp.version}.`,
     )
 
@@ -347,7 +347,7 @@ export class AppDeployer {
       existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0)
 
     if (isSchemaBreak) {
-      Config.getLogger(executeParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
+      Config.getLogger(sendParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
         from: {
           globalInts: existingAppRecord.globalInts,
           globalByteSlices: existingAppRecord.globalByteSlices,
@@ -366,16 +366,16 @@ export class AppDeployer {
       }
 
       if (onSchemaBreak === 'append' || onSchemaBreak === OnSchemaBreak.AppendApp) {
-        Config.getLogger(executeParams?.suppressLog).info('onSchemaBreak=AppendApp, will attempt to create a new app')
+        Config.getLogger(sendParams?.suppressLog).info('onSchemaBreak=AppendApp, will attempt to create a new app')
         return await createApp()
       }
 
       if (existingApp.deletable) {
-        Config.getLogger(executeParams?.suppressLog).info(
+        Config.getLogger(sendParams?.suppressLog).info(
           'App is deletable and onSchemaBreak=ReplaceApp, will attempt to create new app and delete old app',
         )
       } else {
-        Config.getLogger(executeParams?.suppressLog).info(
+        Config.getLogger(sendParams?.suppressLog).info(
           'App is not deletable but onSchemaBreak=ReplaceApp, will attempt to delete app, delete will most likely fail',
         )
       }
@@ -384,7 +384,7 @@ export class AppDeployer {
     }
 
     if (isUpdate) {
-      Config.getLogger(executeParams?.suppressLog).info(
+      Config.getLogger(sendParams?.suppressLog).info(
         `Detected a TEAL update in app ${existingApp.appId} for creator ${createParams.sender}`,
       )
 
@@ -393,15 +393,15 @@ export class AppDeployer {
       }
 
       if (onUpdate === 'append' || onUpdate === OnUpdate.AppendApp) {
-        Config.getLogger(executeParams?.suppressLog).info('onUpdate=AppendApp, will attempt to create a new app')
+        Config.getLogger(sendParams?.suppressLog).info('onUpdate=AppendApp, will attempt to create a new app')
         return await createApp()
       }
 
       if (onUpdate === 'update' || onUpdate === OnUpdate.UpdateApp) {
         if (existingApp.updatable) {
-          Config.getLogger(executeParams?.suppressLog).info(`App is updatable and onUpdate=UpdateApp, updating app...`)
+          Config.getLogger(sendParams?.suppressLog).info(`App is updatable and onUpdate=UpdateApp, updating app...`)
         } else {
-          Config.getLogger(executeParams?.suppressLog).warn(
+          Config.getLogger(sendParams?.suppressLog).warn(
             `App is not updatable but onUpdate=UpdateApp, will attempt to update app, update will most likely fail`,
           )
         }
@@ -411,11 +411,11 @@ export class AppDeployer {
 
       if (onUpdate === 'replace' || onUpdate === OnUpdate.ReplaceApp) {
         if (existingApp.deletable) {
-          Config.getLogger(executeParams?.suppressLog).warn(
+          Config.getLogger(sendParams?.suppressLog).warn(
             'App is deletable and onUpdate=ReplaceApp, creating new app and deleting old app...',
           )
         } else {
-          Config.getLogger(executeParams?.suppressLog).warn(
+          Config.getLogger(sendParams?.suppressLog).warn(
             'App is not deletable and onUpdate=ReplaceApp, will attempt to create new app and delete old app, delete will most likely fail',
           )
         }
@@ -424,7 +424,7 @@ export class AppDeployer {
       }
     }
 
-    Config.getLogger(executeParams?.suppressLog).debug('No detected changes in app, nothing to do.')
+    Config.getLogger(sendParams?.suppressLog).debug('No detected changes in app, nothing to do.')
 
     return { ...existingApp, operationPerformed: 'nothing' }
   }

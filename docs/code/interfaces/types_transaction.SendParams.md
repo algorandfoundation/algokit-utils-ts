@@ -1,18 +1,24 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/transaction](../modules/types_transaction.md) / ExecuteParams
+[@algorandfoundation/algokit-utils](../README.md) / [types/transaction](../modules/types_transaction.md) / SendParams
 
-# Interface: ExecuteParams
+# Interface: SendParams
 
-[types/transaction](../modules/types_transaction.md).ExecuteParams
+[types/transaction](../modules/types_transaction.md).SendParams
 
-Parameters to configure transaction execution.
+Parameters to configure transaction sending.
+
+## Hierarchy
+
+- **`SendParams`**
+
+  ↳ [`AtomicTransactionComposerToSend`](types_transaction.AtomicTransactionComposerToSend.md)
 
 ## Table of contents
 
 ### Properties
 
-- [maxRoundsToWaitForConfirmation](types_transaction.ExecuteParams.md#maxroundstowaitforconfirmation)
-- [populateAppCallResources](types_transaction.ExecuteParams.md#populateappcallresources)
-- [suppressLog](types_transaction.ExecuteParams.md#suppresslog)
+- [maxRoundsToWaitForConfirmation](types_transaction.SendParams.md#maxroundstowaitforconfirmation)
+- [populateAppCallResources](types_transaction.SendParams.md#populateappcallresources)
+- [suppressLog](types_transaction.SendParams.md#suppresslog)
 
 ## Properties
 

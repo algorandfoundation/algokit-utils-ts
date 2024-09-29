@@ -46,6 +46,7 @@
 - [ResolveAppByCreatorAndName](types_app_client.md#resolveappbycreatorandname)
 - [ResolveAppByCreatorAndNameBase](types_app_client.md#resolveappbycreatorandnamebase)
 - [ResolveAppClientByCreatorAndName](types_app_client.md#resolveappclientbycreatorandname)
+- [ResolveAppClientByNetwork](types_app_client.md#resolveappclientbynetwork)
 
 ## Type Aliases
 
@@ -53,7 +54,7 @@
 
 Ƭ **AppClientBareCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"onComplete"``\> & \{ `sender?`: `string`  }\>
 
-AppClient parameters for a bare app call
+AppClient common parameters for a bare app call
 
 #### Defined in
 
@@ -131,7 +132,7 @@ ___
 
 Ƭ **AppClientMethodCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"method"`` \| ``"args"``\> & \{ `args?`: (`ABIValue` \| [`ABIStruct`](types_app_arc56.md#abistruct) \| [`AppMethodCallTransactionArgument`](types_composer.md#appmethodcalltransactionargument) \| `undefined`)[] ; `method`: `string` ; `sender?`: `string`  }\>
 
-AppClient parameters for an ABI method call
+AppClient common parameters for an ABI method call
 
 #### Defined in
 
@@ -257,7 +258,7 @@ ___
 
 ### FundAppParams
 
-Ƭ **FundAppParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`PaymentParams`](types_composer.md#paymentparams), ``"receiver"`` \| ``"sender"``\> & [`ExecuteParams`](../interfaces/types_transaction.ExecuteParams.md) & \{ `sender?`: `string`  }\>
+Ƭ **FundAppParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`PaymentParams`](types_composer.md#paymentparams), ``"receiver"`` \| ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `sender?`: `string`  }\>
 
 Parameters for funding an app account
 
@@ -308,3 +309,15 @@ Resolve an app client instance by looking up an app created by the given creator
 #### Defined in
 
 [src/types/app-client.ts:376](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L376)
+
+___
+
+### ResolveAppClientByNetwork
+
+Ƭ **ResolveAppClientByNetwork**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"appId"``\>\>
+
+Resolve an app client instance by looking up the current network.
+
+#### Defined in
+
+[src/types/app-client.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L390)

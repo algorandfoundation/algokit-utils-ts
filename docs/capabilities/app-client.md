@@ -70,20 +70,20 @@ As well as allowing you to control creation and deployment of apps, the `AppFact
 This is possible via two methods on the app factory:
 
 - [`factory.getAppClientById(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbyid) - Returns a new `AppClient` client for an app instance of the given ID. Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
-- [`factory.getAppClientByCreatorAddressAndName(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbycreatoraddressandname) - Returns a new `AppClient` client, resolving the app by creator address and name using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note). Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
+- [`factory.getAppClientByCreatorAndName(params)`](../code/classes/types_app_factory.AppFactory.md#getappclientbycreatorandname) - Returns a new `AppClient` client, resolving the app by creator address and name using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note). Automatically populates appName, defaultSender and source maps from the factory if not specified in the params.
 
 ```typescript
-const app1 = factory.getAppClientById({ appId: 12345n })
-const app2 = factory.getAppClientById({ appId: 12346n })
-const app3 = factory.getAppClientById({ appId: 12345n, defaultSender: 'SENDER2ADDRESS' })
-const app4 = factory.getAppClientByCreatorAddressAndName({
+const appClient1 = factory.getAppClientById({ appId: 12345n })
+const appClient2 = factory.getAppClientById({ appId: 12346n })
+const appClient3 = factory.getAppClientById({ appId: 12345n, defaultSender: 'SENDER2ADDRESS' })
+const appClient4 = factory.getAppClientByCreatorAndName({
   creatorAddress: 'CREATORADDRESS',
 })
-const app5 = factory.getAppClientByCreatorAddressAndName({
+const appClient5 = factory.getAppClientByCreatorAndName({
   creatorAddress: 'CREATORADDRESS',
   appName: 'NonDefaultAppName',
 })
-const app6 = factory.getAppClientByCreatorAddressAndName({
+const appClient6 = factory.getAppClientByCreatorAndName({
   creatorAddress: 'CREATORADDRESS',
   appName: 'NonDefaultAppName',
   ignoreCache: true, // Perform fresh indexer lookups
@@ -108,9 +108,9 @@ The create method is a wrapper over the `appCreate` (bare calls) and `appCreateM
 
 ```typescript
 // Use no-argument bare-call
-const { result, app } = factory.create()
+const { result, appClient } = factory.send.bare.create()
 // Specify parameters for bare-call and override other parameters
-const { result, app } = factory.create({
+const { result, appClient } = factory.send.bare.create({
   args: [new Uint8Array(1, 2, 3, 4)],
   staticFee: (3000).microAlgo(),
   onComplete: algosdk.OnApplicationComplete.OptIn,
@@ -123,13 +123,13 @@ const { result, app } = factory.create({
   populateAppCallResources: true,
 })
 // Specify parameters for ABI method call
-const { result, app } = factory.create({
+const { result, appClient } = factory.send.create({
   method: 'create_application',
   args: [1, 'something'],
 })
 ```
 
-If you want to construct a custom create call, use the underlying [`algorand.send.appCreate` / `algorand.transactions.appCreate` / `algorand.send.appCreateMethodCall` / `algorand.transactions.appCreateMethodCall` methods](./app.md#creation) then you can get params objects:
+If you want to construct a custom create call, use the underlying [`algorand.send.appCreate` / `algorand.createTransaction.appCreate` / `algorand.send.appCreateMethodCall` / `algorand.createTransaction.appCreateMethodCall` methods](./app.md#creation) then you can get params objects:
 
 - `factory.params.create(params)` - ABI method create call for deploy method or an underlying [`appCreateMethodCall` call](./app.md#creation)
 - `factory.params.bare.create(params)` - Bare create call for deploy method or an underlying [`appCreate` call](./app.md#creation)
@@ -150,9 +150,9 @@ The deploy method is a wrapper over the [`AppDeployer`'s `deploy` method](./app-
 ```typescript
 // Use no-argument bare-calls to deploy with default behaviour
 //  for when update or schema break detected (fail the deployment)
-const { result, app } = factory.deploy({})
+const { result, appClient } = factory.deploy({})
 // Specify parameters for bare-calls and override the schema break behaviour
-const { result, app } = factory.deploy({
+const { result, appClient } = factory.deploy({
   createParams: {
     args: [new Uint8Array(1, 2, 3, 4)],
     staticFee: (3000).microAlgo(),
@@ -174,7 +174,7 @@ const { result, app } = factory.deploy({
   deletable: true,
 })
 // Specify parameters for ABI method calls
-const { result, app } = factory.deploy({
+const { result, appClient } = factory.deploy({
   createParams: {
     method: "create_application",
     args: [1, "something"],
@@ -210,8 +210,8 @@ This is done via the following properties:
 
 - `appClient.params.{onComplete}(params)` - Params for an ABI method call
 - `appClient.params.bare.{onComplete}(params)` - Params for a bare call
-- `appClient.transactions.{onComplete}(params)` - Transaction(s) for an ABI method call
-- `appClient.transactions.bare.{onComplete}(params)` - Transaction for a bare call
+- `appClient.createTransaction.{onComplete}(params)` - Transaction(s) for an ABI method call
+- `appClient.createTransaction.bare.{onComplete}(params)` - Transaction for a bare call
 - `appClient.send.{onComplete}(params)` - Sign and send an ABI method call
 - `appClient.send.bare.{onComplete}(params)` - Sign and send a bare call
 
@@ -229,23 +229,23 @@ The input payload for all of these calls is the same as the [underlying app meth
 The return payload for all of these is the same as the [underlying methods](./app.md#calling-apps).
 
 ```typescript
-const call1 = await app.send.update({
+const call1 = await appClient.send.update({
   method: 'update_abi',
   args: ['string_io'],
   deployTimeParams,
 })
-const call2 = await app.send.delete({
+const call2 = await appClient.send.delete({
   method: 'delete_abi',
   args: ['string_io'],
 })
-const call3 = await app.send.optIn({ method: 'opt_in' })
-const call4 = await app.send.bare.clearState()
+const call3 = await appClient.send.optIn({ method: 'opt_in' })
+const call4 = await appClient.send.bare.clearState()
 
-const transaction = await app.transactions.bare.closeOut({
+const transaction = await appClient.createTransaction.bare.closeOut({
   args: [new Uint8Array(1, 2, 3)],
 })
 
-const params = app.params.optIn({ method: 'optin' })
+const params = appClient.params.optIn({ method: 'optin' })
 ```
 
 ## Funding the app account
@@ -259,10 +259,10 @@ The input parameters are:
 Note: If you are passing the funding payment in as an ABI argument so it can be validated by the ABI method then you'll want to get the funding call as a transaction, e.g.:
 
 ```typescript
-const result = await app.send.call({
+const result = await appClient.send.call({
   method: 'bootstrap',
   args: [
-    app.transactions.fundAppAccount({
+    appClient.createTransaction.fundAppAccount({
       amount: microAlgo(200_000),
     }),
   ],
@@ -270,7 +270,7 @@ const result = await app.send.call({
 })
 ```
 
-You can also get the funding call as a params object via `app.params.fundAppAccount(params)`.
+You can also get the funding call as a params object via `appClient.params.fundAppAccount(params)`.
 
 ## Reading state
 
@@ -282,9 +282,9 @@ The ARC-56 app spec can specify detailed information about the encoding format o
 
 You can access this functionality via:
 
-- `app.state.global.{method}()` - Global state
-- `app.state.local(address).{method}()` - Local state
-- `app.state.box.{method}()` - Box storage
+- `appClient.state.global.{method}()` - Global state
+- `appClient.state.local(address).{method}()` - Local state
+- `appClient.state.box.{method}()` - Box storage
 
 Where `{method}` is one of:
 
@@ -294,10 +294,10 @@ Where `{method}` is one of:
 - `getMap(mapName)` - Returns all map values for the given map in a key=>value record. It's recommended that this is only done when you have a unique `prefix` for the map otherwise there's a high risk that incorrect values will be included in the map.
 
 ```typescript
-const values = app.state.global.getAll()
-const value = app.state.local('ADDRESS').getValue('value1')
-const mapValue = app.state.box.getMapValue('map1', 'mapKey')
-const map = app.state.global.getMap('myMap')
+const values = appClient.state.global.getAll()
+const value = appClient.state.local('ADDRESS').getValue('value1')
+const mapValue = appClient.state.box.getMapValue('map1', 'mapKey')
+const map = appClient.state.global.getMap('myMap')
 ```
 
 ### Generic methods
@@ -313,17 +313,17 @@ There are various methods defined that let you read state from the smart contrac
 - `getBoxValuesFromABIType(type, filter)` - Gets the current values of the boxes from an ABI type using [`algorand.app.getBoxValuesFromABIType`](./app.md#boxes)
 
 ```typescript
-const globalState = await app.getGlobalState()
-const localState = await app.getLocalState('ACCOUNTADDRESS')
+const globalState = await appClient.getGlobalState()
+const localState = await appClient.getLocalState('ACCOUNTADDRESS')
 
 const boxName: BoxReference = 'my-box'
 const boxName2: BoxReference = 'my-box2'
 
-const boxNames = app.getBoxNames()
-const boxValue = app.getBoxValue(boxName)
-const boxValues = app.getBoxValues([boxName, boxName2])
-const boxABIValue = app.getBoxValueFromABIType(boxName, algosdk.ABIStringType)
-const boxABIValues = app.getBoxValuesFromABIType([boxName, boxName2], algosdk.ABIStringType)
+const boxNames = appClient.getBoxNames()
+const boxValue = appClient.getBoxValue(boxName)
+const boxValues = appClient.getBoxValues([boxName, boxName2])
+const boxABIValue = appClient.getBoxValueFromABIType(boxName, algosdk.ABIStringType)
+const boxABIValues = appClient.getBoxValuesFromABIType([boxName, boxName2], algosdk.ABIStringType)
 ```
 
 ## Handling logic errors and diagnosing errors
@@ -364,3 +364,7 @@ Config.configure({ debug: true })
 If you do that then the exception will have the `traces` property within the underlying exception will have key information from the simulation within it and this will get populated into the `led.traces` property of the thrown error.
 
 When this debug flag is set, it will also emit debugging symbols to allow break-point debugging of the calls if the [project root is also configured](./debugging.md).
+
+## Default arguments
+
+If an ABI method call specifies default argument values for any of its arguments you can pass in `undefined` for the value of that argument for the default value to be automatically populated.

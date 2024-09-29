@@ -56,13 +56,13 @@ algosdk.ABIMethod.constructor
 
 #### Defined in
 
-[src/types/app-arc56.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L22)
+[src/types/app-arc56.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L26)
 
 ## Properties
 
 ### args
 
-• `Readonly` **args**: \{ `defaultValue?`: `string` ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `ABIArgumentType`  }[]
+• `Readonly` **args**: \{ `defaultValue?`: \{ `data`: `string` \| `number` ; `source`: ``"box"`` \| ``"global"`` \| ``"local"`` \| ``"literal"`` ; `type`: `string`  } ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `ABIArgumentType`  }[]
 
 #### Overrides
 
@@ -70,7 +70,7 @@ algosdk.ABIMethod.args
 
 #### Defined in
 
-[src/types/app-arc56.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L9)
+[src/types/app-arc56.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L23)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/types/app-arc56.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L22)
+[src/types/app-arc56.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L26)
 
 ___
 
@@ -130,7 +130,7 @@ algosdk.ABIMethod.returns
 
 #### Defined in
 
-[src/types/app-arc56.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L16)
+[src/types/app-arc56.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L24)
 
 ## Methods
 
@@ -184,7 +184,7 @@ algosdk.ABIMethod.toJSON
 
 #### Defined in
 
-[src/types/app-arc56.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L34)
+[src/types/app-arc56.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L38)
 
 ___
 
