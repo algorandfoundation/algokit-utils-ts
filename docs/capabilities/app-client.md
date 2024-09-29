@@ -364,3 +364,7 @@ Config.configure({ debug: true })
 If you do that then the exception will have the `traces` property within the underlying exception will have key information from the simulation within it and this will get populated into the `led.traces` property of the thrown error.
 
 When this debug flag is set, it will also emit debugging symbols to allow break-point debugging of the calls if the [project root is also configured](./debugging.md).
+
+## Default arguments
+
+If an ABI method call specifies default argument values for any of its arguments you can pass in `undefined` for the value of that argument for the default value to be automatically populated.

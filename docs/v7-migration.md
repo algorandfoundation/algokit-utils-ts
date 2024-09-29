@@ -91,6 +91,7 @@ Other things to note that you may come across:
 - Rather than always passing a signer into transaction calls (which is what the `SendTransactionFrom` instance previously combined with the address), we have decoupled signing and sender address via the `AccountManager` (`algorand.account`), which keeps track of the signer associated with a sender address so the signer can be resolved just in time.
   - Most of the time you don't need to worry about it since it will magically happen for you, but if you have situations where you are creating a signer outside of the `AccountManager` you will need to [register the signer](./capabilities/account.md#registering-a-signer) with the `AccountManager` first.
   - Note: you can also explicitly [pass a `signer`](./capabilities/algorand-client.md#transaction-parameters) in as well if you want an escape hatch.
+- Things that were previously nested in a `sendParams` property are now collapsed into the parent params object
 
 ### Step 3 - Replace `ApplicationClient` usage
 
@@ -98,6 +99,7 @@ The existing `ApplicationClient` (untyped app client) class is still present unt
 
 All of the functionality in `ApplicationClient` is available within the new classes, but their interface is slightly different to make it easier to use and more consistent with the new `AlgorandClient` functionality. The key existing methods that have changed all have `@deprecation` notices to help guide you on this, but broadly the changes are:
 
+- The constructor no longer has the confusing `resolveBy` semantics, instead there are static methods that determine different ways of constructing a client and the constructor itself is very simple (requiring `appId`)
 - If you want to call `create` or `deploy` then you need an `AppFactory` to do that, and then it will in turn give you an `AppClient` instance that is connected to the app you just created / deployed. This significantly simplifies the app client because now the app client has a clear operating purpose: allow for calls and state management for an _instance_ of an app, whereas the app factory handles all of the calls when you don't have an instance yet (or may or may not have an instance in the case of `deploy`).
 - This means that you can simply access `client.appId` and `client.appAddress` on `AppClient` since these values are known statically and won't change (previously you had to awkwardly call `await client.getAppReference()` since these values weren't always available and potentially required an API call to resolve).
 - `fundAppAccount` no longer takes an `AlgoAmount` directly - it always expects the params object (more consistent with)
@@ -120,4 +122,15 @@ All of the functionality in `ApplicationClient` is available within the new clas
 
 ### Step 4 - Replace typed app client usage
 
-TODO
+Version 4 of the TypeScript typed app client generator introduces breaking changes to the generated client that support the new `AppFactory` and `AppClient` functionality along with adding ARC-56 support. The generated client has better typing support for things like state commensurate with the new capabilities within ARC-56.
+
+If you are converting from an older typed client to a new one you will need to make the following changes:
+
+- The constructor parameters for a client are different per the above notes about `AppClient`, the recommended way of constructing a client / factory is via `algorand.client.getTyped*()` for a terse creation experience
+- The app client no longer creates or deploys contracts, you need to use the factory for that, which will in turn give you a typed client instance
+- Method calls are no longer directly on the typed client, instead they are nested via `appClient.send.` and `appClient.createTransaction.`
+- Method calls take a single params object (rather than (args, params)) and the args are nested in an `args` property within that object
+- The `compile` method returns `{approvalProgram, clearStateProgram, compiledApproval, compiledClear}` rather than `{approvalCompiled, clearCompiled}`
+- `extraPages` is no longer nested within a `schema` property, instead it's directly on the method call params as `extraProgramPages`
+- `client.compose()` is now `client.newGroup()`
+- `client.compose()....execute()` is now `client.compose()....send()`
