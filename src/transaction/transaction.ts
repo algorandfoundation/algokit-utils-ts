@@ -667,14 +667,19 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
+    // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const err = new Error(typeof e === 'object' ? e?.message : 'Received error executing Atomic Transaction Composer') as any as any
     // Remove headers as it doesn't have anything useful.
     delete e.response?.headers
+    err.response = e.response
+    err.cause = e
 
     if (Config.debug && typeof e === 'object') {
-      e.traces = []
+      err.traces = []
       Config.logger.error(
         'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
-        e,
+        err,
       )
       const simulate = await performAtomicTransactionComposerSimulate(atc, algod)
       if (Config.debug && !Config.traceAll) {
@@ -685,7 +690,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
       if (simulate && simulate.txnGroups[0].failedAt) {
         for (const txn of simulate.txnGroups[0].txnResults) {
-          e.traces.push({
+          err.traces.push({
             trace: txn.execTrace?.get_obj_for_encoding(),
             appBudget: txn.appBudgetConsumed,
             logicSigBudget: txn.logicSigBudgetConsumed,
@@ -695,9 +700,9 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         }
       }
     } else {
-      Config.logger.error('Received error executing Atomic Transaction Composer, for more information enable the debug flag', e)
+      Config.logger.error('Received error executing Atomic Transaction Composer, for more information enable the debug flag', err)
     }
-    throw e
+    throw err
   }
 }
 
