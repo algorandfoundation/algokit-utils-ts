@@ -64,6 +64,19 @@ const kmd = algorand.client.kmd
 
 Once you have fully migrated you will likely find you wont need these sdk client instances and can delete those variables.
 
+Note: If you used the beta version of `AlgorandClient` in v6 of AlgoKit Utils then you will find a few breaking changes within it you will need to accomodate. Namely:
+
+- `algorand.transactions.*` has been renamed to `algorand.createTransaction.*`
+- `AlgokitComposer` class has been renamed to `AlgoKitComposer`
+- `algorand.send.*(params, executeOptions)` has had the second `executeOptions` object collapsed into the first `params` object
+- The order of the `algorand.account.rekeyed()` parameters has been switched to `(sender, signer)`
+- All microAlgo return values from `algorand.account.getInformation()` now return an `AlgoAmount` and `amount` is renamed to `balance` and `round` to `validAsOfRound` (which is now a bigint for broader consistency)
+- Renamed `algorand.account.getAssetInformation` to `algorand.asset.getAccountInformation`
+- Renamed `clearProgram` to `clearStateProgram` and `extraPages` to `extraProgramPages` in AlgoKitComposer params to match algod api
+- Moved `ExecuteParams` type from `/types/composer` to `/types/transaction` and renamed to `SendParams`
+- Renamed `algorand.setSuggestedParamsTimeout` to `algorand.setSuggestedParamsCacheTimeout`
+- `AlgoKitComposer`'s `addMethodCall` and `addAppCall` methods are expanded into the various different types of app calls
+
 ### Step 2 - Replace function calls
 
 Now you can replace the function calls one-by-one. Almost every call should have a `@deprecation` notice that will show up in intellisense for your IDE (e.g. VS Code). The method call will show up with ~~strikethrough~~ and if you hover over it then the deprecation notice will show the new functionality.
