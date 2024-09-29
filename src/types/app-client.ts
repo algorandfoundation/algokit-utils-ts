@@ -837,8 +837,10 @@ export class AppClient {
       }
 
       return {
-        approvalProgram: Buffer.from(appSpec.byteCode.approval, 'base64'),
-        clearStateProgram: Buffer.from(appSpec.byteCode.clear, 'base64'),
+        approvalProgram: Buffer.from(appSpec.byteCode.approval, 'base64') as Uint8Array,
+        compiledApproval: undefined,
+        clearStateProgram: Buffer.from(appSpec.byteCode.clear, 'base64') as Uint8Array,
+        compiledClear: undefined,
       }
     }
 
