@@ -215,7 +215,7 @@ export interface CompiledTeal {
   teal: string
   /** The compiled code */
   compiled: string
-  /** The has returned by the compiler */
+  /** The hash returned by the compiler */
   compiledHash: string
   /** The base64 encoded code as a byte array */
   compiledBase64ToBytes: Uint8Array

@@ -241,7 +241,10 @@ export class AppFactory {
           }),
           result: {
             ...result,
-            ...(compiled as Partial<AppCompilationResult>),
+            ...({
+              compiledApproval: compiled.approvalProgramCompilationResult,
+              compiledClear: compiled.clearStateProgramCompilationResult,
+            } as Partial<AppCompilationResult>),
           },
         }
       },
@@ -272,7 +275,10 @@ export class AppFactory {
         }),
         result: {
           ...result,
-          ...(compiled as Partial<AppCompilationResult>),
+          ...({
+            compiledApproval: compiled.approvalProgramCompilationResult,
+            compiledClear: compiled.clearStateProgramCompilationResult,
+          } as Partial<AppCompilationResult>),
         },
       }
     },
@@ -319,7 +325,10 @@ export class AppFactory {
     })
     const result = {
       ...deployResult,
-      ...compiled,
+      ...({
+        compiledApproval: compiled.approvalProgramCompilationResult,
+        compiledClear: compiled.clearStateProgramCompilationResult,
+      } as Partial<AppCompilationResult>),
     }
     return {
       appClient,
@@ -517,11 +526,11 @@ export class AppFactory {
   public async compile(compilation?: AppClientCompilationParams) {
     const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)
 
-    if (result.compiledApproval) {
-      this._approvalSourceMap = result.compiledApproval.sourceMap
+    if (result.approvalProgramCompilationResult) {
+      this._approvalSourceMap = result.approvalProgramCompilationResult.sourceMap
     }
-    if (result.compiledClear) {
-      this._clearSourceMap = result.compiledClear.sourceMap
+    if (result.clearStateProgramCompilationResult) {
+      this._clearSourceMap = result.clearStateProgramCompilationResult.sourceMap
     }
 
     return result

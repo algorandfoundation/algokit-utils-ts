@@ -143,7 +143,7 @@ If you are converting from an older typed client to a new one you will need to m
 - The app client no longer creates or deploys contracts, you need to use the factory for that, which will in turn give you a typed client instance
 - Method calls are no longer directly on the typed client, instead they are nested via `appClient.send.` and `appClient.createTransaction.`
 - Method calls take a single params object (rather than (args, params)) and the args are nested in an `args` property within that object
-- The `compile` method returns `{approvalProgram, clearStateProgram, compiledApproval, compiledClear}` rather than `{approvalCompiled, clearCompiled}`
+- The `compile` method returns `{compiledApprovalProgram, compiledClearStateProgram, approvalProgramCompilationResult?, clearStateProgramCompilationResult?}` rather than `{approvalCompiled, clearCompiled}`
 - `extraPages` is no longer nested within a `schema` property, instead it's directly on the method call params as `extraProgramPages`
 - `client.compose()` is now `client.newGroup()`
 - `client.compose()....execute()` is now `client.compose()....send()`
