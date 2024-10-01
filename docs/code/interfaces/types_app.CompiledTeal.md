@@ -46,7 +46,7 @@ ___
 
 • **compiledHash**: `string`
 
-The has returned by the compiler
+The hash returned by the compiler
 
 #### Defined in
 

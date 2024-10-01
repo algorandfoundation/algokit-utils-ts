@@ -32,6 +32,7 @@ import {
   AppState,
   AppStorageSchema,
   BoxName,
+  CompiledTeal,
   DELETABLE_TEMPLATE_NAME,
   AppLookup as LegacyAppLookup,
   OnSchemaBreak,
@@ -267,6 +268,20 @@ export interface SourceMapExport {
   sources: string[]
   names: string[]
   mappings: string
+}
+
+/**
+ * The result of asking an `AppClient` to compile a program.
+ */
+export interface AppClientCompilationResult {
+  /** The compiled bytecode of the approval program, ready to deploy to algod */
+  approvalProgram: Uint8Array
+  /** The compiled bytecode of the clear state program, ready to deploy to algod */
+  clearStateProgram: Uint8Array
+  /** The result of compilation of the approval program, including source map, if TEAL code was compiled */
+  approvalProgramCompilationResult?: CompiledTeal
+  /** The result of compilation of the clear state program, including source map, if TEAL code was compiled */
+  clearStateProgramCompilationResult?: CompiledTeal
 }
 
 /**
@@ -760,11 +775,11 @@ export class AppClient {
   public async compile(compilation?: AppClientCompilationParams) {
     const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)
 
-    if (result.compiledApproval) {
-      this._approvalSourceMap = result.compiledApproval.sourceMap
+    if (result.approvalProgramCompilationResult) {
+      this._approvalSourceMap = result.approvalProgramCompilationResult.sourceMap
     }
-    if (result.compiledClear) {
-      this._clearSourceMap = result.compiledClear.sourceMap
+    if (result.clearStateProgramCompilationResult) {
+      this._clearSourceMap = result.clearStateProgramCompilationResult.sourceMap
     }
 
     return result
@@ -828,7 +843,11 @@ export class AppClient {
    * @param appSpec The app spec for the app
    * @param compilation Any compilation parameters to use
    */
-  public static async compile(appSpec: Arc56Contract, appManager: AppManager, compilation?: AppClientCompilationParams) {
+  public static async compile(
+    appSpec: Arc56Contract,
+    appManager: AppManager,
+    compilation?: AppClientCompilationParams,
+  ): Promise<AppClientCompilationResult> {
     const { deployTimeParams, updatable, deletable } = compilation ?? {}
 
     if (!appSpec.source) {
@@ -838,35 +857,33 @@ export class AppClient {
 
       return {
         approvalProgram: Buffer.from(appSpec.byteCode.approval, 'base64') as Uint8Array,
-        compiledApproval: undefined,
         clearStateProgram: Buffer.from(appSpec.byteCode.clear, 'base64') as Uint8Array,
-        compiledClear: undefined,
       }
     }
 
     const approvalTemplate = Buffer.from(appSpec.source.approval, 'base64').toString('utf-8')
-    const compiledApproval = await appManager.compileTealTemplate(approvalTemplate, deployTimeParams, {
+    const approvalProgramCompilationResult = await appManager.compileTealTemplate(approvalTemplate, deployTimeParams, {
       updatable,
       deletable,
     })
 
     const clearTemplate = Buffer.from(appSpec.source.clear, 'base64').toString('utf-8')
-    const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
+    const clearStateProgramCompilationResult = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
     if (Config.debug) {
       await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
-          { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
-          { compiledTeal: compiledClear, appName: appSpec.name, fileName: 'clear' },
+          { compiledTeal: approvalProgramCompilationResult, appName: appSpec.name, fileName: 'approval' },
+          { compiledTeal: clearStateProgramCompilationResult, appName: appSpec.name, fileName: 'clear' },
         ],
       })
     }
 
     return {
-      approvalProgram: compiledApproval.compiledBase64ToBytes,
-      compiledApproval,
-      clearStateProgram: compiledClear.compiledBase64ToBytes,
-      compiledClear,
+      approvalProgram: approvalProgramCompilationResult.compiledBase64ToBytes,
+      approvalProgramCompilationResult,
+      clearStateProgram: clearStateProgramCompilationResult.compiledBase64ToBytes,
+      clearStateProgramCompilationResult,
     }
   }
 
@@ -1014,7 +1031,14 @@ export class AppClient {
     return {
       /** Signs and sends an update call, including deploy-time TEAL template replacements and compilation if provided */
       update: async (params?: AppClientBareCallParams & AppClientCompilationParams & SendParams) => {
-        return await this.handleCallErrors(async () => this._algorand.send.appUpdate(await this.params.bare.update(params)))
+        const compiled = await this.compile(params)
+        return {
+          ...(await this.handleCallErrors(async () => this._algorand.send.appUpdate(await this.params.bare.update(params)))),
+          ...({
+            compiledApproval: compiled.approvalProgramCompilationResult,
+            compiledClear: compiled.clearStateProgramCompilationResult,
+          } as Partial<AppCompilationResult>),
+        }
       },
       /** Signs and sends an opt-in call */
       optIn: (params?: AppClientBareCallParams & SendParams) => {
@@ -1096,7 +1120,10 @@ export class AppClient {
               getArc56Method(params.method, this._appSpec),
             ),
           )),
-          ...(compiled as Partial<AppCompilationResult>),
+          ...({
+            compiledApproval: compiled.approvalProgramCompilationResult,
+            compiledClear: compiled.clearStateProgramCompilationResult,
+          } as Partial<AppCompilationResult>),
         }
       },
       /**
@@ -1144,7 +1171,9 @@ export class AppClient {
           const result = await this._algorand
             .newGroup()
             .addAppCallMethodCall(await this.params.call(params))
-            .simulate()
+            .simulate({
+              allowUnnamedResources: params.populateAppCallResources,
+            })
           return this.processMethodCallReturn(
             {
               ...result,

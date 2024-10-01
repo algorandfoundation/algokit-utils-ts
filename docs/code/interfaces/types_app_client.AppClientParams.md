@@ -28,7 +28,7 @@ An `AlgorandClient` instance
 
 #### Defined in
 
-[src/types/app-client.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L313)
+[src/types/app-client.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L328)
 
 ___
 
@@ -40,7 +40,7 @@ The ID of the app instance this client should make calls against.
 
 #### Defined in
 
-[src/types/app-client.ts:303](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L303)
+[src/types/app-client.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L318)
 
 ___
 
@@ -53,7 +53,7 @@ Defaults to the ARC-32/ARC-56 app spec name
 
 #### Defined in
 
-[src/types/app-client.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L319)
+[src/types/app-client.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L334)
 
 ___
 
@@ -68,7 +68,7 @@ The ARC-56 or ARC-32 application spec as either:
 
 #### Defined in
 
-[src/types/app-client.ts:310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L310)
+[src/types/app-client.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L325)
 
 ___
 
@@ -80,7 +80,7 @@ Optional source map for the approval program
 
 #### Defined in
 
-[src/types/app-client.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L323)
+[src/types/app-client.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L338)
 
 ___
 
@@ -92,7 +92,7 @@ Optional source map for the clear state program
 
 #### Defined in
 
-[src/types/app-client.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L325)
+[src/types/app-client.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L340)
 
 ___
 
@@ -104,4 +104,4 @@ Optional address to use for the account to use as the default sender for calls.
 
 #### Defined in
 
-[src/types/app-client.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L321)
+[src/types/app-client.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L336)
