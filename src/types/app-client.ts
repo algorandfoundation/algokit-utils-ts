@@ -1171,7 +1171,9 @@ export class AppClient {
           const result = await this._algorand
             .newGroup()
             .addAppCallMethodCall(await this.params.call(params))
-            .simulate()
+            .simulate({
+              allowUnnamedResources: params.populateAppCallResources,
+            })
           return this.processMethodCallReturn(
             {
               ...result,
