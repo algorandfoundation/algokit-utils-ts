@@ -1,0 +1,71 @@
+{
+    "hints": {
+        "get_pay_txn_amount(pay)uint64": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        },
+        "get_returned_value_of_app_call_txn(appl)uint64": {
+            "call_config": {
+                "no_op": "CALL"
+            }
+        }
+    },
+    "source": {
+        "approval": "I3ByYWdtYSB2ZXJzaW9uIDEwCgpzbWFydF9jb250cmFjdHMuc2FtcGxlX3JlZmVyZW5jZV90cmFuc2FjdGlvbi5jb250cmFjdC5TYW1wbGVSZWZlcmVuY2VUcmFuc2FjdGlvbi5hcHByb3ZhbF9wcm9ncmFtOgogICAgLy8gc21hcnRfY29udHJhY3RzL3NhbXBsZV9yZWZlcmVuY2VfdHJhbnNhY3Rpb24vY29udHJhY3QucHk6NAogICAgLy8gY2xhc3MgU2FtcGxlUmVmZXJlbmNlVHJhbnNhY3Rpb24oQVJDNENvbnRyYWN0KToKICAgIHR4biBOdW1BcHBBcmdzCiAgICBieiBtYWluX2JhcmVfcm91dGluZ0A2CiAgICBtZXRob2QgImdldF9wYXlfdHhuX2Ftb3VudChwYXkpdWludDY0IgogICAgbWV0aG9kICJnZXRfcmV0dXJuZWRfdmFsdWVfb2ZfYXBwX2NhbGxfdHhuKGFwcGwpdWludDY0IgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMAogICAgbWF0Y2ggbWFpbl9nZXRfcGF5X3R4bl9hbW91bnRfcm91dGVAMiBtYWluX2dldF9yZXR1cm5lZF92YWx1ZV9vZl9hcHBfY2FsbF90eG5fcm91dGVAMwogICAgZXJyIC8vIHJlamVjdCB0cmFuc2FjdGlvbgoKbWFpbl9nZXRfcGF5X3R4bl9hbW91bnRfcm91dGVAMjoKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9zYW1wbGVfcmVmZXJlbmNlX3RyYW5zYWN0aW9uL2NvbnRyYWN0LnB5OjUKICAgIC8vIEBhcmM0LmFiaW1ldGhvZAogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBpcyBOb09wCiAgICB0eG4gQXBwbGljYXRpb25JRAogICAgYXNzZXJ0IC8vIGlzIG5vdCBjcmVhdGluZwogICAgLy8gc21hcnRfY29udHJhY3RzL3NhbXBsZV9yZWZlcmVuY2VfdHJhbnNhY3Rpb24vY29udHJhY3QucHk6NAogICAgLy8gY2xhc3MgU2FtcGxlUmVmZXJlbmNlVHJhbnNhY3Rpb24oQVJDNENvbnRyYWN0KToKICAgIHR4biBHcm91cEluZGV4CiAgICBpbnQgMQogICAgLQogICAgZHVwCiAgICBndHhucyBUeXBlRW51bQogICAgaW50IHBheQogICAgPT0KICAgIGFzc2VydCAvLyB0cmFuc2FjdGlvbiB0eXBlIGlzIHBheQogICAgLy8gc21hcnRfY29udHJhY3RzL3NhbXBsZV9yZWZlcmVuY2VfdHJhbnNhY3Rpb24vY29udHJhY3QucHk6NQogICAgLy8gQGFyYzQuYWJpbWV0aG9kCiAgICBjYWxsc3ViIGdldF9wYXlfdHhuX2Ftb3VudAogICAgYnl0ZSAweDE1MWY3Yzc1CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgaW50IDEKICAgIHJldHVybgoKbWFpbl9nZXRfcmV0dXJuZWRfdmFsdWVfb2ZfYXBwX2NhbGxfdHhuX3JvdXRlQDM6CiAgICAvLyBzbWFydF9jb250cmFjdHMvc2FtcGxlX3JlZmVyZW5jZV90cmFuc2FjdGlvbi9jb250cmFjdC5weTo5CiAgICAvLyBAYXJjNC5hYmltZXRob2QKICAgIHR4biBPbkNvbXBsZXRpb24KICAgICEKICAgIGFzc2VydCAvLyBPbkNvbXBsZXRpb24gaXMgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydCAvLyBpcyBub3QgY3JlYXRpbmcKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9zYW1wbGVfcmVmZXJlbmNlX3RyYW5zYWN0aW9uL2NvbnRyYWN0LnB5OjQKICAgIC8vIGNsYXNzIFNhbXBsZVJlZmVyZW5jZVRyYW5zYWN0aW9uKEFSQzRDb250cmFjdCk6CiAgICB0eG4gR3JvdXBJbmRleAogICAgaW50IDEKICAgIC0KICAgIGR1cAogICAgZ3R4bnMgVHlwZUVudW0KICAgIGludCBhcHBsCiAgICA9PQogICAgYXNzZXJ0IC8vIHRyYW5zYWN0aW9uIHR5cGUgaXMgYXBwbAogICAgLy8gc21hcnRfY29udHJhY3RzL3NhbXBsZV9yZWZlcmVuY2VfdHJhbnNhY3Rpb24vY29udHJhY3QucHk6OQogICAgLy8gQGFyYzQuYWJpbWV0aG9kCiAgICBjYWxsc3ViIGdldF9yZXR1cm5lZF92YWx1ZV9vZl9hcHBfY2FsbF90eG4KICAgIGJ5dGUgMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludCAxCiAgICByZXR1cm4KCm1haW5fYmFyZV9yb3V0aW5nQDY6CiAgICAvLyBzbWFydF9jb250cmFjdHMvc2FtcGxlX3JlZmVyZW5jZV90cmFuc2FjdGlvbi9jb250cmFjdC5weTo0CiAgICAvLyBjbGFzcyBTYW1wbGVSZWZlcmVuY2VUcmFuc2FjdGlvbihBUkM0Q29udHJhY3QpOgogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIHJlamVjdCB0cmFuc2FjdGlvbgogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgICEKICAgIGFzc2VydCAvLyBpcyBjcmVhdGluZwogICAgaW50IDEKICAgIHJldHVybgoKCi8vIHNtYXJ0X2NvbnRyYWN0cy5zYW1wbGVfcmVmZXJlbmNlX3RyYW5zYWN0aW9uLmNvbnRyYWN0LlNhbXBsZVJlZmVyZW5jZVRyYW5zYWN0aW9uLmdldF9wYXlfdHhuX2Ftb3VudChwYXlfdHhuOiB1aW50NjQpIC0+IGJ5dGVzOgpnZXRfcGF5X3R4bl9hbW91bnQ6CiAgICAvLyBzbWFydF9jb250cmFjdHMvc2FtcGxlX3JlZmVyZW5jZV90cmFuc2FjdGlvbi9jb250cmFjdC5weTo1LTYKICAgIC8vIEBhcmM0LmFiaW1ldGhvZAogICAgLy8gZGVmIGdldF9wYXlfdHhuX2Ftb3VudChzZWxmLCBwYXlfdHhuOiBndHhuLlBheW1lbnRUcmFuc2FjdGlvbikgLT4gYXJjNC5VSW50NjQ6CiAgICBwcm90byAxIDEKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9zYW1wbGVfcmVmZXJlbmNlX3RyYW5zYWN0aW9uL2NvbnRyYWN0LnB5OjcKICAgIC8vIHJldHVybiBhcmM0LlVJbnQ2NChwYXlfdHhuLmFtb3VudCkKICAgIGZyYW1lX2RpZyAtMQogICAgZ3R4bnMgQW1vdW50CiAgICBpdG9iCiAgICByZXRzdWIKCgovLyBzbWFydF9jb250cmFjdHMuc2FtcGxlX3JlZmVyZW5jZV90cmFuc2FjdGlvbi5jb250cmFjdC5TYW1wbGVSZWZlcmVuY2VUcmFuc2FjdGlvbi5nZXRfcmV0dXJuZWRfdmFsdWVfb2ZfYXBwX2NhbGxfdHhuKGFwcF9jYWxsX3R4bjogdWludDY0KSAtPiBieXRlczoKZ2V0X3JldHVybmVkX3ZhbHVlX29mX2FwcF9jYWxsX3R4bjoKICAgIC8vIHNtYXJ0X2NvbnRyYWN0cy9zYW1wbGVfcmVmZXJlbmNlX3RyYW5zYWN0aW9uL2NvbnRyYWN0LnB5OjktMTIKICAgIC8vIEBhcmM0LmFiaW1ldGhvZAogICAgLy8gZGVmIGdldF9yZXR1cm5lZF92YWx1ZV9vZl9hcHBfY2FsbF90eG4oCiAgICAvLyAgICAgc2VsZiwgYXBwX2NhbGxfdHhuOiBndHhuLkFwcGxpY2F0aW9uQ2FsbFRyYW5zYWN0aW9uCiAgICAvLyApIC0+IGFyYzQuVUludDY0OgogICAgcHJvdG8gMSAxCiAgICAvLyBzbWFydF9jb250cmFjdHMvc2FtcGxlX3JlZmVyZW5jZV90cmFuc2FjdGlvbi9jb250cmFjdC5weToxMwogICAgLy8gcmV0dXJuIGFyYzQuVUludDY0LmZyb21fbG9nKGFwcF9jYWxsX3R4bi5sYXN0X2xvZykKICAgIGZyYW1lX2RpZyAtMQogICAgZ3R4bnMgTGFzdExvZwogICAgZHVwCiAgICBleHRyYWN0IDQgMAogICAgc3dhcAogICAgZXh0cmFjdCAwIDQKICAgIGJ5dGUgMHgxNTFmN2M3NQogICAgPT0KICAgIGFzc2VydCAvLyBBUkM0IHByZWZpeCBpcyB2YWxpZAogICAgcmV0c3ViCg==",
+        "clear": "I3ByYWdtYSB2ZXJzaW9uIDEwCgpzbWFydF9jb250cmFjdHMuc2FtcGxlX3JlZmVyZW5jZV90cmFuc2FjdGlvbi5jb250cmFjdC5TYW1wbGVSZWZlcmVuY2VUcmFuc2FjdGlvbi5jbGVhcl9zdGF0ZV9wcm9ncmFtOgogICAgLy8gc21hcnRfY29udHJhY3RzL3NhbXBsZV9yZWZlcmVuY2VfdHJhbnNhY3Rpb24vY29udHJhY3QucHk6NAogICAgLy8gY2xhc3MgU2FtcGxlUmVmZXJlbmNlVHJhbnNhY3Rpb24oQVJDNENvbnRyYWN0KToKICAgIGludCAxCiAgICByZXR1cm4K"
+    },
+    "state": {
+        "global": {
+            "num_byte_slices": 0,
+            "num_uints": 0
+        },
+        "local": {
+            "num_byte_slices": 0,
+            "num_uints": 0
+        }
+    },
+    "schema": {
+        "global": {
+            "declared": {},
+            "reserved": {}
+        },
+        "local": {
+            "declared": {},
+            "reserved": {}
+        }
+    },
+    "contract": {
+        "name": "SampleReferenceTransaction",
+        "methods": [
+            {
+                "name": "get_pay_txn_amount",
+                "args": [
+                    {
+                        "type": "pay",
+                        "name": "pay_txn"
+                    }
+                ],
+                "returns": {
+                    "type": "uint64"
+                }
+            },
+            {
+                "name": "get_returned_value_of_app_call_txn",
+                "args": [
+                    {
+                        "type": "appl",
+                        "name": "app_call_txn"
+                    }
+                ],
+                "returns": {
+                    "type": "uint64"
+                }
+            }
+        ],
+        "networks": {}
+    },
+    "bare_call_config": {
+        "no_op": "CREATE"
+    }
+}
