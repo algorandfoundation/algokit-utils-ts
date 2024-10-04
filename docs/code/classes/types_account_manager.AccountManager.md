@@ -305,7 +305,7 @@ ___
 
 ### ensureFundedFromTestNetDispenserApi
 
-▸ **ensureFundedFromTestNetDispenserApi**(`accountToFund`, `dispenserClient`, `minSpendingBalance`, `options`): `Promise`\<`undefined` \| [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
+▸ **ensureFundedFromTestNetDispenserApi**(`accountToFund`, `dispenserClient`, `minSpendingBalance`, `options?`): `Promise`\<`undefined` \| [`EnsureFundedResult`](../interfaces/types_account_manager.EnsureFundedResult.md)\>
 
 Funds a given account using the TestNet Dispenser API as a funding source such that
 the account has a certain amount of Algo free to spend (accounting for Algo locked
@@ -320,7 +320,7 @@ https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
 | `accountToFund` | `string` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The account to fund |
 | `dispenserClient` | [`TestNetDispenserApiClient`](types_dispenser_client.TestNetDispenserApiClient.md) | The TestNet dispenser funding client |
 | `minSpendingBalance` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement) |
-| `options` | `Object` | Optional parameters to control the funding increment, transaction or execution of the transaction |
+| `options?` | `Object` | Optional parameters to control the funding increment, transaction or execution of the transaction |
 | `options.minFundingIncrement?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | - |
 
 #### Returns
