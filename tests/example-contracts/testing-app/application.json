@@ -7,7 +7,6 @@
             }
         },
         "call_abi_txn(pay,string)string": {
-            "read_only": true,
             "call_config": {
                 "no_op": "CALL"
             }

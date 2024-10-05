@@ -10,6 +10,7 @@ import { EventType } from './async-event-emitter'
 import { Expand } from './expand'
 import { genesisIdIsLocalNet } from './network-client'
 import { Arc2TransactionNote, SendAtomicTransactionComposerResults, SendParams } from './transaction'
+import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
@@ -21,7 +22,10 @@ import modelsv2 = algosdk.modelsv2
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
 /** Options to control a simulate request */
-export type SimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
+export type SimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>> & {
+  /** Whether or not to skip signatures for all built transactions and use an empty signer instead. */
+  skipSignatures?: boolean
+}
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
@@ -1269,22 +1273,33 @@ export default class AlgoKitComposer {
    * @returns The simulation result
    */
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
-    await this.build()
+    const atc = options?.skipSignatures ? new AtomicTransactionComposer() : this.atc
+
+    // Build the transactions
+    if (options?.skipSignatures) {
+      options.allowEmptySignatures = true
+      // Build transactions uses empty signers
+      const transactions = await this.buildTransactions()
+      for (const txn of transactions.transactions) {
+        atc.addTransaction({ txn, signer: AlgoKitComposer.NULL_SIGNER })
+      }
+      atc['methodCalls'] = transactions.methodCalls
+    } else {
+      // Build creates real signatures
+      await this.build()
+    }
 
     if (Config.debug && !Config.traceAll) {
       // Dump the traces to a file for use with AlgoKit AVM debugger
       // Checks for false on traceAll because it should have been already
       // executed above
-      const simulateResponse = await performAtomicTransactionComposerSimulate(this.atc, this.algod)
+      const simulateResponse = await performAtomicTransactionComposerSimulate(atc, this.algod)
       await Config.events.emitAsync(EventType.TxnGroupSimulated, {
         simulateResponse,
       })
     }
 
-    const { methodResults, simulateResponse } = await this.atc.simulate(
-      this.algod,
-      new modelsv2.SimulateRequest({ txnGroups: [], ...options }),
-    )
+    const { methodResults, simulateResponse } = await atc.simulate(this.algod, new modelsv2.SimulateRequest({ txnGroups: [], ...options }))
 
     if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
       const error = new Error(
@@ -1295,7 +1310,7 @@ export default class AlgoKitComposer {
       throw error
     }
 
-    const transactions = this.atc.buildGroup().map((t) => t.txn)
+    const transactions = atc.buildGroup().map((t) => t.txn)
     return {
       confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
       transactions: transactions,

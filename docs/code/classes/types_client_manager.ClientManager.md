@@ -239,6 +239,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
 | `params.creatorAddress` | `string` | The address of the creator account for the app |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.ignoreCache?` | `boolean` | Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value |
 
 #### Returns
@@ -280,6 +281,7 @@ Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
 
@@ -322,6 +324,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
 
@@ -358,6 +361,7 @@ Returns a new `AppFactory` client
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name. |
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.deletable?` | `boolean` | Whether or not the contract should have deploy-time permanence control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
 | `params.deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optional deploy-time TEAL template replacement parameters. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
 | `params.updatable?` | `boolean` | Whether or not the contract should have deploy-time immutability control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
@@ -492,6 +496,7 @@ Returns a new typed client, resolving the app by creator address and name.
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
 | `params.creatorAddress` | `string` | The address of the creator account for the app |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.ignoreCache?` | `boolean` | Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value |
 
 #### Returns
@@ -548,6 +553,7 @@ Returns a new typed client, resolving the app by app ID.
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
 
@@ -595,6 +601,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
 | `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 
 #### Returns
 
@@ -636,6 +643,7 @@ Returns a new typed app factory.
 | `params?` | `Object` | The params to resolve the factory by |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name. |
 | `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.deletable?` | `boolean` | Whether or not the contract should have deploy-time permanence control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
 | `params.deployTimeParams?` | [`TealTemplateParams`](../interfaces/types_app.TealTemplateParams.md) | Optional deploy-time TEAL template replacement parameters. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |
 | `params.updatable?` | `boolean` | Whether or not the contract should have deploy-time immutability control set, undefined = ignore. If specified here will get used in calls to `deploy` and `create` calls unless overridden in those calls. Useful if you want to vend multiple contracts from the same factory without specifying this value for each call. |

@@ -40,6 +40,7 @@ import { SendParams } from './transaction'
 import SourceMap = algosdk.SourceMap
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import ABIValue = algosdk.ABIValue
+import TransactionSigner = algosdk.TransactionSigner
 
 /** Parameters to create an app client */
 export interface AppFactoryParams {
@@ -61,6 +62,9 @@ export interface AppFactoryParams {
 
   /** Optional address to use for the account to use as the default sender for calls. */
   defaultSender?: string
+
+  /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
+  defaultSigner?: TransactionSigner
 
   /** The version of app that is / will be deployed; defaults to 1.0 */
   version?: string
@@ -152,6 +156,8 @@ export type AppFactoryDeployParams = Expand<
      * `undefined` = use AppFactory constructor value if set or base it on the app spec.
      */
     deletable?: boolean
+    /** Override the app name for this deployment */
+    appName?: string
   }
 >
 
@@ -166,6 +172,7 @@ export class AppFactory {
   private _algorand: AlgorandClientInterface
   private _version: string
   private _defaultSender?: string
+  private _defaultSigner?: TransactionSigner
   private _deployTimeParams?: TealTemplateParams
   private _updatable?: boolean
   private _deletable?: boolean
@@ -181,10 +188,26 @@ export class AppFactory {
     this._algorand = params.algorand
     this._version = params.version ?? '1.0'
     this._defaultSender = params.defaultSender
+    this._defaultSigner = params.defaultSigner
     this._deployTimeParams = params.deployTimeParams
     this._updatable = params.updatable
     this._deletable = params.deletable
     this._paramsMethods = this.getParamsMethods()
+  }
+
+  /** The name of the app (from the ARC-32 / ARC-56 app spec or override). */
+  public get appName() {
+    return this._appName
+  }
+
+  /** The ARC-56 app spec being used */
+  get appSpec() {
+    return this._appSpec
+  }
+
+  /** Return the algorand client this factory is using. */
+  get algorand() {
+    return this._algorand
   }
 
   /** Get parameters to create transactions (create and deploy related calls) for the current app.
@@ -241,10 +264,7 @@ export class AppFactory {
           }),
           result: {
             ...result,
-            ...({
-              compiledApproval: compiled.approvalProgramCompilationResult,
-              compiledClear: compiled.clearStateProgramCompilationResult,
-            } as Partial<AppCompilationResult>),
+            ...(compiled as Partial<AppCompilationResult>),
           },
         }
       },
@@ -275,10 +295,7 @@ export class AppFactory {
         }),
         result: {
           ...result,
-          ...({
-            compiledApproval: compiled.approvalProgramCompilationResult,
-            compiledClear: compiled.clearStateProgramCompilationResult,
-          } as Partial<AppCompilationResult>),
+          ...(compiled as Partial<AppCompilationResult>),
         },
       }
     },
@@ -314,7 +331,7 @@ export class AppFactory {
           ? this.params.deployDelete(params.deleteParams)
           : this.params.bare.deployDelete(params.deleteParams),
       metadata: {
-        name: this._appName,
+        name: params.appName ?? this._appName,
         version: this._version,
         updatable,
         deletable,
@@ -322,13 +339,11 @@ export class AppFactory {
     })
     const appClient = this.getAppClientById({
       appId: deployResult.appId,
+      appName: params.appName,
     })
     const result = {
       ...deployResult,
-      ...({
-        compiledApproval: compiled.approvalProgramCompilationResult,
-        compiledClear: compiled.clearStateProgramCompilationResult,
-      } as Partial<AppCompilationResult>),
+      ...(compiled as Partial<AppCompilationResult>),
     }
     return {
       appClient,
@@ -367,6 +382,7 @@ export class AppFactory {
       appSpec: this._appSpec,
       appName: params.appName ?? this._appName,
       defaultSender: params.defaultSender ?? this._defaultSender,
+      defaultSigner: params.defaultSigner ?? this._defaultSigner,
       approvalSourceMap: params.approvalSourceMap ?? this._approvalSourceMap,
       clearSourceMap: params.clearSourceMap ?? this._clearSourceMap,
     })
@@ -452,6 +468,7 @@ export class AppFactory {
     return {
       /** Return params for a create ABI call, including deploy-time TEAL template replacements and compilation if provided */
       create: async (params: AppFactoryCreateMethodCallParams) => {
+        const compiled = await this.compile({ ...params, deployTimeParams: params.deployTimeParams ?? this._deployTimeParams })
         return this.getABIParams(
           {
             ...params,
@@ -462,7 +479,8 @@ export class AppFactory {
               localByteSlices: this._appSpec.state.schema.local.bytes,
               localInts: this._appSpec.state.schema.local.ints,
             },
-            ...(await this.compile({ ...params, deployTimeParams: params.deployTimeParams ?? this._deployTimeParams })),
+            approvalProgram: compiled.approvalProgram,
+            clearStateProgram: compiled.clearStateProgram,
           },
           params.onComplete ?? OnApplicationComplete.NoOpOC,
         ) satisfies AppCreateMethodCall
@@ -526,11 +544,11 @@ export class AppFactory {
   public async compile(compilation?: AppClientCompilationParams) {
     const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)
 
-    if (result.approvalProgramCompilationResult) {
-      this._approvalSourceMap = result.approvalProgramCompilationResult.sourceMap
+    if (result.compiledApproval) {
+      this._approvalSourceMap = result.compiledApproval.sourceMap
     }
-    if (result.clearStateProgramCompilationResult) {
-      this._clearSourceMap = result.clearStateProgramCompilationResult.sourceMap
+    if (result.compiledClear) {
+      this._clearSourceMap = result.compiledClear.sourceMap
     }
 
     return result
