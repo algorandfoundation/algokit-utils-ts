@@ -16,6 +16,7 @@ import { Config } from '../config'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { binaryStartsWith } from '../util'
+import { TransactionSignerAccount } from './account'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgoAmount } from './amount'
 import {
@@ -32,7 +33,6 @@ import {
   AppState,
   AppStorageSchema,
   BoxName,
-  CompiledTeal,
   DELETABLE_TEMPLATE_NAME,
   AppLookup as LegacyAppLookup,
   OnSchemaBreak,
@@ -84,6 +84,7 @@ import Indexer = algosdk.Indexer
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.SourceMap
 import SuggestedParams = algosdk.SuggestedParams
+import TransactionSigner = algosdk.TransactionSigner
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
@@ -272,16 +273,14 @@ export interface SourceMapExport {
 
 /**
  * The result of asking an `AppClient` to compile a program.
+ *
+ * Always contains the compiled bytecode, and may contain the result of compiling TEAL (including sourcemap) if it was available.
  */
-export interface AppClientCompilationResult {
+export interface AppClientCompilationResult extends Partial<AppCompilationResult> {
   /** The compiled bytecode of the approval program, ready to deploy to algod */
   approvalProgram: Uint8Array
   /** The compiled bytecode of the clear state program, ready to deploy to algod */
   clearStateProgram: Uint8Array
-  /** The result of compilation of the approval program, including source map, if TEAL code was compiled */
-  approvalProgramCompilationResult?: CompiledTeal
-  /** The result of compilation of the clear state program, including source map, if TEAL code was compiled */
-  clearStateProgramCompilationResult?: CompiledTeal
 }
 
 /**
@@ -334,6 +333,8 @@ export interface AppClientParams {
   appName?: string
   /** Optional address to use for the account to use as the default sender for calls. */
   defaultSender?: string
+  /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
+  defaultSigner?: TransactionSigner
   /** Optional source map for the approval program */
   approvalSourceMap?: SourceMap
   /** Optional source map for the clear state program */
@@ -413,6 +414,7 @@ export class AppClient {
   private _appSpec: Arc56Contract
   private _algorand: AlgorandClientInterface
   private _defaultSender?: string
+  private _defaultSigner?: TransactionSigner
 
   private _approvalSourceMap: SourceMap | undefined
   private _clearSourceMap: SourceMap | undefined
@@ -438,6 +440,7 @@ export class AppClient {
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
     this._defaultSender = params.defaultSender
+    this._defaultSigner = params.defaultSigner
 
     this._approvalSourceMap = params.approvalSourceMap
     this._clearSourceMap = params.clearSourceMap
@@ -553,6 +556,11 @@ export class AppClient {
   /** The ARC-56 app spec being used */
   public get appSpec(): Arc56Contract {
     return this._appSpec
+  }
+
+  /** A reference to the underlying `AlgorandClient` this app client is using. */
+  public get algorand(): AlgorandClientInterface {
+    return this._algorand
   }
 
   /** Get parameters to create transactions for the current app.
@@ -775,11 +783,11 @@ export class AppClient {
   public async compile(compilation?: AppClientCompilationParams) {
     const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)
 
-    if (result.approvalProgramCompilationResult) {
-      this._approvalSourceMap = result.approvalProgramCompilationResult.sourceMap
+    if (result.compiledApproval) {
+      this._approvalSourceMap = result.compiledApproval.sourceMap
     }
-    if (result.clearStateProgramCompilationResult) {
-      this._clearSourceMap = result.clearStateProgramCompilationResult.sourceMap
+    if (result.compiledClear) {
+      this._clearSourceMap = result.compiledClear.sourceMap
     }
 
     return result
@@ -862,28 +870,28 @@ export class AppClient {
     }
 
     const approvalTemplate = Buffer.from(appSpec.source.approval, 'base64').toString('utf-8')
-    const approvalProgramCompilationResult = await appManager.compileTealTemplate(approvalTemplate, deployTimeParams, {
+    const compiledApproval = await appManager.compileTealTemplate(approvalTemplate, deployTimeParams, {
       updatable,
       deletable,
     })
 
     const clearTemplate = Buffer.from(appSpec.source.clear, 'base64').toString('utf-8')
-    const clearStateProgramCompilationResult = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
+    const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
 
     if (Config.debug) {
       await Config.events.emitAsync(EventType.AppCompiled, {
         sources: [
-          { compiledTeal: approvalProgramCompilationResult, appName: appSpec.name, fileName: 'approval' },
-          { compiledTeal: clearStateProgramCompilationResult, appName: appSpec.name, fileName: 'clear' },
+          { compiledTeal: compiledApproval, appName: appSpec.name, fileName: 'approval' },
+          { compiledTeal: compiledClear, appName: appSpec.name, fileName: 'clear' },
         ],
       })
     }
 
     return {
-      approvalProgram: approvalProgramCompilationResult.compiledBase64ToBytes,
-      approvalProgramCompilationResult,
-      clearStateProgram: clearStateProgramCompilationResult.compiledBase64ToBytes,
-      clearStateProgramCompilationResult,
+      approvalProgram: compiledApproval.compiledBase64ToBytes,
+      compiledApproval,
+      clearStateProgram: compiledClear.compiledBase64ToBytes,
+      compiledClear,
     }
   }
 
@@ -1034,10 +1042,7 @@ export class AppClient {
         const compiled = await this.compile(params)
         return {
           ...(await this.handleCallErrors(async () => this._algorand.send.appUpdate(await this.params.bare.update(params)))),
-          ...({
-            compiledApproval: compiled.approvalProgramCompilationResult,
-            compiledClear: compiled.clearStateProgramCompilationResult,
-          } as Partial<AppCompilationResult>),
+          ...(compiled as Partial<AppCompilationResult>),
         }
       },
       /** Signs and sends an opt-in call */
@@ -1070,6 +1075,7 @@ export class AppClient {
         return {
           ...params,
           sender: this.getSender(params.sender),
+          signer: this.getSigner(params.sender, params.signer),
           receiver: this.appAddress,
         } satisfies PaymentParams
       },
@@ -1120,10 +1126,7 @@ export class AppClient {
               getArc56Method(params.method, this._appSpec),
             ),
           )),
-          ...({
-            compiledApproval: compiled.approvalProgramCompilationResult,
-            compiledClear: compiled.clearStateProgramCompilationResult,
-          } as Partial<AppCompilationResult>),
+          ...(compiled as Partial<AppCompilationResult>),
         }
       },
       /**
@@ -1173,6 +1176,8 @@ export class AppClient {
             .addAppCallMethodCall(await this.params.call(params))
             .simulate({
               allowUnnamedResources: params.populateAppCallResources,
+              // Simulate calls for a readonly method shouldn't invoke signing
+              skipSignatures: true,
             })
           return this.processMethodCallReturn(
             {
@@ -1235,7 +1240,7 @@ export class AppClient {
     }
   }
 
-  /** Returns the sender for a call, using the `defaultSender`
+  /** Returns the sender for a call, using the provided sender or using the `defaultSender`
    * if none provided and throws an error if neither provided */
   private getSender(sender: string | undefined): string {
     if (!sender && !this._defaultSender) {
@@ -1244,20 +1249,36 @@ export class AppClient {
     return sender ?? this._defaultSender!
   }
 
-  private getBareParams<TParams extends { sender?: string } | undefined, TOnComplete extends OnApplicationComplete>(
-    params: TParams,
-    onComplete: TOnComplete,
-  ) {
+  /** Returns the signer for a call, using the provided signer or the `defaultSigner`
+   * if no signer was provided and the call will use default sender
+   * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
+  private getSigner(
+    sender: string | undefined,
+    signer: TransactionSigner | TransactionSignerAccount | undefined,
+  ): TransactionSigner | TransactionSignerAccount | undefined {
+    return signer ?? (!sender ? this._defaultSigner : undefined)
+  }
+
+  private getBareParams<
+    TParams extends { sender?: string; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
+    TOnComplete extends OnApplicationComplete,
+  >(params: TParams, onComplete: TOnComplete) {
     return {
       ...params,
       appId: this._appId,
       sender: this.getSender(params?.sender),
+      signer: this.getSigner(params?.sender, params?.signer),
       onComplete,
     }
   }
 
   private async getABIParams<
-    TParams extends { method: string; sender?: string; args?: AppClientMethodCallParams['args'] },
+    TParams extends {
+      method: string
+      sender?: string
+      signer?: TransactionSigner | TransactionSignerAccount
+      args?: AppClientMethodCallParams['args']
+    },
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     const sender = this.getSender(params.sender)
@@ -1267,6 +1288,7 @@ export class AppClient {
       ...params,
       appId: this._appId,
       sender: sender,
+      signer: this.getSigner(params.sender, params.signer),
       method,
       onComplete,
       args,

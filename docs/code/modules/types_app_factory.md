@@ -32,7 +32,7 @@ Params to get an app client by ID from an app factory.
 
 #### Defined in
 
-[src/types/app-factory.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L129)
+[src/types/app-factory.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L133)
 
 ___
 
@@ -44,7 +44,7 @@ Params to specify a create method call for an app
 
 #### Defined in
 
-[src/types/app-factory.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L124)
+[src/types/app-factory.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L128)
 
 ___
 
@@ -56,19 +56,19 @@ Params to specify a bare (raw) create call for an app
 
 #### Defined in
 
-[src/types/app-factory.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L121)
+[src/types/app-factory.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L125)
 
 ___
 
 ### AppFactoryDeployParams
 
-Ƭ **AppFactoryDeployParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppDeployParams`](types_app_deployer.md#appdeployparams), ``"createParams"`` \| ``"updateParams"`` \| ``"deleteParams"`` \| ``"metadata"``\> & \{ `createParams?`: [`Expand`](types_expand.md#expand)\<[`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\> \| [`Expand`](types_expand.md#expand)\<[`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\> ; `deletable?`: `boolean` ; `deleteParams?`: [`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) \| [`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) ; `updatable?`: `boolean` ; `updateParams?`: [`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) \| [`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams)  }\>
+Ƭ **AppFactoryDeployParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppDeployParams`](types_app_deployer.md#appdeployparams), ``"createParams"`` \| ``"updateParams"`` \| ``"deleteParams"`` \| ``"metadata"``\> & \{ `appName?`: `string` ; `createParams?`: [`Expand`](types_expand.md#expand)\<[`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\> \| [`Expand`](types_expand.md#expand)\<[`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) & [`CreateOnComplete`](types_app_factory.md#createoncomplete) & [`CreateSchema`](types_app_factory.md#createschema)\> ; `deletable?`: `boolean` ; `deleteParams?`: [`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) \| [`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams) ; `updatable?`: `boolean` ; `updateParams?`: [`AppClientMethodCallParams`](types_app_client.md#appclientmethodcallparams) \| [`AppClientBareCallParams`](types_app_client.md#appclientbarecallparams)  }\>
 
 Parameters to define a deployment for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L135)
+[src/types/app-factory.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L139)
 
 ___
 
@@ -80,7 +80,7 @@ Params to get an app client by creator address and name from an app factory.
 
 #### Defined in
 
-[src/types/app-factory.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L132)
+[src/types/app-factory.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L136)
 
 ___
 
@@ -98,7 +98,7 @@ onComplete parameter for a create app call
 
 #### Defined in
 
-[src/types/app-factory.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L97)
+[src/types/app-factory.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L101)
 
 ___
 
@@ -121,4 +121,4 @@ Specifies a schema used for creating an app
 
 #### Defined in
 
-[src/types/app-factory.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L102)
+[src/types/app-factory.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L106)
