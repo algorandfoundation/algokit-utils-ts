@@ -1,4 +1,11 @@
-import algosdk from 'algosdk'
+import algosdk, {
+  Address,
+  ApplicationTransactionFields,
+  TransactionBoxReference,
+  TransactionType,
+  encodeMsgpack,
+  msgpackRawEncode,
+} from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
@@ -105,8 +112,8 @@ export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined
  * @param sender A transaction sender
  * @returns The public address
  */
-export const getSenderAddress = function (sender: string | SendTransactionFrom) {
-  return typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr : sender.address()
+export const getSenderAddress = function (sender: string | SendTransactionFrom): string {
+  return typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr.toString() : sender.address().toString()
 }
 
 /**
@@ -272,17 +279,17 @@ async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransaction
     return Promise.all(
       stxns.map(async (stxn) => {
         const decodedStxn = algosdk.decodeSignedTransaction(stxn)
-        const sender = algosdk.encodeAddress(decodedStxn.txn.from.publicKey)
+        const sender = decodedStxn.txn.sender
 
-        const authAddr = (await algod.accountInformation(sender).do())['auth-addr']
+        const authAddr = (await algod.accountInformation(sender).do()).authAddr
 
-        const stxnObj: { txn: algosdk.EncodedTransaction; sgnr?: Buffer } = { txn: decodedStxn.txn.get_obj_for_encoding() }
+        const stxnObj: { txn: Uint8Array; sgnr?: Buffer } = { txn: encodeMsgpack(decodedStxn) }
 
         if (authAddr !== undefined) {
-          stxnObj.sgnr = Buffer.from(algosdk.decodeAddress(authAddr).publicKey)
+          stxnObj.sgnr = Buffer.from(authAddr.publicKey)
         }
 
-        return algosdk.encodeObj(stxnObj)
+        return msgpackRawEncode(stxnObj)
       }),
     )
   }
@@ -331,33 +338,25 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
   const group = atc.buildGroup()
 
   unnamedResourcesAccessed.txns.forEach((r, i) => {
-    if (r === undefined) return
+    if (r === undefined || group[i].txn.type !== TransactionType.appl) return
 
     if (r.boxes || r.extraBoxRefs) throw Error('Unexpected boxes at the transaction level')
     if (r.appLocals) throw Error('Unexpected app local at the transaction level')
     if (r.assetHoldings) throw Error('Unexpected asset holding at the transaction level')
+    ;(group[i].txn as any)['applicationCall'] = {
+      ...group[i].txn.applicationCall,
+      accounts: [...(group[i].txn?.applicationCall?.accounts ?? []), ...(r.accounts ?? [])],
+      foreignApps: [...(group[i].txn?.applicationCall?.foreignApps ?? []), ...(r.apps ?? [])],
+      foreignAssets: [...(group[i].txn?.applicationCall?.foreignAssets ?? []), ...(r.assets ?? [])],
+      boxes: [...(group[i].txn?.applicationCall?.boxes ?? []), ...(r.boxes ?? [])],
+    } satisfies Partial<ApplicationTransactionFields>
 
-    // Do accounts first because the account limit is 4
-    r.accounts?.forEach((a) => {
-      group[i].txn.appAccounts = [...(group[i].txn.appAccounts ?? []), algosdk.decodeAddress(a)]
-    })
-
-    r.apps?.forEach((a) => {
-      group[i].txn.appForeignApps = [...(group[i].txn.appForeignApps ?? []), Number(a)]
-    })
-
-    r.assets?.forEach((a) => {
-      group[i].txn.appForeignAssets = [...(group[i].txn.appForeignAssets ?? []), Number(a)]
-    })
-
-    const accounts = group[i].txn.appAccounts?.length || 0
+    const accounts = group[i].txn.applicationCall?.accounts?.length ?? 0
     if (accounts > MAX_APP_CALL_ACCOUNT_REFERENCES)
       throw Error(`Account reference limit of ${MAX_APP_CALL_ACCOUNT_REFERENCES} exceeded in transaction ${i}`)
-
-    const assets = group[i].txn.appForeignAssets?.length || 0
-    const apps = group[i].txn.appForeignApps?.length || 0
-    const boxes = group[i].txn.boxes?.length || 0
-
+    const assets = group[i].txn.applicationCall?.foreignAssets?.length ?? 0
+    const apps = group[i].txn.applicationCall?.foreignApps?.length ?? 0
+    const boxes = group[i].txn.applicationCall?.boxes?.length ?? 0
     if (accounts + assets + apps + boxes > MAX_APP_CALL_FOREIGN_REFERENCES) {
       throw Error(`Resource reference limit of ${MAX_APP_CALL_FOREIGN_REFERENCES} exceeded in transaction ${i}`)
     }
@@ -371,16 +370,17 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
       | algosdk.modelsv2.ApplicationLocalReference
       | algosdk.modelsv2.AssetHoldingReference
       | bigint
-      | number,
+      | number
+      | Address,
     type: 'account' | 'assetHolding' | 'appLocal' | 'app' | 'box' | 'asset',
   ): void => {
     const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
       if (t.txn.type !== algosdk.TransactionType.appl) return false
 
-      const accounts = t.txn.appAccounts?.length || 0
-      const assets = t.txn.appForeignAssets?.length || 0
-      const apps = t.txn.appForeignApps?.length || 0
-      const boxes = t.txn.boxes?.length || 0
+      const accounts = t.txn.applicationCall?.accounts?.length ?? 0
+      const assets = t.txn.applicationCall?.foreignAssets?.length ?? 0
+      const apps = t.txn.applicationCall?.foreignApps?.length ?? 0
+      const boxes = t.txn.applicationCall?.boxes?.length ?? 0
 
       return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
     }
@@ -394,23 +394,29 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 
         return (
           // account is in the foreign accounts array
-          t.txn.appAccounts?.map((a) => algosdk.encodeAddress(a.publicKey)).includes(account) ||
+          t.txn.applicationCall?.accounts?.map((a) => a.toString()).includes(account.toString()) ||
           // account is available as an app account
-          t.txn.appForeignApps?.map((a) => algosdk.getApplicationAddress(a)).includes(account) ||
+          t.txn.applicationCall?.foreignApps?.map((a) => algosdk.getApplicationAddress(a).toString()).includes(account.toString()) ||
           // account is available since it's in one of the fields
           Object.values(t.txn)
             .map((f) => JSON.stringify(f))
-            .includes(JSON.stringify(algosdk.decodeAddress(account)))
+            .includes(JSON.stringify(account))
         )
       })
 
       if (txnIndex > -1) {
         if (type === 'assetHolding') {
           const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
-          txns[txnIndex].txn.appForeignAssets = [...(txns[txnIndex].txn.appForeignAssets ?? []), Number(asset)]
+          ;(txns[txnIndex].txn as any)['applicationCall'] = {
+            ...txns[txnIndex].txn.applicationCall,
+            foreignAssets: [...(txns[txnIndex].txn?.applicationCall?.foreignAssets ?? []), ...[asset]],
+          } satisfies Partial<ApplicationTransactionFields>
         } else {
           const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
-          txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(app)]
+          ;(txns[txnIndex].txn as any)['applicationCall'] = {
+            ...txns[txnIndex].txn.applicationCall,
+            foreignApps: [...(txns[txnIndex].txn?.applicationCall?.foreignApps ?? []), ...[app]],
+          } satisfies Partial<ApplicationTransactionFields>
         }
         return
       }
@@ -420,21 +426,24 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
         if (!isApplBelowLimit(t)) return false
 
         // check if there is space in the accounts array
-        if ((t.txn.appAccounts?.length || 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
+        if ((t.txn.applicationCall?.accounts?.length ?? 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
 
         if (type === 'assetHolding') {
           const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
-          return t.txn.appForeignAssets?.includes(Number(asset))
+          return t.txn.applicationCall?.foreignAssets?.includes(asset)
         } else {
           const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
-          return t.txn.appForeignApps?.includes(Number(app)) || t.txn.appIndex === Number(app)
+          return t.txn.applicationCall?.foreignApps?.includes(app) || t.txn.applicationCall?.appIndex === app
         }
       })
 
       if (txnIndex > -1) {
         const { account } = reference as algosdk.modelsv2.AssetHoldingReference | algosdk.modelsv2.ApplicationLocalReference
 
-        txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(account)]
+        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+          ...txns[txnIndex].txn.applicationCall,
+          accounts: [...(txns[txnIndex].txn?.applicationCall?.accounts ?? []), ...[account]],
+        } satisfies Partial<ApplicationTransactionFields>
 
         return
       }
@@ -448,11 +457,14 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
         if (!isApplBelowLimit(t)) return false
 
         // If the app is in the foreign array OR the app being called, then we know it's available
-        return t.txn.appForeignApps?.includes(Number(app)) || t.txn.appIndex === Number(app)
+        return t.txn.applicationCall?.foreignApps?.includes(app) || t.txn.applicationCall?.appIndex === app
       })
 
       if (txnIndex > -1) {
-        txns[txnIndex].txn.boxes = [...(txns[txnIndex].txn.boxes ?? []), { appIndex: Number(app), name }]
+        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+          ...txns[txnIndex].txn.applicationCall,
+          boxes: [...(txns[txnIndex].txn?.applicationCall?.boxes ?? []), ...[{ appIndex: app, name } satisfies TransactionBoxReference]],
+        } satisfies Partial<ApplicationTransactionFields>
 
         return
       }
@@ -462,12 +474,12 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     const txnIndex = txns.findIndex((t) => {
       if (t.txn.type !== algosdk.TransactionType.appl) return false
 
-      const accounts = t.txn.appAccounts?.length || 0
+      const accounts = t.txn.applicationCall?.accounts?.length ?? 0
       if (type === 'account') return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES
 
-      const assets = t.txn.appForeignAssets?.length || 0
-      const apps = t.txn.appForeignApps?.length || 0
-      const boxes = t.txn.boxes?.length || 0
+      const assets = t.txn.applicationCall?.foreignAssets?.length ?? 0
+      const apps = t.txn.applicationCall?.foreignApps?.length ?? 0
+      const boxes = t.txn.applicationCall?.boxes?.length ?? 0
 
       // If we're adding local state or asset holding, we need space for the acocunt and the other reference
       if (type === 'assetHolding' || type === 'appLocal') {
@@ -487,26 +499,53 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
     }
 
     if (type === 'account') {
-      txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(reference as string)]
+      ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ...txns[txnIndex].txn.applicationCall,
+        accounts: [...(txns[txnIndex].txn?.applicationCall?.accounts ?? []), ...[reference as Address]],
+      } satisfies Partial<ApplicationTransactionFields>
     } else if (type === 'app') {
-      txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(reference)]
+      ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ...txns[txnIndex].txn.applicationCall,
+        foreignApps: [
+          ...(txns[txnIndex].txn?.applicationCall?.foreignApps ?? []),
+          ...[typeof reference === 'bigint' ? reference : BigInt(reference as number)],
+        ],
+      } satisfies Partial<ApplicationTransactionFields>
     } else if (type === 'box') {
       const { app, name } = reference as algosdk.modelsv2.BoxReference
-      txns[txnIndex].txn.boxes = [...(txns[txnIndex].txn.boxes ?? []), { appIndex: Number(app), name }]
+      ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ...txns[txnIndex].txn.applicationCall,
+        boxes: [...(txns[txnIndex].txn?.applicationCall?.boxes ?? []), ...[{ appIndex: app, name } satisfies TransactionBoxReference]],
+      } satisfies Partial<ApplicationTransactionFields>
 
       if (app.toString() !== '0') {
-        txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(app)]
+        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+          ...txns[txnIndex].txn.applicationCall,
+          foreignApps: [...(txns[txnIndex].txn?.applicationCall?.foreignApps ?? []), ...[app]],
+        } satisfies Partial<ApplicationTransactionFields>
       }
     } else if (type === 'assetHolding') {
       const { asset, account } = reference as algosdk.modelsv2.AssetHoldingReference
-      txns[txnIndex].txn.appForeignAssets = [...(txns[txnIndex].txn.appForeignAssets ?? []), Number(asset)]
-      txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(account)]
+      ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ...txns[txnIndex].txn.applicationCall,
+        foreignAssets: [...(txns[txnIndex].txn?.applicationCall?.foreignAssets ?? []), ...[asset]],
+        accounts: [...(txns[txnIndex].txn?.applicationCall?.accounts ?? []), ...[account]],
+      } satisfies Partial<ApplicationTransactionFields>
     } else if (type === 'appLocal') {
       const { app, account } = reference as algosdk.modelsv2.ApplicationLocalReference
-      txns[txnIndex].txn.appAccounts = [...(txns[txnIndex].txn.appAccounts ?? []), algosdk.decodeAddress(account)]
-      txns[txnIndex].txn.appForeignApps = [...(txns[txnIndex].txn.appForeignApps ?? []), Number(app)]
+      ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ...txns[txnIndex].txn.applicationCall,
+        foreignApps: [...(txns[txnIndex].txn?.applicationCall?.foreignApps ?? []), ...[app]],
+        accounts: [...(txns[txnIndex].txn?.applicationCall?.accounts ?? []), ...[account]],
+      } satisfies Partial<ApplicationTransactionFields>
     } else if (type === 'asset') {
-      txns[txnIndex].txn.appForeignAssets = [...(txns[txnIndex].txn.appForeignAssets ?? []), Number(reference)]
+      ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ...txns[txnIndex].txn.applicationCall,
+        foreignAssets: [
+          ...(txns[txnIndex].txn?.applicationCall?.foreignAssets ?? []),
+          ...[typeof reference === 'bigint' ? reference : BigInt(reference as number)],
+        ],
+      } satisfies Partial<ApplicationTransactionFields>
     }
   }
 
@@ -638,19 +677,13 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
     } else {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
-        `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${algosdk.encodeAddress(
-          transactionsToSend[0].from.publicKey,
-        )}`,
+        `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender.toString()}`,
       )
     }
 
     let confirmations: modelsv2.PendingTransactionResponse[] | undefined = undefined
     if (!sendParams?.skipWaiting) {
-      confirmations = await Promise.all(
-        transactionsToSend.map(async (t) =>
-          modelsv2.PendingTransactionResponse.from_obj_for_encoding(await algod.pendingTransactionInformation(t.txID()).do()),
-        ),
-      )
+      confirmations = await Promise.all(transactionsToSend.map(async (t) => await algod.pendingTransactionInformation(t.txID()).do()))
     }
 
     return {
@@ -670,6 +703,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       // Remove headers as it doesn't have anything useful.
       delete e.response?.headers
       err.response = e.response
+      // body property very noisy
+      if (e.response && 'body' in e.response) delete err.response.body
       err.name = e.name
     }
 
@@ -690,7 +725,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       if (simulate && simulate.txnGroups[0].failedAt) {
         for (const txn of simulate.txnGroups[0].txnResults) {
           err.traces.push({
-            trace: txn.execTrace?.get_obj_for_encoding(),
+            trace: txn.execTrace?.toEncodingData(),
             appBudget: txn.appBudgetConsumed,
             logicSigBudget: txn.logicSigBudgetConsumed,
             logs: txn.txnResult.logs,
@@ -742,23 +777,6 @@ export function getABIReturnValue(result: algosdk.ABIResult): ABIReturn {
         ? convertABIDecodedBigIntToNumber(result.returnValue, result.method.returns.type)
         : result.returnValue!,
   }
-}
-
-/**
- * @deprecated Use `performAtomicTransactionComposerSimulate`, dry-run is a deprecated Algorand feature.
- *
- * Performs a dry run of the transactions loaded into the given AtomicTransactionComposer`
- * @param atc The AtomicTransactionComposer` with transaction(s) loaded
- * @param algod An Algod client
- * @returns The dryrun result
- */
-export async function performAtomicTransactionComposerDryrun(atc: AtomicTransactionComposer, algod: Algodv2) {
-  const signedTransactions = await atc.gatherSignatures()
-  const txns = signedTransactions.map((t) => {
-    return algosdk.decodeSignedTransaction(t)
-  })
-  const dryrun = await algosdk.createDryrun({ client: algod, txns })
-  return new algosdk.DryrunResult(await algod.dryrun(dryrun).do())
 }
 
 /**
@@ -827,7 +845,7 @@ export const waitForConfirmation = async function (
   }
 
   // Get current round
-  const status = modelsv2.NodeStatusResponse.from_obj_for_encoding(await algod.status().do())
+  const status = await algod.status().do()
   if (status === undefined) {
     throw new Error('Unable to get node status')
   }
@@ -837,9 +855,8 @@ export const waitForConfirmation = async function (
   let currentRound = startRound
   while (currentRound < startRound + BigInt(maxRoundsToWait)) {
     try {
-      const pendingInfo = modelsv2.PendingTransactionResponse.from_obj_for_encoding(
-        await algod.pendingTransactionInformation(transactionId).do(),
-      )
+      const pendingInfo = await algod.pendingTransactionInformation(transactionId).do()
+
       if (pendingInfo !== undefined) {
         const confirmedRound = pendingInfo.confirmedRound
         if (confirmedRound && confirmedRound > 0) {
@@ -878,19 +895,21 @@ export const waitForConfirmation = async function (
  */
 export function capTransactionFee(transaction: algosdk.Transaction | SuggestedParams, maxAcceptableFee: AlgoAmount) {
   // If a flat fee hasn't already been defined
-  if (!transaction.flatFee) {
+  if (!('flatFee' in transaction) || !transaction.flatFee) {
     // Once a transaction has been constructed by algosdk, transaction.fee indicates what the total transaction fee
     // Will be based on the current suggested fee-per-byte value.
     if (transaction.fee > maxAcceptableFee.microAlgo) {
       throw new Error(
         `Cancelled transaction due to high network congestion fees. Algorand suggested fees would cause this transaction to cost ${transaction.fee} µALGO. Cap for this transaction is ${maxAcceptableFee.microAlgo} µALGO.`,
       )
-    } else if (transaction.fee > algosdk.ALGORAND_MIN_TX_FEE) {
+    } else if (transaction.fee > 1_000_000) {
       Config.logger.warn(`Algorand network congestion fees are in effect. This transaction will incur a fee of ${transaction.fee} µALGO.`)
     }
 
     // Now set the flat on the transaction. Otherwise the network may increase the fee above our cap and perform the transaction.
-    transaction.flatFee = true
+    if ('flatFee' in transaction) {
+      transaction.flatFee = true
+    }
   }
 }
 
@@ -908,7 +927,9 @@ export function controlFees<T extends SuggestedParams | Transaction>(
   const { fee, maxFee } = feeControl
   if (fee) {
     transaction.fee = Number(fee.microAlgo)
-    transaction.flatFee = true
+    if ('flatFee' in transaction) {
+      transaction.flatFee = true
+    }
   }
 
   if (maxFee !== undefined) {
@@ -926,8 +947,19 @@ export function controlFees<T extends SuggestedParams | Transaction>(
  * @param algod Algod algod
  * @returns The suggested transaction parameters
  */
-export async function getTransactionParams(params: SuggestedParams | undefined, algod: Algodv2) {
-  return params ? { ...params } : await algod.getTransactionParams().do()
+export async function getTransactionParams(params: SuggestedParams | undefined, algod: Algodv2): Promise<SuggestedParams> {
+  if (params) {
+    return { ...params }
+  }
+  const p = await algod.getTransactionParams().do()
+  return {
+    fee: p.fee,
+    firstValid: p.firstValid,
+    lastValid: p.lastValid,
+    genesisID: p.genesisID,
+    genesisHash: p.genesisHash,
+    minFee: p.minFee,
+  }
 }
 
 /**

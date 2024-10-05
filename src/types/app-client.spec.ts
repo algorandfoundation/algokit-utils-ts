@@ -2,6 +2,7 @@ import { describe, test } from '@jest/globals'
 import algosdk, {
   ABIUintType,
   Account,
+  Address,
   Algodv2,
   Indexer,
   OnApplicationComplete,
@@ -27,13 +28,13 @@ describe('application-client', () => {
     appSpec = (await getTestingAppContract()).appSpec
   })
 
-  const deploy = async (account: Account, algod: Algodv2, indexer: Indexer) => {
+  const deploy = async (account: Address & Account, algod: Algodv2, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: account,
-        creatorAddress: account.addr,
+        creatorAddress: account,
         findExistingUsing: indexer,
       },
       algod,
@@ -51,7 +52,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -103,7 +104,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -118,7 +119,7 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId))
     expect(app.confirmation?.applicationIndex).toBe(app.appId)
@@ -132,7 +133,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -157,7 +158,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -185,7 +186,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -216,7 +217,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -242,7 +243,7 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
+    expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
   })
 
   test('Deploy app - update (abi)', async () => {
@@ -252,7 +253,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -282,8 +283,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
-    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -294,7 +295,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -316,12 +317,12 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId).toString())
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -331,7 +332,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -363,12 +364,12 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId).toString())
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
     expect(app.deleteReturn?.returnValue).toBe('arg2_io')
   })
@@ -428,11 +429,11 @@ describe('application-client', () => {
     })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
+    const rekeyedAccount = algorand.account.rekeyed(testAccount, rekeyTo)
     await algorand.send.payment({
       amount: (0).algo(),
-      sender: rekeyedAccount.addr,
-      receiver: testAccount.addr,
+      sender: rekeyedAccount,
+      receiver: testAccount,
     })
   })
 
@@ -536,14 +537,14 @@ describe('application-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.boxes).toEqual([{ appIndex: 0, name: encoder.encode('1') }])
+    expect(call.transaction.applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
     const { algod, algorand, indexer, testAccount } = localnet.context
     const txn = await algorand.createTransaction.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
+      sender: testAccount,
+      receiver: testAccount,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
     const { client } = await deploy(testAccount, algod, indexer)
@@ -558,14 +559,14 @@ describe('application-client', () => {
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const returnValue = AppManager.getABIReturn(result.confirmations[1], client.getABIMethod('call_abi_txn')!)
-    expect(returnValue?.returnValue).toBe(`Sent ${txn.amount}. test`)
+    expect(returnValue?.returnValue).toBe(`Sent ${txn.payment?.amount}. test`)
   })
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
     const { algod, algorand, indexer, testAccount } = localnet.context
     const txn = await algorand.createTransaction.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
+      sender: testAccount,
+      receiver: testAccount,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
     const { client } = await deploy(testAccount, algod, indexer)
@@ -579,7 +580,7 @@ describe('application-client', () => {
     await client.call({
       method: 'call_abi_txn',
       methodArgs: [txn, 'test'],
-      sender: { addr: testAccount.addr, signer },
+      sender: { addr: testAccount, signer },
     })
 
     expect(indexes).toEqual([0, 1])
@@ -589,8 +590,8 @@ describe('application-client', () => {
     const { algod, algorand, indexer, testAccount, generateAccount } = localnet.context
     const signer = await generateAccount({ initialFunds: (1).algo() })
     const transaction = await algorand.createTransaction.payment({
-      sender: signer.addr,
-      receiver: signer.addr,
+      sender: signer,
+      receiver: signer,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
     const { client } = await deploy(testAccount, algod, indexer)
@@ -610,7 +611,7 @@ describe('application-client', () => {
       method: 'call_abi_foreign_refs',
       methodArgs: [],
       apps: [345],
-      accounts: [testAccount.addr],
+      accounts: [testAccount],
       assets: [567],
     })
 
@@ -618,7 +619,7 @@ describe('application-client', () => {
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
     const returnValue = AppManager.getABIReturn(result.confirmations[0], client.getABIMethod('call_abi_foreign_refs')!)
-    const testAccountPublicKey = algosdk.decodeAddress(testAccount.addr).publicKey
+    const testAccountPublicKey = testAccount.publicKey
     expect(returnValue?.returnValue).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
   })
 
@@ -733,12 +734,12 @@ describe('application-client', () => {
       amount: fundAmount,
     })
 
-    expect(result.transaction.amount).toBe(fundAmount.microAlgo)
+    expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
     expect(result.transaction.type).toBe(TransactionType.pay)
-    expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
-    expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
+    expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress)
+    expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)
-    expect(result.confirmation.confirmedRound).toBeGreaterThan(0)
+    expect(result.confirmation.confirmedRound).toBeGreaterThan(0n)
   })
 
   test('Retrieve state', async () => {

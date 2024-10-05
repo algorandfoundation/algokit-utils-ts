@@ -25,24 +25,24 @@ describe('Transfer capability', () => {
     const secondAccount = algorand.account.random()
 
     const result = await algorand.send.payment({
-      sender: testAccount.addr,
-      receiver: secondAccount.addr,
+      sender: testAccount,
+      receiver: secondAccount,
       amount: (5).algo(),
       note: 'Transfer 5 Algos',
     })
 
-    const accountInfo = await algorand.account.getInformation(secondAccount.addr)
+    const accountInfo = await algorand.account.getInformation(secondAccount)
 
     expect(result.transaction).toBeInstanceOf(algosdk.Transaction)
     expect(result.transaction.type).toBe(TransactionType.pay)
     expect(result.confirmation.txn.txn.type).toBe('pay')
 
-    expect(result.transaction.amount).toBe(5_000_000n)
-    expect(result.confirmation.txn.txn.amt).toBe(5_000_000)
+    expect(result.transaction.payment?.amount).toBe(5_000_000n)
+    expect(result.confirmation.txn.txn.payment?.amount).toBe(5_000_000n)
 
-    expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
+    expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(algosdk.encodeAddress(result.confirmation.txn.txn.snd)).toBe(testAccount.addr)
+    expect(result.confirmation.txn.txn.sender.toString()).toBe(testAccount.toString())
 
     expect(accountInfo.balance.microAlgo).toBe(5_000_000n)
   })
@@ -52,16 +52,16 @@ describe('Transfer capability', () => {
     const secondAccount = algorand.account.random()
 
     await algorand.send.payment({
-      sender: testAccount.addr,
-      receiver: secondAccount.addr,
+      sender: testAccount,
+      receiver: secondAccount,
       amount: (1).algo(),
       lease: 'test',
     })
 
     await expect(
       algorand.send.payment({
-        sender: testAccount.addr,
-        receiver: secondAccount.addr,
+        sender: testAccount,
+        receiver: secondAccount,
         amount: (2).algo(),
         lease: 'test',
       }),
@@ -73,16 +73,16 @@ describe('Transfer capability', () => {
     const secondAccount = algorand.account.random()
 
     await algorand.send.payment({
-      sender: testAccount.addr,
-      receiver: secondAccount.addr,
+      sender: testAccount,
+      receiver: secondAccount,
       amount: (1).algo(),
       lease: new Uint8Array([1, 2, 3, 4]),
     })
 
     await expect(
       algorand.send.payment({
-        sender: testAccount.addr,
-        receiver: secondAccount.addr,
+        sender: testAccount,
+        receiver: secondAccount,
         amount: (2).algo(),
         lease: new Uint8Array([1, 2, 3, 4]),
       }),
@@ -91,13 +91,13 @@ describe('Transfer capability', () => {
 
   test('Transfer ASA, respects lease', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
-    const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
+    const dummyAssetId = await generateTestAsset(algorand, testAccount, 100)
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
-    await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
+    await algorand.send.assetOptIn({ sender: secondAccount, assetId: dummyAssetId })
     await algorand.send.assetTransfer({
-      sender: testAccount.addr,
-      receiver: secondAccount.addr,
+      sender: testAccount,
+      receiver: secondAccount,
       assetId: dummyAssetId,
       amount: 1n,
       lease: 'test',
@@ -105,8 +105,8 @@ describe('Transfer capability', () => {
 
     await expect(
       algorand.send.assetTransfer({
-        sender: testAccount.addr,
-        receiver: secondAccount.addr,
+        sender: testAccount,
+        receiver: secondAccount,
         assetId: dummyAssetId,
         amount: 2n,
         lease: 'test',
@@ -116,13 +116,13 @@ describe('Transfer capability', () => {
 
   test('Transfer ASA, receiver is not opted in', async () => {
     const { algorand, testAccount } = localnet.context
-    const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
+    const dummyAssetId = await generateTestAsset(algorand, testAccount, 100)
     const secondAccount = algorand.account.random()
 
     try {
       await algorand.send.assetTransfer({
-        sender: testAccount.addr,
-        receiver: secondAccount.addr,
+        sender: testAccount,
+        receiver: secondAccount,
         assetId: dummyAssetId,
         amount: 1n,
         note: `Transfer 5 assets with id ${dummyAssetId}`,
@@ -135,15 +135,15 @@ describe('Transfer capability', () => {
 
   test('Transfer ASA, sender is not opted in', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
-    const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
+    const dummyAssetId = await generateTestAsset(algorand, testAccount, 100)
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
-    await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
+    await algorand.send.assetOptIn({ sender: secondAccount, assetId: dummyAssetId })
 
     try {
       await algorand.send.assetTransfer({
-        sender: testAccount.addr,
-        receiver: secondAccount.addr,
+        sender: testAccount,
+        receiver: secondAccount,
         assetId: dummyAssetId,
         amount: 1n,
         note: `Transfer 5 assets with id ${dummyAssetId}`,
@@ -160,8 +160,8 @@ describe('Transfer capability', () => {
 
     try {
       await algorand.send.assetTransfer({
-        sender: testAccount.addr,
-        receiver: secondAccount.addr,
+        sender: testAccount,
+        receiver: secondAccount,
         assetId: 1n,
         amount: 5n,
         note: 'Transfer asset with wrong id',
@@ -174,63 +174,63 @@ describe('Transfer capability', () => {
 
   test('Transfer ASA, asset is transfered to another account', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
-    const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
+    const dummyAssetId = await generateTestAsset(algorand, testAccount, 100)
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
-    await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
+    await algorand.send.assetOptIn({ sender: secondAccount, assetId: dummyAssetId })
 
     await algorand.send.assetTransfer({
-      sender: testAccount.addr,
-      receiver: secondAccount.addr,
+      sender: testAccount,
+      receiver: secondAccount,
       assetId: dummyAssetId,
       amount: 5n,
       note: `Transfer 5 assets with id ${dummyAssetId}`,
     })
 
-    const secondAccountInfo = await algorand.asset.getAccountInformation(secondAccount.addr, dummyAssetId)
+    const secondAccountInfo = await algorand.asset.getAccountInformation(secondAccount, dummyAssetId)
     expect(secondAccountInfo.balance).toBe(5n)
 
-    const testAccountInfo = await algorand.asset.getAccountInformation(testAccount.addr, dummyAssetId)
+    const testAccountInfo = await algorand.asset.getAccountInformation(testAccount, dummyAssetId)
     expect(testAccountInfo.balance).toBe(95n)
   }, 10e6)
 
   test('Transfer ASA, asset is transfered to another account from revocationTarget', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
-    const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
+    const dummyAssetId = await generateTestAsset(algorand, testAccount, 100)
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
     const clawbackAccount = await generateAccount({ initialFunds: (1).algo() })
 
-    await algorand.send.assetOptIn({ sender: secondAccount.addr, assetId: dummyAssetId })
+    await algorand.send.assetOptIn({ sender: secondAccount, assetId: dummyAssetId })
 
-    await algorand.send.assetOptIn({ sender: clawbackAccount.addr, assetId: dummyAssetId })
+    await algorand.send.assetOptIn({ sender: clawbackAccount, assetId: dummyAssetId })
 
     await algorand.send.assetTransfer({
-      sender: testAccount.addr,
-      receiver: clawbackAccount.addr,
+      sender: testAccount,
+      receiver: clawbackAccount,
       assetId: dummyAssetId,
       amount: 5n,
       note: `Transfer 5 assets with id ${dummyAssetId}`,
     })
 
-    const clawbackFromInfo = await algorand.asset.getAccountInformation(clawbackAccount.addr, dummyAssetId)
+    const clawbackFromInfo = await algorand.asset.getAccountInformation(clawbackAccount, dummyAssetId)
     expect(clawbackFromInfo.balance).toBe(5n)
 
     await algorand.send.assetTransfer({
-      sender: testAccount.addr,
-      receiver: secondAccount.addr,
+      sender: testAccount,
+      receiver: secondAccount,
       assetId: dummyAssetId,
       amount: 5n,
       note: `Transfer 5 assets with id ${dummyAssetId}`,
-      clawbackTarget: clawbackAccount.addr,
+      clawbackTarget: clawbackAccount,
     })
 
-    const secondAccountInfo = await algorand.asset.getAccountInformation(secondAccount.addr, dummyAssetId)
+    const secondAccountInfo = await algorand.asset.getAccountInformation(secondAccount, dummyAssetId)
     expect(secondAccountInfo.balance).toBe(5n)
 
-    const clawbackAccountInfo = await algorand.asset.getAccountInformation(clawbackAccount.addr, dummyAssetId)
+    const clawbackAccountInfo = await algorand.asset.getAccountInformation(clawbackAccount, dummyAssetId)
     expect(clawbackAccountInfo.balance).toBe(0n)
 
-    const testAccountInfo = await algorand.asset.getAccountInformation(testAccount.addr, dummyAssetId)
+    const testAccountInfo = await algorand.asset.getAccountInformation(testAccount, dummyAssetId)
     expect(testAccountInfo.balance).toBe(95n)
   }, 10e6)
 
@@ -239,7 +239,7 @@ describe('Transfer capability', () => {
     const secondAccount = algorand.account.random()
 
     const result = await algorand.account.ensureFunded(secondAccount, testAccount, (1).microAlgo())
-    const accountInfo = await algorand.account.getInformation(secondAccount.addr)
+    const accountInfo = await algorand.account.getInformation(secondAccount)
 
     invariant(result)
     expect(result.transactionId).toBe(result.transaction.txID())
@@ -257,7 +257,7 @@ describe('Transfer capability', () => {
 
     invariant(result)
     expect(result.amountFunded.algo).toBe(1)
-    const accountInfo = await algorand.account.getInformation(secondAccount.addr)
+    const accountInfo = await algorand.account.getInformation(secondAccount)
     expect(accountInfo.balance.microAlgo).toBe(1_100_000n)
   })
 
@@ -271,9 +271,9 @@ describe('Transfer capability', () => {
     })
 
     invariant(result)
-    const resultReceiver = algosdk.encodeAddress(result.confirmation.txn.txn.snd)
-    expect(resultReceiver).toBe(dispenser.addr)
-    const accountInfo = await algorand.account.getInformation(secondAccount.addr)
+    const resultReceiver = result.confirmation.txn.txn.sender
+    expect(resultReceiver.toString()).toBe(dispenser.toString())
+    const accountInfo = await algorand.account.getInformation(secondAccount)
     expect(accountInfo.balance.algo).toBe(1)
   })
 
@@ -339,14 +339,14 @@ describe('rekey', () => {
     const { testAccount, algorand } = localnet.context
     const secondAccount = algorand.account.random()
 
-    await algorand.account.rekeyAccount(testAccount.addr, secondAccount.addr, {
+    await algorand.account.rekeyAccount(testAccount, secondAccount, {
       note: 'Rekey',
     })
 
     // This will throw if the rekey wasn't successful
     await algorand.send.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
+      sender: testAccount,
+      receiver: testAccount,
       amount: (1).microAlgo(),
       signer: secondAccount.signer,
     })

@@ -1715,10 +1715,10 @@ Create a new ApplicationClient instance by creator and name
 ```ts
 const client = algokit.getAppClientByCreatorAndName(
     {
-      app: {appSpec},
-      sender: {account},
-      creatorAddress: {account.addr},
-      findExistingUsing: {indexerClient},
+      app: appSpec,
+      sender: account,
+      creatorAddress: account,
+      findExistingUsing: indexerClient,
     },
     algodClient,
   )

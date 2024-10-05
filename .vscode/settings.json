@@ -5,7 +5,7 @@
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
   },
-  "jest.jestCommandLine": "npm run test --",
+  "jest.jestCommandLine": "npm run test -- --silent false",
   "jest.runMode": "on-demand",
   "dotenv.enableAutocloaking": false
 }

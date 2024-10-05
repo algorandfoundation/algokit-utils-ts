@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
@@ -13,7 +13,8 @@ import {
   type TealTemplateParams,
 } from './app'
 import { AppManager } from './app-manager'
-import AlgoKitComposer, {
+import {
+  AlgoKitComposer,
   AppCreateMethodCall,
   AppCreateParams,
   AppDeleteMethodCall,
@@ -73,7 +74,7 @@ export interface AppMetadata extends AppDeployMetadata {
   /** The id of the app */
   appId: bigint
   /** The Algorand address of the account associated with the app */
-  appAddress: string
+  appAddress: Address
   /** The round the app was created */
   createdRound: bigint
   /** The last round that the app was updated */
@@ -87,7 +88,7 @@ export interface AppMetadata extends AppDeployMetadata {
 /** A lookup of name -> Algorand app for a creator */
 export interface AppLookup {
   /** The address of the creator associated with this lookup */
-  creator: Readonly<string>
+  creator: Readonly<Address>
   /** A hash map of app name to app metadata */
   apps: {
     [name: string]: AppMetadata
@@ -162,7 +163,7 @@ export class AppDeployer {
 
     // Check for required fields
 
-    if (existingDeployments && existingDeployments.creator !== createParams.sender) {
+    if (existingDeployments && existingDeployments.creator.toString() !== createParams.sender.toString()) {
       throw new Error(
         `Received invalid existingDeployments value for creator ${existingDeployments.creator} when attempting to deploy for creator ${createParams.sender}`,
       )
@@ -429,10 +430,11 @@ export class AppDeployer {
     return { ...existingApp, operationPerformed: 'nothing' }
   }
 
-  private updateAppLookup(sender: string, appMetadata: AppMetadata) {
-    const lookup = this._appLookups.get(sender)
+  private updateAppLookup(sender: string | Address, appMetadata: AppMetadata) {
+    const s = typeof sender === 'string' ? sender : sender.toString()
+    const lookup = this._appLookups.get(s)
     if (!lookup) {
-      this._appLookups.set(sender, { creator: sender, apps: { [appMetadata.name]: appMetadata } })
+      this._appLookups.set(s, { creator: Address.fromString(s), apps: { [appMetadata.name]: appMetadata } })
     } else {
       lookup.apps[appMetadata.name] = appMetadata
     }
@@ -451,11 +453,12 @@ export class AppDeployer {
    * @param ignoreCache Whether or not to ignore the cache and force a lookup, default: use the cache
    * @returns A name-based lookup of the app metadata
    */
-  async getCreatorAppsByName(creatorAddress: string, ignoreCache?: boolean): Promise<AppLookup> {
+  async getCreatorAppsByName(creatorAddress: string | Address, ignoreCache?: boolean): Promise<AppLookup> {
     const appLookup: Record<string, AppMetadata> = {}
 
-    if (!ignoreCache && this._appLookups.has(creatorAddress)) {
-      return this._appLookups.get(creatorAddress)!
+    const address = typeof creatorAddress === 'string' ? creatorAddress : creatorAddress.toString()
+    if (!ignoreCache && this._appLookups.has(address)) {
+      return this._appLookups.get(address)!
     }
 
     if (!this._indexer) {
@@ -489,17 +492,17 @@ export class AppDeployer {
         //  * also verify the sender to prevent a potential security risk
         const appCreationTransaction = appTransactions.transactions.filter(
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          (t) => t['application-transaction']!['application-id'] === 0 && t.sender === creatorAddress,
+          (t) => t.applicationTransaction?.applicationId === 0n && t.sender.toString() === creatorAddress.toString(),
         )[0]
 
         const latestAppUpdateTransaction = appTransactions.transactions
-          .filter((t) => t.sender === creatorAddress)
+          .filter((t) => t.sender.toString() === creatorAddress.toString())
           .sort((a, b) =>
-            a['confirmed-round'] === b['confirmed-round']
+            a.confirmedRound === b.confirmedRound
               ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                (b['intra-round-offset']! - a['intra-round-offset']!) / 10
+                (b.intraRoundOffset! - a.intraRoundOffset!) / 10
               : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                b['confirmed-round']! - a['confirmed-round']!,
+                Number(b.confirmedRound! - a.confirmedRound!),
           )[0]
 
         if (!appCreationTransaction?.note)
@@ -534,16 +537,20 @@ export class AppDeployer {
         }
 
         try {
-          const creationNote = parseNote(appCreationTransaction.note)
-          const updateNote = parseNote(latestAppUpdateTransaction.note)
+          const creationNote = parseNote(
+            appCreationTransaction.note ? Buffer.from(appCreationTransaction.note).toString('utf-8') : undefined,
+          )
+          const updateNote = parseNote(
+            latestAppUpdateTransaction.note ? Buffer.from(latestAppUpdateTransaction.note).toString('utf-8') : undefined,
+          )
           if (creationNote?.name) {
             appLookup[creationNote.name] = {
               appId: createdApp.id,
               appAddress: algosdk.getApplicationAddress(createdApp.id),
               createdMetadata: creationNote,
-              createdRound: BigInt(appCreationTransaction['confirmed-round'] ?? 0),
+              createdRound: appCreationTransaction.confirmedRound ?? 0n,
               ...(updateNote ?? creationNote),
-              updatedRound: BigInt(latestAppUpdateTransaction?.['confirmed-round'] ?? 0),
+              updatedRound: latestAppUpdateTransaction?.confirmedRound ?? 0n,
               deleted: createdApp.deleted ?? false,
             }
           }
@@ -557,11 +564,11 @@ export class AppDeployer {
       })
 
     const lookup = {
-      creator: creatorAddress,
+      creator: typeof creatorAddress === 'string' ? Address.fromString(creatorAddress) : creatorAddress,
       apps: appLookup,
     }
 
-    this._appLookups.set(creatorAddress, lookup)
+    this._appLookups.set(creatorAddress.toString(), lookup)
 
     return lookup
   }

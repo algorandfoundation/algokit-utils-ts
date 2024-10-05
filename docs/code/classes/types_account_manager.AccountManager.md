@@ -481,7 +481,7 @@ The `TransactionSignerAccount` or throws an error if not found
 **`Example`**
 
 ```typescript
-const sender = accountManager.random().addr
+const sender = accountManager.random()
 // ...
 // Returns the `TransactionSignerAccount` for `sender` that has previously been registered
 const account = accountManager.getAccount(sender)

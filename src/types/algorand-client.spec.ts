@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
-import algosdk from 'algosdk'
+import algosdk, { Account, Address } from 'algosdk'
 import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
 import { algorandFixture } from '../testing'
-import { TransactionSignerAccount } from './account'
-import AlgorandClient from './algorand-client'
+import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { AppCallMethodCall } from './composer'
 
@@ -16,8 +15,8 @@ async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
 
 describe('AlgorandClient', () => {
   let algorand: AlgorandClient
-  let alice: TransactionSignerAccount
-  let bob: TransactionSignerAccount
+  let alice: Address & Account
+  let bob: Address & Account
   let appClient: TestContractClient
   let appId: bigint
 
@@ -46,7 +45,7 @@ describe('AlgorandClient', () => {
   test('sendPayment', async () => {
     const alicePreBalance = (await algorand.account.getInformation(alice)).balance
     const bobPreBalance = (await algorand.account.getInformation(bob)).balance
-    await algorand.send.payment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgo(1) })
+    await algorand.send.payment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
     const alicePostBalance = (await algorand.account.getInformation(alice)).balance
     const bobPostBalance = (await algorand.account.getInformation(bob)).balance
 
@@ -55,7 +54,7 @@ describe('AlgorandClient', () => {
   })
 
   test('sendAssetCreate', async () => {
-    const createResult = await algorand.send.assetCreate({ sender: alice.addr, total: 100n })
+    const createResult = await algorand.send.assetCreate({ sender: alice, total: 100n })
 
     expect(createResult.assetId).toBeGreaterThan(0)
   })
@@ -67,7 +66,7 @@ describe('AlgorandClient', () => {
     const doMathAtc = await appClient.compose().doMath({ a: 1, b: 2, operation: 'sum' }).atc()
     const result = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgo(1) })
+      .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1) })
       .addAtc(doMathAtc)
       .send()
 
@@ -86,9 +85,9 @@ describe('AlgorandClient', () => {
 
     const methodRes = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgo(1), note: new Uint8Array([1]) })
+      .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1), note: new Uint8Array([1]) })
       .addAppCallMethodCall({
-        sender: alice.addr,
+        sender: alice,
         appId: appId,
         method: appClient.appClient.getABIMethod('doMath')!,
         args: [1, 2, 'sum'],
@@ -111,9 +110,9 @@ describe('AlgorandClient', () => {
 
     const res = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, receiver: bob.addr, amount: AlgoAmount.MicroAlgo(1), note: new Uint8Array([1]) })
+      .addPayment({ sender: alice, receiver: bob, amount: AlgoAmount.MicroAlgo(1), note: new Uint8Array([1]) })
       .addAppCall({
-        sender: alice.addr,
+        sender: alice,
         appId: appId,
         args: [
           appClient.appClient.getABIMethod('doMath')!.getSelector(),
@@ -136,21 +135,21 @@ describe('AlgorandClient', () => {
   test('method with txn arg', async () => {
     const txnRes = await algorand
       .newGroup()
-      .addPayment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0), note: new Uint8Array([1]) })
+      .addPayment({ sender: alice, receiver: alice, amount: AlgoAmount.MicroAlgo(0), note: new Uint8Array([1]) })
       .addAppCallMethodCall({
-        sender: alice.addr,
+        sender: alice,
         appId: appId,
         method: appClient.appClient.getABIMethod('txnArg')!,
-        args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: (0).microAlgo() })],
+        args: [algorand.createTransaction.payment({ sender: alice, receiver: alice, amount: (0).microAlgo() })],
       })
       .send()
 
-    expect(txnRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
+    expect(txnRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
   })
 
   test('method with method call arg', async () => {
     const helloWorldCall = {
-      sender: alice.addr,
+      sender: alice,
       appId: appId,
       method: appClient.appClient.getABIMethod('helloWorld')!,
     } satisfies AppCallMethodCall
@@ -158,7 +157,7 @@ describe('AlgorandClient', () => {
     const methodArgRes = await algorand
       .newGroup()
       .addAppCallMethodCall({
-        sender: alice.addr,
+        sender: alice,
         appId: appId,
         method: appClient.appClient.getABIMethod('methodArg')!,
         args: [helloWorldCall],
@@ -171,74 +170,73 @@ describe('AlgorandClient', () => {
 
   test('method with method call arg that has a txn arg', async () => {
     const txnArgCall = {
-      sender: alice.addr,
+      sender: alice,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
+      args: [algorand.createTransaction.payment({ sender: alice, receiver: alice, amount: AlgoAmount.MicroAlgo(0) })],
     } satisfies AppCallMethodCall
 
     const nestedTxnArgRes = await algorand
       .newGroup()
       .addAppCallMethodCall({
-        sender: alice.addr,
+        sender: alice,
         appId: appId,
         method: appClient.appClient.getABIMethod('nestedTxnArg')!,
         args: [txnArgCall],
       })
       .send()
 
-    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
   test('method with two method call args that each have a txn arg', async () => {
     const firstTxnCall = {
-      sender: alice.addr,
+      sender: alice,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
+      args: [algorand.createTransaction.payment({ sender: alice, receiver: alice, amount: AlgoAmount.MicroAlgo(0) })],
     } satisfies AppCallMethodCall
 
     const secondTxnCall = {
-      sender: alice.addr,
+      sender: alice,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
-      args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(1) })],
+      args: [algorand.createTransaction.payment({ sender: alice, receiver: alice, amount: AlgoAmount.MicroAlgo(1) })],
       note: new Uint8Array([1]),
     } satisfies AppCallMethodCall
 
     const doubleNestedTxnArgRes = await algorand
       .newGroup()
       .addAppCallMethodCall({
-        sender: alice.addr,
+        sender: alice,
         appId: appId,
         method: appClient.appClient.getABIMethod('doubleNestedTxnArg')!,
         args: [firstTxnCall, secondTxnCall],
       })
       .send()
 
-    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr)
-    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(alice.addr)
+    expect(doubleNestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
+    expect(doubleNestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(alice.toString())
     expect(doubleNestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
   test('assetOptIn', async () => {
     const { algod } = fixture.context
-    const assetId = (await algorand.send.assetCreate({ sender: alice.addr, total: 1n })).assetId
+    const assetId = (await algorand.send.assetCreate({ sender: alice, total: 1n })).assetId
 
     await algorand.send.assetOptIn({
-      sender: alice.addr,
+      sender: alice,
       assetId: assetId,
-      signer: alice,
     })
-    expect(await algod.accountAssetInformation(alice.addr, Number(assetId)).do()).toBeDefined()
+    expect(await algod.accountAssetInformation(alice, Number(assetId)).do()).toBeDefined()
   })
 
   test('methodCall create', async () => {
     const contract = new algosdk.ABIContract(APP_SPEC.contract)
 
     await algorand.send.appCreateMethodCall({
-      sender: alice.addr,
+      sender: alice,
       method: contract.getMethodByName('createApplication'),
       approvalProgram: await compileProgram(algorand, APP_SPEC.source.approval),
       clearStateProgram: await compileProgram(algorand, APP_SPEC.source.clear),
@@ -251,14 +249,14 @@ describe('AlgorandClient', () => {
     const alice = algorand.account.random()
 
     await algorand.send.payment({
-      sender: (await algorand.account.localNetDispenser()).addr,
-      receiver: alice.addr,
+      sender: await algorand.account.localNetDispenser(),
+      receiver: alice,
       amount: (2).algo(),
     })
 
     // Default validity window is 10
     for (let i = 0; i < 10; i++) {
-      await algorand.send.payment({ sender: alice.addr, receiver: alice.addr, amount: i.microAlgo() })
+      await algorand.send.payment({ sender: alice, receiver: alice, amount: i.microAlgo() })
     }
   })
 })

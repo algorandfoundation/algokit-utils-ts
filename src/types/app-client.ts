@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -58,7 +58,7 @@ import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
 import { EventType } from './async-event-emitter'
-import AlgoKitComposer, {
+import {
   AppCallMethodCall,
   AppCallParams,
   AppDeleteMethodCall,
@@ -82,14 +82,14 @@ import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import getApplicationAddress = algosdk.getApplicationAddress
 import Indexer = algosdk.Indexer
 import OnApplicationComplete = algosdk.OnApplicationComplete
-import SourceMap = algosdk.SourceMap
+import SourceMap = algosdk.ProgramSourceMap
 import SuggestedParams = algosdk.SuggestedParams
 import TransactionSigner = algosdk.TransactionSigner
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
   /** The address of the app creator account to resolve the app by */
-  creatorAddress: string
+  creatorAddress: Address | string
   /** The optional name override to resolve the app by within the creator account (default: uses the name in the ABI contract) */
   name?: string
   /** The mechanism to find an existing app instance metadata for the given creator and name; either:
@@ -332,7 +332,7 @@ export interface AppClientParams {
    */
   appName?: string
   /** Optional address to use for the account to use as the default sender for calls. */
-  defaultSender?: string
+  defaultSender?: Address | string
   /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
   defaultSigner?: TransactionSigner
   /** Optional source map for the approval program */
@@ -351,7 +351,7 @@ export type CallOnComplete = {
 export type AppClientBareCallParams = Expand<
   Omit<CommonAppCallParams, 'appId' | 'sender' | 'onComplete'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
-    sender?: string
+    sender?: Address | string
   }
 >
 
@@ -359,7 +359,7 @@ export type AppClientBareCallParams = Expand<
 export type AppClientMethodCallParams = Expand<
   Omit<CommonAppCallParams, 'appId' | 'sender' | 'method' | 'args'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
-    sender?: string
+    sender?: Address | string
     /** The method name or method signature to call if an ABI call is being emitted
      * @example Method name
      * `my_method`
@@ -375,7 +375,7 @@ export type AppClientMethodCallParams = Expand<
      * * An unawaited transaction (e.g. from algorand.createTransaction.transactionType())
      * * Another method call (via method call params object)
      */
-    args?: (ABIValue | ABIStruct | AppMethodCallTransactionArgument | undefined)[]
+    args?: (ABIValue | ABIStruct | Address | AppMethodCallTransactionArgument | undefined)[]
   }
 >
 
@@ -384,7 +384,7 @@ export type FundAppParams = Expand<
   Omit<PaymentParams, 'receiver' | 'sender'> &
     SendParams & {
       /** The optional sender to send the transaction from, will use the application client's default sender by default if specified */
-      sender?: string
+      sender?: Address | string
     }
 >
 
@@ -392,7 +392,7 @@ export type FundAppParams = Expand<
 export type ResolveAppClientByCreatorAndName = Expand<
   Omit<AppClientParams, 'appId'> & {
     /** The address of the creator account for the app */
-    creatorAddress: string
+    creatorAddress: Address | string
     /** An optional cached app lookup that matches a name to on-chain details;
      * either this is needed or indexer is required to be passed in to this `ClientManager` on construction.
      */
@@ -409,11 +409,11 @@ export type ResolveAppClientByNetwork = Expand<Omit<AppClientParams, 'appId'>>
  * state for a specific deployed instance of an app (with a known app ID). */
 export class AppClient {
   private _appId: bigint
-  private _appAddress: string
+  private _appAddress: Address
   private _appName: string
   private _appSpec: Arc56Contract
   private _algorand: AlgorandClientInterface
-  private _defaultSender?: string
+  private _defaultSender?: Address
   private _defaultSigner?: TransactionSigner
 
   private _approvalSourceMap: SourceMap | undefined
@@ -439,7 +439,7 @@ export class AppClient {
     this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
-    this._defaultSender = params.defaultSender
+    this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
     this._defaultSigner = params.defaultSigner
 
     this._approvalSourceMap = params.approvalSourceMap
@@ -474,11 +474,6 @@ export class AppClient {
       /** Send bare (raw) transactions to the current app */
       bare: this.getBareSendMethods(),
     }
-  }
-
-  /** Start a new `AlgoKitComposer` transaction group */
-  public newGroup(): AlgoKitComposer {
-    return this._algorand.newGroup()
   }
 
   /**
@@ -548,7 +543,7 @@ export class AppClient {
     return this._appAddress
   }
 
-  /** The name of the app (from the ARC-32 / ARC-56 app spec). */
+  /** The name of the app (from the ARC-32 / ARC-56 app spec or override). */
   public get appName() {
     return this._appName
   }
@@ -635,7 +630,7 @@ export class AppClient {
    * @param address The address of the account to get the local state for
    * @returns The local state
    */
-  public async getLocalState(address: string): Promise<AppState> {
+  public async getLocalState(address: Address | string): Promise<AppState> {
     return await this._algorand.app.getLocalState(this.appId, address)
   }
 
@@ -907,7 +902,7 @@ export class AppClient {
   private async getABIArgsWithDefaultValues(
     methodNameOrSignature: string,
     args: AppClientMethodCallParams['args'] | undefined,
-    sender: string,
+    sender: Address | string,
   ): Promise<AppMethodCall<CommonAppCallParams>['args']> {
     const m = getArc56Method(methodNameOrSignature, this._appSpec)
     return await Promise.all(
@@ -1185,7 +1180,7 @@ export class AppClient {
               transaction: result.transactions.at(-1)!,
               confirmation: result.confirmations.at(-1)!,
               // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-              return: result.returns?.length ?? 0 > 0 ? result.returns?.at(-1)! : undefined,
+              return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
             } satisfies SendAppTransactionResult,
             getArc56Method(params.method, this._appSpec),
           )
@@ -1242,25 +1237,25 @@ export class AppClient {
 
   /** Returns the sender for a call, using the provided sender or using the `defaultSender`
    * if none provided and throws an error if neither provided */
-  private getSender(sender: string | undefined): string {
+  private getSender(sender: Address | string | undefined): Address {
     if (!sender && !this._defaultSender) {
       throw new Error(`No sender provided and no default sender present in app client for call to app ${this._appName}`)
     }
-    return sender ?? this._defaultSender!
+    return typeof sender === 'string' ? Address.fromString(sender) : (sender ?? this._defaultSender!)
   }
 
   /** Returns the signer for a call, using the provided signer or the `defaultSigner`
    * if no signer was provided and the call will use default sender
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
-    sender: string | undefined,
+    sender: Address | string | undefined,
     signer: TransactionSigner | TransactionSignerAccount | undefined,
   ): TransactionSigner | TransactionSignerAccount | undefined {
     return signer ?? (!sender ? this._defaultSigner : undefined)
   }
 
   private getBareParams<
-    TParams extends { sender?: string; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
+    TParams extends { sender?: Address | string; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -1275,7 +1270,7 @@ export class AppClient {
   private async getABIParams<
     TParams extends {
       method: string
-      sender?: string
+      sender?: Address | string
       signer?: TransactionSigner | TransactionSignerAccount
       args?: AppClientMethodCallParams['args']
     },
@@ -1517,7 +1512,7 @@ export class ApplicationClient {
       this._appId = appIdentifier.id
     } else {
       this._appId = 0
-      this._creator = appIdentifier.creatorAddress
+      this._creator = appIdentifier.creatorAddress?.toString()
       if (appIdentifier.findExistingUsing instanceof Indexer) {
         this.indexer = appIdentifier.findExistingUsing
       } else {
@@ -1530,7 +1525,7 @@ export class ApplicationClient {
       }
     }
 
-    this._appAddress = algosdk.getApplicationAddress(this._appId)
+    this._appAddress = algosdk.getApplicationAddress(this._appId).toString()
     this.sender = sender
     this.params = params
   }
@@ -1771,7 +1766,7 @@ export class ApplicationClient {
       if (result.confirmation) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this._appId = result.confirmation.applicationIndex!
-        this._appAddress = getApplicationAddress(this._appId)
+        this._appAddress = getApplicationAddress(this._appId).toString()
       }
 
       return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
@@ -1852,7 +1847,7 @@ export class ApplicationClient {
         confirmation: result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult,
         confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
         transactions: txns.map((t) => t.txn),
-        return: result.methodResults?.length ?? 0 > 0 ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
+        return: (result.methodResults?.length ?? 0 > 0) ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
       } satisfies AppCallTransactionResult
     }
 
@@ -2215,7 +2210,7 @@ export class ApplicationClient {
       if (!app) {
         return {
           appId: 0,
-          appAddress: getApplicationAddress(0),
+          appAddress: getApplicationAddress(0).toString(),
         }
       }
       return app

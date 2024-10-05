@@ -1,8 +1,8 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
-import { AccountAssetInformation, TransactionSignerAccount } from './account'
-import AlgoKitComposer, { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import { AccountAssetInformation } from './account'
+import { AlgoKitComposer, CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
 import { SendParams } from './transaction'
 import AssetModel = algosdk.modelsv2.Asset
 
@@ -166,7 +166,7 @@ export class AssetManager {
    * @returns The asset information
    */
   public async getById(assetId: bigint): Promise<AssetInformation> {
-    const asset = AssetModel.from_obj_for_encoding(await this._algod.getAssetByID(Number(assetId)).do())
+    const asset = await this._algod.getAssetByID(Number(assetId)).do()
 
     return {
       assetId: BigInt(asset.index),
@@ -203,13 +203,13 @@ export class AssetManager {
    * @param assetId The ID of the asset to return a holding for
    * @returns The account asset holding information
    */
-  public async getAccountInformation(sender: string | TransactionSignerAccount, assetId: bigint): Promise<AccountAssetInformation> {
-    const info = await this._algod.accountAssetInformation(typeof sender === 'string' ? sender : sender.addr, Number(assetId)).do()
+  public async getAccountInformation(sender: string | Address, assetId: bigint): Promise<AccountAssetInformation> {
+    const info = await this._algod.accountAssetInformation(sender, Number(assetId)).do()
 
     return {
       assetId: BigInt(assetId),
-      balance: BigInt(info['asset-holding']['amount']),
-      frozen: info['asset-holding']['is-frozen'] === true,
+      balance: BigInt(info.assetHolding?.amount ?? 0),
+      frozen: info.assetHolding?.isFrozen === true,
       round: BigInt(info['round']),
     }
   }
@@ -232,7 +232,7 @@ export class AssetManager {
    * @returns An array of records matching asset ID to transaction ID of the opt in
    */
   async bulkOptIn(
-    account: string | TransactionSignerAccount,
+    account: string | Address,
     assetIds: bigint[],
     options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
   ): Promise<BulkAssetOptInOutResult[]> {
@@ -244,7 +244,7 @@ export class AssetManager {
       for (const assetId of assetGroup) {
         composer.addAssetOptIn({
           ...options,
-          sender: typeof account === 'string' ? account : account.addr,
+          sender: account,
           assetId: BigInt(assetId),
         })
       }
@@ -282,7 +282,7 @@ export class AssetManager {
    * @returns An array of records matching asset ID to transaction ID of the opt in
    */
   async bulkOptOut(
-    account: string | TransactionSignerAccount,
+    account: string | Address,
     assetIds: bigint[],
     options?: Omit<CommonTransactionParams, 'sender'> &
       SendParams & {
@@ -299,8 +299,6 @@ export class AssetManager {
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
 
-    const sender = typeof account === 'string' ? account : account.addr
-
     for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
       const composer = this._newGroup()
 
@@ -309,7 +307,7 @@ export class AssetManager {
       for (const assetId of assetGroup) {
         if (options?.ensureZeroBalance !== false) {
           try {
-            const accountAssetInfo = await this.getAccountInformation(sender, assetId)
+            const accountAssetInfo = await this.getAccountInformation(account, assetId)
             if (accountAssetInfo.balance !== 0n) {
               nonZeroBalanceAssetIds.push(BigInt(assetId))
             }
@@ -321,7 +319,7 @@ export class AssetManager {
 
       if (notOptedInAssetIds.length > 0 || nonZeroBalanceAssetIds.length > 0) {
         throw new Error(
-          `Account ${sender}${notOptedInAssetIds.length > 0 ? ` is not opted-in to Asset${notOptedInAssetIds.length > 1 ? 's' : ''} ${notOptedInAssetIds.join(', ')}` : ''}${
+          `Account ${account}${notOptedInAssetIds.length > 0 ? ` is not opted-in to Asset${notOptedInAssetIds.length > 1 ? 's' : ''} ${notOptedInAssetIds.join(', ')}` : ''}${
             nonZeroBalanceAssetIds.length > 0
               ? ` has non-zero balance for Asset${nonZeroBalanceAssetIds.length > 1 ? 's' : ''} ${nonZeroBalanceAssetIds.join(', ')}`
               : ''
@@ -333,7 +331,7 @@ export class AssetManager {
         composer.addAssetOptOut({
           ...options,
           creator: (await this.getById(BigInt(assetId))).creator,
-          sender,
+          sender: account,
           assetId: BigInt(assetId),
         })
       }

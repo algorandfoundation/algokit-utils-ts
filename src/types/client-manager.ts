@@ -1,5 +1,4 @@
-import algosdk from 'algosdk'
-import { SuggestedParamsWithMinFee } from 'algosdk/dist/types/types/transactions/base'
+import algosdk, { SuggestedParams } from 'algosdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
@@ -110,7 +109,7 @@ export class ClientManager {
     return this._kmd
   }
 
-  private _getNetworkPromise: Promise<SuggestedParamsWithMinFee> | undefined
+  private _getNetworkPromise: Promise<SuggestedParams> | undefined
   /**
    * Get details about the current network.
    * @example Getting genesis ID
@@ -127,11 +126,11 @@ export class ClientManager {
 
     const params = await this._getNetworkPromise
     return {
-      isTestNet: ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisID),
-      isMainNet: ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID),
-      isLocalNet: ClientManager.genesisIdIsLocalNet(params.genesisID),
-      genesisId: params.genesisID,
-      genesisHash: params.genesisHash,
+      isTestNet: ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisID ?? 'unknown'),
+      isMainNet: ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID ?? 'unknown'),
+      isLocalNet: ClientManager.genesisIdIsLocalNet(params.genesisID ?? 'unknown'),
+      genesisId: params.genesisID ?? 'unknown',
+      genesisHash: params.genesisHash ? Buffer.from(params.genesisHash).toString('base64') : 'unknown',
     }
   }
 
@@ -535,7 +534,7 @@ export class ClientManager {
    */
   public static getAlgodClient(config: AlgoClientConfig): Algodv2 {
     const { token, server, port } = config
-    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : token ?? {}
+    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
     return new algosdk.Algodv2(httpClientWithRetry, server)
   }
@@ -581,12 +580,9 @@ export class ClientManager {
    */
   public static getIndexerClient(config: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
     const { token, server, port } = config
-    const tokenHeader = typeof token === 'string' ? { 'X-Indexer-API-Token': token } : token ?? {}
+    const tokenHeader = typeof token === 'string' ? { 'X-Indexer-API-Token': token } : (token ?? {})
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
-    const indexer = new Indexer(httpClientWithRetry)
-    // Use mixed int decoding by default so bigints don't have lost precision
-    indexer.setIntEncoding(overrideIntDecoding ?? IntDecoding.MIXED)
-    return indexer
+    return new Indexer(httpClientWithRetry)
   }
 
   /**

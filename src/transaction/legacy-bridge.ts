@@ -4,7 +4,8 @@ import { AlgorandClientTransactionSender } from '../types/algorand-client-transa
 import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'
 import { AppManager, BoxReference } from '../types/app-manager'
 import { AssetManager } from '../types/asset-manager'
-import AlgoKitComposer, {
+import {
+  AlgoKitComposer,
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -69,7 +70,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
         .map((txn, i) => ({
           txn,
           signer:
-            'signers' in transaction ? transaction.signers.get(i) ?? getSenderTransactionSigner(from) : getSenderTransactionSigner(from),
+            'signers' in transaction ? (transaction.signers.get(i) ?? getSenderTransactionSigner(from)) : getSenderTransactionSigner(from),
         }))
         .forEach((t) => sendParams.atc!.addTransaction(t))
       // Populate ATC with method calls

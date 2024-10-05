@@ -1,5 +1,5 @@
 import { algos, Config, lookupTransactionById } from '../../'
-import AlgorandClient from '../../types/algorand-client'
+import { AlgorandClient } from '../../types/algorand-client'
 import { ClientManager } from '../../types/client-manager'
 import { AlgoConfig } from '../../types/network-client'
 import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
@@ -91,14 +91,14 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
     algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
-    const acc = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
-    algorand.setSignerFromAccount(acc).setSuggestedParamsCacheTimeout(0)
+    const testAccount = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
+    algorand.setSignerFromAccount(testAccount).setSuggestedParamsCacheTimeout(0)
     // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
     //  otherwise we are more likely to get invalid transactions.
     if (await algorand.client.isLocalNet()) {
       algorand.setDefaultValidityWindow(1000)
     }
-    const testAccount = { ...acc, signer: algorand.account.getSigner(acc.addr) }
+    algorand.account.setSignerFromAccount(testAccount)
     context = {
       algorand,
       algod: transactionLoggerAlgod,
@@ -108,7 +108,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       generateAccount: async (params: GetTestAccountParams) => {
         const account = await getTestAccount(params, algorand)
         algorand.setSignerFromAccount(account)
-        return { ...account, signer: algorand.account.getSigner(account.addr) }
+        return account
       },
       transactionLogger: transactionLogger,
       waitForIndexer: () => transactionLogger.waitForIndexer(indexer),

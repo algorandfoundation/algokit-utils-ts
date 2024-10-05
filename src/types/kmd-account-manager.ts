@@ -1,9 +1,9 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import AlgoKitComposer from './composer'
+import { AlgoKitComposer } from './composer'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */
@@ -63,7 +63,7 @@ export class KmdAccountManager {
     walletName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean,
-    sender?: string,
+    sender?: string | Address,
   ): Promise<(TransactionSignerAccount & { account: SigningAccount }) | undefined> {
     const kmd = await this.kmd()
 

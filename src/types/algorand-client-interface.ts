@@ -3,7 +3,7 @@ import { AlgorandClientTransactionCreator } from './algorand-client-transaction-
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
-import AlgoKitComposer from './composer'
+import { AlgoKitComposer } from './composer'
 import { NetworkDetails } from './network-client'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer

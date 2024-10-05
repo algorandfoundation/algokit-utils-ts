@@ -1,6 +1,7 @@
+import { Address } from 'algosdk'
 import { AlgorandClient } from '../types/algorand-client'
 
-export async function generateTestAsset(algorand: AlgorandClient, sender: string, total?: number) {
+export async function generateTestAsset(algorand: AlgorandClient, sender: Address | string, total?: number) {
   total = !total ? Math.floor(Math.random() * 100) + 20 : total
   const decimals = 0
   const assetName = `ASA ${Math.floor(Math.random() * 100) + 1}_${Math.floor(Math.random() * 100) + 1}_${total}`

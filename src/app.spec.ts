@@ -18,11 +18,11 @@ describe('app', () => {
       approvalProgram: contract.approvalProgram.replace('TMPL_UPDATABLE', '0').replace('TMPL_DELETABLE', '0').replace('TMPL_VALUE', '1'),
       clearStateProgram: contract.clearStateProgram,
       schema: contract.stateSchema,
-      sender: testAccount.addr,
+      sender: testAccount,
     })
 
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
     expect(app.confirmation).toBeTruthy()
     expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
   })
@@ -35,16 +35,16 @@ describe('app', () => {
       approvalProgram: contract.approvalProgram.replace('TMPL_UPDATABLE', '0').replace('TMPL_DELETABLE', '0').replace('TMPL_VALUE', '1'),
       clearStateProgram: contract.clearStateProgram,
       schema: contract.stateSchema,
-      sender: testAccount.addr,
-      rekeyTo: rekeyTo.addr,
+      sender: testAccount,
+      rekeyTo,
     })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
+    const rekeyedAccount = algorand.account.rekeyed(testAccount, rekeyTo)
     await algorand.send.payment({
       amount: (0).algo(),
-      sender: rekeyedAccount.addr,
-      receiver: testAccount.addr,
+      sender: rekeyedAccount,
+      receiver: testAccount,
     })
   })
 })

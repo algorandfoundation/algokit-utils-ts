@@ -1,7 +1,7 @@
 import algosdk from 'algosdk'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import EncodedSignedTransaction = algosdk.EncodedSignedTransaction
+import EncodedSignedTransaction = algosdk.SignedTransaction
 import modelsv2 = algosdk.modelsv2
 
 /**
@@ -25,7 +25,7 @@ export async function performAtomicTransactionComposerSimulate(atc: AtomicTransa
     }),
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({
-        txns: decodedSignedTransactions.map((txn) => algosdk.decodeObj(txn)) as EncodedSignedTransaction[],
+        txns: decodedSignedTransactions.map((txn) => algosdk.decodeSignedTransaction(txn)),
       }),
     ],
   })

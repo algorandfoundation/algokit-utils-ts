@@ -1,4 +1,4 @@
-import type algosdk from 'algosdk'
+import { ProgramSourceMap } from 'algosdk'
 
 const LOGIC_ERROR = /transaction ([A-Z0-9]+): logic eval error: (.*). Details: .*pc=([0-9]+).*/
 
@@ -51,12 +51,12 @@ export class LogicError extends Error {
    * @param program The TEAL source code, split by line
    * @param map The source map of the TEAL source code
    */
-  constructor(errorDetails: LogicErrorDetails, program: string[], map: algosdk.SourceMap) {
+  constructor(errorDetails: LogicErrorDetails, program: string[], map: ProgramSourceMap) {
     super()
     this.led = errorDetails
     this.program = program
 
-    const line = map.getLineForPc(errorDetails.pc)
+    const line = map.getLocationForPc(errorDetails.pc)?.line
     this.teal_line = line === undefined ? 0 : line
 
     this.message = `${this.led.msg}. at:${line}. ${this.led.desc}`
