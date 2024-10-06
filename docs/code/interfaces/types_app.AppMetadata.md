@@ -71,7 +71,7 @@ The metadata when the app was created
 
 #### Defined in
 
-[src/types/app.ts:265](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L265)
+[src/types/app.ts:266](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L266)
 
 ___
 
@@ -83,7 +83,7 @@ The round the app was created
 
 #### Defined in
 
-[src/types/app.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L261)
+[src/types/app.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L262)
 
 ___
 
@@ -99,7 +99,7 @@ Whether or not the app is deletable / permanent / unspecified
 
 #### Defined in
 
-[src/types/app.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L253)
+[src/types/app.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L254)
 
 ___
 
@@ -111,7 +111,7 @@ Whether or not the app is deleted
 
 #### Defined in
 
-[src/types/app.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L267)
+[src/types/app.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L268)
 
 ___
 
@@ -127,7 +127,7 @@ The unique name identifier of the app within the creator account
 
 #### Defined in
 
-[src/types/app.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L249)
+[src/types/app.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L250)
 
 ___
 
@@ -143,7 +143,7 @@ Whether or not the app is updatable / immutable / unspecified
 
 #### Defined in
 
-[src/types/app.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L255)
+[src/types/app.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L256)
 
 ___
 
@@ -155,7 +155,7 @@ The last round that the app was updated
 
 #### Defined in
 
-[src/types/app.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L263)
+[src/types/app.ts:264](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L264)
 
 ___
 
@@ -171,4 +171,4 @@ The version of app that is / will be deployed
 
 #### Defined in
 
-[src/types/app.ts:251](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L251)
+[src/types/app.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L252)

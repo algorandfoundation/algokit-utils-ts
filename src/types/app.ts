@@ -237,9 +237,10 @@ export type ABIReturn =
   | {
       rawReturnValue: Uint8Array
       returnValue: ABIValue
+      method: ABIMethod
       decodeError: undefined
     }
-  | { rawReturnValue: undefined; returnValue: undefined; decodeError: Error }
+  | { rawReturnValue?: undefined; returnValue?: undefined; method?: undefined; decodeError: Error }
 
 /**
  * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.

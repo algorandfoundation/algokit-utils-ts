@@ -6,6 +6,6 @@
     "source.organizeImports": "explicit"
   },
   "jest.jestCommandLine": "npm run test --",
-  "jest.autoRun": {},
+  "jest.runMode": "on-demand",
   "dotenv.enableAutocloaking": false
 }

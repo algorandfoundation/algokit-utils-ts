@@ -23,6 +23,8 @@ import SuggestedParams = algosdk.SuggestedParams
 import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
+import ABIValue = algosdk.ABIValue
+import ABIType = algosdk.ABIType
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
@@ -656,14 +658,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       confirmations,
       txIds: transactionsToSend.map((t) => t.txID()),
       transactions: transactionsToSend,
-      returns: result.methodResults.map(
-        (r) =>
-          ({
-            decodeError: r.decodeError,
-            returnValue: r.returnValue,
-            rawReturnValue: r.rawReturnValue,
-          }) as ABIReturn,
-      ),
+      returns: result.methodResults.map(getABIReturnValue),
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
@@ -706,6 +701,45 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       Config.logger.error('Received error executing Atomic Transaction Composer, for more information enable the debug flag', err)
     }
     throw err
+  }
+}
+
+const convertABIDecodedBigIntToNumber = (value: ABIValue, type: ABIType): ABIValue => {
+  if (typeof value === 'bigint') {
+    if (type instanceof algosdk.ABIUintType) {
+      return type.bitSize < 53 ? Number(value) : value
+    } else {
+      return value
+    }
+  } else if (Array.isArray(value) && (type instanceof algosdk.ABIArrayStaticType || type instanceof algosdk.ABIArrayDynamicType)) {
+    return value.map((v) => convertABIDecodedBigIntToNumber(v, type.childType))
+  } else if (Array.isArray(value) && type instanceof algosdk.ABITupleType) {
+    return value.map((v, i) => convertABIDecodedBigIntToNumber(v, type.childTypes[i]))
+  } else {
+    return value
+  }
+}
+
+/**
+ * Takes an algosdk `ABIResult` and converts it to an `ABIReturn`.
+ * Converts `bigint`'s for Uint's < 64 to `number` for easier use.
+ * @param result The `ABIReturn`
+ */
+export function getABIReturnValue(result: algosdk.ABIResult): ABIReturn {
+  if (result.decodeError) {
+    return {
+      decodeError: result.decodeError,
+    }
+  }
+
+  return {
+    method: result.method,
+    rawReturnValue: result.rawReturnValue,
+    decodeError: undefined,
+    returnValue:
+      result.returnValue !== undefined && result.method.returns.type !== 'void'
+        ? convertABIDecodedBigIntToNumber(result.returnValue, result.method.returns.type)
+        : result.returnValue!,
   }
 }
 

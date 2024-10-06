@@ -1175,7 +1175,7 @@ export class AppClient {
             .newGroup()
             .addAppCallMethodCall(await this.params.call(params))
             .simulate({
-              allowUnnamedResources: params.populateAppCallResources,
+              allowUnnamedResources: params.populateAppCallResources ?? true,
               // Simulate calls for a readonly method shouldn't invoke signing
               skipSignatures: true,
             })

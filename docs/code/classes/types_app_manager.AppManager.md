@@ -57,7 +57,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-manager.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L105)
+[src/types/app-manager.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L106)
 
 ## Properties
 
@@ -67,7 +67,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-manager.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L98)
+[src/types/app-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L99)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/types/app-manager.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L99)
+[src/types/app-manager.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L100)
 
 ## Methods
 
@@ -106,7 +106,7 @@ The information about the compiled file
 
 #### Defined in
 
-[src/types/app-manager.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L120)
+[src/types/app-manager.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L121)
 
 ___
 
@@ -140,7 +140,7 @@ The information about the compiled code
 
 #### Defined in
 
-[src/types/app-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L152)
+[src/types/app-manager.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L153)
 
 ___
 
@@ -164,7 +164,7 @@ The current box names
 
 #### Defined in
 
-[src/types/app-manager.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L240)
+[src/types/app-manager.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L241)
 
 ___
 
@@ -189,7 +189,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/app-manager.ts:257](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L257)
+[src/types/app-manager.ts:258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L258)
 
 ___
 
@@ -213,7 +213,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/types/app-manager.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L278)
+[src/types/app-manager.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L279)
 
 ___
 
@@ -238,7 +238,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/types/app-manager.ts:269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L269)
+[src/types/app-manager.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L270)
 
 ___
 
@@ -262,7 +262,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/types/app-manager.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L289)
+[src/types/app-manager.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L290)
 
 ___
 
@@ -292,7 +292,7 @@ const appInfo = await appManager.getById(12353n);
 
 #### Defined in
 
-[src/types/app-manager.ts:189](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L189)
+[src/types/app-manager.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L190)
 
 ___
 
@@ -317,7 +317,7 @@ The information about the previously compiled file
 
 #### Defined in
 
-[src/types/app-manager.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L174)
+[src/types/app-manager.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L175)
 
 ___
 
@@ -341,7 +341,7 @@ The current global state for the given app
 
 #### Defined in
 
-[src/types/app-manager.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L212)
+[src/types/app-manager.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L213)
 
 ___
 
@@ -366,7 +366,7 @@ The current local state for the given (app, account) combination
 
 #### Defined in
 
-[src/types/app-manager.ts:223](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L223)
+[src/types/app-manager.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L224)
 
 ___
 
@@ -391,7 +391,7 @@ An object keyeed by the UTF-8 representation of the key with various parsings of
 
 #### Defined in
 
-[src/types/app-manager.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L318)
+[src/types/app-manager.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L319)
 
 ___
 
@@ -416,7 +416,7 @@ The return value for the method call
 
 #### Defined in
 
-[src/types/app-manager.ts:366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L366)
+[src/types/app-manager.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L367)
 
 ___
 
@@ -440,7 +440,7 @@ The box reference ready to pass into a `algosdk.Transaction`
 
 #### Defined in
 
-[src/types/app-manager.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L299)
+[src/types/app-manager.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L300)
 
 ___
 
@@ -473,7 +473,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/types/app-manager.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L408)
+[src/types/app-manager.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L397)
 
 ___
 
@@ -500,7 +500,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/types/app-manager.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L439)
+[src/types/app-manager.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L428)
 
 ___
 
@@ -524,4 +524,4 @@ The TEAL without comments
 
 #### Defined in
 
-[src/types/app-manager.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L473)
+[src/types/app-manager.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L462)
