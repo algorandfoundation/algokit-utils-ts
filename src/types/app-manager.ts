@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import { getABIReturnValue } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import {
   BoxName,
@@ -377,19 +378,7 @@ export class AppManager {
       method,
       rawReturnValue: new Uint8Array(),
     }
-    const response = algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation)
-    return !response.decodeError
-      ? {
-          rawReturnValue: response.rawReturnValue,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          returnValue: response.returnValue!,
-          decodeError: undefined,
-        }
-      : {
-          rawReturnValue: undefined,
-          returnValue: undefined,
-          decodeError: response.decodeError,
-        }
+    return getABIReturnValue(algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation))
   }
 
   /**

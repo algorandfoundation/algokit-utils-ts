@@ -1,10 +1,10 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
 import { performAtomicTransactionComposerSimulate } from '../transaction/perform-atomic-transaction-composer-simulate'
-import { encodeLease, sendAtomicTransactionComposer } from '../transaction/transaction'
+import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { ABIReturn, APP_PAGE_MAX_SIZE } from './app'
+import { APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { EventType } from './async-event-emitter'
 import { Expand } from './expand'
@@ -1317,7 +1317,7 @@ export default class AlgoKitComposer {
       txIds: transactions.map((t) => t.txID()),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
-      returns: methodResults.map((m) => m as ABIReturn),
+      returns: methodResults.map(getABIReturnValue),
     }
   }
 

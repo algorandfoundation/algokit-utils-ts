@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, test } from '@jest/globals'
-import algosdk from 'algosdk'
+import algosdk, { ABIMethod, ABIType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
@@ -11,7 +11,7 @@ import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
 import AlgoKitComposer, { PaymentParams } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
-import { waitForConfirmation } from './transaction'
+import { getABIReturnValue, waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
@@ -492,5 +492,92 @@ describe('Resource Packer: meta', () => {
     })
 
     expect(res.transaction.appAccounts?.length || 0).toBe(0)
+  })
+})
+
+describe('abi return', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getABIResult = (type: string, value: any) => {
+    const abiType = ABIType.from(type)
+    const result = {
+      method: new ABIMethod({ name: '', args: [], returns: { type: type } }),
+      rawReturnValue: abiType.encode(value),
+      returnValue: abiType.decode(abiType.encode(value)),
+      txID: '',
+    } as algosdk.ABIResult
+    return getABIReturnValue(result)
+  }
+
+  test('uint32', () => {
+    expect(getABIResult('uint32', 0).returnValue).toBe(0)
+    expect(getABIResult('uint32', 0n).returnValue).toBe(0)
+    expect(getABIResult('uint32', 1).returnValue).toBe(1)
+    expect(getABIResult('uint32', 1n).returnValue).toBe(1)
+    expect(getABIResult('uint32', 2 ** 32 - 1).returnValue).toBe(2 ** 32 - 1)
+    expect(getABIResult('uint32', 2n ** 32n - 1n).returnValue).toBe(2 ** 32 - 1)
+  })
+
+  test('uint64', () => {
+    expect(getABIResult('uint64', 0).returnValue).toBe(0n)
+    expect(getABIResult('uint64', 1).returnValue).toBe(1n)
+    expect(getABIResult('uint64', 2 ** 32 - 1).returnValue).toBe(2n ** 32n - 1n)
+    expect(getABIResult('uint64', 2n ** 64n - 1n).returnValue).toBe(2n ** 64n - 1n)
+  })
+
+  test('uint32[]', () => {
+    expect(getABIResult('uint32[]', [0]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[]', [0n]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[]', [1]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[]', [1n]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
+    expect(getABIResult('uint32[]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+  })
+
+  test('uint32[n]', () => {
+    expect(getABIResult('uint32[1]', [0]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[1]', [0n]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[1]', [1]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[1]', [1n]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[3]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[3]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[1]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
+    expect(getABIResult('uint32[2]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+  })
+
+  test('uint64[]', () => {
+    expect(getABIResult('uint64[]', [0]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[]', [0n]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[]', [1]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[]', [1n]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
+    expect(getABIResult('uint64[]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+  })
+
+  test('uint64[n]', () => {
+    expect(getABIResult('uint64[1]', [0]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[1]', [0n]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[1]', [1]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[1]', [1n]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[3]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[3]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[1]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
+    expect(getABIResult('uint64[2]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+  })
+
+  test('(uint32,uint64,(uint32,uint64),uint32[],uint64[])', () => {
+    const type = '(uint32,uint64,(uint32,uint64),uint32[],uint64[])'
+    expect(getABIResult(type, [0, 0, [0, 0], [0], [0]]).returnValue).toEqual([0, 0n, [0, 0n], [0], [0n]])
+    expect(getABIResult(type, [1, 1, [1, 1], [1], [1]]).returnValue).toEqual([1, 1n, [1, 1n], [1], [1n]])
+    expect(getABIResult(type, [2 ** 32 - 1, 2n ** 64n - 1n, [2 ** 32 - 1, 2n ** 64n - 1n], [1, 2, 3], [1, 2, 3]]).returnValue).toEqual([
+      2 ** 32 - 1,
+      2n ** 64n - 1n,
+      [2 ** 32 - 1, 2n ** 64n - 1n],
+      [1, 2, 3],
+      [1n, 2n, 3n],
+    ])
   })
 })

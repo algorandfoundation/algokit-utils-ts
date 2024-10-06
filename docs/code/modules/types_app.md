@@ -82,7 +82,7 @@ ___
 
 ### ABIReturn
 
-Ƭ **ABIReturn**: \{ `decodeError`: `undefined` ; `rawReturnValue`: `Uint8Array` ; `returnValue`: `ABIValue`  } \| \{ `decodeError`: `Error` ; `rawReturnValue`: `undefined` ; `returnValue`: `undefined`  }
+Ƭ **ABIReturn**: \{ `decodeError`: `undefined` ; `method`: `ABIMethod` ; `rawReturnValue`: `Uint8Array` ; `returnValue`: `ABIValue`  } \| \{ `decodeError`: `Error` ; `method?`: `undefined` ; `rawReturnValue?`: `undefined` ; `returnValue?`: `undefined`  }
 
 The return value of an ABI method call
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L340)
+[src/types/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L341)
 
 ___
 
@@ -180,7 +180,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L357)
+[src/types/app.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L358)
 
 ___
 
@@ -192,7 +192,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L346)
+[src/types/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L347)
 
 ___
 
@@ -204,7 +204,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L354)
+[src/types/app.ts:355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L355)
 
 ## Variables
 
