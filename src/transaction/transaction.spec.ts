@@ -36,7 +36,7 @@ describe('transaction', () => {
     const { algorand } = localnet.context
     const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), maxFee: (1_000_000).microAlgo() })
 
-    expect(confirmation?.txn.txn.fee).toBe(1000)
+    expect(confirmation?.txn.txn.fee).toBe(1000n)
   })
 
   test('Transaction fee is overridable', async () => {
@@ -44,7 +44,7 @@ describe('transaction', () => {
     const fee = (1).algo()
     const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), staticFee: fee })
 
-    expect(confirmation.txn.txn.fee).toBe(Number(fee.microAlgo))
+    expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
   })
 
   test('Transaction group is sent', async () => {
@@ -222,7 +222,6 @@ const tests = (version: 8 | 9) => () => {
 
     test('addressBalance', async () => {
       await appClient.send.call({ method: 'addressBalance', args: [alice] })
-      expect(false) // TODO: check above fails until uncommenting address handling in composer
     })
   })
 
@@ -367,7 +366,6 @@ describe('Resource Packer: Mixed', () => {
     Config.configure({ populateAppCallResources: false })
   })
 
-  // Temporarily skip this until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
   test('same account', async () => {
     const { algorand, testAccount } = fixture.context
     const acct = algosdk.generateAccount()

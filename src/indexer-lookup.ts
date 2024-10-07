@@ -159,7 +159,7 @@ export async function executePaginatedRequest<TResult, TRequest extends { do: ()
       break
     }
     results.push(...items)
-    nextToken = response['next-token']
+    nextToken = response['nextToken']
     if (!nextToken) {
       break
     }

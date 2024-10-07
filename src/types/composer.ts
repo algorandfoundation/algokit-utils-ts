@@ -859,7 +859,7 @@ export class AlgoKitComposer {
 
       // Underlying ATC only supports addresses as strings
       if (arg instanceof Address) {
-        //TODO: methodArgs.push(arg.toString())
+        methodArgs.push(arg.toString())
         continue
       }
 
@@ -1278,6 +1278,7 @@ export class AlgoKitComposer {
     // Build the transactions
     if (options?.skipSignatures) {
       options.allowEmptySignatures = true
+      // todo: options.fixSigners = true
       // Build transactions uses empty signers
       const transactions = await this.buildTransactions()
       for (const txn of transactions.transactions) {

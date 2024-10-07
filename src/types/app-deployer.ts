@@ -469,7 +469,7 @@ export class AppDeployer {
     const createdApps = (await indexer.lookupAccountCreatedApplicationByAddress(this._indexer, creatorAddress))
       .map((a) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return { id: BigInt(a.id), createdAtRound: a.createdAtRound!, deleted: a.deleted }
+        return { id: a.id, createdAtRound: a.createdAtRound!, deleted: a.deleted }
       })
       .sort((a, b) => Number(a.createdAtRound - b.createdAtRound))
 
@@ -525,15 +525,11 @@ export class AppDeployer {
             return
           }
 
-          const decoder = new TextDecoder()
-          const noteAsBase64 = decoder.decode(Buffer.from(note))
-          const noteAsString = Buffer.from(noteAsBase64, 'base64').toString('utf-8')
-
-          if (!noteAsString.startsWith(`${APP_DEPLOY_NOTE_DAPP}:j{`))
+          if (!note.startsWith(`${APP_DEPLOY_NOTE_DAPP}:j{`))
             // Clearly not APP_DEPLOY JSON; ignoring...
             return
 
-          return JSON.parse(noteAsString.substring(APP_DEPLOY_NOTE_DAPP.length + 2)) as AppDeployMetadata
+          return JSON.parse(note.substring(APP_DEPLOY_NOTE_DAPP.length + 2)) as AppDeployMetadata
         }
 
         try {

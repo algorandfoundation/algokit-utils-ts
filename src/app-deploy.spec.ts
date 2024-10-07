@@ -31,7 +31,7 @@ describe('deploy-app', () => {
     expect(Object.keys(apps.apps)).toEqual([name])
     const app = apps.apps[name]
     expect(app.appId).toBe(app1.appId)
-    expect(app.appAddress).toBe(app1.appAddress)
+    expect(app.appAddress).toEqual(app1.appAddress)
     expect(app.createdRound).toBe(BigInt(app1.confirmation.confirmedRound!))
     expect(app.createdMetadata).toEqual(creationMetadata)
     expect(app.updatedRound).toBe(app.createdRound)
@@ -58,6 +58,7 @@ describe('deploy-app', () => {
 
   test('Created, updated and deleted apps are retrieved by name with deployment metadata', async () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
+
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
     const name3 = 'APP_3'
@@ -77,7 +78,7 @@ describe('deploy-app', () => {
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
     const app1Data = apps.apps[name]
     expect(app1Data.appId).toBe(app1.appId)
-    expect(app1Data.appAddress).toBe(app1.appAddress)
+    expect(app1Data.appAddress).toEqual(app1.appAddress)
     expect(app1Data.createdRound).toBe(BigInt(app1.confirmation.confirmedRound!))
     expect(app1Data.createdMetadata).toEqual(creationMetadata)
     expect(app1Data.updatedRound).toBe(BigInt(update1.confirmation.confirmedRound!))

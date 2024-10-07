@@ -317,7 +317,7 @@ describe('Transfer capability', () => {
       algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, (100).algo(), {
         minFundingIncrement: (1).algo(),
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot('"dummy_error"')
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: dummy_error]`)
   })
 })
 

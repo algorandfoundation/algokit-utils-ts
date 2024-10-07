@@ -1,11 +1,4 @@
-import algosdk, {
-  Address,
-  ApplicationTransactionFields,
-  TransactionBoxReference,
-  TransactionType,
-  encodeMsgpack,
-  msgpackRawEncode,
-} from 'algosdk'
+import algosdk, { Address, ApplicationTransactionFields, TransactionBoxReference, TransactionType, stringifyJSON } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
@@ -268,40 +261,13 @@ export const sendTransaction = async function (
  * @returns The unnamed resources accessed by the group and by each transaction in the group
  */
 async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
-  const simReq = new algosdk.modelsv2.SimulateRequest({
-    txnGroups: [],
+  const result = await performAtomicTransactionComposerSimulate(atc, algod, {
     allowUnnamedResources: true,
     allowEmptySignatures: true,
+    //todo: fixSigners: true, waiting for 3.26 to roll out https://github.com/algorand/go-algorand/pull/5942
   })
 
-  const signerWithFixedSgnr: algosdk.TransactionSigner = async (txns: algosdk.Transaction[], indexes: number[]) => {
-    const stxns = await algosdk.makeEmptyTransactionSigner()(txns, indexes)
-    return Promise.all(
-      stxns.map(async (stxn) => {
-        const decodedStxn = algosdk.decodeSignedTransaction(stxn)
-        const sender = decodedStxn.txn.sender
-
-        const authAddr = (await algod.accountInformation(sender).do()).authAddr
-
-        const stxnObj: { txn: Uint8Array; sgnr?: Buffer } = { txn: encodeMsgpack(decodedStxn) }
-
-        if (authAddr !== undefined) {
-          stxnObj.sgnr = Buffer.from(authAddr.publicKey)
-        }
-
-        return msgpackRawEncode(stxnObj)
-      }),
-    )
-  }
-
-  const emptySignerAtc = atc.clone()
-  emptySignerAtc['transactions'].forEach((t: algosdk.TransactionWithSigner) => {
-    t.signer = signerWithFixedSgnr
-  })
-
-  const result = await emptySignerAtc.simulate(algod, simReq)
-
-  const groupResponse = result.simulateResponse.txnGroups[0]
+  const groupResponse = result.txnGroups[0]
 
   if (groupResponse.failureMessage) {
     throw Error(`Error during resource population simulation in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
@@ -398,9 +364,9 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
           // account is available as an app account
           t.txn.applicationCall?.foreignApps?.map((a) => algosdk.getApplicationAddress(a).toString()).includes(account.toString()) ||
           // account is available since it's in one of the fields
-          Object.values(t.txn)
-            .map((f) => JSON.stringify(f))
-            .includes(JSON.stringify(account))
+          Object.values(t.txn).some((f) =>
+            stringifyJSON(f, (_, v) => (v instanceof Address ? v.toString() : v))?.includes(account.toString()),
+          )
         )
       })
 
@@ -621,24 +587,16 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
   let atc: AtomicTransactionComposer
 
-  // const hasAppCalls = () =>
-  //   givenAtc
-  //     .buildGroup()
-  //     .map((t) => t.txn.type)
-  //     .includes(algosdk.TransactionType.appl)
-
   atc = givenAtc
   try {
+    const transactionsWithSigner = atc.buildGroup()
+
     // If populateAppCallResources is true OR if populateAppCallResources is undefined and there are app calls, then populate resources
-    // NOTE: Temporary false by default until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
     const populateResources =
       executeParams?.populateAppCallResources ?? sendParams?.populateAppCallResources ?? Config.populateAppCallResources
-
-    if (populateResources) {
+    if (populateResources && transactionsWithSigner.map((t) => t.txn.type).includes(algosdk.TransactionType.appl)) {
       atc = await populateAppCallResources(givenAtc, algod)
     }
-
-    const transactionsWithSigner = atc.buildGroup()
 
     const transactionsToSend = transactionsWithSigner.map((t) => {
       return t.txn

@@ -70,8 +70,8 @@ describe('application-client', () => {
     })
 
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -121,8 +121,8 @@ describe('application-client', () => {
 
     expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -173,8 +173,8 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -205,8 +205,8 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -321,7 +321,7 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(BigInt(createdApp.appId))
     expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
   })
 
@@ -368,7 +368,7 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(BigInt(createdApp.appId))
     expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
     expect(app.deleteReturn?.returnValue).toBe('arg2_io')
