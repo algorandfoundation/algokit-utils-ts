@@ -2,7 +2,7 @@ import { beforeEach, describe, test } from '@jest/globals'
 import { Address } from 'algosdk'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { indexer } from './'
-import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
+import { algorandFixture } from './testing'
 import { AlgoAmount } from './types/amount'
 
 describe('indexer-lookup', () => {
@@ -16,26 +16,6 @@ describe('indexer-lookup', () => {
       amount: amount ?? (1).microAlgo(),
     })
   }
-
-  test('Transaction is found by id', async () => {
-    const { algorand, waitForIndexer } = localnet.context
-    const { transaction } = await sendTestTransaction()
-    await waitForIndexer()
-
-    const txn = await indexer.lookupTransactionById(transaction.txID(), algorand.client.indexer)
-
-    expect(txn.transaction.id).toBe(transaction.txID())
-    expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)
-  }, 20_000)
-
-  test('Account is found by id', async () => {
-    const { algorand, testAccount } = localnet.context
-    await runWhenIndexerCaughtUp(() => indexer.lookupAccountByAddress(testAccount, algorand.client.indexer))
-
-    const account = await indexer.lookupAccountByAddress(testAccount, algorand.client.indexer)
-
-    expect(account.account.address).toBe(testAccount.toString())
-  }, 20_000)
 
   test('Transactions are searched with pagination', async () => {
     const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
@@ -54,7 +34,7 @@ describe('indexer-lookup', () => {
       1,
     )
 
-    expect(Number(transactions.currentRound)).toBeGreaterThan(0n)
+    expect(transactions.currentRound).toBeGreaterThan(0n)
     expect(transactions.transactions.map((t) => t.id).sort()).toEqual([transaction1.txID(), transaction2.txID()].sort())
   }, 20_000)
 

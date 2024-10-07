@@ -1,4 +1,4 @@
-import { algos, Config, lookupTransactionById } from '../../'
+import { algos, Config } from '../../'
 import { AlgorandClient } from '../../types/algorand-client'
 import { ClientManager } from '../../types/client-manager'
 import { AlgoConfig } from '../../types/network-client'
@@ -112,7 +112,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       },
       transactionLogger: transactionLogger,
       waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
-      waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => lookupTransactionById(transactionId, indexer)),
+      waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(transactionId).do()),
     }
   }
 

@@ -469,9 +469,9 @@ export class AppDeployer {
     const createdApps = (await indexer.lookupAccountCreatedApplicationByAddress(this._indexer, creatorAddress))
       .map((a) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return { id: BigInt(a.id), createdAtRound: a['created-at-round']!, deleted: a.deleted }
+        return { id: BigInt(a.id), createdAtRound: a.createdAtRound!, deleted: a.deleted }
       })
-      .sort((a, b) => a.createdAtRound - b.createdAtRound)
+      .sort((a, b) => Number(a.createdAtRound - b.createdAtRound))
 
     // For each app that account created (in parallel)...
     const apps = await Promise.all(

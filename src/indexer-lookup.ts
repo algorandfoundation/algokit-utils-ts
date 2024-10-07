@@ -1,18 +1,12 @@
-import algosdk, { Address, indexerModels } from 'algosdk'
-import {
-  ApplicationCreatedLookupResult,
-  ApplicationResult,
-  AssetBalancesLookupResult,
-  LookupAssetHoldingsOptions,
-  MiniAssetHolding,
-} from './types/indexer'
+import algosdk, { Address } from 'algosdk'
+import { LookupAssetHoldingsOptions } from './types/indexer'
 import Indexer = algosdk.Indexer
-import TransactionSearchResults = indexerModels.TransactionsResponse
 export type SearchForTransactions = ReturnType<Indexer['searchForTransactions']>
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
 
 /**
+ * @deprecated Use `indexer.lookupTransactionByID(transactionId).do()`.
  * Looks up a transaction by ID using Indexer.
  * @param transactionId The ID of the transaction to look up
  * @param indexer An indexer client
@@ -23,6 +17,7 @@ export async function lookupTransactionById(transactionId: string, indexer: Inde
 }
 
 /**
+ * @deprecated Use `indexer.lookupAccountByID(accountAddress).do()`.
  * Looks up an account by address using Indexer.
  * @param accountAddress The address of the account to look up
  * @param indexer An indexer client
@@ -45,9 +40,9 @@ export async function lookupAccountCreatedApplicationByAddress(
   address: string | Address,
   getAll: boolean | undefined = undefined,
   paginationLimit?: number,
-): Promise<ApplicationResult[]> {
+): Promise<algosdk.indexerModels.Application[]> {
   return await executePaginatedRequest(
-    (response: ApplicationCreatedLookupResult | { message: string }) => {
+    (response: algosdk.indexerModels.ApplicationsResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
@@ -79,9 +74,9 @@ export async function lookupAssetHoldings(
   assetId: number | bigint,
   options?: LookupAssetHoldingsOptions,
   paginationLimit?: number,
-): Promise<MiniAssetHolding[]> {
+): Promise<algosdk.indexerModels.MiniAssetHolding[]> {
   return await executePaginatedRequest(
-    (response: AssetBalancesLookupResult | { message: string }) => {
+    (response: algosdk.indexerModels.AssetBalancesResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
@@ -117,10 +112,10 @@ export async function searchTransactions(
   indexer: Indexer,
   searchCriteria: (s: SearchForTransactions) => SearchForTransactions,
   paginationLimit?: number,
-): Promise<TransactionSearchResults> {
+): Promise<algosdk.indexerModels.TransactionsResponse> {
   let currentRound = 0n
   const transactions = await executePaginatedRequest(
-    (response: TransactionSearchResults | { message: string }) => {
+    (response: algosdk.indexerModels.TransactionsResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
@@ -138,7 +133,7 @@ export async function searchTransactions(
     },
   )
 
-  return new TransactionSearchResults({
+  return new algosdk.indexerModels.TransactionsResponse({
     currentRound,
     nextToken: undefined,
     transactions: transactions,
