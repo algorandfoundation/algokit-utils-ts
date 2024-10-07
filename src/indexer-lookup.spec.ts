@@ -1,5 +1,5 @@
-import { beforeEach, describe, test } from '@jest/globals'
 import { Address } from 'algosdk'
+import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { indexer } from './'
 import { algorandFixture } from './testing'

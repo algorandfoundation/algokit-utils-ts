@@ -1,5 +1,5 @@
-import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 

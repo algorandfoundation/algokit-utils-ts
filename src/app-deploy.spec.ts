@@ -1,6 +1,6 @@
-import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { Config } from './config'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
