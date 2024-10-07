@@ -1292,15 +1292,19 @@ export default class AlgoKitComposer {
       this.algod,
       new modelsv2.SimulateRequest({
         txnGroups: [],
-        allowEmptySignatures: true,
-        allowMoreLogging: true,
-        execTraceConfig: new modelsv2.SimulateTraceConfig({
-          enable: true,
-          scratchChange: true,
-          stackChange: true,
-          stateChange: true,
-        }),
         ...options,
+        ...(Config.debug
+          ? {
+              allowEmptySignatures: true,
+              allowMoreLogging: true,
+              execTraceConfig: new modelsv2.SimulateTraceConfig({
+                enable: true,
+                scratchChange: true,
+                stackChange: true,
+                stateChange: true,
+              }),
+            }
+          : undefined),
       }),
     )
 

@@ -681,6 +681,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
       const simulate = await performAtomicTransactionComposerSimulate(atc, algod)
       if (Config.debug && !Config.traceAll) {
+        // Emit the event only if traceAll: false, as it should have already been emitted above
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
           simulateResponse: simulate,
         })
