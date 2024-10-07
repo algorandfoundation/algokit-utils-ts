@@ -64,7 +64,7 @@ Parameters to create an `AlgoKitComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L463)
+[src/types/composer.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L462)
 
 ___
 
@@ -76,7 +76,7 @@ Parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L412)
+[src/types/composer.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L411)
 
 ___
 
@@ -88,7 +88,7 @@ Parameters to define an application call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L388)
+[src/types/composer.ts:387](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L387)
 
 ___
 
@@ -100,7 +100,7 @@ Parameters to define an ABI method call create transaction.
 
 #### Defined in
 
-[src/types/composer.ts:406](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L406)
+[src/types/composer.ts:405](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L405)
 
 ___
 
@@ -112,7 +112,7 @@ Parameters to define an app create transaction
 
 #### Defined in
 
-[src/types/composer.ts:351](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L351)
+[src/types/composer.ts:350](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L350)
 
 ___
 
@@ -124,7 +124,7 @@ Parameters to define an ABI method call delete transaction.
 
 #### Defined in
 
-[src/types/composer.ts:410](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L410)
+[src/types/composer.ts:409](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L409)
 
 ___
 
@@ -136,7 +136,7 @@ Parameters to define an application delete call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L401)
+[src/types/composer.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L400)
 
 ___
 
@@ -154,7 +154,7 @@ Parameters to define an ABI method call.
 
 #### Defined in
 
-[src/types/composer.ts:425](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L425)
+[src/types/composer.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L424)
 
 ___
 
@@ -166,7 +166,7 @@ Common parameters to define an ABI method call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L393)
+[src/types/composer.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L392)
 
 ___
 
@@ -178,7 +178,7 @@ Types that can be used to define a transaction argument for an ABI call transact
 
 #### Defined in
 
-[src/types/composer.ts:415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L415)
+[src/types/composer.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L414)
 
 ___
 
@@ -190,7 +190,7 @@ Parameters to define an ABI method call update transaction.
 
 #### Defined in
 
-[src/types/composer.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L408)
+[src/types/composer.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L407)
 
 ___
 
@@ -202,7 +202,7 @@ Parameters to define an app update transaction
 
 #### Defined in
 
-[src/types/composer.ts:377](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L377)
+[src/types/composer.ts:376](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L376)
 
 ___
 
@@ -218,7 +218,7 @@ all fields are immutable from that point forward.
 
 #### Defined in
 
-[src/types/composer.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L204)
+[src/types/composer.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L203)
 
 ___
 
@@ -232,7 +232,7 @@ The account that sends this transaction will automatically be opted in to the as
 
 #### Defined in
 
-[src/types/composer.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L88)
+[src/types/composer.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L87)
 
 ___
 
@@ -246,7 +246,7 @@ Created assets can be destroyed only by the asset manager account. All of the as
 
 #### Defined in
 
-[src/types/composer.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L262)
+[src/types/composer.ts:261](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L261)
 
 ___
 
@@ -258,7 +258,7 @@ Parameters to define an asset freeze transaction.
 
 #### Defined in
 
-[src/types/composer.ts:249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L249)
+[src/types/composer.ts:248](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L248)
 
 ___
 
@@ -270,7 +270,7 @@ Parameters to define an asset opt-in transaction.
 
 #### Defined in
 
-[src/types/composer.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L290)
+[src/types/composer.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L289)
 
 ___
 
@@ -282,7 +282,7 @@ Parameters to define an asset opt-out transaction.
 
 #### Defined in
 
-[src/types/composer.ts:296](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L296)
+[src/types/composer.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L295)
 
 ___
 
@@ -294,7 +294,7 @@ Parameters to define an asset transfer transaction.
 
 #### Defined in
 
-[src/types/composer.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L268)
+[src/types/composer.ts:267](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L267)
 
 ___
 
@@ -306,7 +306,7 @@ Common parameters for defining an application call transaction.
 
 #### Defined in
 
-[src/types/composer.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L329)
+[src/types/composer.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L328)
 
 ___
 
@@ -334,7 +334,7 @@ Common parameters for defining a transaction.
 
 #### Defined in
 
-[src/types/composer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L31)
+[src/types/composer.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L30)
 
 ___
 
@@ -346,7 +346,7 @@ Parameters to define an online key registration transaction.
 
 #### Defined in
 
-[src/types/composer.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L307)
+[src/types/composer.ts:306](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L306)
 
 ___
 
@@ -358,7 +358,7 @@ Parameters to define a payment transaction.
 
 #### Defined in
 
-[src/types/composer.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L72)
+[src/types/composer.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L71)
 
 ___
 
@@ -370,7 +370,7 @@ Options to control a simulate request
 
 #### Defined in
 
-[src/types/composer.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L25)
+[src/types/composer.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L24)
 
 ___
 
@@ -380,7 +380,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:447](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L447)
+[src/types/composer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L446)
 
 ## Variables
 
@@ -390,4 +390,4 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L22)
+[src/types/composer.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L21)

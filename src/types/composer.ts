@@ -1,6 +1,5 @@
 import algosdk from 'algosdk'
 import { Config } from '../config'
-import { performAtomicTransactionComposerSimulate } from '../transaction/perform-atomic-transaction-composer-simulate'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -1289,25 +1288,38 @@ export default class AlgoKitComposer {
       await this.build()
     }
 
-    if (Config.debug && !Config.traceAll) {
-      // Dump the traces to a file for use with AlgoKit AVM debugger
-      // Checks for false on traceAll because it should have been already
-      // executed above
-      const simulateResponse = await performAtomicTransactionComposerSimulate(atc, this.algod)
-      await Config.events.emitAsync(EventType.TxnGroupSimulated, {
-        simulateResponse,
-      })
-    }
+    const { methodResults, simulateResponse } = await atc.simulate(
+      this.algod,
+      new modelsv2.SimulateRequest({
+        txnGroups: [],
+        allowEmptySignatures: true,
+        allowMoreLogging: true,
+        execTraceConfig: new modelsv2.SimulateTraceConfig({
+          enable: true,
+          scratchChange: true,
+          stackChange: true,
+          stateChange: true,
+        }),
+        ...options,
+      }),
+    )
 
-    const { methodResults, simulateResponse } = await atc.simulate(this.algod, new modelsv2.SimulateRequest({ txnGroups: [], ...options }))
+    const failedGroup = simulateResponse?.txnGroups[0]
+    if (failedGroup?.failureMessage) {
+      const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
+      const error = new Error(errorMessage)
 
-    if (simulateResponse && simulateResponse.txnGroups[0].failedAt) {
-      const error = new Error(
-        `Transaction failed at transaction(s) ${simulateResponse.txnGroups[0].failedAt.join(', ')} in the group. ${simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage}`,
-      )
+      if (Config.debug) {
+        await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(error as any).simulateResponse = simulateResponse
       throw error
+    }
+
+    if (Config.debug && Config.traceAll) {
+      await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
     }
 
     const transactions = atc.buildGroup().map((t) => t.txn)
