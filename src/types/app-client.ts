@@ -419,7 +419,7 @@ export class AppClient {
   private _approvalSourceMap: SourceMap | undefined
   private _clearSourceMap: SourceMap | undefined
 
-  private _localStateMethods: (address: string) => ReturnType<AppClient['getStateMethods']>
+  private _localStateMethods: (address: string | Address) => ReturnType<AppClient['getStateMethods']>
   private _globalStateMethods: ReturnType<AppClient['getStateMethods']>
   private _boxStateMethods: ReturnType<AppClient['getBoxMethods']>
 
@@ -444,7 +444,7 @@ export class AppClient {
 
     this._approvalSourceMap = params.approvalSourceMap
     this._clearSourceMap = params.clearSourceMap
-    this._localStateMethods = (address: string) =>
+    this._localStateMethods = (address: string | Address) =>
       this.getStateMethods(
         () => this.getLocalState(address),
         () => this._appSpec.state.keys.local,
