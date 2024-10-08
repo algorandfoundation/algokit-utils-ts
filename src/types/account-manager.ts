@@ -647,7 +647,7 @@ export class AccountManager {
     accountToFund: string | TransactionSignerAccount,
     dispenserClient: TestNetDispenserApiClient,
     minSpendingBalance: AlgoAmount,
-    options: {
+    options?: {
       minFundingIncrement?: AlgoAmount
     },
   ): Promise<EnsureFundedResult | undefined> {
