@@ -17,7 +17,7 @@ A wrapper around `TransactionSigner` that also has the sender address.
 
 ### addr
 
-• **addr**: `string`
+• **addr**: `Readonly`\<`Address`\>
 
 #### Defined in
 

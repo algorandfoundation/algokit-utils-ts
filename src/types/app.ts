@@ -16,7 +16,7 @@ import ABIType = algosdk.ABIType
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
 import OnApplicationComplete = algosdk.OnApplicationComplete
-import SourceMap = algosdk.SourceMap
+import SourceMap = algosdk.ProgramSourceMap
 import SuggestedParams = algosdk.SuggestedParams
 import Transaction = algosdk.Transaction
 
@@ -230,7 +230,7 @@ export interface AppCallTransactionResultOfType<T> extends SendTransactionResult
 
 /** Result from calling an app */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AppCallTransactionResult extends AppCallTransactionResultOfType<ABIReturn> {}
+export type AppCallTransactionResult = AppCallTransactionResultOfType<ABIReturn>
 
 /** The return value of an ABI method call */
 export type ABIReturn =
@@ -332,9 +332,9 @@ export interface AppDeploymentParams
 
 /** The result of compiling the approval and clear state TEAL programs for an app */
 export interface AppCompilationResult {
-  /** The compilation result of approval */
+  /** The result of compiling the approval program */
   compiledApproval: CompiledTeal
-  /** The compilation result of clear */
+  /** The result of compiling the clear state program */
   compiledClear: CompiledTeal
 }
 
@@ -360,7 +360,7 @@ export type SendAppCreateTransactionResult = Expand<
     /** The id of the created app */
     appId: bigint
     /** The Algorand address of the account associated with the app */
-    appAddress: string
+    appAddress: Address
   }
 >
 

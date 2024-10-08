@@ -133,7 +133,7 @@ Logger.debug
 
 #### Defined in
 
-[src/testing/test-logger.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L79)
+[src/testing/test-logger.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L88)
 
 ___
 
@@ -158,7 +158,7 @@ Logger.error
 
 #### Defined in
 
-[src/testing/test-logger.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L63)
+[src/testing/test-logger.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L72)
 
 ___
 
@@ -219,7 +219,7 @@ Logger.info
 
 #### Defined in
 
-[src/testing/test-logger.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L71)
+[src/testing/test-logger.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L80)
 
 ___
 
@@ -244,7 +244,7 @@ Logger.verbose
 
 #### Defined in
 
-[src/testing/test-logger.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L75)
+[src/testing/test-logger.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L84)
 
 ___
 
@@ -269,4 +269,4 @@ Logger.warn
 
 #### Defined in
 
-[src/testing/test-logger.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L67)
+[src/testing/test-logger.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/test-logger.ts#L76)

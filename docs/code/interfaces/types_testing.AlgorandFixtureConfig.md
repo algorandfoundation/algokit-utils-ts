@@ -29,7 +29,7 @@ Configuration for creating an Algorand testing fixture.
 
 ### accountGetter
 
-• `Optional` **accountGetter**: (`algod`: `default`, `kmd?`: `default`) => `Promise`\<`default`\>
+• `Optional` **accountGetter**: (`algod`: `AlgodClient`, `kmd?`: `KmdClient`) => `Promise`\<`default`\>
 
 Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts.
 
@@ -41,8 +41,8 @@ Optional override for how to get an account; this allows you to retrieve account
 
 | Name | Type |
 | :------ | :------ |
-| `algod` | `default` |
-| `kmd?` | `default` |
+| `algod` | `AlgodClient` |
+| `kmd?` | `KmdClient` |
 
 ##### Returns
 
@@ -50,19 +50,19 @@ Optional override for how to get an account; this allows you to retrieve account
 
 #### Defined in
 
-[src/types/testing.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L63)
+[src/types/testing.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L62)
 
 ___
 
 ### algod
 
-• `Optional` **algod**: `default`
+• `Optional` **algod**: `AlgodClient`
 
 An optional algod client, if not specified then it will create one against `algodConfig` (if present) then environment variables defined network (if present) or default LocalNet.
 
 #### Defined in
 
-[src/types/testing.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L55)
+[src/types/testing.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L54)
 
 ___
 
@@ -84,13 +84,13 @@ ___
 
 ### indexer
 
-• `Optional` **indexer**: `default`
+• `Optional` **indexer**: `IndexerClient`
 
 An optional indexer client, if not specified then it will create one against `indexerConfig` (if present) then environment variables defined network (if present) or default LocalNet.
 
 #### Defined in
 
-[src/types/testing.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L57)
+[src/types/testing.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L56)
 
 ___
 
@@ -112,13 +112,13 @@ ___
 
 ### kmd
 
-• `Optional` **kmd**: `default`
+• `Optional` **kmd**: `KmdClient`
 
 An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet.
 
 #### Defined in
 
-[src/types/testing.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L59)
+[src/types/testing.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L58)
 
 ___
 
@@ -146,4 +146,4 @@ The amount of funds to allocate to the default testing account, if not specified
 
 #### Defined in
 
-[src/types/testing.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L61)
+[src/types/testing.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L60)

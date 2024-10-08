@@ -52,7 +52,16 @@ export class TestLogger implements Logger {
     accounts?.forEach(
       (sender, id) =>
         (snapshot = snapshot.replace(
-          new RegExp(typeof sender === 'string' ? sender : 'addr' in sender ? sender.addr : sender.address(), 'g'),
+          new RegExp(
+            typeof sender === 'string'
+              ? sender
+              : 'addr' in sender
+                ? sender.addr.toString()
+                : 'address' in sender
+                  ? sender.address().toString()
+                  : sender.toString(),
+            'g',
+          ),
           `ACCOUNT_${id + 1}`,
         )),
     )

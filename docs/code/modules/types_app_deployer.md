@@ -32,7 +32,7 @@ The parameters to idempotently deploy an app
 
 #### Defined in
 
-[src/types/app-deployer.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L37)
+[src/types/app-deployer.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L38)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L97)
+[src/types/app-deployer.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L98)
 
 ___
 
@@ -54,7 +54,7 @@ Params to specify a delete method call for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L34)
+[src/types/app-deployer.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L35)
 
 ___
 
@@ -66,7 +66,7 @@ Params to specify a transaction for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L32)
+[src/types/app-deployer.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L33)
 
 ___
 
@@ -78,7 +78,7 @@ Params to specify an update method call for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L30)
+[src/types/app-deployer.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L31)
 
 ___
 
@@ -90,4 +90,4 @@ Params to specify an update transaction for an app deployment
 
 #### Defined in
 
-[src/types/app-deployer.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L28)
+[src/types/app-deployer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L29)

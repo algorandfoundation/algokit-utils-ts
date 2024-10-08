@@ -53,7 +53,7 @@ ___
 
 • `Optional` **compiledApproval**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
-The compilation result of approval
+The result of compiling the approval program
 
 #### Inherited from
 
@@ -69,7 +69,7 @@ ___
 
 • `Optional` **compiledClear**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
-The compilation result of clear
+The result of compiling the clear state program
 
 #### Inherited from
 

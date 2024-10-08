@@ -24,13 +24,13 @@ Test automation context.
 
 ### algod
 
-• **algod**: `default`
+• **algod**: `AlgodClient`
 
 Algod client instance that will log transactions in `transactionLogger`
 
 #### Defined in
 
-[src/types/testing.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L23)
+[src/types/testing.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L22)
 
 ___
 
@@ -42,19 +42,19 @@ An AlgorandClient instance loaded with the current context, including testAccoun
 
 #### Defined in
 
-[src/types/testing.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L21)
+[src/types/testing.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L20)
 
 ___
 
 ### generateAccount
 
-• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
+• **generateAccount**: (`params`: [`GetTestAccountParams`](types_testing.GetTestAccountParams.md)) => `Promise`\<`Address` & `default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
 
 Generate and fund an additional ephemerally created account
 
 #### Type declaration
 
-▸ (`params`): `Promise`\<`default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
+▸ (`params`): `Promise`\<`Address` & `default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
 
 ##### Parameters
 
@@ -64,47 +64,47 @@ Generate and fund an additional ephemerally created account
 
 ##### Returns
 
-`Promise`\<`default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
+`Promise`\<`Address` & `default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)\>
 
 #### Defined in
 
-[src/types/testing.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L33)
+[src/types/testing.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L32)
 
 ___
 
 ### indexer
 
-• **indexer**: `default`
+• **indexer**: `IndexerClient`
 
 Indexer client instance
 
 #### Defined in
 
-[src/types/testing.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L25)
+[src/types/testing.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L24)
 
 ___
 
 ### kmd
 
-• **kmd**: `default`
+• **kmd**: `KmdClient`
 
 KMD client instance
 
 #### Defined in
 
-[src/types/testing.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L27)
+[src/types/testing.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L26)
 
 ___
 
 ### testAccount
 
-• **testAccount**: `default` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md)
+• **testAccount**: `Address` & [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md) & `default`
 
 Default, funded test account that is ephemerally created
 
 #### Defined in
 
-[src/types/testing.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L31)
+[src/types/testing.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L30)
 
 ___
 
@@ -116,7 +116,7 @@ Transaction logger that will log transaction IDs for all transactions issued by 
 
 #### Defined in
 
-[src/types/testing.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L29)
+[src/types/testing.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L28)
 
 ___
 
@@ -136,19 +136,19 @@ Wait for the indexer to catch up with all transactions logged by `transactionLog
 
 #### Defined in
 
-[src/types/testing.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L35)
+[src/types/testing.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L34)
 
 ___
 
 ### waitForIndexerTransaction
 
-• **waitForIndexerTransaction**: (`transactionId`: `string`) => `Promise`\<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
+• **waitForIndexerTransaction**: (`transactionId`: `string`) => `Promise`\<`TransactionResponse`\>
 
 Wait for the indexer to catch up with the given transaction ID
 
 #### Type declaration
 
-▸ (`transactionId`): `Promise`\<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
+▸ (`transactionId`): `Promise`\<`TransactionResponse`\>
 
 ##### Parameters
 
@@ -158,8 +158,8 @@ Wait for the indexer to catch up with the given transaction ID
 
 ##### Returns
 
-`Promise`\<[`TransactionLookupResult`](types_indexer.TransactionLookupResult.md)\>
+`Promise`\<`TransactionResponse`\>
 
 #### Defined in
 
-[src/types/testing.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L37)
+[src/types/testing.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L36)

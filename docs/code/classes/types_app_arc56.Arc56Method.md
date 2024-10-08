@@ -22,8 +22,10 @@ Wrapper around `algosdk.ABIMethod` that represents an ARC-56 ABI method.
 
 - [args](types_app_arc56.Arc56Method.md#args)
 - [description](types_app_arc56.Arc56Method.md#description)
+- [events](types_app_arc56.Arc56Method.md#events)
 - [method](types_app_arc56.Arc56Method.md#method)
 - [name](types_app_arc56.Arc56Method.md#name)
+- [readonly](types_app_arc56.Arc56Method.md#readonly)
 - [returns](types_app_arc56.Arc56Method.md#returns)
 
 ### Methods
@@ -84,7 +86,21 @@ algosdk.ABIMethod.description
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:23
+node_modules/algosdk/dist/types/abi/method.d.ts:28
+
+___
+
+### events
+
+• `Optional` `Readonly` **events**: `ARC28Event`[]
+
+#### Inherited from
+
+algosdk.ABIMethod.events
+
+#### Defined in
+
+node_modules/algosdk/dist/types/abi/method.d.ts:38
 
 ___
 
@@ -108,7 +124,21 @@ algosdk.ABIMethod.name
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:22
+node_modules/algosdk/dist/types/abi/method.d.ts:27
+
+___
+
+### readonly
+
+• `Optional` `Readonly` **readonly**: `boolean`
+
+#### Inherited from
+
+algosdk.ABIMethod.readonly
+
+#### Defined in
+
+node_modules/algosdk/dist/types/abi/method.d.ts:39
 
 ___
 
@@ -148,7 +178,7 @@ algosdk.ABIMethod.getSelector
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:35
+node_modules/algosdk/dist/types/abi/method.d.ts:42
 
 ___
 
@@ -166,7 +196,7 @@ algosdk.ABIMethod.getSignature
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:34
+node_modules/algosdk/dist/types/abi/method.d.ts:41
 
 ___
 
@@ -202,7 +232,7 @@ algosdk.ABIMethod.txnCount
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:36
+node_modules/algosdk/dist/types/abi/method.d.ts:43
 
 ___
 
@@ -226,4 +256,4 @@ algosdk.ABIMethod.fromSignature
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:38
+node_modules/algosdk/dist/types/abi/method.d.ts:45

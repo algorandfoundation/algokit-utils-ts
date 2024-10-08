@@ -85,7 +85,11 @@ export async function createApp(
         (c) => c.appCreate,
       )
 
-  return { ...result, appId: 'appId' in result ? Number(result.appId) : 0, appAddress: 'appAddress' in result ? result.appAddress : '' }
+  return {
+    ...result,
+    appId: 'appId' in result ? Number(result.appId) : 0,
+    appAddress: 'appAddress' in result ? result.appAddress.toString() : '',
+  }
 }
 
 /**
@@ -339,7 +343,7 @@ export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams
  * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
  */
 export function decodeAppState(state: { key: string; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
-  return AppManager.decodeAppState(state)
+  return AppManager.decodeAppState(state.map(({ key, value }) => ({ key: Buffer.from(key, 'utf-8'), value })))
 }
 
 /**
@@ -400,7 +404,7 @@ function _getAccountAddress(account: string | Address) {
  * @returns The data about the app
  */
 export async function getAppById(appId: number | bigint, algod: Algodv2) {
-  return modelsv2.Application.from_obj_for_encoding(await algod.getApplicationByID(toNumber(appId)).do())
+  return await algod.getApplicationByID(toNumber(appId)).do()
 }
 
 /**

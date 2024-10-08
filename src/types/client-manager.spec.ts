@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals'
+import { afterEach, describe, expect, test, vitest } from 'vitest'
 import { Config } from '..'
 import { envResetFixture } from '../../tests/fixtures/env-fixture'
 import { ClientManager } from './client-manager'
@@ -16,15 +16,15 @@ describe('ClientManager', () => {
 	    */
     // Create a mock logger to track the number of retries
     const myLogger = {
-      error: jest.fn(),
-      warn: jest.fn(),
-      info: jest.fn(),
-      debug: jest.fn(),
-      verbose: jest.fn(),
+      error: vitest.fn(),
+      warn: vitest.fn(),
+      info: vitest.fn(),
+      debug: vitest.fn(),
+      verbose: vitest.fn(),
     }
     Config.configure({ logger: myLogger })
     afterEach(() => {
-      jest.clearAllMocks()
+      vitest.clearAllMocks()
     })
     test('Retries indexer calls', async () => {
       const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('testnet', 'indexer'))

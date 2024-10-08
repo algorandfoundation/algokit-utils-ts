@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { getSenderAddress } from '../transaction/transaction'
 import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
@@ -46,7 +46,7 @@ export function rekeyedAccount(signer: Account, sender: string) {
  * @returns The SigningAccount wrapper
  */
 export function transactionSignerAccount(signer: TransactionSigner, sender: string): TransactionSignerAccount {
-  return { addr: sender, signer }
+  return { addr: Address.fromString(sender), signer }
 }
 
 /**
@@ -132,7 +132,10 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
 export type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
 type ToNumberIfExtends<K, E> = K extends E ? number : K
 /** @deprecated Account information at a given round. */
-export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'get_obj_for_encoding'>
+export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'getEncodingSchema' | 'toEncodingData' | 'authAddr'> & {
+  /** (spend) the address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field. */
+  authAddr?: string
+}
 
 /**
  * @deprecated Use `algorand.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
@@ -151,10 +154,12 @@ export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 
  * @returns The account information
  */
 export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
-  const account = AccountInformationModel.from_obj_for_encoding(await algod.accountInformation(getSenderAddress(sender)).do())
+  const account = await algod.accountInformation(getSenderAddress(sender)).do()
 
   return {
     ...account,
+    address: account.address.toString(),
+    authAddr: account.authAddr ? account.authAddr.toString() : undefined,
     // None of these can practically overflow 2^53
     amount: Number(account.amount),
     amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),

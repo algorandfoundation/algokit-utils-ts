@@ -1,10 +1,11 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
-import AlgoKitComposer, {
+import {
+  AlgoKitComposer,
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -20,7 +21,7 @@ import { SendParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
 
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
-  return `${method.name}(${(args ?? []).map((a) => (typeof a === 'object' ? JSON.stringify(a, (_, v) => (typeof v === 'bigint' ? Number(v) : v)) : a))})`
+  return `${method.name}(${(args ?? []).map((a) => (a instanceof Address ? a.toString() : typeof a === 'object' ? JSON.stringify(a, (_, v) => (typeof v === 'bigint' ? Number(v) : v instanceof Address ? v.toString() : v instanceof Uint8Array ? Buffer.from(v).toString('base64') : v)) : a))})`
 }
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
@@ -491,7 +492,7 @@ export class AlgorandClientTransactionSender {
   assetOptOut = async (
     params: Omit<AssetOptOutParams, 'creator'> & {
       /** Optional asset creator account address; if not specified it will be retrieved from algod */
-      creator?: string
+      creator?: string | Address
       /** Whether or not to check if the account has a zero balance first or not.
        *
        * If this is set to `true` and the account has an asset balance it will throw an error.

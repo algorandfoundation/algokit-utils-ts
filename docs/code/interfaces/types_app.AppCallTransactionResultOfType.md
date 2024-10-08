@@ -20,8 +20,6 @@ The result of preparing and/or sending multiple transactions
 
   ↳ **`AppCallTransactionResultOfType`**
 
-  ↳↳ [`AppCallTransactionResult`](types_app.AppCallTransactionResult.md)
-
 ## Table of contents
 
 ### Properties

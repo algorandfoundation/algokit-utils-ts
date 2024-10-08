@@ -19,7 +19,7 @@ The result of compiling the approval and clear state TEAL programs for an app
 
 • **compiledApproval**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
-The compilation result of approval
+The result of compiling the approval program
 
 #### Defined in
 
@@ -31,7 +31,7 @@ ___
 
 • **compiledClear**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
-The compilation result of clear
+The result of compiling the clear state program
 
 #### Defined in
 

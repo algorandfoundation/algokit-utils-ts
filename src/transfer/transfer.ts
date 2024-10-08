@@ -46,7 +46,9 @@ export async function ensureFunded<T extends EnsureFundedParams>(
     }
   } else {
     const sender = funding.fundingSource ?? (await algorand.account.dispenserFromEnvironment())
-    algorand.setSignerFromAccount(sender)
+    if (funding.fundingSource) {
+      algorand.setSignerFromAccount(funding.fundingSource)
+    }
 
     const result = await algorand.account.ensureFunded(
       getSenderAddress(funding.accountToFund),

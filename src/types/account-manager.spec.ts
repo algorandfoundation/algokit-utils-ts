@@ -1,6 +1,6 @@
-import { test } from '@jest/globals'
 import algosdk from 'algosdk'
 import { v4 as uuid } from 'uuid'
+import { beforeEach, describe, expect, test } from 'vitest'
 import { algorandFixture } from '../testing'
 
 describe('AccountManager', () => {

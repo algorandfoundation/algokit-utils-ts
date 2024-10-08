@@ -61,7 +61,7 @@ ___
 
 ### \_kmd
 
-• `Private` `Optional` **\_kmd**: ``null`` \| `default`
+• `Private` `Optional` **\_kmd**: ``null`` \| `KmdClient`
 
 #### Defined in
 
@@ -146,7 +146,7 @@ Returns an Algorand signing account with private key loaded from the given KMD w
 | :------ | :------ | :------ |
 | `walletName` | `string` | The name of the wallet to retrieve an account from |
 | `predicate?` | (`account`: `Record`\<`string`, `any`\>) => `boolean` | An optional filter to use to find the account (otherwise it will return a random account from the wallet) |
-| `sender?` | `string` | The optional sender address to use this signer for (aka a rekeyed account) |
+| `sender?` | `string` \| `Address` | The optional sender address to use this signer for (aka a rekeyed account) |
 
 #### Returns
 
@@ -171,11 +171,11 @@ ___
 
 ### kmd
 
-▸ **kmd**(): `Promise`\<`default`\>
+▸ **kmd**(): `Promise`\<`KmdClient`\>
 
 #### Returns
 
-`Promise`\<`default`\>
+`Promise`\<`KmdClient`\>
 
 #### Defined in
 

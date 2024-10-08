@@ -27,16 +27,16 @@ A hash map of app name to app metadata
 
 #### Defined in
 
-[src/types/app-deployer.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L92)
+[src/types/app-deployer.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L93)
 
 ___
 
 ### creator
 
-• **creator**: `string`
+• **creator**: `Readonly`\<`Address`\>
 
 The address of the creator associated with this lookup
 
 #### Defined in
 
-[src/types/app-deployer.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L90)
+[src/types/app-deployer.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L91)

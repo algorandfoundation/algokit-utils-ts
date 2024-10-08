@@ -5,7 +5,7 @@
     "target": "ES2020",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
-    "types": ["node", "jest"],
+    "types": ["node"],
     "outDir": "dist",
     "declaration": true,
     "importHelpers": true,

@@ -1,6 +1,6 @@
-import type { BaseHTTPClientResponse, Query } from 'algosdk/dist/types/client/baseHTTPClient'
+import { IntDecoding, parseJSON, stringifyJSON } from 'algosdk'
+import { BaseHTTPClientResponse, Query, URLTokenBaseHTTPClient } from 'algosdk/client'
 import { Config } from '../config'
-import { URLTokenBaseHTTPClient } from './urlTokenBaseHTTPClient'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */
 export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
@@ -56,7 +56,37 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
   }
 
   async get(relativePath: string, query?: Query<string>, requestHeaders: Record<string, string> = {}): Promise<BaseHTTPClientResponse> {
-    return await this.callWithRetry(() => super.get(relativePath, query, requestHeaders))
+    const response = await this.callWithRetry(() => super.get(relativePath, query, requestHeaders))
+    if (
+      relativePath.startsWith('/v2/accounts/') &&
+      relativePath.endsWith('/created-applications') &&
+      response.status === 200 &&
+      query?.['include-all']?.toString() === 'true'
+    ) {
+      // todo: Temporary hack
+      // Indexer get created applications by account returns approvalProgram and clearStateProgram as null, which breaks the algosdk@3 decoder
+      // instead we will detect this call and set them to empty byte arrays
+      try {
+        const json = parseJSON(Buffer.from(response.body).toString(), { intDecoding: IntDecoding.MIXED })
+        if (json.applications) {
+          for (const app of json.applications) {
+            if (app.params) {
+              if (app.params['approval-program'] === null) {
+                app.params['approval-program'] = ''
+              }
+              if (app.params['clear-state-program'] === null) {
+                app.params['clear-state-program'] = ''
+              }
+            }
+          }
+          response.body = Buffer.from(stringifyJSON(json))
+        }
+      } catch (e) {
+        // Make this hack resilient so we never break the app
+        Config.logger.warn('Failed to fix indexer response for created applications', e)
+      }
+    }
+    return response
   }
 
   async post(

@@ -1,5 +1,7 @@
 # v7 migration
 
+TODO: split out breaking changes (v6) from upgrade and indicate they can do it in 2 parts to make it more gradual. Show how to use old generator version.
+
 Version 7 of AlgoKit Utils moved from a stateless function-based interface to a stateful class-based interface. Doing this allowed for a much easier and simpler consumption experience guided by intellisense, involves less passing around of redundant values (e.g. `algod` client) and is more performant since commonly retrieved values like transaction parameters are able to be cached.
 
 The entry point to the vast majority of functionality in AlgoKit Utils is now available via a single entry-point, the [`AlgorandClient` class](./capabilities/algorand-client.md).
@@ -30,7 +32,7 @@ import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 const algorand = await AlgorandClient.fromEnvironment()
 const account = algorand.account.fromEnvironment('MY_ACCOUNT', (2).algo())
 const payment = await algorand.send.payment({
-  sender: account.addr,
+  sender: account,
   receiver: 'RECEIVER',
   amount: (1).algo(),
 })
@@ -44,11 +46,20 @@ import * as algokit from '@algorandfoundation/algokit-utils'
 
 ## Migrating
 
-### Step 1 - Accomodate AlgoAmount change
+### Step 1 - Accommodate algosdk v3
+
+We have upgraded our algosdk dependency from v2 to v3, which has a number of major breaking changes. While utils now wraps most of the algosdk functionality, it's likely you may have functionality that uses algosdk and you can decide for each usage that is broken if you should:
+
+1. Upgrade to [new `AlgorandClient` functionality](#step-3---replace-sdk-clients-with-algorandclient)
+2. Follow the [algosdk v3 migration guide](https://github.com/algorand/js-algorand-sdk/blob/develop/v2_TO_v3_MIGRATION_GUIDE.md
+
+The biggest change is that addresses are consistently typed using `Address`, but all of the AlgoKit Utils methods that took a `string` for an account address now take `string | Address` so the impact of this change should be minimal to AlgoKit Utils method calls.
+
+### Step 2 - Accommodate AlgoAmount change
 
 There is a class in AlgoKit Utils called `AlgoAmount` that wraps the representation of microAlgo / Algo amounts. The `microAlgo` property on that class now returns a `bigint` rather than a `number`, which is a breaking change. This is to align with the new consistent way of representing certain types of values (in this case Algo balances and microAlgo amounts) as bigints.
 
-### Step 1 - Replace sdk clients with `AlgorandClient`
+### Step 3 - Replace sdk clients with `AlgorandClient`
 
 To migrate the first step is to get an `AlgorandClient` instance at the same place(s) you had an algod instance. To do this you can look for anywhere you called the `getAlgoClient` method and replace them with an [equivalent mechanism](./capabilities/algorand-client.md#algorand-client) for getting an `AlgorandClient` instance.
 
@@ -77,7 +88,7 @@ Note: If you used the beta version of `AlgorandClient` in v6 of AlgoKit Utils th
 - Renamed `algorand.setSuggestedParamsTimeout` to `algorand.setSuggestedParamsCacheTimeout`
 - `AlgoKitComposer`'s `addMethodCall` and `addAppCall` methods are expanded into the various different types of app calls
 
-### Step 2 - Replace function calls
+### Step 4 - Replace function calls
 
 Now you can replace the function calls one-by-one. Almost every call should have a `@deprecation` notice that will show up in intellisense for your IDE (e.g. VS Code). The method call will show up with ~~strikethrough~~ and if you hover over it then the deprecation notice will show the new functionality.
 
@@ -88,8 +99,8 @@ For instance, the `algokit.transferAlgos` call shown in the above example has th
 These deprecation notices should largely let you follow the bouncing ball and make quick work of the migration. Largely the old vs new calls are fairly equivalent with some naming changes to improve consistency within AlgoKit Utils and more broadly to align to the core Algorand protocol (e.g. using `payment` rather than `transferAlgos` since it's a payment transaction on the Algorand blockchain). In saying that, there are some key differences that you will need to tweak:
 
 - No longer any need to pass `algod`, `indexer`, or `kmd` around - remove those arguments
-- Consistently using `sender` rather than `from`/`sender`/etc. for the transaction sender, and this argument is a string rather than taking a `SendTransactionFrom` type to improve simplicity (so you may need to add `.addr` or similar to an account object)
-- Transfer receivers are now `receiver` rather than `to` and always take a string of the address (so you may need to add `.addr` or similar to an account object)
+- Consistently using `sender` rather than `from`/`sender`/etc. for the transaction sender, and this argument is an `Address` rather than taking a `SendTransactionFrom` type to improve simplicity (so you may need to add `.addr` or similar to an `Account` object, although most methods involving accounts now return an `Address` anyway)
+- Transfer receivers are now `receiver` rather than `to` and always take an `Address`
 - `clearProgram` parameter is renamed to `clearStateProgram` and `extraPages` to `extraProgramPages` for create and update app calls (to align with Algorand protocol names).
 - `extraProgramPages` appears as a top-level params property rather than nested in a `schema` property.
 - Round numbers, app IDs and asset IDs are now consistently `BigInt`'s rather than `number` or `number | bigint`
@@ -105,8 +116,9 @@ Other things to note that you may come across:
   - Most of the time you don't need to worry about it since it will magically happen for you, but if you have situations where you are creating a signer outside of the `AccountManager` you will need to [register the signer](./capabilities/account.md#registering-a-signer) with the `AccountManager` first.
   - Note: you can also explicitly [pass a `signer`](./capabilities/algorand-client.md#transaction-parameters) in as well if you want an escape hatch.
 - Things that were previously nested in a `sendParams` property are now collapsed into the parent params object
+- `performAtomicTransactionComposerDryrun` has been removed - dryrun has long been deprecated and it wasn't compatible with algosdk v3
 
-### Step 3 - Replace `ApplicationClient` usage
+### Step 5 - Replace `ApplicationClient` usage
 
 The existing `ApplicationClient` (untyped app client) class is still present until the next major version bump, but it's worthwhile migrating to the new [`AppClient` and `AppFactory` classes](./capabilities/app-client.md). These new clients are [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) compatible, but also take an [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) app spec file and will continue to support this indefinitely until such time the community deems they are deprecated.
 
@@ -133,7 +145,7 @@ All of the functionality in `ApplicationClient` is available within the new clas
   - `accounts` -> `accountReferences`
 - The return value for methods that send a transaction will have any ABI return value directly in the `return` property rather than the `ABIReturn` type (this behaviour matches what happened in typed clients, but has now been brought down to the underlying `AppClient`)
 
-### Step 4 - Replace typed app client usage
+### Step 6 - Replace typed app client usage
 
 Version 4 of the TypeScript typed app client generator introduces breaking changes to the generated client that support the new `AppFactory` and `AppClient` functionality along with adding ARC-56 support. The generated client has better typing support for things like state commensurate with the new capabilities within ARC-56.
 
@@ -143,7 +155,7 @@ If you are converting from an older typed client to a new one you will need to m
 - The app client no longer creates or deploys contracts, you need to use the factory for that, which will in turn give you a typed client instance
 - Method calls are no longer directly on the typed client, instead they are nested via `appClient.send.` and `appClient.createTransaction.`
 - Method calls take a single params object (rather than (args, params)) and the args are nested in an `args` property within that object
-- The `compile` method returns `{compiledApprovalProgram, compiledClearStateProgram, approvalProgramCompilationResult?, clearStateProgramCompilationResult?}` rather than `{approvalCompiled, clearCompiled}`
+- The `compile` method returns `{approvalProgram, clearStateProgram, compiledApproval?, compiledClear?}` rather than `{approvalCompiled, clearCompiled}`
 - `extraPages` is no longer nested within a `schema` property, instead it's directly on the method call params as `extraProgramPages`
 - `client.compose()` is now `client.newGroup()`
 - `client.compose()....execute()` is now `client.compose()....send()`

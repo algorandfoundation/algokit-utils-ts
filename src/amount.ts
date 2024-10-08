@@ -1,4 +1,3 @@
-import algosdk from 'algosdk'
 import { AlgoAmount } from './types/amount'
 
 declare global {
@@ -88,5 +87,7 @@ export const microAlgo = (microAlgos: number | bigint) => {
  * @param numberOfTransactions The of standard transaction fees to return the amount of Algo
  */
 export const transactionFees = (numberOfTransactions: number) => {
-  return AlgoAmount.MicroAlgo(numberOfTransactions * algosdk.ALGORAND_MIN_TX_FEE)
+  return AlgoAmount.MicroAlgo(BigInt(numberOfTransactions) * ALGORAND_MIN_TX_FEE.microAlgo)
 }
+
+export const ALGORAND_MIN_TX_FEE = AlgoAmount.MicroAlgo(1_000)
