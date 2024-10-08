@@ -71,6 +71,7 @@ export async function getTestAccount(
 
   algorand.setSignerFromAccount(account)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const address = Address.fromString(account.addr.toString()) as any
   address.addr = account.addr
   address.sk = account.sk

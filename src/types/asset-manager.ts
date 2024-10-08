@@ -4,7 +4,6 @@ import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
 import { AlgoKitComposer, CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
 import { SendParams } from './transaction'
-import AssetModel = algosdk.modelsv2.Asset
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
 export interface BulkAssetOptInOutResult {

@@ -108,6 +108,7 @@ export class AccountManager {
       signer: signer,
     }
     this._accounts[acc.addr.toString()] = acc
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const addressWithAccount = Address.fromString(acc.addr.toString()) as any
     addressWithAccount.account = account
     addressWithAccount.addr = acc.addr.toString()

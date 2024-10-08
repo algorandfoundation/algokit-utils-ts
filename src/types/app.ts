@@ -230,7 +230,7 @@ export interface AppCallTransactionResultOfType<T> extends SendTransactionResult
 
 /** Result from calling an app */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AppCallTransactionResult extends AppCallTransactionResultOfType<ABIReturn> {}
+export type AppCallTransactionResult = AppCallTransactionResultOfType<ABIReturn>
 
 /** The return value of an ABI method call */
 export type ABIReturn =

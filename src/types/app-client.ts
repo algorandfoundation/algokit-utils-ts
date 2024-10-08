@@ -193,7 +193,7 @@ export interface AppClientDeployParams extends AppClientDeployCoreParams, AppCli
   schema?: Partial<AppStorageSchema>
 }
 
-export interface AppClientCallRawArgs extends RawAppCallArgs {}
+export type AppClientCallRawArgs = RawAppCallArgs
 
 export interface AppClientCallABIArgs extends Omit<ABIAppCallArgs, 'method'> {
   /** If calling an ABI method then either the name of the method, or the ABI signature */

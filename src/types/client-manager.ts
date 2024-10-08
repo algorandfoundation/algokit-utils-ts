@@ -9,7 +9,6 @@ import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } fro
 import Kmd = algosdk.Kmd
 import Indexer = algosdk.Indexer
 import Algodv2 = algosdk.Algodv2
-import IntDecoding = algosdk.IntDecoding
 
 /** Clients from algosdk that interact with the official Algorand APIs */
 export interface AlgoSdkClients {
@@ -557,7 +556,6 @@ export class ClientManager {
    * Returns an indexer SDK client that automatically retries on idempotent calls
    *
    * @param config The config of the client
-   * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
    * @example AlgoNode (testnet)
    * ```typescript
    *  const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('testnet', 'indexer'))
@@ -573,12 +571,8 @@ export class ClientManager {
    *  const indexer = ClientManager.getIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
    *  await indexer.makeHealthCheck().do()
    * ```
-   * @example Override int decoding for responses
-   * ```typescript
-   *  const indexer = ClientManager.getIndexerClient(config, IntDecoding.BIGINT)
-   * ```
    */
-  public static getIndexerClient(config: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
+  public static getIndexerClient(config: AlgoClientConfig): Indexer {
     const { token, server, port } = config
     const tokenHeader = typeof token === 'string' ? { 'X-Indexer-API-Token': token } : (token ?? {})
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
@@ -588,7 +582,6 @@ export class ClientManager {
   /**
    * Returns an indexer SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
    *
-   * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
    * @example
    *
    *  ```typescript
@@ -597,8 +590,8 @@ export class ClientManager {
    *  await indexer.makeHealthCheck().do()
    *  ```
    */
-  public static getIndexerClientFromEnvironment(overrideIntDecoding?: IntDecoding): Indexer {
-    return ClientManager.getIndexerClient(ClientManager.getIndexerConfigFromEnvironment(), overrideIntDecoding)
+  public static getIndexerClientFromEnvironment(): Indexer {
+    return ClientManager.getIndexerClient(ClientManager.getIndexerConfigFromEnvironment())
   }
 
   /**
