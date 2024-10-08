@@ -56,8 +56,8 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `algod` | `default` |
-| `indexer?` | `default` |
+| `algod` | `AlgodClient` |
+| `indexer?` | `IndexerClient` |
 | `isLocalNet` | () => `Promise`\<`boolean`\> |
 | `isMainNet` | () => `Promise`\<`boolean`\> |
 | `isTestNet` | () => `Promise`\<`boolean`\> |
@@ -91,11 +91,11 @@ ___
 
 ### newGroup
 
-▸ **newGroup**(): [`default`](../classes/types_composer.default.md)
+▸ **newGroup**(): [`AlgoKitComposer`](../classes/types_composer.AlgoKitComposer.md)
 
 #### Returns
 
-[`default`](../classes/types_composer.default.md)
+[`AlgoKitComposer`](../classes/types_composer.AlgoKitComposer.md)
 
 #### Defined in
 

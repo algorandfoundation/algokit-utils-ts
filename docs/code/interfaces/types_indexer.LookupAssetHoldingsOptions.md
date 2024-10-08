@@ -18,25 +18,25 @@ Options when looking up an asset's account holdings, https://developer.algorand.
 
 ### currencyGreaterThan
 
-• `Optional` **currencyGreaterThan**: `number`
+• `Optional` **currencyGreaterThan**: `number` \| `bigint`
 
 Results should have a decimal units amount greater than this value.
 
 #### Defined in
 
-[src/types/indexer.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L66)
+[src/types/indexer.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L27)
 
 ___
 
 ### currencyLessThan
 
-• `Optional` **currencyLessThan**: `number`
+• `Optional` **currencyLessThan**: `number` \| `bigint`
 
 Results should have a decimal units amount less than this value.
 
 #### Defined in
 
-[src/types/indexer.ts:64](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L64)
+[src/types/indexer.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L25)
 
 ___
 
@@ -48,4 +48,4 @@ Include all items including closed accounts and opted-out asset holdings.
 
 #### Defined in
 
-[src/types/indexer.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L68)
+[src/types/indexer.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L29)

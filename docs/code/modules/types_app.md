@@ -12,7 +12,6 @@
 ### Interfaces
 
 - [AppCallParams](../interfaces/types_app.AppCallParams.md)
-- [AppCallTransactionResult](../interfaces/types_app.AppCallTransactionResult.md)
 - [AppCallTransactionResultOfType](../interfaces/types_app.AppCallTransactionResultOfType.md)
 - [AppCompilationResult](../interfaces/types_app.AppCompilationResult.md)
 - [AppDeployMetadata](../interfaces/types_app.AppDeployMetadata.md)
@@ -39,6 +38,7 @@
 - [ABIAppCallArgs](types_app.md#abiappcallargs)
 - [ABIReturn](types_app.md#abireturn)
 - [AppCallArgs](types_app.md#appcallargs)
+- [AppCallTransactionResult](types_app.md#appcalltransactionresult)
 - [AppCallType](types_app.md#appcalltype)
 - [AppReturn](types_app.md#appreturn)
 - [BoxIdentifier](types_app.md#boxidentifier)
@@ -103,6 +103,18 @@ Arguments to pass to an app call either:
 #### Defined in
 
 [src/types/app.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L124)
+
+___
+
+### AppCallTransactionResult
+
+Ƭ **AppCallTransactionResult**: [`AppCallTransactionResultOfType`](../interfaces/types_app.AppCallTransactionResultOfType.md)\<[`ABIReturn`](types_app.md#abireturn)\>
+
+Result from calling an app
+
+#### Defined in
+
+[src/types/app.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L233)
 
 ___
 
@@ -174,7 +186,7 @@ ___
 
 ### SendAppCreateTransactionResult
 
-Ƭ **SendAppCreateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: `string` ; `appId`: `bigint`  }\>
+Ƭ **SendAppCreateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: `Address` ; `appId`: `bigint`  }\>
 
 Result from sending a single app transaction.
 

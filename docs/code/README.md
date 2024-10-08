@@ -50,4 +50,3 @@
 - [types/testing](modules/types_testing.md)
 - [types/transaction](modules/types_transaction.md)
 - [types/transfer](modules/types_transfer.md)
-- [types/urlTokenBaseHTTPClient](modules/types_urlTokenBaseHTTPClient.md)

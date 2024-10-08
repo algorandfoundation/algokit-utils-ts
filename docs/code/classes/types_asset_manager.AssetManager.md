@@ -36,8 +36,8 @@ Create a new asset manager.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algod` | `default` | An algod client |
-| `newGroup` | () => [`default`](types_composer.default.md) | A function that creates a new `AlgoKitComposer` transaction group |
+| `algod` | `AlgodClient` | An algod client |
+| `newGroup` | () => [`AlgoKitComposer`](types_composer.AlgoKitComposer.md) | A function that creates a new `AlgoKitComposer` transaction group |
 
 #### Returns
 
@@ -51,35 +51,35 @@ const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, (
 
 #### Defined in
 
-[src/types/asset-manager.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L152)
+[src/types/asset-manager.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L151)
 
 ## Properties
 
 ### \_algod
 
-• `Private` **\_algod**: `default`
+• `Private` **\_algod**: `AlgodClient`
 
 #### Defined in
 
-[src/types/asset-manager.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L140)
+[src/types/asset-manager.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L139)
 
 ___
 
 ### \_newGroup
 
-• `Private` **\_newGroup**: () => [`default`](types_composer.default.md)
+• `Private` **\_newGroup**: () => [`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
 
 #### Type declaration
 
-▸ (): [`default`](types_composer.default.md)
+▸ (): [`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
 
 ##### Returns
 
-[`default`](types_composer.default.md)
+[`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
 
 #### Defined in
 
-[src/types/asset-manager.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L141)
+[src/types/asset-manager.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L140)
 
 ## Methods
 
@@ -95,7 +95,7 @@ Transactions will be sent in batches of 16 as transaction groups.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The account to opt-in |
+| `account` | `string` \| `Address` | The account to opt-in |
 | `assetIds` | `bigint`[] | The list of asset IDs to opt-in to |
 | `options?` | `Omit`\<[`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) | Any parameters to control the transaction or execution of the transaction |
 
@@ -116,7 +116,7 @@ algorand.asset.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).mi
 
 #### Defined in
 
-[src/types/asset-manager.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L234)
+[src/types/asset-manager.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L233)
 
 ___
 
@@ -132,7 +132,7 @@ Transactions will be sent in batches of 16 as transaction groups.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The account to opt-in |
+| `account` | `string` \| `Address` | The account to opt-in |
 | `assetIds` | `bigint`[] | The list of asset IDs to opt-out of |
 | `options?` | `Omit`\<[`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `ensureZeroBalance?`: `boolean`  } | Any parameters to control the transaction or execution of the transaction |
 
@@ -153,7 +153,7 @@ algorand.asset.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalanc
 
 #### Defined in
 
-[src/types/asset-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L284)
+[src/types/asset-manager.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L283)
 
 ___
 
@@ -167,7 +167,7 @@ Returns the given sender account's asset holding for a given asset.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The address of the sender/account to look up |
+| `sender` | `string` \| `Address` | The address of the sender/account to look up |
 | `assetId` | `bigint` | The ID of the asset to return a holding for |
 
 #### Returns
@@ -188,7 +188,7 @@ const accountInfo = await algorand.asset.getAccountInformation(address, assetId)
 
 #### Defined in
 
-[src/types/asset-manager.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L206)
+[src/types/asset-manager.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L205)
 
 ___
 
@@ -218,4 +218,4 @@ const assetInfo = await assetManager.getById(12353n);
 
 #### Defined in
 
-[src/types/asset-manager.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L168)
+[src/types/asset-manager.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L167)

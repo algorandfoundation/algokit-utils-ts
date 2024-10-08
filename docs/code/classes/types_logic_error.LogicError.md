@@ -50,7 +50,7 @@ Create a new logic error object.
 | :------ | :------ | :------ |
 | `errorDetails` | [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md) | The details of the logic error |
 | `program` | `string`[] | The TEAL source code, split by line |
-| `map` | `SourceMap` | The source map of the TEAL source code |
+| `map` | `ProgramSourceMap` | The source map of the TEAL source code |
 
 #### Returns
 
