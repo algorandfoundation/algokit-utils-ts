@@ -838,6 +838,8 @@ export default class AlgoKitComposer {
       return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
     }
 
+    const methodAtc = new algosdk.AtomicTransactionComposer()
+
     for (let i = 0; i < (params.args ?? []).length; i++) {
       const arg = params.args![i]
       if (arg === undefined) {
@@ -856,7 +858,10 @@ export default class AlgoKitComposer {
 
       if ('method' in arg) {
         const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-        methodArgs.push(...tempTxnWithSigners)
+        // When building a method call, the last transaction is the method call
+        //  and the previous ones are the transactions that were passed to the method
+        methodArgs.push(...tempTxnWithSigners.slice(-1))
+        tempTxnWithSigners.slice(0, -1).forEach((ts) => methodAtc.addTransaction(ts))
         continue
       }
 
@@ -872,8 +877,6 @@ export default class AlgoKitComposer {
           : AlgoKitComposer.NULL_SIGNER,
       })
     }
-
-    const methodAtc = new algosdk.AtomicTransactionComposer()
 
     const appId = Number('appId' in params ? params.appId : 0n)
     const approvalProgram =
