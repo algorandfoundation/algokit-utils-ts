@@ -57,7 +57,6 @@ import {
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
-import { EventType } from './async-event-emitter'
 import AlgoKitComposer, {
   AppCallMethodCall,
   AppCallParams,
@@ -71,6 +70,7 @@ import AlgoKitComposer, {
   PaymentParams,
 } from './composer'
 import { Expand } from './expand'
+import { EventType } from './lifecycle-events'
 import { LogicError } from './logic-error'
 import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import ABIMethod = algosdk.ABIMethod

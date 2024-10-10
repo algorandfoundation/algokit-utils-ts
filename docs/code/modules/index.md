@@ -10,6 +10,8 @@
 - [AVMTracesEventData](index.md#avmtraceseventdata)
 - [AlgorandClient](index.md#algorandclient)
 - [DEFAULT\_MAX\_SEARCH\_DEPTH](index.md#default_max_search_depth)
+- [EventDataMap](index.md#eventdatamap)
+- [EventType](index.md#eventtype)
 - [SOURCES\_DIR](index.md#sources_dir)
 - [TEAL\_FILE\_EXT](index.md#teal_file_ext)
 - [TEAL\_SOURCEMAP\_EXT](index.md#teal_sourcemap_ext)
@@ -155,6 +157,18 @@ ___
 ### DEFAULT\_MAX\_SEARCH\_DEPTH
 
 Re-exports [DEFAULT_MAX_SEARCH_DEPTH](types_debugging.md#default_max_search_depth)
+
+___
+
+### EventDataMap
+
+Re-exports [EventDataMap](types_lifecycle_events.md#eventdatamap)
+
+___
+
+### EventType
+
+Re-exports [EventType](../enums/types_lifecycle_events.EventType.md)
 
 ___
 
