@@ -9,8 +9,6 @@
 - [ALGOKIT\_DIR](index.md#algokit_dir)
 - [AVMTracesEventData](index.md#avmtraceseventdata)
 - [AlgorandClient](index.md#algorandclient)
-- [AsyncEventEmitter](index.md#asynceventemitter)
-- [AsyncEventListener](index.md#asynceventlistener)
 - [DEFAULT\_MAX\_SEARCH\_DEPTH](index.md#default_max_search_depth)
 - [EventDataMap](index.md#eventdatamap)
 - [EventType](index.md#eventtype)
@@ -156,18 +154,6 @@ Re-exports [AlgorandClient](../classes/types_algorand_client.AlgorandClient.md)
 
 ___
 
-### AsyncEventEmitter
-
-Re-exports [AsyncEventEmitter](../classes/types_async_event_emitter.AsyncEventEmitter.md)
-
-___
-
-### AsyncEventListener
-
-Re-exports [AsyncEventListener](types_async_event_emitter.md#asynceventlistener)
-
-___
-
 ### DEFAULT\_MAX\_SEARCH\_DEPTH
 
 Re-exports [DEFAULT_MAX_SEARCH_DEPTH](types_debugging.md#default_max_search_depth)
@@ -176,13 +162,13 @@ ___
 
 ### EventDataMap
 
-Re-exports [EventDataMap](types_async_event_emitter.md#eventdatamap)
+Re-exports [EventDataMap](types_lifecycle_events.md#eventdatamap)
 
 ___
 
 ### EventType
 
-Re-exports [EventType](../enums/types_async_event_emitter.EventType.md)
+Re-exports [EventType](../enums/types_lifecycle_events.EventType.md)
 
 ___
 

@@ -1,15 +1,4 @@
-import { AVMTracesEventData, TealSourcesDebugEventData } from './debugging'
-
-export enum EventType {
-  TxnGroupSimulated = 'TxnGroupSimulated',
-  AppCompiled = 'AppCompiled',
-}
-
-export type EventDataMap = {
-  [EventType.TxnGroupSimulated]: AVMTracesEventData
-  [EventType.AppCompiled]: TealSourcesDebugEventData
-  [key: string]: unknown
-}
+import { EventDataMap, EventType } from './lifecycle-events'
 
 export type AsyncEventListener<T = unknown> = (event: T, eventName: string | symbol) => Promise<void> | void
 
