@@ -174,6 +174,7 @@ describe('AlgorandClient', () => {
       sender: alice.addr,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
+      // pay txn is passed in here
       args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(0) })],
     } satisfies AppCallMethodCall
 
@@ -183,7 +184,7 @@ describe('AlgorandClient', () => {
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('nestedTxnArg')!,
-        args: [txnArgCall],
+        args: [undefined, txnArgCall],
       })
       .send()
 
@@ -213,7 +214,7 @@ describe('AlgorandClient', () => {
         sender: alice.addr,
         appId: appId,
         method: appClient.appClient.getABIMethod('doubleNestedTxnArg')!,
-        args: [firstTxnCall, secondTxnCall],
+        args: [undefined, firstTxnCall, undefined, secondTxnCall],
       })
       .send()
 

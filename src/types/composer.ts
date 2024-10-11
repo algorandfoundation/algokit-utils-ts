@@ -440,6 +440,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
     | AppMethodCall<AppCreateParams>
     | AppMethodCall<AppUpdateParams>
     | AppMethodCall<AppMethodCallParams>
+    | undefined
   )[]
 }
 
@@ -831,7 +832,7 @@ export default class AlgoKitComposer {
     suggestedParams: algosdk.SuggestedParams,
     includeSigner: boolean,
   ): Promise<algosdk.TransactionWithSigner[]> {
-    const methodArgs: algosdk.ABIArgument[] = []
+    const methodArgs: (algosdk.ABIArgument | undefined)[] = []
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
@@ -843,7 +844,9 @@ export default class AlgoKitComposer {
     for (let i = 0; i < (params.args ?? []).length; i++) {
       const arg = params.args![i]
       if (arg === undefined) {
-        throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
+        methodArgs.push(undefined)
+        continue
+        // throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
       }
 
       if (isAbiValue(arg)) {
@@ -858,10 +861,24 @@ export default class AlgoKitComposer {
 
       if ('method' in arg) {
         const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-        // When building a method call, the last transaction is the method call
-        //  and the previous ones are the transactions that were passed to the method
-        methodArgs.push(...tempTxnWithSigners.slice(-1))
-        tempTxnWithSigners.slice(0, -1).forEach((ts) => methodAtc.addTransaction(ts))
+        if (tempTxnWithSigners.length > 1) {
+          // This method call has txn args
+          const txnArgCount = tempTxnWithSigners.length - 1
+
+          const undefinedMethodArgs = methodArgs.slice(-txnArgCount)
+          const undefinedMethodArgsCount = undefinedMethodArgs.filter((x) => x === undefined).length
+          methodArgs.splice(-undefinedMethodArgsCount)
+
+          // If there isn't enough empty slots to fill, we add the txns to the group
+          if (undefinedMethodArgsCount < txnArgCount) {
+            tempTxnWithSigners.slice(0, txnArgCount - undefinedMethodArgsCount).forEach((txn) => methodAtc.addTransaction(txn))
+            methodArgs.push(...tempTxnWithSigners.slice(-(undefinedMethodArgsCount + 1)))
+          } else {
+            methodArgs.push(...tempTxnWithSigners)
+          }
+        } else {
+          methodArgs.push(...tempTxnWithSigners)
+        }
         continue
       }
 
@@ -877,6 +894,8 @@ export default class AlgoKitComposer {
           : AlgoKitComposer.NULL_SIGNER,
       })
     }
+
+    // TODO: make sure that methodArgs doesn't contain undefined
 
     const appId = Number('appId' in params ? params.appId : 0n)
     const approvalProgram =
@@ -923,7 +942,7 @@ export default class AlgoKitComposer {
             : params.signer
           : this.getSigner(params.sender)
         : AlgoKitComposer.NULL_SIGNER,
-      methodArgs: methodArgs,
+      methodArgs: methodArgs as algosdk.ABIArgument[],
       // note, lease, and rekeyTo are set in the common build step
       note: undefined,
       lease: undefined,
