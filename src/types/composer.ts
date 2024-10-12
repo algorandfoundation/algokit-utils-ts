@@ -844,9 +844,12 @@ export default class AlgoKitComposer {
     for (let i = 0; i < (params.args ?? []).length; i++) {
       const arg = params.args![i]
       if (arg === undefined) {
-        methodArgs.push(undefined)
-        continue
-        // throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
+        if (algosdk.abiTypeIsTransaction(params.method.args[i].type)) {
+          // if the arg type is a transaction, it could be full-filled by a method call
+          methodArgs.push(undefined)
+          continue
+        }
+        throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
       }
 
       if (isAbiValue(arg)) {
@@ -861,23 +864,35 @@ export default class AlgoKitComposer {
 
       if ('method' in arg) {
         const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-        if (tempTxnWithSigners.length > 1) {
-          // This method call has txn args
-          const txnArgCount = tempTxnWithSigners.length - 1
+        if (tempTxnWithSigners.length > 0) {
+          const txnCount = tempTxnWithSigners.length
+          // The last txn is the method call, push it into methodArgs
+          methodArgs.push(tempTxnWithSigners[txnCount - 1])
 
-          const undefinedMethodArgs = methodArgs.slice(-txnArgCount)
-          const undefinedMethodArgsCount = undefinedMethodArgs.filter((x) => x === undefined).length
-          methodArgs.splice(-undefinedMethodArgsCount)
+          // Attempt to fill the remaining txns into methodArgs or the txn group
+          let offset = 2
+          while (txnCount - offset >= 0) {
+            const txnWithSigner = tempTxnWithSigners[txnCount - offset]
+            const methodArgIndex = methodArgs.length - offset
 
-          // If there isn't enough empty slots to fill, we add the txns to the group
-          if (undefinedMethodArgsCount < txnArgCount) {
-            tempTxnWithSigners.slice(0, txnArgCount - undefinedMethodArgsCount).forEach((txn) => methodAtc.addTransaction(txn))
-            methodArgs.push(...tempTxnWithSigners.slice(-(undefinedMethodArgsCount + 1)))
-          } else {
-            methodArgs.push(...tempTxnWithSigners)
+            if (methodArgIndex < 0) {
+              // If the index is negative, we've reached the start, add the txns to the group
+              methodAtc.addTransaction(txnWithSigner)
+            }
+            if (methodArgs[methodArgIndex] === undefined) {
+              // Fill the undefined arg with the txn
+              methodArgs[methodArgIndex] = txnWithSigner
+            } else if (isTransactionWithSigner(methodArgs[methodArgIndex])) {
+              // If the current arg is a txn, we are constructing in invalid group, throw error
+              throw Error(`Cannot add argument ${i + 1} because it has too many transaction arguments`)
+            } else {
+              // If the current arg is not undefined, also not a txn
+              // it could be an ABIValue, we add the txn to the group
+              methodAtc.addTransaction(txnWithSigner)
+            }
+
+            offset++
           }
-        } else {
-          methodArgs.push(...tempTxnWithSigners)
         }
         continue
       }
@@ -896,6 +911,7 @@ export default class AlgoKitComposer {
     }
 
     // TODO: make sure that methodArgs doesn't contain undefined
+    // throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
 
     const appId = Number('appId' in params ? params.appId : 0n)
     const approvalProgram =

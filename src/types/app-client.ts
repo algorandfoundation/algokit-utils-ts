@@ -966,7 +966,9 @@ export class AppClient {
             }
           }
         }
-        // throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
+        if (!algosdk.abiTypeIsTransaction(arg.type)) {
+          throw new Error(`No value provided for required argument ${arg.name ?? `arg${i + 1}`} in call to method ${m.name}`)
+        }
       }) ?? [],
     )
   }
