@@ -15,7 +15,7 @@ Config.configure({
 })
 ```
 
-## Debugging Utilities
+## Debugging in `node` environment (recommended)
 
 Refer to the [algokit-utils-ts-debug](https://github.com/algorandfoundation/algokit-utils-ts-debug) for more details on how to activate the addon package with `algokit-utils` in your project.
 
@@ -24,3 +24,13 @@ Refer to the [algokit-utils-ts-debug](https://github.com/algorandfoundation/algo
 ### Why are the debug utilities in a separate package?
 
 To keep the `algokit-utils-ts` package lean and isomporphic, the debugging utilities are located in a separate package. This eliminates various error cases with bundlers (e.g. `webpack`, `esbuild`) when building for the browser.
+
+## Debugging in `browser` environment
+
+Note that it's not possible to use `algokit-utils-ts-debug` in browser environments; however, you can still obtain and persist simulation traces from the browser network tab whenever a transaction is being submitted using the algokit-utils-ts package. Make sure to enable the debug mode in the algokit-utils-ts config as described in the [getting started](./docs/code/getting-started.md) guide. To obtain the simulation trace:
+
+1. Open the browser network tab
+2. Submit the transaction
+3. Filter the requests by `simulate`
+4. Copy the 'simulate' request body and store it in a file with a .trace.avm.json extension, then place it under the `debug_traces` folder in your AlgoKit contract project.
+   4.1. (Optional) If you are not using an AlgoKit project structure for your contracts codebase, as long as the trace file is within your VSCode workspace, the extension will present a picker to select the trace file.
