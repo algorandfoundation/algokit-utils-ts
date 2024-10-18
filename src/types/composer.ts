@@ -430,6 +430,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    * * A transaction (where the signer will be automatically assigned)
    * * An unawaited transaction (e.g. from algorand.createTransaction.{transactionType}())
    * * Another method call (via method call params object)
+   * * undefined (this represents a placeholder transaction argument that is fulfilled by another method call argument)
    */
   args?: (
     | algosdk.ABIValue
@@ -440,6 +441,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
     | AppMethodCall<AppCreateParams>
     | AppMethodCall<AppUpdateParams>
     | AppMethodCall<AppMethodCallParams>
+    | undefined
   )[]
 }
 
@@ -832,15 +834,25 @@ export default class AlgoKitComposer {
     includeSigner: boolean,
   ): Promise<algosdk.TransactionWithSigner[]> {
     const methodArgs: algosdk.ABIArgument[] = []
+    const transactionsForGroup: TransactionWithSigner[] = []
+
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
       return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
     }
 
-    for (let i = 0; i < (params.args ?? []).length; i++) {
+    for (let i = (params.args ?? []).length - 1; i >= 0; i--) {
       const arg = params.args![i]
       if (arg === undefined) {
+        // An undefined transaction argument signals that the value will be supplied by a method call argument
+        if (algosdk.abiTypeIsTransaction(params.method.args[i].type) && transactionsForGroup.length > 0) {
+          // Move the last transaction from the group to the method call arguments to appease algosdk
+          const placeholderTransaction = transactionsForGroup.splice(-1, 1)[0]
+          methodArgs.push(placeholderTransaction)
+          continue
+        }
+
         throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
       }
 
@@ -856,7 +868,12 @@ export default class AlgoKitComposer {
 
       if ('method' in arg) {
         const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-        methodArgs.push(...tempTxnWithSigners)
+
+        // If there is any transaction args, add to the atc
+        // Everything else should be added as method args
+
+        methodArgs.push(...tempTxnWithSigners.slice(-1)) // Add the method call itself as a method arg
+        transactionsForGroup.push(...tempTxnWithSigners.slice(0, -1).reverse()) // Add any transaction arguments to the atc
         continue
       }
 
@@ -874,6 +891,7 @@ export default class AlgoKitComposer {
     }
 
     const methodAtc = new algosdk.AtomicTransactionComposer()
+    transactionsForGroup.reverse().forEach((txn) => methodAtc.addTransaction(txn))
 
     const appId = Number('appId' in params ? params.appId : 0n)
     const approvalProgram =
@@ -920,7 +938,7 @@ export default class AlgoKitComposer {
             : params.signer
           : this.getSigner(params.sender)
         : AlgoKitComposer.NULL_SIGNER,
-      methodArgs: methodArgs,
+      methodArgs: methodArgs.reverse(),
       // note, lease, and rekeyTo are set in the common build step
       note: undefined,
       lease: undefined,
@@ -1217,6 +1235,8 @@ export default class AlgoKitComposer {
 
     return { atc: this.atc, transactions: this.atc.buildGroup(), methodCalls: this.atc['methodCalls'] }
   }
+
+  // TODO: NC - Docs about the behaviour
 
   /**
    * Rebuild the group, discarding any previously built transactions.
