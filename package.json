@@ -49,7 +49,8 @@
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
     "generate:code-docs": "typedoc",
-    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs"
+    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs",
+    "example": "tsx -r dotenv/config"
   },
   "overrides": {
     "semver": "7.5.2",
