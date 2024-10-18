@@ -70,7 +70,7 @@ ___
 
 ### TEAL\_SOURCEMAP\_EXT
 
-• `Const` **TEAL\_SOURCEMAP\_EXT**: ``".teal.tok.map"``
+• `Const` **TEAL\_SOURCEMAP\_EXT**: ``".teal.map"``
 
 The file extension for TEAL source map files
 

@@ -4,10 +4,6 @@
 
 ## Table of contents
 
-### Enumerations
-
-- [EventType](../enums/types_async_event_emitter.EventType.md)
-
 ### Classes
 
 - [AsyncEventEmitter](../classes/types_async_event_emitter.AsyncEventEmitter.md)
@@ -15,7 +11,6 @@
 ### Type Aliases
 
 - [AsyncEventListener](types_async_event_emitter.md#asynceventlistener)
-- [EventDataMap](types_async_event_emitter.md#eventdatamap)
 
 ## Type Aliases
 
@@ -46,25 +41,4 @@
 
 #### Defined in
 
-[src/types/async-event-emitter.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L14)
-
-___
-
-### EventDataMap
-
-Ƭ **EventDataMap**: `Object`
-
-#### Index signature
-
-▪ [key: `string`]: `unknown`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `AppCompiled` | [`TealSourcesDebugEventData`](../interfaces/types_debugging.TealSourcesDebugEventData.md) |
-| `TxnGroupSimulated` | [`AVMTracesEventData`](../interfaces/types_debugging.AVMTracesEventData.md) |
-
-#### Defined in
-
-[src/types/async-event-emitter.ts:8](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L8)
+[src/types/async-event-emitter.ts:3](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/async-event-emitter.ts#L3)

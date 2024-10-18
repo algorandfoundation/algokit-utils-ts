@@ -3,7 +3,7 @@ import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
-import { EventType } from '../types/async-event-emitter'
+import { EventType } from '../types/lifecycle-events'
 import {
   AtomicTransactionComposerToSend,
   SendAtomicTransactionComposerResults,
