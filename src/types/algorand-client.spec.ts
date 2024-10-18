@@ -271,8 +271,6 @@ describe('AlgorandClient', () => {
   test('methodCall create', async () => {
     const contract = new algosdk.ABIContract(APP_SPEC.contract)
 
-    console.debug(JSON.stringify(APP_SPEC))
-
     await algorand.send.appCreateMethodCall({
       sender: alice.addr,
       method: contract.getMethodByName('createApplication'),

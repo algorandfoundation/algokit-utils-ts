@@ -374,6 +374,7 @@ export type AppClientMethodCallParams = Expand<
      * * A transaction (where the signer will be automatically assigned)
      * * An unawaited transaction (e.g. from algorand.createTransaction.transactionType())
      * * Another method call (via method call params object)
+     * * undefined (this represents a placeholder for either a default argument or a transaction argument that is fulfilled by another method call argument)
      */
     args?: (ABIValue | ABIStruct | AppMethodCallTransactionArgument | undefined)[]
   }

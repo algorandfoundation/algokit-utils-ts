@@ -430,6 +430,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    * * A transaction (where the signer will be automatically assigned)
    * * An unawaited transaction (e.g. from algorand.createTransaction.{transactionType}())
    * * Another method call (via method call params object)
+   * * undefined (this represents a placeholder transaction argument that is fulfilled by another method call argument)
    */
   args?: (
     | algosdk.ABIValue
@@ -1234,6 +1235,8 @@ export default class AlgoKitComposer {
 
     return { atc: this.atc, transactions: this.atc.buildGroup(), methodCalls: this.atc['methodCalls'] }
   }
+
+  // TODO: NC - Docs about the behaviour
 
   /**
    * Rebuild the group, discarding any previously built transactions.
