@@ -832,23 +832,26 @@ export default class AlgoKitComposer {
     suggestedParams: algosdk.SuggestedParams,
     includeSigner: boolean,
   ): Promise<algosdk.TransactionWithSigner[]> {
-    const methodArgs: (algosdk.ABIArgument | undefined)[] = []
+    const methodArgs: algosdk.ABIArgument[] = []
+    const transactionsForGroup: TransactionWithSigner[] = []
+
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
       return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
     }
 
-    const methodAtc = new algosdk.AtomicTransactionComposer()
-
-    for (let i = 0; i < (params.args ?? []).length; i++) {
+    for (let i = (params.args ?? []).length - 1; i >= 0; i--) {
       const arg = params.args![i]
       if (arg === undefined) {
-        if (algosdk.abiTypeIsTransaction(params.method.args[i].type)) {
-          // if the arg type is a transaction, it could be full-filled by a method call
-          methodArgs.push(undefined)
+        // An undefined transaction argument signals that the value will be supplied by a method call argument
+        if (algosdk.abiTypeIsTransaction(params.method.args[i].type) && transactionsForGroup.length > 0) {
+          // Move the last transaction from the group to the method call arguments to appease algosdk
+          const placeholderTransaction = transactionsForGroup.splice(-1, 1)[0]
+          methodArgs.push(placeholderTransaction)
           continue
         }
+
         throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
       }
 
@@ -864,36 +867,12 @@ export default class AlgoKitComposer {
 
       if ('method' in arg) {
         const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-        if (tempTxnWithSigners.length > 0) {
-          const txnCount = tempTxnWithSigners.length
-          // The last txn is the method call, push it into methodArgs
-          methodArgs.push(tempTxnWithSigners[txnCount - 1])
 
-          // Attempt to fill the remaining txns into methodArgs or the txn group
-          let offset = 2
-          while (txnCount - offset >= 0) {
-            const txnWithSigner = tempTxnWithSigners[txnCount - offset]
-            const methodArgIndex = methodArgs.length - offset
+        // If there is any transaction args, add to the atc
+        // Everything else should be added as method args
 
-            if (methodArgIndex < 0) {
-              // If the index is negative, we've reached the start, add the txns to the group
-              methodAtc.addTransaction(txnWithSigner)
-            }
-            if (methodArgs[methodArgIndex] === undefined) {
-              // Fill the undefined arg with the txn
-              methodArgs[methodArgIndex] = txnWithSigner
-            } else if (isTransactionWithSigner(methodArgs[methodArgIndex])) {
-              // If the current arg is a txn, we are constructing in invalid group, throw error
-              throw Error(`Cannot add argument ${i + 1} because it has too many transaction arguments`)
-            } else {
-              // If the current arg is not undefined, also not a txn
-              // it could be an ABIValue, we add the txn to the group
-              methodAtc.addTransaction(txnWithSigner)
-            }
-
-            offset++
-          }
-        }
+        methodArgs.push(...tempTxnWithSigners.slice(-1)) // Add the method call itself as a method arg
+        transactionsForGroup.push(...tempTxnWithSigners.slice(0, -1).reverse()) // Add any transaction arguments to the atc
         continue
       }
 
@@ -910,8 +889,8 @@ export default class AlgoKitComposer {
       })
     }
 
-    // TODO: make sure that methodArgs doesn't contain undefined
-    // throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
+    const methodAtc = new algosdk.AtomicTransactionComposer()
+    transactionsForGroup.reverse().forEach((txn) => methodAtc.addTransaction(txn))
 
     const appId = Number('appId' in params ? params.appId : 0n)
     const approvalProgram =
@@ -958,7 +937,7 @@ export default class AlgoKitComposer {
             : params.signer
           : this.getSigner(params.sender)
         : AlgoKitComposer.NULL_SIGNER,
-      methodArgs: methodArgs as algosdk.ABIArgument[],
+      methodArgs: methodArgs.reverse(),
       // note, lease, and rekeyTo are set in the common build step
       note: undefined,
       lease: undefined,
