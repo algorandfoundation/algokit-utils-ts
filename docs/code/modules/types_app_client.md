@@ -265,7 +265,7 @@ Parameters for funding an app account
 
 #### Defined in
 
-[src/types/app-client.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L383)
+[src/types/app-client.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L384)
 
 ___
 
@@ -309,7 +309,7 @@ Resolve an app client instance by looking up an app created by the given creator
 
 #### Defined in
 
-[src/types/app-client.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L392)
+[src/types/app-client.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L393)
 
 ___
 
@@ -321,4 +321,4 @@ Resolve an app client instance by looking up the current network.
 
 #### Defined in
 
-[src/types/app-client.ts:406](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L406)
+[src/types/app-client.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L407)
