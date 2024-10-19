@@ -64,7 +64,7 @@ Parameters to create an `AlgoKitComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L462)
+[src/types/composer.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L464)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 ### AppMethodCall
 
-Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`algosdk.ABIValue` \| `TransactionWithSigner` \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\>)[] ; `method`: `algosdk.ABIMethod`  }
+Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`algosdk.ABIValue` \| `TransactionWithSigner` \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\> \| `undefined`)[] ; `method`: `algosdk.ABIMethod`  }
 
 Parameters to define an ABI method call.
 
@@ -380,7 +380,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:446](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L446)
+[src/types/composer.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L448)
 
 ## Variables
 
