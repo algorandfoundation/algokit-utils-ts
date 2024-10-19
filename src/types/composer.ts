@@ -1236,8 +1236,6 @@ export default class AlgoKitComposer {
     return { atc: this.atc, transactions: this.atc.buildGroup(), methodCalls: this.atc['methodCalls'] }
   }
 
-  // TODO: NC - Docs about the behaviour
-
   /**
    * Rebuild the group, discarding any previously built transactions.
    * This will potentially cause new signers and suggested params to be used if the callbacks return a new value compared to the first build.
