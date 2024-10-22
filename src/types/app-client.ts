@@ -406,6 +406,46 @@ export type ResolveAppClientByCreatorAndName = Expand<
 /** Resolve an app client instance by looking up the current network. */
 export type ResolveAppClientByNetwork = Expand<Omit<AppClientParams, 'appId'>>
 
+const BYTE_CBLOCK = 38
+const INT_CBLOCK = 32
+
+function getConstantBlockOffsets(program: Uint8Array) {
+  const bytes = [...program]
+
+  const programSize = bytes.length
+  bytes.shift() // remove version
+  const offsets: { bytecblockOffset?: number; intcblockOffset?: number; cblocksOffset: number } = { cblocksOffset: 0 }
+
+  while (bytes.length > 0) {
+    const byte = bytes.shift()!
+
+    if (byte === BYTE_CBLOCK || byte === INT_CBLOCK) {
+      const isBytecblock = byte === BYTE_CBLOCK
+      const valuesRemaining = bytes.shift()!
+
+      for (let i = 0; i < valuesRemaining; i++) {
+        if (isBytecblock) {
+          // byte is the length of the next element
+          bytes.splice(0, bytes.shift()!)
+        } else {
+          // intcblock is a uvarint, so we need to keep reading until we find the end (MSB is not set)
+          while ((bytes.shift()! & 0x80) !== 0) {}
+        }
+      }
+
+      offsets[isBytecblock ? 'bytecblockOffset' : 'intcblockOffset'] = programSize - bytes.length - 1
+
+      if (bytes[0] !== BYTE_CBLOCK && bytes[0] !== INT_CBLOCK) {
+        // if the next opcode isn't a constant block, we're done
+        break
+      }
+    }
+  }
+
+  offsets.cblocksOffset = Math.max(...Object.values(offsets))
+  return offsets
+}
+
 /** ARC-56/ARC-32 application client that allows you to manage calls and
  * state for a specific deployed instance of an app (with a known app ID). */
 export class AppClient {
@@ -710,11 +750,21 @@ export class AppClient {
    * @param isClearStateProgram Whether or not the code was running the clear state program (defaults to approval program)
    * @returns The new error, or if there was no logic error or source map then the wrapped error with source details
    */
-  public exposeLogicError(e: Error, isClearStateProgram?: boolean): Error {
+  public async exposeLogicError(e: Error, isClearStateProgram?: boolean): Promise<Error> {
+    const pcOffsetMethod = this._appSpec.sourceInfo?.[isClearStateProgram ? 'clear' : 'approval']?.pcOffsetMethod
+
+    let program: Uint8Array | undefined
+    if (pcOffsetMethod === 'cblocks') {
+      // TODO: Cache this if we deploy the app and it's not updateable
+      const appInfo = await this._algorand.app.getById(this.appId)
+      program = isClearStateProgram ? appInfo.clearStateProgram : appInfo.approvalProgram
+    }
+
     return AppClient.exposeLogicError(e, this._appSpec, {
       isClearStateProgram,
       approvalSourceMap: this._approvalSourceMap,
       clearSourceMap: this._clearSourceMap,
+      program,
     })
   }
 
@@ -809,16 +859,26 @@ export class AppClient {
       /** Whether or not the code was running the clear state program (defaults to approval program) */ isClearStateProgram?: boolean
       /** Approval program source map */ approvalSourceMap?: SourceMap
       /** Clear state program source map */ clearSourceMap?: SourceMap
+      /** program bytes */ program?: Uint8Array
     },
   ): Error {
-    const { isClearStateProgram, approvalSourceMap, clearSourceMap } = details
+    const { isClearStateProgram, approvalSourceMap, clearSourceMap, program } = details
     if ((!isClearStateProgram && approvalSourceMap == undefined) || (isClearStateProgram && clearSourceMap == undefined)) return e
 
     const errorDetails = LogicError.parseLogicError(e)
 
-    const errorMessage = (isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval)?.find((s) =>
-      s?.pc?.includes(errorDetails?.pc ?? -1),
-    )?.errorMessage
+    const programSourceInfo = isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval
+
+    let errorMessage: string | undefined
+
+    if (programSourceInfo?.pcOffsetMethod === 'none') {
+      errorMessage = programSourceInfo.sourceInfo.find((s) => s.pc.includes(errorDetails?.pc ?? -1))?.errorMessage
+    } else if (programSourceInfo?.pcOffsetMethod === 'cblocks' && program !== undefined && errorDetails?.pc !== undefined) {
+      const { cblocksOffset } = getConstantBlockOffsets(program)
+      const offsetPc = errorDetails.pc - cblocksOffset
+
+      errorMessage = programSourceInfo.sourceInfo.find((s) => s.pc.includes(offsetPc))?.errorMessage
+    }
 
     if (errorDetails !== undefined && appSpec.source)
       e = new LogicError(
@@ -1303,7 +1363,7 @@ export class AppClient {
     try {
       return await call()
     } catch (e) {
-      throw this.exposeLogicError(e as Error)
+      throw await this.exposeLogicError(e as Error)
     }
   }
 
@@ -1779,7 +1839,7 @@ export class ApplicationClient {
 
       return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
-      throw this.exposeLogicError(e as Error)
+      throw await this.exposeLogicError(e as Error)
     }
   }
 
@@ -1820,7 +1880,7 @@ export class ApplicationClient {
 
       return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
-      throw this.exposeLogicError(e as Error)
+      throw await this.exposeLogicError(e as Error)
     }
   }
 
