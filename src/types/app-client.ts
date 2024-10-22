@@ -429,7 +429,9 @@ function getConstantBlockOffsets(program: Uint8Array) {
           bytes.splice(0, bytes.shift()!)
         } else {
           // intcblock is a uvarint, so we need to keep reading until we find the end (MSB is not set)
-          while ((bytes.shift()! & 0x80) !== 0) {}
+          while ((bytes.shift()! & 0x80) !== 0) {
+            // Do nothing...
+          }
         }
       }
 
