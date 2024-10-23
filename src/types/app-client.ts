@@ -2341,7 +2341,7 @@ export class ApplicationClient {
           .toString()
           .split('\n'),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        (isClear ? this._clearSourceMap : this._approvalSourceMap)!.getLineForPc,
+        (pc: number) => (isClear ? this._clearSourceMap : this._approvalSourceMap)!.getLineForPc(pc),
       )
     else return e
   }
