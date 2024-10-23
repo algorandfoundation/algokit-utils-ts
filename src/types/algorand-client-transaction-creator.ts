@@ -1,22 +1,22 @@
 import algosdk from 'algosdk'
-import AlgoKitComposer, { BuiltTransactions } from './composer'
+import TransactionComposer, { BuiltTransactions } from './composer'
 import { Expand } from './expand'
 
 import Transaction = algosdk.Transaction
 
 /** Orchestrates creating transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionCreator {
-  private _newGroup: () => AlgoKitComposer
+  private _newGroup: () => TransactionComposer
 
   /**
    * Creates a new `AlgorandClientTransactionCreator`
-   * @param newGroup A lambda that starts a new `AlgoKitComposer` transaction group
+   * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    */
-  constructor(newGroup: () => AlgoKitComposer) {
+  constructor(newGroup: () => TransactionComposer) {
     this._newGroup = newGroup
   }
 
-  private _transaction<T>(c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer): (params: T) => Promise<Transaction> {
+  private _transaction<T>(c: (c: TransactionComposer) => (params: T) => TransactionComposer): (params: T) => Promise<Transaction> {
     return async (params: T) => {
       const composer = this._newGroup()
       const result = await c(composer).apply(composer, [params]).buildTransactions()
@@ -24,7 +24,9 @@ export class AlgorandClientTransactionCreator {
     }
   }
 
-  private _transactions<T>(c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer): (params: T) => Promise<Expand<BuiltTransactions>> {
+  private _transactions<T>(
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
+  ): (params: T) => Promise<Expand<BuiltTransactions>> {
     return async (params: T) => {
       const composer = this._newGroup()
       return await c(composer).apply(composer, [params]).buildTransactions()

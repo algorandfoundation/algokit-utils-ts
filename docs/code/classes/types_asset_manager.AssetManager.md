@@ -37,7 +37,7 @@ Create a new asset manager.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `algod` | `default` | An algod client |
-| `newGroup` | () => [`default`](types_composer.default.md) | A function that creates a new `AlgoKitComposer` transaction group |
+| `newGroup` | () => [`default`](types_composer.default.md) | A function that creates a new `TransactionComposer` transaction group |
 
 #### Returns
 
@@ -46,7 +46,7 @@ Create a new asset manager.
 **`Example`**
 
 ```typescript
-const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, () => signer, () => suggestedParams}))
+const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
 ```
 
 #### Defined in

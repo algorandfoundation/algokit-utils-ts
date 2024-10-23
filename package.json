@@ -121,6 +121,10 @@
             {
               "type": "chore",
               "release": "patch"
+            },
+            {
+              "type": "refactor",
+              "release": "patch"
             }
           ]
         }
@@ -143,6 +147,10 @@
                 "type": "build",
                 "section": "Dependencies and Other Build Updates",
                 "hidden": false
+              },
+              {
+                "type": "refactor",
+                "section": "Code Refactoring"
               }
             ]
           }

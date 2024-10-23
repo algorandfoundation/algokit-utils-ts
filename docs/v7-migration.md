@@ -148,6 +148,25 @@ If you are converting from an older typed client to a new one you will need to m
 - `client.compose()` is now `client.newGroup()`
 - `client.compose()....execute()` is now `client.compose()....send()`
 
+### Step 5 - Rename AlgoKitComposer to TransactionComposer
+
+In v7, `AlgoKitComposer` has been renamed to `TransactionComposer`. To migrate:
+
+1. Replace all occurrences of `AlgoKitComposer` with `TransactionComposer`.
+2. Update import statements:
+
+```typescript
+// Old
+import { AlgoKitComposer } from '@algorandfoundation/algokit-utils'
+// New
+import { TransactionComposer } from '@algorandfoundation/algokit-utils'
+```
+
+3. Rename `AlgoKitComposerParams` type to `TransactionComposerParams` (if you were referencing it directly).
+4. Review code interacting with the composer for compatibility with the new class.
+
+This change aligns the class name with its purpose and improves consistency with Algorand terminology.
+
 ### Optional steps
 
 #### AlgoKit VScode AVM debugger extension utils
