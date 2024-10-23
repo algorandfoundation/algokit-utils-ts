@@ -897,8 +897,9 @@ export class AppClient {
     }
 
     if (errorDetails !== undefined && appSpec.source) {
-      let getLineForPc = sourceMap?.getLineForPc
-      if (getLineForPc === undefined) {
+      let getLineForPc = (inputPc: number) => sourceMap?.getLineForPc?.(inputPc)
+
+      if (sourceMap === undefined) {
         getLineForPc = (inputPc: number) => {
           let teal: number | undefined
           if (programSourceInfo?.pcOffsetMethod === 'none') teal = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(inputPc))?.teal
