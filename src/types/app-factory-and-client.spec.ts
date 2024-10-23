@@ -717,4 +717,45 @@ describe('ARC56: app-factory-and-app-client', () => {
       expect(JSON.stringify(e)).toMatch('this is an error')
     }
   })
+
+  test('ARC56 undefined error message with dynamic template vars (cblock offset)', async () => {
+    const appId = (
+      await factory.deploy({
+        createParams: {
+          method: 'createApplication',
+        },
+        deployTimeParams: { bytes64TmplVar: '0'.repeat(64), uint64TmplVar: 0, bytes32TmplVar: '0'.repeat(32), bytesTmplVar: 'foo' },
+      })
+    ).result.appId
+
+    // Create a new client so that won't have the source map from compilation
+    const appClient = localnet.algorand.client.getAppClientById({
+      appId,
+      defaultSender: localnet.context.testAccount.addr,
+      // @ts-expect-error TODO: Fix this
+      appSpec: arc56Json,
+    })
+
+    try {
+      await appClient.send.call({ method: 'tmpl' })
+      throw Error('should not get here')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(
+        e.stack
+          .split('\n')
+          .map((l: string) => l.trim())
+          .join('\n'),
+      ).toMatch(`log
+
+// tests/contracts/general.algo.ts:35
+// assert(this.uint64TmplVar)
+intc 0 // TMPL_uint64TmplVar
+assert <--- Error
+retsub
+
+// specificLengthTemplateVar()void
+*abi_route_specificLengthTemplateVar:`)
+    }
+  })
 })

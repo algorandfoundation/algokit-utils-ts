@@ -46,13 +46,14 @@ import {
   ABIStruct,
   Arc56Contract,
   Arc56Method,
-  StorageKey,
-  StorageMap,
   getABIDecodedValue,
   getABIEncodedValue,
   getABITupleFromABIStruct,
   getArc56Method,
   getArc56ReturnValue,
+  ProgramSourceInfo,
+  StorageKey,
+  StorageMap,
 } from './app-arc56'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
@@ -862,14 +863,27 @@ export class AppClient {
       /** Approval program source map */ approvalSourceMap?: SourceMap
       /** Clear state program source map */ clearSourceMap?: SourceMap
       /** program bytes */ program?: Uint8Array
+      /** ARC56 approval source info */ approvalSourceInfo?: ProgramSourceInfo
+      /** ARC56 clear source info */ clearSourceInfo?: ProgramSourceInfo
     },
   ): Error {
     const { isClearStateProgram, approvalSourceMap, clearSourceMap, program } = details
-    if ((!isClearStateProgram && approvalSourceMap == undefined) || (isClearStateProgram && clearSourceMap == undefined)) return e
+    const sourceMap = isClearStateProgram ? clearSourceMap : approvalSourceMap
 
     const errorDetails = LogicError.parseLogicError(e)
 
     const programSourceInfo = isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval
+
+    if (sourceMap === undefined) {
+      const pc = errorDetails?.pc
+      // Return the error if there's no pc
+      if (pc === undefined) return e
+
+      // Return the error if our app spec doesn't have source info on the PC
+      if (programSourceInfo?.sourceInfo.find((s) => s.pc.includes(pc)) === undefined) {
+        return e
+      }
+    }
 
     let errorMessage: string | undefined
 
@@ -882,15 +896,29 @@ export class AppClient {
       errorMessage = programSourceInfo.sourceInfo.find((s) => s.pc.includes(offsetPc))?.errorMessage
     }
 
-    if (errorDetails !== undefined && appSpec.source)
+    if (errorDetails !== undefined && appSpec.source) {
+      let getLineForPc = sourceMap?.getLineForPc
+      if (getLineForPc === undefined) {
+        getLineForPc = (inputPc: number) => {
+          let teal: number | undefined
+          if (programSourceInfo?.pcOffsetMethod === 'none') teal = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(inputPc))?.teal
+          if (programSourceInfo?.pcOffsetMethod === 'cblocks' && program !== undefined) {
+            const { cblocksOffset } = getConstantBlockOffsets(program)
+            teal = programSourceInfo.sourceInfo.find((s) => s.pc.includes(inputPc - cblocksOffset))?.teal
+          }
+          if (teal === undefined) return undefined
+          return teal - 1
+        }
+      }
       e = new LogicError(
         errorDetails,
         Buffer.from(isClearStateProgram ? appSpec.source.clear : appSpec.source.approval, 'base64')
           .toString()
           .split('\n'),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        isClearStateProgram ? clearSourceMap! : approvalSourceMap!,
+        getLineForPc,
       )
+    }
     if (errorMessage) {
       const appId = JSON.stringify(e).match(/(?<=app=)\d+/)?.[0] || ''
       const txId = JSON.stringify(e).match(/(?<=transaction )\S+(?=:)/)?.[0]
@@ -2312,7 +2340,7 @@ export class ApplicationClient {
           .toString()
           .split('\n'),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        isClear ? this._clearSourceMap! : this._approvalSourceMap!,
+        (isClear ? this._clearSourceMap : this._approvalSourceMap)!.getLineForPc,
       )
     else return e
   }
