@@ -23,16 +23,16 @@ How the program counter offset is calculated
 
 #### Defined in
 
-[src/types/app-arc56.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L499)
+[src/types/app-arc56.ts:503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L503)
 
 ___
 
 ### sourceInfo
 
-• **sourceInfo**: [`SourceInfo`](types_app_arc56.SourceInfo.md)[]
+• **sourceInfo**: `SourceInfo`[]
 
 The source information for the program
 
 #### Defined in
 
-[src/types/app-arc56.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L494)
+[src/types/app-arc56.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L498)

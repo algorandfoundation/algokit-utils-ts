@@ -14,7 +14,6 @@
 - [Event](../interfaces/types_app_arc56.Event.md)
 - [Method](../interfaces/types_app_arc56.Method.md)
 - [ProgramSourceInfo](../interfaces/types_app_arc56.ProgramSourceInfo.md)
-- [SourceInfo](../interfaces/types_app_arc56.SourceInfo.md)
 - [StorageKey](../interfaces/types_app_arc56.StorageKey.md)
 - [StorageMap](../interfaces/types_app_arc56.StorageMap.md)
 - [StructField](../interfaces/types_app_arc56.StructField.md)
