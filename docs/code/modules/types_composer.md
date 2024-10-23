@@ -14,7 +14,6 @@
 
 ### Type Aliases
 
-- [AlgoKitComposerParams](types_composer.md#algokitcomposerparams)
 - [AppCallMethodCall](types_composer.md#appcallmethodcall)
 - [AppCallParams](types_composer.md#appcallparams)
 - [AppCreateMethodCall](types_composer.md#appcreatemethodcall)
@@ -38,6 +37,7 @@
 - [OnlineKeyRegistrationParams](types_composer.md#onlinekeyregistrationparams)
 - [PaymentParams](types_composer.md#paymentparams)
 - [SimulateOptions](types_composer.md#simulateoptions)
+- [TransactionComposerParams](types_composer.md#transactioncomposerparams)
 - [Txn](types_composer.md#txn)
 
 ### Variables
@@ -45,28 +45,6 @@
 - [MAX\_TRANSACTION\_GROUP\_SIZE](types_composer.md#max_transaction_group_size)
 
 ## Type Aliases
-
-### AlgoKitComposerParams
-
-Ƭ **AlgoKitComposerParams**: `Object`
-
-Parameters to create an `TransactionComposer`.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
-| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
-| `defaultValidityWindow?` | `number` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
-| `getSigner` | (`address`: `string`) => `algosdk.TransactionSigner` | - |
-| `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
-
-#### Defined in
-
-[src/types/composer.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L464)
-
-___
 
 ### AppCallMethodCall
 
@@ -371,6 +349,28 @@ Options to control a simulate request
 #### Defined in
 
 [src/types/composer.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L24)
+
+___
+
+### TransactionComposerParams
+
+Ƭ **TransactionComposerParams**: `Object`
+
+Parameters to create an `TransactionComposer`.
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
+| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
+| `defaultValidityWindow?` | `number` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
+| `getSigner` | (`address`: `string`) => `algosdk.TransactionSigner` | - |
+| `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
+
+#### Defined in
+
+[src/types/composer.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L464)
 
 ___
 

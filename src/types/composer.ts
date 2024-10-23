@@ -461,7 +461,7 @@ export type Txn =
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
 /** Parameters to create an `TransactionComposer`. */
-export type AlgoKitComposerParams = {
+export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: algosdk.Algodv2
   /** The function used to get the TransactionSigner for a given address */
@@ -524,7 +524,7 @@ export default class TransactionComposer {
    * Create an `TransactionComposer`.
    * @param params The configuration for this composer
    */
-  constructor(params: AlgoKitComposerParams) {
+  constructor(params: TransactionComposerParams) {
     this.algod = params.algod
     const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams

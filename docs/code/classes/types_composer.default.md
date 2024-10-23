@@ -80,7 +80,7 @@ Create an `TransactionComposer`.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `params` | [`AlgoKitComposerParams`](../modules/types_composer.md#algokitcomposerparams) | The configuration for this composer |
+| `params` | [`TransactionComposerParams`](../modules/types_composer.md#transactioncomposerparams) | The configuration for this composer |
 
 #### Returns
 
