@@ -410,24 +410,42 @@ export type ResolveAppClientByNetwork = Expand<Omit<AppClientParams, 'appId'>>
 const BYTE_CBLOCK = 38
 const INT_CBLOCK = 32
 
-function getConstantBlockOffsets(program: Uint8Array) {
+/**
+ * Get the offset of the last constant block at the beginning of the program
+ * This value is used to calculate the program counter for an ARC56 program that has a pcOffsetMethod of "cblocks"
+ *
+ * @param program The program to parse
+ * @returns The PC value of the opcode after the last constant block
+ */
+function getConstantBlockOffset(program: Uint8Array) {
   const bytes = [...program]
 
   const programSize = bytes.length
   bytes.shift() // remove version
-  const offsets: { bytecblockOffset?: number; intcblockOffset?: number; cblocksOffset: number } = { cblocksOffset: 0 }
+
+  /** The PC of the opcode after the bytecblock */
+  let bytecblockOffset: number | undefined
+
+  /** The PC of the opcode after the intcblock */
+  let intcblockOffset: number | undefined
 
   while (bytes.length > 0) {
+    /** The current byte from the beginning of the byte array */
     const byte = bytes.shift()!
 
+    // If the byte is a constant block...
     if (byte === BYTE_CBLOCK || byte === INT_CBLOCK) {
       const isBytecblock = byte === BYTE_CBLOCK
+
+      /** The byte following the opcode is the number of values in the constant block */
       const valuesRemaining = bytes.shift()!
 
+      // Iterate over all the values in the constant block
       for (let i = 0; i < valuesRemaining; i++) {
         if (isBytecblock) {
-          // byte is the length of the next element
-          bytes.splice(0, bytes.shift()!)
+          /** The byte following the opcode is the length of the next element */
+          const length = bytes.shift()!
+          bytes.splice(0, length)
         } else {
           // intcblock is a uvarint, so we need to keep reading until we find the end (MSB is not set)
           while ((bytes.shift()! & 0x80) !== 0) {
@@ -436,7 +454,8 @@ function getConstantBlockOffsets(program: Uint8Array) {
         }
       }
 
-      offsets[isBytecblock ? 'bytecblockOffset' : 'intcblockOffset'] = programSize - bytes.length - 1
+      if (isBytecblock) bytecblockOffset = programSize - bytes.length - 1
+      else intcblockOffset = programSize - bytes.length - 1
 
       if (bytes[0] !== BYTE_CBLOCK && bytes[0] !== INT_CBLOCK) {
         // if the next opcode isn't a constant block, we're done
@@ -445,8 +464,7 @@ function getConstantBlockOffsets(program: Uint8Array) {
     }
   }
 
-  offsets.cblocksOffset = Math.max(...Object.values(offsets))
-  return offsets
+  return Math.max(bytecblockOffset ?? 0, intcblockOffset ?? 0)
 }
 
 /** ARC-56/ARC-32 application client that allows you to manage calls and
@@ -890,7 +908,7 @@ export class AppClient {
     if (programSourceInfo?.pcOffsetMethod === 'none') {
       errorMessage = programSourceInfo.sourceInfo.find((s) => s.pc.includes(errorDetails?.pc ?? -1))?.errorMessage
     } else if (programSourceInfo?.pcOffsetMethod === 'cblocks' && program !== undefined && errorDetails?.pc !== undefined) {
-      const { cblocksOffset } = getConstantBlockOffsets(program)
+      const cblocksOffset = getConstantBlockOffset(program)
       const offsetPc = errorDetails.pc - cblocksOffset
 
       errorMessage = programSourceInfo.sourceInfo.find((s) => s.pc.includes(offsetPc))?.errorMessage
@@ -904,7 +922,7 @@ export class AppClient {
           let teal: number | undefined
           if (programSourceInfo?.pcOffsetMethod === 'none') teal = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(inputPc))?.teal
           if (programSourceInfo?.pcOffsetMethod === 'cblocks' && program !== undefined) {
-            const { cblocksOffset } = getConstantBlockOffsets(program)
+            const cblocksOffset = getConstantBlockOffset(program)
             teal = programSourceInfo.sourceInfo.find((s) => s.pc.includes(inputPc - cblocksOffset))?.teal
           }
           if (teal === undefined) return undefined
