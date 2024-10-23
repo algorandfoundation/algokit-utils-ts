@@ -4,7 +4,7 @@ import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import AlgoKitComposer, { CommonTransactionParams } from './composer'
+import TransactionComposer, { CommonTransactionParams } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
@@ -58,7 +58,7 @@ export class AccountManager {
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
-    return new AlgoKitComposer({
+    return new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: this.getSigner.bind(this),
       getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),

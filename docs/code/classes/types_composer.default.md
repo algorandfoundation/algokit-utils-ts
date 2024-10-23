@@ -74,7 +74,7 @@ AlgoKit Composer helps you compose and execute transactions as a transaction gro
 
 • **new default**(`params`): [`default`](types_composer.default.md)
 
-Create an `AlgoKitComposer`.
+Create an `TransactionComposer`.
 
 #### Parameters
 

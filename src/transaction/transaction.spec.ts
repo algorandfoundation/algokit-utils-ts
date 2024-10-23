@@ -9,7 +9,7 @@ import { Config } from '../config'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
-import AlgoKitComposer, { PaymentParams } from '../types/composer'
+import TransactionComposer, { PaymentParams } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { getABIReturnValue, waitForConfirmation } from './transaction'
 
@@ -156,7 +156,7 @@ describe('transaction', () => {
 describe('arc2 transaction note', () => {
   test('arc-0002', () => {
     expect(
-      AlgoKitComposer.arc2Note({
+      TransactionComposer.arc2Note({
         dAppName: 'a',
         format: 'u',
         data: 'abc',

@@ -124,7 +124,7 @@ export type ABIAppCallArgs = CoreAppCallArgs & {
 export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
 /**
- * @deprecated Use `AlgoKitComposer` to construct create app transactions instead.
+ * @deprecated Use `TransactionComposer` to construct create app transactions instead.
  *
  * Base interface for common data passed to an app create or update.
  */
@@ -144,7 +144,7 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` to construct create app transactions instead.
+ * @deprecated Use `TransactionComposer` to construct create app transactions instead.
  *
  * Parameters that are passed in when creating an app. */
 export interface CreateAppParams extends CreateOrUpdateAppParams {
@@ -155,7 +155,7 @@ export interface CreateAppParams extends CreateOrUpdateAppParams {
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` to construct update app transactions instead.
+ * @deprecated Use `TransactionComposer` to construct update app transactions instead.
  *
  * Parameters that are passed in when updating an app. */
 export interface UpdateAppParams extends CreateOrUpdateAppParams {

@@ -4,7 +4,7 @@ import { Config } from '../config'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
-import AlgoKitComposer, {
+import TransactionComposer, {
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -25,16 +25,16 @@ const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionSender {
-  private _newGroup: () => AlgoKitComposer
+  private _newGroup: () => TransactionComposer
   private _assetManager: AssetManager
   private _appManager: AppManager
 
   /**
    * Creates a new `AlgorandClientSender`
-   * @param newGroup A lambda that starts a new `AlgoKitComposer` transaction group
+   * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @param assetManager An `AssetManager` instance
    */
-  constructor(newGroup: () => AlgoKitComposer, assetManager: AssetManager, appManager: AppManager) {
+  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
     this._newGroup = newGroup
     this._assetManager = assetManager
     this._appManager = appManager
@@ -45,7 +45,7 @@ export class AlgorandClientTransactionSender {
   }
 
   private _send<T>(
-    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
     log?: {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
@@ -90,7 +90,7 @@ export class AlgorandClientTransactionSender {
       | AppCallMethodCall
       | AppDeleteMethodCall,
   >(
-    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
     log?: {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
@@ -104,7 +104,7 @@ export class AlgorandClientTransactionSender {
   }
 
   private _sendAppUpdateCall<T extends AppCreateParams | AppUpdateParams | AppCreateMethodCall | AppUpdateMethodCall>(
-    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
     log?: {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
@@ -123,7 +123,7 @@ export class AlgorandClientTransactionSender {
   }
 
   private _sendAppCreateCall<T extends AppCreateParams | AppCreateMethodCall>(
-    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
     log?: {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string

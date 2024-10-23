@@ -341,7 +341,7 @@ ___
 
 ▸ **newGroup**(): [`default`](types_composer.default.md)
 
-Start a new `AlgoKitComposer` transaction group
+Start a new `TransactionComposer` transaction group
 
 #### Returns
 

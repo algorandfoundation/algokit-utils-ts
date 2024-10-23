@@ -4,7 +4,7 @@
 
 [types/composer](../modules/types_composer.md).BuiltTransactions
 
-Set of transactions built by `AlgoKitComposer`.
+Set of transactions built by `TransactionComposer`.
 
 ## Table of contents
 

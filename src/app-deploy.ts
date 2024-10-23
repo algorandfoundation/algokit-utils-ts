@@ -17,7 +17,7 @@ import {
 import { AppDeployer } from './types/app-deployer'
 import { AppManager, BoxReference } from './types/app-manager'
 import { AssetManager } from './types/asset-manager'
-import AlgoKitComposer, {
+import TransactionComposer, {
   AppCreateMethodCall,
   AppCreateParams,
   AppDeleteMethodCall,
@@ -67,7 +67,7 @@ export async function deployApp(
 > {
   const appManager = new AppManager(algod)
   const newGroup = () =>
-    new AlgoKitComposer({
+    new TransactionComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(deployment.from),
       getSuggestedParams: async () =>

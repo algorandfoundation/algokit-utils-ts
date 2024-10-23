@@ -55,7 +55,7 @@ Creates a new `AlgorandClientSender`
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `newGroup` | () => [`default`](types_composer.default.md) | A lambda that starts a new `AlgoKitComposer` transaction group |
+| `newGroup` | () => [`default`](types_composer.default.md) | A lambda that starts a new `TransactionComposer` transaction group |
 | `assetManager` | [`AssetManager`](types_asset_manager.AssetManager.md) | An `AssetManager` instance |
 | `appManager` | [`AppManager`](types_app_manager.AppManager.md) | - |
 

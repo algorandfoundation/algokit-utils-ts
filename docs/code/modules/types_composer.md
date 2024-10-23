@@ -50,7 +50,7 @@
 
 Ƭ **AlgoKitComposerParams**: `Object`
 
-Parameters to create an `AlgoKitComposer`.
+Parameters to create an `TransactionComposer`.
 
 #### Type declaration
 
