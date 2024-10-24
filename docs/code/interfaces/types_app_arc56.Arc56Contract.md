@@ -214,8 +214,8 @@ Information about the TEAL programs
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `approval` | [`SourceInfo`](types_app_arc56.SourceInfo.md)[] | Approval program information |
-| `clear` | [`SourceInfo`](types_app_arc56.SourceInfo.md)[] | Clear program information |
+| `approval` | [`ProgramSourceInfo`](types_app_arc56.ProgramSourceInfo.md) | Approval program information |
+| `clear` | [`ProgramSourceInfo`](types_app_arc56.ProgramSourceInfo.md) | Clear program information |
 
 #### Defined in
 

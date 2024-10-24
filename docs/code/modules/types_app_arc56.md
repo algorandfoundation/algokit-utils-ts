@@ -13,7 +13,7 @@
 - [Arc56Contract](../interfaces/types_app_arc56.Arc56Contract.md)
 - [Event](../interfaces/types_app_arc56.Event.md)
 - [Method](../interfaces/types_app_arc56.Method.md)
-- [SourceInfo](../interfaces/types_app_arc56.SourceInfo.md)
+- [ProgramSourceInfo](../interfaces/types_app_arc56.ProgramSourceInfo.md)
 - [StorageKey](../interfaces/types_app_arc56.StorageKey.md)
 - [StorageMap](../interfaces/types_app_arc56.StorageMap.md)
 - [StructField](../interfaces/types_app_arc56.StructField.md)

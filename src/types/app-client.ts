@@ -46,13 +46,14 @@ import {
   ABIStruct,
   Arc56Contract,
   Arc56Method,
-  StorageKey,
-  StorageMap,
   getABIDecodedValue,
   getABIEncodedValue,
   getABITupleFromABIStruct,
   getArc56Method,
   getArc56ReturnValue,
+  ProgramSourceInfo,
+  StorageKey,
+  StorageMap,
 } from './app-arc56'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
@@ -406,6 +407,66 @@ export type ResolveAppClientByCreatorAndName = Expand<
 /** Resolve an app client instance by looking up the current network. */
 export type ResolveAppClientByNetwork = Expand<Omit<AppClientParams, 'appId'>>
 
+const BYTE_CBLOCK = 38
+const INT_CBLOCK = 32
+
+/**
+ * Get the offset of the last constant block at the beginning of the program
+ * This value is used to calculate the program counter for an ARC56 program that has a pcOffsetMethod of "cblocks"
+ *
+ * @param program The program to parse
+ * @returns The PC value of the opcode after the last constant block
+ */
+function getConstantBlockOffset(program: Uint8Array) {
+  const bytes = [...program]
+
+  const programSize = bytes.length
+  bytes.shift() // remove version
+
+  /** The PC of the opcode after the bytecblock */
+  let bytecblockOffset: number | undefined
+
+  /** The PC of the opcode after the intcblock */
+  let intcblockOffset: number | undefined
+
+  while (bytes.length > 0) {
+    /** The current byte from the beginning of the byte array */
+    const byte = bytes.shift()!
+
+    // If the byte is a constant block...
+    if (byte === BYTE_CBLOCK || byte === INT_CBLOCK) {
+      const isBytecblock = byte === BYTE_CBLOCK
+
+      /** The byte following the opcode is the number of values in the constant block */
+      const valuesRemaining = bytes.shift()!
+
+      // Iterate over all the values in the constant block
+      for (let i = 0; i < valuesRemaining; i++) {
+        if (isBytecblock) {
+          /** The byte following the opcode is the length of the next element */
+          const length = bytes.shift()!
+          bytes.splice(0, length)
+        } else {
+          // intcblock is a uvarint, so we need to keep reading until we find the end (MSB is not set)
+          while ((bytes.shift()! & 0x80) !== 0) {
+            // Do nothing...
+          }
+        }
+      }
+
+      if (isBytecblock) bytecblockOffset = programSize - bytes.length - 1
+      else intcblockOffset = programSize - bytes.length - 1
+
+      if (bytes[0] !== BYTE_CBLOCK && bytes[0] !== INT_CBLOCK) {
+        // if the next opcode isn't a constant block, we're done
+        break
+      }
+    }
+  }
+
+  return Math.max(bytecblockOffset ?? 0, intcblockOffset ?? 0)
+}
+
 /** ARC-56/ARC-32 application client that allows you to manage calls and
  * state for a specific deployed instance of an app (with a known app ID). */
 export class AppClient {
@@ -710,11 +771,21 @@ export class AppClient {
    * @param isClearStateProgram Whether or not the code was running the clear state program (defaults to approval program)
    * @returns The new error, or if there was no logic error or source map then the wrapped error with source details
    */
-  public exposeLogicError(e: Error, isClearStateProgram?: boolean): Error {
+  public async exposeLogicError(e: Error, isClearStateProgram?: boolean): Promise<Error> {
+    const pcOffsetMethod = this._appSpec.sourceInfo?.[isClearStateProgram ? 'clear' : 'approval']?.pcOffsetMethod
+
+    let program: Uint8Array | undefined
+    if (pcOffsetMethod === 'cblocks') {
+      // TODO: Cache this if we deploy the app and it's not updateable
+      const appInfo = await this._algorand.app.getById(this.appId)
+      program = isClearStateProgram ? appInfo.clearStateProgram : appInfo.approvalProgram
+    }
+
     return AppClient.exposeLogicError(e, this._appSpec, {
       isClearStateProgram,
       approvalSourceMap: this._approvalSourceMap,
       clearSourceMap: this._clearSourceMap,
+      program,
     })
   }
 
@@ -809,26 +880,59 @@ export class AppClient {
       /** Whether or not the code was running the clear state program (defaults to approval program) */ isClearStateProgram?: boolean
       /** Approval program source map */ approvalSourceMap?: SourceMap
       /** Clear state program source map */ clearSourceMap?: SourceMap
+      /** program bytes */ program?: Uint8Array
+      /** ARC56 approval source info */ approvalSourceInfo?: ProgramSourceInfo
+      /** ARC56 clear source info */ clearSourceInfo?: ProgramSourceInfo
     },
   ): Error {
-    const { isClearStateProgram, approvalSourceMap, clearSourceMap } = details
-    if ((!isClearStateProgram && approvalSourceMap == undefined) || (isClearStateProgram && clearSourceMap == undefined)) return e
+    const { isClearStateProgram, approvalSourceMap, clearSourceMap, program } = details
+    const sourceMap = isClearStateProgram ? clearSourceMap : approvalSourceMap
 
     const errorDetails = LogicError.parseLogicError(e)
 
-    const errorMessage = (isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval)?.find((s) =>
-      s?.pc?.includes(errorDetails?.pc ?? -1),
-    )?.errorMessage
+    // Return the error if we don't have a PC
+    if (errorDetails === undefined || errorDetails?.pc === undefined) return e
 
-    if (errorDetails !== undefined && appSpec.source)
+    /** The PC value to find in the ARC56 SourceInfo */
+    let arc56Pc = errorDetails?.pc
+
+    const programSourceInfo = isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval
+
+    /** The offset to apply to the PC if using the cblocks pc offset method */
+    let cblocksOffset = 0
+
+    // If the program uses cblocks offset, then we need to adjust the PC accordingly
+    if (programSourceInfo?.pcOffsetMethod === 'cblocks') {
+      if (program === undefined) throw new Error('Program bytes are required to calculate the ARC56 cblocks PC offset')
+      cblocksOffset = getConstantBlockOffset(program)
+      arc56Pc = errorDetails.pc - cblocksOffset
+    }
+
+    // Find the source info for this PC and get the error message
+    const sourceInfo = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(arc56Pc))
+    const errorMessage = sourceInfo?.errorMessage
+
+    // If we have the source we can display the TEAL in the error message
+    if (appSpec.source) {
+      let getLineForPc = (inputPc: number) => sourceMap?.getLineForPc?.(inputPc)
+
+      // If the SourceMap is not defined, we need to provide our own function for going from a PC to TEAL based on ARC56 SourceInfo[]
+      if (sourceMap === undefined) {
+        getLineForPc = (inputPc: number) => {
+          const teal = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(inputPc - cblocksOffset))?.teal
+          if (teal === undefined) return undefined
+          return teal - 1
+        }
+      }
       e = new LogicError(
         errorDetails,
         Buffer.from(isClearStateProgram ? appSpec.source.clear : appSpec.source.approval, 'base64')
           .toString()
           .split('\n'),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        isClearStateProgram ? clearSourceMap! : approvalSourceMap!,
+        getLineForPc,
       )
+    }
     if (errorMessage) {
       const appId = JSON.stringify(e).match(/(?<=app=)\d+/)?.[0] || ''
       const txId = JSON.stringify(e).match(/(?<=transaction )\S+(?=:)/)?.[0]
@@ -1303,7 +1407,7 @@ export class AppClient {
     try {
       return await call()
     } catch (e) {
-      throw this.exposeLogicError(e as Error)
+      throw await this.exposeLogicError(e as Error)
     }
   }
 
@@ -1779,7 +1883,7 @@ export class ApplicationClient {
 
       return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
-      throw this.exposeLogicError(e as Error)
+      throw await this.exposeLogicError(e as Error)
     }
   }
 
@@ -1820,7 +1924,7 @@ export class ApplicationClient {
 
       return { ...result, ...({ compiledApproval: approvalCompiled, compiledClear: clearCompiled } as AppCompilationResult) }
     } catch (e) {
-      throw this.exposeLogicError(e as Error)
+      throw await this.exposeLogicError(e as Error)
     }
   }
 
@@ -2250,7 +2354,7 @@ export class ApplicationClient {
           .toString()
           .split('\n'),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        isClear ? this._clearSourceMap! : this._approvalSourceMap!,
+        (pc: number) => (isClear ? this._clearSourceMap : this._approvalSourceMap)!.getLineForPc(pc),
       )
     else return e
   }

@@ -2,6 +2,7 @@ import { describe, test } from '@jest/globals'
 import algosdk, { ABIUintType, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '..'
+import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { getArc56Method } from './app-arc56'
@@ -682,6 +683,79 @@ describe('ARC32: app-factory-and-app-client', () => {
         args: [undefined],
       })
       expect(defaultValueResult.return).toBe(defaultValueReturnValue)
+    }
+  })
+})
+
+describe('ARC56: app-factory-and-app-client', () => {
+  let factory: AppFactory
+
+  const localnet = algorandFixture()
+  beforeEach(async () => {
+    await localnet.beforeEach()
+
+    factory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
+      appSpec: arc56Json,
+      defaultSender: localnet.context.testAccount.addr,
+    })
+  }, 10_000)
+
+  test('ARC56 error messages with dynamic template vars (cblock offset)', async () => {
+    const { appClient } = await factory.deploy({
+      createParams: {
+        method: 'createApplication',
+      },
+      deployTimeParams: { bytes64TmplVar: '0'.repeat(64), uint64TmplVar: 123, bytes32TmplVar: '0'.repeat(32), bytesTmplVar: 'foo' },
+    })
+
+    try {
+      await appClient.send.call({ method: 'throwError' })
+      invariant(false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(JSON.stringify(e)).toMatch('this is an error')
+    }
+  })
+
+  test('ARC56 undefined error message with dynamic template vars (cblock offset)', async () => {
+    const appId = (
+      await factory.deploy({
+        createParams: {
+          method: 'createApplication',
+        },
+        deployTimeParams: { bytes64TmplVar: '0'.repeat(64), uint64TmplVar: 0, bytes32TmplVar: '0'.repeat(32), bytesTmplVar: 'foo' },
+      })
+    ).result.appId
+
+    // Create a new client so that won't have the source map from compilation
+    const appClient = localnet.algorand.client.getAppClientById({
+      appId,
+      defaultSender: localnet.context.testAccount.addr,
+      // @ts-expect-error TODO: Fix this
+      appSpec: arc56Json,
+    })
+
+    try {
+      await appClient.send.call({ method: 'tmpl' })
+      throw Error('should not get here')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(
+        e.stack
+          .split('\n')
+          .map((l: string) => l.trim())
+          .join('\n'),
+      ).toMatch(`log
+
+// tests/example-contracts/arc56_templates/templates.algo.ts:14
+// assert(this.uint64TmplVar)
+intc 1 // TMPL_uint64TmplVar
+assert <--- Error
+retsub
+
+// specificLengthTemplateVar()void
+*abi_route_specificLengthTemplateVar:`)
     }
   })
 })
