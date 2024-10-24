@@ -748,9 +748,9 @@ describe('ARC56: app-factory-and-app-client', () => {
           .join('\n'),
       ).toMatch(`log
 
-// tests/contracts/general.algo.ts:35
+// tests/example-contracts/arc56_templates/templates.algo.ts:14
 // assert(this.uint64TmplVar)
-intc 0 // TMPL_uint64TmplVar
+intc 1 // TMPL_uint64TmplVar
 assert <--- Error
 retsub
 

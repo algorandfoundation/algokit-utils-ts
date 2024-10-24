@@ -890,41 +890,36 @@ export class AppClient {
 
     const errorDetails = LogicError.parseLogicError(e)
 
+    // Return the error if we don't have a PC
+    if (errorDetails === undefined || errorDetails?.pc === undefined) return e
+
+    /** The PC value to find in the ARC56 SourceInfo */
+    let arc56Pc = errorDetails?.pc
+
     const programSourceInfo = isClearStateProgram ? appSpec.sourceInfo?.clear : appSpec.sourceInfo?.approval
 
-    if (sourceMap === undefined) {
-      const pc = errorDetails?.pc
-      // Return the error if there's no pc
-      if (pc === undefined) return e
+    /** The offset to apply to the PC if using the cblocks pc offset method */
+    let cblocksOffset = 0
 
-      // Return the error if our app spec doesn't have source info on the PC
-      if (programSourceInfo?.sourceInfo.find((s) => s.pc.includes(pc)) === undefined) {
-        return e
-      }
+    // If the program uses cblocks offset, then we need to adjust the PC accordingly
+    if (programSourceInfo?.pcOffsetMethod === 'cblocks') {
+      if (program === undefined) throw new Error('Program bytes are required to calculate the ARC56 cblocks PC offset')
+      cblocksOffset = getConstantBlockOffset(program)
+      arc56Pc = errorDetails.pc - cblocksOffset
     }
 
-    let errorMessage: string | undefined
+    // Find the source info for this PC and get the error message
+    const sourceInfo = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(arc56Pc))
+    const errorMessage = sourceInfo?.errorMessage
 
-    if (programSourceInfo?.pcOffsetMethod === 'none') {
-      errorMessage = programSourceInfo.sourceInfo.find((s) => s.pc.includes(errorDetails?.pc ?? -1))?.errorMessage
-    } else if (programSourceInfo?.pcOffsetMethod === 'cblocks' && program !== undefined && errorDetails?.pc !== undefined) {
-      const cblocksOffset = getConstantBlockOffset(program)
-      const offsetPc = errorDetails.pc - cblocksOffset
-
-      errorMessage = programSourceInfo.sourceInfo.find((s) => s.pc.includes(offsetPc))?.errorMessage
-    }
-
-    if (errorDetails !== undefined && appSpec.source) {
+    // If we have the source we can display the TEAL in the error message
+    if (appSpec.source) {
       let getLineForPc = (inputPc: number) => sourceMap?.getLineForPc?.(inputPc)
 
+      // If the SourceMap is not defined, we need to provide our own function for going from a PC to TEAL based on ARC56 SourceInfo[]
       if (sourceMap === undefined) {
         getLineForPc = (inputPc: number) => {
-          let teal: number | undefined
-          if (programSourceInfo?.pcOffsetMethod === 'none') teal = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(inputPc))?.teal
-          if (programSourceInfo?.pcOffsetMethod === 'cblocks' && program !== undefined) {
-            const cblocksOffset = getConstantBlockOffset(program)
-            teal = programSourceInfo.sourceInfo.find((s) => s.pc.includes(inputPc - cblocksOffset))?.teal
-          }
+          const teal = programSourceInfo?.sourceInfo.find((s) => s.pc.includes(inputPc - cblocksOffset))?.teal
           if (teal === undefined) return undefined
           return teal - 1
         }

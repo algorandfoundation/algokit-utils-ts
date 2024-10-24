@@ -12,82 +12,58 @@
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3"
   },
   {
-    "teal": 11,
+    "teal": 15,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
-      1
-    ]
-  },
-  {
-    "teal": 12,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
+      1,
       2
     ]
   },
   {
-    "teal": 13,
+    "teal": 16,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
       3
     ]
   },
   {
-    "teal": 14,
+    "teal": 17,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
-      4
+      4,
+      5
+    ]
+  },
+  {
+    "teal": 18,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "pc": [
+      6
+    ]
+  },
+  {
+    "teal": 19,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "pc": [
+      7,
+      8
+    ]
+  },
+  {
+    "teal": 20,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "pc": [
+      9
     ]
   },
   {
     "teal": 21,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
-      5,
-      6
-    ]
-  },
-  {
-    "teal": 22,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      7
-    ]
-  },
-  {
-    "teal": 23,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      8,
-      9
-    ]
-  },
-  {
-    "teal": 24,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      10
-    ]
-  },
-  {
-    "teal": 25,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
+      10,
       11,
-      12
-    ]
-  },
-  {
-    "teal": 26,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      13
-    ]
-  },
-  {
-    "teal": 27,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
+      12,
+      13,
       14,
       15,
       16,
@@ -109,8 +85,21 @@
       32,
       33,
       34,
-      35,
-      36,
+      35
+    ]
+  },
+  {
+    "teal": 25,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "errorMessage": "The requested action is not implemented in this contract. Are you using the correct OnComplete? Did you set your app ID?",
+    "pc": [
+      36
+    ]
+  },
+  {
+    "teal": 30,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
+    "pc": [
       37,
       38,
       39
@@ -118,76 +107,81 @@
   },
   {
     "teal": 31,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "errorMessage": "The requested action is not implemented in this contract. Are you using the correct OnComplete? Did you set your app ID?",
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
     "pc": [
       40
+    ]
+  },
+  {
+    "teal": 32,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
+    "pc": [
+      41
     ]
   },
   {
     "teal": 36,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
     "pc": [
-      41,
       42,
-      43
+      43,
+      44
     ]
   },
   {
-    "teal": 37,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
+    "teal": 40,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:13",
     "pc": [
-      44,
       45
     ]
   },
   {
-    "teal": 38,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
+    "teal": 41,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:13",
     "pc": [
       46
     ]
   },
   {
-    "teal": 42,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
+    "teal": 45,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:14",
     "pc": [
-      47,
-      48,
-      49
+      47
     ]
   },
   {
     "teal": 46,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:13",
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:14",
     "pc": [
-      50
+      48
     ]
   },
   {
     "teal": 47,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:13",
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
     "pc": [
-      51
-    ]
-  },
-  {
-    "teal": 51,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:14",
-    "pc": [
-      52
+      49
     ]
   },
   {
     "teal": 52,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:14",
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:17",
+    "pc": [
+      50,
+      51,
+      52
+    ]
+  },
+  {
+    "teal": 53,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:17",
     "pc": [
       53
     ]
   },
   {
-    "teal": 53,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:12",
+    "teal": 54,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:17",
     "pc": [
       54
     ]
@@ -202,328 +196,322 @@
     ]
   },
   {
-    "teal": 59,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:17",
+    "teal": 62,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
     "pc": [
-      58,
+      58
+    ]
+  },
+  {
+    "teal": 63,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
+    "pc": [
       59
     ]
   },
   {
-    "teal": 60,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:17",
+    "teal": 64,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
     "pc": [
       60
     ]
   },
   {
-    "teal": 64,
+    "teal": 65,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
+    "pc": [
+      61
+    ]
+  },
+  {
+    "teal": 66,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:17",
     "pc": [
-      61,
-      62,
-      63
+      62
     ]
   },
   {
-    "teal": 68,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
+    "teal": 71,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
     "pc": [
-      64
-    ]
-  },
-  {
-    "teal": 69,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
-    "pc": [
+      63,
+      64,
       65
     ]
   },
   {
-    "teal": 70,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
+    "teal": 72,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
     "pc": [
       66
     ]
   },
   {
-    "teal": 71,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:18",
+    "teal": 73,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
     "pc": [
       67
-    ]
-  },
-  {
-    "teal": 72,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:17",
-    "pc": [
-      68
     ]
   },
   {
     "teal": 77,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
     "pc": [
+      68,
       69,
-      70,
+      70
+    ]
+  },
+  {
+    "teal": 80,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:22",
+    "errorMessage": "this is an error",
+    "pc": [
       71
     ]
   },
   {
-    "teal": 78,
+    "teal": 81,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
     "pc": [
-      72,
-      73
-    ]
-  },
-  {
-    "teal": 79,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
-    "pc": [
-      74
-    ]
-  },
-  {
-    "teal": 83,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
-    "pc": [
-      75,
-      76,
-      77
+      72
     ]
   },
   {
     "teal": 86,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:22",
-    "errorMessage": "this is an error",
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
+      73,
+      74,
+      75,
+      76,
+      77,
       78
     ]
   },
   {
-    "teal": 87,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:21",
+    "teal": 89,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      79
+      79,
+      80,
+      81
+    ]
+  },
+  {
+    "teal": 90,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
+    "pc": [
+      82
+    ]
+  },
+  {
+    "teal": 91,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
+    "pc": [
+      83
     ]
   },
   {
     "teal": 92,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      80,
-      81,
-      82,
-      83,
-      84,
-      85
+      84
+    ]
+  },
+  {
+    "teal": 93,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
+    "pc": [
+      85,
+      86,
+      87
+    ]
+  },
+  {
+    "teal": 94,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
+    "pc": [
+      88
     ]
   },
   {
     "teal": 95,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      86,
-      87,
-      88
+      89
     ]
   },
   {
     "teal": 96,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      89
+      90
     ]
   },
   {
     "teal": 97,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      90
+      91
     ]
   },
   {
     "teal": 98,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      91
+      92
     ]
   },
   {
     "teal": 99,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      92,
-      93,
-      94
-    ]
-  },
-  {
-    "teal": 100,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
-    "pc": [
-      95
-    ]
-  },
-  {
-    "teal": 101,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
-    "pc": [
-      96
-    ]
-  },
-  {
-    "teal": 102,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
-    "pc": [
-      97
+      93
     ]
   },
   {
     "teal": 103,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
+      94,
+      95,
+      96
+    ]
+  },
+  {
+    "teal": 107,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:26",
+    "pc": [
+      97
+    ]
+  },
+  {
+    "teal": 108,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:26",
+    "pc": [
       98
-    ]
-  },
-  {
-    "teal": 104,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
-    "pc": [
-      99,
-      100
-    ]
-  },
-  {
-    "teal": 105,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
-    "pc": [
-      101
     ]
   },
   {
     "teal": 109,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
     "pc": [
-      102,
-      103,
-      104
+      99
+    ]
+  },
+  {
+    "teal": 112,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "pc": [
+      100
     ]
   },
   {
     "teal": 113,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:26",
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
-      105
+      101
     ]
   },
   {
-    "teal": 114,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:26",
+    "teal": 116,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
-      106
-    ]
-  },
-  {
-    "teal": 115,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:25",
-    "pc": [
+      102,
+      103,
+      104,
+      105,
+      106,
       107
+    ]
+  },
+  {
+    "teal": 117,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "pc": [
+      108,
+      109,
+      110
     ]
   },
   {
     "teal": 118,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
-      108,
-      109
-    ]
-  },
-  {
-    "teal": 119,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      110
-    ]
-  },
-  {
-    "teal": 122,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
       111,
       112,
       113,
-      114,
-      115,
-      116
+      114
     ]
   },
   {
-    "teal": 123,
+    "teal": 121,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "errorMessage": "this contract does not implement the given ABI method for create NoOp",
     "pc": [
-      117,
-      118,
-      119
+      115
     ]
   },
   {
     "teal": 124,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
+      116,
+      117,
+      118,
+      119,
       120,
-      121,
+      121
+    ]
+  },
+  {
+    "teal": 125,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "pc": [
       122,
-      123
+      123,
+      124,
+      125,
+      126,
+      127
+    ]
+  },
+  {
+    "teal": 126,
+    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
+    "pc": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      133
     ]
   },
   {
     "teal": 127,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "errorMessage": "this contract does not implement the given ABI method for create NoOp",
     "pc": [
-      124
-    ]
-  },
-  {
-    "teal": 130,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      125,
-      126,
-      127,
-      128,
-      129,
-      130
-    ]
-  },
-  {
-    "teal": 131,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      131,
-      132,
-      133,
       134,
       135,
-      136
+      136,
+      137,
+      138,
+      139
     ]
   },
   {
-    "teal": 132,
+    "teal": 128,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
-      137,
-      138,
-      139,
       140,
       141,
       142
     ]
   },
   {
-    "teal": 133,
+    "teal": 129,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "pc": [
       143,
@@ -531,40 +519,19 @@
       145,
       146,
       147,
-      148
-    ]
-  },
-  {
-    "teal": 134,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
+      148,
       149,
       150,
-      151
+      151,
+      152
     ]
   },
   {
-    "teal": 135,
-    "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
-    "pc": [
-      152,
-      153,
-      154,
-      155,
-      156,
-      157,
-      158,
-      159,
-      160,
-      161
-    ]
-  },
-  {
-    "teal": 138,
+    "teal": 132,
     "source": "tests/example-contracts/arc56_templates/templates.algo.ts:3",
     "errorMessage": "this contract does not implement the given ABI method for call NoOp",
     "pc": [
-      162
+      153
     ]
   }
 ]
