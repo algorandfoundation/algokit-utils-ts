@@ -31,7 +31,7 @@ Note: `algokit-utils-ts-debug` cannot be used in browser environments. However, 
 
 ### Subscribe to the `simulate` response event
 
-After setting the `debug` flag to true in the [configuration](#configuration) section, subscribe to the `simulate` response event as follows:
+After setting the `debug` flag to true in the [configuration](#configuration) section, subscribe to the `TxnGroupSimulated` event as follows:
 
 ```ts
 import { AVMTracesEventData, Config, EventType } from '@algorandfoundation/algokit-utils'
@@ -41,7 +41,7 @@ Config.events.on(EventType.TxnGroupSimulated, (eventData: AVMTracesEventData) =>
 })
 ```
 
-This will output the simulation traces emitted by the `algokit-utils-ts` package. Place this code immediately after the `Config.configure` call to ensure it executes before any transactions are submitted for simulation.
+This will output any simulation traces that have been emitted whilst calling your app. Place this code immediately after the `Config.configure` call to ensure it executes before any transactions are submitted for simulation.
 
 ### Save simulation trace responses from the browser
 
@@ -49,7 +49,6 @@ With the event handler configured, follow these steps to save simulation trace r
 
 1. Open your browser's `Console` tab
 2. Submit the transaction
-3. Look for the message: `(Optional) Save content to your local file system to use with AlgoKit AVM Debugger`
-4. Copy the simulation request `JSON` and save it to a file with the extension `.trace.avm.json`
-5. Place the file in the `debug_traces` folder of your AlgoKit contract project
+3. Copy the simulation request `JSON` and save it to a file with the extension `.trace.avm.json`
+4. Place the file in the `debug_traces` folder of your AlgoKit contract project
    - Note: If you're not using an AlgoKit project structure, the extension will present a file picker as long as the trace file is within your VSCode workspace
