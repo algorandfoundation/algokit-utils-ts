@@ -2,6 +2,10 @@ const DISPENSER_BASE_URL = 'https://api.dispenser.algorandfoundation.tools'
 const DEFAULT_DISPENSER_REQUEST_TIMEOUT = 15
 const DISPENSER_ACCESS_TOKEN_KEY = 'ALGOKIT_DISPENSER_ACCESS_TOKEN'
 
+interface ErrorResponse {
+  code?: string
+}
+
 enum DispenserAssetName {
   Algo = 0,
 }
@@ -124,14 +128,15 @@ export class TestNetDispenserApiClient {
       let error_response = null
       try {
         error_response = await response.json()
-      } catch (err) {
+      } catch {
         // suppress exception
       }
 
-      if (error_response && error_response.code) {
-        error_message = error_response.code
+      if (error_response && (error_response as ErrorResponse).code) {
+        error_message = (error_response as ErrorResponse).code!
       } else if (response.status === 400) {
-        error_message = (await response.json()).message
+        const errorResponse = (await response.json()) as { message: string }
+        error_message = errorResponse.message
       }
 
       throw new Error(error_message)
@@ -147,15 +152,15 @@ export class TestNetDispenserApiClient {
    *
    * @returns DispenserFundResponse: An object containing the transaction ID and funded amount.
    */
-  async fund(address: string, amount: number): Promise<DispenserFundResponse> {
+  async fund(address: string, amount: number | bigint): Promise<DispenserFundResponse> {
     const response = await this.processDispenserRequest(
       this.authToken,
       `fund/${dispenserAssets[DispenserAssetName.Algo].assetId}`,
-      { receiver: address, amount: amount, assetID: dispenserAssets[DispenserAssetName.Algo].assetId },
+      { receiver: address, amount: Number(amount), assetID: dispenserAssets[DispenserAssetName.Algo].assetId },
       'POST',
     )
 
-    const content = await response.json()
+    const content = (await response.json()) as { txID: string; amount: number }
     return { txId: content.txID, amount: content.amount }
   }
 
@@ -180,7 +185,7 @@ export class TestNetDispenserApiClient {
       null,
       'GET',
     )
-    const content = await response.json()
+    const content = (await response.json()) as { amount: number }
 
     return { amount: content.amount }
   }

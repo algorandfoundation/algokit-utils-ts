@@ -8,7 +8,7 @@ import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
-/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
+/**  @deprecated use `algorand.account.fromEnvironment()` instead
  *
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
@@ -44,7 +44,7 @@ export async function getAccount(
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
-/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
+/**  @deprecated use `algorand.account.fromEnvironment()` instead
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
  * Note: This function expects to run in a Node.js environment.
@@ -71,7 +71,7 @@ export async function getAccount(
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
-/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
+/**  @deprecated use `algorand.account.fromEnvironment()` instead
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
  * Note: This function expects to run in a Node.js environment.

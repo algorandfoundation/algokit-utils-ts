@@ -11,6 +11,7 @@ The AlgoKit configuration type
 ### Properties
 
 - [debug](types_config.Config.md#debug)
+- [events](types_config.Config.md#events)
 - [logger](types_config.Config.md#logger)
 - [maxSearchDepth](types_config.Config.md#maxsearchdepth)
 - [populateAppCallResources](types_config.Config.md#populateappcallresources)
@@ -29,6 +30,16 @@ Whether or not debug mode is enabled
 #### Defined in
 
 [src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
+
+___
+
+### events
+
+• **events**: [`AsyncEventEmitter`](../classes/types_async_event_emitter.AsyncEventEmitter.md)
+
+#### Defined in
+
+[src/types/config.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L28)
 
 ___
 

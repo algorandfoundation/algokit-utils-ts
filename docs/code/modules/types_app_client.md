@@ -6,6 +6,7 @@
 
 ### Classes
 
+- [AppClient](../classes/types_app_client.AppClient.md)
 - [ApplicationClient](../classes/types_app_client.ApplicationClient.md)
 
 ### Interfaces
@@ -14,9 +15,11 @@
 - [AppClientCallCoreParams](../interfaces/types_app_client.AppClientCallCoreParams.md)
 - [AppClientCallRawArgs](../interfaces/types_app_client.AppClientCallRawArgs.md)
 - [AppClientCompilationParams](../interfaces/types_app_client.AppClientCompilationParams.md)
+- [AppClientCompilationResult](../interfaces/types_app_client.AppClientCompilationResult.md)
 - [AppClientDeployCallInterfaceParams](../interfaces/types_app_client.AppClientDeployCallInterfaceParams.md)
 - [AppClientDeployCoreParams](../interfaces/types_app_client.AppClientDeployCoreParams.md)
 - [AppClientDeployParams](../interfaces/types_app_client.AppClientDeployParams.md)
+- [AppClientParams](../interfaces/types_app_client.AppClientParams.md)
 - [AppSourceMaps](../interfaces/types_app_client.AppSourceMaps.md)
 - [FundAppAccountParams](../interfaces/types_app_client.FundAppAccountParams.md)
 - [ResolveAppById](../interfaces/types_app_client.ResolveAppById.md)
@@ -25,11 +28,13 @@
 
 ### Type Aliases
 
+- [AppClientBareCallParams](types_app_client.md#appclientbarecallparams)
 - [AppClientCallArgs](types_app_client.md#appclientcallargs)
 - [AppClientCallParams](types_app_client.md#appclientcallparams)
 - [AppClientClearStateParams](types_app_client.md#appclientclearstateparams)
 - [AppClientCreateOnComplete](types_app_client.md#appclientcreateoncomplete)
 - [AppClientCreateParams](types_app_client.md#appclientcreateparams)
+- [AppClientMethodCallParams](types_app_client.md#appclientmethodcallparams)
 - [AppClientUpdateParams](types_app_client.md#appclientupdateparams)
 - [AppDetails](types_app_client.md#appdetails)
 - [AppDetailsBase](types_app_client.md#appdetailsbase)
@@ -37,10 +42,26 @@
 - [AppSpecAppDetailsBase](types_app_client.md#appspecappdetailsbase)
 - [AppSpecAppDetailsByCreatorAndName](types_app_client.md#appspecappdetailsbycreatorandname)
 - [AppSpecAppDetailsById](types_app_client.md#appspecappdetailsbyid)
+- [CallOnComplete](types_app_client.md#calloncomplete)
+- [FundAppParams](types_app_client.md#fundappparams)
 - [ResolveAppByCreatorAndName](types_app_client.md#resolveappbycreatorandname)
 - [ResolveAppByCreatorAndNameBase](types_app_client.md#resolveappbycreatorandnamebase)
+- [ResolveAppClientByCreatorAndName](types_app_client.md#resolveappclientbycreatorandname)
+- [ResolveAppClientByNetwork](types_app_client.md#resolveappclientbynetwork)
 
 ## Type Aliases
+
+### AppClientBareCallParams
+
+Ƭ **AppClientBareCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"onComplete"``\> & \{ `sender?`: `string`  }\>
+
+AppClient common parameters for a bare app call
+
+#### Defined in
+
+[src/types/app-client.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L352)
+
+___
 
 ### AppClientCallArgs
 
@@ -50,7 +71,7 @@ The arguments to pass to an Application Client smart contract call
 
 #### Defined in
 
-[src/types/app-client.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L174)
+[src/types/app-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L205)
 
 ___
 
@@ -62,7 +83,7 @@ Parameters to construct a ApplicationClient contract call
 
 #### Defined in
 
-[src/types/app-client.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L187)
+[src/types/app-client.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L218)
 
 ___
 
@@ -74,7 +95,7 @@ Parameters to construct a ApplicationClient clear state contract call
 
 #### Defined in
 
-[src/types/app-client.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L190)
+[src/types/app-client.ts:221](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L221)
 
 ___
 
@@ -92,7 +113,7 @@ On-complete action parameter for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L202)
+[src/types/app-client.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L233)
 
 ___
 
@@ -104,7 +125,19 @@ Parameters for creating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L208)
+[src/types/app-client.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L239)
+
+___
+
+### AppClientMethodCallParams
+
+Ƭ **AppClientMethodCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"method"`` \| ``"args"``\> & \{ `args?`: (`ABIValue` \| [`ABIStruct`](types_app_arc56.md#abistruct) \| [`AppMethodCallTransactionArgument`](types_composer.md#appmethodcalltransactionargument) \| `undefined`)[] ; `method`: `string` ; `sender?`: `string`  }\>
+
+AppClient common parameters for an ABI method call
+
+#### Defined in
+
+[src/types/app-client.ts:360](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L360)
 
 ___
 
@@ -116,7 +149,7 @@ Parameters for updating a contract using ApplicationClient
 
 #### Defined in
 
-[src/types/app-client.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L216)
+[src/types/app-client.ts:247](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L247)
 
 ___
 
@@ -128,7 +161,7 @@ The details of an AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L103)
+[src/types/app-client.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L135)
 
 ___
 
@@ -148,7 +181,7 @@ The details of an AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L91)
+[src/types/app-client.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L123)
 
 ___
 
@@ -160,7 +193,7 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L121)
+[src/types/app-client.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L153)
 
 ___
 
@@ -178,7 +211,7 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app
 
 #### Defined in
 
-[src/types/app-client.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L106)
+[src/types/app-client.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L138)
 
 ___
 
@@ -190,7 +223,7 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by cre
 
 #### Defined in
 
-[src/types/app-client.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L118)
+[src/types/app-client.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L150)
 
 ___
 
@@ -202,7 +235,37 @@ The details of an ARC-0032 app spec specified, AlgoKit Utils deployed app by id
 
 #### Defined in
 
-[src/types/app-client.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L115)
+[src/types/app-client.ts:147](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L147)
+
+___
+
+### CallOnComplete
+
+Ƭ **CallOnComplete**: `Object`
+
+onComplete parameter for a non-update app call
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `onComplete?` | `Exclude`\<`OnApplicationComplete`, `OnApplicationComplete.UpdateApplicationOC`\> | On-complete of the call; defaults to no-op |
+
+#### Defined in
+
+[src/types/app-client.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L346)
+
+___
+
+### FundAppParams
+
+Ƭ **FundAppParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`PaymentParams`](types_composer.md#paymentparams), ``"receiver"`` \| ``"sender"``\> & [`SendParams`](../interfaces/types_transaction.SendParams.md) & \{ `sender?`: `string`  }\>
+
+Parameters for funding an app account
+
+#### Defined in
+
+[src/types/app-client.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L385)
 
 ___
 
@@ -214,7 +277,7 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 #### Defined in
 
-[src/types/app-client.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L72)
+[src/types/app-client.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L104)
 
 ___
 
@@ -234,4 +297,28 @@ Configuration to resolve app by creator and name `getCreatorAppsByName`
 
 #### Defined in
 
-[src/types/app-client.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L59)
+[src/types/app-client.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L91)
+
+___
+
+### ResolveAppClientByCreatorAndName
+
+Ƭ **ResolveAppClientByCreatorAndName**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"appId"``\> & \{ `appLookupCache?`: [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) ; `creatorAddress`: `string` ; `ignoreCache?`: `boolean`  }\>
+
+Resolve an app client instance by looking up an app created by the given creator with the given name
+
+#### Defined in
+
+[src/types/app-client.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L394)
+
+___
+
+### ResolveAppClientByNetwork
+
+Ƭ **ResolveAppClientByNetwork**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"appId"``\>\>
+
+Resolve an app client instance by looking up the current network.
+
+#### Defined in
+
+[src/types/app-client.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L408)

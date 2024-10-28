@@ -1,9 +1,9 @@
 import algosdk from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
-import { simulateAndPersistResponse } from '../debugging/simulate-and-persist-response'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
+import { EventType } from '../types/lifecycle-events'
 import {
   AtomicTransactionComposerToSend,
   SendAtomicTransactionComposerResults,
@@ -23,12 +23,17 @@ import SuggestedParams = algosdk.SuggestedParams
 import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
+import ABIValue = algosdk.ABIValue
+import ABIType = algosdk.ABIType
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
 export const MAX_APP_CALL_ACCOUNT_REFERENCES = 4
 
-/** Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
+/**
+ * @deprecated Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `TransactionComposer.arc2Note`.
+ *
+ * Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
  * @param note The transaction note
  * @returns the transaction note ready for inclusion in a transaction
@@ -93,6 +98,9 @@ export function encodeLease(lease?: string | Uint8Array): Uint8Array | undefined
 }
 
 /**
+ * @deprecated Use `algorand.client` to interact with accounts, and use `.addr` to get the address
+ * and/or move from using `SendTransactionFrom` to `TransactionSignerAccount` and use `.addr` instead.
+ *
  * Returns the public address of the given transaction sender.
  * @param sender A transaction sender
  * @returns The public address
@@ -102,6 +110,9 @@ export const getSenderAddress = function (sender: string | SendTransactionFrom) 
 }
 
 /**
+ * @deprecated Use `AlgorandClient` / `TransactionComposer` to construct transactions instead or
+ * construct an `algosdk.TransactionWithSigner` manually instead.
+ *
  * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
  * AtomicTransactionComposer's addTransaction method.
  * @param transaction One of: A TransactionWithSigner object (returned as is), a TransactionToSign object (signer is obtained from the
@@ -144,6 +155,9 @@ const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
 }
 
 /**
+ * @deprecated Use `TransactionSignerAccount` instead of `SendTransactionFrom` or use
+ * `algosdk.makeBasicAccountTransactionSigner` / `algosdk.makeLogicSigAccountTransactionSigner`.
+ *
  * Returns a `TransactionSigner` for the given transaction sender.
  * This function has memoization, so will return the same transaction signer for a given sender.
  * @param sender A transaction sender
@@ -158,6 +172,10 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
 })
 
 /**
+ * @deprecated Use `AlgorandClient` / `TransactionComposer` to sign transactions
+ * or use the relevant underlying `account.signTxn` / `algosdk.signLogicSigTransactionObject`
+ * / `multiSigAccount.sign` / `TransactionSigner` methods directly.
+ *
  * Signs a single transaction by the given signer.
  * @param transaction The transaction to sign
  * @param signer The signer to sign
@@ -173,7 +191,10 @@ export const signTransaction = async (transaction: Transaction, signer: SendTran
         : (await signer.signer([transaction], [0]))[0]
 }
 
-/** Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
+/**
+ * @deprecated Use `AlgorandClient` / `TransactionComposer` to send transactions.
+ *
+ * Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
  *
  * @param send The details for the transaction to prepare/send, including:
  *   * `transaction`: The unsigned transaction
@@ -552,14 +573,12 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 
 /**
  * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
- * @param atcSend The parameters controlling the send, including:
- *  * `atc` The `AtomicTransactionComposer`
- *  * `sendParams` The parameters to control the send behaviour
+ * @param atcSend The parameters controlling the send, including `atc` The `AtomicTransactionComposer` and params to control send behaviour
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: Algodv2) {
-  const { atc: givenAtc, sendParams } = atcSend
+  const { atc: givenAtc, sendParams, ...executeParams } = atcSend
 
   let atc: AtomicTransactionComposer
 
@@ -573,7 +592,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
   try {
     // If populateAppCallResources is true OR if populateAppCallResources is undefined and there are app calls, then populate resources
     // NOTE: Temporary false by default until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
-    const populateResources = sendParams?.populateAppCallResources ?? Config.populateAppCallResources
+    const populateResources =
+      executeParams?.populateAppCallResources ?? sendParams?.populateAppCallResources ?? Config.populateAppCallResources
 
     if (populateResources) {
       atc = await populateAppCallResources(givenAtc, algod)
@@ -587,33 +607,37 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     let groupId: string | undefined = undefined
     if (transactionsToSend.length > 1) {
       groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
-      Config.getLogger(sendParams?.suppressLog).verbose(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
-        transactionsToSend,
-      })
+      Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
+        `Sending group of ${transactionsToSend.length} transactions (${groupId})`,
+        {
+          transactionsToSend,
+        },
+      )
 
-      Config.getLogger(sendParams?.suppressLog).debug(
+      Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).debug(
         `Transaction IDs (${groupId})`,
         transactionsToSend.map((t) => t.txID()),
       )
     }
 
-    if (Config.debug && Config.projectRoot && Config.traceAll) {
+    if (Config.debug && Config.traceAll) {
       // Dump the traces to a file for use with AlgoKit AVM debugger
-      await simulateAndPersistResponse({
-        atc,
-        projectRoot: Config.projectRoot,
-        algod,
-        bufferSizeMb: Config.traceBufferSizeMb,
+      const simulateResponse = await performAtomicTransactionComposerSimulate(atc, algod)
+      await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+        simulateResponse,
       })
     }
-    const result = await atc.execute(algod, sendParams?.maxRoundsToWaitForConfirmation ?? 5)
+    const result = await atc.execute(
+      algod,
+      executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5,
+    )
 
     if (transactionsToSend.length > 1) {
-      Config.getLogger(sendParams?.suppressLog).verbose(
+      Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
         `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,
       )
     } else {
-      Config.getLogger(sendParams?.suppressLog).verbose(
+      Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
         `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${algosdk.encodeAddress(
           transactionsToSend[0].from.publicKey,
         )}`,
@@ -634,44 +658,38 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       confirmations,
       txIds: transactionsToSend.map((t) => t.txID()),
       transactions: transactionsToSend,
-      returns: result.methodResults.map(
-        (r) =>
-          ({
-            decodeError: r.decodeError,
-            returnValue: r.returnValue,
-            rawReturnValue: r.rawReturnValue,
-          }) as ABIReturn,
-      ),
+      returns: result.methodResults.map(getABIReturnValue),
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-    // Remove headers as it doesn't have anything useful.
-    delete e.response?.headers
+    // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const err = new Error(typeof e === 'object' ? e?.message : 'Received error executing Atomic Transaction Composer') as any as any
+    err.cause = e
+    if (typeof e === 'object') {
+      // Remove headers as it doesn't have anything useful.
+      delete e.response?.headers
+      err.response = e.response
+      err.name = e.name
+    }
 
     if (Config.debug && typeof e === 'object') {
-      e.traces = []
+      err.traces = []
       Config.logger.error(
         'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
-        e,
+        err,
       )
-      let simulate = undefined
-      if (Config.debug && Config.projectRoot && !Config.traceAll) {
-        // Dump the traces to a file for use with AlgoKit AVM debugger
-        // Checks for false on traceAll because it should have been already
-        // executed above
-        simulate = await simulateAndPersistResponse({
-          atc,
-          projectRoot: Config.projectRoot,
-          algod,
-          bufferSizeMb: Config.traceBufferSizeMb,
+      const simulate = await performAtomicTransactionComposerSimulate(atc, algod)
+      if (Config.debug && !Config.traceAll) {
+        // Emit the event only if traceAll: false, as it should have already been emitted above
+        await Config.events.emitAsync(EventType.TxnGroupSimulated, {
+          simulateResponse: simulate,
         })
-      } else {
-        simulate = await performAtomicTransactionComposerSimulate(atc, algod)
       }
 
       if (simulate && simulate.txnGroups[0].failedAt) {
         for (const txn of simulate.txnGroups[0].txnResults) {
-          e.traces.push({
+          err.traces.push({
             trace: txn.execTrace?.get_obj_for_encoding(),
             appBudget: txn.appBudgetConsumed,
             logicSigBudget: txn.logicSigBudgetConsumed,
@@ -681,13 +699,54 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         }
       }
     } else {
-      Config.logger.error('Received error executing Atomic Transaction Composer, for more information enable the debug flag', e)
+      Config.logger.error('Received error executing Atomic Transaction Composer, for more information enable the debug flag', err)
     }
-    throw e
+    throw err
+  }
+}
+
+const convertABIDecodedBigIntToNumber = (value: ABIValue, type: ABIType): ABIValue => {
+  if (typeof value === 'bigint') {
+    if (type instanceof algosdk.ABIUintType) {
+      return type.bitSize < 53 ? Number(value) : value
+    } else {
+      return value
+    }
+  } else if (Array.isArray(value) && (type instanceof algosdk.ABIArrayStaticType || type instanceof algosdk.ABIArrayDynamicType)) {
+    return value.map((v) => convertABIDecodedBigIntToNumber(v, type.childType))
+  } else if (Array.isArray(value) && type instanceof algosdk.ABITupleType) {
+    return value.map((v, i) => convertABIDecodedBigIntToNumber(v, type.childTypes[i]))
+  } else {
+    return value
   }
 }
 
 /**
+ * Takes an algosdk `ABIResult` and converts it to an `ABIReturn`.
+ * Converts `bigint`'s for Uint's < 64 to `number` for easier use.
+ * @param result The `ABIReturn`
+ */
+export function getABIReturnValue(result: algosdk.ABIResult): ABIReturn {
+  if (result.decodeError) {
+    return {
+      decodeError: result.decodeError,
+    }
+  }
+
+  return {
+    method: result.method,
+    rawReturnValue: result.rawReturnValue,
+    decodeError: undefined,
+    returnValue:
+      result.returnValue !== undefined && result.method.returns.type !== 'void'
+        ? convertABIDecodedBigIntToNumber(result.returnValue, result.method.returns.type)
+        : result.returnValue!,
+  }
+}
+
+/**
+ * @deprecated Use `performAtomicTransactionComposerSimulate`, dry-run is a deprecated Algorand feature.
+ *
  * Performs a dry run of the transactions loaded into the given AtomicTransactionComposer`
  * @param atc The AtomicTransactionComposer` with transaction(s) loaded
  * @param algod An Algod client
@@ -703,6 +762,8 @@ export async function performAtomicTransactionComposerDryrun(atc: AtomicTransact
 }
 
 /**
+ * @deprecated Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
+ *
  * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
  *
  * @param groupSend The group details to send, with:
@@ -807,6 +868,8 @@ export const waitForConfirmation = async function (
 }
 
 /**
+ * @deprecated Use `TransactionComposer` and the `maxFee` field in the transaction params instead.
+ *
  * Limit the acceptable fee to a defined amount of µAlgo.
  * This also sets the transaction to be flatFee to ensure the transaction only succeeds at
  * the estimated rate.
@@ -832,6 +895,8 @@ export function capTransactionFee(transaction: algosdk.Transaction | SuggestedPa
 }
 
 /**
+ * @deprecated Use `TransactionComposer` and the `maxFee` and `staticFee` fields in the transaction params instead.
+ *
  * Allows for control of fees on a `Transaction` or `SuggestedParams` object
  * @param transaction The transaction or suggested params
  * @param feeControl The fee control parameters
@@ -842,7 +907,7 @@ export function controlFees<T extends SuggestedParams | Transaction>(
 ) {
   const { fee, maxFee } = feeControl
   if (fee) {
-    transaction.fee = fee.microAlgo
+    transaction.fee = Number(fee.microAlgo)
     transaction.flatFee = true
   }
 
@@ -854,6 +919,8 @@ export function controlFees<T extends SuggestedParams | Transaction>(
 }
 
 /**
+ * @deprecated Use `suggestedParams ? { ...suggestedParams } : await algod.getTransactionParams().do()` instead
+ *
  * Returns suggested transaction parameters from algod unless some are already provided.
  * @param params Optionally provide parameters to use
  * @param algod Algod algod
@@ -864,6 +931,8 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
 }
 
 /**
+ * @deprecated Use `atc.clone().buildGroup()` instead.
+ *
  * Returns the array of transactions currently present in the given `AtomicTransactionComposer`
  * @param atc The atomic transaction composer
  * @returns The array of transactions with signers

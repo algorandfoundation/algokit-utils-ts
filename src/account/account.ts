@@ -14,7 +14,7 @@ import TransactionSigner = algosdk.TransactionSigner
 import AccountInformationModel = algosdk.modelsv2.Account
 
 /**
- * @deprecated Use `algorandClient.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
+ * @deprecated Use `algorand.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
  *
  * Returns an account wrapper that supports partial or full multisig signing.
  * @param multisigParams The parameters that define the multisig account
@@ -26,7 +26,7 @@ export function multisigAccount(multisigParams: MultisigMetadata, signingAccount
 }
 
 /**
- * @deprecated Use `algorandClient.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
+ * @deprecated Use `algorand.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
  *
  * Returns an account wrapper that supports a rekeyed account.
  * @param signer The account, with private key loaded, that is signing
@@ -38,7 +38,7 @@ export function rekeyedAccount(signer: Account, sender: string) {
 }
 
 /**
- * @deprecated Use `algorandClient.account.getSigner(sender)` (after previously registering the signer with `setSigner`) or `{ addr: sender, signer }` instead.
+ * @deprecated Use `algorand.account.getSigner(sender)` (after previously registering the signer with `setSigner`) or `{ addr: sender, signer }` instead.
  *
  * Returns an account wrapper that supports a transaction signer with associated sender address.
  * @param signer The transaction signer
@@ -50,7 +50,7 @@ export function transactionSignerAccount(signer: TransactionSigner, sender: stri
 }
 
 /**
- * @deprecated Use `algorandClient.account.random()` or `algosdk.generateAccount()` instead.
+ * @deprecated Use `algorand.account.random()` or `algosdk.generateAccount()` instead.
  *
  * Returns a new, random Algorand account with secret key loaded.
  *
@@ -63,7 +63,7 @@ export function randomAccount(): Account {
 }
 
 /**
- * @deprecated Use `algorandClient.account.fromEnvironment(name, fundWith)` or `new AccountManager(clientManager).fromEnvironment()` instead.
+ * @deprecated Use `algorand.account.fromEnvironment(name, fundWith)` or `new AccountManager(clientManager).fromEnvironment()` instead.
  *
  * Returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
  *
@@ -129,13 +129,13 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
   return algosdk.encodeAddress(Buffer.from(addressEncodedInB64, 'base64'))
 }
 
-type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
+export type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
 type ToNumberIfExtends<K, E> = K extends E ? number : K
 /** @deprecated Account information at a given round. */
 export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'get_obj_for_encoding'>
 
 /**
- * @deprecated Use `algorandClient.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
+ * @deprecated Use `algorand.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
  *
  * Returns the given sender account's current status, balance and spendable amounts.
  *
@@ -174,7 +174,7 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
 }
 
 /**
- * @deprecated Use `algorandClient.asset.getAccountInformation(sender, assetId)` or `new AssetManager(...).getAccountInformation(sender, assetId)` instead.
+ * @deprecated Use `algorand.asset.getAccountInformation(sender, assetId)` or `new AssetManager(...).getAccountInformation(sender, assetId)` instead.
  *
  * Returns the given sender account's asset holding for a given asset.
  *

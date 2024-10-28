@@ -1,7 +1,6 @@
 import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
-import { transferAsset } from '..'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'
@@ -38,14 +37,14 @@ describe('Transfer capability', () => {
     expect(result.transaction.type).toBe(TransactionType.pay)
     expect(result.confirmation.txn.txn.type).toBe('pay')
 
-    expect(result.transaction.amount).toBe(5_000_000)
+    expect(result.transaction.amount).toBe(5_000_000n)
     expect(result.confirmation.txn.txn.amt).toBe(5_000_000)
 
     expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(algosdk.encodeAddress(result.confirmation.txn.txn.snd)).toBe(testAccount.addr)
 
-    expect(accountInfo.balance.microAlgo).toBe(5_000_000)
+    expect(accountInfo.balance.microAlgo).toBe(5_000_000n)
   })
 
   test('Transfer Algo respects string lease', async () => {
@@ -173,27 +172,6 @@ describe('Transfer capability', () => {
     }
   }, 10e6)
 
-  // @deprecated test - remove when removing transferAsset
-  test('Transfer ASA, without sending', async () => {
-    const { algod, testAccount, generateAccount } = localnet.context
-    const secondAccount = await generateAccount({ initialFunds: (1).algo() })
-
-    const response = await transferAsset(
-      {
-        from: testAccount,
-        to: secondAccount.addr,
-        assetId: 1,
-        amount: 5,
-        note: `Transfer asset with wrong id`,
-        skipSending: true,
-      },
-      algod,
-    )
-
-    expect(response.transaction).toBeDefined()
-    expect(response.confirmation).toBeUndefined()
-  }, 10e6)
-
   test('Transfer ASA, asset is transfered to another account', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const dummyAssetId = await generateTestAsset(algorand, testAccount.addr, 100)
@@ -265,8 +243,8 @@ describe('Transfer capability', () => {
 
     invariant(result)
     expect(result.transactionId).toBe(result.transaction.txID())
-    expect(result.amountFunded.microAlgo).toBe(100_001)
-    expect(accountInfo.balance.microAlgo).toBe(100_001)
+    expect(result.amountFunded.microAlgo).toBe(100_001n)
+    expect(accountInfo.balance.microAlgo).toBe(100_001n)
   })
 
   test('ensureFunded respects minimum funding increment', async () => {
@@ -280,7 +258,7 @@ describe('Transfer capability', () => {
     invariant(result)
     expect(result.amountFunded.algo).toBe(1)
     const accountInfo = await algorand.account.getInformation(secondAccount.addr)
-    expect(accountInfo.balance.microAlgo).toBe(1_100_000)
+    expect(accountInfo.balance.microAlgo).toBe(1_100_000n)
   })
 
   test('ensureFunded uses dispenser account by default', async () => {

@@ -1,5 +1,5 @@
 {
-  "extends": "@makerx/ts-config",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "module": "ESNext",
     "target": "ES2020",

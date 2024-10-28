@@ -6,7 +6,7 @@ To see some usage examples check out the [automated tests](../../src/types/algor
 
 ## `payment`
 
-The key function to facilitate Algo transfers is `algorand.send.payment(params)` (immediately send a single payment transaction), `algorand.transaction.payment(params)` (construct a payment transaction), or `algorand.newGroup().addPayment(params)` (add payment to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+The key function to facilitate Algo transfers is `algorand.send.payment(params)` (immediately send a single payment transaction), `algorand.createTransaction.payment(params)` (construct a payment transaction), or `algorand.newGroup().addPayment(params)` (add payment to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
 
 The base type for specifying a payment transaction is [`PaymentParams`](../code/modules/types_composer.md#paymentparams), which has the following parameters in addition to the [common transaction parameters](./algorand-client.md#transaction-parameters):
 
@@ -81,10 +81,10 @@ The general structure of these calls is similar, they all take:
 // From account
 
 // Basic example
-await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', algokit.algo(1))
+await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', (1).algo())
 // With configuration
-await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', algokit.algo(1), {
-  minFundingIncrement: algokit.algo(2),
+await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', (1).algo(), {
+  minFundingIncrement: (2).algo(),
   fee: (1000).microAlgo(),
   suppressLog: true,
 })
@@ -92,10 +92,10 @@ await algorand.account.ensureFunded('ACCOUNTADDRESS', 'DISPENSERADDRESS', algoki
 // From environment
 
 // Basic example
-await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.algo(1))
+await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', (1).algo())
 // With configuration
-await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.algo(1), {
-  minFundingIncrement: algokit.algo(2),
+await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', (1).algo(), {
+  minFundingIncrement: (2).algo(),
   fee: (1000).microAlgo(),
   suppressLog: true,
 })
@@ -103,18 +103,11 @@ await algorand.account.ensureFundedFromEnvironment('ACCOUNTADDRESS', algokit.alg
 // TestNet Dispenser API
 
 // Basic example
-await algorand.account.ensureFundedUsingDispenserAPI(
-  'ACCOUNTADDRESS',
-  algorand.client.getTestNetDispenserFromEnvironment(),
-  algokit.algo(1),
-)
+await algorand.account.ensureFundedUsingDispenserAPI('ACCOUNTADDRESS', algorand.client.getTestNetDispenserFromEnvironment(), (1).algo())
 // With configuration
-await algorand.account.ensureFundedUsingDispenserAPI(
-  'ACCOUNTADDRESS',
-  algorand.client.getTestNetDispenserFromEnvironment(),
-  algokit.algo(1),
-  { minFundingIncrement: algokit.algo(2) },
-)
+await algorand.account.ensureFundedUsingDispenserAPI('ACCOUNTADDRESS', algorand.client.getTestNetDispenserFromEnvironment(), (1).algo(), {
+  minFundingIncrement: (2).algo(),
+})
 ```
 
 All 3 variants return an [`EnsureFundedReturnType`](../code/modules/types_account_manager.md#) (and the first two also return a [single transaction result](./algorand-client.md#sending-a-single-transaction)) if a funding transaction was needed, or `undefined` if no transaction was required:

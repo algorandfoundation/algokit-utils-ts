@@ -1,11 +1,14 @@
 import algosdk from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
+import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
+import { AppDeployer } from './app-deployer'
+import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import AlgoKitComposer from './composer'
+import TransactionComposer from './composer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -13,9 +16,11 @@ import LogicSigAccount = algosdk.LogicSigAccount
 /**
  * A client that brokers easy access to Algorand functionality.
  */
-export class AlgorandClient {
+export class AlgorandClient implements AlgorandClientInterface {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
+  private _appManager: AppManager
+  private _appDeployer: AppDeployer
   private _assetManager: AssetManager
   private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
@@ -27,11 +32,13 @@ export class AlgorandClient {
   private _defaultValidityWindow: number | undefined = undefined
 
   private constructor(config: AlgoConfig | AlgoSdkClients) {
-    this._clientManager = new ClientManager(config)
+    this._clientManager = new ClientManager(config, this)
     this._accountManager = new AccountManager(this._clientManager)
+    this._appManager = new AppManager(this._clientManager.algod)
     this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
-    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager)
+    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager, this._appManager)
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
+    this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
   /**
@@ -55,7 +62,7 @@ export class AlgorandClient {
   }
 
   /**
-   * Tracks the given account for later signing.
+   * Tracks the given account (object that encapsulates an address and a signer) for later signing.
    * @param account The account to register, which can be a `TransactionSignerAccount` or
    *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
    * @example
@@ -77,7 +84,7 @@ export class AlgorandClient {
   }
 
   /**
-   * Tracks the given account for later signing.
+   * Tracks the given signer against the given sender for later signing.
    * @param sender The sender address to use this signer for
    * @param signer The signer to sign transactions with for the given sender
    * @returns The `AlgorandClient` so method calls can be chained
@@ -88,12 +95,12 @@ export class AlgorandClient {
   }
 
   /**
-   * Sets a cache value to use for suggested params.
+   * Sets a cache value to use for suggested transaction params.
    * @param suggestedParams The suggested params to use
    * @param until A date until which to cache, or if not specified then the timeout is used
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSuggestedParams(suggestedParams: algosdk.SuggestedParams, until?: Date) {
+  public setSuggestedParamsCache(suggestedParams: algosdk.SuggestedParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
     this._cachedSuggestedParamsExpiry = until ?? new Date(+new Date() + this._cachedSuggestedParamsTimeout)
     return this
@@ -104,7 +111,7 @@ export class AlgorandClient {
    * @param timeout The timeout in milliseconds
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSuggestedParamsTimeout(timeout: number) {
+  public setSuggestedParamsCacheTimeout(timeout: number) {
     this._cachedSuggestedParamsTimeout = timeout
     return this
   }
@@ -140,27 +147,38 @@ export class AlgorandClient {
     return this._assetManager
   }
 
-  /** Start a new `AlgoKitComposer` transaction group */
+  /** Methods for interacting with apps. */
+  public get app() {
+    return this._appManager
+  }
+
+  /** Methods for deploying apps and managing app deployment metadata. */
+  public get appDeployer() {
+    return this._appDeployer
+  }
+
+  /** Start a new `TransactionComposer` transaction group */
   public newGroup() {
-    return new AlgoKitComposer({
+    return new TransactionComposer({
       algod: this.client.algod,
       getSigner: (addr: string) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
+      appManager: this._appManager,
     })
   }
 
   /**
-   * Methods for sending a single transaction.
+   * Methods for sending a transaction.
    */
   public get send() {
     return this._transactionSender
   }
 
   /**
-   * Methods for building transactions
+   * Methods for creating a transaction.
    */
-  public get transactions() {
+  public get createTransaction() {
     return this._transactionCreator
   }
 

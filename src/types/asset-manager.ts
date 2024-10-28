@@ -2,7 +2,8 @@ import algosdk from 'algosdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation, TransactionSignerAccount } from './account'
-import AlgoKitComposer, { CommonTransactionParams, ExecuteParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import TransactionComposer, { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import { SendParams } from './transaction'
 import AssetModel = algosdk.modelsv2.Asset
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
@@ -137,18 +138,18 @@ export interface AssetInformation {
 /** Allows management of asset information. */
 export class AssetManager {
   private _algod: algosdk.Algodv2
-  private _newGroup: () => AlgoKitComposer
+  private _newGroup: () => TransactionComposer
 
   /**
    * Create a new asset manager.
    * @param algod An algod client
-   * @param newGroup A function that creates a new `AlgoKitComposer` transaction group
+   * @param newGroup A function that creates a new `TransactionComposer` transaction group
    * @example Create a new asset manager
    * ```typescript
-   * const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, () => signer, () => suggestedParams}))
+   * const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
    * ```
    */
-  constructor(algod: algosdk.Algodv2, newGroup: () => AlgoKitComposer) {
+  constructor(algod: algosdk.Algodv2, newGroup: () => TransactionComposer) {
     this._algod = algod
     this._newGroup = newGroup
   }
@@ -233,7 +234,7 @@ export class AssetManager {
   async bulkOptIn(
     account: string | TransactionSignerAccount,
     assetIds: bigint[],
-    options?: Omit<CommonTransactionParams, 'sender'> & ExecuteParams,
+    options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
 
@@ -248,7 +249,7 @@ export class AssetManager {
         })
       }
 
-      const result = await composer.execute(options)
+      const result = await composer.send(options)
 
       Config.getLogger(options?.suppressLog).info(
         `Successfully opted in ${account} for assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +
@@ -284,7 +285,7 @@ export class AssetManager {
     account: string | TransactionSignerAccount,
     assetIds: bigint[],
     options?: Omit<CommonTransactionParams, 'sender'> &
-      ExecuteParams & {
+      SendParams & {
         /** Whether or not to check if the account has a zero balance for each asset first or not.
          *
          * Defaults to `true`.
@@ -298,7 +299,6 @@ export class AssetManager {
   ): Promise<BulkAssetOptInOutResult[]> {
     const results: BulkAssetOptInOutResult[] = []
 
-    const params = await this._algod.getTransactionParams().do()
     const sender = typeof account === 'string' ? account : account.addr
 
     for (const assetGroup of chunkArray(assetIds, MAX_TRANSACTION_GROUP_SIZE)) {
@@ -313,7 +313,7 @@ export class AssetManager {
             if (accountAssetInfo.balance !== 0n) {
               nonZeroBalanceAssetIds.push(BigInt(assetId))
             }
-          } catch (e) {
+          } catch {
             notOptedInAssetIds.push(BigInt(assetId))
           }
         }
@@ -338,7 +338,7 @@ export class AssetManager {
         })
       }
 
-      const result = await composer.execute(options)
+      const result = await composer.send(options)
 
       Config.getLogger(options?.suppressLog).info(
         `Successfully opted ${account} out of assets ${assetGroup.join(', ')} with transaction IDs ${result.txIds.join(', ')}` +

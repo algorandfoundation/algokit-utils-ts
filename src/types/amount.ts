@@ -2,7 +2,7 @@ import algosdk from 'algosdk'
 
 /** Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbers */
 export class AlgoAmount {
-  private amountInMicroAlgo
+  private amountInMicroAlgo: bigint
 
   /** Return the amount as a number in µAlgo */
   get microAlgos() {
@@ -16,23 +16,25 @@ export class AlgoAmount {
 
   /** Return the amount as a number in Algo */
   get algos() {
-    return algosdk.microalgosToAlgos(this.amountInMicroAlgo)
+    return algosdk.microalgosToAlgos(Number(this.amountInMicroAlgo))
   }
 
   /** Return the amount as a number in Algo */
   get algo() {
-    return algosdk.microalgosToAlgos(this.amountInMicroAlgo)
+    return algosdk.microalgosToAlgos(Number(this.amountInMicroAlgo))
   }
 
-  constructor(amount: { algos: number } | { algo: number } | { microAlgos: number } | { microAlgo: number }) {
+  constructor(
+    amount: { algos: number | bigint } | { algo: number | bigint } | { microAlgos: number | bigint } | { microAlgo: number | bigint },
+  ) {
     this.amountInMicroAlgo =
       'microAlgos' in amount
-        ? amount.microAlgos
+        ? BigInt(amount.microAlgos)
         : 'microAlgo' in amount
-          ? amount.microAlgo
+          ? BigInt(amount.microAlgo)
           : 'algos' in amount
-            ? algosdk.algosToMicroalgos(amount.algos)
-            : algosdk.algosToMicroalgos(amount.algo)
+            ? BigInt(algosdk.algosToMicroalgos(Number(amount.algos)))
+            : BigInt(algosdk.algosToMicroalgos(Number(amount.algo)))
   }
 
   toString(): string {
@@ -44,26 +46,26 @@ export class AlgoAmount {
    * the algos or microAlgos properties
    */
   valueOf(): number {
-    return this.microAlgo
+    return Number(this.microAlgo)
   }
 
   /** Create a `AlgoAmount` object representing the given number of Algo */
-  static Algos(amount: number) {
+  static Algos(amount: number | bigint) {
     return new AlgoAmount({ algos: amount })
   }
 
   /** Create a `AlgoAmount` object representing the given number of Algo */
-  static Algo(amount: number) {
+  static Algo(amount: number | bigint) {
     return new AlgoAmount({ algos: amount })
   }
 
   /** Create a `AlgoAmount` object representing the given number of µAlgo */
-  static MicroAlgos(amount: number) {
+  static MicroAlgos(amount: number | bigint) {
     return new AlgoAmount({ microAlgos: amount })
   }
 
   /** Create a `AlgoAmount` object representing the given number of µAlgo */
-  static MicroAlgo(amount: number) {
+  static MicroAlgo(amount: number | bigint) {
     return new AlgoAmount({ microAlgos: amount })
   }
 }

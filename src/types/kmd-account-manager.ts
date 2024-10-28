@@ -3,7 +3,7 @@ import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import AlgoKitComposer from './composer'
+import TransactionComposer from './composer'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */
@@ -19,7 +19,7 @@ export class KmdAccountManager {
     this._clientManager = clientManager
     try {
       this._kmd = clientManager.kmd
-    } catch (e) {
+    } catch {
       this._kmd = undefined
     }
   }
@@ -161,7 +161,7 @@ export class KmdAccountManager {
 
     // Fund the account from the dispenser
     const dispenser = await this.getLocalNetDispenserAccount()
-    await new AlgoKitComposer({
+    await new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: () => dispenser.signer,
       getSuggestedParams: () => this._clientManager.algod.getTransactionParams().do(),
@@ -171,7 +171,7 @@ export class KmdAccountManager {
         receiver: account.addr,
         sender: dispenser.addr,
       })
-      .execute()
+      .send()
 
     return account
   }

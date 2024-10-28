@@ -1,36 +1,56 @@
 import algosdk from 'algosdk'
+import { Buffer } from 'buffer'
 import { Config } from '../config'
+import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
+import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
-import AlgoKitComposer, { AssetCreateParams, AssetOptOutParams, ExecuteParams } from './composer'
-import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults } from './transaction'
-
+import TransactionComposer, {
+  AppCallMethodCall,
+  AppCallParams,
+  AppCreateMethodCall,
+  AppCreateParams,
+  AppDeleteMethodCall,
+  AppDeleteParams,
+  AppUpdateMethodCall,
+  AppUpdateParams,
+  AssetCreateParams,
+  AssetOptOutParams,
+} from './composer'
+import { SendParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
 
-/** Result from sending a single transaction. */
-export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
+const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
+  return `${method.name}(${(args ?? []).map((a) => (typeof a === 'object' ? JSON.stringify(a, (_, v) => (typeof v === 'bigint' ? Number(v) : v)) : a))})`
+}
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionSender {
-  private _newGroup: () => AlgoKitComposer
+  private _newGroup: () => TransactionComposer
   private _assetManager: AssetManager
+  private _appManager: AppManager
 
   /**
    * Creates a new `AlgorandClientSender`
-   * @param newGroup A lambda that starts a new `AlgoKitComposer` transaction group
+   * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @param assetManager An `AssetManager` instance
    */
-  constructor(newGroup: () => AlgoKitComposer, assetManager: AssetManager) {
+  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
     this._newGroup = newGroup
     this._assetManager = assetManager
+    this._appManager = appManager
+  }
+
+  newGroup() {
+    return this._newGroup()
   }
 
   private _send<T>(
-    c: (c: AlgoKitComposer) => (params: T) => AlgoKitComposer,
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
     log?: {
       preLog?: (params: T, transaction: Transaction) => string
       postLog?: (params: T, result: SendSingleTransactionResult) => string
     },
-  ): (params: T & ExecuteParams) => Promise<SendSingleTransactionResult> {
+  ): (params: T & SendParams) => Promise<SendSingleTransactionResult> {
     return async (params) => {
       const composer = this._newGroup()
 
@@ -42,12 +62,12 @@ export class AlgorandClientTransactionSender {
         Config.getLogger(params?.suppressLog).debug(log.preLog(params, transaction))
       }
 
-      const rawResult = await composer.execute(params)
+      const rawResult = await composer.send(params)
       const result = {
         // Last item covers when a group is created by an app call with ABI transaction parameters
-        transaction: rawResult.transactions[rawResult.transactions.length - 1],
-        confirmation: rawResult.confirmations![rawResult.confirmations!.length - 1],
-        txId: rawResult.txIds[0],
+        transaction: rawResult.transactions.at(-1)!,
+        confirmation: rawResult.confirmations.at(-1)!,
+        txId: rawResult.txIds.at(-1)!,
         ...rawResult,
       }
 
@@ -59,12 +79,73 @@ export class AlgorandClientTransactionSender {
     }
   }
 
+  private _sendAppCall<
+    T extends
+      | AppCreateParams
+      | AppUpdateParams
+      | AppCallParams
+      | AppDeleteParams
+      | AppCreateMethodCall
+      | AppUpdateMethodCall
+      | AppCallMethodCall
+      | AppDeleteMethodCall,
+  >(
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
+    log?: {
+      preLog?: (params: T, transaction: Transaction) => string
+      postLog?: (params: T, result: SendSingleTransactionResult) => string
+    },
+  ): (params: T & SendParams) => Promise<SendAppTransactionResult> {
+    return async (params) => {
+      const result = await this._send(c, log)(params)
+
+      return { ...result, return: AppManager.getABIReturn(result.confirmation, 'method' in params ? params.method : undefined) }
+    }
+  }
+
+  private _sendAppUpdateCall<T extends AppCreateParams | AppUpdateParams | AppCreateMethodCall | AppUpdateMethodCall>(
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
+    log?: {
+      preLog?: (params: T, transaction: Transaction) => string
+      postLog?: (params: T, result: SendSingleTransactionResult) => string
+    },
+  ): (params: T & SendParams) => Promise<SendAppUpdateTransactionResult> {
+    return async (params) => {
+      const result = await this._sendAppCall(c, log)(params)
+
+      const compiledApproval =
+        typeof params.approvalProgram === 'string' ? this._appManager.getCompilationResult(params.approvalProgram) : undefined
+      const compiledClear =
+        typeof params.clearStateProgram === 'string' ? this._appManager.getCompilationResult(params.clearStateProgram) : undefined
+
+      return { ...result, compiledApproval, compiledClear }
+    }
+  }
+
+  private _sendAppCreateCall<T extends AppCreateParams | AppCreateMethodCall>(
+    c: (c: TransactionComposer) => (params: T) => TransactionComposer,
+    log?: {
+      preLog?: (params: T, transaction: Transaction) => string
+      postLog?: (params: T, result: SendSingleTransactionResult) => string
+    },
+  ): (params: T & SendParams) => Promise<SendAppCreateTransactionResult> {
+    return async (params) => {
+      const result = await this._sendAppUpdateCall(c, log)(params)
+
+      return {
+        ...result,
+        appId: BigInt(result.confirmation.applicationIndex!),
+        appAddress: algosdk.getApplicationAddress(result.confirmation.applicationIndex!),
+      }
+    }
+  }
+
   /**
    * Send a payment transaction to transfer Algo between accounts.
    * @param params The parameters for the payment transaction
    * @example Basic example
    * ```typescript
-   * const result = await algorandClient.send.payment({
+   * const result = await algorand.send.payment({
    *  sender: 'SENDERADDRESS',
    *  receiver: 'RECEIVERADDRESS',
    *  amount: (4).algo(),
@@ -72,7 +153,7 @@ export class AlgorandClientTransactionSender {
    * ```
    * @example Advanced example
    * ```typescript
-   * const result = await algorandClient.send.payment({
+   * const result = await algorand.send.payment({
    *   amount: (4).algo(),
    *   receiver: 'RECEIVERADDRESS',
    *   sender: 'SENDERADDRESS',
@@ -151,7 +232,7 @@ export class AlgorandClientTransactionSender {
    * ```
    * @returns The result of the transaction and the transaction that was sent
    */
-  assetCreate = async (params: AssetCreateParams & ExecuteParams) => {
+  assetCreate = async (params: AssetCreateParams & SendParams) => {
     const result = await this._send((c) => c.addAssetCreate, {
       postLog: (params, result) =>
         `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
@@ -372,7 +453,7 @@ export class AlgorandClientTransactionSender {
    *
    * @param params The parameters for the asset opt-out transaction
    *
-   * @example Basic example (without creator)
+   * @example Basic example (without creator, will be retrieved from algod)
    * ```typescript
    * await algorand.send.assetOptOut({sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
    * ```
@@ -418,14 +499,14 @@ export class AlgorandClientTransactionSender {
        * If this is set to `false` and the account has an asset balance it will lose those assets to the asset creator.
        */
       ensureZeroBalance: boolean
-    } & ExecuteParams,
+    } & SendParams,
   ) => {
     if (params.ensureZeroBalance) {
       let balance = 0n
       try {
         const accountAssetInfo = await this._assetManager.getAccountInformation(params.sender, params.assetId)
         balance = accountAssetInfo.balance
-      } catch (e) {
+      } catch {
         throw new Error(`Account ${params.sender} is not opted-in to Asset ${params.assetId}; can't opt-out.`)
       }
       if (balance !== 0n) {
@@ -438,20 +519,432 @@ export class AlgorandClientTransactionSender {
     return await this._send((c) => c.addAssetOptOut, {
       preLog: (params, transaction) =>
         `Opting ${params.sender} out of asset with ID ${params.assetId} to creator ${params.creator} via transaction ${transaction.txID()}`,
-    })(params as AssetOptOutParams & ExecuteParams)
+    })(params as AssetOptOutParams & SendParams)
   }
+  /**
+   * Create a smart contract.
+   *
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
+   *
+   * @param params The parameters for the app creation transaction
+   * @example Basic example
+   * ```typescript
+   * const result = await algorand.send.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+   * const createdAppId = result.appId
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.send.appCreate({
+   *  sender: 'CREATORADDRESS',
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  schema: {
+   *    globalInts: 1,
+   *    globalByteSlices: 2,
+   *    localInts: 3,
+   *    localByteSlices: 4
+   *  },
+   *  extraProgramPages: 1,
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
+   */
+  appCreate = this._sendAppCreateCall((c) => c.addAppCreate, {
+    postLog: (params, result) =>
+      `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+  })
+
+  /**
+   * Update a smart contract.
+   *
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
+   *
+   * @param params The parameters for the app update transaction
+   * @example Basic example
+   * ```typescript
+   * await algorand.send.appUpdate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.send.appUpdate({
+   *  sender: 'CREATORADDRESS',
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
+   */
+  appUpdate = this._sendAppUpdateCall((c) => c.addAppUpdate, {
+    postLog: (params, result) =>
+      `App ${params.appId} updated ${params.args ? ` with ${params.args.map((a) => Buffer.from(a).toString('base64'))}` : ''} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
+
+  /**
+   * Delete a smart contract.
+   *
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
+   *
+   * @param params The parameters for the app deletion transaction
+   * @example Basic example
+   * ```typescript
+   * await algorand.send.appDelete({ sender: 'CREATORADDRESS' })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.send.appDelete({
+   *  sender: 'CREATORADDRESS',
+   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
+   */
+  appDelete = this._sendAppCall((c) => c.addAppDelete, {
+    postLog: (params, result) =>
+      `App ${params.appId} deleted ${params.args ? ` with ${params.args.map((a) => Buffer.from(a).toString('base64'))}` : ''} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
+
   /**
    * Call a smart contract.
    *
-   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
-   */
-  appCall = this._send((c) => c.addAppCall)
-  /**
-   * Call a smart contract ABI method.
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
    *
-   * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
+   * @param params The parameters for the app call transaction
+   * @example Basic example
+   * ```typescript
+   * await algorand.send.appCall({ sender: 'CREATORADDRESS' })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.send.appCall({
+   *  sender: 'CREATORADDRESS',
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
    */
-  methodCall = this._send((c) => c.addMethodCall)
+  appCall = this._sendAppCall((c) => c.addAppCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} called ${params.args ? ` with ${params.args.map((a) => Buffer.from(a).toString('base64'))}` : ''} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
+
+  /**
+   * Create a smart contract via an ABI method.
+   *
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
+   *
+   * @param params The parameters for the app creation transaction
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * const result = await algorand.send.appCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+   * const createdAppId = result.appId
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * await algorand.send.appCreate({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  schema: {
+   *    globalInts: 1,
+   *    globalByteSlices: 2,
+   *    localInts: 3,
+   *    localByteSlices: 4
+   *  },
+   *  extraProgramPages: 1,
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
+   */
+  appCreateMethodCall = this._sendAppCreateCall((c) => c.addAppCreateMethodCall, {
+    postLog: (params, result) =>
+      `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+  })
+
+  /**
+   * Update a smart contract via an ABI method.
+   *
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
+   *
+   * @param params The parameters for the app update transaction
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * await algorand.send.appUpdateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * await algorand.send.appUpdateMethodCall({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
+   */
+  appUpdateMethodCall = this._sendAppUpdateCall((c) => c.addAppUpdateMethodCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} updated with ${getMethodCallForLog(params)} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
+
+  /**
+   * Delete a smart contract via an ABI method.
+   *
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
+   *
+   * @param params The parameters for the app deletion transaction
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * await algorand.send.appDeleteMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * await algorand.send.appDeleteMethodCall({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
+   */
+  appDeleteMethodCall = this._sendAppCall((c) => c.addAppDeleteMethodCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} deleted with ${getMethodCallForLog(params)} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
+
+  /**
+   * Call a smart contract via an ABI method.
+   *
+   * Note: you may prefer to use `algorand.client` to get an app client for more advanced functionality.
+   *
+   * @param params The parameters for the app call transaction
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * await algorand.send.appCallMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * await algorand.send.appCallMethodCall({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
+   */
+  appCallMethodCall = this._sendAppCall((c) => c.addAppCallMethodCall, {
+    postLog: (params, result) =>
+      `App ${params.appId} called with ${getMethodCallForLog(params)} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
+  })
+
   /** Register an online key. */
   onlineKeyRegistration = this._send((c) => c.addOnlineKeyRegistration, {
     preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${transaction.txID()}`,

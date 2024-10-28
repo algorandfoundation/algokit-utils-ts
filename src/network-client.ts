@@ -153,12 +153,12 @@ export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
   return config ? ClientManager.getKmdClient(config) : ClientManager.getKmdClientFromEnvironment()
 }
 
-/** @deprecated Use `await algorandClient.client.isTestNet()` or `await new ClientManager({ algod }).isTestNet()` instead. */
+/** @deprecated Use `await algorand.client.isTestNet()` or `await new ClientManager({ algod }).isTestNet()` instead. */
 export async function isTestNet(algod: Algodv2): Promise<boolean> {
   return await new ClientManager({ algod }).isTestNet()
 }
 
-/** @deprecated Use `await algorandClient.client.isMainNet()` or `await new ClientManager({ algod }).isMainNet()` instead. */
+/** @deprecated Use `await algorand.client.isMainNet()` or `await new ClientManager({ algod }).isMainNet()` instead. */
 export async function isMainNet(algod: Algodv2): Promise<boolean> {
   return await new ClientManager({ algod }).isMainNet()
 }
