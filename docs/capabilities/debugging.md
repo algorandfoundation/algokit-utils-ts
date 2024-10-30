@@ -27,10 +27,28 @@ To keep the `algokit-utils-ts` package lean and isomporphic, the debugging utili
 
 ## Debugging in `browser` environment
 
-Note that it's not possible to use `algokit-utils-ts-debug` in browser environments; however, you can still obtain and persist simulation traces from the browser network tab whenever a transaction is being submitted using the algokit-utils-ts package. Make sure to enable the debug mode in the algokit-utils-ts config as described in the [getting started](./docs/code/getting-started.md) guide. To obtain the simulation trace:
+Note: `algokit-utils-ts-debug` cannot be used in browser environments. However, you can still obtain and persist simulation traces from the browser's `Console` tab when submitting transactions using the algokit-utils-ts package. To enable this functionality, activate debug mode in the algokit-utils-ts config as described in the [getting started](./docs/code/getting-started.md) guide.
 
-1. Open the browser network tab
+### Subscribe to the `simulate` response event
+
+After setting the `debug` flag to true in the [configuration](#configuration) section, subscribe to the `TxnGroupSimulated` event as follows:
+
+```ts
+import { AVMTracesEventData, Config, EventType } from '@algorandfoundation/algokit-utils'
+
+Config.events.on(EventType.TxnGroupSimulated, (eventData: AVMTracesEventData) => {
+  Config.logger.info(JSON.stringify(eventData.simulateResponse.get_obj_for_encoding(), null, 2))
+})
+```
+
+This will output any simulation traces that have been emitted whilst calling your app. Place this code immediately after the `Config.configure` call to ensure it executes before any transactions are submitted for simulation.
+
+### Save simulation trace responses from the browser
+
+With the event handler configured, follow these steps to save simulation trace responses:
+
+1. Open your browser's `Console` tab
 2. Submit the transaction
-3. Filter the requests by `simulate`
-4. Copy the 'simulate' request body and store it in a file with a .trace.avm.json extension, then place it under the `debug_traces` folder in your AlgoKit contract project.
-   4.1. (Optional) If you are not using an AlgoKit project structure for your contracts codebase, as long as the trace file is within your VSCode workspace, the extension will present a picker to select the trace file.
+3. Copy the simulation request `JSON` and save it to a file with the extension `.trace.avm.json`
+4. Place the file in the `debug_traces` folder of your AlgoKit contract project
+   - Note: If you're not using an AlgoKit project structure, the extension will present a file picker as long as the trace file is within your VSCode workspace
