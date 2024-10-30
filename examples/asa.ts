@@ -1,9 +1,10 @@
-import * as algokit from '../src/index'
-import { indexerWaitForRound } from './utils'
+// import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { AlgorandClient } from '../src'
+import { runWhenIndexerCaughtUp } from '../src/testing/indexer'
 
 /* eslint-disable no-console */
 async function main() {
-  const algorand = algokit.AlgorandClient.defaultLocalNet()
+  const algorand = AlgorandClient.defaultLocalNet()
 
   // Create a random account and fund it
   const creator = await algorand.account.random()
@@ -14,14 +15,14 @@ async function main() {
     /** That account that will receive the ALGO */
     receiver: creator.addr,
     /** Amount to send */
-    amount: algokit.algos(1),
+    amount: (1).algos(),
   })
 
   // example: ASSET_CREATE
   const createResult = await algorand.send.assetCreate({
     sender: creator.addr,
     /** The total amount of the smallest divisible unit to create */
-    total: BigInt(1000),
+    total: 1000n,
     /** The amount of decimal places the asset should have */
     decimals: 0,
     /** Whether the asset is frozen by default in the creator address */
@@ -42,7 +43,7 @@ async function main() {
     url: 'http://path/to/my/asset/details',
   })
 
-  const assetId = createResult.confirmation.assetIndex!
+  const assetId = createResult.assetId
   console.log(`Asset ID created: ${assetId}\n`)
 
   const asset_create_confirmed_round = createResult.confirmation.confirmedRound!
@@ -50,16 +51,14 @@ async function main() {
   // example: ASSET_CREATE
 
   // example: ASSET_INFO
-  const assetInfo = await algorand.client.algod.getAssetByID(Number(assetId)).do()
-  console.log(`Asset Name: ${assetInfo.params.name}\n`)
-  console.log('Asset Params: ', assetInfo.params, '\n')
+  const assetInfo = await algorand.asset.getById(assetId)
+  console.log(`Asset Name: ${assetInfo.assetName}\n`)
+  console.log('Asset Params: ', assetInfo, '\n')
   // example: ASSET_INFO
 
   // example: INDEXER_LOOKUP_ASSET
   // ensure indexer is caught up
-  await indexerWaitForRound(algorand.client.indexer, asset_create_confirmed_round, 30)
-
-  const indexerAssetInfo = await algorand.client.indexer.lookupAssetByID(Number(assetId)).do()
+  const indexerAssetInfo = await runWhenIndexerCaughtUp(() => algorand.client.indexer.lookupAssetByID(Number(assetId)).do())
   console.log('Indexer Asset Info: ', indexerAssetInfo, '\n')
   // example: INDEXER_LOOKUP_ASSET
 
@@ -69,7 +68,7 @@ async function main() {
   await algorand.send.payment({
     sender: dispenser.addr,
     receiver: manager.addr,
-    amount: algokit.algos(1),
+    amount: (1).algos(),
   })
 
   const configResult = await algorand.send.assetConfig({
@@ -94,16 +93,16 @@ async function main() {
   await algorand.send.payment({
     sender: dispenser.addr,
     receiver: receiver.addr,
-    amount: algokit.algos(1),
+    amount: (1).algos(),
   })
 
   await algorand.send.assetOptIn({
     sender: receiver.addr,
     /** ID of the asset */
-    assetId: BigInt(assetId),
+    assetId,
   })
 
-  let receiverAssetInfo = await algorand.account.getAssetInformation(receiver.addr, Number(assetId))
+  let receiverAssetInfo = await algorand.asset.getAccountInformation(receiver.addr, assetId)
   console.log(`\nAsset holding before asset_xfer: ${receiverAssetInfo.balance}\n`)
   // example: ASSET_OPTIN
 
@@ -113,12 +112,12 @@ async function main() {
     /** The account to send the asset to */
     receiver: receiver.addr,
     /** ID of the asset */
-    assetId: BigInt(assetId),
+    assetId,
     /** Amount of the asset to transfer (smallest divisible unit) */
-    amount: BigInt(1),
+    amount: 1n,
   })
 
-  receiverAssetInfo = await algorand.account.getAssetInformation(receiver.addr, Number(assetId))
+  receiverAssetInfo = await algorand.asset.getAccountInformation(receiver.addr, assetId)
   console.log(`\nAsset holding after asset_xfer: ${receiverAssetInfo.balance}\n`)
   // example: ASSET_XFER
 
@@ -126,14 +125,14 @@ async function main() {
   await algorand.send.assetFreeze({
     sender: manager.addr,
     /** The ID of the asset */
-    assetId: BigInt(assetId),
+    assetId,
     /** The account to freeze or unfreeze */
     account: receiver.addr,
     /** Whether the assets in the account should be frozen */
     frozen: true,
   })
 
-  receiverAssetInfo = await algorand.account.getAssetInformation(receiver.addr, Number(assetId))
+  receiverAssetInfo = await algorand.asset.getAccountInformation(receiver.addr, assetId)
   console.log(`\nAsset frozen in ${receiver.addr}?: ${receiverAssetInfo.frozen}\n`)
   // example: ASSET_FREEZE
 
@@ -141,16 +140,16 @@ async function main() {
   await algorand.send.assetTransfer({
     sender: manager.addr,
     /** ID of the asset */
-    assetId: BigInt(assetId),
+    assetId,
     /** Amount of the asset to transfer (smallest divisible unit) */
-    amount: BigInt(1),
+    amount: 1n,
     /** The account to send the asset to */
     receiver: creator.addr,
     /** The account to take the asset from */
     clawbackTarget: receiver.addr,
   })
 
-  receiverAssetInfo = await algorand.account.getAssetInformation(receiver.addr, Number(assetId))
+  receiverAssetInfo = await algorand.asset.getAccountInformation(receiver.addr, assetId)
   console.log(`\nAsset holding after clawback: ${receiverAssetInfo.balance}\n`)
   // example: ASSET_CLAWBACK
 
@@ -161,9 +160,9 @@ async function main() {
   await algorand.send.assetTransfer({
     sender: receiver.addr,
     /** ID of the asset */
-    assetId: BigInt(assetId),
+    assetId,
     /** Amount of the asset to transfer (smallest divisible unit) */
-    amount: BigInt(0),
+    amount: 0n,
     /** The account to send the asset to */
     receiver: creator.addr,
     /** The account to close the asset to */
@@ -175,7 +174,7 @@ async function main() {
   await algorand.send.assetDestroy({
     sender: manager.addr,
     /** ID of the asset */
-    assetId: BigInt(assetId),
+    assetId,
   })
   // example: ASSET_DELETE
 }

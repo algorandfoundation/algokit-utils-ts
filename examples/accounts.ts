@@ -1,9 +1,10 @@
-import * as algokit from '../src/index'
-import { SigningAccount } from '../src/types/account'
+import { Account } from 'algosdk'
+// import { AlgorandClient } from '@algorandfoundation/algokit-utils'
+import { AlgorandClient } from '../src'
 
 /* eslint-disable no-console */
 async function main() {
-  const algorand = algokit.AlgorandClient.defaultLocalNet()
+  const algorand = AlgorandClient.defaultLocalNet()
 
   // example: RANDOM_ACCOUNT_CREATE
   const alice = algorand.account.random()
@@ -26,10 +27,10 @@ async function main() {
   console.log(`Dispenser account: ${dispenser.addr}\n`)
 
   // example: MULTISIG_CREATE
-  const signerAccounts: SigningAccount[] = []
-  signerAccounts.push(algorand.account.random() as unknown as SigningAccount)
-  signerAccounts.push(algorand.account.random() as unknown as SigningAccount)
-  signerAccounts.push(algorand.account.random() as unknown as SigningAccount)
+  const signerAccounts: Account[] = []
+  signerAccounts.push(algorand.account.random().account)
+  signerAccounts.push(algorand.account.random().account)
+  signerAccounts.push(algorand.account.random().account)
 
   // multiSigParams is used when creating the address and when signing transactions
   const multiSigParams = {
@@ -47,7 +48,7 @@ async function main() {
   await algorand.send.payment({
     sender: dispenser.addr,
     receiver: multisigAccount.addr,
-    amount: algokit.algos(1),
+    amount: (1).algos(),
   })
   // TODO: send payment txn with multisigAccount
   // example: MULTISIG_SIGN
@@ -57,30 +58,19 @@ async function main() {
   await algorand.send.payment({
     sender: dispenser.addr,
     receiver: alice.addr,
-    amount: algokit.algos(1),
+    amount: (1).algos(),
   })
 
   // rekey the original account to the new signer via a payment transaction
   // Note any transaction type can be used to rekey an account
-  await algorand.send.payment({
-    sender: alice.addr,
-    receiver: alice.addr,
-    amount: algokit.algos(0),
-    rekeyTo: bob.addr,
-  })
+  await algorand.account.rekeyAccount(alice, bob)
 
   let rekeyedAliceInfo = await algorand.account.getInformation(alice.addr)
   console.log(`\n Alice signer rekeyed to: ${rekeyedAliceInfo['authAddr']}\n`)
   // example: ACCOUNT_REKEY
 
   // rekey back to the original account
-  await algorand.send.payment({
-    sender: alice.addr,
-    receiver: alice.addr,
-    amount: algokit.algos(0),
-    signer: bob,
-    rekeyTo: alice.addr,
-  })
+  await algorand.account.rekeyAccount(alice, alice)
 
   rekeyedAliceInfo = await algorand.account.getInformation(alice.addr)
   console.log(`\n authAddr for Alice: ${rekeyedAliceInfo['authAddr']}`)
