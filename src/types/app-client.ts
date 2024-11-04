@@ -342,6 +342,9 @@ export interface AppClientParams {
   clearSourceMap?: SourceMap
 }
 
+/** Parameters to clone an app client */
+export type CloneAppClientParams = Expand<Partial<Omit<AppClientParams, 'algorand' | 'appSpec'>>>
+
 /** onComplete parameter for a non-update app call */
 export type CallOnComplete = {
   /** On-complete of the call; defaults to no-op */
@@ -536,6 +539,20 @@ export class AppClient {
       /** Send bare (raw) transactions to the current app */
       bare: this.getBareSendMethods(),
     }
+  }
+
+  public clone(params: CloneAppClientParams) {
+    return new AppClient({
+      appId: this._appId,
+      appSpec: this._appSpec,
+      algorand: this._algorand,
+      appName: this._appName,
+      defaultSender: this._defaultSender,
+      defaultSigner: this._defaultSigner,
+      approvalSourceMap: this._approvalSourceMap,
+      clearSourceMap: this._clearSourceMap,
+      ...params,
+    })
   }
 
   /** Start a new `TransactionComposer` transaction group */

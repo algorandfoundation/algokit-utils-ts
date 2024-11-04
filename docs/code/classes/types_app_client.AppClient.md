@@ -45,6 +45,7 @@ state for a specific deployed instance of an app (with a known app ID).
 
 ### Methods
 
+- [clone](types_app_client.AppClient.md#clone)
 - [compile](types_app_client.AppClient.md#compile)
 - [exportSourceMaps](types_app_client.AppClient.md#exportsourcemaps)
 - [exposeLogicError](types_app_client.AppClient.md#exposelogicerror)
@@ -98,7 +99,7 @@ state for a specific deployed instance of an app (with a known app ID).
 
 #### Defined in
 
-[src/types/app-client.ts:498](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L498)
+[src/types/app-client.ts:501](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L501)
 
 ## Properties
 
@@ -108,7 +109,7 @@ state for a specific deployed instance of an app (with a known app ID).
 
 #### Defined in
 
-[src/types/app-client.ts:477](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L477)
+[src/types/app-client.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L480)
 
 ___
 
@@ -118,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:474](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L474)
+[src/types/app-client.ts:477](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L477)
 
 ___
 
@@ -128,7 +129,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L473)
+[src/types/app-client.ts:476](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L476)
 
 ___
 
@@ -138,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L475)
+[src/types/app-client.ts:478](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L478)
 
 ___
 
@@ -148,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:476](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L476)
+[src/types/app-client.ts:479](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L479)
 
 ___
 
@@ -158,7 +159,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L481)
+[src/types/app-client.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L484)
 
 ___
 
@@ -177,7 +178,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:486](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L486)
+[src/types/app-client.ts:489](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L489)
 
 ___
 
@@ -187,7 +188,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:482](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L482)
+[src/types/app-client.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L485)
 
 ___
 
@@ -197,7 +198,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L491)
+[src/types/app-client.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L494)
 
 ___
 
@@ -207,7 +208,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:478](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L478)
+[src/types/app-client.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L481)
 
 ___
 
@@ -217,7 +218,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:479](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L479)
+[src/types/app-client.ts:482](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L482)
 
 ___
 
@@ -236,7 +237,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:485](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L485)
+[src/types/app-client.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L488)
 
 ___
 
@@ -267,7 +268,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L484)
+[src/types/app-client.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L487)
 
 ___
 
@@ -277,7 +278,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L488)
+[src/types/app-client.ts:491](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L491)
 
 ___
 
@@ -287,7 +288,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L494)
+[src/types/app-client.ts:497](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L497)
 
 ## Accessors
 
@@ -303,7 +304,7 @@ A reference to the underlying `AlgorandClient` this app client is using.
 
 #### Defined in
 
-[src/types/app-client.ts:624](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L624)
+[src/types/app-client.ts:641](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L641)
 
 ___
 
@@ -319,7 +320,7 @@ The app address of the app instance this client is linked to.
 
 #### Defined in
 
-[src/types/app-client.ts:609](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L609)
+[src/types/app-client.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L626)
 
 ___
 
@@ -335,7 +336,7 @@ The ID of the app instance this client is linked to.
 
 #### Defined in
 
-[src/types/app-client.ts:604](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L604)
+[src/types/app-client.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L621)
 
 ___
 
@@ -351,7 +352,7 @@ The name of the app (from the ARC-32 / ARC-56 app spec).
 
 #### Defined in
 
-[src/types/app-client.ts:614](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L614)
+[src/types/app-client.ts:631](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L631)
 
 ___
 
@@ -367,7 +368,7 @@ The ARC-56 app spec being used
 
 #### Defined in
 
-[src/types/app-client.ts:619](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L619)
+[src/types/app-client.ts:636](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L636)
 
 ___
 
@@ -383,7 +384,7 @@ Create transactions for the current app
 
 #### Defined in
 
-[src/types/app-client.ts:648](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L648)
+[src/types/app-client.ts:665](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L665)
 
 ___
 
@@ -416,7 +417,7 @@ await appClient.send.call({method: 'my_method2', args: [myMethodCall]})
 
 #### Defined in
 
-[src/types/app-client.ts:643](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L643)
+[src/types/app-client.ts:660](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L660)
 
 ___
 
@@ -432,7 +433,7 @@ Send transactions to the current app
 
 #### Defined in
 
-[src/types/app-client.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L653)
+[src/types/app-client.ts:670](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L670)
 
 ___
 
@@ -462,9 +463,35 @@ Get state (local, global, box) from the current app
 
 #### Defined in
 
-[src/types/app-client.ts:658](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L658)
+[src/types/app-client.ts:675](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L675)
 
 ## Methods
+
+### clone
+
+▸ **clone**(`params`): [`AppClient`](types_app_client.AppClient.md)
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | `Object` | - |
+| `params.appId?` | `bigint` | The ID of the app instance this client should make calls against. |
+| `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
+| `params.approvalSourceMap?` | `SourceMap` | Optional source map for the approval program |
+| `params.clearSourceMap?` | `SourceMap` | Optional source map for the clear state program |
+| `params.defaultSender?` | `string` | Optional address to use for the account to use as the default sender for calls. |
+| `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
+
+#### Returns
+
+[`AppClient`](types_app_client.AppClient.md)
+
+#### Defined in
+
+[src/types/app-client.ts:544](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L544)
+
+___
 
 ### compile
 
@@ -490,7 +517,7 @@ Will store any generated source maps for later use in debugging.
 
 #### Defined in
 
-[src/types/app-client.ts:855](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L855)
+[src/types/app-client.ts:872](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L872)
 
 ___
 
@@ -508,7 +535,7 @@ The source maps
 
 #### Defined in
 
-[src/types/app-client.ts:796](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L796)
+[src/types/app-client.ts:813](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L813)
 
 ___
 
@@ -534,7 +561,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-client.ts:774](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L774)
+[src/types/app-client.ts:791](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L791)
 
 ___
 
@@ -576,7 +603,7 @@ The result of the funding
 
 #### Defined in
 
-[src/types/app-client.ts:683](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L683)
+[src/types/app-client.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L700)
 
 ___
 
@@ -603,7 +630,7 @@ It does this by replacing any `undefined` values with the equivalent default val
 
 #### Defined in
 
-[src/types/app-client.ts:1012](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1012)
+[src/types/app-client.ts:1029](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1029)
 
 ___
 
@@ -627,7 +654,7 @@ A tuple with: [ARC-56 `Method`, algosdk `ABIMethod`]
 
 #### Defined in
 
-[src/types/app-client.ts:824](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L824)
+[src/types/app-client.ts:841](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L841)
 
 ___
 
@@ -655,7 +682,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1382)
+[src/types/app-client.ts:1399](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1399)
 
 ___
 
@@ -678,7 +705,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1116)
+[src/types/app-client.ts:1133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1133)
 
 ___
 
@@ -706,7 +733,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1369)
+[src/types/app-client.ts:1386](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1386)
 
 ___
 
@@ -729,7 +756,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1081](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1081)
+[src/types/app-client.ts:1098](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1098)
 
 ___
 
@@ -752,7 +779,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1145)
+[src/types/app-client.ts:1162](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1162)
 
 ___
 
@@ -773,7 +800,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1414)
+[src/types/app-client.ts:1431](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1431)
 
 ___
 
@@ -791,7 +818,7 @@ The names of the boxes
 
 #### Defined in
 
-[src/types/app-client.ts:708](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L708)
+[src/types/app-client.ts:725](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L725)
 
 ___
 
@@ -815,7 +842,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/app-client.ts:717](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L717)
+[src/types/app-client.ts:734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L734)
 
 ___
 
@@ -840,7 +867,7 @@ The current box value as a byte array
 
 #### Defined in
 
-[src/types/app-client.ts:727](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L727)
+[src/types/app-client.ts:744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L744)
 
 ___
 
@@ -865,7 +892,7 @@ The (name, value) pair of the boxes with values as raw byte arrays
 
 #### Defined in
 
-[src/types/app-client.ts:741](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L741)
+[src/types/app-client.ts:758](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L758)
 
 ___
 
@@ -891,7 +918,7 @@ The (name, value) pair of the boxes with values as the ABI Value
 
 #### Defined in
 
-[src/types/app-client.ts:757](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L757)
+[src/types/app-client.ts:774](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L774)
 
 ___
 
@@ -909,7 +936,7 @@ The global state
 
 #### Defined in
 
-[src/types/app-client.ts:691](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L691)
+[src/types/app-client.ts:708](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L708)
 
 ___
 
@@ -933,7 +960,7 @@ The local state
 
 #### Defined in
 
-[src/types/app-client.ts:700](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L700)
+[src/types/app-client.ts:717](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L717)
 
 ___
 
@@ -956,7 +983,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1311)
+[src/types/app-client.ts:1328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1328)
 
 ___
 
@@ -979,7 +1006,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1178)
+[src/types/app-client.ts:1195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1195)
 
 ___
 
@@ -1002,7 +1029,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1218)
+[src/types/app-client.ts:1235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1235)
 
 ___
 
@@ -1025,7 +1052,7 @@ if none provided and throws an error if neither provided
 
 #### Defined in
 
-[src/types/app-client.ts:1352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1352)
+[src/types/app-client.ts:1369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1369)
 
 ___
 
@@ -1050,7 +1077,7 @@ or `undefined` otherwise (so the signer is resolved from `AlgorandClient`)
 
 #### Defined in
 
-[src/types/app-client.ts:1362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1362)
+[src/types/app-client.ts:1379](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1379)
 
 ___
 
@@ -1079,7 +1106,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1486](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1486)
+[src/types/app-client.ts:1503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1503)
 
 ___
 
@@ -1107,7 +1134,7 @@ Make the given call and catch any errors, augmenting with debugging information 
 
 #### Defined in
 
-[src/types/app-client.ts:1406](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1406)
+[src/types/app-client.ts:1423](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1423)
 
 ___
 
@@ -1129,7 +1156,7 @@ Import source maps for the app.
 
 #### Defined in
 
-[src/types/app-client.ts:813](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L813)
+[src/types/app-client.ts:830](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L830)
 
 ___
 
@@ -1145,7 +1172,7 @@ Start a new `TransactionComposer` transaction group
 
 #### Defined in
 
-[src/types/app-client.ts:542](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L542)
+[src/types/app-client.ts:559](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L559)
 
 ___
 
@@ -1180,7 +1207,7 @@ The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-client.ts:838](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L838)
+[src/types/app-client.ts:855](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L855)
 
 ___
 
@@ -1210,7 +1237,7 @@ Will store any generated source maps for later use in debugging.
 
 #### Defined in
 
-[src/types/app-client.ts:959](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L959)
+[src/types/app-client.ts:976](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L976)
 
 ___
 
@@ -1243,7 +1270,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-client.ts:876](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L876)
+[src/types/app-client.ts:893](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L893)
 
 ___
 
@@ -1276,7 +1303,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 
 #### Defined in
 
-[src/types/app-client.ts:551](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L551)
+[src/types/app-client.ts:568](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L568)
 
 ___
 
@@ -1308,7 +1335,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 
 #### Defined in
 
-[src/types/app-client.ts:573](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L573)
+[src/types/app-client.ts:590](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L590)
 
 ___
 
@@ -1333,4 +1360,4 @@ The normalised ARC-56 contract object
 
 #### Defined in
 
-[src/types/app-client.ts:597](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L597)
+[src/types/app-client.ts:614](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L614)
