@@ -61,7 +61,7 @@
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
-    "algosdk": "^2.7.0"
+    "algosdk": ">=2.9.0 <3.0"
   },
   "devDependencies": {
     "@algorandfoundation/tealscript": "^0.105.3",
@@ -75,7 +75,7 @@
     "@tsconfig/node20": "^20.1.4",
     "@types/jest": "^29.5.2",
     "@types/uuid": "^9.0.2",
-    "algosdk": "^2.7.0",
+    "algosdk": ">=2.9.0 <3.0",
     "better-npm-audit": "^3.7.3",
     "conventional-changelog-conventionalcommits": "6.1.0",
     "cpy-cli": "^5.0.0",

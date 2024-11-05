@@ -1127,7 +1127,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L194)
+[src/account/account.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L196)
 
 ___
 
