@@ -16,6 +16,7 @@ export async function performAtomicTransactionComposerSimulate(atc: AtomicTransa
 
   const simulateRequest = new modelsv2.SimulateRequest({
     allowEmptySignatures: true,
+    fixSigners: true,
     allowMoreLogging: true,
     execTraceConfig: new modelsv2.SimulateTraceConfig({
       enable: true,

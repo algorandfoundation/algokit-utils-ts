@@ -261,38 +261,21 @@ export const sendTransaction = async function (
  * @returns The unnamed resources accessed by the group and by each transaction in the group
  */
 async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
-  const simReq = new algosdk.modelsv2.SimulateRequest({
+  const simulateRequest = new algosdk.modelsv2.SimulateRequest({
     txnGroups: [],
     allowUnnamedResources: true,
     allowEmptySignatures: true,
+    fixSigners: true,
   })
 
-  const signerWithFixedSgnr: algosdk.TransactionSigner = async (txns: algosdk.Transaction[], indexes: number[]) => {
-    const stxns = await algosdk.makeEmptyTransactionSigner()(txns, indexes)
-    return Promise.all(
-      stxns.map(async (stxn) => {
-        const decodedStxn = algosdk.decodeSignedTransaction(stxn)
-        const sender = algosdk.encodeAddress(decodedStxn.txn.from.publicKey)
-
-        const authAddr = (await algod.accountInformation(sender).do())['auth-addr']
-
-        const stxnObj: { txn: algosdk.EncodedTransaction; sgnr?: Buffer } = { txn: decodedStxn.txn.get_obj_for_encoding() }
-
-        if (authAddr !== undefined) {
-          stxnObj.sgnr = Buffer.from(algosdk.decodeAddress(authAddr).publicKey)
-        }
-
-        return algosdk.encodeObj(stxnObj)
-      }),
-    )
-  }
+  const nullSigner = algosdk.makeEmptyTransactionSigner()
 
   const emptySignerAtc = atc.clone()
   emptySignerAtc['transactions'].forEach((t: algosdk.TransactionWithSigner) => {
-    t.signer = signerWithFixedSgnr
+    t.signer = nullSigner
   })
 
-  const result = await emptySignerAtc.simulate(algod, simReq)
+  const result = await emptySignerAtc.simulate(algod, simulateRequest)
 
   const groupResponse = result.simulateResponse.txnGroups[0]
 
