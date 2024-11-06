@@ -257,6 +257,17 @@ export type AccountInformation = {
    * The number of existing boxes created by this account's app.
    */
   totalBoxes?: number
+
+  /**
+   * The round in which this account last went online, or explicitly renewed their
+   * online status.
+   */
+  lastHeartbeatRound?: bigint
+
+  /**
+   * The round in which this account last proposed the block.
+   */
+  lastProposedRound?: bigint
 }
 
 /** Account asset holding information at a given round. */
