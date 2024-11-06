@@ -541,6 +541,12 @@ export class AppClient {
     }
   }
 
+  /**
+   * Clone this app client with different params
+   *
+   * @param params The params to use for the the cloned app client. Omit a param to keep the original value. Set a param to override the original value. Setting to undefined will clear the original value.
+   * @returns A new app client with the altered params
+   */
   public clone(params: CloneAppClientParams) {
     return new AppClient({
       appId: this._appId,
@@ -1051,16 +1057,15 @@ export class AppClient {
                 m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
                 this._appSpec.structs,
               ) as ABIValue
-            // todo: When ARC-56 supports ABI calls as default args
-            // case 'abi': {
-            //   const method = this.getABIMethod(defaultValue.data as string)
-            //   const result = await this.send.call({
-            //     method: defaultValue.data as string,
-            //     methodArgs: method.args.map(() => undefined),
-            //     sender,
-            //   })
-            //   return result.return!
-            // }
+            case 'abi': {
+              const method = this.getABIMethod(defaultValue.data as string)
+              const result = await this.send.call({
+                method: defaultValue.data as string,
+                methodArgs: method.args.map(() => undefined),
+                sender,
+              })
+              return result.return!
+            }
             case 'local':
             case 'global': {
               const state = defaultValue.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
