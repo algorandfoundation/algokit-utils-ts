@@ -1064,7 +1064,7 @@ export class AppClient {
                 sender,
               })
 
-              if (!result.return) {
+              if (result.return === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
               if (typeof result.return === 'object' && !(result.return instanceof Uint8Array) && !Array.isArray(result.return)) {
