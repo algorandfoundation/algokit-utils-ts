@@ -1295,6 +1295,7 @@ export default class TransactionComposer {
     // Build the transactions
     if (options?.skipSignatures) {
       options.allowEmptySignatures = true
+      options.fixSigners = true
       // Build transactions uses empty signers
       const transactions = await this.buildTransactions()
       for (const txn of transactions.transactions) {
@@ -1314,6 +1315,7 @@ export default class TransactionComposer {
         ...(Config.debug
           ? {
               allowEmptySignatures: true,
+              fixSigners: true,
               allowMoreLogging: true,
               execTraceConfig: new modelsv2.SimulateTraceConfig({
                 enable: true,

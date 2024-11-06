@@ -557,7 +557,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:879](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L879)
+[src/transaction/transaction.ts:862](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L862)
 
 ___
 
@@ -621,7 +621,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:904](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L904)
+[src/transaction/transaction.ts:887](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L887)
 
 ___
 
@@ -948,7 +948,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:729](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L729)
+[src/transaction/transaction.ts:712](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L712)
 
 ___
 
@@ -1127,7 +1127,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L194)
+[src/account/account.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L196)
 
 ___
 
@@ -1931,7 +1931,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:940](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L940)
+[src/transaction/transaction.ts:923](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L923)
 
 ___
 
@@ -2318,7 +2318,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:929](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L929)
+[src/transaction/transaction.ts:912](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L912)
 
 ___
 
@@ -2635,7 +2635,7 @@ Performs a dry run of the transactions loaded into the given AtomicTransactionCo
 
 #### Defined in
 
-[src/transaction/transaction.ts:755](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L755)
+[src/transaction/transaction.ts:738](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L738)
 
 ___
 
@@ -2778,7 +2778,7 @@ A new ATC with the resources packed into the transactions
 
 #### Defined in
 
-[src/transaction/transaction.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L329)
+[src/transaction/transaction.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L312)
 
 ___
 
@@ -2928,7 +2928,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:580](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L580)
+[src/transaction/transaction.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L563)
 
 ___
 
@@ -2957,7 +2957,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Defined in
 
-[src/transaction/transaction.ts:775](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L775)
+[src/transaction/transaction.ts:758](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L758)
 
 ___
 
@@ -3230,4 +3230,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:820](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L820)
+[src/transaction/transaction.ts:803](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L803)
