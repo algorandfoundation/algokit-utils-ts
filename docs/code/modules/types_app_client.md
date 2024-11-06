@@ -43,6 +43,7 @@
 - [AppSpecAppDetailsByCreatorAndName](types_app_client.md#appspecappdetailsbycreatorandname)
 - [AppSpecAppDetailsById](types_app_client.md#appspecappdetailsbyid)
 - [CallOnComplete](types_app_client.md#calloncomplete)
+- [CloneAppClientParams](types_app_client.md#cloneappclientparams)
 - [FundAppParams](types_app_client.md#fundappparams)
 - [ResolveAppByCreatorAndName](types_app_client.md#resolveappbycreatorandname)
 - [ResolveAppByCreatorAndNameBase](types_app_client.md#resolveappbycreatorandnamebase)
@@ -59,7 +60,7 @@ AppClient common parameters for a bare app call
 
 #### Defined in
 
-[src/types/app-client.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L352)
+[src/types/app-client.ts:355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L355)
 
 ___
 
@@ -137,7 +138,7 @@ AppClient common parameters for an ABI method call
 
 #### Defined in
 
-[src/types/app-client.ts:360](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L360)
+[src/types/app-client.ts:363](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L363)
 
 ___
 
@@ -253,6 +254,18 @@ onComplete parameter for a non-update app call
 
 #### Defined in
 
+[src/types/app-client.ts:349](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L349)
+
+___
+
+### CloneAppClientParams
+
+Ƭ **CloneAppClientParams**: [`Expand`](types_expand.md#expand)\<`Partial`\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"algorand"`` \| ``"appSpec"``\>\>\>
+
+Parameters to clone an app client
+
+#### Defined in
+
 [src/types/app-client.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L346)
 
 ___
@@ -265,7 +278,7 @@ Parameters for funding an app account
 
 #### Defined in
 
-[src/types/app-client.ts:385](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L385)
+[src/types/app-client.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L388)
 
 ___
 
@@ -309,7 +322,7 @@ Resolve an app client instance by looking up an app created by the given creator
 
 #### Defined in
 
-[src/types/app-client.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L394)
+[src/types/app-client.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L397)
 
 ___
 
@@ -321,4 +334,4 @@ Resolve an app client instance by looking up the current network.
 
 #### Defined in
 
-[src/types/app-client.ts:408](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L408)
+[src/types/app-client.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L411)
