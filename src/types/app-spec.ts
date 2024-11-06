@@ -33,11 +33,20 @@ export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
     type: string,
     defaultArg: DefaultArgument | undefined,
   ): Arc56Contract['methods'][0]['args'][0]['defaultValue'] => {
-    if (!defaultArg || defaultArg.source === 'abi-method') return undefined
+    if (!defaultArg) return undefined
+
+    if (defaultArg.source === 'abi-method') {
+      return {
+        source: 'method',
+        data: defaultArg.data.name,
+      }
+    }
 
     return {
       source: defaultArg.source === 'constant' ? 'literal' : defaultArg.source === 'global-state' ? 'global' : 'local',
-      data: typeof defaultArg.data === 'string' ? Buffer.from(defaultArg.data).toString('base64') : defaultArg.data,
+      data: Buffer.from(
+        typeof defaultArg.data === 'number' ? algosdk.ABIType.from('uint64').encode(defaultArg.data) : defaultArg.data,
+      ).toString('base64'),
       type: type === 'string' ? 'AVMString' : type,
     }
   }

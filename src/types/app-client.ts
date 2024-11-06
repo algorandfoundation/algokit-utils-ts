@@ -1051,25 +1051,31 @@ export class AppClient {
         if (defaultValue) {
           switch (defaultValue.source) {
             case 'literal':
-              if (typeof defaultValue.data === 'number') return defaultValue.data
               return getABIDecodedValue(
                 Buffer.from(defaultValue.data, 'base64'),
                 m.method.args[i].defaultValue?.type ?? m.method.args[i].type,
                 this._appSpec.structs,
               ) as ABIValue
-            case 'abi': {
-              const method = this.getABIMethod(defaultValue.data as string)
+            case 'method': {
+              const method = this.getABIMethod(defaultValue.data)
               const result = await this.send.call({
-                method: defaultValue.data as string,
-                methodArgs: method.args.map(() => undefined),
+                method: defaultValue.data,
+                args: method.args.map(() => undefined),
                 sender,
               })
-              return result.return!
+
+              if (!result.return) {
+                throw new Error('Default value method call did not return a value')
+              }
+              if (typeof result.return === 'object' && !(result.return instanceof Uint8Array) && !Array.isArray(result.return)) {
+                return getABITupleFromABIStruct(result.return, this._appSpec.structs[method.returns.struct!], this._appSpec.structs)
+              }
+              return result.return
             }
             case 'local':
             case 'global': {
               const state = defaultValue.source === 'global' ? await this.getGlobalState() : await this.getLocalState(sender)
-              const value = Object.values(state).find((s) => s.keyBase64 === (defaultValue.data as string))
+              const value = Object.values(state).find((s) => s.keyBase64 === defaultValue.data)
               if (!value) {
                 throw new Error(
                   `Preparing default value for argument ${arg.name ?? `arg${i + 1}`} resulted in the failure: The key '${defaultValue.data}' could not be found in ${defaultValue.source} storage`,
@@ -1084,7 +1090,7 @@ export class AppClient {
                 : value.value
             }
             case 'box': {
-              const value = await this.getBoxValue(Buffer.from(defaultValue.data as string, 'base64'))
+              const value = await this.getBoxValue(Buffer.from(defaultValue.data, 'base64'))
               return getABIDecodedValue(
                 value,
                 m.method.args[i].defaultValue?.type ?? m.method.args[i].type,

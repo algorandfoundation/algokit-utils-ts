@@ -595,7 +595,6 @@ export class AppFactory {
       if (defaultValue) {
         switch (defaultValue.source) {
           case 'literal':
-            if (typeof defaultValue.data === 'number') return defaultValue.data
             return getABIDecodedValue(Buffer.from(defaultValue.data, 'base64'), m.method.args[i].type, this._appSpec.structs) as ABIValue
           default:
             throw new Error(`Can't provide default value for ${defaultValue.source} for a contract creation call`)

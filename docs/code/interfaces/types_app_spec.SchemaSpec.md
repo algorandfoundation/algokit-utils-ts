@@ -23,7 +23,7 @@ The global storage schema
 
 #### Defined in
 
-[src/types/app-spec.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L279)
+[src/types/app-spec.ts:288](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L288)
 
 ___
 
@@ -35,4 +35,4 @@ The local storage schema
 
 #### Defined in
 
-[src/types/app-spec.ts:277](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L277)
+[src/types/app-spec.ts:286](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L286)

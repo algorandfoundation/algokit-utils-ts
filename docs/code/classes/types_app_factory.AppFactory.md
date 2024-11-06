@@ -666,7 +666,7 @@ if none provided and throws an error if neither provided
 
 #### Defined in
 
-[src/types/app-factory.ts:610](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L610)
+[src/types/app-factory.ts:609](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L609)
 
 ___
 
@@ -751,4 +751,4 @@ The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-factory.ts:627](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L627)
+[src/types/app-factory.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L626)

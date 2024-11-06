@@ -23,7 +23,7 @@ The elements (in order) that make up the struct/tuple
 
 #### Defined in
 
-[src/types/app-spec.ts:204](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L204)
+[src/types/app-spec.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L213)
 
 ___
 
@@ -35,4 +35,4 @@ The name of the type
 
 #### Defined in
 
-[src/types/app-spec.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L202)
+[src/types/app-spec.ts:211](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L211)
