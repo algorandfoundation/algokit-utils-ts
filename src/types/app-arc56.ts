@@ -229,7 +229,7 @@ export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValu
 
 /** Describes the entire contract. This interface is an extension of the interface described in ARC-4 */
 export interface Arc56Contract {
-  /** The ARCs used and/or supported by this contract. All contracts implicity support ARC4 and ARC56 */
+  /** The ARCs used and/or supported by this contract. All contracts implicitly support ARC4 and ARC56 */
   arcs: number[]
   /** A user-friendly name for the contract */
   name: string
@@ -319,7 +319,7 @@ export interface Arc56Contract {
   }
   /** ARC-28 events that MAY be emitted by this contract */
   events?: Array<Event>
-  /** A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respecive types and values (if applicable) */
+  /** A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respective types and values (if applicable) */
   templateVariables?: {
     [name: string]: {
       /** The type of the template variable */
@@ -421,7 +421,7 @@ export interface Event {
   desc?: string
   /** The arguments of the event, in order */
   args: Array<{
-    /** The type of the argument. The `struct` field should also be checked to determine if this return value is a struct. */
+    /** The type of the argument. The `struct` field should also be checked to determine if this arg is a struct. */
     type: ABIType
     /** Optional, user-friendly name for the argument */
     name?: string
