@@ -3,12 +3,13 @@ import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import AlgokitComposer from './composer'
+import TransactionComposer from './composer'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */
 export class KmdAccountManager {
-  private _clientManager: ClientManager
+  private _clientManager: Omit<ClientManager, 'kmd'>
+  private _kmd?: algosdk.Kmd | null
 
   /**
    * Create a new KMD manager.
@@ -16,6 +17,30 @@ export class KmdAccountManager {
    */
   constructor(clientManager: ClientManager) {
     this._clientManager = clientManager
+    try {
+      this._kmd = clientManager.kmd
+    } catch {
+      this._kmd = undefined
+    }
+  }
+
+  async kmd(): Promise<algosdk.Kmd> {
+    if (this._kmd === undefined) {
+      if (await this._clientManager.isLocalNet()) {
+        const { kmdConfig } = ClientManager.getConfigFromEnvironmentOrLocalNet()
+        if (kmdConfig) {
+          this._kmd = ClientManager.getKmdClient(kmdConfig)
+          return this._kmd
+        }
+      }
+      this._kmd = null
+    }
+
+    if (!this._kmd) {
+      throw new Error('Attempt to use Kmd client in AlgoKit instance with no Kmd configured')
+    }
+
+    return this._kmd
   }
 
   /**
@@ -40,7 +65,9 @@ export class KmdAccountManager {
     predicate?: (account: Record<string, any>) => boolean,
     sender?: string,
   ): Promise<(TransactionSignerAccount & { account: SigningAccount }) | undefined> {
-    const walletsResponse = await this._clientManager.kmd.listWallets()
+    const kmd = await this.kmd()
+
+    const walletsResponse = await kmd.listWallets()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const wallet = walletsResponse.wallets.filter((w: any) => w.name === walletName)
@@ -50,8 +77,8 @@ export class KmdAccountManager {
 
     const walletId = wallet[0].id
 
-    const walletHandle = (await this._clientManager.kmd.initWalletHandle(walletId, '')).wallet_handle_token
-    const addresses = (await this._clientManager.kmd.listKeys(walletHandle)).addresses
+    const walletHandle = (await kmd.initWalletHandle(walletId, '')).wallet_handle_token
+    const addresses = (await kmd.listKeys(walletHandle)).addresses
 
     let i = 0
     if (predicate) {
@@ -68,7 +95,7 @@ export class KmdAccountManager {
       return undefined
     }
 
-    const accountKey = (await this._clientManager.kmd.exportKey(walletHandle, '', addresses[i])).private_key
+    const accountKey = (await kmd.exportKey(walletHandle, '', addresses[i])).private_key
 
     const accountMnemonic = algosdk.secretKeyToMnemonic(accountKey)
 
@@ -92,13 +119,13 @@ export class KmdAccountManager {
    * If this is used via `mnemonicAccountFromEnvironment`, then you can even use the same code that runs on production without changes for local development!
    *
    * @param name The name of the wallet to retrieve / create
-   * @param fundWith The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account
+   * @param fundWith The number of Algo to fund the account with when it gets created, if not specified then 1000 ALGO will be funded from the dispenser account
    *
    * @example
    * ```typescript
    * // Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
-   * // if creating it then fund it with 2 Algos from the default dispenser account
-   * const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
+   * // if creating it then fund it with 2 ALGO from the default dispenser account
+   * const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algo())
    * // This will return the same account as above since the name matches
    * const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
    * ```
@@ -115,10 +142,12 @@ export class KmdAccountManager {
       return existing
     }
 
+    const kmd = await this.kmd()
+
     // None existed: create the KMD wallet instead
-    const walletId = (await this._clientManager.kmd.createWallet(name, '')).wallet.id
-    const walletHandle = (await this._clientManager.kmd.initWalletHandle(walletId, '')).wallet_handle_token
-    await this._clientManager.kmd.generateKey(walletHandle)
+    const walletId = (await kmd.createWallet(name, '')).wallet.id
+    const walletHandle = (await kmd.initWalletHandle(walletId, '')).wallet_handle_token
+    await kmd.generateKey(walletHandle)
 
     // Get the account from the new KMD wallet
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -126,23 +155,23 @@ export class KmdAccountManager {
 
     Config.logger.info(
       `LocalNet account '${name}' doesn't yet exist; created account ${account.addr} with keys stored in KMD and funding with ${
-        fundWith?.algos ?? 1000
-      } ALGOs`,
+        fundWith?.algo ?? 1000
+      } ALGO`,
     )
 
     // Fund the account from the dispenser
     const dispenser = await this.getLocalNetDispenserAccount()
-    await new AlgokitComposer({
+    await new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: () => dispenser.signer,
       getSuggestedParams: () => this._clientManager.algod.getTransactionParams().do(),
     })
       .addPayment({
-        amount: fundWith ?? AlgoAmount.Algos(1000),
+        amount: fundWith ?? AlgoAmount.Algo(1000),
         receiver: account.addr,
         sender: dispenser.addr,
       })
-      .execute()
+      .send()
 
     return account
   }

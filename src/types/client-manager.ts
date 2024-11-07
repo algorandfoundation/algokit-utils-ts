@@ -1,17 +1,12 @@
 import algosdk from 'algosdk'
 import { SuggestedParamsWithMinFee } from 'algosdk/dist/types/types/transactions/base'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
-import { AppLookup } from './app'
-import {
-  AppDetails,
-  AppDetailsBase,
-  AppSpecAppDetailsBase,
-  ApplicationClient,
-  ResolveAppByCreatorAndNameBase,
-  ResolveAppByIdBase,
-} from './app-client'
+import { AlgorandClientInterface } from './algorand-client-interface'
+import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
+import { AppFactory, AppFactoryParams } from './app-factory'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
-import { AlgoClientConfig, AlgoConfig } from './network-client'
+import { Expand } from './expand'
+import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './network-client'
 import Kmd = algosdk.Kmd
 import Indexer = algosdk.Indexer
 import Algodv2 = algosdk.Algodv2
@@ -27,25 +22,36 @@ export interface AlgoSdkClients {
   kmd?: algosdk.Kmd
 }
 
-/** Details of the current network. */
-export interface NetworkDetails {
-  /** Whether or not the network is TestNet. */
-  isTestNet: boolean
-  /** Whether or not the network is MainNet. */
-  isMainNet: boolean
-  /** Whether or not the network is LocalNet. */
-  isLocalNet: boolean
-  /** The genesis ID of the current network. */
-  genesisId: string
-  /** The base64 genesis hash of the current network. */
-  genesisHash: string
-}
+/** Params to get an app factory from `ClientManager`. */
+export type ClientAppFactoryParams = Expand<Omit<AppFactoryParams, 'algorand'>>
+
+/** Params to get an app client by creator address and name from `ClientManager`. */
+export type ClientResolveAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand'>>
+
+/** Params to get an app client by ID from `ClientManager`. */
+export type ClientAppClientParams = Expand<Omit<AppClientParams, 'algorand'>>
+
+/** Params to get an app client by network from `ClientManager`. */
+export type ClientAppClientByNetworkParams = Expand<Omit<AppClientParams, 'algorand' | 'appId'>>
+
+/** Params to get a typed app client by creator address and name from `ClientManager`. */
+export type ClientTypedAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand' | 'appSpec'>>
+
+/** Params to get a typed app client by ID from `ClientManager`. */
+export type ClientTypedAppClientParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec'>>
+
+/** Params to get a typed app client by network from `ClientManager`. */
+export type ClientTypedAppClientByNetworkParams = Expand<Omit<AppClientParams, 'algorand' | 'appSpec' | 'appId'>>
+
+/** Params to get a typed app factory from `ClientManager`. */
+export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algorand' | 'appSpec'>>
 
 /** Exposes access to various API clients. */
 export class ClientManager {
   private _algod: algosdk.Algodv2
   private _indexer?: algosdk.Indexer
   private _kmd?: algosdk.Kmd
+  private _algorand?: AlgorandClientInterface
 
   /**
    * algosdk clients or config for interacting with the official Algorand APIs.
@@ -67,7 +73,7 @@ export class ClientManager {
    * const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig })
    * ```
    */
-  constructor(clientsOrConfig: AlgoConfig | AlgoSdkClients) {
+  constructor(clientsOrConfig: AlgoConfig | AlgoSdkClients, algorandClient?: AlgorandClientInterface) {
     const _clients =
       'algod' in clientsOrConfig
         ? clientsOrConfig
@@ -79,6 +85,7 @@ export class ClientManager {
     this._algod = _clients.algod
     this._indexer = _clients.indexer
     this._kmd = _clients.kmd
+    this._algorand = algorandClient
   }
 
   /** Returns an algosdk Algod API client. */
@@ -89,6 +96,11 @@ export class ClientManager {
   /** Returns an algosdk Indexer API client or throws an error if it's not been provided. */
   public get indexer(): algosdk.Indexer {
     if (!this._indexer) throw new Error('Attempt to use Indexer client in AlgoKit instance with no Indexer configured')
+    return this._indexer
+  }
+
+  /** Returns an algosdk Indexer API client or `undefined` if it's not been provided. */
+  public get indexerIfPresent(): algosdk.Indexer | undefined {
     return this._indexer
   }
 
@@ -129,7 +141,7 @@ export class ClientManager {
    * @returns Whether the given genesis ID is associated with a LocalNet network
    */
   public static genesisIdIsLocalNet(genesisId: string) {
-    return genesisId === 'devnet-v1' || genesisId === 'sandnet-v1' || genesisId === 'dockernet-v1'
+    return genesisIdIsLocalNet(genesisId)
   }
 
   /**
@@ -158,10 +170,10 @@ export class ClientManager {
 
   /**
    * Returns a TestNet Dispenser API client.
+   *
    * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
    *
    * @param params An object containing parameters for the TestNetDispenserApiClient class.
-   *  Or null if you want the client to load the access token from the environment variable `ALGOKIT_DISPENSER_ACCESS_TOKEN`.
    * @example
    * const client = clientManager.getTestNetDispenser(
    *     {
@@ -172,55 +184,226 @@ export class ClientManager {
    *
    * @returns An instance of the TestNetDispenserApiClient class.
    */
-  public getTestNetDispenser(params: TestNetDispenserApiClientParams | null = null) {
+  public getTestNetDispenser(params: TestNetDispenserApiClientParams) {
     return new TestNetDispenserApiClient(params)
   }
 
   /**
-   * Returns a new `ApplicationClient` client, resolving the app by creator address and name.
-   * @param details The details to resolve the app by creator address and name
-   * @param cachedAppLookup A cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this manager on construction.
-   * @returns The `ApplicationClient`
+   * Returns a TestNet Dispenser API client, loading the auth token from `process.env.ALGOKIT_DISPENSER_ACCESS_TOKEN`.
+   *
+   * Refer to [docs](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md) on guidance to obtain an access token.
+   *
+   * @param params An object containing parameters for the TestNetDispenserApiClient class.
+   * @example
+   * const client = clientManager.getTestNetDispenserFromEnvironment(
+   *     {
+   *       requestTimeout: 15,
+   *     }
+   * )
+   *
+   * @returns An instance of the TestNetDispenserApiClient class.
    */
-  public getAppClientByCreatorAndName(details: AppClientByCreatorAndNameDetails, cachedAppLookup?: AppLookup) {
-    return new ApplicationClient(
-      { ...details, resolveBy: 'creatorAndName', findExistingUsing: cachedAppLookup ?? this.indexer },
-      this._algod,
-    )
+  public getTestNetDispenserFromEnvironment(params?: Omit<TestNetDispenserApiClientParams, 'authToken'>) {
+    return new TestNetDispenserApiClient(params ? { ...params, authToken: '' } : undefined)
   }
 
   /**
-   * Returns a new `ApplicationClient` client, resolving the app by app ID.
-   * @param details The details to resolve the app by ID
-   * @returns The `ApplicationClient`
+   * Returns a new `AppFactory` client
+   * @example Basic example
+   * ```typescript
+   * const factory = algorand.client.getAppFactory({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\/}',
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const factory = algorand.client.getAppFactory({
+   *   appSpec: parsedAppSpec_AppSpec_or_Arc56Contract,
+   *   defaultSender: "SENDERADDRESS",
+   *   appName: "OverriddenAppName",
+   *   version: "2.0.0",
+   *   updatable: true,
+   *   deletable: false,
+   *   deployTimeParams: { ONE: 1, TWO: 'value' }
+   * })
+   * ```
    */
-  public getAppClientById(details: AppClientByIdDetails) {
-    return new ApplicationClient({ ...details, resolveBy: 'id' }, this._algod)
+  public getAppFactory(params: ClientAppFactoryParams) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
+    }
+
+    return new AppFactory({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
+   * This method resolves the app ID by looking up the creator address and name
+   * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
+   * @param params The parameters to create the app client
+   * @example Basic
+   * ```typescript
+   * const appClient = algorand.client.getAppClientByCreatorAndName({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
+   *   // appId resolved by looking for app ID of named app by this creator
+   *   creatorAddress: 'CREATORADDRESS',
+   * })
+   * ```
+   * @returns The `AppClient`
+   */
+  public getAppClientByCreatorAndName(params: ClientResolveAppClientByCreatorAndNameParams) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+
+    return AppClient.fromCreatorAndName({
+      ...params,
+      algorand: this._algorand,
+    })
+  }
+
+  /**
+   * Returns a new `AppClient` client for managing calls and state for an ARC-32/ARC-56 app.
+   * @param params The parameters to create the app client
+   * @example Basic
+   * ```typescript
+   * const appClient = algorand.client.getAppClientById({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
+   *   appId: 12345n,
+   * })
+   * ```
+   * @returns The `AppClient`
+   */
+  public getAppClientById(params: ClientAppClientParams) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+    return new AppClient({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns a new `AppClient` client for managing calls and state for an ARC-56 app.
+   * This method resolves the app ID for the current network based on
+   * pre-determined network-specific app IDs specified in the ARC-56 app spec.
+   *
+   * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
+   * @param params The parameters to create the app client
+   * @example Basic
+   * ```typescript
+   * const appClient = algorand.client.getAppClientByNetwork({
+   *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
+   *   // appId resolved by using ARC-56 spec to find app ID for current network
+   * })
+   * ```
+   * @returns The `AppClient`
+   */
+  public async getAppClientByNetwork(params: ClientAppClientByNetworkParams) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+    return AppClient.fromNetwork({ ...params, algorand: this._algorand })
   }
 
   /**
    * Returns a new typed client, resolving the app by creator address and name.
    * @param typedClient The typed client type to use
-   * @param details The details to resolve the app by creator address and name
-   * @param cachedAppLookup A cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this manager on construction.
+   * @param params The params to resolve the app by creator address and name
+   * @example Use name in ARC-32 / ARC-56 app spec
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   *   creatorAddress: "CREATORADDRESS",
+   *   defaultSender: alice,
+   * })
+   * ```
+   * @example Specify name
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   *   creatorAddress: "CREATORADDRESS",
+   *   name: "contract-name",
+   *   defaultSender: alice,
+   * })
+   * ```
    * @returns The typed client instance
    */
-  public getTypedAppClientByCreatorAndName<TClient>(
-    typedClient: TypedAppClient<TClient>,
-    details: TypedAppClientByCreatorAndNameDetails,
-    cachedAppLookup?: AppLookup,
+  public async getTypedAppClientByCreatorAndName<TClient extends TypedAppClient<InstanceType<TClient>>>(
+    typedClient: TClient,
+    params: ClientTypedAppClientByCreatorAndNameParams,
   ) {
-    return new typedClient({ ...details, resolveBy: 'creatorAndName', findExistingUsing: cachedAppLookup ?? this.indexer }, this._algod)
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+
+    return typedClient.fromCreatorAndName({ ...params, algorand: this._algorand })
   }
 
   /**
    * Returns a new typed client, resolving the app by app ID.
    * @param typedClient The typed client type to use
-   * @param details The details to resolve the app by ID
+   * @param params The params to resolve the app by ID
+   * @example
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
+   *   appId: 12345n,
+   *   defaultSender: alice,
+   * })
+   * ```
    * @returns The typed client instance
    */
-  public getTypedAppClientById<TClient>(typedClient: TypedAppClient<TClient>, details: TypedAppClientByIdDetails) {
-    return new typedClient({ ...details, resolveBy: 'id' }, this._algod)
+  public getTypedAppClientById<TClient extends TypedAppClient<InstanceType<TClient>>>(
+    typedClient: TClient,
+    params: ClientTypedAppClientParams,
+  ) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+
+    return new typedClient({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns a new typed client, resolves the app ID for the current network based on
+   * pre-determined network-specific app IDs specified in the ARC-56 app spec.
+   *
+   * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
+   * @param typedClient The typed client type to use
+   * @param params The params to resolve the app by network
+   * @example
+   * ```typescript
+   * const appClient = algorand.client.getTypedAppClientByNetwork(MyContractClient, {
+   *   defaultSender: alice,
+   * })
+   * ```
+   * @returns The typed client instance
+   */
+  public getTypedAppClientByNetwork<TClient extends TypedAppClient<InstanceType<TClient>>>(
+    typedClient: TClient,
+    params?: ClientTypedAppClientByNetworkParams,
+  ) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
+    }
+
+    return typedClient.fromNetwork({ ...params, algorand: this._algorand })
+  }
+
+  /**
+   * Returns a new typed app factory.
+   * @param typedFactory The typed factory type to use
+   * @param params The params to resolve the factory by
+   * @example
+   * ```typescript
+   * const appFactory = algorand.client.getTypedAppFactory(MyContractClient, {
+   *   sender: alice,
+   * })
+   * ```
+   * @returns The typed client instance
+   */
+  public getTypedAppFactory<TClient>(typedFactory: TypedAppFactory<TClient>, params?: ClientTypedAppFactoryParams) {
+    if (!this._algorand) {
+      throw new Error('Attempt to get app factory from a ClientManager without an Algorand client')
+    }
+
+    return new typedFactory({ ...params, algorand: this._algorand })
   }
 
   /**
@@ -458,27 +641,14 @@ export class ClientManager {
  * Interface to identify a typed client that can be used to interact with an application.
  */
 export interface TypedAppClient<TClient> {
-  new (details: AppDetails, algod: algosdk.Algodv2): TClient
+  new (params: Omit<AppClientParams, 'appSpec'>): TClient
+  fromNetwork(params: Omit<AppClientParams, 'appId' | 'appSpec'>): Promise<TClient>
+  fromCreatorAndName(params: Omit<ResolveAppClientByCreatorAndName, 'appSpec'>): Promise<TClient>
 }
 
 /**
- * Details to resolve an app client by creator address and name.
+ * Interface to identify a typed factory that can be used to create and deploy an application.
  */
-export type AppClientByCreatorAndNameDetails = AppSpecAppDetailsBase &
-  AppDetailsBase &
-  Omit<ResolveAppByCreatorAndNameBase, 'findExistingUsing'>
-
-/**
- * Details to resolve a typed app creator address and name.
- */
-export type TypedAppClientByCreatorAndNameDetails = AppDetailsBase & Omit<ResolveAppByCreatorAndNameBase, 'findExistingUsing'>
-
-/**
- * Details to resolve an app client by app ID.
- */
-export type AppClientByIdDetails = AppSpecAppDetailsBase & AppDetailsBase & ResolveAppByIdBase
-
-/**
- * Details to resolve a typed app by app ID.
- */
-export type TypedAppClientByIdDetails = AppDetailsBase & ResolveAppByIdBase
+export interface TypedAppFactory<TClient> {
+  new (params: Omit<AppFactoryParams, 'appSpec'>): TClient
+}

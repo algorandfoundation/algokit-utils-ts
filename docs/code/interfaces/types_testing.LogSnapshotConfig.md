@@ -20,7 +20,7 @@ This helps ensure that the provided configuration items won't appear
 
 ### accounts
 
-• `Optional` **accounts**: (`string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom))[]
+• `Optional` **accounts**: (`string` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| `default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md) \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md) \| `LogicSigAccount`)[]
 
 Any accounts/addresses to replace the address for predictably
 

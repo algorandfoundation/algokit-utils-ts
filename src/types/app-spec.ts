@@ -1,6 +1,142 @@
 import algosdk from 'algosdk'
+import { Arc56Contract, Method as Arc56Method, StorageKey, StructField } from './app-arc56'
 import ABIContractParams = algosdk.ABIContractParams
 import ABIMethodParams = algosdk.ABIMethodParams
+import ABIMethod = algosdk.ABIMethod
+
+export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
+  const arc32Structs = Object.values(appSpec.hints).flatMap((hint) => Object.entries(hint.structs ?? {}))
+  const structs = Object.fromEntries(
+    arc32Structs.map(([_, struct]) => {
+      const fields = struct.elements.map((e) => ({ name: e[0], type: e[1] }))
+      return [struct.name, fields]
+    }),
+  ) satisfies { [structName: string]: StructField[] }
+  const hint = (m: ABIMethodParams) => appSpec.hints[new ABIMethod(m).getSignature()] as Hint | undefined
+  const actions = (m: ABIMethodParams, type: 'CREATE' | 'CALL') => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+    return hint(m)?.call_config !== undefined ? callConfigToActions(hint(m)?.call_config!, type) : []
+  }
+  const bareActions = (type: 'CREATE' | 'CALL') => {
+    return callConfigToActions(appSpec.bare_call_config, type)
+  }
+  const callConfigToActions = (c: CallConfig, type: 'CREATE' | 'CALL') => {
+    const actions: ('NoOp' | 'OptIn' | 'CloseOut' | 'ClearState' | 'UpdateApplication' | 'DeleteApplication')[] = []
+    if (c.close_out && ['ALL', type].includes(c.close_out)) actions.push('CloseOut')
+    if (c.delete_application && ['ALL', type].includes(c.delete_application)) actions.push('DeleteApplication')
+    if (c.no_op && ['ALL', type].includes(c.no_op)) actions.push('NoOp')
+    if (c.opt_in && ['ALL', type].includes(c.opt_in)) actions.push('OptIn')
+    if (c.update_application && ['ALL', type].includes(c.update_application)) actions.push('UpdateApplication')
+    return actions
+  }
+  const getDefaultArgValue = (
+    type: string,
+    defaultArg: DefaultArgument | undefined,
+  ): Arc56Contract['methods'][0]['args'][0]['defaultValue'] => {
+    if (!defaultArg) return undefined
+
+    if (defaultArg.source === 'abi-method') {
+      return {
+        source: 'method',
+        data: defaultArg.data.name,
+      }
+    }
+
+    return {
+      source: defaultArg.source === 'constant' ? 'literal' : defaultArg.source === 'global-state' ? 'global' : 'local',
+      data: Buffer.from(
+        typeof defaultArg.data === 'number' ? algosdk.ABIType.from('uint64').encode(defaultArg.data) : defaultArg.data,
+      ).toString('base64'),
+      type: type === 'string' ? 'AVMString' : type,
+    }
+  }
+
+  return {
+    arcs: [],
+    name: appSpec.contract.name,
+    desc: appSpec.contract.desc,
+    structs: structs,
+    methods: appSpec.contract.methods.map(
+      (m) =>
+        ({
+          name: m.name,
+          desc: m.desc,
+          args: m.args.map((a) => ({
+            name: a.name,
+            type: a.type,
+            desc: a.desc,
+            struct: a.name ? hint(m)?.structs?.[a.name]?.name : undefined,
+            defaultValue: getDefaultArgValue(a.type, !a.name ? undefined : hint(m)?.default_arguments?.[a.name]),
+          })),
+          returns: {
+            type: m.returns.type,
+            desc: m.returns.desc,
+            struct: hint(m)?.structs?.output?.name,
+          },
+          events: [],
+          readonly: hint(m)?.read_only,
+          actions: {
+            create: actions(m, 'CREATE') as Arc56Method['actions']['create'],
+            call: actions(m, 'CALL'),
+          },
+        }) satisfies Arc56Method,
+    ),
+    state: {
+      schema: {
+        global: {
+          ints: appSpec.state.global.num_uints,
+          bytes: appSpec.state.global.num_byte_slices,
+        },
+        local: {
+          ints: appSpec.state.local.num_uints,
+          bytes: appSpec.state.local.num_byte_slices,
+        },
+      },
+      keys: {
+        global: Object.fromEntries(
+          Object.entries(appSpec.schema.global.declared).map((s) => [
+            s[0],
+            {
+              key: Buffer.from(s[1].key, 'utf-8').toString('base64'),
+              keyType: 'AVMString',
+              valueType: s[1].type === 'uint64' ? 'AVMUint64' : 'AVMBytes',
+              desc: s[1].descr,
+            } satisfies StorageKey,
+          ]),
+        ),
+        local: Object.fromEntries(
+          Object.entries(appSpec.schema.local.declared).map((s) => [
+            s[0],
+            {
+              key: Buffer.from(s[1].key, 'utf-8').toString('base64'),
+              keyType: 'AVMString',
+              valueType: s[1].type === 'uint64' ? 'AVMUint64' : 'AVMBytes',
+              desc: s[1].descr,
+            } satisfies StorageKey,
+          ]),
+        ),
+        box: {},
+      },
+      maps: {
+        global: {},
+        local: {},
+        box: {},
+      },
+    },
+    source: appSpec.source,
+    bareActions: {
+      create: bareActions('CREATE') as unknown as Arc56Contract['bareActions']['create'],
+      call: bareActions('CALL'),
+    },
+    byteCode: undefined,
+    compilerInfo: undefined,
+    events: undefined,
+    networks: undefined,
+    scratchVariables: undefined,
+    sourceInfo: undefined,
+    templateVariables: undefined,
+  } satisfies Arc56Contract
+}
 
 /** An ARC-0032 Application Specification see https://github.com/algorandfoundation/ARCs/pull/150 */
 export interface AppSpec {

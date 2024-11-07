@@ -26,7 +26,7 @@ npm install @algorandfoundation/algokit-utils
 
 ## Peer Dependencies
 
-This library requires `algosdk` as a peer dependency. Ensure you have it installed in your project.
+This library requires `algosdk@2` as a peer dependency. Ensure you have it installed in your project.
 
 # Usage
 
@@ -36,38 +36,40 @@ To use this library simply include the following at the top of your file:
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 ```
 
-As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import withing the {} in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
+As well as `AlgorandClient` and `Config`, you can use intellisense to auto-complete the various types that you can import within the `{}` in your favourite Integrated Development Environment (IDE), or you can refer to the [reference documentation](./code/modules/index.md).
 
 > [!WARNING]
-> Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as`):
+> Previous versions of AlgoKit Utils encouraged you to include an import that looks like this (note the subtle difference of the extra `* as algokit`):
 >
 > ```typescript
 > import * as algokit from '@algorandfoundation/algokit-utils'
 > ```
 >
-> This version will still work, but it exposes an older, function-based interface to the functionality that is in the process of being deprecated. The recommended way to use AlgoKit Utils is via the `AlgorandClient` class mentioned below, which is easier and more convenient to use. Some functionality won't yet be migrated to the new approach and this old approach will be needed, but the documentation pages will indicate when this is the case.
+> This version will still work until the next major version bump, but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
+>
+> If you are migrating from the old functions to the new ones then you can follow the [migration guide](v7-migration.md).
 
-The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `algokit.AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
+The main entrypoint to the bulk of the functionality is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
 
 ```typescript
 // Point to the network configured through environment variables or
 //  if no environment variables it will point to the default LocalNet
 //  configuration
-const algorand = algokit.AlgorandClient.fromEnvironment()
+const algorand = AlgorandClient.fromEnvironment()
 // Point to default LocalNet configuration
-const algorand = algokit.AlgorandClient.defaultLocalNet()
+const algorand = AlgorandClient.defaultLocalNet()
 // Point to TestNet using AlgoNode free tier
-const algorand = algokit.AlgorandClient.testNet()
+const algorand = AlgorandClient.testNet()
 // Point to MainNet using AlgoNode free tier
-const algorand = algokit.AlgorandClient.mainNet()
+const algorand = AlgorandClient.mainNet()
 // Point to a pre-created algod client
-const algorand = algokit.AlgorandClient.fromClients({ algod })
+const algorand = AlgorandClient.fromClients({ algod })
 // Point to pre-created algod, indexer and kmd clients
-const algorand = algokit.AlgorandClient.fromClients({ algod, indexer, kmd })
+const algorand = AlgorandClient.fromClients({ algod, indexer, kmd })
 // Point to custom configuration for algod
-const algorand = algokit.AlgorandClient.fromConfig({ algodConfig })
+const algorand = AlgorandClient.fromConfig({ algodConfig })
 // Point to custom configuration for algod, indexer and kmd
-const algorand = algokit.AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig })
+const algorand = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig })
 ```
 
 ## Testing
@@ -100,7 +102,7 @@ Where `<type>` would be replaced with the type and `<module>` would be replaced 
 
 # Config and logging
 
-To configure the AlgoKit Utils library you can make use of the `algokit.Config` object, which has a `configure` method that lets you configure some or all of the configuration options.
+To configure the AlgoKit Utils library you can make use of the `Config` object, which has a `configure` method that lets you configure some or all of the configuration options.
 
 ## Logging
 
@@ -125,28 +127,28 @@ By default, the [`consoleLogger`](./code/modules/types_logging.md#consolelogger)
 If you want to override the logger you can use the following:
 
 ```typescript
-algokit.configure({ logger: myLogger })
+Config.configure({ logger: myLogger })
 ```
 
-To retrieve the current debug state you can use [`algokit.Config.logger`](./code/interfaces/types_config.Config.md). To get a logger that is optionally set to the null logger based on a boolean flag you can use the [`algokit.Config.getLogger(useNullLogger)`](./code/classes/types_config.UpdatableConfig.md#getlogger) function.
+To retrieve the current debug state you can use [`Config.logger`](./code/interfaces/types_config.Config.md). To get a logger that is optionally set to the null logger based on a boolean flag you can use the [`Config.getLogger(useNullLogger)`](./code/classes/types_config.UpdatableConfig.md#getlogger) function.
 
 ## Debug mode
 
 To turn on debug mode you can use the following:
 
 ```typescript
-algokit.configure({ debug: true })
+Config.configure({ debug: true })
 ```
 
-To retrieve the current debug state you can use [`algokit.Config.debug`](./code/interfaces/types_config.Config.md).
+To retrieve the current debug state you can use [`Config.debug`](./code/interfaces/types_config.Config.md).
 
 This will turn on things like automatic tracing, more verbose logging and [advanced debugging](./capabilities/debugging.md). It's likely this option will result in extra HTTP calls to algod so worth being careful when it's turned on.
 
 If you want to temporarily turn it on you can use the [`withDebug`](./code/classes/types_config.UpdatableConfig.md#withdebug) function:
 
 ```typescript
-algokit.Config.withDebug(() => {
-  // Do stuff with algokit.Config.debug set to true
+Config.withDebug(() => {
+  // Do stuff with Config.debug set to true
 })
 ```
 
@@ -155,29 +157,21 @@ algokit.Config.withDebug(() => {
 The library helps you interact with and develop against the Algorand blockchain with a series of end-to-end capabilities as described below:
 
 - [**AlgorandClient**](./capabilities/algorand-client.md) - The key entrypoint to the AlgoKit Utils functionality
-- Core capabilities
-  - [**Client management**](./capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration
-  - [**Account management**](./capabilities/account.md) - Creation and use of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
-  - [**Algo amount handling**](./capabilities/amount.md) - Reliable and terse specification of microAlgo and Algo amounts and conversion between them
-  - [**Transaction management**](./capabilities/transaction.md) - Ability to send single, grouped or Atomic Transaction Composer transactions with consistent and highly configurable semantics, including configurable control of transaction notes (including ARC-0002), logging, fees, multiple sender account types, and sending behaviour
-- Higher-order use cases
-  - [**App management**](./capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
-  - [**App deployment**](./capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
-  - [**ARC-0032 Application Spec client**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities to provide a high productivity application client that works with ARC-0032 application spec defined smart contracts (e.g. via Beaker)
-  - [**Algo transfers**](./capabilities/transfer.md) - Ability to easily initiate algo transfers between accounts, including dispenser management and idempotent account funding
+- **Core capabilities**
+  - [**Client management**](./capabilities/client.md) - Creation of (auto-retry) algod, indexer and kmd clients against various networks resolved from environment or specified configuration, and creation of other API clients (e.g. TestNet Dispenser API and app clients)
+  - [**Account management**](./capabilities/account.md) - Creation, use, and management of accounts including mnemonic, rekeyed, multisig, transaction signer ([useWallet](https://github.com/TxnLab/use-wallet) for dApps and Atomic Transaction Composer compatible signers), idempotent KMD accounts and environment variable injected
+  - [**Algo amount handling**](./capabilities/amount.md) - Reliable, explicit, and terse specification of microAlgo and Algo amounts and safe conversion between them
+  - [**Transaction management**](./capabilities/transaction.md) - Ability to construct, simulate and send transactions with consistent and highly configurable semantics, including configurable control of transaction notes, logging, fees, validity, signing, and sending behaviour
+- **Higher-order use cases**
+  - [**Asset management**](./capabilities/asset.md) - Creation, transfer, destroying, opting in and out and managing Algorand Standard Assets
+  - [**Typed application clients**](./capabilities/typed-app-clients.md) - Type-safe application clients that are [generated](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients) from ARC-56 or ARC-32 application spec files and allow you to intuitively and productively interact with a deployed app, which is the recommended way of interacting with apps and builds on top of the following capabilities:
+    - [**ARC-56 / ARC-32 App client and App factory**](./capabilities/app-client.md) - Builds on top of the App management and App deployment capabilities (below) to provide a high productivity application client that works with ARC-56 and ARC-32 application spec defined smart contracts
+    - [**App management**](./capabilities/app.md) - Creation, updating, deleting, calling (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes)
+    - [**App deployment**](./capabilities/app-deploy.md) - Idempotent (safely retryable) deployment of an app, including deploy-time immutability and permanence control and TEAL template substitution
+  - [**Algo transfers (payments)**](./capabilities/transfer.md) - Ability to easily initiate Algo transfers between accounts, including dispenser management and idempotent account funding
   - [**Automated testing**](./capabilities/testing.md) - Terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture
-  - [**Indexer lookups / searching**](./capabilities/indexer.md) - Type-safe indexer API wrappers (no more `Record<string, any>` pain), including automatic pagination control
+  - [**Indexer lookups / searching**](./capabilities/indexer.md) - Type-safe indexer API wrappers (no `Record<string, any>` pain from the SDK client), including automatic pagination control
 
 # Reference documentation
 
 We have [auto-generated reference documentation for the code](./code/README.md).
-
-# Roadmap
-
-This library will naturally evolve with any logical developer experience improvements needed to facilitate the [AlgoKit](https://github.com/algorandfoundation/algokit-cli) roadmap as it evolves.
-
-Likely future capability additions include:
-
-- Typed application client (similar to [beaker-ts](https://github.com/algorand-devrel/beaker-ts))
-- Asset management
-- Expanded indexer API wrapper support

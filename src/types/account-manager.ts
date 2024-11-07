@@ -1,20 +1,24 @@
 import algosdk from 'algosdk'
+import { Config } from '../config'
+import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
+import TransactionComposer, { CommonTransactionParams } from './composer'
+import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
+import { SendParams, SendSingleTransactionResult } from './transaction'
 import LogicSigAccount = algosdk.LogicSigAccount
 import Account = algosdk.Account
 import TransactionSigner = algosdk.TransactionSigner
 import AccountInformationModel = algosdk.modelsv2.Account
 
-const memoize = <T = unknown, R = unknown>(fn: (val: T) => R) => {
-  const cache = new Map()
-  const cached = function (this: unknown, val: T) {
-    return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(this, val)) && cache.get(val)
-  }
-  cached.cache = cache
-  return cached as (val: T) => R
+/** Result from performing an ensureFunded call. */
+export interface EnsureFundedResult {
+  /** The transaction ID of the transaction that funded the account. */
+  transactionId: string
+  /** The amount that was sent to the account. */
+  amountFunded: AlgoAmount
 }
 
 /**
@@ -51,6 +55,14 @@ export class AccountManager {
   constructor(clientManager: ClientManager) {
     this._clientManager = clientManager
     this._kmdAccountManager = new KmdAccountManager(clientManager)
+  }
+
+  private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
+    return new TransactionComposer({
+      algod: this._clientManager.algod,
+      getSigner: this.getSigner.bind(this),
+      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),
+    })
   }
 
   /** KMD account manager that allows you to easily get and create accounts using KMD. */
@@ -135,6 +147,21 @@ export class AccountManager {
   }
 
   /**
+   * Takes all registered signers from the given `AccountManager` and adds them to this `AccountManager`.
+   *
+   * This is useful for situations where you have multiple contexts you are building accounts in such as unit tests.
+   * @param anotherAccountManager Another account manager with signers registered
+   * @param overwriteExisting Whether or not to overwrite any signers that have the same sender address with the ones in the other account manager or not (default: true)
+   * @returns The `AccountManager` instance for method chaining
+   */
+  public setSigners(anotherAccountManager: AccountManager, overwriteExisting = true) {
+    this._accounts = overwriteExisting
+      ? { ...this._accounts, ...anotherAccountManager._accounts }
+      : { ...anotherAccountManager._accounts, ...this._accounts }
+    return
+  }
+
+  /**
    * Returns the `TransactionSigner` for the given sender address, ready to sign a transaction for that sender.
    *
    * If no signer has been registered for that address then the default signer is used if registered and
@@ -160,8 +187,7 @@ export class AccountManager {
    * @param sender The sender address
    * @example
    * ```typescript
-   * const account = accountManager.random()
-   * const sender = account.addr
+   * const sender = accountManager.random().addr
    * // ...
    * // Returns the `TransactionSignerAccount` for `sender` that has previously been registered
    * const account = accountManager.getAccount(sender)
@@ -187,52 +213,35 @@ export class AccountManager {
    * @param sender The account / address to look up
    * @returns The account information
    */
-  public async getInformation(sender: string): Promise<AccountInformation> {
-    const account = AccountInformationModel.from_obj_for_encoding(await this._clientManager.algod.accountInformation(sender).do())
+  public async getInformation(sender: string | TransactionSignerAccount): Promise<AccountInformation> {
+    const {
+      round,
+      lastHeartbeat = undefined,
+      lastProposed = undefined,
+      ...account
+    } = AccountInformationModel.from_obj_for_encoding(
+      await this._clientManager.algod.accountInformation(typeof sender === 'string' ? sender : sender.addr).do(),
+    )
 
     return {
       ...account,
-      // None of these can practically overflow 2^53
-      amount: Number(account.amount),
-      amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
-      minBalance: Number(account.minBalance),
-      pendingRewards: Number(account.pendingRewards),
-      rewards: Number(account.rewards),
-      round: Number(account.round),
+      // None of the Number types can practically overflow 2^53
+      balance: AlgoAmount.MicroAlgo(Number(account.amount)),
+      amountWithoutPendingRewards: AlgoAmount.MicroAlgo(Number(account.amountWithoutPendingRewards)),
+      minBalance: AlgoAmount.MicroAlgo(Number(account.minBalance)),
+      pendingRewards: AlgoAmount.MicroAlgo(Number(account.pendingRewards)),
+      rewards: AlgoAmount.MicroAlgo(Number(account.rewards)),
+      validAsOfRound: BigInt(round),
       totalAppsOptedIn: Number(account.totalAppsOptedIn),
       totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
       totalCreatedApps: Number(account.totalCreatedApps),
       totalCreatedAssets: Number(account.totalCreatedAssets),
-      appsTotalExtraPages: account.appsTotalExtraPages ? Number(account.appsTotalExtraPages) : undefined,
-      rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
-      totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
-      totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
-    }
-  }
-
-  /**
-   * Returns the given sender account's asset holding for a given asset.
-   *
-   * @example
-   * ```typescript
-   * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
-   * const assetId = 123345;
-   * const accountInfo = await accountManager.getAccountAssetInformation(address, assetId);
-   * ```
-   *
-   * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
-   * @param sender The address of the sender/account to look up
-   * @param assetId The ID of the asset to return a holding for
-   * @returns The account asset holding information
-   */
-  public async getAssetInformation(sender: string, assetId: number | bigint) {
-    const info = await this._clientManager.algod.accountAssetInformation(sender, Number(assetId)).do()
-
-    return {
-      assetId: BigInt(assetId),
-      balance: BigInt(info['asset-holding']['amount']),
-      frozen: info['asset-holding']['is-frozen'] === 'true',
-      round: BigInt(info['round']),
+      appsTotalExtraPages: account.appsTotalExtraPages !== undefined ? Number(account.appsTotalExtraPages) : undefined,
+      rewardBase: account.rewardBase !== undefined ? Number(account.rewardBase) : undefined,
+      totalBoxBytes: account.totalBoxBytes !== undefined ? Number(account.totalBoxBytes) : undefined,
+      totalBoxes: account.totalBoxes !== undefined ? Number(account.totalBoxes) : undefined,
+      lastHeartbeatRound: lastHeartbeat !== undefined ? BigInt(lastHeartbeat) : undefined,
+      lastProposedRound: lastProposed !== undefined ? BigInt(lastProposed) : undefined,
     }
   }
 
@@ -241,8 +250,8 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.fromMnemonic("mnemonic secret ...")
-   * const rekeyedAccount = await account.fromMnemonic("mnemonic secret ...", "SENDERADDRESS...")
+   * const account = accountManager.fromMnemonic("mnemonic secret ...")
+   * const rekeyedAccount = accountManager.fromMnemonic("mnemonic secret ...", "SENDERADDRESS...")
    * ```
    * @param mnemonicSecret The mnemonic secret representing the private key of an account; **Note: Be careful how the mnemonic is handled**,
    *  never commit it into source control and ideally load it from the environment (ideally via a secret storage service) rather than the file system.
@@ -252,6 +261,22 @@ export class AccountManager {
   public fromMnemonic(mnemonicSecret: string, sender?: string): string {
     const account = algosdk.mnemonicToSecretKey(mnemonicSecret)
     return this.signerAccount(new SigningAccount(account, sender)).addr
+  }
+
+  /**
+   * Tracks and returns an Algorand account that is a rekeyed version of the given account to a new sender.
+   *
+   * @example
+   * ```typescript
+   * const account = account.fromMnemonic("mnemonic secret ...")
+   * const rekeyedAccount = accountManager.rekeyed(account, "SENDERADDRESS...")
+   * ```
+   * @param account The account to use as the signer for this new rekeyed account
+   * @param sender The sender address to use as the new sender
+   * @returns The account
+   */
+  public rekeyed(sender: string, account: TransactionSignerAccount) {
+    return this.signerAccount({ addr: sender, signer: account.signer })
   }
 
   /**
@@ -271,14 +296,14 @@ export class AccountManager {
    *
    * If you have a mnemonic secret loaded into `process.env.MY_ACCOUNT_MNEMONIC` then you can call the following to get that private key loaded into an account object:
    * ```typescript
-   * const account = await account.fromEnvironment('MY_ACCOUNT', algod)
+   * const account = await accountManager.fromEnvironment('MY_ACCOUNT')
    * ```
    *
-   * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+   * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
    * If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
    *
    * @param name The name identifier of the account
-   * @param fundWith The optional amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+   * @param fundWith The optional amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account
    * @returns The account
    */
   public async fromEnvironment(name: string, fundWith?: AlgoAmount): Promise<string> {
@@ -322,8 +347,8 @@ export class AccountManager {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean,
     sender?: string,
-  ): Promise<string> {
-    const account = await this.kmd.getWalletAccount(name, predicate, sender)
+  ) {
+    const account = await this._kmdAccountManager.getWalletAccount(name, predicate, sender)
     if (!account) throw new Error(`Unable to find KMD account ${name}${predicate ? ' with predicate' : ''}`)
     return this.signerAccount(account.account).addr
   }
@@ -333,8 +358,8 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.multisig({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]},
-   *  await account.fromEnvironment('ACCOUNT1'))
+   * const account = accountManager.multisig({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]},
+   *  [(await accountManager.fromEnvironment('ACCOUNT1')).account])
    * ```
    * @param multisigParams The parameters that define the multisig account
    * @param signingAccounts The signers that are currently present
@@ -349,7 +374,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.logicsig(program, [new Uint8Array(3, ...)])
+   * const account = account.logicsig(program, [new Uint8Array(3, ...)])
    * ```
    * @param program The bytes that make up the compiled logic signature
    * @param args The (binary) arguments to pass into the logic signature
@@ -364,7 +389,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.random()
+   * const account = account.random()
    * ```
    * @returns The account
    */
@@ -410,5 +435,243 @@ export class AccountManager {
   public async localNetDispenser(): Promise<string> {
     const dispenser = await this._kmdAccountManager.getLocalNetDispenserAccount()
     return this.signerAccount(dispenser.account).addr
+  }
+
+  /**
+   * Rekey an account to a new address.
+   *
+   * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   *
+   * @param account The account to rekey
+   * @param rekeyTo The account address or signing account of the account that will be used to authorise transactions for the rekeyed account going forward.
+   *  If a signing account is provided that will now be tracked as the signer for `account` in this `AccountManager`
+   * @param options Any parameters to control the transaction or execution of the transaction
+   *
+   * @example Basic example (with string addresses)
+   * ```typescript
+   * await algorand.account.rekeyAccount({account: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
+   * ```
+   * @example Basic example (with signer accounts)
+   * ```typescript
+   * await algorand.account.rekeyAccount({account: account1, rekeyTo: newSignerAccount})
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.account.rekeyAccount({
+   *   account: "ACCOUNTADDRESS",
+   *   rekeyTo: "NEWADDRESS",
+   *   lease: 'lease',
+   *   note: 'note',
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   *   maxRoundsToWaitForConfirmation: 5,
+   *   suppressLog: true,
+   * })
+   * ```
+   * @returns The result of the transaction and the transaction that was sent
+   */
+  async rekeyAccount(
+    account: string | TransactionSignerAccount,
+    rekeyTo: string | TransactionSignerAccount,
+    options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
+  ): Promise<SendSingleTransactionResult> {
+    const result = await this._getComposer()
+      .addPayment({
+        ...options,
+        sender: typeof account === 'string' ? account : account.addr,
+        receiver: typeof account === 'string' ? account : account.addr,
+        amount: AlgoAmount.MicroAlgo(0),
+        rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : rekeyTo.addr,
+      })
+      .send(options)
+
+    // If the rekey is a signing account set it as the signer for this account
+    if (typeof rekeyTo !== 'string') {
+      this.rekeyed(typeof account === 'string' ? account : account.addr, rekeyTo)
+    }
+
+    Config.getLogger(options?.suppressLog).info(`Rekeyed ${account} to ${rekeyTo} via transaction ${result.txIds.at(-1)}`)
+
+    return { ...result, transaction: result.transactions.at(-1)!, confirmation: result.confirmations.at(-1)! }
+  }
+
+  private async _getEnsureFundedAmount(sender: string, minSpendingBalance: AlgoAmount, minFundingIncrement?: AlgoAmount) {
+    const accountInfo = await this.getInformation(sender)
+    const currentSpendingBalance = accountInfo.balance.microAlgo - accountInfo.minBalance.microAlgo
+
+    const amountFunded = calculateFundAmount(minSpendingBalance.microAlgo, currentSpendingBalance, minFundingIncrement?.microAlgo ?? 0n)
+
+    return amountFunded === null ? undefined : AlgoAmount.MicroAlgo(amountFunded)
+  }
+
+  /**
+   * Funds a given account using a dispenser account as a funding source such that
+   * the given account has a certain amount of Algo free to spend (accounting for
+   * Algo locked in minimum balance requirement).
+   *
+   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   *
+   * @param accountToFund The account to fund
+   * @param dispenserAccount The account to use as a dispenser funding source
+   * @param minSpendingBalance The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1))
+   * // With configuration
+   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1),
+   *  { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
+   * )
+   * ```
+   * @returns
+   * - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
+   * - `undefined` if no funds were needed.
+   */
+  async ensureFunded(
+    accountToFund: string | TransactionSignerAccount,
+    dispenserAccount: string | TransactionSignerAccount,
+    minSpendingBalance: AlgoAmount,
+    options?: {
+      minFundingIncrement?: AlgoAmount
+    } & SendParams &
+      Omit<CommonTransactionParams, 'sender'>,
+  ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
+    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+
+    const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
+    if (!amountFunded) return undefined
+
+    const result = await this._getComposer()
+      .addPayment({
+        ...options,
+        sender: typeof dispenserAccount === 'string' ? dispenserAccount : dispenserAccount.addr,
+        receiver: addressToFund,
+        amount: amountFunded,
+      })
+      .send(options)
+
+    return {
+      ...result,
+      transaction: result.transactions[0],
+      confirmation: result.confirmations[0],
+      transactionId: result.txIds[0],
+      amountFunded: amountFunded,
+    }
+  }
+
+  /**
+   * Funds a given account using a dispenser account retrieved from the environment,
+   * per the `dispenserFromEnvironment` method, as a funding source such that
+   * the given account has a certain amount of Algo free to spend (accounting for
+   * Algo locked in minimum balance requirement).
+   *
+   * **Note:** requires a Node.js environment to execute.
+   *
+   * The dispenser account is retrieved from the account mnemonic stored in
+   * process.env.DISPENSER_MNEMONIC and optionally process.env.DISPENSER_SENDER
+   * if it's a rekeyed account, or against default LocalNet if no environment variables present.
+   *
+   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   *
+   * @param accountToFund The account to fund
+   * @param minSpendingBalance The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1))
+   * // With configuration
+   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1),
+   *  { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
+   * )
+   * ```
+   * @returns
+   * - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
+   * - `undefined` if no funds were needed.
+   */
+  async ensureFundedFromEnvironment(
+    accountToFund: string | TransactionSignerAccount,
+    minSpendingBalance: AlgoAmount,
+    options?: {
+      minFundingIncrement?: AlgoAmount
+    } & SendParams &
+      Omit<CommonTransactionParams, 'sender'>,
+  ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
+    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+    const dispenserAccount = await this.dispenserFromEnvironment()
+
+    const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
+    if (!amountFunded) return undefined
+
+    const result = await this._getComposer()
+      .addPayment({
+        ...options,
+        sender: dispenserAccount,
+        receiver: addressToFund,
+        amount: amountFunded,
+      })
+      .send(options)
+
+    return {
+      ...result,
+      transaction: result.transactions[0],
+      confirmation: result.confirmations[0],
+      transactionId: result.txIds[0],
+      amountFunded: amountFunded,
+    }
+  }
+
+  /**
+   * Funds a given account using the TestNet Dispenser API as a funding source such that
+   * the account has a certain amount of Algo free to spend (accounting for Algo locked
+   * in minimum balance requirement).
+   *
+   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   *
+   * @param accountToFund The account to fund
+   * @param dispenserClient The TestNet dispenser funding client
+   * @param minSpendingBalance The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement)
+   * @param options Optional parameters to control the funding increment, transaction or execution of the transaction
+   * @example Example using AlgorandClient
+   * ```typescript
+   * // Basic example
+   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1))
+   * // With configuration
+   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1),
+   *  { minFundingIncrement: algokit.algo(2) }
+   * )
+   * ```
+   * @returns
+   * - The result of executing the dispensing transaction and the `amountFunded` if funds were needed.
+   * - `undefined` if no funds were needed.
+   */
+  async ensureFundedFromTestNetDispenserApi(
+    accountToFund: string | TransactionSignerAccount,
+    dispenserClient: TestNetDispenserApiClient,
+    minSpendingBalance: AlgoAmount,
+    options?: {
+      minFundingIncrement?: AlgoAmount
+    },
+  ): Promise<EnsureFundedResult | undefined> {
+    if (!(await this._clientManager.isTestNet())) {
+      throw new Error('Attempt to fund using TestNet dispenser API on non TestNet network.')
+    }
+
+    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+
+    const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
+    if (!amountFunded) return undefined
+
+    const result = await dispenserClient.fund(addressToFund, amountFunded.microAlgo)
+    return {
+      amountFunded: AlgoAmount.MicroAlgo(result.amount),
+      transactionId: result.txId,
+    }
   }
 }

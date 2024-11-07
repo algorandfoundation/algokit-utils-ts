@@ -18,18 +18,22 @@ Interface to identify a typed client that can be used to interact with an applic
 
 - [constructor](types_client_manager.TypedAppClient.md#constructor)
 
+### Methods
+
+- [fromCreatorAndName](types_client_manager.TypedAppClient.md#fromcreatorandname)
+- [fromNetwork](types_client_manager.TypedAppClient.md#fromnetwork)
+
 ## Constructors
 
 ### constructor
 
-• **new TypedAppClient**(`details`, `algod`): `TClient`
+• **new TypedAppClient**(`params`): `TClient`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `details` | [`AppDetails`](../modules/types_app_client.md#appdetails) |
-| `algod` | `default` |
+| `params` | `Omit`\<[`AppClientParams`](types_app_client.AppClientParams.md), ``"appSpec"``\> |
 
 #### Returns
 
@@ -37,4 +41,44 @@ Interface to identify a typed client that can be used to interact with an applic
 
 #### Defined in
 
-[src/types/client-manager.ts:461](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L461)
+[src/types/client-manager.ts:644](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L644)
+
+## Methods
+
+### fromCreatorAndName
+
+▸ **fromCreatorAndName**(`params`): `Promise`\<`TClient`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `params` | `Omit`\<\{ `algorand`: [`AlgorandClientInterface`](types_algorand_client_interface.AlgorandClientInterface.md) ; `appLookupCache?`: [`AppLookup`](types_app_deployer.AppLookup.md) ; `appName?`: `string` ; `appSpec`: `string` \| [`Arc56Contract`](types_app_arc56.Arc56Contract.md) \| [`AppSpec`](types_app_spec.AppSpec.md) ; `approvalSourceMap?`: `SourceMap` ; `clearSourceMap?`: `SourceMap` ; `creatorAddress`: `string` ; `defaultSender?`: `string` ; `defaultSigner?`: `TransactionSigner` ; `ignoreCache?`: `boolean`  }, ``"appSpec"``\> |
+
+#### Returns
+
+`Promise`\<`TClient`\>
+
+#### Defined in
+
+[src/types/client-manager.ts:646](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L646)
+
+___
+
+### fromNetwork
+
+▸ **fromNetwork**(`params`): `Promise`\<`TClient`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `params` | `Omit`\<[`AppClientParams`](types_app_client.AppClientParams.md), ``"appId"`` \| ``"appSpec"``\> |
+
+#### Returns
+
+`Promise`\<`TClient`\>
+
+#### Defined in
+
+[src/types/client-manager.ts:645](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L645)

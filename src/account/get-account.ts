@@ -8,7 +8,7 @@ import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
-/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
+/**  @deprecated use `algorand.account.fromEnvironment()` instead
  *
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
@@ -29,11 +29,11 @@ import Kmd = algosdk.Kmd
  * const account = await getAccount('ACCOUNT', algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `name`: The name identifier of the account
- *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
@@ -44,7 +44,7 @@ export async function getAccount(
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
-/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
+/**  @deprecated use `algorand.account.fromEnvironment()` instead
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
  * Note: This function expects to run in a Node.js environment.
@@ -56,11 +56,11 @@ export async function getAccount(
  * const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
  *
  * @param account The details of the account to get, an object with:
  *   * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName)
- *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
@@ -71,7 +71,7 @@ export async function getAccount(
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
-/**  @deprecated use `algorandClient.account.fromEnvironment()` instead
+/**  @deprecated use `algorand.account.fromEnvironment()` instead
  * Returns an Algorand account with private key loaded by convention based on the given name identifier.
  *
  * Note: This function expects to run in a Node.js environment.
@@ -91,13 +91,13 @@ export async function getAccount(
  * const account = await getAccount({config: getAccountConfigFromEnvironment('ACCOUNT')}, algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `config`: Account configuration. To get from environment use getAccountConfigFromEnvironment(accountName) OR
  *   * `name`: string: The name identifier of the account (deprecated)
  *   And optionally
- *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)

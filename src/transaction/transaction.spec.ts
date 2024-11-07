@@ -1,132 +1,60 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { describe, test } from '@jest/globals'
-import algosdk, { makeBasicAccountTransactionSigner } from 'algosdk'
+import algosdk, { ABIMethod, ABIType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
-
-import * as algokit from '..'
+import { Config } from '../config'
 import { algorandFixture } from '../testing'
-import { ApplicationClient } from '../types/app-client'
+import { AlgoAmount } from '../types/amount'
+import { AppClient } from '../types/app-client'
+import TransactionComposer, { PaymentParams } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
+import { getABIReturnValue, waitForConfirmation } from './transaction'
+
 describe('transaction', () => {
   const localnet = algorandFixture()
   beforeEach(localnet.beforeEach, 10_000)
 
-  const getTestTransaction = async (amount?: number, sender?: string) => {
-    return algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      from: sender ?? localnet.context.testAccount.addr,
-      to: localnet.context.testAccount.addr,
-      amount: amount ?? 1,
-      suggestedParams: await localnet.context.algod.getTransactionParams().do(),
-    })
+  const getTestTransaction = (amount?: AlgoAmount, sender?: string) => {
+    return {
+      sender: sender ?? localnet.context.testAccount.addr,
+      receiver: localnet.context.testAccount.addr,
+      amount: amount ?? (1).microAlgo(),
+    } as PaymentParams
   }
 
-  test('Transaction is sent and waited for', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn = await getTestTransaction()
-    const { transaction, confirmation } = await algokit.sendTransaction({ transaction: txn, from: testAccount }, algod)
-
-    expect(transaction.txID()).toBe(txn.txID())
-    expect(confirmation?.confirmedRound).toBeGreaterThanOrEqual(txn.firstRound)
-  })
-
   test('Transaction is capped by low min txn fee', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn = await getTestTransaction()
+    const { algorand } = localnet.context
     await expect(async () => {
-      await algokit.sendTransaction(
-        {
-          transaction: txn,
-          from: testAccount,
-          sendParams: {
-            maxFee: algokit.microAlgos(1),
-          },
-        },
-        algod,
-      )
-    }).rejects.toThrowError(
-      'Cancelled transaction due to high network congestion fees. ' +
-        'Algorand suggested fees would cause this transaction to cost 1000 µALGOs. ' +
-        'Cap for this transaction is 1 µALGOs.',
-    )
-  })
-
-  test('Transaction cap is ignored if flat fee set', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn = await getTestTransaction()
-    txn.flatFee = true
-    await algokit.sendTransaction(
-      {
-        transaction: txn,
-        from: testAccount,
-        sendParams: {
-          maxFee: algokit.microAlgos(1),
-        },
-      },
-      algod,
-    )
+      await algorand.send.payment({ ...getTestTransaction(), maxFee: (1).microAlgo() })
+    }).rejects.toThrowError('Transaction fee 1000 µALGO is greater than maxFee 1 µALGO')
   })
 
   test('Transaction cap is ignored if higher than fee', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn = await getTestTransaction()
-    const { confirmation } = await algokit.sendTransaction(
-      {
-        transaction: txn,
-        from: testAccount,
-        sendParams: {
-          maxFee: algokit.microAlgos(1000_000),
-        },
-      },
-      algod,
-    )
+    const { algorand } = localnet.context
+    const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), maxFee: (1_000_000).microAlgo() })
 
     expect(confirmation?.txn.txn.fee).toBe(1000)
   })
 
   test('Transaction fee is overridable', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn = await getTestTransaction()
-    const fee = algokit.algos(1)
-    const result = await algokit.sendTransaction(
-      {
-        transaction: txn,
-        from: testAccount,
-        sendParams: {
-          fee: fee,
-        },
-      },
-      algod,
-    )
+    const { algorand } = localnet.context
+    const fee = (1).algo()
+    const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), staticFee: fee })
 
-    invariant(result.confirmation)
-    expect(result.confirmation.txn.txn.fee).toBe(fee.microAlgos)
+    expect(confirmation.txn.txn.fee).toBe(Number(fee.microAlgo))
   })
 
   test('Transaction group is sent', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn1 = await getTestTransaction(1)
-    const txn2 = await getTestTransaction(2)
+    const { algorand } = localnet.context
 
-    const { confirmations } = await algokit.sendGroupOfTransactions(
-      {
-        transactions: [
-          {
-            transaction: txn1,
-            signer: testAccount,
-          },
-          {
-            transaction: txn2,
-            signer: testAccount,
-          },
-        ],
-      },
-      algod,
-    )
+    const {
+      transactions: [txn1, txn2],
+      confirmations,
+    } = await algorand.newGroup().addPayment(getTestTransaction((1).microAlgo())).addPayment(getTestTransaction((2).microAlgo())).send()
 
-    invariant(confirmations)
     invariant(confirmations[0].txn.txn.grp)
     invariant(confirmations[1].txn.txn.grp)
     invariant(txn1.group)
@@ -136,188 +64,79 @@ describe('transaction', () => {
     expect(confirmations[1].confirmedRound).toBeGreaterThanOrEqual(txn2.firstRound)
     expect(Buffer.from(confirmations[0].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
     expect(Buffer.from(confirmations[1].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
-  })
-
-  test('Transaction group is sent with same signer', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn1 = await getTestTransaction(1)
-    const txn2Promise = algokit.transferAlgos(
-      {
-        amount: algokit.microAlgos(2),
-        from: testAccount,
-        to: testAccount.addr,
-        skipSending: true,
-      },
-      algod,
-    )
-
-    const { confirmations } = await algokit.sendGroupOfTransactions({ transactions: [txn1, txn2Promise], signer: testAccount }, algod)
-
-    const txn2 = (await txn2Promise).transaction
-    invariant(confirmations)
-    invariant(confirmations[0].txn.txn.grp)
-    invariant(confirmations[1].txn.txn.grp)
-    invariant(txn1.group)
-    invariant(txn2.group)
-    expect(confirmations.length).toBe(2)
-    expect(confirmations[0].confirmedRound).toBeGreaterThanOrEqual(txn1.firstRound)
-    expect(confirmations[1].confirmedRound).toBeGreaterThanOrEqual(txn2.firstRound)
-    expect(Buffer.from(confirmations[0].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
-    expect(Buffer.from(confirmations[1].txn.txn.grp).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
-  })
-
-  test('Transaction group is sent using transaction signers', async () => {
-    const { algod, testAccount, generateAccount } = localnet.context
-    const account2 = await generateAccount({ suppressLog: true, initialFunds: algokit.algos(10) })
-    const txn1 = await getTestTransaction(1)
-    const txn2 = await getTestTransaction(2, account2.addr)
-    const txn3 = await getTestTransaction(3)
-    const txn4 = await getTestTransaction(4, account2.addr)
-    const signer1 = algokit.transactionSignerAccount(makeBasicAccountTransactionSigner(testAccount), testAccount.addr)
-    const signer2 = algokit.transactionSignerAccount(makeBasicAccountTransactionSigner(account2), account2.addr)
-
-    const { confirmations } = await algokit.sendGroupOfTransactions(
-      {
-        transactions: [
-          {
-            transaction: txn1,
-            signer: signer1,
-          },
-          {
-            transaction: txn2,
-            signer: signer2,
-          },
-          {
-            transaction: txn3,
-            signer: signer1,
-          },
-          {
-            transaction: txn4,
-            signer: signer2,
-          },
-        ],
-      },
-      algod,
-    )
-
-    invariant(confirmations)
-    invariant(confirmations[0].confirmedRound)
-    invariant(confirmations[1].confirmedRound)
-    invariant(confirmations[2].confirmedRound)
-    invariant(confirmations[3].confirmedRound)
-    expect(confirmations[0].txn.txn.amt).toBe(1)
-    expect(algosdk.encodeAddress(confirmations[0].txn.txn.snd)).toBe(testAccount.addr)
-    expect(confirmations[1].txn.txn.amt).toBe(2)
-    expect(algosdk.encodeAddress(confirmations[1].txn.txn.snd)).toBe(account2.addr)
-    expect(confirmations[2].txn.txn.amt).toBe(3)
-    expect(algosdk.encodeAddress(confirmations[2].txn.txn.snd)).toBe(testAccount.addr)
-    expect(confirmations[3].txn.txn.amt).toBe(4)
-    expect(algosdk.encodeAddress(confirmations[3].txn.txn.snd)).toBe(account2.addr)
   })
 
   test('Multisig single account', async () => {
-    const { algod, testAccount } = localnet.context
+    const { algorand, testAccount } = localnet.context
 
     // Setup multisig
-    const multisig = algokit.multisigAccount(
-      {
-        addrs: [testAccount.addr],
-        threshold: 1,
-        version: 1,
-      },
-      [testAccount],
-    )
+    const multisig = algorand.account.multisig({
+      addrs: [testAccount.addr],
+      threshold: 1,
+      version: 1,
+    })
 
     // Fund multisig
-    await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: multisig.addr,
-        amount: algokit.algos(1),
-      },
-      algod,
-    )
+    await algorand.send.payment({
+      sender: testAccount.addr,
+      receiver: multisig,
+      amount: (1).algo(),
+    })
 
     // Use multisig
-    await algokit.transferAlgos(
-      {
-        from: multisig,
-        to: testAccount.addr,
-        amount: algokit.microAlgos(500),
-      },
-      algod,
-    )
+    await algorand.send.payment({
+      sender: multisig,
+      receiver: testAccount.addr,
+      amount: (500).microAlgo(),
+    })
   })
 
   test('Multisig double account', async () => {
-    const { algod, testAccount, generateAccount } = localnet.context
+    const { algorand, testAccount, generateAccount } = localnet.context
     const account2 = await generateAccount({
-      initialFunds: algokit.algos(10),
+      initialFunds: (10).algo(),
       suppressLog: true,
     })
 
     // Setup multisig
-    const multisig = algokit.multisigAccount(
-      {
-        addrs: [testAccount.addr, account2.addr],
-        threshold: 2,
-        version: 1,
-      },
-      [testAccount, account2],
-    )
+    const multisig = algorand.account.multisig({
+      addrs: [testAccount.addr, account2.addr],
+      threshold: 2,
+      version: 1,
+    })
 
     // Fund multisig
-    await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: multisig.addr,
-        amount: algokit.algos(1),
-      },
-      algod,
-    )
+    await algorand.send.payment({
+      sender: testAccount.addr,
+      receiver: multisig,
+      amount: (1).algo(),
+    })
 
     // Use multisig
-    await algokit.transferAlgos(
-      {
-        from: multisig,
-        to: testAccount.addr,
-        amount: algokit.microAlgos(500),
-      },
-      algod,
-    )
+    await algorand.send.payment({
+      sender: multisig,
+      receiver: testAccount.addr,
+      amount: (500).microAlgo(),
+    })
   })
 
   test('Transaction wait for confirmation http error', async () => {
-    const { algod } = localnet.context
-    const txn = await getTestTransaction()
+    const { algorand, algod } = localnet.context
+    const txn = await algorand.createTransaction.payment(getTestTransaction())
     try {
-      await algokit.waitForConfirmation(txn.txID(), 5, algod)
+      await waitForConfirmation(txn.txID(), 5, algod)
     } catch (e: unknown) {
       expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
     }
   })
 
   test('Transaction fails in debug mode, error is enriched using simulate', async () => {
-    const { algod, testAccount } = localnet.context
-    const txn1 = await getTestTransaction(1)
-    const txn2 = await getTestTransaction(9999999999999) // This will fail due to fee being too high
-
+    const { algorand, testAccount } = localnet.context
+    const txn1 = await algorand.createTransaction.payment(getTestTransaction((1).microAlgo()))
+    // This will fail due to fee being too high
+    const txn2 = await algorand.createTransaction.payment(getTestTransaction((9999999999999).microAlgo()))
     try {
-      await algokit.sendGroupOfTransactions(
-        {
-          transactions: [
-            {
-              transaction: txn1,
-              signer: testAccount,
-            },
-            {
-              transaction: txn2,
-              signer: testAccount,
-            },
-          ],
-        },
-        algod,
-      )
+      await algorand.newGroup().addTransaction(txn1).addTransaction(txn2).send()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const messageRegex = new RegExp(
@@ -328,40 +147,10 @@ describe('transaction', () => {
   })
 })
 
-describe('transaction node encoder', () => {
-  test('null', () => {
-    expect(algokit.encodeTransactionNote(null)).toBeUndefined()
-  })
-  test('undefined', () => {
-    expect(algokit.encodeTransactionNote(undefined)).toBeUndefined()
-  })
-  test('string', () => {
-    expect(algokit.encodeTransactionNote('abc')).toMatchInlineSnapshot(`
-      Uint8Array [
-        97,
-        98,
-        99,
-      ]
-    `)
-  })
-  test('object', () => {
-    expect(algokit.encodeTransactionNote({ a: 'b' })).toMatchInlineSnapshot(`
-      Uint8Array [
-        123,
-        34,
-        97,
-        34,
-        58,
-        34,
-        98,
-        34,
-        125,
-      ]
-    `)
-  })
+describe('arc2 transaction note', () => {
   test('arc-0002', () => {
     expect(
-      algokit.encodeTransactionNote({
+      TransactionComposer.arc2Note({
         dAppName: 'a',
         format: 'u',
         data: 'abc',
@@ -382,58 +171,36 @@ describe('transaction node encoder', () => {
 const tests = (version: 8 | 9) => () => {
   const fixture = algorandFixture()
 
-  let appClient: ApplicationClient
-  let externalClient: ApplicationClient
+  let appClient: AppClient
+  let externalClient: AppClient
 
   beforeEach(fixture.beforeEach)
 
   beforeAll(async () => {
-    algokit.Config.configure({ populateAppCallResources: true })
+    Config.configure({ populateAppCallResources: true })
     await fixture.beforeEach()
-    const { algod, testAccount } = fixture.context
+    const { algorand, testAccount } = fixture.context
 
-    if (version === 8) {
-      appClient = new ApplicationClient(
-        {
-          app: JSON.stringify(v8ARC32),
-          sender: testAccount,
-          resolveBy: 'id',
-          id: 0,
-        },
-        algod,
-      )
-    } else {
-      appClient = new ApplicationClient(
-        {
-          app: JSON.stringify(v9ARC32),
-          sender: testAccount,
-          resolveBy: 'id',
-          id: 0,
-        },
-        algod,
-      )
-    }
+    const appFactory = algorand.client.getAppFactory({
+      appSpec: JSON.stringify(version === 8 ? v8ARC32 : v9ARC32),
+      defaultSender: testAccount.addr,
+    })
 
-    await appClient.create({ method: 'createApplication', methodArgs: [] })
+    appClient = (await appFactory.send.create({ method: 'createApplication' })).appClient
 
-    await appClient.fundAppAccount(algokit.microAlgos(2334300))
+    await appClient.fundAppAccount({ amount: (2334300).microAlgo() })
 
-    await appClient.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
+    await appClient.send.call({ method: 'bootstrap', staticFee: (3_000).microAlgo() })
 
-    externalClient = new ApplicationClient(
-      {
-        app: JSON.stringify(externalARC32),
-        sender: testAccount,
-        resolveBy: 'id',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        id: (await appClient.getGlobalState()).externalAppID!.value as bigint,
-      },
-      algod,
-    )
+    externalClient = algorand.client.getAppClientById({
+      appSpec: JSON.stringify(externalARC32),
+      appId: (await appClient.getGlobalState()).externalAppID.value as bigint,
+      defaultSender: testAccount.addr,
+    })
   })
 
   afterAll(() => {
-    algokit.Config.configure({ populateAppCallResources: false })
+    Config.configure({ populateAppCallResources: false })
   })
 
   let alice: algosdk.Account
@@ -443,47 +210,44 @@ const tests = (version: 8 | 9) => () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
-        appClient.call({ method: 'addressBalance', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: false } }),
+        appClient.send.call({ method: 'addressBalance', args: [testAccount.addr], populateAppCallResources: false }),
       ).rejects.toThrow('invalid Account reference')
     })
 
     test('addressBalance', async () => {
-      await appClient.call({ method: 'addressBalance', methodArgs: [alice.addr] })
+      await appClient.send.call({ method: 'addressBalance', args: [alice.addr] })
     })
   })
 
   describe('boxes', () => {
     test('smallBox: invalid Box reference', async () => {
-      await expect(appClient.call({ method: 'smallBox', methodArgs: [], sendParams: { populateAppCallResources: false } })).rejects.toThrow(
-        'invalid Box reference',
-      )
+      await expect(appClient.send.call({ method: 'smallBox', populateAppCallResources: false })).rejects.toThrow('invalid Box reference')
     })
 
     test('smallBox', async () => {
-      await appClient.call({ method: 'smallBox', methodArgs: [] })
+      await appClient.send.call({ method: 'smallBox' })
     })
 
     test('mediumBox', async () => {
-      await appClient.call({ method: 'mediumBox', methodArgs: [] })
+      await appClient.send.call({ method: 'mediumBox' })
     })
   })
 
   describe('apps', () => {
     test('externalAppCall: unavailable App', async () => {
       await expect(
-        appClient.call({
+        appClient.send.call({
           method: 'externalAppCall',
-          methodArgs: [],
-          sendParams: { populateAppCallResources: false, fee: algokit.microAlgos(2_000) },
+          populateAppCallResources: false,
+          staticFee: (2_000).microAlgo(),
         }),
       ).rejects.toThrow('unavailable App')
     })
 
     test('externalAppCall', async () => {
-      await appClient.call({
+      await appClient.send.call({
         method: 'externalAppCall',
-        methodArgs: [],
-        sendParams: { fee: algokit.microAlgos(2_000) },
+        staticFee: (2_000).microAlgo(),
       })
     })
   })
@@ -492,13 +256,11 @@ const tests = (version: 8 | 9) => () => {
     test('assetTotal: unavailable Asset', async () => {
       const { testAccount } = fixture.context
       alice = testAccount
-      await expect(
-        appClient.call({ method: 'assetTotal', methodArgs: [], sendParams: { populateAppCallResources: false } }),
-      ).rejects.toThrow('unavailable Asset')
+      await expect(appClient.send.call({ method: 'assetTotal', populateAppCallResources: false })).rejects.toThrow('unavailable Asset')
     })
 
     test('assetTotal', async () => {
-      await appClient.call({ method: 'assetTotal', methodArgs: [] })
+      await appClient.send.call({ method: 'assetTotal' })
     })
   })
 
@@ -508,81 +270,55 @@ const tests = (version: 8 | 9) => () => {
     test(`hasAsset: ${hasAssetErrorMsg}`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
-      await expect(
-        appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: false } }),
-      ).rejects.toThrow(hasAssetErrorMsg)
+      await expect(appClient.send.call({ method: 'hasAsset', args: [testAccount.addr], populateAppCallResources: false })).rejects.toThrow(
+        hasAssetErrorMsg,
+      )
     })
 
     test('hasAsset', async () => {
       const { testAccount } = fixture.context
-      await appClient.call({ method: 'hasAsset', methodArgs: [testAccount.addr] })
+      await appClient.send.call({ method: 'hasAsset', args: [testAccount.addr] })
     })
 
     test(`externalLocal: ${hasAssetErrorMsg}`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
-        appClient.call({ method: 'externalLocal', methodArgs: [testAccount.addr], sendParams: { populateAppCallResources: false } }),
+        appClient.send.call({ method: 'externalLocal', args: [testAccount.addr], populateAppCallResources: false }),
       ).rejects.toThrow(hasAssetErrorMsg)
     })
 
     test('externalLocal', async () => {
-      const { testAccount } = fixture.context
-      await externalClient.optIn({ method: 'optInToApplication', methodArgs: [], sender: testAccount })
+      const { algorand, testAccount } = fixture.context
 
-      await appClient.call({
-        method: 'externalLocal',
-        methodArgs: [testAccount.addr],
-        sender: testAccount,
-      })
+      await algorand.send.appCallMethodCall(await externalClient.params.optIn({ method: 'optInToApplication', sender: testAccount.addr }))
+
+      await algorand.send.appCallMethodCall(
+        await appClient.params.call({
+          method: 'externalLocal',
+          args: [testAccount.addr],
+          sender: testAccount.addr,
+        }),
+      )
     })
   })
 
   describe('sendTransaction', () => {
     test('addressBalance: invalid Account reference', async () => {
-      const { testAccount, algod } = fixture.context
-      alice = testAccount
-
-      const atc = new algosdk.AtomicTransactionComposer()
-
-      atc.addMethodCall({
-        appID: Number((await appClient.getAppReference()).appId),
-        sender: testAccount.addr,
-        signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
-        method: appClient.getABIMethod('addressBalance')!,
-        methodArgs: [algosdk.generateAccount().addr],
-        suggestedParams: await fixture.context.algod.getTransactionParams().do(),
-      })
-
-      const txn = atc.buildGroup()[0]
-
-      txn.txn.group = undefined
-
       await expect(
-        algokit.sendTransaction({ transaction: txn.txn, from: testAccount, sendParams: { populateAppCallResources: false } }, algod),
+        appClient.send.call({
+          method: 'addressBalance',
+          args: [algosdk.generateAccount().addr],
+          populateAppCallResources: false,
+        }),
       ).rejects.toThrow('invalid Account reference')
     })
 
     test('addressBalance', async () => {
-      const { testAccount, algod } = fixture.context
-      alice = testAccount
-
-      const atc = new algosdk.AtomicTransactionComposer()
-
-      atc.addMethodCall({
-        appID: Number((await appClient.getAppReference()).appId),
-        sender: testAccount.addr,
-        signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
-        method: appClient.getABIMethod('addressBalance')!,
-        methodArgs: [algosdk.generateAccount().addr],
-        suggestedParams: await fixture.context.algod.getTransactionParams().do(),
+      appClient.send.call({
+        method: 'addressBalance',
+        args: [algosdk.generateAccount().addr],
       })
-
-      const txn = atc.buildGroup()[0]
-
-      txn.txn.group = undefined
-
-      await algokit.sendTransaction({ transaction: txn.txn, from: testAccount }, algod)
     })
   })
 }
@@ -592,194 +328,141 @@ describe('Resource Packer: AVM9', tests(9))
 describe('Resource Packer: Mixed', () => {
   const fixture = algorandFixture()
 
-  let v9Client: ApplicationClient
-
-  let v8Client: ApplicationClient
+  let v9Client: AppClient
+  let v8Client: AppClient
 
   beforeEach(fixture.beforeEach)
 
   beforeAll(async () => {
-    algokit.Config.configure({ populateAppCallResources: true })
+    Config.configure({ populateAppCallResources: true })
 
     await fixture.beforeEach()
-    const { algod, testAccount } = fixture.context
 
-    v9Client = new ApplicationClient(
-      {
-        app: JSON.stringify(v9ARC32),
-        sender: testAccount,
-        resolveBy: 'id',
-        id: 0,
-      },
-      algod,
-    )
+    const testAccount = fixture.context.testAccount
 
-    v8Client = new ApplicationClient(
-      {
-        app: JSON.stringify(v8ARC32),
-        sender: testAccount,
-        resolveBy: 'id',
-        id: 0,
-      },
-      algod,
-    )
+    const v8AppFactory = fixture.algorand.client.getAppFactory({
+      appSpec: JSON.stringify(v8ARC32),
+      defaultSender: testAccount.addr,
+    })
 
-    await v9Client.create({ method: 'createApplication', methodArgs: [] })
-    await v8Client.create({ method: 'createApplication', methodArgs: [] })
+    const v9AppFactory = fixture.algorand.client.getAppFactory({
+      appSpec: JSON.stringify(v9ARC32),
+      defaultSender: testAccount.addr,
+    })
+
+    const v8Result = await v8AppFactory.send.create({ method: 'createApplication' })
+    const v9Result = await v9AppFactory.send.create({ method: 'createApplication' })
+    v8Client = v8Result.appClient
+    v9Client = v9Result.appClient
   })
 
   afterAll(() => {
-    algokit.Config.configure({ populateAppCallResources: false })
+    Config.configure({ populateAppCallResources: false })
   })
 
   // Temporarily skip this until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
-  test.skip('same account', async () => {
-    const { algod, testAccount } = fixture.context
+  test('same account', async () => {
+    const { algorand, testAccount } = fixture.context
     const acct = algosdk.generateAccount()
-    const atc = new algosdk.AtomicTransactionComposer()
 
-    const v8ID = Number((await v8Client.getAppReference()).appId)
-    const v9ID = Number((await v9Client.getAppReference()).appId)
-    const suggestedParams = await algod.getTransactionParams().do()
+    const rekeyedTo = algorand.account.random()
+    await algorand.account.rekeyAccount(testAccount.addr, rekeyedTo)
 
-    const rekeyedTo = algosdk.generateAccount()
-    const rekeyTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      from: testAccount.addr,
-      to: testAccount.addr,
-      amount: 0,
-      rekeyTo: rekeyedTo.addr,
-      suggestedParams: await algod.getTransactionParams().do(),
-    })
+    const { transactions } = await algorand.send
+      .newGroup()
+      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
+      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
+      .send({ populateAppCallResources: true })
 
-    await algokit.sendTransaction({ transaction: rekeyTxn, from: testAccount }, algod)
-
-    atc.addMethodCall({
-      appID: v8ID,
-      sender: testAccount.addr,
-      signer: algosdk.makeBasicAccountTransactionSigner(rekeyedTo),
-      method: v8Client.getABIMethod('addressBalance')!,
-      methodArgs: [acct.addr],
-      suggestedParams,
-    })
-
-    atc.addMethodCall({
-      appID: v9ID,
-      sender: testAccount.addr,
-      signer: algosdk.makeBasicAccountTransactionSigner(rekeyedTo),
-      method: v9Client.getABIMethod('addressBalance')!,
-      methodArgs: [acct.addr],
-      suggestedParams,
-    })
-
-    const packedAtc = await algokit.populateAppCallResources(atc, fixture.context.algod)
-
-    const v8CallAccts = packedAtc.buildGroup()[0].txn.appAccounts
-    const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts
+    const v8CallAccts = transactions[0].appAccounts
+    const v9CallAccts = transactions[1].appAccounts
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(v8CallAccts!.length + v9CallAccts!.length).toBe(1)
-    await packedAtc.execute(algod, 3)
   })
 
   test('app account', async () => {
-    const { algod, testAccount } = fixture.context
+    const { algorand, testAccount } = fixture.context
 
-    await v8Client.fundAppAccount(algokit.microAlgos(328500))
-    await v8Client.call({ method: 'bootstrap', methodArgs: [], sendParams: { fee: algokit.microAlgos(3_000) } })
+    await v8Client.fundAppAccount({ amount: (328500).microAlgo() })
+    await v8Client.send.call({ method: 'bootstrap', staticFee: (3_000).microAlgo() })
 
     const externalAppID = (await v8Client.getGlobalState()).externalAppID!.value as bigint
 
-    const atc = new algosdk.AtomicTransactionComposer()
-    const v8ID = Number((await v8Client.getAppReference()).appId)
-    const v9ID = Number((await v9Client.getAppReference()).appId)
-    const suggestedParams = await algod.getTransactionParams().do()
+    const { transactions } = await algorand.send
+      .newGroup()
+      .addAppCallMethodCall(
+        await v8Client.params.call({ method: 'externalAppCall', staticFee: (2_000).microAlgo(), sender: testAccount.addr }),
+      )
+      .addAppCallMethodCall(
+        await v9Client.params.call({
+          method: 'addressBalance',
+          args: [algosdk.getApplicationAddress(externalAppID)],
+          sender: testAccount.addr,
+        }),
+      )
+      .send({ populateAppCallResources: true })
 
-    atc.addMethodCall({
-      appID: v8ID,
-      sender: testAccount.addr,
-      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
-      method: v8Client.getABIMethod('externalAppCall')!,
-      methodArgs: [],
-      suggestedParams: { ...suggestedParams, fee: 2_000 },
-    })
-
-    atc.addMethodCall({
-      appID: v9ID,
-      sender: testAccount.addr,
-      signer: algosdk.makeBasicAccountTransactionSigner(testAccount),
-      method: v9Client.getABIMethod('addressBalance')!,
-      methodArgs: [algosdk.getApplicationAddress(externalAppID)],
-      suggestedParams,
-    })
-
-    const packedAtc = await algokit.populateAppCallResources(atc, fixture.context.algod)
-
-    const v8CallApps = packedAtc.buildGroup()[0].txn.appForeignApps
-    const v9CallAccts = packedAtc.buildGroup()[1].txn.appAccounts
+    const v8CallApps = transactions[0].appForeignApps
+    const v9CallAccts = transactions[1].appAccounts
 
     expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
-    await packedAtc.execute(algod, 3)
   })
 })
+
 describe('Resource Packer: meta', () => {
   const fixture = algorandFixture()
 
-  let externalClient: ApplicationClient
+  let externalClient: AppClient
 
   beforeEach(fixture.beforeEach)
 
   beforeAll(async () => {
     await fixture.beforeEach()
-    const { testAccount, algod } = fixture.context
-    algokit.Config.configure({ populateAppCallResources: true })
+    const { algorand, testAccount } = fixture.context
+    Config.configure({ populateAppCallResources: true })
 
-    externalClient = new ApplicationClient(
-      {
-        app: JSON.stringify(externalARC32),
-        sender: testAccount,
-        resolveBy: 'id',
-        id: 0,
-      },
-      algod,
-    )
+    const factory = algorand.client.getAppFactory({
+      appSpec: JSON.stringify(externalARC32),
+      defaultSender: testAccount.addr,
+    })
 
-    await externalClient.create({ method: 'createApplication', methodArgs: [] })
+    const result = await factory.send.create({ method: 'createApplication' })
+    externalClient = result.appClient
   })
 
   afterAll(() => {
-    algokit.Config.configure({ populateAppCallResources: false })
+    Config.configure({ populateAppCallResources: false })
   })
 
   test('error during simulate', async () => {
-    await expect(externalClient.call({ method: 'error', methodArgs: [] })).rejects.toThrow(
+    await expect(externalClient.send.call({ method: 'error' })).rejects.toThrow(
       'Error during resource population simulation in transaction 0',
     )
   })
 
   test('box with txn arg', async () => {
-    const { testAccount, algod } = fixture.context
+    const { testAccount, algorand } = fixture.context
 
-    const payment = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      from: testAccount.addr,
-      to: testAccount.addr,
-      suggestedParams: await algod.getTransactionParams().do(),
-      amount: 0,
+    const payment = await algorand.createTransaction.payment({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      amount: (0).microAlgo(),
     })
 
-    await externalClient.fundAppAccount(algokit.microAlgos(106100))
+    await externalClient.fundAppAccount({ amount: (106100).microAlgo() })
 
-    await externalClient.call({ method: 'boxWithPayment', methodArgs: [{ transaction: payment, signer: testAccount }] })
+    await externalClient.send.call({ method: 'boxWithPayment', args: [{ txn: payment, signer: testAccount.signer }] })
   })
 
   test('sender asset holding', async () => {
-    await externalClient.fundAppAccount(algokit.microAlgos(200_000))
+    await externalClient.fundAppAccount({ amount: (200_000).microAlgo() })
 
-    await externalClient.call({
+    await externalClient.send.call({
       method: 'createAsset',
-      methodArgs: [],
-      sendParams: { fee: algokit.microAlgos(2_000) },
+      staticFee: (2_000).microAlgo(),
     })
-    const res = await externalClient.call({ method: 'senderAssetBalance', methodArgs: [] })
+    const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
     expect(res.transaction.appAccounts?.length || 0).toBe(0)
   })
@@ -790,27 +473,105 @@ describe('Resource Packer: meta', () => {
 
     const authAddr = algorand.account.random()
 
-    await algorand.send.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
-      rekeyTo: authAddr,
-      amount: algokit.microAlgos(0),
-    })
+    await algorand.account.rekeyAccount(testAccount.addr, authAddr)
 
-    await externalClient.fundAppAccount(algokit.microAlgos(200_000))
+    await externalClient.fundAppAccount({ amount: (200_001).microAlgo() })
 
-    await externalClient.call({
+    await externalClient.send.call({
       method: 'createAsset',
-      methodArgs: [],
-      sendParams: { fee: algokit.microAlgos(2_000) },
-      sender: { addr: testAccount.addr, signer: algorand.account.getSigner(authAddr) },
+      staticFee: (2_001).microAlgo(),
     })
-    const res = await externalClient.call({
+    const res = await externalClient.send.call({
       method: 'senderAssetBalance',
-      methodArgs: [],
-      sender: { addr: testAccount.addr, signer: algorand.account.getSigner(authAddr) },
     })
 
     expect(res.transaction.appAccounts?.length || 0).toBe(0)
+  })
+})
+
+describe('abi return', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const getABIResult = (type: string, value: any) => {
+    const abiType = ABIType.from(type)
+    const result = {
+      method: new ABIMethod({ name: '', args: [], returns: { type: type } }),
+      rawReturnValue: abiType.encode(value),
+      returnValue: abiType.decode(abiType.encode(value)),
+      txID: '',
+    } as algosdk.ABIResult
+    return getABIReturnValue(result)
+  }
+
+  test('uint32', () => {
+    expect(getABIResult('uint32', 0).returnValue).toBe(0)
+    expect(getABIResult('uint32', 0n).returnValue).toBe(0)
+    expect(getABIResult('uint32', 1).returnValue).toBe(1)
+    expect(getABIResult('uint32', 1n).returnValue).toBe(1)
+    expect(getABIResult('uint32', 2 ** 32 - 1).returnValue).toBe(2 ** 32 - 1)
+    expect(getABIResult('uint32', 2n ** 32n - 1n).returnValue).toBe(2 ** 32 - 1)
+  })
+
+  test('uint64', () => {
+    expect(getABIResult('uint64', 0).returnValue).toBe(0n)
+    expect(getABIResult('uint64', 1).returnValue).toBe(1n)
+    expect(getABIResult('uint64', 2 ** 32 - 1).returnValue).toBe(2n ** 32n - 1n)
+    expect(getABIResult('uint64', 2n ** 64n - 1n).returnValue).toBe(2n ** 64n - 1n)
+  })
+
+  test('uint32[]', () => {
+    expect(getABIResult('uint32[]', [0]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[]', [0n]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[]', [1]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[]', [1n]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
+    expect(getABIResult('uint32[]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+  })
+
+  test('uint32[n]', () => {
+    expect(getABIResult('uint32[1]', [0]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[1]', [0n]).returnValue).toEqual([0])
+    expect(getABIResult('uint32[1]', [1]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[1]', [1n]).returnValue).toEqual([1])
+    expect(getABIResult('uint32[3]', [1, 2, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[3]', [1n, 2n, 3]).returnValue).toEqual([1, 2, 3])
+    expect(getABIResult('uint32[1]', [2 ** 32 - 1]).returnValue).toEqual([2 ** 32 - 1])
+    expect(getABIResult('uint32[2]', [2n ** 32n - 1n, 1]).returnValue).toEqual([2 ** 32 - 1, 1])
+  })
+
+  test('uint64[]', () => {
+    expect(getABIResult('uint64[]', [0]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[]', [0n]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[]', [1]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[]', [1n]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
+    expect(getABIResult('uint64[]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+  })
+
+  test('uint64[n]', () => {
+    expect(getABIResult('uint64[1]', [0]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[1]', [0n]).returnValue).toEqual([0n])
+    expect(getABIResult('uint64[1]', [1]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[1]', [1n]).returnValue).toEqual([1n])
+    expect(getABIResult('uint64[3]', [1, 2, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[3]', [1n, 2n, 3]).returnValue).toEqual([1n, 2n, 3n])
+    expect(getABIResult('uint64[1]', [2 ** 32 - 1]).returnValue).toEqual([2n ** 32n - 1n])
+    expect(getABIResult('uint64[2]', [2n ** 64n - 1n, 1]).returnValue).toEqual([2n ** 64n - 1n, 1n])
+  })
+
+  test('(uint32,uint64,(uint32,uint64),uint32[],uint64[])', () => {
+    const type = '(uint32,uint64,(uint32,uint64),uint32[],uint64[])'
+    expect(getABIResult(type, [0, 0, [0, 0], [0], [0]]).returnValue).toEqual([0, 0n, [0, 0n], [0], [0n]])
+    expect(getABIResult(type, [1, 1, [1, 1], [1], [1]]).returnValue).toEqual([1, 1n, [1, 1n], [1], [1n]])
+    expect(getABIResult(type, [2 ** 32 - 1, 2n ** 64n - 1n, [2 ** 32 - 1, 2n ** 64n - 1n], [1, 2, 3], [1, 2, 3]]).returnValue).toEqual([
+      2 ** 32 - 1,
+      2n ** 64n - 1n,
+      [2 ** 32 - 1, 2n ** 64n - 1n],
+      [1, 2, 3],
+      [1n, 2n, 3n],
+    ])
   })
 })

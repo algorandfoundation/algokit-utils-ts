@@ -20,7 +20,7 @@ Configuration for algod, indexer and kmd clients.
 
 • **algodConfig**: [`AlgoClientConfig`](types_network_client.AlgoClientConfig.md)
 
-Algo client configuration
+Algod client configuration
 
 #### Defined in
 

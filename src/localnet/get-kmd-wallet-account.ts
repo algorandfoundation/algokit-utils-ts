@@ -6,7 +6,7 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
- * @deprecated use `algorandClient.account.kmd.getWalletAccount(name, predicate)` or `new KMDAccountManager(clientManager).getWalletAccount(name, predicate)` instead.
+ * @deprecated use `algorand.account.kmd.getWalletAccount(name, predicate)` or `new KMDAccountManager(clientManager).getWalletAccount(name, predicate)` instead.
  *
  * Returns an Algorand account with private key loaded from the given KMD wallet (identified by name).
  *

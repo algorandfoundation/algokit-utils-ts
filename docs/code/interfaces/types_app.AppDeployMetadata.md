@@ -10,6 +10,8 @@ The payload of the metadata to add to the transaction note when deploying an app
 
 - **`AppDeployMetadata`**
 
+  ↳ [`AppMetadata`](types_app_deployer.AppMetadata.md)
+
   ↳ [`AppMetadata`](types_app.AppMetadata.md)
 
 ## Table of contents
@@ -31,7 +33,7 @@ Whether or not the app is deletable / permanent / unspecified
 
 #### Defined in
 
-[src/types/app.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L234)
+[src/types/app.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L254)
 
 ___
 
@@ -43,7 +45,7 @@ The unique name identifier of the app within the creator account
 
 #### Defined in
 
-[src/types/app.ts:230](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L230)
+[src/types/app.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L250)
 
 ___
 
@@ -55,7 +57,7 @@ Whether or not the app is updatable / immutable / unspecified
 
 #### Defined in
 
-[src/types/app.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L236)
+[src/types/app.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L256)
 
 ___
 
@@ -67,4 +69,4 @@ The version of app that is / will be deployed
 
 #### Defined in
 
-[src/types/app.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L232)
+[src/types/app.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L252)

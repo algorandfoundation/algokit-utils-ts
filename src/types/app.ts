@@ -1,5 +1,7 @@
 import algosdk from 'algosdk'
+import { Expand } from './expand'
 import {
+  SendSingleTransactionResult,
   SendTransactionFrom,
   SendTransactionParams,
   SendTransactionResult,
@@ -24,7 +26,7 @@ export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
 /** The name of the TEAL template variable for deploy-time permanence control */
 export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
 
-/** The app create/update ARC-2 transaction note prefix */
+/** The app create/update [ARC-2](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0002.md) transaction note prefix */
 export const APP_DEPLOY_NOTE_DAPP = 'ALGOKIT_DEPLOYER'
 
 /** The maximum number of bytes in a single app code page */
@@ -42,6 +44,8 @@ export interface AppReference {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxReference` instead.
+ *
  * A grouping of the app ID and name of the box in an Uint8Array
  */
 export interface BoxReference {
@@ -56,6 +60,8 @@ export interface BoxReference {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxIdentifier` instead.
+ *
  * Something that identifies a box name - either a:
  *  * `Uint8Array`
  *  * `string` (that will be encoded to a Uint8Array)
@@ -117,7 +123,11 @@ export type ABIAppCallArgs = CoreAppCallArgs & {
  **/
 export type AppCallArgs = RawAppCallArgs | ABIAppCallArgs
 
-/** Base interface for common data passed to an app create or update. */
+/**
+ * @deprecated Use `TransactionComposer` to construct create app transactions instead.
+ *
+ * Base interface for common data passed to an app create or update.
+ */
 interface CreateOrUpdateAppParams extends SendTransactionParams {
   /** The account (with private key loaded) that will send the transaction */
   from: SendTransactionFrom
@@ -133,7 +143,10 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
   args?: AppCallArgs
 }
 
-/** Parameters that are passed in when creating an app. */
+/**
+ * @deprecated Use `TransactionComposer` to construct create app transactions instead.
+ *
+ * Parameters that are passed in when creating an app. */
 export interface CreateAppParams extends CreateOrUpdateAppParams {
   /** The storage schema to request for the created app */
   schema: AppStorageSchema
@@ -141,13 +154,19 @@ export interface CreateAppParams extends CreateOrUpdateAppParams {
   onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
 }
 
-/** Parameters that are passed in when updating an app. */
+/**
+ * @deprecated Use `TransactionComposer` to construct update app transactions instead.
+ *
+ * Parameters that are passed in when updating an app. */
 export interface UpdateAppParams extends CreateOrUpdateAppParams {
   /** The id of the app to update */
   appId: number | bigint
 }
 
-/** The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
+/**
+ * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
+ *
+ * The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
  *
  * Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
  *
@@ -196,7 +215,7 @@ export interface CompiledTeal {
   teal: string
   /** The compiled code */
   compiled: string
-  /** The has returned by the compiler */
+  /** The hash returned by the compiler */
   compiledHash: string
   /** The base64 encoded code as a byte array */
   compiledBase64ToBytes: Uint8Array
@@ -218,9 +237,10 @@ export type ABIReturn =
   | {
       rawReturnValue: Uint8Array
       returnValue: ABIValue
+      method: ABIMethod
       decodeError: undefined
     }
-  | { rawReturnValue: undefined; returnValue: undefined; decodeError: Error }
+  | { rawReturnValue?: undefined; returnValue?: undefined; method?: undefined; decodeError: Error }
 
 /**
  * The payload of the metadata to add to the transaction note when deploying an app, noting it will be prefixed with `APP_DEPLOY_NOTE_PREFIX`.
@@ -310,7 +330,7 @@ export interface AppDeploymentParams
   deleteArgs?: AppCallArgs
 }
 
-/** The result of compiling the approval and clear TEAL for an app */
+/** The result of compiling the approval and clear state TEAL programs for an app */
 export interface AppCompilationResult {
   /** The compilation result of approval */
   compiledApproval: CompiledTeal
@@ -318,11 +338,37 @@ export interface AppCompilationResult {
   compiledClear: CompiledTeal
 }
 
+export type AppReturn<TReturn> = {
+  /** The ABI method call return value */
+  return?: TReturn
+}
+
+/** Result from sending a single app transaction. */
+export type SendAppTransactionResult = Expand<
+  SendSingleTransactionResult & {
+    /** If an ABI method was called the processed return value */
+    return?: ABIReturn
+  }
+>
+
+/** Result from sending a single app transaction. */
+export type SendAppUpdateTransactionResult = Expand<SendAppTransactionResult & Partial<AppCompilationResult>>
+
+/** Result from sending a single app transaction. */
+export type SendAppCreateTransactionResult = Expand<
+  SendAppUpdateTransactionResult & {
+    /** The id of the created app */
+    appId: bigint
+    /** The Algorand address of the account associated with the app */
+    appAddress: string
+  }
+>
+
 /** Object holding app state values */
 export interface AppState {
   [key: string]:
     | {
-        value: number | bigint
+        value: bigint
         keyRaw: Uint8Array
         keyBase64: string
       }
@@ -335,7 +381,8 @@ export interface AppState {
       }
 }
 
-/** The name of a box storage box */
+/**
+ * The name of a box storage box */
 export interface BoxName {
   /** Name in UTF-8 */
   name: string
@@ -346,6 +393,7 @@ export interface BoxName {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxValueRequestParams` instead.
  * Parameters to get and decode a box value as an ABI type.
  */
 export interface BoxValueRequestParams {
@@ -358,6 +406,7 @@ export interface BoxValueRequestParams {
 }
 
 /**
+ * @deprecated Use `types/app-manager/BoxValuesRequestParams` instead.
  * Parameters to get and decode a box value as an ABI type.
  */
 export interface BoxValuesRequestParams {

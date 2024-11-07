@@ -3,6 +3,11 @@ import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetails
 import Algodv2 = algosdk.Algodv2
 
 /**
+ * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
+ * `algorand.client.getAppClientByCreatorAndName`.
+ * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+ * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+ *
  * Create a new ApplicationClient instance
  * @param appDetails The details of the app
  * @param algod An algod instance
@@ -37,6 +42,11 @@ export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
 }
 
 /**
+ * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById`.
+ * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+ * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+ *
+ *
  * Create a new ApplicationClient instance by id
  * @param appDetails The details of the app
  * @param algod An algod instance
@@ -58,6 +68,11 @@ export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algod
 }
 
 /**
+ * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientByCreatorAndName`.
+ * If you want to `create` or `deploy` then use `AppFactory` e.g. via `algorand.client.getAppFactory`,
+ * which will in turn give you an `AppClient` instance against the created/deployed app to make other calls.
+ *
+ *
  * Create a new ApplicationClient instance by creator and name
  * @param appDetails The details of the app by creator and name
  * @param algod An algod instance

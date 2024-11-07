@@ -11,10 +11,12 @@ import algosdk, {
 } from 'algosdk'
 import invariant from 'tiny-invariant'
 import * as algokit from '..'
+import { algo } from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { ABIAppCallArg } from './app'
 import { ApplicationClient } from './app-client'
+import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
 
 describe('application-client', () => {
@@ -427,15 +429,12 @@ describe('application-client', () => {
     })
 
     // If the rekey didn't work this will throw
-    algorand.account.setSigner(testAccount.addr, algorand.account.getSigner(rekeyTo))
-    await algokit.transferAlgos(
-      {
-        amount: (0).algos(),
-        from: algorand.account.getAccount(testAccount.addr),
-        to: testAccount,
-      },
-      algod,
-    )
+    const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, algorand.account.getAccount(rekeyTo))
+    await algorand.send.payment({
+      amount: (0).algo(),
+      sender: rekeyedAccount.addr,
+      receiver: testAccount.addr,
+    })
   })
 
   test('Create app with abi', async () => {
@@ -542,42 +541,34 @@ describe('application-client', () => {
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const txn = await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: testAccount.addr,
-        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
-        skipSending: true,
-      },
-      algod,
-    )
+    const { algod, algorand, indexer, testAccount } = localnet.context
+    const txn = await algorand.createTransaction.payment({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     const result = await client.call({
       method: 'call_abi_txn',
-      methodArgs: [txn.transaction, 'test'],
+      methodArgs: [txn, 'test'],
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, methodArgs: [] }, result.confirmations[1])
-    expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], client.getABIMethod('call_abi_txn')!)
+    expect(returnValue?.returnValue).toBe(`Sent ${txn.amount}. test`)
   })
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const txn = await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: testAccount.addr,
-        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
-        skipSending: true,
-      },
-      algod,
-    )
+    const { algod, algorand, indexer, testAccount } = localnet.context
+    const txn = await algorand.createTransaction.payment({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     let indexes: number[] = []
@@ -588,7 +579,7 @@ describe('application-client', () => {
 
     await client.call({
       method: 'call_abi_txn',
-      methodArgs: [txn.transaction, 'test'],
+      methodArgs: [txn, 'test'],
       sender: { addr: testAccount.addr, signer },
     })
 
@@ -596,19 +587,13 @@ describe('application-client', () => {
   })
 
   test('Sign transaction in group with different signer if provided', async () => {
-    const { algod, indexer, testAccount, generateAccount } = localnet.context
-    const signer = await generateAccount({ initialFunds: (1).algos() })
-    const transaction = (
-      await algokit.transferAlgos(
-        {
-          from: signer,
-          to: signer.addr,
-          amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
-          skipSending: true,
-        },
-        algod,
-      )
-    ).transaction
+    const { algod, algorand, indexer, testAccount, generateAccount } = localnet.context
+    const signer = await generateAccount({ initialFunds: (1).algo() })
+    const transaction = await algorand.createTransaction.payment({
+      sender: signer.addr,
+      receiver: signer.addr,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     await client.call({
@@ -633,11 +618,7 @@ describe('application-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    const returnValue = algokit.getABIReturn(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      { method: client.getABIMethod('call_abi_foreign_refs')!, methodArgs: [] },
-      result.confirmations[0],
-    )
+    const returnValue = AppManager.getABIReturn(result.confirmations[0], client.getABIMethod('call_abi_foreign_refs')!)
     const testAccountPublicKey = algosdk.decodeAddress(testAccount.addr).publicKey
     expect(returnValue?.returnValue).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
   })
@@ -746,14 +727,14 @@ describe('application-client', () => {
 
   test('Fund app account', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const fundAmount = algokit.microAlgos(200_000)
+    const fundAmount = algokit.microAlgo(200_000)
     const { client, app } = await deploy(testAccount, algod, indexer)
 
     const result = await client.fundAppAccount({
       amount: fundAmount,
     })
 
-    expect(result.transaction.amount).toBe(fundAmount.microAlgos)
+    expect(result.transaction.amount).toBe(fundAmount.microAlgo)
     expect(result.transaction.type).toBe(TransactionType.pay)
     expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
     expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
@@ -774,8 +755,8 @@ describe('application-client', () => {
     invariant(globalState.bytes2)
     invariant('valueRaw' in globalState.bytes2)
     expect(Object.keys(globalState).sort()).toEqual(['bytes1', 'bytes2', 'int1', 'int2', 'value'])
-    expect(globalState.int1.value).toBe(1)
-    expect(globalState.int2.value).toBe(2)
+    expect(globalState.int1.value).toBe(1n)
+    expect(globalState.int2.value).toBe(2n)
     expect(globalState.bytes1.value).toBe('asdf')
     expect(globalState.bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
 
@@ -789,8 +770,8 @@ describe('application-client', () => {
     invariant(localState.local_bytes2)
     invariant('valueRaw' in localState.local_bytes2)
     expect(Object.keys(localState).sort()).toEqual(['local_bytes1', 'local_bytes2', 'local_int1', 'local_int2'])
-    expect(localState.local_int1.value).toBe(1)
-    expect(localState.local_int2.value).toBe(2)
+    expect(localState.local_int1.value).toBe(1n)
+    expect(localState.local_int2.value).toBe(2n)
     expect(localState.local_bytes1.value).toBe('asdf')
     expect(localState.local_bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
 
@@ -798,7 +779,7 @@ describe('application-client', () => {
     const boxName1Base64 = Buffer.from(boxName1).toString('base64')
     const boxName2 = new Uint8Array([0, 0, 0, 2])
     const boxName2Base64 = Buffer.from(boxName2).toString('base64')
-    await client.fundAppAccount(algokit.algos(1))
+    await client.fundAppAccount(algokit.algo(1))
     await client.call({
       method: 'set_box',
       methodArgs: [boxName1, 'value1'],
@@ -886,5 +867,68 @@ describe('application-client', () => {
       })
       expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
     }
+  })
+})
+
+describe('app-client', () => {
+  const localnet = algorandFixture()
+  beforeEach(localnet.beforeEach, 10_000)
+
+  let appSpec: AppSpec
+  beforeAll(async () => {
+    appSpec = (await getTestingAppContract()).appSpec
+  })
+
+  const deploy = async (account: Account, appName?: string) => {
+    const appFactory = localnet.algorand.client.getAppFactory({
+      appSpec,
+      defaultSender: account.addr,
+      appName: appName,
+    })
+
+    const { appClient } = await appFactory.deploy({
+      deployTimeParams: { VALUE: 1 },
+    })
+
+    return appClient
+  }
+
+  test('clone overriding the defaultSender and inheriting appName', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount, 'overridden')
+    const testAccount2 = await localnet.context.generateAccount({ initialFunds: algo(0.1) })
+
+    const clonedAppClient = appClient.clone({
+      defaultSender: testAccount2.addr,
+    })
+
+    expect(appClient.appName).toBe('overridden')
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe(appClient.appName)
+    expect(algosdk.encodeAddress((await clonedAppClient.createTransaction.bare.call()).from.publicKey)).toBe(testAccount2.addr)
+  })
+
+  test('clone overriding appName', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount)
+
+    const clonedAppClient = appClient.clone({
+      appName: 'cloned',
+    })
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe('cloned')
+  })
+
+  test('clone inheriting appName based on default handling', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount, 'overridden')
+
+    const clonedAppClient = appClient.clone({
+      appName: undefined,
+    })
+
+    expect(appClient.appName).toBe('overridden')
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe(appSpec.contract.name)
   })
 })

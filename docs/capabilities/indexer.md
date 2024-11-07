@@ -4,31 +4,38 @@ Indexer lookups / searching is a higher-order use case capability provided by Al
 
 To see some usage examples check out the [automated tests](../../src/indexer-lookup.spec.ts).
 
-> [!NOTE]
-> The methods on this page require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+To import the indexer functions you can:
+
+```typescript
+import { indexer } from '@algorandfoundation/algokit-utils'
+```
+
+All of the indexer functions require you to pass in an indexer SDK client, which you can get from [`AlgorandClient`](./algorand-client.md) via `algorand.client.indexer`. These calls are not made more easy to call by exposing via `AlgorandClient` and thus not requiring the indexer SDK client to be passed in. This is because we want to add a tiny bit of friction to using indexer, given it's an expensive API to run for node providers, the data from it can sometimes be slow and stale, and there are alternatives [that](https://github.com/algorandfoundation/algokit-subscriber-ts) [allow](https://github.com/algorand/conduit) individual projects to index subsets of chain data specific to them as a preferred option. In saying that, it's a very useful API for doing ad hoc data retrieval, writing automated tests, and many other uses.
 
 ## Indexer wrapper functions
 
 There is a subset of [indexer API calls](https://developer.algorand.org/docs/rest-apis/indexer) that are exposed as easy to use methods with correct typing exposed and automatic pagination for multi item returns.
 
-- [`algokit.lookupTransactionById(transactionId, indexer)`](../code/modules/index.md#lookuptransactionbyid) - Finds a transaction by ID
-- [`algokit.lookupAccountByAddress(accountAddress, indexer)`](../code/modules/index.md#lookupaccountbyaddress) - Finds an account by address
-- [`algokit.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)`](../code/modules/index.md#lookupaccountcreatedapplicationbyaddress) - Finds all applications created for an account
-- [`algokit.lookupAssetHoldings(indexer, assetId, options?, paginationLimit?)`](../code/modules/index.md#lookupassetholdings) - Finds all asset holdings for the given asset
-- [`algokit.searchTransactions(indexer, searchCriteria, paginationLimit?)`](../code/modules/index.md#searchtransactions) - Search for transactions with a given set of criteria
-- [`algokit.executePaginatedRequest(extractItems, buildRequest)`](../code/modules/index.md#executepaginatedrequest) - Execute the given indexer request with automatic pagination
+- [`indexer.lookupTransactionById(transactionId, algorand.client.indexer)`](../code/modules/index.md#lookuptransactionbyid) - Finds a transaction by ID
+- [`indexer.lookupAccountByAddress(accountAddress, algorand.client.indexer)`](../code/modules/index.md#lookupaccountbyaddress) - Finds an account by address
+- [`indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, address, getAll?, paginationLimit?)`](../code/modules/index.md#lookupaccountcreatedapplicationbyaddress) - Finds all applications created for an account
+- [`indexer.lookupAssetHoldings(algorand.client.indexer, assetId, options?, paginationLimit?)`](../code/modules/index.md#lookupassetholdings) - Finds all asset holdings for the given asset
+- [`indexer.searchTransactions(algorand.client.indexer, searchCriteria, paginationLimit?)`](../code/modules/index.md#searchtransactions) - Search for transactions with a given set of criteria
+- [`indexer.executePaginatedRequest(extractItems, buildRequest)`](../code/modules/index.md#executepaginatedrequest) - Execute the given indexer request with automatic pagination
 
 ### Search transactions example
 
-To use the `algokit.searchTransaction` method, you can follow this example as a starting point:
+To use the `indexer.searchTransaction` method, you can follow this example as a starting point:
 
 ```typescript
-const transactions = await algokit.searchTransactions(indexer, (s) => s.txType('pay').addressRole('sender').address(myAddress))
+const transactions = await indexer.searchTransactions(algorand.client.indexer, (s) =>
+  s.txType('pay').addressRole('sender').address(myAddress),
+)
 ```
 
 ### Automatic pagination example
 
-To use the `algokit.executePaginatedRequest` method, you can follow this example as a starting point:
+To use the `indexer.executePaginatedRequest` method, you can follow this example as a starting point:
 
 ```typescript
 const transactions = await executePaginatedRequest(
@@ -36,7 +43,7 @@ const transactions = await executePaginatedRequest(
     return response.transactions
   },
   (nextToken) => {
-    let s = indexer.searchForTransactions().txType('pay').address(myAddress).limit(1000)
+    let s = algorand.client.indexer.searchForTransactions().txType('pay').address(myAddress).limit(1000)
     if (nextToken) {
       s = s.nextToken(nextToken)
     }
@@ -72,5 +79,5 @@ import { TransactionLookupResult } from '@algorandfoundation/algokit-utils/types
 
 ...
 
-const transaction = (await indexer.lookupTransactionByID(transactionId).do()) as TransactionLookupResult
+const transaction = (await algorand.client.indexer.lookupTransactionByID(transactionId).do()) as TransactionLookupResult
 ```

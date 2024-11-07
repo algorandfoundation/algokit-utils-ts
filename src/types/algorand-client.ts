@@ -1,22 +1,29 @@
 import algosdk from 'algosdk'
-import { Config } from '../config'
-import { TransactionSignerAccount } from './account'
+import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
+import { AlgorandClientInterface } from './algorand-client-interface'
+import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
+import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
+import { AppDeployer } from './app-deployer'
+import { AppManager } from './app-manager'
+import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import AlgokitComposer, { ExecuteParams, MethodCallParams } from './composer'
+import TransactionComposer from './composer'
 import { AlgoConfig } from './network-client'
-import { ConfirmedTransactionResult, SendAtomicTransactionComposerResults, SendTransactionFrom } from './transaction'
-import Transaction = algosdk.Transaction
-
-/** Result from sending a single transaction. */
-export type SendSingleTransactionResult = SendAtomicTransactionComposerResults & ConfirmedTransactionResult
+import Account = algosdk.Account
+import LogicSigAccount = algosdk.LogicSigAccount
 
 /**
  * A client that brokers easy access to Algorand functionality.
  */
-export class AlgorandClient {
+export class AlgorandClient implements AlgorandClientInterface {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
+  private _appManager: AppManager
+  private _appDeployer: AppDeployer
+  private _assetManager: AssetManager
+  private _transactionSender: AlgorandClientTransactionSender
+  private _transactionCreator: AlgorandClientTransactionCreator
 
   private _cachedSuggestedParams?: algosdk.SuggestedParams
   private _cachedSuggestedParamsExpiry?: Date
@@ -25,8 +32,13 @@ export class AlgorandClient {
   private _defaultValidityWindow: number | undefined = undefined
 
   private constructor(config: AlgoConfig | AlgoSdkClients) {
-    this._clientManager = new ClientManager(config)
+    this._clientManager = new ClientManager(config, this)
     this._accountManager = new AccountManager(this._clientManager)
+    this._appManager = new AppManager(this._clientManager.algod)
+    this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
+    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager, this._appManager)
+    this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
+    this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
   /**
@@ -50,17 +62,29 @@ export class AlgorandClient {
   }
 
   /**
-   * Tracks the given account for later signing.
-   * @param account The account to register
+   * Tracks the given account (object that encapsulates an address and a signer) for later signing.
+   * @param account The account to register, which can be a `TransactionSignerAccount` or
+   *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
+   * @example
+   * ```typescript
+   * const accountManager = AlgorandClient.mainnet()
+   *  .setSignerFromAccount(algosdk.generateAccount())
+   *  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
+   *  .setSignerFromAccount(new SigningAccount(mnemonic, sender))
+   *  .setSignerFromAccount(new MultisigAccount({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]}, [account1, account2]))
+   *  .setSignerFromAccount({addr: "SENDERADDRESS", signer: transactionSigner})
+   * ```
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSignerFromAccount(account: TransactionSignerAccount | SendTransactionFrom) {
+  public setSignerFromAccount(
+    account: TransactionSignerAccount | TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount,
+  ) {
     this._accountManager.setSignerFromAccount(account)
     return this
   }
 
   /**
-   * Tracks the given account for later signing.
+   * Tracks the given signer against the given sender for later signing.
    * @param sender The sender address to use this signer for
    * @param signer The signer to sign transactions with for the given sender
    * @returns The `AlgorandClient` so method calls can be chained
@@ -71,12 +95,12 @@ export class AlgorandClient {
   }
 
   /**
-   * Sets a cache value to use for suggested params.
+   * Sets a cache value to use for suggested transaction params.
    * @param suggestedParams The suggested params to use
    * @param until A date until which to cache, or if not specified then the timeout is used
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSuggestedParams(suggestedParams: algosdk.SuggestedParams, until?: Date) {
+  public setSuggestedParamsCache(suggestedParams: algosdk.SuggestedParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
     this._cachedSuggestedParamsExpiry = until ?? new Date(+new Date() + this._cachedSuggestedParamsTimeout)
     return this
@@ -87,13 +111,13 @@ export class AlgorandClient {
    * @param timeout The timeout in milliseconds
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSuggestedParamsTimeout(timeout: number) {
+  public setSuggestedParamsCacheTimeout(timeout: number) {
     this._cachedSuggestedParamsTimeout = timeout
     return this
   }
 
   /** Get suggested params for a transaction (either cached or from algod if the cache is stale or empty) */
-  async getSuggestedParams(): Promise<algosdk.SuggestedParams> {
+  public async getSuggestedParams(): Promise<algosdk.SuggestedParams> {
     if (this._cachedSuggestedParams && (!this._cachedSuggestedParamsExpiry || this._cachedSuggestedParamsExpiry > new Date())) {
       return {
         ...this._cachedSuggestedParams,
@@ -118,153 +142,44 @@ export class AlgorandClient {
     return this._accountManager
   }
 
-  /** Start a new `AlgokitComposer` transaction group */
-  newGroup() {
-    return new AlgokitComposer({
+  /** Methods for interacting with assets. */
+  public get asset() {
+    return this._assetManager
+  }
+
+  /** Methods for interacting with apps. */
+  public get app() {
+    return this._appManager
+  }
+
+  /** Methods for deploying apps and managing app deployment metadata. */
+  public get appDeployer() {
+    return this._appDeployer
+  }
+
+  /** Start a new `TransactionComposer` transaction group */
+  public newGroup() {
+    return new TransactionComposer({
       algod: this.client.algod,
       getSigner: (addr: string) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
+      appManager: this._appManager,
     })
   }
 
-  private _send<T>(
-    c: (c: AlgokitComposer) => (params: T) => AlgokitComposer,
-    log?: {
-      preLog?: (params: T, transaction: Transaction) => string
-      postLog?: (params: T, result: SendSingleTransactionResult) => string
-    },
-  ): (params: T, config?: ExecuteParams) => Promise<SendSingleTransactionResult> {
-    return async (params, config) => {
-      const composer = this.newGroup()
-
-      // Ensure `this` is properly populated
-      c(composer).apply(composer, [params])
-
-      if (log?.preLog) {
-        const transaction = (await composer.build()).transactions.at(-1)!.txn
-        Config.getLogger(config?.suppressLog).debug(log.preLog(params, transaction))
-      }
-
-      const rawResult = await composer.execute(config)
-      const result = {
-        // Last item covers when a group is created by an app call with ABI transaction parameters
-        transaction: rawResult.transactions[rawResult.transactions.length - 1],
-        confirmation: rawResult.confirmations![rawResult.confirmations!.length - 1],
-        txId: rawResult.txIds[0],
-        ...rawResult,
-      }
-
-      if (log?.postLog) {
-        Config.getLogger(config?.suppressLog).debug(log.postLog(params, result))
-      }
-
-      return result
-    }
+  /**
+   * Methods for sending a transaction.
+   */
+  public get send() {
+    return this._transactionSender
   }
 
   /**
-   * Methods for sending a single transaction.
+   * Methods for creating a transaction.
    */
-  send = {
-    /**
-     * Send a payment transaction.
-     */
-    payment: this._send((c) => c.addPayment, {
-      preLog: (params, transaction) =>
-        `Sending ${params.amount.microAlgos} µALGOs from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-    }),
-    /**
-     * Create an asset.
-     */
-    assetCreate: this._send((c) => c.addAssetCreate, {
-      postLog: (params, result) =>
-        `Created asset${params.assetName ? ` ${params.assetName} ` : ''}${params.unitName ? ` (${params.unitName}) ` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
-    }),
-    /**
-     * Configure an existing asset.
-     */
-    assetConfig: this._send((c) => c.addAssetConfig, {
-      preLog: (params, transaction) => `Configuring asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
-    }),
-    /**
-     * Freeze or unfreeze an asset.
-     */
-    assetFreeze: this._send((c) => c.addAssetFreeze, {
-      preLog: (params, transaction) => `Freezing asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
-    }),
-    /**
-     * Destroy an asset.
-     */
-    assetDestroy: this._send((c) => c.addAssetDestroy, {
-      preLog: (params, transaction) => `Destroying asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
-    }),
-    /**
-     * Transfer an asset.
-     */
-    assetTransfer: this._send((c) => c.addAssetTransfer, {
-      preLog: (params, transaction) =>
-        `Transferring ${params.amount} units of asset with ID ${params.assetId} from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-    }),
-    /**
-     * Opt an account into an asset.
-     */
-    assetOptIn: this._send((c) => c.addAssetOptIn, {
-      preLog: (params, transaction) =>
-        `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
-    }),
-    /**
-     * Call a smart contract.
-     *
-     * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
-     */
-    appCall: this._send((c) => c.addAppCall),
-    /**
-     * Call a smart contract ABI method.
-     *
-     * Note: you may prefer to use `algorandClient.client` to get an app client for more advanced functionality.
-     */
-    methodCall: this._send((c) => c.addMethodCall),
-    /** Register an online key. */
-    onlineKeyRegistration: this._send((c) => c.addOnlineKeyRegistration, {
-      preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${transaction.txID()}`,
-    }),
-  }
-
-  private _transaction<T>(c: (c: AlgokitComposer) => (params: T) => AlgokitComposer): (params: T) => Promise<Transaction> {
-    return async (params: T) => {
-      const composer = this.newGroup()
-      const result = await c(composer).apply(composer, [params]).build()
-      return result.transactions.map((ts) => ts.txn)[0]
-    }
-  }
-
-  /**
-   * Methods for building transactions
-   */
-  transactions = {
-    /** Create a payment transaction. */
-    payment: this._transaction((c) => c.addPayment),
-    /** Create an asset creation transaction. */
-    assetCreate: this._transaction((c) => c.addAssetCreate),
-    /** Create an asset config transaction. */
-    assetConfig: this._transaction((c) => c.addAssetConfig),
-    /** Create an asset freeze transaction. */
-    assetFreeze: this._transaction((c) => c.addAssetFreeze),
-    /** Create an asset destroy transaction. */
-    assetDestroy: this._transaction((c) => c.addAssetDestroy),
-    /** Create an asset transfer transaction. */
-    assetTransfer: this._transaction((c) => c.addAssetTransfer),
-    /** Create an asset opt-in transaction. */
-    assetOptIn: this._transaction((c) => c.addAssetOptIn),
-    /** Create an application call transaction. */
-    appCall: this._transaction((c) => c.addAppCall),
-    /** Create an application call with ABI method call transaction. */
-    methodCall: async (params: MethodCallParams) => {
-      return (await this.newGroup().addMethodCall(params).build()).transactions.map((ts) => ts.txn)
-    },
-    /** Create an online key registration transaction. */
-    onlineKeyRegistration: this._transaction((c) => c.addOnlineKeyRegistration),
+  public get createTransaction() {
+    return this._transactionCreator
   }
 
   // Static methods to create an `AlgorandClient`
