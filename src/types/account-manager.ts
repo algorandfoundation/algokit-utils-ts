@@ -363,10 +363,27 @@ export class AccountManager {
    * ```
    * @param multisigParams The parameters that define the multisig account
    * @param signingAccounts The signers that are currently present
-   * @returns A multisig account wrapper
+   * @returns The multisig address
    */
   public multisig(multisigParams: algosdk.MultisigMetadata): string {
-    return this.signerAccount(new MultisigAccount(multisigParams, [])).addr
+    const addr = algosdk.multisigAddress(multisigParams)
+
+    // At time of signing, get all of the secret keys we know
+    // TODO: Support non-sk accounts and combine signatures from respective signer functions
+    const signer: algosdk.TransactionSigner = (txnGroup, indexesToSign) => {
+      const secretKeys = multisigParams.addrs
+        .map((addr) => this._accounts[addr])
+        .filter((a) => a !== undefined)
+        .filter((a) => a.sk !== undefined)
+        .map((a) => a.sk!)
+
+      const msigSigner = algosdk.makeMultiSigAccountTransactionSigner(multisigParams, secretKeys)
+      return msigSigner(txnGroup, indexesToSign)
+    }
+
+    this.signerAccount({ addr, signer })
+
+    return addr
   }
 
   /**
