@@ -363,15 +363,12 @@ describe('Resource Packer: Mixed', () => {
   // Temporarily skip this until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
   test('same account', async () => {
     const { algorand, testAccount } = fixture.context
-    const acct = algosdk.generateAccount()
-
-    const rekeyedTo = algorand.account.random()
-    await algorand.account.rekeyAccount(testAccount.addr, rekeyedTo)
+    const acct = algorand.account.random()
 
     const { transactions } = await algorand.send
       .newGroup()
-      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
-      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount.addr }))
+      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct], sender: testAccount.addr }))
+      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct], sender: testAccount.addr }))
       .send({ populateAppCallResources: true })
 
     const v8CallAccts = transactions[0].appAccounts
