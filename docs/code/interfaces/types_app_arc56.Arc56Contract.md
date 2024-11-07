@@ -157,7 +157,7 @@ Optional object listing the contract instances across different networks.
 The key is the base64 genesis hash of the network, and the value contains
 information about the deployed contract in the network indicated by the
 key. A key containing the human-readable name of the network MAY be
-included, but the corresponding genesis hash key MUST also be define
+included, but the corresponding genesis hash key MUST also be defined
 
 #### Index signature
 
@@ -257,7 +257,7 @@ ___
 
 • **structs**: `Object`
 
-Named structs use by the application. Each struct field appears in the same order as ABI encoding.
+Named structs used by the application. Each struct field appears in the same order as ABI encoding.
 
 #### Index signature
 
@@ -273,7 +273,7 @@ ___
 
 • `Optional` **templateVariables**: `Object`
 
-A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respective types and values (if applicable)
+A mapping of template variable names as they appear in the TEAL (not including TMPL_ prefix) to their respective types and values (if applicable)
 
 #### Index signature
 
