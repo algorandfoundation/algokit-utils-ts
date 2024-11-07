@@ -330,15 +330,5 @@ export async function performTemplateSubstitutionAndCompile(
  * @returns The TEAL without comments
  */
 export function stripTealComments(tealCode: string) {
-  // find // outside quotes, i.e. won't pick up "//not a comment"
-  const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
-
-  tealCode = tealCode
-    .split('\n')
-    .map((tealCodeLine) => {
-      return tealCodeLine.split(regex)[0].trim()
-    })
-    .join('\n')
-
-  return tealCode
+  return AppManager.stripTealComments(tealCode)
 }

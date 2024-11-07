@@ -564,9 +564,60 @@ describe('deploy-app', () => {
 })
 
 test('Strip comments remove comments without removing commands', async () => {
-  const tealCode =
-    '//comment\nop arg //comment\nop "arg" //comment\nop "//" //comment\nop "  //comment  " //comment\nop "" //" //comment\nop "" //comment\n//\nop 123\nop 123 // something\nop "" // more comments\nop "//" //op "//"\nop "//"'
-  const tealCodeResult = '\nop arg\nop "arg"\nop "//"\nop "  //comment  "\nop "" //"\nop ""\n\nop 123\nop 123\nop ""\nop "//"\nop "//"'
+  const tealCode = `//comment
+op arg //comment
+op "arg" //comment
+op "//" //comment
+op "  //comment  " //comment
+op "\\" //" //comment
+op ""     //comment
+//
+op 123
+op 123 // something
+op "" // more comments
+op "//" //op "//"
+op "//"
+
+pushbytes base64(//8=)
+pushbytes b64(//8=)
+pushbytes base64(//8=)  // pushbytes base64(//8=)
+pushbytes b64(//8=)     // pushbytes b64(//8=)
+pushbytes "base64(//8=)"  // pushbytes "base64(//8=)"
+pushbytes "b64(//8=)"     // pushbytes "b64(//8=)"
+pushbytes base64 //8=
+pushbytes b64 //8=
+pushbytes base64 //8=  // pushbytes base64 //8=
+pushbytes b64 //8=     // pushbytes b64 //8=
+pushbytes "base64 //8="  // pushbytes "base64 //8="
+pushbytes "b64 //8="     // pushbytes "b64 //8="
+`
+  const tealCodeResult = `
+op arg
+op "arg"
+op "//"
+op "  //comment  "
+op "\\" //"
+op ""
+
+op 123
+op 123
+op ""
+op "//"
+op "//"
+
+pushbytes base64(//8=)
+pushbytes b64(//8=)
+pushbytes base64(//8=)
+pushbytes b64(//8=)
+pushbytes "base64(//8=)"
+pushbytes "b64(//8=)"
+pushbytes base64 //8=
+pushbytes b64 //8=
+pushbytes base64 //8=
+pushbytes b64 //8=
+pushbytes "base64 //8="
+pushbytes "b64 //8="
+`
 
   const result = AppManager.stripTealComments(tealCode)
 
@@ -574,14 +625,14 @@ test('Strip comments remove comments without removing commands', async () => {
 })
 
 test('Can substitute template variable with multiple underscores', async () => {
-  const test_teal = `
+  const testTeal = `
   int TMPL_SOME_VALUE
   return
   `
-  const test_params = {
+  const testParams = {
     SOME_VALUE: 123,
   }
-  const substituted = AppManager.replaceTealTemplateParams(test_teal, test_params)
+  const substituted = AppManager.replaceTealTemplateParams(testTeal, testParams)
   expect(substituted).toBe(`
   int 123
   return
@@ -589,23 +640,75 @@ test('Can substitute template variable with multiple underscores', async () => {
 })
 
 test('Can substitue both bytes and int uint64', async () => {
-  const test_teal = `
+  const testTeal = `
   int TMPL_SOME_VALUE
   pushint TMPL_SOME_VALUE
   bytes TMPL_SOME_VALUE
   pushbytes TMPL_SOME_VALUE
   return
   `
-  const test_params = {
+  const testParams = {
     SOME_VALUE: 123,
   }
-  const substituted = AppManager.replaceTealTemplateParams(test_teal, test_params)
+  const substituted = AppManager.replaceTealTemplateParams(testTeal, testParams)
   expect(substituted).toBe(`
   int 123
   pushint 123
   bytes 0x000000000000007b
   pushbytes 0x000000000000007b
   return
+  `)
+})
+
+test('Does not substitute template variables in comments or when quoted', async () => {
+  const testTeal = `
+test TMPL_INT // TMPL_INT
+test TMPL_INT
+no change
+test TMPL_STR // TMPL_STR
+TMPL_STR
+TMPL_STR // TMPL_INT
+TMPL_STR // foo //
+TMPL_STR // bar
+test "TMPL_STR" // not replaced
+test "TMPL_STRING" // not replaced
+test TMPL_STRING // not replaced
+test TMPL_STRI // not replaced
+test TMPL_STR TMPL_INT TMPL_INT TMPL_STR // TMPL_STR TMPL_INT TMPL_INT TMPL_STR
+test TMPL_INT TMPL_STR TMPL_STRING "TMPL_INT TMPL_STR TMPL_STRING" //TMPL_INT TMPL_STR TMPL_STRING
+test TMPL_INT TMPL_INT TMPL_STRING TMPL_STRING TMPL_STRING TMPL_INT TMPL_STRING //keep
+TMPL_STR TMPL_STR TMPL_STR
+TMPL_STRING
+test NOTTMPL_STR // not replaced
+NOTTMPL_STR // not replaced
+TMPL_STR // replaced
+  `
+  const testParams = {
+    INT: 123,
+    STR: 'ABC',
+  }
+  const substituted = AppManager.replaceTealTemplateParams(testTeal, testParams)
+  expect(substituted).toBe(`
+test 123 // TMPL_INT
+test 123
+no change
+test 0x414243 // TMPL_STR
+0x414243
+0x414243 // TMPL_INT
+0x414243 // foo //
+0x414243 // bar
+test "TMPL_STR" // not replaced
+test "TMPL_STRING" // not replaced
+test TMPL_STRING // not replaced
+test TMPL_STRI // not replaced
+test 0x414243 123 123 0x414243 // TMPL_STR TMPL_INT TMPL_INT TMPL_STR
+test 123 0x414243 TMPL_STRING "TMPL_INT TMPL_STR TMPL_STRING" //TMPL_INT TMPL_STR TMPL_STRING
+test 123 123 TMPL_STRING TMPL_STRING TMPL_STRING 123 TMPL_STRING //keep
+0x414243 0x414243 0x414243
+TMPL_STRING
+test NOTTMPL_STR // not replaced
+NOTTMPL_STR // not replaced
+0x414243 // replaced
   `)
 })
 
