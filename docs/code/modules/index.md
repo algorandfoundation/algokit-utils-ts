@@ -248,7 +248,7 @@ Account information at a given round.
 
 #### Defined in
 
-[src/account/account.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L135)
+[src/account/account.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L136)
 
 ___
 
@@ -264,7 +264,7 @@ ___
 
 #### Defined in
 
-[src/account/account.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L132)
+[src/account/account.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L133)
 
 ## Variables
 
@@ -1061,7 +1061,7 @@ Returns the string address of an Algorand account from a base64 encoded version 
 
 #### Defined in
 
-[src/account/account.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L128)
+[src/account/account.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L129)
 
 ___
 
@@ -1087,7 +1087,7 @@ Returns an account's address as a byte array
 
 #### Defined in
 
-[src/account/account.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L117)
+[src/account/account.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L118)
 
 ___
 
@@ -1127,7 +1127,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L196)
+[src/account/account.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L197)
 
 ___
 
@@ -1198,7 +1198,7 @@ const accountInfo = await account.getInformation(address, algod);
 
 #### Defined in
 
-[src/account/account.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L153)
+[src/account/account.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L154)
 
 ___
 
@@ -2042,7 +2042,7 @@ ___
 
 ### getDispenserAccount
 
-▸ **getDispenserAccount**(`algod`, `kmd?`): `Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](../classes/types_account.SigningAccount.md)  }\>
+▸ **getDispenserAccount**(`algod`, `kmd?`): `Promise`\<`string`\>
 
 #### Parameters
 
@@ -2053,7 +2053,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) & \{ `account`: [`SigningAccount`](../classes/types_account.SigningAccount.md)  }\>
+`Promise`\<`string`\>
 
 **`Deprecated`**
 

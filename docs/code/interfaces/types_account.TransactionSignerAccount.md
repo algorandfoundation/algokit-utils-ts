@@ -12,6 +12,7 @@ A wrapper around `TransactionSigner` that also has the sender address.
 
 - [addr](types_account.TransactionSignerAccount.md#addr)
 - [signer](types_account.TransactionSignerAccount.md#signer)
+- [sk](types_account.TransactionSignerAccount.md#sk)
 
 ## Properties
 
@@ -32,3 +33,13 @@ ___
 #### Defined in
 
 [src/types/account.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L121)
+
+___
+
+### sk
+
+• `Optional` **sk**: `Readonly`\<`Uint8Array`\>
+
+#### Defined in
+
+[src/types/account.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L122)
