@@ -23,7 +23,7 @@ The TEAL source of the approval program
 
 #### Defined in
 
-[src/types/app-spec.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L154)
+[src/types/app-spec.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L163)
 
 ___
 
@@ -35,4 +35,4 @@ The TEAL source of the clear program
 
 #### Defined in
 
-[src/types/app-spec.ts:156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L156)
+[src/types/app-spec.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L165)

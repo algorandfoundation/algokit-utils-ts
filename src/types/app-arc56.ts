@@ -229,7 +229,7 @@ export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValu
 
 /** Describes the entire contract. This interface is an extension of the interface described in ARC-4 */
 export interface Arc56Contract {
-  /** The ARCs used and/or supported by this contract. All contracts implicity support ARC4 and ARC56 */
+  /** The ARCs used and/or supported by this contract. All contracts implicitly support ARC4 and ARC56 */
   arcs: number[]
   /** A user-friendly name for the contract */
   name: string
@@ -319,7 +319,7 @@ export interface Arc56Contract {
   }
   /** ARC-28 events that MAY be emitted by this contract */
   events?: Array<Event>
-  /** A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respecive types and values (if applicable) */
+  /** A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respective types and values (if applicable) */
   templateVariables?: {
     [name: string]: {
       /** The type of the template variable */
@@ -355,17 +355,18 @@ export interface Method {
     desc?: string
     /** The default value that clients should use. */
     defaultValue?: {
-      /** Base64 encoded bytes or uint64 */
-      data: string | number
+      /** Base64 encoded bytes, base64 ARC4 encoded uint64, or UTF-8 method selector */
+      data: string
       /** How the data is encoded. This is the encoding for the data provided here, not the arg type */
-      type: ABIType | AVMType
+      type?: ABIType | AVMType
       /** Where the default value is coming from
        * - box: The data key signifies the box key to read the value from
        * - global: The data key signifies the global state key to read the value from
        * - local: The data key signifies the local state key to read the value from (for the sender)
        * - literal: the value is a literal and should be passed directly as the argument
+       * - method: The utf8 signature of the method in this contract to call to get the default value. If the method has arguments, they all must have default values. The method **MUST** be readonly so simulate can be used to get the default value
        */
-      source: 'box' | 'global' | 'local' | 'literal'
+      source: 'box' | 'global' | 'local' | 'literal' | 'method'
     }
   }>
   /** Information about the method's return value */
@@ -420,7 +421,7 @@ export interface Event {
   desc?: string
   /** The arguments of the event, in order */
   args: Array<{
-    /** The type of the argument. The `struct` field should also be checked to determine if this return value is a struct. */
+    /** The type of the argument. The `struct` field should also be checked to determine if this arg is a struct. */
     type: ABIType
     /** Optional, user-friendly name for the argument */
     name?: string

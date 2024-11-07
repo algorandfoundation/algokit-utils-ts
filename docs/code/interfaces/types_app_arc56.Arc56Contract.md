@@ -32,7 +32,7 @@ Describes the entire contract. This interface is an extension of the interface d
 
 • **arcs**: `number`[]
 
-The ARCs used and/or supported by this contract. All contracts implicity support ARC4 and ARC56
+The ARCs used and/or supported by this contract. All contracts implicitly support ARC4 and ARC56
 
 #### Defined in
 
@@ -273,7 +273,7 @@ ___
 
 • `Optional` **templateVariables**: `Object`
 
-A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respecive types and values (if applicable)
+A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respective types and values (if applicable)
 
 #### Index signature
 

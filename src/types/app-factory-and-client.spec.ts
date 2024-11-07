@@ -635,8 +635,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       await testAbiWithDefaultArgMethod('default_value(string)string', 'defined value', 'defined value', 'default value')
     })
 
-    // todo: Waiting for ABI support in ARC-56
-    test.skip('from abi method', async () => {
+    test('from abi method', async () => {
       await testAbiWithDefaultArgMethod('default_value_from_abi(string)string', 'defined value', 'ABI, defined value', 'ABI, default value')
     })
 
