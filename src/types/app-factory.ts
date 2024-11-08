@@ -554,7 +554,7 @@ export class AppFactory {
     return result
   }
 
-  private getBareParams<TParams extends { sender?: Address | string | Address } | undefined, TOnComplete extends OnApplicationComplete>(
+  private getBareParams<TParams extends { sender?: Address | string } | undefined, TOnComplete extends OnApplicationComplete>(
     params: TParams,
     onComplete: TOnComplete,
   ) {
