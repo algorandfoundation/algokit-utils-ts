@@ -240,7 +240,7 @@ export interface Arc56Contract {
    * The key is the base64 genesis hash of the network, and the value contains
    * information about the deployed contract in the network indicated by the
    * key. A key containing the human-readable name of the network MAY be
-   * included, but the corresponding genesis hash key MUST also be define
+   * included, but the corresponding genesis hash key MUST also be defined
    */
   networks?: {
     [network: string]: {
@@ -248,7 +248,7 @@ export interface Arc56Contract {
       appID: number
     }
   }
-  /** Named structs use by the application. Each struct field appears in the same order as ABI encoding. */
+  /** Named structs used by the application. Each struct field appears in the same order as ABI encoding. */
   structs: { [structName: StructName]: StructField[] }
   /** All of the methods that the contract implements */
   methods: Method[]
@@ -319,12 +319,12 @@ export interface Arc56Contract {
   }
   /** ARC-28 events that MAY be emitted by this contract */
   events?: Array<Event>
-  /** A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respective types and values (if applicable) */
+  /** A mapping of template variable names as they appear in the TEAL (not including TMPL_ prefix) to their respective types and values (if applicable) */
   templateVariables?: {
     [name: string]: {
       /** The type of the template variable */
       type: ABIType | AVMType | StructName
-      /** If given, the the base64 encoded value used for the given app/program */
+      /** If given, the base64 encoded value used for the given app/program */
       value?: string
     }
   }

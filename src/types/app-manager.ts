@@ -401,7 +401,7 @@ export class AppManager {
           `Deploy-time updatability control requested for app deployment, but ${UPDATABLE_TEMPLATE_NAME} not present in TEAL code`,
         )
       }
-      tealTemplateCode = tealTemplateCode.replace(new RegExp(UPDATABLE_TEMPLATE_NAME, 'g'), (params.updatable ? 1 : 0).toString())
+      tealTemplateCode = replaceTemplateVariable(tealTemplateCode, UPDATABLE_TEMPLATE_NAME, (params.updatable ? 1 : 0).toString())
     }
 
     if (params.deletable !== undefined) {
@@ -410,7 +410,7 @@ export class AppManager {
           `Deploy-time deletability control requested for app deployment, but ${DELETABLE_TEMPLATE_NAME} not present in TEAL code`,
         )
       }
-      tealTemplateCode = tealTemplateCode.replace(new RegExp(DELETABLE_TEMPLATE_NAME, 'g'), (params.deletable ? 1 : 0).toString())
+      tealTemplateCode = replaceTemplateVariable(tealTemplateCode, DELETABLE_TEMPLATE_NAME, (params.deletable ? 1 : 0).toString())
     }
 
     return tealTemplateCode
@@ -439,8 +439,9 @@ export class AppManager {
           // We could probably return here since mixing pushint and pushbytes is likely not going to happen, but might as well do both
         }
 
-        tealTemplateCode = tealTemplateCode.replace(
-          new RegExp(token, 'g'),
+        tealTemplateCode = replaceTemplateVariable(
+          tealTemplateCode,
+          token,
           typeof value === 'string'
             ? `0x${Buffer.from(value, 'utf-8').toString('hex')}`
             : ArrayBuffer.isView(value)
@@ -460,16 +461,116 @@ export class AppManager {
    * @returns The TEAL without comments
    */
   static stripTealComments(tealCode: string) {
-    // find // outside quotes, i.e. won't pick up "//not a comment"
-    const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
-
-    tealCode = tealCode
-      .split('\n')
-      .map((tealCodeLine) => {
-        return tealCodeLine.split(regex)[0].trim()
-      })
-      .join('\n')
+    const stripCommentFromLine = (line: string) => {
+      const commentIndex = findUnquotedString(line, '//')
+      if (commentIndex === undefined) {
+        return line
+      }
+      return line.slice(0, commentIndex).trimEnd()
+    }
 
     return tealCode
+      .split('\n')
+      .map((line) => stripCommentFromLine(line))
+      .join('\n')
   }
+}
+
+/**
+ * Find the first string within a line of TEAL. Only matches outside of quotes and base64 are returned.
+ * Returns undefined if not found
+ */
+const findUnquotedString = (line: string, token: string, startIndex: number = 0, _endIndex?: number): number | undefined => {
+  const endIndex = _endIndex === undefined ? line.length : _endIndex
+  let index = startIndex
+  let inQuotes = false
+  let inBase64 = false
+
+  while (index < endIndex) {
+    const currentChar = line[index]
+    if ((currentChar === ' ' || currentChar === '(') && !inQuotes && lastTokenBase64(line, index)) {
+      // enter base64
+      inBase64 = true
+    } else if ((currentChar === ' ' || currentChar === ')') && !inQuotes && inBase64) {
+      // exit base64
+      inBase64 = false
+    } else if (currentChar === '\\' && inQuotes) {
+      // escaped char, skip next character
+      index += 1
+    } else if (currentChar === '"') {
+      // quote boundary
+      inQuotes = !inQuotes
+    } else if (!inQuotes && !inBase64 && line.startsWith(token, index)) {
+      // can test for match
+      return index
+    }
+    index += 1
+  }
+  return undefined
+}
+
+const lastTokenBase64 = (line: string, index: number): boolean => {
+  try {
+    const tokens = line.slice(0, index).split(/\s+/)
+    const last = tokens[tokens.length - 1]
+    return ['base64', 'b64'].includes(last)
+  } catch {
+    return false
+  }
+}
+
+function replaceTemplateVariable(program: string, token: string, replacement: string): string {
+  const result: string[] = []
+  const tokenIndexOffset = replacement.length - token.length
+
+  const programLines = program.split('\n')
+
+  for (const line of programLines) {
+    const _commentIndex = findUnquotedString(line, '//')
+    const commentIndex = _commentIndex === undefined ? line.length : _commentIndex
+    let code = line.substring(0, commentIndex)
+    const comment = line.substring(commentIndex)
+    let trailingIndex = 0
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const tokenIndex = findTemplateToken(code, token, trailingIndex)
+      if (tokenIndex === undefined) {
+        break
+      }
+      trailingIndex = tokenIndex + token.length
+      const prefix = code.substring(0, tokenIndex)
+      const suffix = code.substring(trailingIndex)
+      code = `${prefix}${replacement}${suffix}`
+      trailingIndex += tokenIndexOffset
+    }
+    result.push(code + comment)
+  }
+
+  return result.join('\n')
+}
+
+const findTemplateToken = (line: string, token: string, startIndex: number = 0, _endIndex?: number): number | undefined => {
+  const endIndex = _endIndex === undefined ? line.length : _endIndex
+
+  let index = startIndex
+  while (index < endIndex) {
+    const tokenIndex = findUnquotedString(line, token, index, endIndex)
+    if (tokenIndex === undefined) {
+      break
+    }
+    const trailingIndex = tokenIndex + token.length
+    if (
+      (tokenIndex === 0 || !isValidTokenCharacter(line[tokenIndex - 1])) &&
+      (trailingIndex >= line.length || !isValidTokenCharacter(line[trailingIndex]))
+    ) {
+      return tokenIndex
+    }
+    index = trailingIndex
+  }
+  return undefined
+}
+
+function isValidTokenCharacter(char: string): boolean {
+  return char.length === 1 && (/\w/.test(char) || char === '_')
 }
