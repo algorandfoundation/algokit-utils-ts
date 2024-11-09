@@ -174,6 +174,7 @@ describe('AlgorandClient', () => {
       sender: alice,
       appId: appId,
       method: appClient.appClient.getABIMethod('txnArg')!,
+      // pay txn is passed in here
       args: [algorand.createTransaction.payment({ sender: alice, receiver: alice, amount: AlgoAmount.MicroAlgo(0) })],
     } satisfies AppCallMethodCall
 
@@ -183,12 +184,45 @@ describe('AlgorandClient', () => {
         sender: alice,
         appId: appId,
         method: appClient.appClient.getABIMethod('nestedTxnArg')!,
-        args: [txnArgCall],
+        args: [undefined, txnArgCall],
+      })
+      .send()
+
+    expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.addr.toString())
+    expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
+  })
+
+  test('multiple layers of nested app calls', async () => {
+    const txnArg2Call = {
+      sender: alice.addr,
+      appId: appId,
+      method: appClient.appClient.getABIMethod('txnArg')!,
+      note: 'txnArg2Call',
+      args: [algorand.createTransaction.payment({ sender: alice.addr, receiver: alice.addr, amount: AlgoAmount.MicroAlgo(1) })],
+    } satisfies AppCallMethodCall
+
+    const txnArg1Call = {
+      sender: alice.addr,
+      appId: appId,
+      method: appClient.appClient.getABIMethod('methodArg')!,
+      note: 'txnArg1Call',
+      args: [txnArg2Call],
+    } satisfies AppCallMethodCall
+
+    const nestedTxnArgRes = await algorand
+      .newGroup()
+      .addAppCallMethodCall({
+        sender: alice.addr,
+        appId: appId,
+        note: 'nestedTxnArgRes',
+        method: appClient.appClient.getABIMethod('methodArg')!,
+        args: [txnArg1Call],
       })
       .send()
 
     expect(nestedTxnArgRes.returns?.[0].returnValue?.valueOf()).toBe(alice.toString())
     expect(nestedTxnArgRes.returns?.[1].returnValue?.valueOf()).toBe(BigInt(appId))
+    expect(nestedTxnArgRes.returns?.[2].returnValue?.valueOf()).toBe(BigInt(appId))
   })
 
   test('method with two method call args that each have a txn arg', async () => {
@@ -213,7 +247,7 @@ describe('AlgorandClient', () => {
         sender: alice,
         appId: appId,
         method: appClient.appClient.getABIMethod('doubleNestedTxnArg')!,
-        args: [firstTxnCall, secondTxnCall],
+        args: [undefined, firstTxnCall, undefined, secondTxnCall],
       })
       .send()
 

@@ -6,7 +6,7 @@
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` to construct create app transactions instead.
+Use `TransactionComposer` to construct create app transactions instead.
 
 Parameters that are passed in when creating an app.
 

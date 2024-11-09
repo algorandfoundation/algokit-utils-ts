@@ -252,6 +252,54 @@ const transaction = await appClient.createTransaction.bare.closeOut({
 const params = appClient.params.optIn({ method: 'optin' })
 ```
 
+### Nested ABI Method Call Transactions
+
+The ARC4 ABI specification supports ABI method calls as arguments to other ABI method calls, enabling some interesting use cases. While this conceptually resembles a function call hierarchy, in practice, the transactions are organized as a flat, ordered transaction group. Unfortunately, this logically hierarchical structure cannot always be correctly represented as a flat transaction group, making some scenarios impossible.
+
+To illustrate this, let's consider an example of two ABI methods with the following signatures:
+
+- `myMethod(pay, appl): void`
+- `myOtherMethod(pay): void`
+
+These signatures are compatible, so `myOtherMethod` can be passed as an ABI method call argument to `myMethod`, which would look like:
+
+Hierarchical method call
+
+```
+myMethod(pay, myOtherMethod(pay))
+```
+
+Flat transaction group
+
+```
+pay (pay)
+appl (myOtherMethod)
+appl (myMethod)
+```
+
+An important limitation to note is that the flat transaction group representation does not allow having two different pay transactions. This invariant is represented in the hierarchical call interface of the app client by passing an `undefined` value. This acts as a placeholder and tells the app client that another ABI method call argument will supply the value for this argument. For example:
+
+```typescript
+const payment = algorand.createTransaction.payment({
+  sender: alice.addr,
+  receiver: alice.addr,
+  amount: microAlgo(1),
+})
+
+const myOtherMethodCall = await appClient.params.call({
+  method: 'myOtherMethod',
+  args: [payment],
+})
+
+const myMethodCall = await appClient.send.call({
+  method: 'myMethod',
+  args: [undefined, myOtherMethodCall],
+})
+```
+
+`myOtherMethodCall` supplies the pay transaction to the transaction group and, by association, `myOtherMethodCall` has access to it as defined in its signature.
+To ensure the app client builds the correct transaction group, you must supply a value for every argument in a method call signature.
+
 ## Funding the app account
 
 Often there is a need to fund an app account to cover minimum balance requirements for boxes and other scenarios. There is an app client method that will do this for you `fundAppAccount(params)`.

@@ -17,28 +17,12 @@ export async function performAtomicTransactionComposerSimulate(
   options?: Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>,
 ) {
   const unsignedTransactionsSigners = atc.buildGroup()
-
-  // Don't trigger any actual signatures
-  const signer = algosdk.makeEmptyTransactionSigner()
-  const signedTxns = await signer(
-    unsignedTransactionsSigners.map((t) => t.txn),
-    unsignedTransactionsSigners.map((_, i) => i),
-  )
-
-  // todo: This won't be needed once the fixSigners option is available
-  const authAddrs = Object.fromEntries(
-    (
-      await Promise.all(
-        unsignedTransactionsSigners.map((t) => t.txn.sender.toString()).map(async (s) => await algod.accountInformation(s).do()),
-      )
-    ).map((a) => [a.address, a.authAddr]),
-  )
+  const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
 
   const simulateRequest = new modelsv2.SimulateRequest({
     ...(options ?? {
       allowEmptySignatures: true,
-      allowUnnamedResources: true,
-      //todo: fixSigners: true, waiting for 3.26 to roll out https://github.com/algorand/go-algorand/pull/5942
+      fixSigners: true,
       allowMoreLogging: true,
       execTraceConfig: new modelsv2.SimulateTraceConfig({
         enable: true,
@@ -49,17 +33,7 @@ export async function performAtomicTransactionComposerSimulate(
     }),
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({
-        txns: signedTxns.map((txn) => {
-          const stxn = decodeMsgpack(txn, SignedTransaction)
-          // todo: This won't be needed once the fixSigners option is available
-          const sender = stxn.txn.sender.toString()
-          if (authAddrs[sender]) {
-            const data = stxn.toEncodingData()
-            data.set('sgnr', authAddrs[sender])
-            return SignedTransaction.fromEncodingData(data)
-          }
-          return stxn
-        }),
+        txns: decodedSignedTransactions.map((txn) => decodeMsgpack(txn, SignedTransaction)),
       }),
     ],
   })

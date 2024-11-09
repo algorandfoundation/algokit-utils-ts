@@ -5,8 +5,8 @@ import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
-import { EventType } from './async-event-emitter'
 import { Expand } from './expand'
+import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
 import { Arc2TransactionNote, SendAtomicTransactionComposerResults, SendParams } from './transaction'
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
@@ -433,6 +433,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    * * A transaction (where the signer will be automatically assigned)
    * * An unawaited transaction (e.g. from algorand.createTransaction.{transactionType}())
    * * Another method call (via method call params object)
+   * * undefined (this represents a placeholder transaction argument that is fulfilled by another method call argument)
    */
   args?: (
     | algosdk.ABIValue
@@ -444,6 +445,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
     | AppMethodCall<AppCreateParams>
     | AppMethodCall<AppUpdateParams>
     | AppMethodCall<AppMethodCallParams>
+    | undefined
   )[]
 }
 
@@ -462,8 +464,8 @@ export type Txn =
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
-/** Parameters to create an `AlgoKitComposer`. */
-export type AlgoKitComposerParams = {
+/** Parameters to create an `TransactionComposer`. */
+export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: algosdk.Algodv2
   /** The function used to get the TransactionSigner for a given address */
@@ -481,7 +483,7 @@ export type AlgoKitComposerParams = {
   appManager?: AppManager
 }
 
-/** Set of transactions built by `AlgoKitComposer`. */
+/** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
   transactions: algosdk.Transaction[]
@@ -492,7 +494,7 @@ export interface BuiltTransactions {
 }
 
 /** AlgoKit Composer helps you compose and execute transactions as a transaction group. */
-export class AlgoKitComposer {
+export class TransactionComposer {
   /** Signer used to represent a lack of signer */
   private static NULL_SIGNER: algosdk.TransactionSigner = algosdk.makeEmptyTransactionSigner()
 
@@ -523,10 +525,10 @@ export class AlgoKitComposer {
   private appManager: AppManager
 
   /**
-   * Create an `AlgoKitComposer`.
+   * Create an `TransactionComposer`.
    * @param params The configuration for this composer
    */
-  constructor(params: AlgoKitComposerParams) {
+  constructor(params: TransactionComposerParams) {
     this.algod = params.algod
     const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
@@ -542,7 +544,7 @@ export class AlgoKitComposer {
    * @param signer Optional signer override for the transaction
    * @returns The composer so you can chain method calls
    */
-  addTransaction(transaction: Transaction, signer?: TransactionSigner): AlgoKitComposer {
+  addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
     this.txns.push({
       txn: transaction,
       signer: signer ?? this.getSigner(transaction.sender),
@@ -557,7 +559,7 @@ export class AlgoKitComposer {
    * @param params The payment transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addPayment(params: PaymentParams): AlgoKitComposer {
+  addPayment(params: PaymentParams): TransactionComposer {
     this.txns.push({ ...params, type: 'pay' })
 
     return this
@@ -568,7 +570,7 @@ export class AlgoKitComposer {
    * @param params The asset create transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetCreate(params: AssetCreateParams): AlgoKitComposer {
+  addAssetCreate(params: AssetCreateParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetCreate' })
 
     return this
@@ -579,7 +581,7 @@ export class AlgoKitComposer {
    * @param params The asset config transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetConfig(params: AssetConfigParams): AlgoKitComposer {
+  addAssetConfig(params: AssetConfigParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetConfig' })
 
     return this
@@ -590,7 +592,7 @@ export class AlgoKitComposer {
    * @param params The asset freeze transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetFreeze(params: AssetFreezeParams): AlgoKitComposer {
+  addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetFreeze' })
 
     return this
@@ -601,7 +603,7 @@ export class AlgoKitComposer {
    * @param params The asset destroy transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetDestroy(params: AssetDestroyParams): AlgoKitComposer {
+  addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetDestroy' })
 
     return this
@@ -612,7 +614,7 @@ export class AlgoKitComposer {
    * @param params The asset transfer transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetTransfer(params: AssetTransferParams): AlgoKitComposer {
+  addAssetTransfer(params: AssetTransferParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetTransfer' })
 
     return this
@@ -623,7 +625,7 @@ export class AlgoKitComposer {
    * @param params The asset opt-in transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetOptIn(params: AssetOptInParams): AlgoKitComposer {
+  addAssetOptIn(params: AssetOptInParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetOptIn' })
 
     return this
@@ -634,7 +636,7 @@ export class AlgoKitComposer {
    * @param params The asset opt-out transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAssetOptOut(params: AssetOptOutParams): AlgoKitComposer {
+  addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetOptOut' })
 
     return this
@@ -647,7 +649,7 @@ export class AlgoKitComposer {
    * @param params The application create transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAppCreate(params: AppCreateParams): AlgoKitComposer {
+  addAppCreate(params: AppCreateParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall' })
 
     return this
@@ -660,7 +662,7 @@ export class AlgoKitComposer {
    * @param params The application update transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAppUpdate(params: AppUpdateParams): AlgoKitComposer {
+  addAppUpdate(params: AppUpdateParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
 
     return this
@@ -673,7 +675,7 @@ export class AlgoKitComposer {
    * @param params The application delete transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAppDelete(params: AppDeleteParams): AlgoKitComposer {
+  addAppDelete(params: AppDeleteParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
 
     return this
@@ -688,7 +690,7 @@ export class AlgoKitComposer {
    * @param params The application call transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addAppCall(params: AppCallParams): AlgoKitComposer {
+  addAppCall(params: AppCallParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall' })
 
     return this
@@ -747,7 +749,7 @@ export class AlgoKitComposer {
    * @param params The online key registration transaction parameters
    * @returns The composer so you can chain method calls
    */
-  addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): AlgoKitComposer {
+  addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
     this.txns.push({ ...params, type: 'keyReg' })
 
     return this
@@ -758,7 +760,7 @@ export class AlgoKitComposer {
    * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
    * @returns The composer so you can chain method calls
    */
-  addAtc(atc: algosdk.AtomicTransactionComposer): AlgoKitComposer {
+  addAtc(atc: algosdk.AtomicTransactionComposer): TransactionComposer {
     this.txns.push({ atc, type: 'atc' })
     return this
   }
@@ -768,7 +770,7 @@ export class AlgoKitComposer {
     const group = atc.buildGroup()
 
     const txnWithSigners = group.map((ts, idx) => {
-      // Remove underlying group ID from the transaction since it will be re-grouped when this AlgoKitComposer is built
+      // Remove underlying group ID from the transaction since it will be re-grouped when this TransactionComposer is built
       ts.txn.group = undefined
       // If this was a method call stash the ABIMethod for later
       if (atc['methodCalls'].get(idx)) {
@@ -840,15 +842,25 @@ export class AlgoKitComposer {
     includeSigner: boolean,
   ): Promise<algosdk.TransactionWithSigner[]> {
     const methodArgs: algosdk.ABIArgument[] = []
+    const transactionsForGroup: TransactionWithSigner[] = []
+
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
       return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
     }
 
-    for (let i = 0; i < (params.args ?? []).length; i++) {
+    for (let i = (params.args ?? []).length - 1; i >= 0; i--) {
       const arg = params.args![i]
       if (arg === undefined) {
+        // An undefined transaction argument signals that the value will be supplied by a method call argument
+        if (algosdk.abiTypeIsTransaction(params.method.args[i].type) && transactionsForGroup.length > 0) {
+          // Move the last transaction from the group to the method call arguments to appease algosdk
+          const placeholderTransaction = transactionsForGroup.splice(-1, 1)[0]
+          methodArgs.push(placeholderTransaction)
+          continue
+        }
+
         throw Error(`No value provided for argument ${i + 1} within call to ${params.method.name}`)
       }
 
@@ -870,7 +882,12 @@ export class AlgoKitComposer {
 
       if ('method' in arg) {
         const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-        methodArgs.push(...tempTxnWithSigners)
+
+        // If there is any transaction args, add to the atc
+        // Everything else should be added as method args
+
+        methodArgs.push(...tempTxnWithSigners.slice(-1)) // Add the method call itself as a method arg
+        transactionsForGroup.push(...tempTxnWithSigners.slice(0, -1).reverse()) // Add any transaction arguments to the atc
         continue
       }
 
@@ -883,11 +900,12 @@ export class AlgoKitComposer {
               ? params.signer.signer
               : params.signer
             : this.getSigner(txn.sender)
-          : AlgoKitComposer.NULL_SIGNER,
+          : TransactionComposer.NULL_SIGNER,
       })
     }
 
     const methodAtc = new algosdk.AtomicTransactionComposer()
+    transactionsForGroup.reverse().forEach((txn) => methodAtc.addTransaction(txn))
 
     const appId = Number('appId' in params ? params.appId : 0n)
     const approvalProgram =
@@ -933,8 +951,8 @@ export class AlgoKitComposer {
             ? params.signer.signer
             : params.signer
           : this.getSigner(params.sender)
-        : AlgoKitComposer.NULL_SIGNER,
-      methodArgs: methodArgs,
+        : TransactionComposer.NULL_SIGNER,
+      methodArgs: methodArgs.reverse(),
       // note, lease, and rekeyTo are set in the common build step
       note: undefined,
       lease: undefined,
@@ -1164,7 +1182,7 @@ export class AlgoKitComposer {
 
         transactions.push(...transactionsWithSigner.map((ts) => ts.txn))
         transactionsWithSigner.forEach((ts, idx) => {
-          if (ts.signer && ts.signer !== AlgoKitComposer.NULL_SIGNER) {
+          if (ts.signer && ts.signer !== TransactionComposer.NULL_SIGNER) {
             signers.set(idx, ts.signer)
           }
         })
@@ -1278,11 +1296,11 @@ export class AlgoKitComposer {
     // Build the transactions
     if (options?.skipSignatures) {
       options.allowEmptySignatures = true
-      // todo: options.fixSigners = true
+      options.fixSigners = true
       // Build transactions uses empty signers
       const transactions = await this.buildTransactions()
       for (const txn of transactions.transactions) {
-        atc.addTransaction({ txn, signer: AlgoKitComposer.NULL_SIGNER })
+        atc.addTransaction({ txn, signer: TransactionComposer.NULL_SIGNER })
       }
       atc['methodCalls'] = transactions.methodCalls
     } else {
@@ -1298,6 +1316,7 @@ export class AlgoKitComposer {
         ...(Config.debug
           ? {
               allowEmptySignatures: true,
+              fixSigners: true,
               allowMoreLogging: true,
               execTraceConfig: new modelsv2.SimulateTraceConfig({
                 enable: true,

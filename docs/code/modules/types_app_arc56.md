@@ -13,7 +13,7 @@
 - [Arc56Contract](../interfaces/types_app_arc56.Arc56Contract.md)
 - [Event](../interfaces/types_app_arc56.Event.md)
 - [Method](../interfaces/types_app_arc56.Method.md)
-- [SourceInfo](../interfaces/types_app_arc56.SourceInfo.md)
+- [ProgramSourceInfo](../interfaces/types_app_arc56.ProgramSourceInfo.md)
 - [StorageKey](../interfaces/types_app_arc56.StorageKey.md)
 - [StorageMap](../interfaces/types_app_arc56.StorageMap.md)
 - [StructField](../interfaces/types_app_arc56.StructField.md)
@@ -66,7 +66,7 @@ An ABI-encoded type
 
 #### Defined in
 
-[src/types/app-arc56.ts:435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L435)
+[src/types/app-arc56.ts:436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L436)
 
 ___
 
@@ -78,7 +78,7 @@ Raw byteslice without the length prefixed that is specified in ARC-4
 
 #### Defined in
 
-[src/types/app-arc56.ts:441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L441)
+[src/types/app-arc56.ts:442](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L442)
 
 ___
 
@@ -90,7 +90,7 @@ A utf-8 string without the length prefix that is specified in ARC-4
 
 #### Defined in
 
-[src/types/app-arc56.ts:444](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L444)
+[src/types/app-arc56.ts:445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L445)
 
 ___
 
@@ -102,7 +102,7 @@ A native AVM type
 
 #### Defined in
 
-[src/types/app-arc56.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L450)
+[src/types/app-arc56.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L451)
 
 ___
 
@@ -114,7 +114,7 @@ A 64-bit unsigned integer
 
 #### Defined in
 
-[src/types/app-arc56.ts:447](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L447)
+[src/types/app-arc56.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L448)
 
 ___
 
@@ -150,7 +150,7 @@ The name of a defined struct
 
 #### Defined in
 
-[src/types/app-arc56.ts:438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L438)
+[src/types/app-arc56.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L439)
 
 ## Functions
 

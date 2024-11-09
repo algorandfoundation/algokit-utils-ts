@@ -6,7 +6,7 @@
 
 ### Classes
 
-- [AlgoKitComposer](../classes/types_composer.AlgoKitComposer.md)
+- [TransactionComposer](../classes/types_composer.TransactionComposer.md)
 
 ### Interfaces
 
@@ -14,7 +14,6 @@
 
 ### Type Aliases
 
-- [AlgoKitComposerParams](types_composer.md#algokitcomposerparams)
 - [AppCallMethodCall](types_composer.md#appcallmethodcall)
 - [AppCallParams](types_composer.md#appcallparams)
 - [AppCreateMethodCall](types_composer.md#appcreatemethodcall)
@@ -38,6 +37,7 @@
 - [OnlineKeyRegistrationParams](types_composer.md#onlinekeyregistrationparams)
 - [PaymentParams](types_composer.md#paymentparams)
 - [SimulateOptions](types_composer.md#simulateoptions)
+- [TransactionComposerParams](types_composer.md#transactioncomposerparams)
 - [Txn](types_composer.md#txn)
 
 ### Variables
@@ -45,28 +45,6 @@
 - [MAX\_TRANSACTION\_GROUP\_SIZE](types_composer.md#max_transaction_group_size)
 
 ## Type Aliases
-
-### AlgoKitComposerParams
-
-Ƭ **AlgoKitComposerParams**: `Object`
-
-Parameters to create an `AlgoKitComposer`.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
-| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
-| `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
-| `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
-| `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
-
-#### Defined in
-
-[src/types/composer.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L466)
-
-___
 
 ### AppCallMethodCall
 
@@ -142,7 +120,7 @@ ___
 
 ### AppMethodCall
 
-Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`algosdk.ABIValue` \| `Address` \| `TransactionWithSigner` \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\>)[] ; `method`: `algosdk.ABIMethod`  }
+Ƭ **AppMethodCall**\<`T`\>: [`Expand`](types_expand.md#expand)\<`Omit`\<`T`, ``"args"``\>\> & \{ `args?`: (`algosdk.ABIValue` \| `Address` \| `TransactionWithSigner` \| `Transaction` \| `Promise`\<`Transaction`\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppCreateParams`](types_composer.md#appcreateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppUpdateParams`](types_composer.md#appupdateparams)\> \| [`AppMethodCall`](types_composer.md#appmethodcall)\<[`AppMethodCallParams`](types_composer.md#appmethodcallparams)\> \| `undefined`)[] ; `method`: `algosdk.ABIMethod`  }
 
 Parameters to define an ABI method call.
 
@@ -374,13 +352,35 @@ Options to control a simulate request
 
 ___
 
+### TransactionComposerParams
+
+Ƭ **TransactionComposerParams**: `Object`
+
+Parameters to create an `TransactionComposer`.
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
+| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
+| `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
+| `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
+| `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
+
+#### Defined in
+
+[src/types/composer.ts:468](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L468)
+
+___
+
 ### Txn
 
 Ƭ **Txn**: [`PaymentParams`](types_composer.md#paymentparams) & \{ `type`: ``"pay"``  } \| [`AssetCreateParams`](types_composer.md#assetcreateparams) & \{ `type`: ``"assetCreate"``  } \| [`AssetConfigParams`](types_composer.md#assetconfigparams) & \{ `type`: ``"assetConfig"``  } \| [`AssetFreezeParams`](types_composer.md#assetfreezeparams) & \{ `type`: ``"assetFreeze"``  } \| [`AssetDestroyParams`](types_composer.md#assetdestroyparams) & \{ `type`: ``"assetDestroy"``  } \| [`AssetTransferParams`](types_composer.md#assettransferparams) & \{ `type`: ``"assetTransfer"``  } \| [`AssetOptInParams`](types_composer.md#assetoptinparams) & \{ `type`: ``"assetOptIn"``  } \| [`AssetOptOutParams`](types_composer.md#assetoptoutparams) & \{ `type`: ``"assetOptOut"``  } \| [`AppCallParams`](types_composer.md#appcallparams) \| [`AppCreateParams`](types_composer.md#appcreateparams) \| [`AppUpdateParams`](types_composer.md#appupdateparams) & \{ `type`: ``"appCall"``  } \| [`OnlineKeyRegistrationParams`](types_composer.md#onlinekeyregistrationparams) & \{ `type`: ``"keyReg"``  } \| `algosdk.TransactionWithSigner` & \{ `type`: ``"txnWithSigner"``  } \| \{ `atc`: `algosdk.AtomicTransactionComposer` ; `type`: ``"atc"``  } \| [`AppCallMethodCall`](types_composer.md#appcallmethodcall) \| [`AppCreateMethodCall`](types_composer.md#appcreatemethodcall) \| [`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall) & \{ `type`: ``"methodCall"``  }
 
 #### Defined in
 
-[src/types/composer.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L450)
+[src/types/composer.ts:452](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L452)
 
 ## Variables
 

@@ -5,7 +5,7 @@ import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as L
 import { AppManager, BoxReference } from '../types/app-manager'
 import { AssetManager } from '../types/asset-manager'
 import {
-  AlgoKitComposer,
+  TransactionComposer,
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -44,7 +44,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
   const appManager = new AppManager(algod)
   const newGroup = () =>
-    new AlgoKitComposer({
+    new TransactionComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(from),
       getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.getTransactionParams().do()),

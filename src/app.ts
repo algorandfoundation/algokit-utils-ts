@@ -347,7 +347,7 @@ export function decodeAppState(state: { key: string; value: modelsv2.TealValue |
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` methods to construct transactions instead.
+ * @deprecated Use `TransactionComposer` methods to construct transactions instead.
  *
  * Returns the app args ready to load onto an app `Transaction` object
  * @param args The app call args
@@ -368,7 +368,7 @@ export function getAppArgsForTransaction(args?: RawAppCallArgs) {
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` methods to construct transactions instead.
+ * @deprecated Use `TransactionComposer` methods to construct transactions instead.
  *
  * Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
  * @param args The ABI app call args

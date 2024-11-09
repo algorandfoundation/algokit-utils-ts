@@ -3,7 +3,7 @@ import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
-import { EventType } from '../types/async-event-emitter'
+import { EventType } from '../types/lifecycle-events'
 import {
   AtomicTransactionComposerToSend,
   SendAtomicTransactionComposerResults,
@@ -31,7 +31,7 @@ export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
 export const MAX_APP_CALL_ACCOUNT_REFERENCES = 4
 
 /**
- * @deprecated Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `AlgoKitComposer.arc2Note`.
+ * @deprecated Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `TransactionComposer.arc2Note`.
  *
  * Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
  *
@@ -110,7 +110,7 @@ export const getSenderAddress = function (sender: string | SendTransactionFrom):
 }
 
 /**
- * @deprecated Use `AlgorandClient` / `AlgoKitComposer` to construct transactions instead or
+ * @deprecated Use `AlgorandClient` / `TransactionComposer` to construct transactions instead or
  * construct an `algosdk.TransactionWithSigner` manually instead.
  *
  * Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
@@ -172,7 +172,7 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
 })
 
 /**
- * @deprecated Use `AlgorandClient` / `AlgoKitComposer` to sign transactions
+ * @deprecated Use `AlgorandClient` / `TransactionComposer` to sign transactions
  * or use the relevant underlying `account.signTxn` / `algosdk.signLogicSigTransactionObject`
  * / `multiSigAccount.sign` / `TransactionSigner` methods directly.
  *
@@ -192,7 +192,7 @@ export const signTransaction = async (transaction: Transaction, signer: SendTran
 }
 
 /**
- * @deprecated Use `AlgorandClient` / `AlgoKitComposer` to send transactions.
+ * @deprecated Use `AlgorandClient` / `TransactionComposer` to send transactions.
  *
  * Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
  *
@@ -261,13 +261,23 @@ export const sendTransaction = async function (
  * @returns The unnamed resources accessed by the group and by each transaction in the group
  */
 async function getUnnamedAppCallResourcesAccessed(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
-  const result = await performAtomicTransactionComposerSimulate(atc, algod, {
+  const simulateRequest = new algosdk.modelsv2.SimulateRequest({
+    txnGroups: [],
     allowUnnamedResources: true,
     allowEmptySignatures: true,
-    //todo: fixSigners: true, waiting for 3.26 to roll out https://github.com/algorand/go-algorand/pull/5942
+    fixSigners: true,
   })
 
-  const groupResponse = result.txnGroups[0]
+  const nullSigner = algosdk.makeEmptyTransactionSigner()
+
+  const emptySignerAtc = atc.clone()
+  emptySignerAtc['transactions'].forEach((t: algosdk.TransactionWithSigner) => {
+    t.signer = nullSigner
+  })
+
+  const result = await emptySignerAtc.simulate(algod, simulateRequest)
+
+  const groupResponse = result.simulateResponse.txnGroups[0]
 
   if (groupResponse.failureMessage) {
     throw Error(`Error during resource population simulation in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
@@ -751,7 +761,7 @@ export function getABIReturnValue(result: algosdk.ABIResult): ABIReturn {
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
+ * @deprecated Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
  *
  * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
  *
@@ -856,7 +866,7 @@ export const waitForConfirmation = async function (
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` and the `maxFee` field in the transaction params instead.
+ * @deprecated Use `TransactionComposer` and the `maxFee` field in the transaction params instead.
  *
  * Limit the acceptable fee to a defined amount of µAlgo.
  * This also sets the transaction to be flatFee to ensure the transaction only succeeds at
@@ -885,7 +895,7 @@ export function capTransactionFee(transaction: algosdk.Transaction | SuggestedPa
 }
 
 /**
- * @deprecated Use `AlgoKitComposer` and the `maxFee` and `staticFee` fields in the transaction params instead.
+ * @deprecated Use `TransactionComposer` and the `maxFee` and `staticFee` fields in the transaction params instead.
  *
  * Allows for control of fees on a `Transaction` or `SuggestedParams` object
  * @param transaction The transaction or suggested params

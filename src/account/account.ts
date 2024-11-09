@@ -171,10 +171,12 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
     totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
     totalCreatedApps: Number(account.totalCreatedApps),
     totalCreatedAssets: Number(account.totalCreatedAssets),
-    appsTotalExtraPages: account.appsTotalExtraPages ? Number(account.appsTotalExtraPages) : undefined,
-    rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
-    totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
-    totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
+    appsTotalExtraPages: account.appsTotalExtraPages !== undefined ? Number(account.appsTotalExtraPages) : undefined,
+    rewardBase: account.rewardBase !== undefined ? Number(account.rewardBase) : undefined,
+    totalBoxBytes: account.totalBoxBytes !== undefined ? Number(account.totalBoxBytes) : undefined,
+    totalBoxes: account.totalBoxes !== undefined ? Number(account.totalBoxes) : undefined,
+    lastHeartbeat: account.lastHeartbeat !== undefined ? Number(account.lastHeartbeat) : undefined,
+    lastProposed: account.lastProposed !== undefined ? Number(account.lastProposed) : undefined,
   }
 }
 

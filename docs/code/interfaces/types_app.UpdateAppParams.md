@@ -6,7 +6,7 @@
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` to construct update app transactions instead.
+Use `TransactionComposer` to construct update app transactions instead.
 
 Parameters that are passed in when updating an app.
 

@@ -91,11 +91,11 @@ ___
 
 ### newGroup
 
-▸ **newGroup**(): [`AlgoKitComposer`](../classes/types_composer.AlgoKitComposer.md)
+▸ **newGroup**(): [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
 
 #### Returns
 
-[`AlgoKitComposer`](../classes/types_composer.AlgoKitComposer.md)
+[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
 
 #### Defined in
 

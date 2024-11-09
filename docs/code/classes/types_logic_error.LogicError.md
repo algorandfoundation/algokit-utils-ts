@@ -40,7 +40,7 @@ Wraps key functionality around processing logic errors
 
 ### constructor
 
-• **new LogicError**(`errorDetails`, `program`, `map`): [`LogicError`](types_logic_error.LogicError.md)
+• **new LogicError**(`errorDetails`, `program`, `getLineForPc`): [`LogicError`](types_logic_error.LogicError.md)
 
 Create a new logic error object.
 
@@ -50,7 +50,7 @@ Create a new logic error object.
 | :------ | :------ | :------ |
 | `errorDetails` | [`LogicErrorDetails`](../interfaces/types_logic_error.LogicErrorDetails.md) | The details of the logic error |
 | `program` | `string`[] | The TEAL source code, split by line |
-| `map` | `ProgramSourceMap` | The source map of the TEAL source code |
+| `getLineForPc` | (`pc`: `number`) => `undefined` \| `number` | The source map of the TEAL source code |
 
 #### Returns
 
@@ -62,7 +62,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L54)
+[src/types/logic-error.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L52)
 
 ## Properties
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L42)
+[src/types/logic-error.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L40)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
+[src/types/logic-error.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L42)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L43)
+[src/types/logic-error.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L41)
 
 ___
 
@@ -148,7 +148,7 @@ Error.stack
 
 #### Defined in
 
-[src/types/logic-error.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L46)
+[src/types/logic-error.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L45)
+[src/types/logic-error.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L43)
 
 ___
 
@@ -258,4 +258,4 @@ The logic error details if any, or undefined
 
 #### Defined in
 
-[src/types/logic-error.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L28)
+[src/types/logic-error.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L26)

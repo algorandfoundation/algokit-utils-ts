@@ -15,7 +15,7 @@ export const SOURCES_DIR = 'sources'
 export const TEAL_FILE_EXT = '.teal'
 
 /** The file extension for TEAL source map files */
-export const TEAL_SOURCEMAP_EXT = '.teal.tok.map'
+export const TEAL_SOURCEMAP_EXT = '.teal.map'
 
 /** The default maximum search depth for file operations */
 export const DEFAULT_MAX_SEARCH_DEPTH = 10

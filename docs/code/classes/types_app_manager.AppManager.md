@@ -524,4 +524,4 @@ The TEAL without comments
 
 #### Defined in
 
-[src/types/app-manager.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L456)
+[src/types/app-manager.ts:457](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L457)

@@ -8,7 +8,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { AlgoKitComposer } from './composer'
+import { TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -157,9 +157,9 @@ export class AlgorandClient implements AlgorandClientInterface {
     return this._appDeployer
   }
 
-  /** Start a new `AlgoKitComposer` transaction group */
+  /** Start a new `TransactionComposer` transaction group */
   public newGroup() {
-    return new AlgoKitComposer({
+    return new TransactionComposer({
       algod: this.client.algod,
       getSigner: (addr: string | Address) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),

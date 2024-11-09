@@ -2,7 +2,7 @@ import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
-import { AlgoKitComposer, CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import { TransactionComposer, CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
 import { SendParams } from './transaction'
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */
@@ -137,18 +137,18 @@ export interface AssetInformation {
 /** Allows management of asset information. */
 export class AssetManager {
   private _algod: algosdk.Algodv2
-  private _newGroup: () => AlgoKitComposer
+  private _newGroup: () => TransactionComposer
 
   /**
    * Create a new asset manager.
    * @param algod An algod client
-   * @param newGroup A function that creates a new `AlgoKitComposer` transaction group
+   * @param newGroup A function that creates a new `TransactionComposer` transaction group
    * @example Create a new asset manager
    * ```typescript
-   * const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, () => signer, () => suggestedParams}))
+   * const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
    * ```
    */
-  constructor(algod: algosdk.Algodv2, newGroup: () => AlgoKitComposer) {
+  constructor(algod: algosdk.Algodv2, newGroup: () => TransactionComposer) {
     this._algod = algod
     this._newGroup = newGroup
   }

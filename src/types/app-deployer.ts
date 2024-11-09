@@ -14,7 +14,7 @@ import {
 } from './app'
 import { AppManager } from './app-manager'
 import {
-  AlgoKitComposer,
+  TransactionComposer,
   AppCreateMethodCall,
   AppCreateParams,
   AppDeleteMethodCall,
@@ -155,7 +155,7 @@ export class AppDeployer {
 
     // Set creation note
 
-    createParams.note = updateParams.note = AlgoKitComposer.arc2Note({
+    createParams.note = updateParams.note = TransactionComposer.arc2Note({
       dAppName: APP_DEPLOY_NOTE_DAPP,
       data: metadata,
       format: 'j',

@@ -39,7 +39,7 @@
     "build:0-clean": "rimraf dist coverage",
     "build:1-compile": "rollup -c --configPlugin typescript",
     "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --custom-sections module main type types exports",
-    "build:4-copy-readme": "cpy README.md dist",
+    "build:4-copy-readme": "cpy README.md LICENSE dist",
     "test": "vitest run --coverage --passWithNoTests",
     "test:watch": "vitest watch --coverage --passWithNoTests",
     "lint": "eslint ./src/ --ext .ts",
@@ -64,7 +64,7 @@
     "algosdk": "^3.0.0"
   },
   "devDependencies": {
-    "@algorandfoundation/tealscript": "^0.103.0",
+    "@algorandfoundation/tealscript": "^0.105.3",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@makerx/eslint-config": "^4.0.0",
@@ -124,6 +124,10 @@
             {
               "type": "chore",
               "release": "patch"
+            },
+            {
+              "type": "refactor",
+              "release": "patch"
             }
           ]
         }
@@ -146,6 +150,10 @@
                 "type": "build",
                 "section": "Dependencies and Other Build Updates",
                 "hidden": false
+              },
+              {
+                "type": "refactor",
+                "section": "Code Refactoring"
               }
             ]
           }

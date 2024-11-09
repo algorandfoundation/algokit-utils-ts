@@ -12,6 +12,7 @@ import algosdk, {
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
+import { algo } from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { ABIAppCallArg } from './app'
@@ -867,5 +868,68 @@ describe('application-client', () => {
       })
       expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
     }
+  })
+})
+
+describe('app-client', () => {
+  const localnet = algorandFixture()
+  beforeEach(localnet.beforeEach, 10_000)
+
+  let appSpec: AppSpec
+  beforeAll(async () => {
+    appSpec = (await getTestingAppContract()).appSpec
+  })
+
+  const deploy = async (account: Account, appName?: string) => {
+    const appFactory = localnet.algorand.client.getAppFactory({
+      appSpec,
+      defaultSender: account.addr,
+      appName: appName,
+    })
+
+    const { appClient } = await appFactory.deploy({
+      deployTimeParams: { VALUE: 1 },
+    })
+
+    return appClient
+  }
+
+  test('clone overriding the defaultSender and inheriting appName', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount, 'overridden')
+    const testAccount2 = await localnet.context.generateAccount({ initialFunds: algo(0.1) })
+
+    const clonedAppClient = appClient.clone({
+      defaultSender: testAccount2.addr,
+    })
+
+    expect(appClient.appName).toBe('overridden')
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe(appClient.appName)
+    expect(algosdk.encodeAddress((await clonedAppClient.createTransaction.bare.call()).sender.publicKey)).toBe(testAccount2.addr.toString())
+  })
+
+  test('clone overriding appName', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount)
+
+    const clonedAppClient = appClient.clone({
+      appName: 'cloned',
+    })
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe('cloned')
+  })
+
+  test('clone inheriting appName based on default handling', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount, 'overridden')
+
+    const clonedAppClient = appClient.clone({
+      appName: undefined,
+    })
+
+    expect(appClient.appName).toBe('overridden')
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe(appSpec.contract.name)
   })
 })

@@ -37,7 +37,7 @@ Create a new asset manager.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `algod` | `AlgodClient` | An algod client |
-| `newGroup` | () => [`AlgoKitComposer`](types_composer.AlgoKitComposer.md) | A function that creates a new `AlgoKitComposer` transaction group |
+| `newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | A function that creates a new `TransactionComposer` transaction group |
 
 #### Returns
 
@@ -46,7 +46,7 @@ Create a new asset manager.
 **`Example`**
 
 ```typescript
-const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, () => signer, () => suggestedParams}))
+const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
 ```
 
 #### Defined in
@@ -67,15 +67,15 @@ ___
 
 ### \_newGroup
 
-• `Private` **\_newGroup**: () => [`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
+• `Private` **\_newGroup**: () => [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Type declaration
 
-▸ (): [`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
+▸ (): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 ##### Returns
 
-[`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Defined in
 

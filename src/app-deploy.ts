@@ -18,13 +18,13 @@ import { AppDeployer } from './types/app-deployer'
 import { AppManager, BoxReference } from './types/app-manager'
 import { AssetManager } from './types/asset-manager'
 import {
-  AlgoKitComposer,
   AppCreateMethodCall,
   AppCreateParams,
   AppDeleteMethodCall,
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
+  TransactionComposer,
 } from './types/composer'
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
@@ -68,7 +68,7 @@ export async function deployApp(
 > {
   const appManager = new AppManager(algod)
   const newGroup = () =>
-    new AlgoKitComposer({
+    new TransactionComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(deployment.from),
       getSuggestedParams: async () =>
@@ -349,15 +349,5 @@ export async function performTemplateSubstitutionAndCompile(
  * @returns The TEAL without comments
  */
 export function stripTealComments(tealCode: string) {
-  // find // outside quotes, i.e. won't pick up "//not a comment"
-  const regex = /\/\/(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)/
-
-  tealCode = tealCode
-    .split('\n')
-    .map((tealCodeLine) => {
-      return tealCodeLine.split(regex)[0].trim()
-    })
-    .join('\n')
-
-  return tealCode
+  return AppManager.stripTealComments(tealCode)
 }

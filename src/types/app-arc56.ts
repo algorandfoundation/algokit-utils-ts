@@ -229,7 +229,7 @@ export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValu
 
 /** Describes the entire contract. This interface is an extension of the interface described in ARC-4 */
 export interface Arc56Contract {
-  /** The ARCs used and/or supported by this contract. All contracts implicity support ARC4 and ARC56 */
+  /** The ARCs used and/or supported by this contract. All contracts implicitly support ARC4 and ARC56 */
   arcs: number[]
   /** A user-friendly name for the contract */
   name: string
@@ -240,7 +240,7 @@ export interface Arc56Contract {
    * The key is the base64 genesis hash of the network, and the value contains
    * information about the deployed contract in the network indicated by the
    * key. A key containing the human-readable name of the network MAY be
-   * included, but the corresponding genesis hash key MUST also be define
+   * included, but the corresponding genesis hash key MUST also be defined
    */
   networks?: {
     [network: string]: {
@@ -248,7 +248,7 @@ export interface Arc56Contract {
       appID: number
     }
   }
-  /** Named structs use by the application. Each struct field appears in the same order as ABI encoding. */
+  /** Named structs used by the application. Each struct field appears in the same order as ABI encoding. */
   structs: { [structName: StructName]: StructField[] }
   /** All of the methods that the contract implements */
   methods: Method[]
@@ -287,9 +287,9 @@ export interface Arc56Contract {
   /** Information about the TEAL programs */
   sourceInfo?: {
     /** Approval program information */
-    approval: SourceInfo[]
+    approval: ProgramSourceInfo
     /** Clear program information */
-    clear: SourceInfo[]
+    clear: ProgramSourceInfo
   }
   /** The pre-compiled TEAL that may contain template variables. MUST be omitted if included as part of ARC23 */
   source?: {
@@ -319,12 +319,12 @@ export interface Arc56Contract {
   }
   /** ARC-28 events that MAY be emitted by this contract */
   events?: Array<Event>
-  /** A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respecive types and values (if applicable) */
+  /** A mapping of template variable names as they appear in the TEAL (not including TMPL_ prefix) to their respective types and values (if applicable) */
   templateVariables?: {
     [name: string]: {
       /** The type of the template variable */
       type: ABIType | AVMType | StructName
-      /** If given, the the base64 encoded value used for the given app/program */
+      /** If given, the base64 encoded value used for the given app/program */
       value?: string
     }
   }
@@ -355,17 +355,18 @@ export interface Method {
     desc?: string
     /** The default value that clients should use. */
     defaultValue?: {
-      /** Base64 encoded bytes or uint64 */
-      data: string | number
+      /** Base64 encoded bytes, base64 ARC4 encoded uint64, or UTF-8 method selector */
+      data: string
       /** How the data is encoded. This is the encoding for the data provided here, not the arg type */
-      type: ABIType | AVMType
+      type?: ABIType | AVMType
       /** Where the default value is coming from
        * - box: The data key signifies the box key to read the value from
        * - global: The data key signifies the global state key to read the value from
        * - local: The data key signifies the local state key to read the value from (for the sender)
        * - literal: the value is a literal and should be passed directly as the argument
+       * - method: The utf8 signature of the method in this contract to call to get the default value. If the method has arguments, they all must have default values. The method **MUST** be readonly so simulate can be used to get the default value
        */
-      source: 'box' | 'global' | 'local' | 'literal'
+      source: 'box' | 'global' | 'local' | 'literal' | 'method'
     }
   }>
   /** Information about the method's return value */
@@ -420,7 +421,7 @@ export interface Event {
   desc?: string
   /** The arguments of the event, in order */
   args: Array<{
-    /** The type of the argument. The `struct` field should also be checked to determine if this return value is a struct. */
+    /** The type of the argument. The `struct` field should also be checked to determine if this arg is a struct. */
     type: ABIType
     /** Optional, user-friendly name for the argument */
     name?: string
@@ -482,13 +483,23 @@ export interface StorageMap {
   prefix?: string
 }
 
-export interface SourceInfo {
-  /** The line of pre-compiled TEAL */
-  teal?: number
-  /** The program counter offset(s) that correspond to this line of TEAL */
-  pc?: Array<number>
-  /** A human-readable string that describes the error when the program fails at this given line of TEAL */
+interface SourceInfo {
+  /** The program counter value(s). Could be offset if pcOffsetMethod is not "none" */
+  pc: Array<number>
+  /** A human-readable string that describes the error when the program fails at the given PC */
   errorMessage?: string
-  /** The line of the dissasembled TEAL this line of pre-compiled TEAL corresponds to */
-  disassembledTeal?: number
+  /** The TEAL line number that corresponds to the given PC. RECOMMENDED to be used for development purposes, but not required for clients */
+  teal?: number
+  /** The original source file and line number that corresponds to the given PC. RECOMMENDED to be used for development purposes, but not required for clients */
+  source?: string
+}
+
+export interface ProgramSourceInfo {
+  /** The source information for the program */
+  sourceInfo: SourceInfo[]
+  /** How the program counter offset is calculated
+   * - none: The pc values in sourceInfo are not offset
+   * - cblocks: The pc values in sourceInfo are offset by the PC of the first op following the last cblock at the top of the program
+   */
+  pcOffsetMethod: 'none' | 'cblocks'
 }

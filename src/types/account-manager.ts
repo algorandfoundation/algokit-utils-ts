@@ -4,7 +4,7 @@ import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import { AlgoKitComposer, CommonTransactionParams } from './composer'
+import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
@@ -59,7 +59,7 @@ export class AccountManager {
   }
 
   private _getComposer(getSuggestedParams?: () => Promise<algosdk.SuggestedParams>) {
-    return new AlgoKitComposer({
+    return new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: this.getSigner.bind(this),
       getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.getTransactionParams().do()),
@@ -223,25 +223,34 @@ export class AccountManager {
    * @returns The account information
    */
   public async getInformation(sender: string | Address): Promise<AccountInformation> {
-    const account = await this._clientManager.algod.accountInformation(sender).do()
+    const {
+      round,
+      lastHeartbeat = undefined,
+      lastProposed = undefined,
+      address,
+      ...account
+    } = await this._clientManager.algod.accountInformation(sender).do()
 
     return {
       ...account,
-      address: Address.fromString(account.address),
+      // None of the Number types can practically overflow 2^53
+      address: Address.fromString(address),
       balance: AlgoAmount.MicroAlgo(Number(account.amount)),
       amountWithoutPendingRewards: AlgoAmount.MicroAlgo(Number(account.amountWithoutPendingRewards)),
       minBalance: AlgoAmount.MicroAlgo(Number(account.minBalance)),
       pendingRewards: AlgoAmount.MicroAlgo(Number(account.pendingRewards)),
       rewards: AlgoAmount.MicroAlgo(Number(account.rewards)),
-      validAsOfRound: BigInt(account.round),
+      validAsOfRound: BigInt(round),
       totalAppsOptedIn: Number(account.totalAppsOptedIn),
       totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
       totalCreatedApps: Number(account.totalCreatedApps),
       totalCreatedAssets: Number(account.totalCreatedAssets),
-      appsTotalExtraPages: account.appsTotalExtraPages ? Number(account.appsTotalExtraPages) : undefined,
-      rewardBase: account.rewardBase ? Number(account.rewardBase) : undefined,
-      totalBoxBytes: account.totalBoxBytes ? Number(account.totalBoxBytes) : undefined,
-      totalBoxes: account.totalBoxes ? Number(account.totalBoxes) : undefined,
+      appsTotalExtraPages: account.appsTotalExtraPages !== undefined ? Number(account.appsTotalExtraPages) : undefined,
+      rewardBase: account.rewardBase !== undefined ? Number(account.rewardBase) : undefined,
+      totalBoxBytes: account.totalBoxBytes !== undefined ? Number(account.totalBoxBytes) : undefined,
+      totalBoxes: account.totalBoxes !== undefined ? Number(account.totalBoxes) : undefined,
+      lastHeartbeatRound: lastHeartbeat !== undefined ? BigInt(lastHeartbeat) : undefined,
+      lastProposedRound: lastProposed !== undefined ? BigInt(lastProposed) : undefined,
     }
   }
 
@@ -655,7 +664,7 @@ export class AccountManager {
     accountToFund: string | Address,
     dispenserClient: TestNetDispenserApiClient,
     minSpendingBalance: AlgoAmount,
-    options: {
+    options?: {
       minFundingIncrement?: AlgoAmount
     },
   ): Promise<EnsureFundedResult | undefined> {

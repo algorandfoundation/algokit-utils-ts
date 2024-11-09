@@ -32,7 +32,7 @@ Describes the entire contract. This interface is an extension of the interface d
 
 • **arcs**: `number`[]
 
-The ARCs used and/or supported by this contract. All contracts implicity support ARC4 and ARC56
+The ARCs used and/or supported by this contract. All contracts implicitly support ARC4 and ARC56
 
 #### Defined in
 
@@ -157,7 +157,7 @@ Optional object listing the contract instances across different networks.
 The key is the base64 genesis hash of the network, and the value contains
 information about the deployed contract in the network indicated by the
 key. A key containing the human-readable name of the network MAY be
-included, but the corresponding genesis hash key MUST also be define
+included, but the corresponding genesis hash key MUST also be defined
 
 #### Index signature
 
@@ -214,8 +214,8 @@ Information about the TEAL programs
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `approval` | [`SourceInfo`](types_app_arc56.SourceInfo.md)[] | Approval program information |
-| `clear` | [`SourceInfo`](types_app_arc56.SourceInfo.md)[] | Clear program information |
+| `approval` | [`ProgramSourceInfo`](types_app_arc56.ProgramSourceInfo.md) | Approval program information |
+| `clear` | [`ProgramSourceInfo`](types_app_arc56.ProgramSourceInfo.md) | Clear program information |
 
 #### Defined in
 
@@ -257,7 +257,7 @@ ___
 
 • **structs**: `Object`
 
-Named structs use by the application. Each struct field appears in the same order as ABI encoding.
+Named structs used by the application. Each struct field appears in the same order as ABI encoding.
 
 #### Index signature
 
@@ -273,7 +273,7 @@ ___
 
 • `Optional` **templateVariables**: `Object`
 
-A mapping of template variable names as they appear in the teal (not including TMPL_ prefix) to their respecive types and values (if applicable)
+A mapping of template variable names as they appear in the TEAL (not including TMPL_ prefix) to their respective types and values (if applicable)
 
 #### Index signature
 

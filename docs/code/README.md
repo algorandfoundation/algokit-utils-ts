@@ -44,6 +44,7 @@
 - [types/expand](modules/types_expand.md)
 - [types/indexer](modules/types_indexer.md)
 - [types/kmd-account-manager](modules/types_kmd_account_manager.md)
+- [types/lifecycle-events](modules/types_lifecycle_events.md)
 - [types/logging](modules/types_logging.md)
 - [types/logic-error](modules/types_logic_error.md)
 - [types/network-client](modules/types_network_client.md)

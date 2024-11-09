@@ -339,13 +339,13 @@ ___
 
 ### newGroup
 
-▸ **newGroup**(): [`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
+▸ **newGroup**(): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
-Start a new `AlgoKitComposer` transaction group
+Start a new `TransactionComposer` transaction group
 
 #### Returns
 
-[`AlgoKitComposer`](types_composer.AlgoKitComposer.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Implementation of
 

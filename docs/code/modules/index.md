@@ -10,6 +10,8 @@
 - [AVMTracesEventData](index.md#avmtraceseventdata)
 - [AlgorandClient](index.md#algorandclient)
 - [DEFAULT\_MAX\_SEARCH\_DEPTH](index.md#default_max_search_depth)
+- [EventDataMap](index.md#eventdatamap)
+- [EventType](index.md#eventtype)
 - [SOURCES\_DIR](index.md#sources_dir)
 - [SearchForTransactions](index.md#searchfortransactions)
 - [TEAL\_FILE\_EXT](index.md#teal_file_ext)
@@ -156,6 +158,18 @@ ___
 ### DEFAULT\_MAX\_SEARCH\_DEPTH
 
 Re-exports [DEFAULT_MAX_SEARCH_DEPTH](types_debugging.md#default_max_search_depth)
+
+___
+
+### EventDataMap
+
+Re-exports [EventDataMap](types_lifecycle_events.md#eventdatamap)
+
+___
+
+### EventType
+
+Re-exports [EventType](../enums/types_lifecycle_events.EventType.md)
 
 ___
 
@@ -552,7 +566,7 @@ ___
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` and the `maxFee` field in the transaction params instead.
+Use `TransactionComposer` and the `maxFee` field in the transaction params instead.
 
 Limit the acceptable fee to a defined amount of µAlgo.
 This also sets the transaction to be flatFee to ensure the transaction only succeeds at
@@ -560,7 +574,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:867](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L867)
+[src/transaction/transaction.ts:877](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L877)
 
 ___
 
@@ -618,13 +632,13 @@ ___
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` and the `maxFee` and `staticFee` fields in the transaction params instead.
+Use `TransactionComposer` and the `maxFee` and `staticFee` fields in the transaction params instead.
 
 Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:894](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L894)
+[src/transaction/transaction.ts:904](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L904)
 
 ___
 
@@ -825,7 +839,7 @@ the transaction note ready for inclusion in a transaction
 
 **`Deprecated`**
 
-Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `AlgoKitComposer.arc2Note`.
+Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `TransactionComposer.arc2Note`.
 
 Encodes a transaction note into a byte array ready to be included in an Algorand transaction.
 
@@ -951,7 +965,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L735)
+[src/transaction/transaction.ts:745](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L745)
 
 ___
 
@@ -1130,7 +1144,7 @@ const accountInfo = await account.getAccountAssetInformation(address, assetId, a
 
 #### Defined in
 
-[src/account/account.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L199)
+[src/account/account.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/account/account.ts#L201)
 
 ___
 
@@ -1423,7 +1437,7 @@ The parameters ready to pass into `addMethodCall` within AtomicTransactionCompos
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` methods to construct transactions instead.
+Use `TransactionComposer` methods to construct transactions instead.
 
 Returns the app args ready to load onto an ABI method call in `AtomicTransactionComposer`
 
@@ -1451,7 +1465,7 @@ The args ready to load into a `Transaction`
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` methods to construct transactions instead.
+Use `TransactionComposer` methods to construct transactions instead.
 
 Returns the app args ready to load onto an app `Transaction` object
 
@@ -1927,7 +1941,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:943](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L943)
+[src/transaction/transaction.ts:953](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L953)
 
 ___
 
@@ -2314,7 +2328,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:921](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L921)
+[src/transaction/transaction.ts:931](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L931)
 
 ___
 
@@ -2337,7 +2351,7 @@ A TransactionWithSigner object.
 
 **`Deprecated`**
 
-Use `AlgorandClient` / `AlgoKitComposer` to construct transactions instead or
+Use `AlgorandClient` / `TransactionComposer` to construct transactions instead or
 construct an `algosdk.TransactionWithSigner` manually instead.
 
 Given a transaction in a variety of supported formats, returns a TransactionWithSigner object ready to be passed to an
@@ -2746,7 +2760,7 @@ A new ATC with the resources packed into the transactions
 
 #### Defined in
 
-[src/transaction/transaction.ts:302](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L302)
+[src/transaction/transaction.ts:312](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L312)
 
 ___
 
@@ -2896,7 +2910,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:598](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L598)
+[src/transaction/transaction.ts:608](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L608)
 
 ___
 
@@ -2919,13 +2933,13 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 **`Deprecated`**
 
-Use `AlgoKitComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
+Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
 
 Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
 
 #### Defined in
 
-[src/transaction/transaction.ts:764](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L764)
+[src/transaction/transaction.ts:774](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L774)
 
 ___
 
@@ -2951,7 +2965,7 @@ An object with transaction (`transaction`) and (if `skipWaiting` is `false` or `
 
 **`Deprecated`**
 
-Use `AlgorandClient` / `AlgoKitComposer` to send transactions.
+Use `AlgorandClient` / `TransactionComposer` to send transactions.
 
 Prepares a transaction for sending and then (if instructed) signs and sends the given transaction to the chain.
 
@@ -2980,7 +2994,7 @@ The signed transaction as a `Uint8Array`
 
 **`Deprecated`**
 
-Use `AlgorandClient` / `AlgoKitComposer` to sign transactions
+Use `AlgorandClient` / `TransactionComposer` to sign transactions
 or use the relevant underlying `account.signTxn` / `algosdk.signLogicSigTransactionObject`
 / `multiSigAccount.sign` / `TransactionSigner` methods directly.
 
@@ -3198,4 +3212,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:809](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L809)
+[src/transaction/transaction.ts:819](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L819)

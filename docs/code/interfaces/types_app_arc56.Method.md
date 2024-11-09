@@ -36,13 +36,13 @@ an action is a combination of call/create and an OnComplete
 
 #### Defined in
 
-[src/types/app-arc56.ts:381](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L381)
+[src/types/app-arc56.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L382)
 
 ___
 
 ### args
 
-• **args**: \{ `defaultValue?`: \{ `data`: `string` \| `number` ; `source`: ``"box"`` \| ``"global"`` \| ``"local"`` \| ``"literal"`` ; `type`: `string`  } ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `string`  }[]
+• **args**: \{ `defaultValue?`: \{ `data`: `string` ; `source`: ``"method"`` \| ``"box"`` \| ``"global"`` \| ``"local"`` \| ``"literal"`` ; `type?`: `string`  } ; `desc?`: `string` ; `name?`: `string` ; `struct?`: `string` ; `type`: `string`  }[]
 
 The arguments of the method, in order
 
@@ -72,7 +72,7 @@ ARC-28 events that MAY be emitted by this method
 
 #### Defined in
 
-[src/types/app-arc56.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L390)
+[src/types/app-arc56.ts:391](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L391)
 
 ___
 
@@ -96,7 +96,7 @@ If this method does not write anything to the ledger (ARC-22)
 
 #### Defined in
 
-[src/types/app-arc56.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L388)
+[src/types/app-arc56.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L389)
 
 ___
 
@@ -122,7 +122,7 @@ Information that clients can use when calling the method
 
 #### Defined in
 
-[src/types/app-arc56.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L392)
+[src/types/app-arc56.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L393)
 
 ___
 
@@ -142,4 +142,4 @@ Information about the method's return value
 
 #### Defined in
 
-[src/types/app-arc56.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L372)
+[src/types/app-arc56.ts:373](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L373)

@@ -159,3 +159,52 @@ If you are converting from an older typed client to a new one you will need to m
 - `extraPages` is no longer nested within a `schema` property, instead it's directly on the method call params as `extraProgramPages`
 - `client.compose()` is now `client.newGroup()`
 - `client.compose()....execute()` is now `client.compose()....send()`
+
+### Step 5 - Rename AlgoKitComposer to TransactionComposer
+
+In v7, `AlgoKitComposer` has been renamed to `TransactionComposer`. To migrate:
+
+1. Replace all occurrences of `AlgoKitComposer` with `TransactionComposer`.
+2. Update import statements:
+
+```typescript
+// Old
+import { AlgoKitComposer } from '@algorandfoundation/algokit-utils'
+// New
+import { TransactionComposer } from '@algorandfoundation/algokit-utils'
+```
+
+3. Rename `AlgoKitComposerParams` type to `TransactionComposerParams` (if you were referencing it directly).
+4. Review code interacting with the composer for compatibility with the new class.
+
+This change aligns the class name with its purpose and improves consistency with Algorand terminology.
+
+### Optional steps
+
+#### AlgoKit VScode AVM debugger extension utils
+
+If you previously used `Config.configure({ debug: true })` for AVM sourcemaps and TEAL traces, you can now debug `puya` compiler-based sourcemaps. This allows stepping through higher-level Algorand Python constructs instead of raw TEAL.
+
+To incorporate this change and resolve frontend bundler issues, `algokit-utils` is now isomorphic. Node-specific dependencies are split into the `algokit-utils-ts-debug` package.
+
+To migrate:
+
+1. Install the new package:
+
+```bash
+npm i @algorandfoundation/algokit-utils-debug
+```
+
+2. Activate the new package:
+
+```typescript
+import { Config } from '@algorandfoundation/algokit-utils'
+import { registerDebugEventHandlers } from '@algorandfoundation/algokit-utils-debug'
+
+Config.configure({ debug: true })
+registerDebugEventHandlers()
+```
+
+This approach maintains debug functionality while ensuring compatibility with frontend bundlers.
+
+> For more details on debugging puya based contracts, refer [here](https://github.com/algorandfoundation/algokit-avm-vscode-debugger).
