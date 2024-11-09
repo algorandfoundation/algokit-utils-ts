@@ -50,7 +50,7 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ## Creating and issuing transactions
 
-`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`AlgoKitComposer`](./algokit-composer.md)).
+`AlgorandClient` exposes a series of methods that allow you to create, execute, and compose groups of transactions (all via the [`TransactionComposer`](./transaction-composer.md)).
 
 ### Creating transactions
 
@@ -112,7 +112,7 @@ Generally, the functions to immediately send a single transaction will emit log 
 
 ### Composing a group of transactions
 
-You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`AlgoKitComposer`](./algokit-composer.md) to add a series of transactions.
+You can compose a group of transactions for execution by using the `newGroup()` method on `AlgorandClient` and then use the various `.add{Type}()` methods on [`TransactionComposer`](./transaction-composer.md) to add a series of transactions.
 
 ```typescript
 const result = algorand
@@ -122,7 +122,7 @@ const result = algorand
   .send()
 ```
 
-`newGroup()` returns a new [`AlgoKitComposer`](./algokit-composer.md) instance, which can also return the group of transactions, simulate them and other things.
+`newGroup()` returns a new [`TransactionComposer`](./transaction-composer.md) instance, which can also return the group of transactions, simulate them and other things.
 
 ### Transaction parameters
 
@@ -148,7 +148,7 @@ There are two common base interfaces that get reused:
   - `maxRoundsToWaitForConfirmation?: number` - The number of rounds to wait for confirmation. By default until the latest lastValid has past.
   - `suppressLog?: boolean` - Whether to suppress log messages from transaction send, default: do not suppress.
 
-Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`AlgoKitComposer`](./algokit-composer.md).
+Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`TransactionComposer`](./transaction-composer.md).
 
 ### Transaction configuration
 

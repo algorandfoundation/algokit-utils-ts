@@ -2,7 +2,7 @@ import algosdk from 'algosdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation, TransactionSignerAccount } from './account'
-import TransactionComposer, { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE, TransactionComposer } from './composer'
 import { SendParams } from './transaction'
 import AssetModel = algosdk.modelsv2.Asset
 

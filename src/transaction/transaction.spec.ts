@@ -9,7 +9,7 @@ import { Config } from '../config'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
-import TransactionComposer, { PaymentParams } from '../types/composer'
+import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { getABIReturnValue, waitForConfirmation } from './transaction'
 

@@ -8,7 +8,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import TransactionComposer from './composer'
+import { TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import LogicSigAccount = algosdk.LogicSigAccount

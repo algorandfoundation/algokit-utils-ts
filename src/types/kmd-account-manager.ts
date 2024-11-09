@@ -3,7 +3,7 @@ import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import TransactionComposer from './composer'
+import { TransactionComposer } from './composer'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */

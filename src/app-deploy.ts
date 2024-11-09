@@ -17,13 +17,14 @@ import {
 import { AppDeployer } from './types/app-deployer'
 import { AppManager, BoxReference } from './types/app-manager'
 import { AssetManager } from './types/asset-manager'
-import TransactionComposer, {
+import {
   AppCreateMethodCall,
   AppCreateParams,
   AppDeleteMethodCall,
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
+  TransactionComposer,
 } from './types/composer'
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
 import Algodv2 = algosdk.Algodv2

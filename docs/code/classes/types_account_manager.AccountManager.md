@@ -141,7 +141,7 @@ KMD account manager that allows you to easily get and create accounts using KMD.
 
 ### \_getComposer
 
-▸ **_getComposer**(`getSuggestedParams?`): [`default`](types_composer.default.md)
+▸ **_getComposer**(`getSuggestedParams?`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Parameters
 
@@ -151,7 +151,7 @@ KMD account manager that allows you to easily get and create accounts using KMD.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Defined in
 

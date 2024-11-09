@@ -4,7 +4,7 @@ import { AlgorandClientTransactionSender } from '../types/algorand-client-transa
 import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'
 import { AppManager, BoxReference } from '../types/app-manager'
 import { AssetManager } from '../types/asset-manager'
-import TransactionComposer, {
+import {
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -15,6 +15,7 @@ import TransactionComposer, {
   AppUpdateParams,
   BuiltTransactions,
   CommonTransactionParams,
+  TransactionComposer,
 } from '../types/composer'
 import {
   SendParams,

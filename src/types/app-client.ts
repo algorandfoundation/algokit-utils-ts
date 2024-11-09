@@ -58,7 +58,7 @@ import {
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
 import { AppSpec, arc32ToArc56 } from './app-spec'
-import TransactionComposer, {
+import {
   AppCallMethodCall,
   AppCallParams,
   AppDeleteMethodCall,
@@ -69,6 +69,7 @@ import TransactionComposer, {
   AppUpdateParams,
   CommonAppCallParams,
   PaymentParams,
+  TransactionComposer,
 } from './composer'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
