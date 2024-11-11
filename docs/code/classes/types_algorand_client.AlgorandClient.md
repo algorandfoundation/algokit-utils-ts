@@ -339,13 +339,13 @@ ___
 
 ### newGroup
 
-▸ **newGroup**(): [`default`](types_composer.default.md)
+▸ **newGroup**(): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Start a new `TransactionComposer` transaction group
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Implementation of
 

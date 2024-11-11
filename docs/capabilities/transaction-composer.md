@@ -1,20 +1,20 @@
-# AlgoKit composer
+# Transaction composer
 
-The `AlgoKitComposer` class allows you to easily compose one or more compliant Algorand transactions and execute and/or simulate them.
+The `TransactionComposer` class allows you to easily compose one or more compliant Algorand transactions and execute and/or simulate them.
 
 It's the core of how the [`AlgorandClient`](./algorand-client.md) class composes and sends transactions.
 
-To get an instance of `AlgoKitComposer` you can either get it from an [app client](./app-client.md), from an [`AlgorandClient`](./algorand-client.md), or by new-ing up via the constructor.
+To get an instance of `TransactionComposer` you can either get it from an [app client](./app-client.md), from an [`AlgorandClient`](./algorand-client.md), or by new-ing up via the constructor.
 
 ```typescript
 const composerFromAlgorand = algorand.newGroup()
 const composerFromAppClient = appClient.newGroup()
-const composerFromConstructor = new AlgoKitComposer({
+const composerFromConstructor = new TransactionComposer({
   algod,
   /* Return the algosdk.TransactionSigner for this address*/
   getSigner: (address: string) => signer,
 })
-const composerFromConstructorWithOptionalParams = new AlgoKitComposer({
+const composerFromConstructorWithOptionalParams = new TransactionComposer({
   algod,
   /* Return the algosdk.TransactionSigner for this address*/
   getSigner: (address: string) => signer,

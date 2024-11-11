@@ -91,11 +91,11 @@ ___
 
 ### newGroup
 
-▸ **newGroup**(): [`default`](../classes/types_composer.default.md)
+▸ **newGroup**(): [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
 
 #### Returns
 
-[`default`](../classes/types_composer.default.md)
+[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
 
 #### Defined in
 

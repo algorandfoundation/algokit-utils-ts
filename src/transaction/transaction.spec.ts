@@ -9,7 +9,7 @@ import { Config } from '../config'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
-import TransactionComposer, { PaymentParams } from '../types/composer'
+import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { getABIReturnValue, waitForConfirmation } from './transaction'
 
@@ -321,10 +321,14 @@ const tests = (version: 8 | 9) => () => {
     })
 
     test('addressBalance', async () => {
-      appClient.send.call({
+      const result = await appClient.send.call({
         method: 'addressBalance',
         args: [algosdk.generateAccount().addr],
+        onComplete: algosdk.OnApplicationComplete.NoOpOC,
       })
+
+      // Ensure the transaction was not sent via simulate
+      await fixture.context.waitForIndexerTransaction(result.txIds[0])
     })
   })
 }

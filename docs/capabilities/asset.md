@@ -12,9 +12,9 @@ To get an instance of `AssetManager`, you can use either [`AlgorandClient`](./al
 
 ```typescript
 import { AssetManager } from '@algorandfoundation/algokit-utils/types/asset-manager'
-import { AlgoKitComposer } from '@algorandfoundation/algokit-utils/types/composer'
+import {TransactionComposer } from '@algorandfoundation/algokit-utils/types/composer'
 
-const assetManager = new AssetManager(algod, () => new AlgoKitComposer({algod, () => signer, () => suggestedParams}))
+const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
 ```
 
 ## Creation

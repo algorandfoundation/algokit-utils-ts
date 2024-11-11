@@ -50,7 +50,7 @@ Creates a new `AlgorandClientTransactionCreator`
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `newGroup` | () => [`default`](types_composer.default.md) | A lambda that starts a new `TransactionComposer` transaction group |
+| `newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | A lambda that starts a new `TransactionComposer` transaction group |
 
 #### Returns
 
@@ -64,15 +64,15 @@ Creates a new `AlgorandClientTransactionCreator`
 
 ### \_newGroup
 
-• `Private` **\_newGroup**: () => [`default`](types_composer.default.md)
+• `Private` **\_newGroup**: () => [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Type declaration
 
-▸ (): [`default`](types_composer.default.md)
+▸ (): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 ##### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Defined in
 
@@ -1202,7 +1202,7 @@ const result = await algorand.send.payment({
 
 | Name | Type |
 | :------ | :------ |
-| `c` | (`c`: [`default`](types_composer.default.md)) => (`params`: `T`) => [`default`](types_composer.default.md) |
+| `c` | (`c`: [`TransactionComposer`](types_composer.TransactionComposer.md)) => (`params`: `T`) => [`TransactionComposer`](types_composer.TransactionComposer.md) |
 
 #### Returns
 
@@ -1240,7 +1240,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `c` | (`c`: [`default`](types_composer.default.md)) => (`params`: `T`) => [`default`](types_composer.default.md) |
+| `c` | (`c`: [`TransactionComposer`](types_composer.TransactionComposer.md)) => (`params`: `T`) => [`TransactionComposer`](types_composer.TransactionComposer.md) |
 
 #### Returns
 

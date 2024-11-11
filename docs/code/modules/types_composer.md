@@ -6,7 +6,7 @@
 
 ### Classes
 
-- [default](../classes/types_composer.default.md)
+- [TransactionComposer](../classes/types_composer.TransactionComposer.md)
 
 ### Interfaces
 

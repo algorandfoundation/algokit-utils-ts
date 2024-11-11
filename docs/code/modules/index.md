@@ -753,7 +753,7 @@ To understand the architecture decisions behind this functionality please see ht
 
 #### Defined in
 
-[src/app-deploy.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L50)
+[src/app-deploy.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L51)
 
 ___
 
@@ -1812,7 +1812,7 @@ Return the transaction note for an app deployment.
 
 #### Defined in
 
-[src/app-deploy.ts:252](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L252)
+[src/app-deploy.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L253)
 
 ___
 
@@ -2010,7 +2010,7 @@ Returns a lookup of name => app metadata (id, address, ...metadata) for all apps
 
 #### Defined in
 
-[src/app-deploy.ts:231](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L231)
+[src/app-deploy.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L232)
 
 ___
 
@@ -2430,7 +2430,7 @@ Returns true is there is a breaking change in the application state schema from 
 
 #### Defined in
 
-[src/app-deploy.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L216)
+[src/app-deploy.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L217)
 
 ___
 
@@ -2691,7 +2691,7 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 #### Defined in
 
-[src/app-deploy.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L290)
+[src/app-deploy.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L291)
 
 ___
 
@@ -2724,7 +2724,7 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 #### Defined in
 
-[src/app-deploy.ts:307](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L307)
+[src/app-deploy.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L308)
 
 ___
 
@@ -2903,7 +2903,7 @@ Note: If these values are not undefined, but the corresponding `TMPL_*` value
 
 #### Defined in
 
-[src/app-deploy.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L275)
+[src/app-deploy.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L276)
 
 ___
 
@@ -3048,7 +3048,7 @@ Remove comments from TEAL Code
 
 #### Defined in
 
-[src/app-deploy.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L332)
+[src/app-deploy.ts:333](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/app-deploy.ts#L333)
 
 ___
 

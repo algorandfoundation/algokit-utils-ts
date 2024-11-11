@@ -1,80 +1,80 @@
-[@algorandfoundation/algokit-utils](../README.md) / [types/composer](../modules/types_composer.md) / default
+[@algorandfoundation/algokit-utils](../README.md) / [types/composer](../modules/types_composer.md) / TransactionComposer
 
-# Class: default
+# Class: TransactionComposer
 
-[types/composer](../modules/types_composer.md).default
+[types/composer](../modules/types_composer.md).TransactionComposer
 
-AlgoKit Composer helps you compose and execute transactions as a transaction group.
+TransactionComposer helps you compose and execute transactions as a transaction group.
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](types_composer.default.md#constructor)
+- [constructor](types_composer.TransactionComposer.md#constructor)
 
 ### Properties
 
-- [algod](types_composer.default.md#algod)
-- [appManager](types_composer.default.md#appmanager)
-- [atc](types_composer.default.md#atc)
-- [defaultValidityWindow](types_composer.default.md#defaultvaliditywindow)
-- [defaultValidityWindowIsExplicit](types_composer.default.md#defaultvaliditywindowisexplicit)
-- [getSigner](types_composer.default.md#getsigner)
-- [getSuggestedParams](types_composer.default.md#getsuggestedparams)
-- [txnMethodMap](types_composer.default.md#txnmethodmap)
-- [txns](types_composer.default.md#txns)
-- [NULL\_SIGNER](types_composer.default.md#null_signer)
+- [algod](types_composer.TransactionComposer.md#algod)
+- [appManager](types_composer.TransactionComposer.md#appmanager)
+- [atc](types_composer.TransactionComposer.md#atc)
+- [defaultValidityWindow](types_composer.TransactionComposer.md#defaultvaliditywindow)
+- [defaultValidityWindowIsExplicit](types_composer.TransactionComposer.md#defaultvaliditywindowisexplicit)
+- [getSigner](types_composer.TransactionComposer.md#getsigner)
+- [getSuggestedParams](types_composer.TransactionComposer.md#getsuggestedparams)
+- [txnMethodMap](types_composer.TransactionComposer.md#txnmethodmap)
+- [txns](types_composer.TransactionComposer.md#txns)
+- [NULL\_SIGNER](types_composer.TransactionComposer.md#null_signer)
 
 ### Methods
 
-- [addAppCall](types_composer.default.md#addappcall)
-- [addAppCallMethodCall](types_composer.default.md#addappcallmethodcall)
-- [addAppCreate](types_composer.default.md#addappcreate)
-- [addAppCreateMethodCall](types_composer.default.md#addappcreatemethodcall)
-- [addAppDelete](types_composer.default.md#addappdelete)
-- [addAppDeleteMethodCall](types_composer.default.md#addappdeletemethodcall)
-- [addAppUpdate](types_composer.default.md#addappupdate)
-- [addAppUpdateMethodCall](types_composer.default.md#addappupdatemethodcall)
-- [addAssetConfig](types_composer.default.md#addassetconfig)
-- [addAssetCreate](types_composer.default.md#addassetcreate)
-- [addAssetDestroy](types_composer.default.md#addassetdestroy)
-- [addAssetFreeze](types_composer.default.md#addassetfreeze)
-- [addAssetOptIn](types_composer.default.md#addassetoptin)
-- [addAssetOptOut](types_composer.default.md#addassetoptout)
-- [addAssetTransfer](types_composer.default.md#addassettransfer)
-- [addAtc](types_composer.default.md#addatc)
-- [addOnlineKeyRegistration](types_composer.default.md#addonlinekeyregistration)
-- [addPayment](types_composer.default.md#addpayment)
-- [addTransaction](types_composer.default.md#addtransaction)
-- [build](types_composer.default.md#build)
-- [buildAppCall](types_composer.default.md#buildappcall)
-- [buildAssetConfig](types_composer.default.md#buildassetconfig)
-- [buildAssetCreate](types_composer.default.md#buildassetcreate)
-- [buildAssetDestroy](types_composer.default.md#buildassetdestroy)
-- [buildAssetFreeze](types_composer.default.md#buildassetfreeze)
-- [buildAssetTransfer](types_composer.default.md#buildassettransfer)
-- [buildAtc](types_composer.default.md#buildatc)
-- [buildKeyReg](types_composer.default.md#buildkeyreg)
-- [buildMethodCall](types_composer.default.md#buildmethodcall)
-- [buildPayment](types_composer.default.md#buildpayment)
-- [buildTransactions](types_composer.default.md#buildtransactions)
-- [buildTxn](types_composer.default.md#buildtxn)
-- [buildTxnWithSigner](types_composer.default.md#buildtxnwithsigner)
-- [commonTxnBuildStep](types_composer.default.md#commontxnbuildstep)
-- [count](types_composer.default.md#count)
-- [execute](types_composer.default.md#execute)
-- [rebuild](types_composer.default.md#rebuild)
-- [send](types_composer.default.md#send)
-- [simulate](types_composer.default.md#simulate)
-- [arc2Note](types_composer.default.md#arc2note)
+- [addAppCall](types_composer.TransactionComposer.md#addappcall)
+- [addAppCallMethodCall](types_composer.TransactionComposer.md#addappcallmethodcall)
+- [addAppCreate](types_composer.TransactionComposer.md#addappcreate)
+- [addAppCreateMethodCall](types_composer.TransactionComposer.md#addappcreatemethodcall)
+- [addAppDelete](types_composer.TransactionComposer.md#addappdelete)
+- [addAppDeleteMethodCall](types_composer.TransactionComposer.md#addappdeletemethodcall)
+- [addAppUpdate](types_composer.TransactionComposer.md#addappupdate)
+- [addAppUpdateMethodCall](types_composer.TransactionComposer.md#addappupdatemethodcall)
+- [addAssetConfig](types_composer.TransactionComposer.md#addassetconfig)
+- [addAssetCreate](types_composer.TransactionComposer.md#addassetcreate)
+- [addAssetDestroy](types_composer.TransactionComposer.md#addassetdestroy)
+- [addAssetFreeze](types_composer.TransactionComposer.md#addassetfreeze)
+- [addAssetOptIn](types_composer.TransactionComposer.md#addassetoptin)
+- [addAssetOptOut](types_composer.TransactionComposer.md#addassetoptout)
+- [addAssetTransfer](types_composer.TransactionComposer.md#addassettransfer)
+- [addAtc](types_composer.TransactionComposer.md#addatc)
+- [addOnlineKeyRegistration](types_composer.TransactionComposer.md#addonlinekeyregistration)
+- [addPayment](types_composer.TransactionComposer.md#addpayment)
+- [addTransaction](types_composer.TransactionComposer.md#addtransaction)
+- [build](types_composer.TransactionComposer.md#build)
+- [buildAppCall](types_composer.TransactionComposer.md#buildappcall)
+- [buildAssetConfig](types_composer.TransactionComposer.md#buildassetconfig)
+- [buildAssetCreate](types_composer.TransactionComposer.md#buildassetcreate)
+- [buildAssetDestroy](types_composer.TransactionComposer.md#buildassetdestroy)
+- [buildAssetFreeze](types_composer.TransactionComposer.md#buildassetfreeze)
+- [buildAssetTransfer](types_composer.TransactionComposer.md#buildassettransfer)
+- [buildAtc](types_composer.TransactionComposer.md#buildatc)
+- [buildKeyReg](types_composer.TransactionComposer.md#buildkeyreg)
+- [buildMethodCall](types_composer.TransactionComposer.md#buildmethodcall)
+- [buildPayment](types_composer.TransactionComposer.md#buildpayment)
+- [buildTransactions](types_composer.TransactionComposer.md#buildtransactions)
+- [buildTxn](types_composer.TransactionComposer.md#buildtxn)
+- [buildTxnWithSigner](types_composer.TransactionComposer.md#buildtxnwithsigner)
+- [commonTxnBuildStep](types_composer.TransactionComposer.md#commontxnbuildstep)
+- [count](types_composer.TransactionComposer.md#count)
+- [execute](types_composer.TransactionComposer.md#execute)
+- [rebuild](types_composer.TransactionComposer.md#rebuild)
+- [send](types_composer.TransactionComposer.md#send)
+- [simulate](types_composer.TransactionComposer.md#simulate)
+- [arc2Note](types_composer.TransactionComposer.md#arc2note)
 
 ## Constructors
 
 ### constructor
 
-• **new default**(`params`): [`default`](types_composer.default.md)
+• **new TransactionComposer**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
-Create an `TransactionComposer`.
+Create a `TransactionComposer`.
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Create an `TransactionComposer`.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 #### Defined in
 
@@ -234,7 +234,7 @@ Signer used to represent a lack of signer
 
 ### addAppCall
 
-▸ **addAppCall**(`params`): [`default`](types_composer.default.md)
+▸ **addAppCall**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an application call transaction to the transaction group.
 
@@ -250,7 +250,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -262,7 +262,7 @@ ___
 
 ### addAppCallMethodCall
 
-▸ **addAppCallMethodCall**(`params`): [`default`](types_composer.default.md)
+▸ **addAppCallMethodCall**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add a non-create/non-update ABI method application call transaction to the transaction group.
 
@@ -276,7 +276,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -288,7 +288,7 @@ ___
 
 ### addAppCreate
 
-▸ **addAppCreate**(`params`): [`default`](types_composer.default.md)
+▸ **addAppCreate**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an application create transaction to the transaction group.
 
@@ -327,7 +327,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -339,7 +339,7 @@ ___
 
 ### addAppCreateMethodCall
 
-▸ **addAppCreateMethodCall**(`params`): [`default`](types_composer.default.md)
+▸ **addAppCreateMethodCall**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an ABI method create application call transaction to the transaction group.
 
@@ -353,7 +353,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -365,7 +365,7 @@ ___
 
 ### addAppDelete
 
-▸ **addAppDelete**(`params`): [`default`](types_composer.default.md)
+▸ **addAppDelete**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an application delete transaction to the transaction group.
 
@@ -379,7 +379,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -391,7 +391,7 @@ ___
 
 ### addAppDeleteMethodCall
 
-▸ **addAppDeleteMethodCall**(`params`): [`default`](types_composer.default.md)
+▸ **addAppDeleteMethodCall**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an ABI method delete application call transaction to the transaction group.
 
@@ -405,7 +405,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -417,7 +417,7 @@ ___
 
 ### addAppUpdate
 
-▸ **addAppUpdate**(`params`): [`default`](types_composer.default.md)
+▸ **addAppUpdate**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an application update transaction to the transaction group.
 
@@ -451,7 +451,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -463,7 +463,7 @@ ___
 
 ### addAppUpdateMethodCall
 
-▸ **addAppUpdateMethodCall**(`params`): [`default`](types_composer.default.md)
+▸ **addAppUpdateMethodCall**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an ABI method update application call transaction to the transaction group.
 
@@ -477,7 +477,7 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -489,7 +489,7 @@ ___
 
 ### addAssetConfig
 
-▸ **addAssetConfig**(`params`): [`default`](types_composer.default.md)
+▸ **addAssetConfig**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an asset config transaction to the transaction group.
 
@@ -501,7 +501,7 @@ Add an asset config transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -513,7 +513,7 @@ ___
 
 ### addAssetCreate
 
-▸ **addAssetCreate**(`params`): [`default`](types_composer.default.md)
+▸ **addAssetCreate**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an asset create transaction to the transaction group.
 
@@ -525,7 +525,7 @@ Add an asset create transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -537,7 +537,7 @@ ___
 
 ### addAssetDestroy
 
-▸ **addAssetDestroy**(`params`): [`default`](types_composer.default.md)
+▸ **addAssetDestroy**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an asset destroy transaction to the transaction group.
 
@@ -549,7 +549,7 @@ Add an asset destroy transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -561,7 +561,7 @@ ___
 
 ### addAssetFreeze
 
-▸ **addAssetFreeze**(`params`): [`default`](types_composer.default.md)
+▸ **addAssetFreeze**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an asset freeze transaction to the transaction group.
 
@@ -573,7 +573,7 @@ Add an asset freeze transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -585,7 +585,7 @@ ___
 
 ### addAssetOptIn
 
-▸ **addAssetOptIn**(`params`): [`default`](types_composer.default.md)
+▸ **addAssetOptIn**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an asset opt-in transaction to the transaction group.
 
@@ -597,7 +597,7 @@ Add an asset opt-in transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -609,7 +609,7 @@ ___
 
 ### addAssetOptOut
 
-▸ **addAssetOptOut**(`params`): [`default`](types_composer.default.md)
+▸ **addAssetOptOut**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an asset opt-out transaction to the transaction group.
 
@@ -621,7 +621,7 @@ Add an asset opt-out transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -633,7 +633,7 @@ ___
 
 ### addAssetTransfer
 
-▸ **addAssetTransfer**(`params`): [`default`](types_composer.default.md)
+▸ **addAssetTransfer**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an asset transfer transaction to the transaction group.
 
@@ -645,7 +645,7 @@ Add an asset transfer transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -657,7 +657,7 @@ ___
 
 ### addAtc
 
-▸ **addAtc**(`atc`): [`default`](types_composer.default.md)
+▸ **addAtc**(`atc`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add the transactions within an `AtomicTransactionComposer` to the transaction group.
 
@@ -669,7 +669,7 @@ Add the transactions within an `AtomicTransactionComposer` to the transaction gr
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -681,7 +681,7 @@ ___
 
 ### addOnlineKeyRegistration
 
-▸ **addOnlineKeyRegistration**(`params`): [`default`](types_composer.default.md)
+▸ **addOnlineKeyRegistration**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add an online key registration transaction to the transaction group.
 
@@ -693,7 +693,7 @@ Add an online key registration transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -705,7 +705,7 @@ ___
 
 ### addPayment
 
-▸ **addPayment**(`params`): [`default`](types_composer.default.md)
+▸ **addPayment**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add a payment transaction to the transaction group.
 
@@ -717,7 +717,7 @@ Add a payment transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
@@ -729,7 +729,7 @@ ___
 
 ### addTransaction
 
-▸ **addTransaction**(`transaction`, `signer?`): [`default`](types_composer.default.md)
+▸ **addTransaction**(`transaction`, `signer?`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Add a pre-built transaction to the transaction group.
 
@@ -742,7 +742,7 @@ Add a pre-built transaction to the transaction group.
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
 
 The composer so you can chain method calls
 
