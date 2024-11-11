@@ -78,15 +78,15 @@ Once you have fully migrated you will likely find you wont need these sdk client
 Note: If you used the beta version of `AlgorandClient` in v6 of AlgoKit Utils then you will find a few breaking changes within it you will need to accomodate. Namely:
 
 - `algorand.transactions.*` has been renamed to `algorand.createTransaction.*`
-- `AlgokitComposer` class has been renamed to `AlgoKitComposer`
+- `AlgokitComposer` class has been renamed to `TransactionComposer` and has been made a named export (rather than a default)
 - `algorand.send.*(params, executeOptions)` has had the second `executeOptions` object collapsed into the first `params` object
 - The order of the `algorand.account.rekeyed()` parameters has been switched to `(sender, signer)`
 - All microAlgo return values from `algorand.account.getInformation()` now return an `AlgoAmount` and `amount` is renamed to `balance` and `round` to `validAsOfRound` (which is now a bigint for broader consistency)
 - Renamed `algorand.account.getAssetInformation` to `algorand.asset.getAccountInformation`
-- Renamed `clearProgram` to `clearStateProgram` and `extraPages` to `extraProgramPages` in AlgoKitComposer params to match algod api
+- Renamed `clearProgram` to `clearStateProgram` and `extraPages` to `extraProgramPages` in `AlgokitComposer` (now `TransactionComposer`) params to match algod api
 - Moved `ExecuteParams` type from `/types/composer` to `/types/transaction` and renamed to `SendParams`
 - Renamed `algorand.setSuggestedParamsTimeout` to `algorand.setSuggestedParamsCacheTimeout`
-- `AlgoKitComposer`'s `addMethodCall` and `addAppCall` methods are expanded into the various different types of app calls
+- `AlgokitComposer`'s (now `TransactionComposer`) `addMethodCall` and `addAppCall` methods are expanded into the various different types of app calls
 
 ### Step 4 - Replace function calls
 
@@ -105,7 +105,7 @@ These deprecation notices should largely let you follow the bouncing ball and ma
 - `extraProgramPages` appears as a top-level params property rather than nested in a `schema` property.
 - Round numbers, app IDs and asset IDs are now consistently `BigInt`'s rather than `number` or `number | bigint`
 - If you previously used `skipSending: true` that no longer exists; the new equivalent of that is to use `algorand.createTransaction...`, but otherwise you should use `algorand.send...` to immediately sign and send.
-- If you previously used `atc` as a parameter when constructing a transaction that no longer exists; the new equivalent of that is to use `algorand.newGroup()` to get an [`AlgoKitComposer`](./capabilities/algokit-composer.md) and chain method calls to build up a group of transactions and then call `execute()` to execute the group.
+- If you previously used `atc` as a parameter when constructing a transaction that no longer exists; the new equivalent of that is to use `algorand.newGroup()` to get a [`TransactionComposer`](./capabilities/transaction-composer.md) and chain method calls to build up a group of transactions and then call `execute()` to execute the group.
 - Functions that took multiple params objects largely only take a single, combined object now (intellisense is your friend, ctrl+space or your IDE's equivalent auto-complete keyboard shortcut will help you see all of the options!).
 
 Other things to note that you may come across:
@@ -160,24 +160,19 @@ If you are converting from an older typed client to a new one you will need to m
 - `client.compose()` is now `client.newGroup()`
 - `client.compose()....execute()` is now `client.compose()....send()`
 
-### Step 5 - Rename AlgoKitComposer to TransactionComposer
+### Step 5 - Rename AlgokitComposer to TransactionComposer
 
-In v7, `AlgoKitComposer` has been renamed to `TransactionComposer`. To migrate:
+In v7, `AlgokitComposer` has been renamed to `TransactionComposer`. To migrate:
 
-1. Replace all occurrences of `AlgoKitComposer` with `TransactionComposer`.
+1. Replace all occurrences of `AlgokitComposer` with `TransactionComposer`.
 2. Update import statements:
 
 ```typescript
 // Old
-import { AlgoKitComposer } from '@algorandfoundation/algokit-utils'
+import { AlgokitComposer } from '@algorandfoundation/algokit-utils'
 // New
 import { TransactionComposer } from '@algorandfoundation/algokit-utils'
 ```
-
-3. Rename `AlgoKitComposerParams` type to `TransactionComposerParams` (if you were referencing it directly).
-4. Review code interacting with the composer for compatibility with the new class.
-
-This change aligns the class name with its purpose and improves consistency with Algorand terminology.
 
 ### Optional steps
 

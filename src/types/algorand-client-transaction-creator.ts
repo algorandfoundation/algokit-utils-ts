@@ -1,5 +1,5 @@
 import algosdk from 'algosdk'
-import { TransactionComposer, BuiltTransactions } from './composer'
+import { BuiltTransactions, TransactionComposer } from './composer'
 import { Expand } from './expand'
 
 import Transaction = algosdk.Transaction

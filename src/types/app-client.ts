@@ -1299,8 +1299,8 @@ export class AppClient {
       call: async (params: AppClientMethodCallParams & CallOnComplete & SendParams) => {
         // Read-only call - do it via simulate
         if (
-          params.onComplete === OnApplicationComplete.NoOpOC ||
-          (!params.onComplete && getArc56Method(params.method, this._appSpec).method.readonly)
+          (params.onComplete === OnApplicationComplete.NoOpOC || !params.onComplete) &&
+          getArc56Method(params.method, this._appSpec).method.readonly
         ) {
           const result = await this._algorand
             .newGroup()

@@ -14,13 +14,13 @@ import {
 } from './app'
 import { AppManager } from './app-manager'
 import {
-  TransactionComposer,
   AppCreateMethodCall,
   AppCreateParams,
   AppDeleteMethodCall,
   AppDeleteParams,
   AppUpdateMethodCall,
   AppUpdateParams,
+  TransactionComposer,
 } from './composer'
 import { Expand } from './expand'
 import { ConfirmedTransactionResult, SendParams } from './transaction'

@@ -4,7 +4,7 @@
 
 [types/composer](../modules/types_composer.md).TransactionComposer
 
-AlgoKit Composer helps you compose and execute transactions as a transaction group.
+TransactionComposer helps you compose and execute transactions as a transaction group.
 
 ## Table of contents
 
@@ -74,7 +74,7 @@ AlgoKit Composer helps you compose and execute transactions as a transaction gro
 
 • **new TransactionComposer**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
-Create an `TransactionComposer`.
+Create a `TransactionComposer`.
 
 #### Parameters
 

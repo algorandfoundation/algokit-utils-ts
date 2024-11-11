@@ -5,7 +5,6 @@ import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as L
 import { AppManager, BoxReference } from '../types/app-manager'
 import { AssetManager } from '../types/asset-manager'
 import {
-  TransactionComposer,
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -16,6 +15,7 @@ import {
   AppUpdateParams,
   BuiltTransactions,
   CommonTransactionParams,
+  TransactionComposer,
 } from '../types/composer'
 import {
   SendParams,

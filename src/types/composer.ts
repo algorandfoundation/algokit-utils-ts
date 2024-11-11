@@ -493,7 +493,7 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
-/** AlgoKit Composer helps you compose and execute transactions as a transaction group. */
+/** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
   /** Signer used to represent a lack of signer */
   private static NULL_SIGNER: algosdk.TransactionSigner = algosdk.makeEmptyTransactionSigner()
@@ -525,7 +525,7 @@ export class TransactionComposer {
   private appManager: AppManager
 
   /**
-   * Create an `TransactionComposer`.
+   * Create a `TransactionComposer`.
    * @param params The configuration for this composer
    */
   constructor(params: TransactionComposerParams) {

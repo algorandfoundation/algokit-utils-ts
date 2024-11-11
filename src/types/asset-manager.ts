@@ -2,7 +2,7 @@ import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
-import { TransactionComposer, CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE } from './composer'
+import { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE, TransactionComposer } from './composer'
 import { SendParams } from './transaction'
 
 /** Individual result from performing a bulk opt-in or bulk opt-out for an account against a series of assets. */

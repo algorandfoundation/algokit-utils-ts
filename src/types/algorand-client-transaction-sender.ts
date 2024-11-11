@@ -5,7 +5,6 @@ import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdate
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import {
-  TransactionComposer,
   AppCallMethodCall,
   AppCallParams,
   AppCreateMethodCall,
@@ -16,6 +15,7 @@ import {
   AppUpdateParams,
   AssetCreateParams,
   AssetOptOutParams,
+  TransactionComposer,
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
