@@ -69,7 +69,6 @@ import {
   AppUpdateParams,
   CommonAppCallParams,
   PaymentParams,
-  TransactionComposer,
 } from './composer'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
@@ -560,11 +559,6 @@ export class AppClient {
       clearSourceMap: this._clearSourceMap,
       ...params,
     })
-  }
-
-  /** Start a new `TransactionComposer` transaction group */
-  public newGroup(): TransactionComposer {
-    return this._algorand.newGroup()
   }
 
   /**
