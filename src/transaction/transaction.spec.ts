@@ -321,10 +321,14 @@ const tests = (version: 8 | 9) => () => {
     })
 
     test('addressBalance', async () => {
-      appClient.send.call({
+      const result = await appClient.send.call({
         method: 'addressBalance',
         args: [algosdk.generateAccount().addr],
+        onComplete: algosdk.OnApplicationComplete.NoOpOC,
       })
+
+      // Ensure the transaction was not sent via simulate
+      await fixture.context.waitForIndexerTransaction(result.txIds[0])
     })
   })
 }
