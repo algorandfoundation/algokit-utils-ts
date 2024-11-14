@@ -8,9 +8,9 @@ The old version will still work until at least v9 (we have been careful to keep 
 
 An early version of the AlgorandClient was released in v6.1.0. The intention was to evolve the stateful class-based interface without any breaking changes, however unfortunately that wasn't possible.
 
-As a result we have 2 supported migration paths: [Pre 6.1.0](#pre-610-migration-guide) and [Post 6.1.0](#post-610-migration-guide).
+As a result we have 2 supported migration paths: [<6.1.0](#610-migration-guide) and [>=6.1.0](#610-migration-guide-1).
 
-## Pre 6.1.0 Migration Guide
+## <6.1.0 Migration Guide
 
 We have been diligently adding JSDoc deprecations to the code. We recommend that after reading this guide you leverage the deprecation messages inside your IDE to guide you through the migration process.
 
@@ -36,7 +36,7 @@ const payment = await algokit.transferAlgos({
 /**** After ****/
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 const algorand = await AlgorandClient.fromEnvironment()
-const account = algorand.account.fromEnvironment('MY_ACCOUNT', (2).algo())
+const account = await algorand.account.fromEnvironment('MY_ACCOUNT', (2).algo())
 const payment = await algorand.send.payment({
   sender: account.addr,
   receiver: 'RECEIVER',
@@ -144,9 +144,9 @@ If you are converting from an older typed client to a new one you will need to m
 - `client.compose()` is now `client.newGroup()`
 - `client.compose()....execute()` is now `client.compose()....send()`
 
-## Post 6.1.0 Migration Guide
+## >=6.1.0 Migration Guide
 
-Assuming you have actioned the deprecation notices as part of moving to a post `6.1.0` version and have started using the early version of the AlgorandClient, then you need to be aware of some breaking changes that we have made to accommodate the featureset of v7. Any migration information related to the stateless function based interface is available in the [Pre 6.1.0 Migration Guide](#pre-610-migration-guide).
+Assuming you have actioned the deprecation notices as part of moving to the `>=6.1.0` version and have started using the early version of the `AlgorandClient`, then you need to be aware of some breaking changes that we have made to accommodate the feature set of v7. Any migration information related to the stateless function based interface is available in the [<6.1.0 Migration Guide](#610-migration-guide).
 
 ### Migrating
 
