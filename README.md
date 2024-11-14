@@ -24,6 +24,13 @@ import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 
 See [usage](./docs/README.md#usage) for more details.
 
+## Migration
+
+Whilst we aim to minimise breaking changes, there are situations where they are required.
+JSDoc deprecations should guide you through most migration paths inside your IDE, however the migration guides will provide more detailed information should you need it.
+
+If you're targetting v7, please refer to the [v7 migration guide](./docs/v7-migration.md).
+
 ## Guiding principles
 
 This library follows the [Guiding Principles of AlgoKit](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/algokit.md#guiding-principles).
