@@ -26,7 +26,7 @@ npm install @algorandfoundation/algokit-utils
 
 ## Peer Dependencies
 
-This library requires `algosdk@2` as a peer dependency. Ensure you have it installed in your project.
+This library requires `algosdk@2.9.0` as a peer dependency. Ensure you have it installed in your project.
 
 # Usage
 
@@ -45,7 +45,7 @@ As well as `AlgorandClient` and `Config`, you can use intellisense to auto-compl
 > import * as algokit from '@algorandfoundation/algokit-utils'
 > ```
 >
-> This version will still work until the next major version bump, but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
+> This version will still work until at least v9, but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
 >
 > If you are migrating from the old functions to the new ones then you can follow the [migration guide](v7-migration.md).
 
