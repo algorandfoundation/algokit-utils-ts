@@ -109,6 +109,10 @@
       },
       {
         "name": "release"
+      },
+      {
+        "name": "alpha",
+        "prerelease": "alpha"
       }
     ],
     "plugins": [
