@@ -67,7 +67,7 @@ const config: RollupOptions = {
     normaliseEsmOutput(),
     multiInput(),
   ],
-  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
+  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies), /^algosdk\/*/],
   onLog(level: LogLevel, log: RollupLog, handler: LogOrStringHandler) {
     if (log.code === 'CIRCULAR_DEPENDENCY') {
       handler('error', log)
