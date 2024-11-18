@@ -142,7 +142,7 @@ ___
 
 ### AppClientMethodCallParams
 
-Ƭ **AppClientMethodCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"method"`` \| ``"args"``\> & \{ `args?`: (`ABIValue` \| [`ABIStruct`](types_app_arc56.md#abistruct) \| `Address` \| [`AppMethodCallTransactionArgument`](types_composer.md#appmethodcalltransactionargument) \| `undefined`)[] ; `method`: `string` ; `sender?`: `Address` \| `string`  }\>
+Ƭ **AppClientMethodCallParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`CommonAppCallParams`](types_composer.md#commonappcallparams), ``"appId"`` \| ``"sender"`` \| ``"method"`` \| ``"args"``\> & \{ `args?`: (`ABIValue` \| [`ABIStruct`](types_app_arc56.md#abistruct) \| [`AppMethodCallTransactionArgument`](types_composer.md#appmethodcalltransactionargument) \| `undefined`)[] ; `method`: `string` ; `sender?`: `Address` \| `string`  }\>
 
 AppClient common parameters for an ABI method call
 
@@ -288,7 +288,7 @@ Parameters for funding an app account
 
 #### Defined in
 
-[src/types/app-client.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L389)
+[src/types/app-client.ts:388](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L388)
 
 ___
 
@@ -332,7 +332,7 @@ Resolve an app client instance by looking up an app created by the given creator
 
 #### Defined in
 
-[src/types/app-client.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L398)
+[src/types/app-client.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L397)
 
 ___
 
@@ -344,4 +344,4 @@ Resolve an app client instance by looking up the current network.
 
 #### Defined in
 
-[src/types/app-client.ts:412](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L412)
+[src/types/app-client.ts:411](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L411)

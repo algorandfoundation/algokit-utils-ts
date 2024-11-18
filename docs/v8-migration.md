@@ -30,7 +30,7 @@ const account = await algokit.mnemonicAccountFromEnvironment(
   algod,
 )
 const payment = await algokit.transferAlgos({
-  from: account,
+  from: account.addr,
   to: 'RECEIVER',
   amount: algokit.algos(1),
 })
@@ -68,27 +68,24 @@ While AlgoKit utils now wraps most of the algosdk functionality, it's likely you
 
 #### Step 1 - Accommodate usages of addresses
 
-The biggest change in this release is that addresses are consistently typed using `Address` from algosdk@3. All of the AlgoKit Utils methods that previously took a `string` for an account address now take `string | Address` so the impact of this change should be minimal.
+The biggest change in this release is that addresses are consistently typed using `Address` from algosdk@3. The vast majority of AlgoKit Utils methods that previously took a `string` for an account address now take `string | Address`. The impact of this change should be minimal, as `string` is still accepted.
 
-The majority of changes should simply be either adding or removing `.addr` from the account like type that you are using, like below:
+Any changes needed here should be related to converting an algosdk `Account` or `Address` type into the type the function expects.
+
+One scenario that requires a `string` rather than `string | Address` is passing an address as an ABI method arg. This is due to algosdk not supporting this type as an `ABIValue`. When passing an `Address` as an ABI method arg, you'll need to convert to the encoded address representation using `toString()`, like below:
 
 ```typescript
-/**** Before ****/
-const payment = await algorand.send.payment({
-  sender: account.addr,
-  receiver: 'RECEIVER',
-  amount: (1).algo(),
-})
+const alice = algorand.account.random()
+const bob = algorand.account.random()
 
-/**** After ****/
-const payment = await algorand.send.payment({
-  sender: account, // NOTE: .addr has been removed here
-  receiver: 'RECEIVER',
-  amount: (1).algo(),
+const result = await appClient.send.call({
+  sender: alice,
+  method: 'hello',
+  args: [bob.addr.toString()], // NOTE: the conversion to the encoded string representation
 })
 ```
 
-Whilst the above is cleaner, it's generally not required as `string` is also supported.
+It's also worth noting that the account utils (`algorand.account.random()` in this scenario) returns a type which combines `Address`, `Account` and `TransactionSignerAccount`, so that you can simply pass the object (`alice` in this case) returned into a function that accepts an `Address` or `Account`, which allows you to remove `.addr` in a lot of cases.
 
 #### Step 2 - Remove usages of performAtomicTransactionComposerDryrun
 

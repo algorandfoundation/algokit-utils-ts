@@ -437,7 +437,6 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    */
   args?: (
     | algosdk.ABIValue
-    | Address
     // The following should match the above `AppMethodCallTransactionArgument` type above
     | TransactionWithSigner
     | Transaction
@@ -866,12 +865,6 @@ export class TransactionComposer {
 
       if (isAbiValue(arg)) {
         methodArgs.push(arg)
-        continue
-      }
-
-      // Underlying ATC only supports addresses as strings
-      if (arg instanceof Address) {
-        methodArgs.push(arg.toString())
         continue
       }
 

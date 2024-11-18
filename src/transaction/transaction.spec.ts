@@ -215,13 +215,13 @@ const tests = (version: 8 | 9) => () => {
     test('addressBalance: invalid Account reference', async () => {
       const { testAccount } = fixture.context
       alice = testAccount
-      await expect(appClient.send.call({ method: 'addressBalance', args: [testAccount], populateAppCallResources: false })).rejects.toThrow(
-        'invalid Account reference',
-      )
+      await expect(
+        appClient.send.call({ method: 'addressBalance', args: [testAccount.toString()], populateAppCallResources: false }),
+      ).rejects.toThrow('invalid Account reference')
     })
 
     test('addressBalance', async () => {
-      await appClient.send.call({ method: 'addressBalance', args: [alice] })
+      await appClient.send.call({ method: 'addressBalance', args: [alice.toString()] })
     })
   })
 
@@ -276,22 +276,22 @@ const tests = (version: 8 | 9) => () => {
     test(`hasAsset: ${hasAssetErrorMsg}`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
-      await expect(appClient.send.call({ method: 'hasAsset', args: [testAccount], populateAppCallResources: false })).rejects.toThrow(
-        hasAssetErrorMsg,
-      )
+      await expect(
+        appClient.send.call({ method: 'hasAsset', args: [testAccount.toString()], populateAppCallResources: false }),
+      ).rejects.toThrow(hasAssetErrorMsg)
     })
 
     test('hasAsset', async () => {
       const { testAccount } = fixture.context
-      await appClient.send.call({ method: 'hasAsset', args: [testAccount] })
+      await appClient.send.call({ method: 'hasAsset', args: [testAccount.toString()] })
     })
 
     test(`externalLocal: ${hasAssetErrorMsg}`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
-      await expect(appClient.send.call({ method: 'externalLocal', args: [testAccount], populateAppCallResources: false })).rejects.toThrow(
-        hasAssetErrorMsg,
-      )
+      await expect(
+        appClient.send.call({ method: 'externalLocal', args: [testAccount.toString()], populateAppCallResources: false }),
+      ).rejects.toThrow(hasAssetErrorMsg)
     })
 
     test('externalLocal', async () => {
@@ -302,7 +302,7 @@ const tests = (version: 8 | 9) => () => {
       await algorand.send.appCallMethodCall(
         await appClient.params.call({
           method: 'externalLocal',
-          args: [testAccount],
+          args: [testAccount.toString()],
           sender: testAccount,
         }),
       )
@@ -314,7 +314,7 @@ const tests = (version: 8 | 9) => () => {
       await expect(
         appClient.send.call({
           method: 'addressBalance',
-          args: [algosdk.generateAccount().addr],
+          args: [algosdk.generateAccount().addr.toString()],
           populateAppCallResources: false,
         }),
       ).rejects.toThrow('invalid Account reference')
@@ -323,7 +323,7 @@ const tests = (version: 8 | 9) => () => {
     test('addressBalance', async () => {
       const result = await appClient.send.call({
         method: 'addressBalance',
-        args: [algosdk.generateAccount().addr],
+        args: [algosdk.generateAccount().addr.toString()],
         onComplete: algosdk.OnApplicationComplete.NoOpOC,
       })
 
@@ -379,8 +379,8 @@ describe('Resource Packer: Mixed', () => {
 
     const { transactions } = await algorand.send
       .newGroup()
-      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount }))
-      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr], sender: testAccount }))
+      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
+      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
       .send({ populateAppCallResources: true })
 
     const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
@@ -404,7 +404,7 @@ describe('Resource Packer: Mixed', () => {
       .addAppCallMethodCall(
         await v9Client.params.call({
           method: 'addressBalance',
-          args: [algosdk.getApplicationAddress(externalAppID)],
+          args: [algosdk.getApplicationAddress(externalAppID).toString()],
           sender: testAccount,
         }),
       )
