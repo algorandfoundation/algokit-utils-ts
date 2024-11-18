@@ -374,14 +374,13 @@ export type AppClientMethodCallParams = Expand<
     /** Arguments to the ABI method, either:
      * * An ABI value
      * * An ARC-56 struct
-     * * An Address
      * * A transaction with explicit signer
      * * A transaction (where the signer will be automatically assigned)
      * * An unawaited transaction (e.g. from algorand.createTransaction.transactionType())
      * * Another method call (via method call params object)
      * * undefined (this represents a placeholder for either a default argument or a transaction argument that is fulfilled by another method call argument)
      */
-    args?: (ABIValue | ABIStruct | Address | AppMethodCallTransactionArgument | undefined)[]
+    args?: (ABIValue | ABIStruct | AppMethodCallTransactionArgument | undefined)[]
   }
 >
 
