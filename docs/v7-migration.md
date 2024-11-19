@@ -146,7 +146,7 @@ If you are converting from an older typed client to a new one you will need to m
 
 ## >=6.1.0 Migration Guide
 
-Assuming you have actioned the deprecation notices as part of moving to the `>=6.1.0` version and have started using the early version of the `AlgorandClient`, then you need to be aware of some breaking changes that we have made to accommodate the feature set of v7. Any migration information related to the stateless function based interface is available in the [<6.1.0 Migration Guide](#610-migration-guide).
+Assuming you have started using the early version of the `AlgorandClient`, then you need to be aware of some breaking changes that we have made to accommodate the feature set of v7. Any migration information related to the stateless function based interface is available in the [<6.1.0 Migration Guide](#610-migration-guide).
 
 ### Migrating
 
