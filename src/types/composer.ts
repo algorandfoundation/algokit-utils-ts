@@ -1091,19 +1091,24 @@ export class TransactionComposer {
   }
 
   private buildKeyReg(params: OnlineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
-    const txn = algosdk.makeKeyRegistrationTxnWithSuggestedParams(
-      params.sender,
-      undefined,
-      params.voteKey,
-      params.selectionKey,
-      Number(params.voteFirst),
-      Number(params.voteLast),
-      Number(params.voteKeyDilution),
+    // algosdk throws when voteFirst is 0, so we need to set it to 1, then switch back to 1 after creating the transaction
+    const voteFirst = params.voteFirst === 0n ? 1n : params.voteFirst
+
+    const txn = algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject({
+      from: params.sender,
+      voteKey: params.voteKey,
+      selectionKey: params.selectionKey,
+      voteFirst: Number(voteFirst),
+      voteLast: Number(params.voteLast),
+      voteKeyDilution: Number(params.voteKeyDilution),
       suggestedParams,
-      undefined,
-      false,
-      params.stateProofKey,
-    )
+      nonParticipation: false,
+      stateProofKey: params.stateProofKey as string | Uint8Array,
+    })
+
+    if (params.voteFirst === 0n) {
+      txn.voteFirst = 0
+    }
 
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
