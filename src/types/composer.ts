@@ -318,11 +318,11 @@ export type OnlineKeyRegistrationParams = CommonTransactionParams & {
   stateProofKey?: Uint8Array
 }
 
-// Not yet exposed because of bug in algosdk
-// export type OfflineKeyRegistrationParams = CommonTransactionParams & {
-//   /** Prevent this account from ever participating again. On network with rewards enabled, also disable rewards for this account */
-//   preventAddressFromEverParticipatingAgain?: boolean
-// }
+/** Parameters to define an offline key registration transaction. */
+export type OfflineKeyRegistrationParams = CommonTransactionParams & {
+  /** Prevent this account from ever participating again. The account will also no longer earn rewards */
+  preventAccountFromEverParticipatingAgain?: boolean
+}
 
 /** Common parameters for defining an application call transaction. */
 export type CommonAppCallParams = CommonTransactionParams & {
@@ -455,7 +455,7 @@ export type Txn =
   | (AssetOptInParams & { type: 'assetOptIn' })
   | (AssetOptOutParams & { type: 'assetOptOut' })
   | ((AppCallParams | AppCreateParams | AppUpdateParams) & { type: 'appCall' })
-  | (OnlineKeyRegistrationParams & { type: 'keyReg' })
+  | ((OnlineKeyRegistrationParams | OfflineKeyRegistrationParams) & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
@@ -746,6 +746,17 @@ export class TransactionComposer {
    * @returns The composer so you can chain method calls
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
+    this.txns.push({ ...params, type: 'keyReg' })
+
+    return this
+  }
+
+  /**
+   * Add an offline key registration transaction to the transaction group.
+   * @param params The offline key registration transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
     this.txns.push({ ...params, type: 'keyReg' })
 
     return this
@@ -1090,24 +1101,34 @@ export class TransactionComposer {
     return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
-  private buildKeyReg(params: OnlineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
-    // algosdk throws when voteFirst is 0, so we need to set it to 1, then switch back to 1 after creating the transaction
-    const voteFirst = params.voteFirst === 0n ? 1n : params.voteFirst
+  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
+    let txn: algosdk.Transaction
 
-    const txn = algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject({
-      from: params.sender,
-      voteKey: params.voteKey,
-      selectionKey: params.selectionKey,
-      voteFirst: Number(voteFirst),
-      voteLast: Number(params.voteLast),
-      voteKeyDilution: Number(params.voteKeyDilution),
-      suggestedParams,
-      nonParticipation: false,
-      stateProofKey: params.stateProofKey as string | Uint8Array,
-    })
+    if ('voteKey' in params) {
+      // algosdk throws when voteFirst is 0, so we need to set it to 1, then switch back to 0 after creating the transaction
+      const voteFirst = params.voteFirst === 0n ? 1n : params.voteFirst
 
-    if (params.voteFirst === 0n) {
-      txn.voteFirst = 0
+      txn = algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject({
+        from: params.sender,
+        voteKey: params.voteKey,
+        selectionKey: params.selectionKey,
+        voteFirst: Number(voteFirst),
+        voteLast: Number(params.voteLast),
+        voteKeyDilution: Number(params.voteKeyDilution),
+        suggestedParams,
+        nonParticipation: false,
+        stateProofKey: params.stateProofKey as string | Uint8Array,
+      })
+
+      if (params.voteFirst === 0n) {
+        txn.voteFirst = 0
+      }
+    } else {
+      txn = algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject({
+        from: params.sender,
+        suggestedParams,
+        nonParticipation: params.preventAccountFromEverParticipatingAgain,
+      })
     }
 
     return this.commonTxnBuildStep(params, txn, suggestedParams)

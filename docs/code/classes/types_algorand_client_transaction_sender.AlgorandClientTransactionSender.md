@@ -30,6 +30,7 @@ Orchestrates sending transactions for `AlgorandClient`.
 - [assetFreeze](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md#assetfreeze)
 - [assetOptIn](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md#assetoptin)
 - [assetTransfer](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md#assettransfer)
+- [offlineKeyRegistration](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md#offlinekeyregistration)
 - [onlineKeyRegistration](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md#onlinekeyregistration)
 - [payment](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md#payment)
 
@@ -992,6 +993,32 @@ await algorand.send.assetTransfer({
 #### Defined in
 
 [src/types/algorand-client-transaction-sender.ts:407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L407)
+
+___
+
+### offlineKeyRegistration
+
+• **offlineKeyRegistration**: (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `preventAccountFromEverParticipatingAgain?`: `boolean`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md)) => `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
+
+Register an offline key.
+
+#### Type declaration
+
+▸ (`params`): `Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `params` | [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) & \{ `preventAccountFromEverParticipatingAgain?`: `boolean`  } & [`SendParams`](../interfaces/types_transaction.SendParams.md) |
+
+##### Returns
+
+`Promise`\<\{ `confirmation`: `PendingTransactionResponse` ; `confirmations`: `PendingTransactionResponse`[] ; `groupId`: `string` ; `returns?`: [`ABIReturn`](../modules/types_app.md#abireturn)[] ; `transaction`: `Transaction` ; `transactions`: `Transaction`[] ; `txIds`: `string`[]  }\>
+
+#### Defined in
+
+[src/types/algorand-client-transaction-sender.ts:955](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L955)
 
 ___
 

@@ -950,4 +950,9 @@ export class AlgorandClientTransactionSender {
   onlineKeyRegistration = this._send((c) => c.addOnlineKeyRegistration, {
     preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${transaction.txID()}`,
   })
+
+  /** Register an offline key. */
+  offlineKeyRegistration = this._send((c) => c.addOfflineKeyRegistration, {
+    preLog: (params, transaction) => `Registering offline key for ${params.sender} via transaction ${transaction.txID()}`,
+  })
 }

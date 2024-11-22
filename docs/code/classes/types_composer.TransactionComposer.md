@@ -43,6 +43,7 @@ TransactionComposer helps you compose and execute transactions as a transaction 
 - [addAssetOptOut](types_composer.TransactionComposer.md#addassetoptout)
 - [addAssetTransfer](types_composer.TransactionComposer.md#addassettransfer)
 - [addAtc](types_composer.TransactionComposer.md#addatc)
+- [addOfflineKeyRegistration](types_composer.TransactionComposer.md#addofflinekeyregistration)
 - [addOnlineKeyRegistration](types_composer.TransactionComposer.md#addonlinekeyregistration)
 - [addPayment](types_composer.TransactionComposer.md#addpayment)
 - [addTransaction](types_composer.TransactionComposer.md#addtransaction)
@@ -675,6 +676,30 @@ The composer so you can chain method calls
 
 #### Defined in
 
+[src/types/composer.ts:770](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L770)
+
+___
+
+### addOfflineKeyRegistration
+
+▸ **addOfflineKeyRegistration**(`params`): [`TransactionComposer`](types_composer.TransactionComposer.md)
+
+Add an offline key registration transaction to the transaction group.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams) | The offline key registration transaction parameters |
+
+#### Returns
+
+[`TransactionComposer`](types_composer.TransactionComposer.md)
+
+The composer so you can chain method calls
+
+#### Defined in
+
 [src/types/composer.ts:759](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L759)
 
 ___
@@ -771,7 +796,7 @@ The built atomic transaction composer and the transactions
 
 #### Defined in
 
-[src/types/composer.ts:1220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1220)
+[src/types/composer.ts:1241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1241)
 
 ___
 
@@ -792,7 +817,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1038](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1038)
+[src/types/composer.ts:1049](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1049)
 
 ___
 
@@ -813,7 +838,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:987](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L987)
+[src/types/composer.ts:998](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L998)
 
 ___
 
@@ -834,7 +859,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:967](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L967)
+[src/types/composer.ts:978](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L978)
 
 ___
 
@@ -855,7 +880,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1002](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1002)
+[src/types/composer.ts:1013](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1013)
 
 ___
 
@@ -876,7 +901,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1012](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1012)
+[src/types/composer.ts:1023](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1023)
 
 ___
 
@@ -897,7 +922,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1024](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1024)
+[src/types/composer.ts:1035](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1035)
 
 ___
 
@@ -920,7 +945,7 @@ Build an ATC and return transactions ready to be incorporated into a broader set
 
 #### Defined in
 
-[src/types/composer.ts:765](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L765)
+[src/types/composer.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L776)
 
 ___
 
@@ -932,7 +957,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `params` | [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams) |
+| `params` | [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams) \| [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams) |
 | `suggestedParams` | `SuggestedParams` |
 
 #### Returns
@@ -941,7 +966,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1093](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1093)
+[src/types/composer.ts:1104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1104)
 
 ___
 
@@ -965,7 +990,7 @@ Builds an ABI method call transaction and any other associated transactions repr
 
 #### Defined in
 
-[src/types/composer.ts:831](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L831)
+[src/types/composer.ts:842](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L842)
 
 ___
 
@@ -986,7 +1011,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:955](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L955)
+[src/types/composer.ts:966](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L966)
 
 ___
 
@@ -1004,7 +1029,7 @@ The array of built transactions and any corresponding method calls
 
 #### Defined in
 
-[src/types/composer.ts:1167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1167)
+[src/types/composer.ts:1188](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1188)
 
 ___
 
@@ -1027,7 +1052,7 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 
 #### Defined in
 
-[src/types/composer.ts:1117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1117)
+[src/types/composer.ts:1138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1138)
 
 ___
 
@@ -1048,7 +1073,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1144)
+[src/types/composer.ts:1165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1165)
 
 ___
 
@@ -1070,7 +1095,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:786](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L786)
+[src/types/composer.ts:797](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L797)
 
 ___
 
@@ -1086,7 +1111,7 @@ Get the number of transactions currently added to this composer.
 
 #### Defined in
 
-[src/types/composer.ts:1207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1207)
+[src/types/composer.ts:1228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1228)
 
 ___
 
@@ -1116,7 +1141,7 @@ An alias for `composer.send(params)`.
 
 #### Defined in
 
-[src/types/composer.ts:1289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1289)
+[src/types/composer.ts:1310](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1310)
 
 ___
 
@@ -1135,7 +1160,7 @@ The newly built atomic transaction composer and the transactions
 
 #### Defined in
 
-[src/types/composer.ts:1249](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1249)
+[src/types/composer.ts:1270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1270)
 
 ___
 
@@ -1159,7 +1184,7 @@ The execution result
 
 #### Defined in
 
-[src/types/composer.ts:1259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1259)
+[src/types/composer.ts:1280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1280)
 
 ___
 
@@ -1183,7 +1208,7 @@ The simulation result
 
 #### Defined in
 
-[src/types/composer.ts:1297](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1297)
+[src/types/composer.ts:1318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1318)
 
 ___
 
@@ -1209,4 +1234,4 @@ The binary encoded transaction note
 
 #### Defined in
 
-[src/types/composer.ts:1372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1372)
+[src/types/composer.ts:1393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1393)
