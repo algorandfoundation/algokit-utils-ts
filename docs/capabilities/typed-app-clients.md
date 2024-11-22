@@ -15,64 +15,158 @@ You can generate an app spec file:
 
 ## Generating a typed client
 
-To generate a typed client from an app spec file you can use [algokit CLI](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients):
+To generate a typed client from an app spec file you can use [AlgoKit CLI](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#1-typed-clients):
 
 ```
 > algokit generate client application.json --output /absolute/path/to/client.ts
 ```
 
+Note: If you are using a version of AlgoKit Utils >= 7.0.0 in your project, you will need to generate using >= 4.0.0. See [AlgoKit CLI generator version pinning](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#version-pinning) for more information on how to lock to a specific version.
+
 ## Getting a typed client instance
 
-To get an instance of a typed client you can use an [`AlgorandClient`](./algorand-client.md) instance, which coordinates passing in SDK clients etc.:
+To get an instance of a typed client you can use an [`AlgorandClient`](./algorand-client.md) instance or a typed app [`Factory`](#creating-a-typed-factory-instance) instance.
+
+The approach to obtaining a client instance depends on how many app clients you require for a given app spec and if the app has already been deployed, which is summarised below:
+
+### App is deployed
+
+<table>
+<thead>
+<tr>
+<th colspan="2">Resolve App by ID</th>
+<th colspan="2">Resolve App by Creator and Name</th>
+</tr>
+<tr>
+<th>Single App Client Instance</th>
+<th>Multiple App Client Instances</th>
+<th>Single App Client Instance</th>
+<th>Multiple App Client Instances</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
 
 ```typescript
-// Get an app factory
-const factory = algorand.client.getTypedAppFactory(MyContractFactory)
-// Resolve by ID for existing contract
 const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
   appId: 1234n,
+  // ...
 })
-// Resolve by creator address and contract name
-const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
-  creatorAddress: 'CREATORADDRESS',
-})
-const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
-  creatorAddress: 'CREATORADDRESS',
-  // Override the name (by default uses the name in the ARC-32 / ARC-56 app spec)
-  appName: 'contract-name',
-})
-
-// With all optional params specified
-const factory = algorand.client.getTypedAppFactory(MyContractFactory, {
-  appName: nameOverride,
-  deployTimeParams,
-  defaultSender: 'DEFAULTSENDER',
-  version: '2.0',
-  updatable: true,
-  deletable: false,
-  deployTimeParams: {
-    VALUE: 1,
-  },
-})
-const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
-  appId: 12345n,
-  appName: nameOverride,
-  defaultSender: 'DEFAULTSENDER',
-  approvalSourceMap,
-  clearSourceMap,
-})
-const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
-  creatorAddress: 'CREATORADDRESS',
-  appName: nameOverride,
-  defaultSender: 'DEFAULTSENDER',
-  // Cached app lookup to avoid indexer calls
-  appLookupCache,
-  approvalSourceMap,
-  clearSourceMap,
+//or
+const appClient = new MyContractClient({
+  algorand,
+  appId: 1234n,
+  // ...
 })
 ```
 
-To understand the difference between resolving by ID and name see the underlying [app client documentation](./app-client.md#appclient).
+</td>
+<td>
+
+```typescript
+const appClient1 = factory.getAppClientById({
+  appId: 1234n,
+  // ...
+})
+const appClient2 = factory.getAppClientById({
+  appId: 4321n,
+  // ...
+})
+```
+
+</td>
+<td>
+
+```typescript
+const appClient = await algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+  creatorAddress: 'CREATORADDRESS',
+  appName: 'contract-name',
+  // ...
+})
+//or
+const appClient = await MyContractClient.fromCreatorAndName({
+  algorand,
+  creatorAddress: 'CREATORADDRESS',
+  appName: 'contract-name',
+  // ...
+})
+```
+
+</td>
+<td>
+
+```typescript
+const appClient1 = await factory.getAppClientByCreatorAndName({
+  creatorAddress: 'CREATORADDRESS',
+  appName: 'contract-name',
+  // ...
+})
+const appClient2 = await factory.getAppClientByCreatorAndName({
+  creatorAddress: 'CREATORADDRESS',
+  appName: 'contract-name-2',
+  // ...
+})
+```
+
+</td>
+</tr>
+</tbody>
+</table>
+
+To understand the difference between resolving by ID vs by creator and name see the underlying [app client documentation](./app-client.md#appclient).
+
+### App is not deployed
+
+<table>
+<thead>
+<tr>
+<th>Deploy a New App</th>
+<th>Deploy or Resolve App Idempotently by Creator and Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+
+```typescript
+const { appClient } = await factory.send.create.bare({
+  args: [],
+  // ...
+})
+// or
+const { appClient } = await factory.send.create.METHODNAME({
+  args: [],
+  // ...
+})
+```
+
+</td>
+<td>
+
+```typescript
+const { appClient } = await factory.deploy({
+  appName: 'contract-name',
+  // ...
+})
+```
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### Creating a typed factory instance
+
+If your scenario calls for an app factory, you can create one using the below:
+
+```typescript
+const factory = algorand.client.getTypedAppFactory(MyContractFactory)
+//or
+const factory = new MyContractFactory({
+  algorand,
+})
+```
 
 ## Client usage
 

@@ -30,6 +30,7 @@ Orchestrates creating transactions for `AlgorandClient`.
 - [assetOptIn](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md#assetoptin)
 - [assetOptOut](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md#assetoptout)
 - [assetTransfer](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md#assettransfer)
+- [offlineKeyRegistration](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md#offlinekeyregistration)
 - [onlineKeyRegistration](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md#onlinekeyregistration)
 - [payment](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md#payment)
 
@@ -1100,6 +1101,32 @@ await algorand.createTransaction.assetTransfer({
 #### Defined in
 
 [src/types/algorand-client-transaction-creator.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L243)
+
+___
+
+### offlineKeyRegistration
+
+• **offlineKeyRegistration**: (`params`: [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams)) => `Promise`\<`Transaction`\>
+
+Create an offline key registration transaction.
+
+#### Type declaration
+
+▸ (`params`): `Promise`\<`Transaction`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `params` | [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams) |
+
+##### Returns
+
+`Promise`\<`Transaction`\>
+
+#### Defined in
+
+[src/types/algorand-client-transaction-creator.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L692)
 
 ___
 

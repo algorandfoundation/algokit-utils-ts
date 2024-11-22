@@ -688,4 +688,6 @@ export class AlgorandClientTransactionCreator {
   appCallMethodCall = this._transactions((c) => c.addAppCallMethodCall)
   /** Create an online key registration transaction. */
   onlineKeyRegistration = this._transaction((c) => c.addOnlineKeyRegistration)
+  /** Create an offline key registration transaction. */
+  offlineKeyRegistration = this._transaction((c) => c.addOfflineKeyRegistration)
 }
