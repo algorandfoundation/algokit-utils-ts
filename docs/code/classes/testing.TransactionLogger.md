@@ -68,7 +68,7 @@ readonly `string`[]
 
 ### capture
 
-▸ **capture**(`algod`): `default`
+▸ **capture**(`algod`): `AlgodClient`
 
 Return a proxy that wraps the given Algodv2 with this transaction logger.
 
@@ -76,11 +76,11 @@ Return a proxy that wraps the given Algodv2 with this transaction logger.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `algod` | `default` | The `Algodv2` to wrap |
+| `algod` | `AlgodClient` | The `Algodv2` to wrap |
 
 #### Returns
 
-`default`
+`AlgodClient`
 
 The wrapped `Algodv2`, any transactions sent using this algod instance will be logged by this transaction logger
 
@@ -138,7 +138,7 @@ Wait until all logged transactions IDs appear in the given `Indexer`.
 
 | Name | Type |
 | :------ | :------ |
-| `indexer` | `default` |
+| `indexer` | `IndexerClient` |
 
 #### Returns
 

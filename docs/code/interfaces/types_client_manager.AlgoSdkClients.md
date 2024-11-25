@@ -18,9 +18,21 @@ Clients from algosdk that interact with the official Algorand APIs
 
 ### algod
 
-• **algod**: `default`
+• **algod**: `AlgodClient`
 
 Algod client, see https://developer.algorand.org/docs/rest-apis/algod/
+
+#### Defined in
+
+[src/types/client-manager.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L16)
+
+___
+
+### indexer
+
+• `Optional` **indexer**: `IndexerClient`
+
+Optional indexer client, see https://developer.algorand.org/docs/rest-apis/indexer/
 
 #### Defined in
 
@@ -28,24 +40,12 @@ Algod client, see https://developer.algorand.org/docs/rest-apis/algod/
 
 ___
 
-### indexer
-
-• `Optional` **indexer**: `default`
-
-Optional indexer client, see https://developer.algorand.org/docs/rest-apis/indexer/
-
-#### Defined in
-
-[src/types/client-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L20)
-
-___
-
 ### kmd
 
-• `Optional` **kmd**: `default`
+• `Optional` **kmd**: `KmdClient`
 
 Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/
 
 #### Defined in
 
-[src/types/client-manager.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L22)
+[src/types/client-manager.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L20)

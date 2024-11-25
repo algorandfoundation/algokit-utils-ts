@@ -8,7 +8,7 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 ## Hierarchy
 
-- [`URLTokenBaseHTTPClient`](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md)
+- `URLTokenBaseHTTPClient`
 
   ↳ **`AlgoHttpClientWithRetry`**
 
@@ -42,10 +42,10 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 | Name | Type |
 | :------ | :------ |
-| `tokenHeader` | [`TokenHeader`](../modules/types_urlTokenBaseHTTPClient.md#tokenheader) |
+| `tokenHeader` | `TokenHeader` |
 | `baseServer` | `string` |
 | `port?` | `string` \| `number` |
-| `defaultHeaders` | `Record`\<`string`, `any`\> |
+| `defaultHeaders?` | `Record`\<`string`, `any`\> |
 
 #### Returns
 
@@ -53,11 +53,11 @@ A HTTP Client that wraps the Algorand SDK HTTP Client with retries
 
 #### Inherited from
 
-[URLTokenBaseHTTPClient](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md).[constructor](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md#constructor)
+URLTokenBaseHTTPClient.constructor
 
 #### Defined in
 
-[src/types/urlTokenBaseHTTPClient.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/urlTokenBaseHTTPClient.ts#L47)
+node_modules/algosdk/dist/types/client/urlTokenBaseHTTPClient.d.ts:27
 
 ## Properties
 
@@ -140,11 +140,11 @@ ___
 
 #### Overrides
 
-[URLTokenBaseHTTPClient](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md).[delete](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md#delete)
+URLTokenBaseHTTPClient.delete
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L71)
+[src/types/algo-http-client-with-retry.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L101)
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 #### Overrides
 
-[URLTokenBaseHTTPClient](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md).[get](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md#get)
+URLTokenBaseHTTPClient.get
 
 #### Defined in
 
@@ -193,8 +193,8 @@ ___
 
 #### Overrides
 
-[URLTokenBaseHTTPClient](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md).[post](types_urlTokenBaseHTTPClient.URLTokenBaseHTTPClient.md#post)
+URLTokenBaseHTTPClient.post
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L62)
+[src/types/algo-http-client-with-retry.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L92)

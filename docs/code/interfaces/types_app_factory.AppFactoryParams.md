@@ -64,7 +64,7 @@ ___
 
 ### defaultSender
 
-• `Optional` **defaultSender**: `string`
+• `Optional` **defaultSender**: `string` \| `Address`
 
 Optional address to use for the account to use as the default sender for calls.
 

@@ -6,6 +6,10 @@
 
 ## Table of contents
 
+### Type Aliases
+
+- [SearchForTransactions](index.indexer.md#searchfortransactions)
+
 ### Functions
 
 - [executePaginatedRequest](index.indexer.md#executepaginatedrequest)
@@ -14,6 +18,16 @@
 - [lookupAssetHoldings](index.indexer.md#lookupassetholdings)
 - [lookupTransactionById](index.indexer.md#lookuptransactionbyid)
 - [searchTransactions](index.indexer.md#searchtransactions)
+
+## Type Aliases
+
+### SearchForTransactions
+
+Ƭ **SearchForTransactions**: `ReturnType`\<`Indexer`[``"searchForTransactions"``]\>
+
+#### Defined in
+
+[src/indexer-lookup.ts:4](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L4)
 
 ## Functions
 
@@ -41,38 +55,41 @@
 
 #### Defined in
 
-[src/indexer-lookup.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L152)
+[src/indexer-lookup.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L145)
 
 ___
 
 ### lookupAccountByAddress
 
-▸ **lookupAccountByAddress**(`accountAddress`, `indexer`): `Promise`\<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
-
-Looks up an account by address using Indexer.
+▸ **lookupAccountByAddress**(`accountAddress`, `indexer`): `Promise`\<`AccountResponse`\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `accountAddress` | `string` | The address of the account to look up |
-| `indexer` | `default` | An indexer client |
+| `accountAddress` | `string` \| `Address` | The address of the account to look up |
+| `indexer` | `IndexerClient` | An indexer client |
 
 #### Returns
 
-`Promise`\<[`AccountLookupResult`](../interfaces/types_indexer.AccountLookupResult.md)\>
+`Promise`\<`AccountResponse`\>
 
 The result of the look-up
 
+**`Deprecated`**
+
+Use `indexer.lookupAccountByID(accountAddress).do()`.
+Looks up an account by address using Indexer.
+
 #### Defined in
 
-[src/indexer-lookup.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L33)
+[src/indexer-lookup.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L26)
 
 ___
 
 ### lookupAccountCreatedApplicationByAddress
 
-▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
+▸ **lookupAccountCreatedApplicationByAddress**(`indexer`, `address`, `getAll?`, `paginationLimit?`): `Promise`\<`algosdk.indexerModels.Application`[]\>
 
 Looks up applications that were created by the given address; will automatically paginate through all data.
 
@@ -80,26 +97,26 @@ Looks up applications that were created by the given address; will automatically
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `indexer` | `default` | `undefined` | An indexer instance |
-| `address` | `string` | `undefined` | The address of the creator to look up |
+| `indexer` | `IndexerClient` | `undefined` | An indexer instance |
+| `address` | `string` \| `Address` | `undefined` | The address of the creator to look up |
 | `getAll` | `undefined` \| `boolean` | `undefined` | Whether or not to include deleted applications |
 | `paginationLimit?` | `number` | `undefined` | The number of records to return per paginated request, default 1000 |
 
 #### Returns
 
-`Promise`\<[`ApplicationResult`](../interfaces/types_indexer.ApplicationResult.md)[]\>
+`Promise`\<`algosdk.indexerModels.Application`[]\>
 
 The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L45)
+[src/indexer-lookup.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L38)
 
 ___
 
 ### lookupAssetHoldings
 
-▸ **lookupAssetHoldings**(`indexer`, `assetId`, `options?`, `paginationLimit?`): `Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
+▸ **lookupAssetHoldings**(`indexer`, `assetId`, `options?`, `paginationLimit?`): `Promise`\<`algosdk.indexerModels.MiniAssetHolding`[]\>
 
 Looks up asset holdings for the given asset; will automatically paginate through all data.
 
@@ -107,51 +124,54 @@ Looks up asset holdings for the given asset; will automatically paginate through
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `indexer` | `default` | An indexer instance |
+| `indexer` | `IndexerClient` | An indexer instance |
 | `assetId` | `number` \| `bigint` | The ID of the asset to look up holdings for |
 | `options?` | [`LookupAssetHoldingsOptions`](../interfaces/types_indexer.LookupAssetHoldingsOptions.md) | Optional options to control the lookup |
 | `paginationLimit?` | `number` | The number of records to return per paginated request, default 1000 |
 
 #### Returns
 
-`Promise`\<[`MiniAssetHolding`](../interfaces/types_indexer.MiniAssetHolding.md)[]\>
+`Promise`\<`algosdk.indexerModels.MiniAssetHolding`[]\>
 
 The list of application results
 
 #### Defined in
 
-[src/indexer-lookup.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L79)
+[src/indexer-lookup.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L72)
 
 ___
 
 ### lookupTransactionById
 
-▸ **lookupTransactionById**(`transactionId`, `indexer`): `Promise`\<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
-
-Looks up a transaction by ID using Indexer.
+▸ **lookupTransactionById**(`transactionId`, `indexer`): `Promise`\<`TransactionResponse`\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `transactionId` | `string` | The ID of the transaction to look up |
-| `indexer` | `default` | An indexer client |
+| `indexer` | `IndexerClient` | An indexer client |
 
 #### Returns
 
-`Promise`\<[`TransactionLookupResult`](../interfaces/types_indexer.TransactionLookupResult.md)\>
+`Promise`\<`TransactionResponse`\>
 
 The result of the look-up
 
+**`Deprecated`**
+
+Use `indexer.lookupTransactionByID(transactionId).do()`.
+Looks up a transaction by ID using Indexer.
+
 #### Defined in
 
-[src/indexer-lookup.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L23)
+[src/indexer-lookup.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L15)
 
 ___
 
 ### searchTransactions
 
-▸ **searchTransactions**(`indexer`, `searchCriteria`, `paginationLimit?`): `Promise`\<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
+▸ **searchTransactions**(`indexer`, `searchCriteria`, `paginationLimit?`): `Promise`\<`algosdk.indexerModels.TransactionsResponse`\>
 
 Allows transactions to be searched for the given criteria.
 
@@ -159,16 +179,16 @@ Allows transactions to be searched for the given criteria.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `indexer` | `default` | An indexer client |
+| `indexer` | `IndexerClient` | An indexer client |
 | `searchCriteria` | (`s`: `default`) => `default` | The criteria to search for |
 | `paginationLimit?` | `number` | The number of records to return per paginated request, default 1000 |
 
 #### Returns
 
-`Promise`\<[`TransactionSearchResults`](../interfaces/types_indexer.TransactionSearchResults.md)\>
+`Promise`\<`algosdk.indexerModels.TransactionsResponse`\>
 
 The search results
 
 #### Defined in
 
-[src/indexer-lookup.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L118)
+[src/indexer-lookup.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/indexer-lookup.ts#L111)

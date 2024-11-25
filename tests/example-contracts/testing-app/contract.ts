@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
@@ -41,7 +41,7 @@ export const getTestingAppCreateParams = async (from: algosdk.Account, metadata:
 }
 
 export const getTestingAppDeployParams = async (deployment: {
-  sender: string
+  sender: Address | string
   metadata: AppDeployMetadata
   codeInjectionValue?: number
   onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak

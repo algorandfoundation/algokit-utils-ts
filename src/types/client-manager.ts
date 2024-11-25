@@ -1,5 +1,4 @@
-import algosdk from 'algosdk'
-import { SuggestedParamsWithMinFee } from 'algosdk/dist/types/types/transactions/base'
+import algosdk, { SuggestedParams } from 'algosdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
@@ -10,7 +9,6 @@ import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } fro
 import Kmd = algosdk.Kmd
 import Indexer = algosdk.Indexer
 import Algodv2 = algosdk.Algodv2
-import IntDecoding = algosdk.IntDecoding
 
 /** Clients from algosdk that interact with the official Algorand APIs */
 export interface AlgoSdkClients {
@@ -110,7 +108,7 @@ export class ClientManager {
     return this._kmd
   }
 
-  private _getNetworkPromise: Promise<SuggestedParamsWithMinFee> | undefined
+  private _getNetworkPromise: Promise<SuggestedParams> | undefined
   /**
    * Get details about the current network.
    * @example Getting genesis ID
@@ -127,11 +125,11 @@ export class ClientManager {
 
     const params = await this._getNetworkPromise
     return {
-      isTestNet: ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisID),
-      isMainNet: ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID),
-      isLocalNet: ClientManager.genesisIdIsLocalNet(params.genesisID),
-      genesisId: params.genesisID,
-      genesisHash: params.genesisHash,
+      isTestNet: ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisID ?? 'unknown'),
+      isMainNet: ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID ?? 'unknown'),
+      isLocalNet: ClientManager.genesisIdIsLocalNet(params.genesisID ?? 'unknown'),
+      genesisId: params.genesisID ?? 'unknown',
+      genesisHash: params.genesisHash ? Buffer.from(params.genesisHash).toString('base64') : 'unknown',
     }
   }
 
@@ -558,7 +556,6 @@ export class ClientManager {
    * Returns an indexer SDK client that automatically retries on idempotent calls
    *
    * @param config The config of the client
-   * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
    * @example AlgoNode (testnet)
    * ```typescript
    *  const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('testnet', 'indexer'))
@@ -574,25 +571,17 @@ export class ClientManager {
    *  const indexer = ClientManager.getIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
    *  await indexer.makeHealthCheck().do()
    * ```
-   * @example Override int decoding for responses
-   * ```typescript
-   *  const indexer = ClientManager.getIndexerClient(config, IntDecoding.BIGINT)
-   * ```
    */
-  public static getIndexerClient(config: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
+  public static getIndexerClient(config: AlgoClientConfig): Indexer {
     const { token, server, port } = config
     const tokenHeader = typeof token === 'string' ? { 'X-Indexer-API-Token': token } : (token ?? {})
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
-    const indexer = new Indexer(httpClientWithRetry)
-    // Use mixed int decoding by default so bigints don't have lost precision
-    indexer.setIntEncoding(overrideIntDecoding ?? IntDecoding.MIXED)
-    return indexer
+    return new Indexer(httpClientWithRetry)
   }
 
   /**
    * Returns an indexer SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
    *
-   * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
    * @example
    *
    *  ```typescript
@@ -601,8 +590,8 @@ export class ClientManager {
    *  await indexer.makeHealthCheck().do()
    *  ```
    */
-  public static getIndexerClientFromEnvironment(overrideIntDecoding?: IntDecoding): Indexer {
-    return ClientManager.getIndexerClient(ClientManager.getIndexerConfigFromEnvironment(), overrideIntDecoding)
+  public static getIndexerClientFromEnvironment(): Indexer {
+    return ClientManager.getIndexerClient(ClientManager.getIndexerConfigFromEnvironment())
   }
 
   /**

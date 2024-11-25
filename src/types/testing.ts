@@ -1,10 +1,9 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgorandClient } from './algorand-client'
-import { TransactionLookupResult } from './indexer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
@@ -28,13 +27,13 @@ export interface AlgorandTestAutomationContext {
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
-  testAccount: Account & TransactionSignerAccount
+  testAccount: Address & TransactionSignerAccount & Account
   /** Generate and fund an additional ephemerally created account */
-  generateAccount: (params: GetTestAccountParams) => Promise<Account & TransactionSignerAccount>
+  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & TransactionSignerAccount>
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
-  waitForIndexerTransaction: (transactionId: string) => Promise<TransactionLookupResult>
+  waitForIndexerTransaction: (transactionId: string) => Promise<algosdk.indexerModels.TransactionResponse>
 }
 
 /**
@@ -96,7 +95,7 @@ export interface LogSnapshotConfig {
   /** Any transaction IDs or transactions to replace the ID for predictably */
   transactions?: (string | Transaction)[]
   /** Any accounts/addresses to replace the address for predictably */
-  accounts?: (string | Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount)[]
+  accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount)[]
   /** Any app IDs to replace predictably */
   apps?: (string | number | bigint)[]
 }

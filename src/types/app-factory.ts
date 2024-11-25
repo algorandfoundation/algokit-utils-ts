@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import {
   AppCompilationResult,
@@ -37,7 +37,7 @@ import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams, AppMethodCall, AppMethodCallTransactionArgument, CommonAppCallParams } from './composer'
 import { Expand } from './expand'
 import { SendParams } from './transaction'
-import SourceMap = algosdk.SourceMap
+import SourceMap = algosdk.ProgramSourceMap
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import ABIValue = algosdk.ABIValue
 import TransactionSigner = algosdk.TransactionSigner
@@ -61,7 +61,7 @@ export interface AppFactoryParams {
   appName?: string
 
   /** Optional address to use for the account to use as the default sender for calls. */
-  defaultSender?: string
+  defaultSender?: Address | string
 
   /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
   defaultSigner?: TransactionSigner
@@ -171,7 +171,7 @@ export class AppFactory {
   private _appName: string
   private _algorand: AlgorandClientInterface
   private _version: string
-  private _defaultSender?: string
+  private _defaultSender?: Address
   private _defaultSigner?: TransactionSigner
   private _deployTimeParams?: TealTemplateParams
   private _updatable?: boolean
@@ -187,7 +187,7 @@ export class AppFactory {
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
     this._version = params.version ?? '1.0'
-    this._defaultSender = params.defaultSender
+    this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
     this._defaultSigner = params.defaultSigner
     this._deployTimeParams = params.deployTimeParams
     this._updatable = params.updatable
@@ -554,7 +554,7 @@ export class AppFactory {
     return result
   }
 
-  private getBareParams<TParams extends { sender?: string } | undefined, TOnComplete extends OnApplicationComplete>(
+  private getBareParams<TParams extends { sender?: Address | string } | undefined, TOnComplete extends OnApplicationComplete>(
     params: TParams,
     onComplete: TOnComplete,
   ) {
@@ -566,7 +566,7 @@ export class AppFactory {
   }
 
   private getABIParams<
-    TParams extends { method: string; sender?: string; args?: AppClientMethodCallParams['args'] },
+    TParams extends { method: string; sender?: Address | string; args?: AppClientMethodCallParams['args'] },
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
@@ -606,11 +606,12 @@ export class AppFactory {
 
   /** Returns the sender for a call, using the `defaultSender`
    * if none provided and throws an error if neither provided */
-  private getSender(sender: string | undefined): string {
+  private getSender(sender: string | Address | undefined): Address {
     if (!sender && !this._defaultSender) {
       throw new Error(`No sender provided and no default sender present in app client for call to app ${this._appName}`)
     }
-    return sender ?? this._defaultSender!
+    const s = sender ?? this._defaultSender!
+    return typeof s === 'string' ? Address.fromString(s) : s
   }
 
   /**

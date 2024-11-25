@@ -80,10 +80,10 @@ export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algod
  * @example
  * const client = algokit.getAppClientByCreatorAndName(
  *     {
- *       app: {appSpec},
- *       sender: {account},
- *       creatorAddress: {account.addr},
- *       findExistingUsing: {indexerClient},
+ *       app: appSpec,
+ *       sender: account,
+ *       creatorAddress: account,
+ *       findExistingUsing: indexerClient,
  *     },
  *     algodClient,
  *   )

@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
@@ -11,7 +11,8 @@ import { SendParams, SendSingleTransactionResult } from './transaction'
 import LogicSigAccount = algosdk.LogicSigAccount
 import Account = algosdk.Account
 import TransactionSigner = algosdk.TransactionSigner
-import AccountInformationModel = algosdk.modelsv2.Account
+
+const address = (address: string | Address) => (typeof address === 'string' ? Address.fromString(address) : address)
 
 /** Result from performing an ensureFunded call. */
 export interface EnsureFundedResult {
@@ -97,13 +98,22 @@ export class AccountManager {
    */
   private signerAccount<T extends TransactionSignerAccount | Account | SigningAccount | LogicSigAccount | MultisigAccount>(
     account: T,
-  ): TransactionSignerAccount & { account: T } {
-    const acc = {
+  ): Address &
+    TransactionSignerAccount & {
+      /* The underlying account that specified this address. */ account: T
+    } {
+    const signer = getAccountTransactionSigner(account)
+    const acc: TransactionSignerAccount = {
       addr: 'addr' in account ? account.addr : account.address(),
-      signer: getAccountTransactionSigner(account),
+      signer: signer,
     }
-    this._accounts[acc.addr] = acc
-    return { ...acc, account }
+    this._accounts[acc.addr.toString()] = acc
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const addressWithAccount = Address.fromString(acc.addr.toString()) as any
+    addressWithAccount.account = account
+    addressWithAccount.addr = acc.addr.toString()
+    addressWithAccount.signer = signer
+    return addressWithAccount as Address & TransactionSignerAccount & { account: T }
   }
 
   /**
@@ -140,8 +150,8 @@ export class AccountManager {
    * ```
    * @returns The `AccountManager` instance for method chaining
    */
-  public setSigner(sender: string, signer: algosdk.TransactionSigner) {
-    this._accounts[sender] = { addr: sender, signer }
+  public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
+    this._accounts[address(sender).toString()] = { addr: address(sender), signer }
     return this
   }
 
@@ -173,8 +183,8 @@ export class AccountManager {
    * ```
    * @returns The `TransactionSigner` or throws an error if not found and no default signer is set
    */
-  public getSigner(sender: string): algosdk.TransactionSigner {
-    const signer = this._accounts[sender]?.signer ?? this._defaultSigner
+  public getSigner(sender: string | Address): algosdk.TransactionSigner {
+    const signer = this._accounts[address(sender).toString()]?.signer ?? this._defaultSigner
     if (!signer) throw new Error(`No signer found for address ${sender}`)
     return signer
   }
@@ -186,15 +196,15 @@ export class AccountManager {
    * @param sender The sender address
    * @example
    * ```typescript
-   * const sender = accountManager.random().addr
+   * const sender = accountManager.random()
    * // ...
    * // Returns the `TransactionSignerAccount` for `sender` that has previously been registered
    * const account = accountManager.getAccount(sender)
    * ```
    * @returns The `TransactionSignerAccount` or throws an error if not found
    */
-  public getAccount(sender: string): TransactionSignerAccount {
-    const account = this._accounts[sender]
+  public getAccount(sender: string | Address): TransactionSignerAccount {
+    const account = this._accounts[address(sender).toString()]
     if (!account) throw new Error(`No signer found for address ${sender}`)
     return account
   }
@@ -212,19 +222,19 @@ export class AccountManager {
    * @param sender The account / address to look up
    * @returns The account information
    */
-  public async getInformation(sender: string | TransactionSignerAccount): Promise<AccountInformation> {
+  public async getInformation(sender: string | Address): Promise<AccountInformation> {
     const {
       round,
       lastHeartbeat = undefined,
       lastProposed = undefined,
+      address,
       ...account
-    } = AccountInformationModel.from_obj_for_encoding(
-      await this._clientManager.algod.accountInformation(typeof sender === 'string' ? sender : sender.addr).do(),
-    )
+    } = await this._clientManager.algod.accountInformation(sender).do()
 
     return {
       ...account,
       // None of the Number types can practically overflow 2^53
+      address: Address.fromString(address),
       balance: AlgoAmount.MicroAlgo(Number(account.amount)),
       amountWithoutPendingRewards: AlgoAmount.MicroAlgo(Number(account.amountWithoutPendingRewards)),
       minBalance: AlgoAmount.MicroAlgo(Number(account.minBalance)),
@@ -257,7 +267,7 @@ export class AccountManager {
    * @param sender The optional sender address to use this signer for (aka a rekeyed account)
    * @returns The account
    */
-  public fromMnemonic(mnemonicSecret: string, sender?: string) {
+  public fromMnemonic(mnemonicSecret: string, sender?: string | Address) {
     const account = algosdk.mnemonicToSecretKey(mnemonicSecret)
     return this.signerAccount(new SigningAccount(account, sender))
   }
@@ -274,8 +284,8 @@ export class AccountManager {
    * @param sender The sender address to use as the new sender
    * @returns The account
    */
-  public rekeyed(sender: string, account: TransactionSignerAccount) {
-    return this.signerAccount({ addr: sender, signer: account.signer })
+  public rekeyed(sender: string | Address, account: TransactionSignerAccount) {
+    return this.signerAccount({ addr: address(sender), signer: account.signer })
   }
 
   /**
@@ -345,7 +355,7 @@ export class AccountManager {
     name: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean,
-    sender?: string,
+    sender?: string | Address,
   ) {
     const account = await this._kmdAccountManager.getWalletAccount(name, predicate, sender)
     if (!account) throw new Error(`Unable to find KMD account ${name}${predicate ? ' with predicate' : ''}`)
@@ -475,23 +485,23 @@ export class AccountManager {
    * @returns The result of the transaction and the transaction that was sent
    */
   async rekeyAccount(
-    account: string | TransactionSignerAccount,
-    rekeyTo: string | TransactionSignerAccount,
+    account: string | Address,
+    rekeyTo: string | Address | TransactionSignerAccount,
     options?: Omit<CommonTransactionParams, 'sender'> & SendParams,
   ): Promise<SendSingleTransactionResult> {
     const result = await this._getComposer()
       .addPayment({
         ...options,
-        sender: typeof account === 'string' ? account : account.addr,
-        receiver: typeof account === 'string' ? account : account.addr,
+        sender: address(account),
+        receiver: address(account),
         amount: AlgoAmount.MicroAlgo(0),
-        rekeyTo: typeof rekeyTo === 'string' ? rekeyTo : rekeyTo.addr,
+        rekeyTo: address(typeof rekeyTo === 'object' && 'addr' in rekeyTo ? rekeyTo.addr : rekeyTo),
       })
       .send(options)
 
     // If the rekey is a signing account set it as the signer for this account
-    if (typeof rekeyTo !== 'string') {
-      this.rekeyed(typeof account === 'string' ? account : account.addr, rekeyTo)
+    if (typeof rekeyTo === 'object' && 'addr' in rekeyTo) {
+      this.rekeyed(account, rekeyTo)
     }
 
     Config.getLogger(options?.suppressLog).info(`Rekeyed ${account} to ${rekeyTo} via transaction ${result.txIds.at(-1)}`)
@@ -499,7 +509,7 @@ export class AccountManager {
     return { ...result, transaction: result.transactions.at(-1)!, confirmation: result.confirmations.at(-1)! }
   }
 
-  private async _getEnsureFundedAmount(sender: string, minSpendingBalance: AlgoAmount, minFundingIncrement?: AlgoAmount) {
+  private async _getEnsureFundedAmount(sender: Address, minSpendingBalance: AlgoAmount, minFundingIncrement?: AlgoAmount) {
     const accountInfo = await this.getInformation(sender)
     const currentSpendingBalance = accountInfo.balance.microAlgo - accountInfo.minBalance.microAlgo
 
@@ -533,15 +543,15 @@ export class AccountManager {
    * - `undefined` if no funds were needed.
    */
   async ensureFunded(
-    accountToFund: string | TransactionSignerAccount,
-    dispenserAccount: string | TransactionSignerAccount,
+    accountToFund: string | Address,
+    dispenserAccount: string | Address,
     minSpendingBalance: AlgoAmount,
     options?: {
       minFundingIncrement?: AlgoAmount
     } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
-    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+    const addressToFund = address(accountToFund)
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
     if (!amountFunded) return undefined
@@ -549,7 +559,7 @@ export class AccountManager {
     const result = await this._getComposer()
       .addPayment({
         ...options,
-        sender: typeof dispenserAccount === 'string' ? dispenserAccount : dispenserAccount.addr,
+        sender: address(dispenserAccount),
         receiver: addressToFund,
         amount: amountFunded,
       })
@@ -595,14 +605,14 @@ export class AccountManager {
    * - `undefined` if no funds were needed.
    */
   async ensureFundedFromEnvironment(
-    accountToFund: string | TransactionSignerAccount,
+    accountToFund: string | Address,
     minSpendingBalance: AlgoAmount,
     options?: {
       minFundingIncrement?: AlgoAmount
     } & SendParams &
       Omit<CommonTransactionParams, 'sender'>,
   ): Promise<(SendSingleTransactionResult & EnsureFundedResult) | undefined> {
-    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+    const addressToFund = address(accountToFund)
     const dispenserAccount = await this.dispenserFromEnvironment()
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
@@ -611,7 +621,7 @@ export class AccountManager {
     const result = await this._getComposer()
       .addPayment({
         ...options,
-        sender: dispenserAccount.addr,
+        sender: dispenserAccount,
         receiver: addressToFund,
         amount: amountFunded,
       })
@@ -651,7 +661,7 @@ export class AccountManager {
    * - `undefined` if no funds were needed.
    */
   async ensureFundedFromTestNetDispenserApi(
-    accountToFund: string | TransactionSignerAccount,
+    accountToFund: string | Address,
     dispenserClient: TestNetDispenserApiClient,
     minSpendingBalance: AlgoAmount,
     options?: {
@@ -662,7 +672,7 @@ export class AccountManager {
       throw new Error('Attempt to fund using TestNet dispenser API on non TestNet network.')
     }
 
-    const addressToFund = typeof accountToFund === 'string' ? accountToFund : accountToFund.addr
+    const addressToFund = address(accountToFund)
 
     const amountFunded = await this._getEnsureFundedAmount(addressToFund, minSpendingBalance, options?.minFundingIncrement)
     if (!amountFunded) return undefined

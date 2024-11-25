@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-bridge'
 import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'
@@ -186,11 +186,17 @@ export async function deployApp(
     onUpdate: deployment.onUpdate,
     existingDeployments: deployment.existingDeployments
       ? {
-          creator: deployment.existingDeployments.creator,
+          creator: Address.fromString(deployment.existingDeployments.creator),
           apps: Object.fromEntries(
             Object.entries(deployment.existingDeployments.apps).map(([name, app]) => [
               name,
-              { ...app, appId: BigInt(app.appId), createdRound: BigInt(app.createdRound), updatedRound: BigInt(app.updatedRound) },
+              {
+                ...app,
+                appAddress: Address.fromString(app.appAddress),
+                appId: BigInt(app.appId),
+                createdRound: BigInt(app.createdRound),
+                updatedRound: BigInt(app.updatedRound),
+              },
             ]),
           ),
         }
@@ -200,7 +206,13 @@ export async function deployApp(
     suppressLog: deployment.suppressLog,
   })
 
-  return { ...result, appId: Number(result.appId), createdRound: Number(result.createdRound), updatedRound: Number(result.updatedRound) }
+  return {
+    ...result,
+    appAddress: result.appAddress.toString(),
+    appId: Number(result.appId),
+    createdRound: Number(result.createdRound),
+    updatedRound: Number(result.updatedRound),
+  }
 }
 
 /**
@@ -233,11 +245,17 @@ export async function getCreatorAppsByName(creatorAccount: SendTransactionFrom |
   const lookup = await new AppDeployer(undefined!, undefined!, indexer).getCreatorAppsByName(getSenderAddress(creatorAccount))
 
   return {
-    creator: lookup.creator,
+    creator: lookup.creator.toString(),
     apps: Object.fromEntries(
       Object.entries(lookup.apps).map(([name, app]) => [
         name,
-        { ...app, appId: Number(app.appId), createdRound: Number(app.createdRound), updatedRound: Number(app.updatedRound) },
+        {
+          ...app,
+          appAddress: app.appAddress.toString(),
+          appId: Number(app.appId),
+          createdRound: Number(app.createdRound),
+          updatedRound: Number(app.updatedRound),
+        },
       ]),
     ),
   }

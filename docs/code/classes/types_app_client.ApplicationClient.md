@@ -75,7 +75,7 @@ Application client - a class that wraps an ARC-0032 app spec and provides high p
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appDetails` | [`AppSpecAppDetails`](../modules/types_app_client.md#appspecappdetails) | The details of the app |
-| `algod` | `default` | An algod instance |
+| `algod` | `AlgodClient` | An algod instance |
 
 #### Returns
 
@@ -128,7 +128,7 @@ ___
 
 ### \_approvalSourceMap
 
-• `Private` **\_approvalSourceMap**: `undefined` \| `SourceMap`
+• `Private` **\_approvalSourceMap**: `undefined` \| `ProgramSourceMap`
 
 #### Defined in
 
@@ -138,7 +138,7 @@ ___
 
 ### \_clearSourceMap
 
-• `Private` **\_clearSourceMap**: `undefined` \| `SourceMap`
+• `Private` **\_clearSourceMap**: `undefined` \| `ProgramSourceMap`
 
 #### Defined in
 
@@ -158,7 +158,7 @@ ___
 
 ### algod
 
-• `Private` **algod**: `default`
+• `Private` **algod**: `AlgodClient`
 
 #### Defined in
 
@@ -198,7 +198,7 @@ ___
 
 ### indexer
 
-• `Private` `Optional` **indexer**: `default`
+• `Private` `Optional` **indexer**: `IndexerClient`
 
 #### Defined in
 

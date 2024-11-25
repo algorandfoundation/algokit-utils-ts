@@ -1,3 +1,5 @@
+import { Address } from 'algosdk'
+
 const DISPENSER_BASE_URL = 'https://api.dispenser.algorandfoundation.tools'
 const DEFAULT_DISPENSER_REQUEST_TIMEOUT = 15
 const DISPENSER_ACCESS_TOKEN_KEY = 'ALGOKIT_DISPENSER_ACCESS_TOKEN'
@@ -152,11 +154,15 @@ export class TestNetDispenserApiClient {
    *
    * @returns DispenserFundResponse: An object containing the transaction ID and funded amount.
    */
-  async fund(address: string, amount: number | bigint): Promise<DispenserFundResponse> {
+  async fund(address: string | Address, amount: number | bigint): Promise<DispenserFundResponse> {
     const response = await this.processDispenserRequest(
       this.authToken,
       `fund/${dispenserAssets[DispenserAssetName.Algo].assetId}`,
-      { receiver: address, amount: Number(amount), assetID: dispenserAssets[DispenserAssetName.Algo].assetId },
+      {
+        receiver: typeof address === 'string' ? address : address.toString(),
+        amount: Number(amount),
+        assetID: dispenserAssets[DispenserAssetName.Algo].assetId,
+      },
       'POST',
     )
 

@@ -186,8 +186,8 @@ const deployer = algorand.account.fromEnvironment('DEPLOYER', (1).algo())
 
 // Create the typed app factory
 const factory = algorand.client.getTypedAppFactory(HelloWorldAppFactory, {
-  creatorAddress: deployer.addr,
-  defaultSender: deployer.addr,
+  creatorAddress: deployer,
+  defaultSender: deployer,
 })
 
 // Create the app and get a typed app client for the created app (note: this creates a new instance of the app every time,
