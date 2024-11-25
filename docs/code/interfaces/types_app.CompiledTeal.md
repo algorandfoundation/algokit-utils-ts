@@ -56,7 +56,7 @@ ___
 
 ### sourceMap
 
-• **sourceMap**: `SourceMap`
+• **sourceMap**: `ProgramSourceMap`
 
 Source map from the compilation
 

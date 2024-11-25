@@ -25,9 +25,9 @@ describe('deploy-app', () => {
     const app1 = await algorand.send.appCreate(await getTestingAppCreateParams(testAccount, creationMetadata))
     await waitForIndexer()
 
-    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
+    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
-    expect(apps.creator).toBe(testAccount.addr)
+    expect(apps.creator).toBe(testAccount)
     expect(Object.keys(apps.apps)).toEqual([name])
     const app = apps.apps[name]
     expect(app.appId).toBe(app1.appId)
@@ -49,7 +49,7 @@ describe('deploy-app', () => {
     const app3 = await algorand.send.appCreate({ ...(await getTestingAppCreateParams(testAccount, creationMetadata)), lease: '3' })
     await waitForIndexer()
 
-    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
+    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
     expect(apps.apps[name].appId).not.toBe(app1.appId)
     expect(apps.apps[name].appId).not.toBe(app2.appId)
@@ -58,6 +58,7 @@ describe('deploy-app', () => {
 
   test('Created, updated and deleted apps are retrieved by name with deployment metadata', async () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
+
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
     const name3 = 'APP_3'
@@ -68,12 +69,12 @@ describe('deploy-app', () => {
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
     const update1 = await algorand.send.appUpdate({ ...(await getTestingAppCreateParams(testAccount, updateMetadata)), appId: app1.appId })
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delete3 = await algorand.send.appDelete({ appId: app3.appId, sender: testAccount.addr })
+    const delete3 = await algorand.send.appDelete({ appId: app3.appId, sender: testAccount })
     await waitForIndexer()
 
-    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount.addr)
+    const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
-    expect(apps.creator).toBe(testAccount.addr)
+    expect(apps.creator).toBe(testAccount)
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
     const app1Data = apps.apps[name]
     expect(app1Data.appId).toBe(app1.appId)
@@ -99,7 +100,7 @@ describe('deploy-app', () => {
   test('Deploy new app', async () => {
     const { algorand, testAccount } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: getMetadata(),
     })
     const result = await algorand.appDeployer.deploy(deployment)
@@ -128,7 +129,7 @@ describe('deploy-app', () => {
   test('Fail to deploy immutable app without TMPL_UPDATABLE', async () => {
     const { algorand, testAccount } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: getMetadata({ updatable: true }),
     })
     deployment.createParams.approvalProgram = deployment.createParams.approvalProgram.replace(/TMPL_UPDATABLE/g, '0')
@@ -140,7 +141,7 @@ describe('deploy-app', () => {
   test('Fail to deploy permanent app without TMPL_DELETABLE', async () => {
     const { algorand, testAccount } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: getMetadata({ deletable: true }),
     })
     deployment.createParams.approvalProgram = deployment.createParams.approvalProgram.replace(/TMPL_DELETABLE/g, '0')
@@ -153,7 +154,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: true })
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -161,7 +162,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'update',
@@ -193,7 +194,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ updatable: false })
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -201,7 +202,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'update',
@@ -229,7 +230,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -237,7 +238,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
       codeInjectionValue: 2,
       onUpdate: 'fail',
@@ -260,7 +261,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: true })
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -268,7 +269,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'replace',
@@ -303,7 +304,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })) as AppDeployParams
 
@@ -312,7 +313,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 2,
       onUpdate: 'replace',
@@ -340,7 +341,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: true })
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -348,7 +349,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
       breakSchema: true,
       onSchemaBreak: 'replace',
@@ -383,7 +384,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })) as AppDeployParams
 
@@ -392,7 +393,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
       breakSchema: true,
       onSchemaBreak: 'replace',
@@ -420,7 +421,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -428,7 +429,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
       onSchemaBreak: 'fail',
       breakSchema: true,
@@ -452,7 +453,7 @@ describe('deploy-app', () => {
   test('Do nothing if deploying app with no changes', async () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const deployment = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: getMetadata(),
     })
     const initialDeployment = await algorand.appDeployer.deploy(deployment)
@@ -486,7 +487,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -494,7 +495,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
       onSchemaBreak: 'append',
       breakSchema: true,
@@ -526,7 +527,7 @@ describe('deploy-app', () => {
     const { algorand, testAccount, waitForIndexer } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
@@ -534,7 +535,7 @@ describe('deploy-app', () => {
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
-      sender: testAccount.addr,
+      sender: testAccount,
       metadata: { ...metadata, version: '2.0' },
       codeInjectionValue: 3,
       onUpdate: 'append',

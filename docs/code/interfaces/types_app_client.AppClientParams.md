@@ -75,7 +75,7 @@ ___
 
 ### approvalSourceMap
 
-• `Optional` **approvalSourceMap**: `SourceMap`
+• `Optional` **approvalSourceMap**: `ProgramSourceMap`
 
 Optional source map for the approval program
 
@@ -87,7 +87,7 @@ ___
 
 ### clearSourceMap
 
-• `Optional` **clearSourceMap**: `SourceMap`
+• `Optional` **clearSourceMap**: `ProgramSourceMap`
 
 Optional source map for the clear state program
 
@@ -99,7 +99,7 @@ ___
 
 ### defaultSender
 
-• `Optional` **defaultSender**: `string`
+• `Optional` **defaultSender**: `string` \| `Address`
 
 Optional address to use for the account to use as the default sender for calls.
 

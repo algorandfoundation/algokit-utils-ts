@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
@@ -14,9 +14,12 @@ import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
-import encodeAddress = algosdk.encodeAddress
 import SimulateResponse = algosdk.modelsv2.SimulateResponse
 import modelsv2 = algosdk.modelsv2
+
+const address = (address: string | Address): Address => {
+  return typeof address === 'string' ? Address.fromString(address) : address
+}
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
@@ -29,7 +32,7 @@ export type SimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
   /** The address of the account sending the transaction. */
-  sender: string
+  sender: string | Address
   /** The function used to sign transaction(s); if not specified then
    *  an attempt will be made to find a registered signer for the
    *  given `sender` or use a default signer (if configured).
@@ -39,7 +42,7 @@ export type CommonTransactionParams = {
    *
    * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
    */
-  rekeyTo?: string
+  rekeyTo?: string | Address
   /** Note to attach to the transaction. Max of 1000 bytes. */
   note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window.
@@ -55,7 +58,7 @@ export type CommonTransactionParams = {
   /** Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. */
   maxFee?: AlgoAmount
   /** How many rounds the transaction should be valid for, if not specified then the registered default validity window will be used. */
-  validityWindow?: number
+  validityWindow?: number | bigint
   /**
    * Set the first round this transaction is valid.
    * If left undefined, the value from algod will be used.
@@ -70,14 +73,14 @@ export type CommonTransactionParams = {
 /** Parameters to define a payment transaction. */
 export type PaymentParams = CommonTransactionParams & {
   /** The address of the account that will receive the Algo */
-  receiver: string
+  receiver: string | Address
   /** Amount to send */
   amount: AlgoAmount
   /** If given, close the sender account and send the remaining balance to this address
    *
    * *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly.
    */
-  closeRemainderTo?: string
+  closeRemainderTo?: string | Address
 }
 
 /** Parameters to define an asset create transaction.
@@ -156,7 +159,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the `manager` the asset becomes permanently immutable.
    */
-  manager?: string
+  manager?: string | Address
 
   /**
    * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
@@ -171,7 +174,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
    */
-  reserve?: string
+  reserve?: string | Address
 
   /**
    * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
@@ -180,7 +183,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
    */
-  freeze?: string
+  freeze?: string | Address
 
   /**
    * The address of the optional account that can clawback holdings of this asset from any account.
@@ -191,7 +194,7 @@ export type AssetCreateParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) at asset creation or subsequently set to empty by the manager the field is permanently empty.
    */
-  clawback?: string
+  clawback?: string | Address
 }
 
 /** Parameters to define an asset reconfiguration transaction.
@@ -209,7 +212,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the asset will become permanently immutable.
    */
-  manager: string | undefined
+  manager: string | Address | undefined
   /**
    * The address of the optional account that holds the reserve (uncirculated supply) units of the asset.
    *
@@ -223,7 +226,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the field will become permanently empty.
    */
-  reserve?: string
+  reserve?: string | Address
   /**
    * The address of the optional account that can be used to freeze or unfreeze holdings of this asset for any account.
    *
@@ -231,7 +234,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the field will become permanently empty.
    */
-  freeze?: string
+  freeze?: string | Address
   /**
    * The address of the optional account that can clawback holdings of this asset from any account.
    *
@@ -241,7 +244,7 @@ export type AssetConfigParams = CommonTransactionParams & {
    *
    * If not set (`undefined` or `""`) the field will become permanently empty.
    */
-  clawback?: string
+  clawback?: string | Address
 }
 
 /** Parameters to define an asset freeze transaction. */
@@ -249,7 +252,7 @@ export type AssetFreezeParams = CommonTransactionParams & {
   /** The ID of the asset to freeze/unfreeze */
   assetId: bigint
   /** The address of the account to freeze or unfreeze */
-  account: string
+  account: string | Address
   /** Whether the assets in the account should be frozen */
   frozen: boolean
 }
@@ -270,19 +273,19 @@ export type AssetTransferParams = CommonTransactionParams & {
   /** Amount of the asset to transfer (in smallest divisible (decimal) units). */
   amount: bigint
   /** The address of the account that will receive the asset unit(s). */
-  receiver: string
+  receiver: string | Address
   /** Optional address of an account to clawback the asset from.
    *
    * Requires the sender to be the clawback account.
    *
    * **Warning:** Be careful with this parameter as it can lead to unexpected loss of funds if not used correctly.
    */
-  clawbackTarget?: string
+  clawbackTarget?: string | Address
   /** Optional address of an account to close the asset position to.
    *
    * **Warning:** Be careful with this parameter as it can lead to loss of funds if not used correctly.
    */
-  closeAssetTo?: string
+  closeAssetTo?: string | Address
 }
 
 /** Parameters to define an asset opt-in transaction. */
@@ -299,7 +302,7 @@ export type AssetOptOutParams = CommonTransactionParams & {
    * The address of the asset creator account to close the asset
    *   position to (any remaining asset units will be sent to this account).
    */
-  creator: string
+  creator: string | Address
 }
 
 /** Parameters to define an online key registration transaction. */
@@ -333,7 +336,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   /** Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/avm/teal/#argument-passing). */
   args?: Uint8Array[]
   /** Any account addresses to add to the [accounts array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
-  accountReferences?: string[]
+  accountReferences?: (string | Address)[]
   /** The ID of any apps to load to the [foreign apps array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
   appReferences?: bigint[]
   /** The ID of any assets to load to the [foreign assets array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
@@ -465,13 +468,13 @@ export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
   algod: algosdk.Algodv2
   /** The function used to get the TransactionSigner for a given address */
-  getSigner: (address: string) => algosdk.TransactionSigner
+  getSigner: (address: string | Address) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
   getSuggestedParams?: () => Promise<algosdk.SuggestedParams>
   /** How many rounds a transaction should be valid for by default; if not specified
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
-  defaultValidityWindow?: number
+  defaultValidityWindow?: bigint
   /** An existing `AppManager` to use to manage app compilation and cache compilation results.
    *
    * If not specified than an ephemeral one will be created.
@@ -510,10 +513,10 @@ export class TransactionComposer {
   private getSuggestedParams: () => Promise<algosdk.SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
-  private getSigner: (address: string) => algosdk.TransactionSigner
+  private getSigner: (address: string | Address) => algosdk.TransactionSigner
 
   /** The default transaction validity window */
-  private defaultValidityWindow = 10
+  private defaultValidityWindow = 10n
 
   /** Whether the validity window was explicitly set on construction */
   private defaultValidityWindowIsExplicit = false
@@ -543,7 +546,7 @@ export class TransactionComposer {
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
     this.txns.push({
       txn: transaction,
-      signer: signer ?? this.getSigner(algosdk.encodeAddress(transaction.from.publicKey)),
+      signer: signer ?? this.getSigner(transaction.sender),
       type: 'txnWithSigner',
     })
 
@@ -773,17 +776,12 @@ export class TransactionComposer {
   }
 
   /** Build an ATC and return transactions ready to be incorporated into a broader set of transactions this composer is composing */
-  private buildAtc(
-    atc: algosdk.AtomicTransactionComposer,
-    processTransaction?: (txn: algosdk.Transaction, index: number) => algosdk.Transaction,
-  ): algosdk.TransactionWithSigner[] {
+  private buildAtc(atc: algosdk.AtomicTransactionComposer): algosdk.TransactionWithSigner[] {
     const group = atc.buildGroup()
 
     const txnWithSigners = group.map((ts, idx) => {
       // Remove underlying group ID from the transaction since it will be re-grouped when this TransactionComposer is built
       ts.txn.group = undefined
-      // Process transaction if a function is provided
-      ts.txn = processTransaction?.(ts.txn, idx) ?? ts.txn
       // If this was a method call stash the ABIMethod for later
       if (atc['methodCalls'].get(idx)) {
         this.txnMethodMap.set(ts.txn.txID(), atc['methodCalls'].get(idx))
@@ -794,25 +792,34 @@ export class TransactionComposer {
     return txnWithSigners
   }
 
-  private commonTxnBuildStep(params: CommonTransactionParams, txn: algosdk.Transaction, suggestedParams: algosdk.SuggestedParams) {
-    if (params.lease) txn.addLease(encodeLease(params.lease)!)
-    if (params.rekeyTo) txn.addRekey(params.rekeyTo)
+  private commonTxnBuildStep<TParams extends algosdk.CommonTransactionParams>(
+    buildTxn: (params: TParams) => Transaction,
+    params: CommonTransactionParams,
+    txnParams: TParams,
+  ): Transaction {
+    // We are going to mutate suggested params, let's create a clone first
+    txnParams.suggestedParams = { ...txnParams.suggestedParams }
+    if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies algosdk.Transaction['lease']
+    if (params.rekeyTo) txnParams.rekeyTo = address(params.rekeyTo) satisfies algosdk.Transaction['rekeyTo']
     const encoder = new TextEncoder()
-    if (params.note) txn.note = typeof params.note === 'string' ? encoder.encode(params.note) : params.note
+    if (params.note)
+      txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies algosdk.Transaction['note']
 
     if (params.firstValidRound) {
-      txn.firstRound = Number(params.firstValidRound)
+      txnParams.suggestedParams.firstValid = params.firstValidRound
     }
 
     if (params.lastValidRound) {
-      txn.lastRound = Number(params.lastValidRound)
+      txnParams.suggestedParams.lastValid = params.lastValidRound
     } else {
       // If the validity window isn't set in this transaction or by default and we are pointing at
       //  LocalNet set a bigger window to avoid dead transactions
-      const window =
-        params.validityWindow ??
-        (!this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisID) ? 1000 : this.defaultValidityWindow)
-      txn.lastRound = txn.firstRound + window
+      const window = params.validityWindow
+        ? BigInt(params.validityWindow)
+        : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(txnParams.suggestedParams.genesisID ?? 'unknown')
+          ? 1000n
+          : this.defaultValidityWindow
+      txnParams.suggestedParams.lastValid = BigInt(txnParams.suggestedParams.firstValid) + window
     }
 
     if (params.staticFee !== undefined && params.extraFee !== undefined) {
@@ -820,13 +827,13 @@ export class TransactionComposer {
     }
 
     if (params.staticFee !== undefined) {
-      txn.fee = Number(params.staticFee.microAlgo)
-    } else {
-      txn.fee = txn.estimateSize() * suggestedParams.fee || algosdk.ALGORAND_MIN_TX_FEE
-      if (params.extraFee) txn.fee += Number(params.extraFee.microAlgo)
+      txnParams.suggestedParams.fee = params.staticFee.microAlgo
+      txnParams.suggestedParams.flatFee = true
     }
-    txn.flatFee = true
 
+    const txn = buildTxn(txnParams)
+
+    if (params.extraFee) txn.fee += params.extraFee.microAlgo
     if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
       throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
     }
@@ -896,7 +903,7 @@ export class TransactionComposer {
             ? 'signer' in params.signer
               ? params.signer.signer
               : params.signer
-            : this.getSigner(encodeAddress(txn.from.publicKey))
+            : this.getSigner(txn.sender)
           : TransactionComposer.NULL_SIGNER,
       })
     }
@@ -918,7 +925,7 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
-    methodAtc.addMethodCall({
+    const txnParams = {
       appID: appId,
       sender: params.sender,
       suggestedParams,
@@ -954,51 +961,54 @@ export class TransactionComposer {
       note: undefined,
       lease: undefined,
       rekeyTo: undefined,
-    })
+    }
+
+    // Build the transaction
+    this.commonTxnBuildStep(
+      (txnParams) => {
+        methodAtc.addMethodCall(txnParams)
+        return methodAtc.buildGroup()[methodAtc.count() - 1].txn
+      },
+      params,
+      txnParams,
+    )
 
     // Process the ATC to get a set of transactions ready for broader grouping
-    //  and with the common build step to set fees and validity rounds
-    return this.buildAtc(methodAtc, (txn, idx) =>
-      idx === methodAtc.count() - 1 ? this.commonTxnBuildStep(params, txn, suggestedParams) : txn,
-    )
+    return this.buildAtc(methodAtc)
   }
 
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
-    const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      from: params.sender,
-      to: params.receiver,
+    return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
+      sender: params.sender,
+      receiver: params.receiver,
       amount: params.amount.microAlgo,
       closeRemainderTo: params.closeRemainderTo,
       suggestedParams,
     })
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
   private buildAssetCreate(params: AssetCreateParams, suggestedParams: algosdk.SuggestedParams) {
-    const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-      from: params.sender,
+    return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
+      sender: params.sender,
       total: params.total,
       decimals: params.decimals ?? 0,
       assetName: params.assetName,
       unitName: params.unitName,
       assetURL: params.url,
       defaultFrozen: params.defaultFrozen ?? false,
-      assetMetadataHash: params.metadataHash,
+      assetMetadataHash: typeof params.metadataHash === 'string' ? Buffer.from(params.metadataHash, 'utf-8') : params.metadataHash,
       manager: params.manager,
       reserve: params.reserve,
       freeze: params.freeze,
       clawback: params.clawback,
       suggestedParams,
     })
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
   private buildAssetConfig(params: AssetConfigParams, suggestedParams: algosdk.SuggestedParams) {
-    const txn = algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject({
-      from: params.sender,
-      assetIndex: Number(params.assetId),
+    return this.commonTxnBuildStep(algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject, params, {
+      sender: params.sender,
+      assetIndex: params.assetId,
       suggestedParams,
       manager: params.manager,
       reserve: params.reserve,
@@ -1006,48 +1016,40 @@ export class TransactionComposer {
       clawback: params.clawback,
       strictEmptyAddressChecking: false,
     })
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
   private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: algosdk.SuggestedParams) {
-    const txn = algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject({
-      from: params.sender,
-      assetIndex: Number(params.assetId),
+    return this.commonTxnBuildStep(algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject, params, {
+      sender: params.sender,
+      assetIndex: params.assetId,
       suggestedParams,
     })
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
   private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: algosdk.SuggestedParams) {
-    const txn = algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject({
-      from: params.sender,
-      assetIndex: Number(params.assetId),
+    return this.commonTxnBuildStep(algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject, params, {
+      sender: params.sender,
+      assetIndex: params.assetId,
       freezeTarget: params.account,
-      freezeState: params.frozen,
+      frozen: params.frozen,
       suggestedParams,
     })
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
   private buildAssetTransfer(params: AssetTransferParams, suggestedParams: algosdk.SuggestedParams) {
-    const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-      from: params.sender,
-      to: params.receiver,
-      assetIndex: Number(params.assetId),
+    return this.commonTxnBuildStep(algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject, params, {
+      sender: params.sender,
+      receiver: params.receiver,
+      assetIndex: params.assetId,
       amount: params.amount,
       suggestedParams,
       closeRemainderTo: params.closeAssetTo,
-      revocationTarget: params.clawbackTarget,
+      assetSender: params.clawbackTarget,
     })
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
   private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: algosdk.SuggestedParams) {
-    const appId = Number('appId' in params ? params.appId : 0n)
+    const appId = 'appId' in params ? params.appId : 0n
     const approvalProgram =
       'approvalProgram' in params
         ? typeof params.approvalProgram === 'string'
@@ -1062,7 +1064,7 @@ export class TransactionComposer {
         : undefined
 
     const sdkParams = {
-      from: params.sender,
+      sender: params.sender,
       suggestedParams,
       appArgs: params.args,
       onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
@@ -1074,14 +1076,12 @@ export class TransactionComposer {
       clearProgram: clearStateProgram,
     }
 
-    let txn: algosdk.Transaction
-
-    if (appId === 0) {
+    if (appId === 0n) {
       if (sdkParams.approvalProgram === undefined || sdkParams.clearProgram === undefined) {
         throw new Error('approvalProgram and clearStateProgram are required for application creation')
       }
 
-      txn = algosdk.makeApplicationCreateTxnFromObject({
+      return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, {
         ...sdkParams,
         extraPages:
           'extraProgramPages' in params
@@ -1095,43 +1095,30 @@ export class TransactionComposer {
         clearProgram: clearStateProgram!,
       })
     } else {
-      txn = algosdk.makeApplicationCallTxnFromObject({ ...sdkParams, appIndex: appId })
+      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appIndex: appId })
     }
-
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
   }
 
   private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
-    let txn: algosdk.Transaction
-
     if ('voteKey' in params) {
-      // algosdk throws when voteFirst is 0, so we need to set it to 1, then switch back to 0 after creating the transaction
-      const voteFirst = params.voteFirst === 0n ? 1n : params.voteFirst
-
-      txn = algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject({
-        from: params.sender,
+      return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
+        sender: params.sender,
         voteKey: params.voteKey,
         selectionKey: params.selectionKey,
-        voteFirst: Number(voteFirst),
-        voteLast: Number(params.voteLast),
-        voteKeyDilution: Number(params.voteKeyDilution),
+        voteFirst: params.voteFirst,
+        voteLast: params.voteLast,
+        voteKeyDilution: params.voteKeyDilution,
         suggestedParams,
         nonParticipation: false,
-        stateProofKey: params.stateProofKey as string | Uint8Array,
-      })
-
-      if (params.voteFirst === 0n) {
-        txn.voteFirst = 0
-      }
-    } else {
-      txn = algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject({
-        from: params.sender,
-        suggestedParams,
-        nonParticipation: params.preventAccountFromEverParticipatingAgain,
+        stateProofKey: params.stateProofKey,
       })
     }
 
-    return this.commonTxnBuildStep(params, txn, suggestedParams)
+    return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
+      sender: params.sender,
+      suggestedParams,
+      nonParticipation: params.preventAccountFromEverParticipatingAgain,
+    })
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
@@ -1282,9 +1269,9 @@ export class TransactionComposer {
 
     let waitRounds = params?.maxRoundsToWaitForConfirmation
     if (waitRounds === undefined) {
-      const lastRound = group.reduce((max, txn) => Math.max(txn.txn.lastRound, max), 0)
-      const { firstRound } = await this.getSuggestedParams()
-      waitRounds = lastRound - firstRound + 1
+      const lastRound = group.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
+      const { firstValid: firstRound } = await this.getSuggestedParams()
+      waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
     }
 
     return await sendAtomicTransactionComposer(

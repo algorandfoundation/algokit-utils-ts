@@ -15,7 +15,7 @@ describe('ARC32: app-factory-and-app-client', () => {
   const localnet = algorandFixture()
   beforeEach(async () => {
     await localnet.beforeEach()
-    factory = await localnet.algorand.client.getAppFactory({ appSpec, defaultSender: localnet.context.testAccount.addr })
+    factory = await localnet.algorand.client.getAppFactory({ appSpec, defaultSender: localnet.context.testAccount })
   }, 10_000)
 
   let appSpec: AppSpec
@@ -46,7 +46,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -55,7 +55,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     const factory = algorand.client.getAppFactory({
       appSpec,
-      defaultSender: testAccount.addr,
+      defaultSender: testAccount,
       deployTimeParams: {
         UPDATABLE: 0,
         DELETABLE: 0,
@@ -79,10 +79,10 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
     })
 
-    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -107,7 +107,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
     expect(app.compiledClear).toBeTruthy()
   })
@@ -126,7 +126,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
+    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
     expect(app.return).toBe('arg_io')
   })
 
@@ -150,7 +150,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(BigInt(app.confirmation.confirmedRound ?? 0))
+    expect(app.updatedRound).toBe(app.confirmation.confirmedRound ?? 0n)
   })
 
   test('Deploy app - update (abi)', async () => {
@@ -177,8 +177,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(BigInt(app.confirmation.confirmedRound ?? 0))
-    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.updatedRound).toBe(app.confirmation.confirmedRound ?? 0n)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return).toBe('arg_io')
   })
 
@@ -202,8 +202,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(BigInt(app.deleteResult.transaction.appIndex)).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -236,8 +236,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(BigInt(app.deleteResult.transaction.appIndex)).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
     expect(app.return).toBe('arg_io')
     expect(app.deleteReturn).toBe('arg2_io')
   })
@@ -273,15 +273,15 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
     await appClient.send.optIn({
       method: 'opt_in',
-      rekeyTo: rekeyTo.addr,
+      rekeyTo: rekeyTo,
     })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
+    const rekeyedAccount = algorand.account.rekeyed(testAccount, rekeyTo)
     await algorand.send.payment({
       amount: (0).algo(),
-      sender: rekeyedAccount.addr,
-      receiver: testAccount.addr,
+      sender: rekeyedAccount,
+      receiver: testAccount,
     })
   })
 
@@ -349,7 +349,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transactions[0].boxes).toEqual([{ appIndex: 0, name: encoder.encode('1') }])
+    expect(call.transactions[0].applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
 
     const call2 = await client.createTransaction.call({
       method: 'call_abi',
@@ -357,14 +357,14 @@ describe('ARC32: app-factory-and-app-client', () => {
       boxReferences: ['1'],
     })
 
-    expect(call2.transactions[0].boxes).toEqual([{ appIndex: 0, name: encoder.encode('1') }])
+    expect(call2.transactions[0].applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
     const { algorand, testAccount } = localnet.context
     const txn = await algorand.createTransaction.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
+      sender: testAccount,
+      receiver: testAccount,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
     const { client } = await deploy()
@@ -379,15 +379,15 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(result.transactions.length).toBe(2)
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const returnValue = AppManager.getABIReturn(result.confirmations[1], getArc56Method('call_abi_txn', client.appSpec))
-    expect(result.return).toBe(`Sent ${txn.amount}. test`)
+    expect(result.return).toBe(`Sent ${txn.payment?.amount}. test`)
     expect(returnValue?.returnValue).toBe(result.return)
   })
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
     const { algorand, testAccount } = localnet.context
     const txn = await algorand.createTransaction.payment({
-      sender: testAccount.addr,
-      receiver: testAccount.addr,
+      sender: testAccount,
+      receiver: testAccount,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
     const { client } = await deploy()
@@ -395,13 +395,13 @@ describe('ARC32: app-factory-and-app-client', () => {
     let indexes: number[] = []
     const signer: TransactionSigner = (group, indxs) => {
       indexes = indxs
-      return testAccount.signer(group, indexes)
+      return algorand.account.getSigner(testAccount)(group, indexes)
     }
 
     await client.send.call({
       method: 'call_abi_txn',
       args: [txn, 'test'],
-      sender: testAccount.addr,
+      sender: testAccount,
       signer,
     })
 
@@ -412,8 +412,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     const { algorand, generateAccount } = localnet.context
     const signer = await generateAccount({ initialFunds: (1).algo() })
     const txn = await algorand.createTransaction.payment({
-      sender: signer.addr,
-      receiver: signer.addr,
+      sender: signer,
+      receiver: signer,
       amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
     })
     const { client } = await deploy()
@@ -431,7 +431,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     const result = await client.send.call({
       method: 'call_abi_foreign_refs',
       appReferences: [345n],
-      accountReferences: [testAccount.addr],
+      accountReferences: [testAccount],
       assetReferences: [567n],
     })
 
@@ -439,7 +439,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
     const expectedReturnValue = AppManager.getABIReturn(result.confirmations[0], getArc56Method('call_abi_foreign_refs', client.appSpec))
-    const testAccountPublicKey = algosdk.decodeAddress(testAccount.addr).publicKey
+    const testAccountPublicKey = testAccount.publicKey
     expect(result.return).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
     expect(expectedReturnValue?.returnValue).toBe(result.return)
   })
@@ -456,7 +456,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       const oldSourceMaps = client.exportSourceMaps()
       const newClient = algorand.client.getAppClientById({
         appId: app.appId,
-        defaultSender: testAccount.addr,
+        defaultSender: testAccount,
         appSpec,
       })
 
@@ -548,10 +548,10 @@ describe('ARC32: app-factory-and-app-client', () => {
       amount: fundAmount,
     })
 
-    expect(result.transaction.amount).toBe(fundAmount.microAlgo)
+    expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
     expect(result.transaction.type).toBe(TransactionType.pay)
-    expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
-    expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
+    expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress.toString())
+    expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)
     expect(result.confirmation.confirmedRound).toBeGreaterThan(0)
   })
@@ -576,7 +576,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     await client.send.optIn({ method: 'opt_in' })
     await client.send.call({ method: 'set_local', args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])] })
-    const localState = await client.getLocalState(testAccount.addr)
+    const localState = await client.getLocalState(testAccount)
 
     invariant(localState.local_int1)
     invariant(localState.local_int2)

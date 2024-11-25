@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address, ProgramSourceMap } from 'algosdk'
 import { getABIReturnValue } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import {
@@ -17,7 +17,7 @@ export interface AppInformation {
   /** The ID of the app. */
   appId: bigint
   /** The escrow address that the app operates with. */
-  appAddress: string
+  appAddress: Address
   /**
    * Approval program.
    */
@@ -30,7 +30,7 @@ export interface AppInformation {
    * The address that created this application. This is the address where the
    * parameters and global state for this application can be found.
    */
-  creator: string
+  creator: Address
   /**
    * Current global state values.
    */
@@ -129,7 +129,7 @@ export class AppManager {
       compiled: compiled.result,
       compiledHash: compiled.hash,
       compiledBase64ToBytes: new Uint8Array(Buffer.from(compiled.result, 'base64')),
-      sourceMap: new algosdk.SourceMap(compiled['sourcemap']),
+      sourceMap: new ProgramSourceMap(JSON.parse(algosdk.encodeJSON(compiled.sourcemap!))),
     }
     this._compilationResults[tealCode] = result
 
@@ -188,7 +188,7 @@ export class AppManager {
    * @returns The app information
    */
   public async getById(appId: bigint): Promise<AppInformation> {
-    const app = modelsv2.Application.from_obj_for_encoding(await this._algod.getApplicationByID(Number(appId)).do())
+    const app = await this._algod.getApplicationByID(Number(appId)).do()
     return {
       appId: BigInt(app.id),
       appAddress: algosdk.getApplicationAddress(app.id),
@@ -221,10 +221,8 @@ export class AppManager {
    * @param address The string address of the account to get local state for the given app
    * @returns The current local state for the given (app, account) combination
    */
-  public async getLocalState(appId: bigint, address: string) {
-    const appInfo = modelsv2.AccountApplicationResponse.from_obj_for_encoding(
-      await this._algod.accountApplicationInformation(address, Number(appId)).do(),
-    )
+  public async getLocalState(appId: bigint, address: Address | string) {
+    const appInfo = await this._algod.accountApplicationInformation(address, appId).do()
 
     if (!appInfo.appLocalState?.keyValue) {
       throw new Error("Couldn't find local state")
@@ -239,7 +237,7 @@ export class AppManager {
    * @returns The current box names
    */
   public async getBoxNames(appId: bigint): Promise<BoxName[]> {
-    const boxResult = await this._algod.getApplicationBoxes(Number(appId)).do()
+    const boxResult = await this._algod.getApplicationBoxes(appId).do()
     return boxResult.boxes.map((b) => {
       return {
         nameRaw: b.name,
@@ -300,13 +298,8 @@ export class AppManager {
   public static getBoxReference(boxId: BoxIdentifier | BoxReference): algosdk.BoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
     return {
-      appIndex: Number(ref.appId),
-      name:
-        typeof ref.name === 'string'
-          ? new TextEncoder().encode(ref.name)
-          : 'length' in ref.name
-            ? ref.name
-            : algosdk.decodeAddress(ref.name.addr).publicKey,
+      appIndex: ref.appId,
+      name: typeof ref.name === 'string' ? new TextEncoder().encode(ref.name) : 'length' in ref.name ? ref.name : ref.name.addr.publicKey,
     } as algosdk.BoxReference
   }
 
@@ -316,14 +309,14 @@ export class AppManager {
    * @param state A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas`
    * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
    */
-  public static decodeAppState(state: { key: string; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
+  public static decodeAppState(state: { key: Uint8Array; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
     const stateValues = {} as AppState
 
     // Start with empty set
     for (const stateVal of state) {
-      const keyBase64 = stateVal.key
-      const keyRaw = Buffer.from(keyBase64, 'base64')
-      const key = keyRaw.toString('utf-8')
+      const keyBase64 = Buffer.from(stateVal.key).toString('base64')
+      const keyRaw = stateVal.key
+      const key = Buffer.from(stateVal.key).toString('utf-8')
       const tealValue = stateVal.value
 
       const dataTypeFlag = 'action' in tealValue ? tealValue.action : tealValue.type
@@ -331,7 +324,8 @@ export class AppManager {
       let valueRaw: Buffer
       switch (dataTypeFlag) {
         case 1:
-          valueBase64 = tealValue.bytes ?? ''
+          valueBase64 =
+            typeof tealValue.bytes === 'string' ? tealValue.bytes : tealValue.bytes ? Buffer.from(tealValue.bytes).toString('base64') : ''
           valueRaw = Buffer.from(valueBase64, 'base64')
           stateValues[key] = {
             keyRaw,

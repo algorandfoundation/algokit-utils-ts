@@ -161,7 +161,7 @@ ___
 
 ### \_defaultValidityWindow
 
-• `Private` **\_defaultValidityWindow**: `undefined` \| `number` = `undefined`
+• `Private` **\_defaultValidityWindow**: `undefined` \| `bigint` = `undefined`
 
 #### Defined in
 
@@ -391,7 +391,7 @@ Sets the default validity window for transactions.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `validityWindow` | `number` | The number of rounds between the first and last valid rounds |
+| `validityWindow` | `number` \| `bigint` | The number of rounds between the first and last valid rounds |
 
 #### Returns
 
@@ -415,7 +415,7 @@ Tracks the given signer against the given sender for later signing.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` | The sender address to use this signer for |
+| `sender` | `string` \| `Address` | The sender address to use this signer for |
 | `signer` | `TransactionSigner` | The signer to sign transactions with for the given sender |
 
 #### Returns

@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientInterface } from './algorand-client-interface'
@@ -29,7 +29,7 @@ export class AlgorandClient implements AlgorandClientInterface {
   private _cachedSuggestedParamsExpiry?: Date
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
-  private _defaultValidityWindow: number | undefined = undefined
+  private _defaultValidityWindow: bigint | undefined = undefined
 
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config, this)
@@ -46,8 +46,8 @@ export class AlgorandClient implements AlgorandClientInterface {
    * @param validityWindow The number of rounds between the first and last valid rounds
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setDefaultValidityWindow(validityWindow: number) {
-    this._defaultValidityWindow = validityWindow
+  public setDefaultValidityWindow(validityWindow: number | bigint) {
+    this._defaultValidityWindow = BigInt(validityWindow)
     return this
   }
 
@@ -89,7 +89,7 @@ export class AlgorandClient implements AlgorandClientInterface {
    * @param signer The signer to sign transactions with for the given sender
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSigner(sender: string, signer: algosdk.TransactionSigner) {
+  public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
     this._accountManager.setSigner(sender, signer)
     return this
   }
@@ -161,7 +161,7 @@ export class AlgorandClient implements AlgorandClientInterface {
   public newGroup() {
     return new TransactionComposer({
       algod: this.client.algod,
-      getSigner: (addr: string) => this.account.getSigner(addr),
+      getSigner: (addr: string | Address) => this.account.getSigner(addr),
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,

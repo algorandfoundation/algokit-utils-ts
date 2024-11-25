@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
@@ -492,7 +492,7 @@ export class AlgorandClientTransactionSender {
   assetOptOut = async (
     params: Omit<AssetOptOutParams, 'creator'> & {
       /** Optional asset creator account address; if not specified it will be retrieved from algod */
-      creator?: string
+      creator?: string | Address
       /** Whether or not to check if the account has a zero balance first or not.
        *
        * If this is set to `true` and the account has an asset balance it will throw an error.

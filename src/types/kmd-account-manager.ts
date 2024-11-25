@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -63,7 +63,7 @@ export class KmdAccountManager {
     walletName: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean,
-    sender?: string,
+    sender?: string | Address,
   ): Promise<(TransactionSignerAccount & { account: SigningAccount }) | undefined> {
     const kmd = await this.kmd()
 

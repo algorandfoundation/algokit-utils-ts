@@ -10,13 +10,23 @@ Note: If you prefer Python there's an equivalent [Python utility library](https:
 
 ## Install
 
-This library can be installed from NPM using your favourite npm client, e.g.:
+Before installing, you'll need to decide on the version you want to target. Version 7 and 8 have the same feature set, however v7 leverages algosdk@>=2.9.0<3.0, whereas v8 leverages algosdk@>=3.0.0. Your project and it's dependencies will help you decide which version to target.
+
+Once you've decided on the target version, this library can be installed from NPM using your favourite npm client, e.g.:
+
+To target algosdk@2 and use version 7 of AlgoKit Utils, run the below:
 
 ```
-npm install algosdk@2 @algorandfoundation/algokit-utils
+npm install algosdk@^2.9.0 @algorandfoundation/algokit-utils@^7.0.0
 ```
 
-Then to import it:
+To target algosdk@3 and use the latest version of AlgoKit Utils, run the below:
+
+```
+npm install algosdk@^3.0.0 @algorandfoundation/algokit-utils
+```
+
+Now you can import the library:
 
 ```typescript
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
@@ -30,6 +40,7 @@ Whilst we aim to minimise breaking changes, there are situations where they are 
 JSDoc deprecations should guide you through most migration paths inside your IDE, however the migration guides will provide more detailed information should you need it.
 
 If you're targetting v7, please refer to the [v7 migration guide](./docs/v7-migration.md).
+If you're targetting v8, please refer to the [v8 migration guide](./docs/v8-migration.md).
 
 ## Guiding principles
 

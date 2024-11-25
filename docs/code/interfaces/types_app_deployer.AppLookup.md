@@ -33,7 +33,7 @@ ___
 
 ### creator
 
-• **creator**: `string`
+• **creator**: `Readonly`\<`Address`\>
 
 The address of the creator associated with this lookup
 

@@ -186,7 +186,7 @@ ___
 
 ### SendAppCreateTransactionResult
 
-Ƭ **SendAppCreateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: `string` ; `appId`: `bigint`  }\>
+Ƭ **SendAppCreateTransactionResult**: [`Expand`](types_expand.md#expand)\<[`SendAppUpdateTransactionResult`](types_app.md#sendappupdatetransactionresult) & \{ `appAddress`: `Address` ; `appId`: `bigint`  }\>
 
 Result from sending a single app transaction.
 

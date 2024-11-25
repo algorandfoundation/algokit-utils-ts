@@ -18,15 +18,25 @@ This library is designed with the following principles:
 
 # Installation
 
-This library can be installed from NPM using your favourite npm client, e.g.:
+Before installing, you'll need to decide on the version you want to target. Version 7 and 8 have the same feature set, however v7 leverages algosdk@>=2.9.0<3.0, whereas v8 leverages algosdk@>=3.0.0. Your project and it's dependencies will help you decide which version to target.
+
+Once you've decided on the target version, this library can be installed from NPM using your favourite npm client, e.g.:
+
+To target algosdk@2 and use version 7 of AlgoKit Utils, run the below:
 
 ```
-npm install @algorandfoundation/algokit-utils
+npm install algosdk@^2.9.0 @algorandfoundation/algokit-utils@^7.0.0
+```
+
+To target algosdk@3 and use the latest version of AlgoKit Utils, run the below:
+
+```
+npm install algosdk@^3.0.0 @algorandfoundation/algokit-utils
 ```
 
 ## Peer Dependencies
 
-This library requires `algosdk@2.9.0` as a peer dependency. Ensure you have it installed in your project.
+This library uses `algosdk` as a peer dependency. Please see above to ensure you have the correct version installed in your project.
 
 # Usage
 

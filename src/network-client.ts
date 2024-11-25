@@ -4,7 +4,6 @@ import { AlgoClientConfig, AlgoConfig } from './types/network-client'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
-import IntDecoding = algosdk.IntDecoding
 
 /**
  * @deprecated Use `ClientManager.getConfigFromEnvironmentOrLocalNet()` instead.
@@ -96,7 +95,6 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  * Returns an indexer SDK client that automatically retries transient failures on idempotent calls
  *
  * @param config The config if you want to override the default (getting config from process.env)
- * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
  * @example Default (load from environment variables)
  *
  *  ```typescript
@@ -119,15 +117,9 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  *  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  *  await indexer.makeHealthCheck().do()
  * ```
- * @example Override int decoding for responses
- * ```typescript
- *  const indexer = getAlgoIndexerClient(config, IntDecoding.BIGINT)
- * ```
  */
-export function getAlgoIndexerClient(config?: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
-  return config
-    ? ClientManager.getIndexerClient(config, overrideIntDecoding)
-    : ClientManager.getIndexerClientFromEnvironment(overrideIntDecoding)
+export function getAlgoIndexerClient(config?: AlgoClientConfig): Indexer {
+  return config ? ClientManager.getIndexerClient(config) : ClientManager.getIndexerClientFromEnvironment()
 }
 
 /**

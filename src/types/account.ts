@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { AlgoAmount } from './amount'
 import ApplicationLocalState = algosdk.modelsv2.ApplicationLocalState
 import ApplicationStateSchema = algosdk.modelsv2.ApplicationStateSchema
@@ -20,7 +20,7 @@ export const DISPENSER_ACCOUNT = 'DISPENSER'
 export class MultisigAccount {
   _params: algosdk.MultisigMetadata
   _signingAccounts: (algosdk.Account | SigningAccount)[]
-  _addr: string
+  _addr: Address
   _signer: TransactionSigner
 
   /** The parameters for the multisig account */
@@ -34,7 +34,7 @@ export class MultisigAccount {
   }
 
   /** The address of the multisig account */
-  get addr(): Readonly<string> {
+  get addr(): Readonly<Address> {
     return this._addr
   }
 
@@ -58,7 +58,7 @@ export class MultisigAccount {
    * @returns The transaction signed by the present signers
    */
   public sign(transaction: Transaction | Uint8Array): Uint8Array {
-    let signedTxn = 'from' in transaction ? undefined : transaction
+    let signedTxn = 'sender' in transaction ? undefined : transaction
     for (const signer of this._signingAccounts) {
       if (signedTxn) {
         signedTxn = algosdk.appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
@@ -75,12 +75,12 @@ export class MultisigAccount {
 export class SigningAccount implements Account {
   private _account: Account
   private _signer: TransactionSigner
-  private _sender: string
+  private _sender: Address
 
   /**
    * Algorand address of the sender
    */
-  get addr(): Readonly<string> {
+  get addr(): Readonly<Address> {
     return this._sender
   }
 
@@ -108,16 +108,16 @@ export class SigningAccount implements Account {
     }
   }
 
-  constructor(account: Account, sender: string | undefined) {
+  constructor(account: Account, sender: string | Address | undefined) {
     this._account = account
-    this._sender = sender ?? account.addr
+    this._sender = typeof sender === 'string' ? Address.fromString(sender) : (sender ?? account.addr)
     this._signer = algosdk.makeBasicAccountTransactionSigner(account)
   }
 }
 
 /** A wrapper around `TransactionSigner` that also has the sender address. */
 export interface TransactionSignerAccount {
-  addr: Readonly<string>
+  addr: Readonly<Address>
   signer: TransactionSigner
 }
 
@@ -126,7 +126,7 @@ export type AccountInformation = {
   /**
    * The account public key
    */
-  address: string
+  address: Address
 
   /** The balance of Algo currently held by the account. */
   balance: AlgoAmount
@@ -214,7 +214,7 @@ export type AccountInformation = {
    * address of the current account is used. This field can be updated in any
    * transaction by setting the `RekeyTo` field.
    */
-  authAddr?: string
+  authAddress?: Address
 
   /**
    * Parameters of applications created by this account including app global data.

@@ -56,8 +56,8 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `algod` | `default` |
-| `indexer?` | `default` |
+| `algod` | `AlgodClient` |
+| `indexer?` | `IndexerClient` |
 | `isLocalNet` | () => `Promise`\<`boolean`\> |
 | `isMainNet` | () => `Promise`\<`boolean`\> |
 | `isTestNet` | () => `Promise`\<`boolean`\> |

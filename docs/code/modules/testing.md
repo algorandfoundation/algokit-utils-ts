@@ -151,19 +151,19 @@ ___
 
 ### getTestAccount
 
-▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<`Account`\>
+▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
-| `algod` | `default` | An algod client |
-| `kmd?` | `default` | A KMD client, if not specified then a default KMD client will be loaded from environment variables and if not found fallback to the default LocalNet KMD client |
+| `algod` | `AlgodClient` | An algod client |
+| `kmd?` | `KmdClient` | A KMD client, if not specified then a default KMD client will be loaded from environment variables and if not found fallback to the default LocalNet KMD client |
 
 #### Returns
 
-`Promise`\<`Account`\>
+`Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
 
 The account, with private key loaded
 
@@ -178,9 +178,9 @@ Note: By default this will log the mnemonic of the account.
 
 #### Defined in
 
-[src/testing/account.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L20)
+[src/testing/account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L21)
 
-▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Account`\>
+▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
@@ -196,13 +196,13 @@ Note: By default this will log the mnemonic of the account.
 
 #### Returns
 
-`Promise`\<`Account`\>
+`Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
 
 The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L30)
+[src/testing/account.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L35)
 
 ___
 

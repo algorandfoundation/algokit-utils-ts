@@ -26,7 +26,7 @@ Information about an app.
 
 ### appAddress
 
-• **appAddress**: `string`
+• **appAddress**: `Address`
 
 The escrow address that the app operates with.
 
@@ -74,7 +74,7 @@ ___
 
 ### creator
 
-• **creator**: `string`
+• **creator**: `Address`
 
 The address that created this application. This is the address where the
 parameters and global state for this application can be found.

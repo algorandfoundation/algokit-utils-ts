@@ -23,7 +23,7 @@ The ID of the asset opted into / out of
 
 #### Defined in
 
-[src/types/asset-manager.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L12)
+[src/types/asset-manager.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L11)
 
 ___
 
@@ -35,4 +35,4 @@ The transaction ID of the resulting opt in / out
 
 #### Defined in
 
-[src/types/asset-manager.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L14)
+[src/types/asset-manager.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/asset-manager.ts#L13)
