@@ -112,7 +112,7 @@ test('My test', async () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `fixtureConfig` | `undefined` \| [`AlgorandFixtureConfig`](../interfaces/types_testing.AlgorandFixtureConfig.md) | The fixture configuration |
-| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The algo configuration |
+| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The fixture configuration |
 
 #### Returns
 

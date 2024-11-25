@@ -1,6 +1,6 @@
-import { test } from '@jest/globals'
 import algosdk from 'algosdk'
 import { v4 as uuid } from 'uuid'
+import { beforeEach, describe, expect, test } from 'vitest'
 import { algorandFixture } from '../testing'
 
 describe('AccountManager', () => {
@@ -14,7 +14,7 @@ describe('AccountManager', () => {
     const account = await algorand.account.fromEnvironment(uuid())
 
     const accountInfo = await algorand.account.getInformation(account.addr)
-    expect(accountInfo.amount).toBeGreaterThan(0)
+    expect(accountInfo.balance.microAlgo).toBeGreaterThan(0)
   }, 10e6)
 
   test('Same account is subsequently retrieved', async () => {

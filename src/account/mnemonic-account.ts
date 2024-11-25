@@ -2,7 +2,7 @@ import algosdk from 'algosdk'
 import Account = algosdk.Account
 
 /**
- * @deprecated Use `algorandClient.account.fromMnemonic(mnemonicSecret)` or `algosdk.mnemonicToSecretKey(mnemonicSecret)` instead.
+ * @deprecated Use `algorand.account.fromMnemonic(mnemonicSecret)` or `algosdk.mnemonicToSecretKey(mnemonicSecret)` instead.
  *
  * Returns an Algorand account with secret key loaded (i.e. that can sign transactions) by taking the mnemonic secret.
  *

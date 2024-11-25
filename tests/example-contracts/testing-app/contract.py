@@ -44,7 +44,7 @@ def itoa(i: pt.Expr) -> pt.Expr:
     )
 
 
-@app.external(read_only=True)
+@app.external()
 def call_abi_txn(txn: pt.abi.PaymentTransaction, value: pt.abi.String, *, output: pt.abi.String) -> pt.Expr:
     return output.set(
         pt.Concat(

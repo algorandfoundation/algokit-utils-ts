@@ -5,7 +5,7 @@ import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 /**
- * @deprecated Use `algorandClient.account.kmd.getLocalNetDispenserAccount()` instead.
+ * @deprecated Use `algorand.account.kmd.getLocalNetDispenserAccount()` instead.
  *
  * Returns an Algorand account with private key loaded for the default LocalNet dispenser account (that can be used to fund other accounts)
  *

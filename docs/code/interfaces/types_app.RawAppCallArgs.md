@@ -12,8 +12,6 @@ App call args with non-ABI (raw) values (minus some processing like encoding str
 
   ↳ **`RawAppCallArgs`**
 
-  ↳↳ [`AppClientCallRawArgs`](types_app_client.AppClientCallRawArgs.md)
-
 ## Table of contents
 
 ### Properties
@@ -41,7 +39,7 @@ The address of any accounts to load in
 
 #### Defined in
 
-[src/types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
+[src/types/app.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L79)
 
 ___
 
@@ -53,7 +51,7 @@ Any application arguments to pass through
 
 #### Defined in
 
-[src/types/app.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L90)
+[src/types/app.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L96)
 
 ___
 
@@ -69,7 +67,7 @@ IDs of any apps to load into the foreignApps array
 
 #### Defined in
 
-[src/types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
+[src/types/app.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L81)
 
 ___
 
@@ -85,7 +83,7 @@ IDs of any assets to load into the foreignAssets array
 
 #### Defined in
 
-[src/types/app.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L77)
+[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
 
 ___
 
@@ -101,7 +99,7 @@ Any box references to load
 
 #### Defined in
 
-[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
+[src/types/app.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L77)
 
 ___
 
@@ -117,7 +115,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-[src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+[src/types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
 
 ___
 
@@ -129,7 +127,7 @@ Property to aid intellisense
 
 #### Defined in
 
-[src/types/app.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L92)
+[src/types/app.ts:98](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L98)
 
 ___
 
@@ -147,4 +145,4 @@ Optional account / account address that should be authorised to transact on beha
 
 #### Defined in
 
-[src/types/app.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L82)
+[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)

@@ -1,7 +1,6 @@
-import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
-import * as algokit from './'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 
 describe('app', () => {
@@ -11,53 +10,41 @@ describe('app', () => {
   const logging = algoKitLogCaptureFixture()
   beforeEach(logging.beforeEach)
   afterEach(logging.afterEach)
-
-  test('createApp creates an app', async () => {
-    const { algod, testAccount } = localnet.context
+  test('appCreate creates an app', async () => {
+    const { algorand, testAccount } = localnet.context
     const contract = await getTestingAppContract()
 
-    const app = await algokit.createApp(
-      {
-        approvalProgram: contract.approvalProgram.replace('TMPL_UPDATABLE', '0').replace('TMPL_DELETABLE', '0').replace('TMPL_VALUE', '1'),
-        clearStateProgram: contract.clearStateProgram,
-        schema: contract.stateSchema,
-        from: testAccount,
-      },
-      algod,
-    )
+    const app = await algorand.send.appCreate({
+      approvalProgram: contract.approvalProgram.replace('TMPL_UPDATABLE', '0').replace('TMPL_DELETABLE', '0').replace('TMPL_VALUE', '1'),
+      clearStateProgram: contract.clearStateProgram,
+      schema: contract.stateSchema,
+      sender: testAccount.addr,
+    })
 
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
     expect(app.confirmation).toBeTruthy()
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
   })
 
-  test('createApp with rekey performs rekey', async () => {
-    const { algod, algorand, testAccount } = localnet.context
+  test('appCreate with rekey performs rekey', async () => {
+    const { algorand, testAccount } = localnet.context
     const rekeyTo = algorand.account.random()
     const contract = await getTestingAppContract()
-    await algokit.createApp(
-      {
-        approvalProgram: contract.approvalProgram.replace('TMPL_UPDATABLE', '0').replace('TMPL_DELETABLE', '0').replace('TMPL_VALUE', '1'),
-        clearStateProgram: contract.clearStateProgram,
-        schema: contract.stateSchema,
-        from: testAccount,
-        args: {
-          rekeyTo: rekeyTo,
-        },
-      },
-      algod,
-    )
+    await algorand.send.appCreate({
+      approvalProgram: contract.approvalProgram.replace('TMPL_UPDATABLE', '0').replace('TMPL_DELETABLE', '0').replace('TMPL_VALUE', '1'),
+      clearStateProgram: contract.clearStateProgram,
+      schema: contract.stateSchema,
+      sender: testAccount.addr,
+      rekeyTo: rekeyTo.addr,
+    })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(rekeyTo, testAccount.addr)
-    await algokit.transferAlgos(
-      {
-        amount: (0).algos(),
-        from: rekeyedAccount,
-        to: testAccount,
-      },
-      algod,
-    )
+    const rekeyedAccount = algorand.account.rekeyed(testAccount.addr, rekeyTo)
+    await algorand.send.payment({
+      amount: (0).algo(),
+      sender: rekeyedAccount.addr,
+      receiver: testAccount.addr,
+    })
   })
 })

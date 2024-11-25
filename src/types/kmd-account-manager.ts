@@ -3,7 +3,7 @@ import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
-import AlgokitComposer from './composer'
+import { TransactionComposer } from './composer'
 
 /** Provides abstractions over a [KMD](https://github.com/algorand/go-algorand/blob/master/daemon/kmd/README.md) instance
  * that makes it easier to get and manage accounts using KMD. */
@@ -19,7 +19,7 @@ export class KmdAccountManager {
     this._clientManager = clientManager
     try {
       this._kmd = clientManager.kmd
-    } catch (e) {
+    } catch {
       this._kmd = undefined
     }
   }
@@ -119,13 +119,13 @@ export class KmdAccountManager {
    * If this is used via `mnemonicAccountFromEnvironment`, then you can even use the same code that runs on production without changes for local development!
    *
    * @param name The name of the wallet to retrieve / create
-   * @param fundWith The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account
+   * @param fundWith The number of Algo to fund the account with when it gets created, if not specified then 1000 ALGO will be funded from the dispenser account
    *
    * @example
    * ```typescript
    * // Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
-   * // if creating it then fund it with 2 Algos from the default dispenser account
-   * const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
+   * // if creating it then fund it with 2 ALGO from the default dispenser account
+   * const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algo())
    * // This will return the same account as above since the name matches
    * const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
    * ```
@@ -155,23 +155,23 @@ export class KmdAccountManager {
 
     Config.logger.info(
       `LocalNet account '${name}' doesn't yet exist; created account ${account.addr} with keys stored in KMD and funding with ${
-        fundWith?.algos ?? 1000
-      } ALGOs`,
+        fundWith?.algo ?? 1000
+      } ALGO`,
     )
 
     // Fund the account from the dispenser
     const dispenser = await this.getLocalNetDispenserAccount()
-    await new AlgokitComposer({
+    await new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: () => dispenser.signer,
       getSuggestedParams: () => this._clientManager.algod.getTransactionParams().do(),
     })
       .addPayment({
-        amount: fundWith ?? AlgoAmount.Algos(1000),
+        amount: fundWith ?? AlgoAmount.Algo(1000),
         receiver: account.addr,
         sender: dispenser.addr,
       })
-      .execute()
+      .send()
 
     return account
   }

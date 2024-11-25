@@ -117,7 +117,7 @@ export class URLTokenBaseHTTPClient implements BaseHTTPClient {
       if (decoded.message) {
         bodyErrorMessage = decoded.message
       }
-    } catch (_) {
+    } catch {
       // ignore any error that happened while we are parsing the error response
     }
 

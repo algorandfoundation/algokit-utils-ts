@@ -6,7 +6,7 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
- * @deprecated Use `algorandClient.account.dispenserFromEnvironment()` or `new AccountManager(clientManager).dispenserFromEnvironment()` instead
+ * @deprecated Use `algorand.account.dispenserFromEnvironment()` or `new AccountManager(clientManager).dispenserFromEnvironment()` instead
  *
  * Returns an account (with private key loaded) that can act as a dispenser
  *
