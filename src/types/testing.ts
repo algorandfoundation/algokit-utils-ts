@@ -3,7 +3,7 @@ import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
-import AlgorandClient from './algorand-client'
+import { AlgorandClient } from './algorand-client'
 import { TransactionLookupResult } from './indexer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account

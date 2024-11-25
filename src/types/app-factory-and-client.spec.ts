@@ -1,6 +1,6 @@
-import { describe, test } from '@jest/globals'
 import algosdk, { ABIUintType, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
+import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
 import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
@@ -45,7 +45,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     expect(app.appId).toBeGreaterThan(0n)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
   })
@@ -81,7 +81,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0n)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
   })
 
@@ -106,7 +106,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0n)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
     expect(app.compiledClear).toBeTruthy()
@@ -125,7 +125,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
     expect(app.return).toBe('arg_io')
   })
@@ -198,7 +198,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
@@ -232,7 +232,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)

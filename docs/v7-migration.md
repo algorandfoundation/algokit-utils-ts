@@ -170,6 +170,22 @@ Some imports have changed, which may need to updated. This only applies if you a
    })
    ```
 
+1. The `AlgorandClient` class is no longer available as a default export.
+
+```typescript
+/**** Before ****/
+import AlgorandClient from '../../types/algorand-client'
+const algorand = AlgorandClient.fromClients({
+  //...
+})
+
+/**** After ****/
+import { AlgorandClient } from '../../types/algorand-client'
+const algorand = AlgorandClient.fromClients({
+  //...
+})
+```
+
 1. The `ExecuteParams` type has been renamed to `SendParams` and moved from `/types/composer` to `/types/transaction`.
 
    ```typescript

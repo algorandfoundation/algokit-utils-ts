@@ -61,7 +61,7 @@ Partial.compiledApproval
 
 #### Defined in
 
-[src/types/app.ts:336](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L336)
+[src/types/app.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L335)
 
 ___
 
@@ -77,4 +77,4 @@ Partial.compiledClear
 
 #### Defined in
 
-[src/types/app.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L338)
+[src/types/app.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L337)

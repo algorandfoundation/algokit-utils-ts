@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import algosdk from 'algosdk'
+import { beforeAll, describe, expect, test } from 'vitest'
 import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
 import { algorandFixture } from '../testing'
 import { TransactionSignerAccount } from './account'
-import AlgorandClient from './algorand-client'
+import { AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import { AppCallMethodCall } from './composer'
 

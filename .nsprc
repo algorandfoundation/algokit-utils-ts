@@ -1,7 +1,1 @@
-{
-  "1100563": {
-    "active": true,
-    "notes": "Waiting for https://github.com/npm/cli/issues/7902 to be resolved",
-    "expiry": "2024-12-31"
-  }
-}
+{}

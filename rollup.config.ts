@@ -1,3 +1,4 @@
+import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import typescript from '@rollup/plugin-typescript'
 import MagicString from 'magic-string'
@@ -59,13 +60,14 @@ const config: RollupOptions = {
     typescript({
       tsconfig: 'tsconfig.build.json',
     }),
+    commonjs(),
     nodeResolve({
       preferBuiltins: true,
     }),
     normaliseEsmOutput(),
     multiInput(),
   ],
-  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)],
+  external: [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies), /^algosdk\/*/],
   onLog(level: LogLevel, log: RollupLog, handler: LogOrStringHandler) {
     if (log.code === 'CIRCULAR_DEPENDENCY') {
       handler('error', log)
