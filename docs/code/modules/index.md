@@ -504,7 +504,7 @@ ___
 
 ### callApp
 
-▸ **callApp**(`call`, `algod`): `Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+▸ **callApp**(`call`, `algod`): `Promise`\<[`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
 
 #### Parameters
 
@@ -515,7 +515,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+`Promise`\<[`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
 
 The result of the call
 
@@ -627,7 +627,7 @@ ___
 
 ### createApp
 
-▸ **createApp**(`create`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+▸ **createApp**(`create`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 #### Parameters
 
@@ -638,7 +638,7 @@ ___
 
 #### Returns
 
-`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
+`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult) & [`AppReference`](../interfaces/types_app.AppReference.md)\>
 
 The details of the created app, or the transaction to create it if `skipSending` and the compilation result
 
@@ -3175,7 +3175,7 @@ ___
 
 ### updateApp
 
-▸ **updateApp**(`update`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+▸ **updateApp**(`update`, `algod`): `Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
 
 #### Parameters
 
@@ -3186,7 +3186,7 @@ ___
 
 #### Returns
 
-`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](../interfaces/types_app.AppCallTransactionResult.md)\>
+`Promise`\<`Partial`\<[`AppCompilationResult`](../interfaces/types_app.AppCompilationResult.md)\> & [`AppCallTransactionResult`](types_app.md#appcalltransactionresult)\>
 
 The transaction send result and the compilation result
 

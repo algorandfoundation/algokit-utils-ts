@@ -535,7 +535,7 @@ export class ClientManager {
    */
   public static getAlgodClient(config: AlgoClientConfig): Algodv2 {
     const { token, server, port } = config
-    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : token ?? {}
+    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
     return new algosdk.Algodv2(httpClientWithRetry, server)
   }
@@ -581,7 +581,7 @@ export class ClientManager {
    */
   public static getIndexerClient(config: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
     const { token, server, port } = config
-    const tokenHeader = typeof token === 'string' ? { 'X-Indexer-API-Token': token } : token ?? {}
+    const tokenHeader = typeof token === 'string' ? { 'X-Indexer-API-Token': token } : (token ?? {})
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
     const indexer = new Indexer(httpClientWithRetry)
     // Use mixed int decoding by default so bigints don't have lost precision

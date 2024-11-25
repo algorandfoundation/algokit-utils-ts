@@ -937,10 +937,10 @@ export class TransactionComposer {
               ? Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0)) / APP_PAGE_MAX_SIZE)
               : 0
           : undefined,
-      numLocalInts: appId === 0 ? ('schema' in params ? params.schema?.localInts ?? 0 : 0) : undefined,
-      numLocalByteSlices: appId === 0 ? ('schema' in params ? params.schema?.localByteSlices ?? 0 : 0) : undefined,
-      numGlobalInts: appId === 0 ? ('schema' in params ? params.schema?.globalInts ?? 0 : 0) : undefined,
-      numGlobalByteSlices: appId === 0 ? ('schema' in params ? params.schema?.globalByteSlices ?? 0 : 0) : undefined,
+      numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
+      numLocalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.localByteSlices ?? 0) : 0) : undefined,
+      numGlobalInts: appId === 0 ? ('schema' in params ? (params.schema?.globalInts ?? 0) : 0) : undefined,
+      numGlobalByteSlices: appId === 0 ? ('schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0) : undefined,
       method: params.method,
       signer: includeSigner
         ? params.signer
@@ -1085,12 +1085,12 @@ export class TransactionComposer {
         ...sdkParams,
         extraPages:
           'extraProgramPages' in params
-            ? params.extraProgramPages ?? Math.floor((approvalProgram!.length + clearStateProgram!.length) / APP_PAGE_MAX_SIZE)
+            ? (params.extraProgramPages ?? Math.floor((approvalProgram!.length + clearStateProgram!.length) / APP_PAGE_MAX_SIZE))
             : 0,
-        numLocalInts: 'schema' in params ? params.schema?.localInts ?? 0 : 0,
-        numLocalByteSlices: 'schema' in params ? params.schema?.localByteSlices ?? 0 : 0,
-        numGlobalInts: 'schema' in params ? params.schema?.globalInts ?? 0 : 0,
-        numGlobalByteSlices: 'schema' in params ? params.schema?.globalByteSlices ?? 0 : 0,
+        numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
+        numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
+        numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
+        numGlobalByteSlices: 'schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0,
         approvalProgram: approvalProgram!,
         clearProgram: clearStateProgram!,
       })
