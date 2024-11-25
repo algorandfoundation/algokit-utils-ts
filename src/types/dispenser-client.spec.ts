@@ -1,12 +1,16 @@
-import fetchMock, { enableFetchMocks } from 'jest-fetch-mock'
+import { afterEach, beforeEach, describe, expect, it, vi, vitest } from 'vitest'
+import createFetchMock from 'vitest-fetch-mock'
 import { TestNetDispenserApiClient } from './dispenser-client'
-enableFetchMocks()
+
+const fetchMocker = createFetchMock(vi)
+fetchMocker.enableMocks()
 
 describe('TestNetDispenserApiClient', () => {
   const env = process.env
 
   beforeEach(async () => {
-    jest.resetModules()
+    vitest.resetModules()
+    fetchMocker.resetMocks()
     process.env = { ...env }
   })
 

@@ -1,4 +1,3 @@
-import { describe, test } from '@jest/globals'
 import algosdk, {
   ABIUintType,
   Account,
@@ -10,6 +9,7 @@ import algosdk, {
   getApplicationAddress,
 } from 'algosdk'
 import invariant from 'tiny-invariant'
+import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
 import { algo } from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'

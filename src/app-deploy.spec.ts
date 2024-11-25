@@ -1,6 +1,6 @@
-import { describe, test } from '@jest/globals'
 import { getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { Config } from './config'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
@@ -31,7 +31,7 @@ describe('deploy-app', () => {
     expect(Object.keys(apps.apps)).toEqual([name])
     const app = apps.apps[name]
     expect(app.appId).toBe(app1.appId)
-    expect(app.appAddress).toBe(app1.appAddress)
+    expect(app.appAddress).toEqual(app1.appAddress)
     expect(app.createdRound).toBe(BigInt(app1.confirmation.confirmedRound!))
     expect(app.createdMetadata).toEqual(creationMetadata)
     expect(app.updatedRound).toBe(app.createdRound)
@@ -77,7 +77,7 @@ describe('deploy-app', () => {
     expect(Object.keys(apps.apps).sort()).toEqual([name, name2, name3].sort())
     const app1Data = apps.apps[name]
     expect(app1Data.appId).toBe(app1.appId)
-    expect(app1Data.appAddress).toBe(app1.appAddress)
+    expect(app1Data.appAddress).toEqual(app1.appAddress)
     expect(app1Data.createdRound).toBe(BigInt(app1.confirmation.confirmedRound!))
     expect(app1Data.createdMetadata).toEqual(creationMetadata)
     expect(app1Data.updatedRound).toBe(BigInt(update1.confirmation.confirmedRound!))
@@ -107,7 +107,7 @@ describe('deploy-app', () => {
     invariant('transaction' in result)
     invariant(result.confirmation)
     expect(result.appId).toBe(BigInt(result.confirmation.applicationIndex!))
-    expect(result.appAddress).toBe(getApplicationAddress(result.appId))
+    expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(BigInt(result.confirmation.confirmedRound!))
     expect(result.updatedRound).toBe(result.createdRound)
@@ -464,7 +464,7 @@ describe('deploy-app', () => {
     invariant('transaction' in initialDeployment)
     invariant(!('transaction' in result))
     expect(result.appId).toBe(initialDeployment.appId)
-    expect(result.appAddress).toBe(getApplicationAddress(initialDeployment.appId))
+    expect(result.appAddress).toEqual(getApplicationAddress(initialDeployment.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(initialDeployment.createdRound)
     expect(result.updatedRound).toBe(initialDeployment.createdRound)

@@ -1,8 +1,10 @@
+import { afterAll, beforeEach, vitest } from 'vitest'
+
 export const envResetFixture = () => {
   const OLD_ENV = process.env
 
   beforeEach(() => {
-    jest.resetModules()
+    vitest.resetModules()
     process.env = { ...OLD_ENV }
   })
 

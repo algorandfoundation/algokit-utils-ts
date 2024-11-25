@@ -1,4 +1,4 @@
-import { beforeEach, describe, test } from '@jest/globals'
+import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { indexer } from './'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'

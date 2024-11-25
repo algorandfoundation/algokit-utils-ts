@@ -1,6 +1,6 @@
-import { describe, test } from '@jest/globals'
 import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
+import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'
@@ -11,7 +11,7 @@ describe('Transfer capability', () => {
   const env = process.env
 
   beforeEach(async () => {
-    jest.resetModules()
+    vitest.resetModules()
     process.env = { ...env }
     await localnet.beforeEach()
   }, 10_000)
@@ -284,7 +284,7 @@ describe('Transfer capability', () => {
 
     const dispenserClient = new TestNetDispenserApiClient()
     Object.assign(dispenserClient, {
-      fund: jest.fn().mockImplementation(() => {
+      fund: vitest.fn().mockImplementation(() => {
         return Promise.resolve({ txId: 'dummy_tx_id', amount: 200_000 })
       }),
     })
@@ -307,7 +307,7 @@ describe('Transfer capability', () => {
 
     const dispenserClient = new TestNetDispenserApiClient()
     Object.assign(dispenserClient, {
-      fund: jest.fn().mockImplementation(() => {
+      fund: vitest.fn().mockImplementation(() => {
         return Promise.reject(new Error('dummy_error'))
       }),
     })
@@ -317,7 +317,7 @@ describe('Transfer capability', () => {
       algorand.account.ensureFundedFromTestNetDispenserApi(accountToFund, dispenserClient, (100).algo(), {
         minFundingIncrement: (1).algo(),
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot('"dummy_error"')
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`[Error: dummy_error]`)
   })
 })
 
@@ -326,7 +326,7 @@ describe('rekey', () => {
   const env = process.env
 
   beforeEach(async () => {
-    jest.resetModules()
+    vitest.resetModules()
     process.env = { ...env }
     await localnet.beforeEach()
   }, 10_000)

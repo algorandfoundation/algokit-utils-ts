@@ -1,5 +1,5 @@
-import { describe, test } from '@jest/globals'
 import algosdk from 'algosdk'
+import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 
@@ -22,7 +22,7 @@ describe('app', () => {
     })
 
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toEqual(algosdk.getApplicationAddress(app.appId))
     expect(app.confirmation).toBeTruthy()
     expect(BigInt(app.confirmation?.applicationIndex ?? 0)).toBe(app.appId)
   })
