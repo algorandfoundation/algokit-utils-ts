@@ -259,5 +259,3 @@ export class AlgorandClient implements AlgorandClientInterface {
     return new AlgorandClient(config)
   }
 }
-
-export default AlgorandClient

@@ -1,5 +1,5 @@
 import { algos, Config, lookupTransactionById } from '../../'
-import AlgorandClient from '../../types/algorand-client'
+import { AlgorandClient } from '../../types/algorand-client'
 import { ClientManager } from '../../types/client-manager'
 import { AlgoConfig } from '../../types/network-client'
 import { AlgorandFixture, AlgorandFixtureConfig, AlgorandTestAutomationContext, GetTestAccountParams } from '../../types/testing'
