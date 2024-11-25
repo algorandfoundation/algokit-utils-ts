@@ -6,7 +6,7 @@ The entry point to the vast majority of functionality in AlgoKit Utils is now av
 
 The old version will still work until at least v9 (we have been careful to keep those functions working with backwards compatibility), but it exposes an older, function-based interface to the functionality that is deprecated. The new way to use AlgoKit Utils is via the `AlgorandClient` class, which is easier, simpler and more convenient to use and has powerful new features.
 
-An early version of the AlgorandClient was released in v6.1.0. The intention was to evolve the stateful class-based interface without any breaking changes, however unfortunately that wasn't possible.
+An early version of the `AlgorandClient` was released in v6.1.0. The intention was to evolve the stateful class-based interface without any breaking changes, however unfortunately that wasn't possible.
 
 As a result we have 2 supported migration paths: [<6.1.0](#610-migration-guide) and [>=6.1.0](#610-migration-guide-1).
 
@@ -146,7 +146,7 @@ If you are converting from an older typed client to a new one you will need to m
 
 ## >=6.1.0 Migration Guide
 
-Assuming you have actioned the deprecation notices as part of moving to the `>=6.1.0` version and have started using the early version of the `AlgorandClient`, then you need to be aware of some breaking changes that we have made to accommodate the feature set of v7. Any migration information related to the stateless function based interface is available in the [<6.1.0 Migration Guide](#610-migration-guide).
+Assuming you have started using the early version of the `AlgorandClient`, then you need to be aware of some breaking changes that we have made to accommodate the feature set of v7. Any migration information related to the stateless function based interface is available in the [<6.1.0 Migration Guide](#610-migration-guide).
 
 ### Migrating
 
@@ -169,6 +169,22 @@ Some imports have changed, which may need to updated. This only applies if you a
      //...
    })
    ```
+
+1. The `AlgorandClient` class is no longer available as a default export.
+
+```typescript
+/**** Before ****/
+import AlgorandClient from '../../types/algorand-client'
+const algorand = AlgorandClient.fromClients({
+  //...
+})
+
+/**** After ****/
+import { AlgorandClient } from '../../types/algorand-client'
+const algorand = AlgorandClient.fromClients({
+  //...
+})
+```
 
 1. The `ExecuteParams` type has been renamed to `SendParams` and moved from `/types/composer` to `/types/transaction`.
 

@@ -2,7 +2,7 @@ import { Address } from 'algosdk'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import * as indexer from './indexer-lookup'
-import { algorandFixture } from './testing'
+import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 import { AlgoAmount } from './types/amount'
 
 describe('indexer-lookup', () => {
@@ -16,6 +16,26 @@ describe('indexer-lookup', () => {
       amount: amount ?? (1).microAlgo(),
     })
   }
+
+  test('Transaction is found by id', async () => {
+    const { algorand, waitForIndexer } = localnet.context
+    const { transaction } = await sendTestTransaction()
+    await waitForIndexer()
+
+    const txn = await algorand.client.indexer.lookupTransactionByID(transaction.txID()).do()
+
+    expect(txn.transaction.id).toBe(transaction.txID())
+    expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)
+  }, 20_000)
+
+  test('Account is found by id', async () => {
+    const { algorand, testAccount } = localnet.context
+    await runWhenIndexerCaughtUp(() => algorand.client.indexer.lookupAccountByID(testAccount.addr).do())
+
+    const account = await algorand.client.indexer.lookupAccountByID(testAccount.addr).do()
+
+    expect(account.account.address).toBe(testAccount.addr.toString())
+  }, 20_000)
 
   test('Transactions are searched with pagination', async () => {
     const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context

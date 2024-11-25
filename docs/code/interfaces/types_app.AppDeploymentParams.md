@@ -78,7 +78,7 @@ Any args to pass to any create transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L324)
+[src/types/app.ts:323](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L323)
 
 ___
 
@@ -90,7 +90,7 @@ Override the on-completion action for the create call; defaults to NoOp
 
 #### Defined in
 
-[src/types/app.ts:326](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L326)
+[src/types/app.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L325)
 
 ___
 
@@ -102,7 +102,7 @@ Any args to pass to any delete transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:330](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L330)
+[src/types/app.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L329)
 
 ___
 
@@ -114,7 +114,7 @@ Any deploy-time parameters to replace in the TEAL code
 
 #### Defined in
 
-[src/types/app.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L316)
+[src/types/app.ts:315](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L315)
 
 ___
 
@@ -126,7 +126,7 @@ Optional cached value of the existing apps for the given creator
 
 #### Defined in
 
-[src/types/app.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L322)
+[src/types/app.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L321)
 
 ___
 
@@ -202,7 +202,7 @@ The deployment metadata
 
 #### Defined in
 
-[src/types/app.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L314)
+[src/types/app.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L313)
 
 ___
 
@@ -214,7 +214,7 @@ What action to perform if a schema break is detected
 
 #### Defined in
 
-[src/types/app.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L318)
+[src/types/app.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L317)
 
 ___
 
@@ -226,7 +226,7 @@ What action to perform if a TEAL update is detected
 
 #### Defined in
 
-[src/types/app.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L320)
+[src/types/app.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L319)
 
 ___
 
@@ -302,4 +302,4 @@ Any args to pass to any update transaction that is issued as part of deployment
 
 #### Defined in
 
-[src/types/app.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L328)
+[src/types/app.ts:327](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L327)

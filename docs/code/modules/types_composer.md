@@ -34,6 +34,7 @@
 - [AssetTransferParams](types_composer.md#assettransferparams)
 - [CommonAppCallParams](types_composer.md#commonappcallparams)
 - [CommonTransactionParams](types_composer.md#commontransactionparams)
+- [OfflineKeyRegistrationParams](types_composer.md#offlinekeyregistrationparams)
 - [OnlineKeyRegistrationParams](types_composer.md#onlinekeyregistrationparams)
 - [PaymentParams](types_composer.md#paymentparams)
 - [SimulateOptions](types_composer.md#simulateoptions)
@@ -316,6 +317,18 @@ Common parameters for defining a transaction.
 
 ___
 
+### OfflineKeyRegistrationParams
+
+Ƭ **OfflineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `preventAccountFromEverParticipatingAgain?`: `boolean`  }
+
+Parameters to define an offline key registration transaction.
+
+#### Defined in
+
+[src/types/composer.ts:325](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L325)
+
+___
+
 ### OnlineKeyRegistrationParams
 
 Ƭ **OnlineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `selectionKey`: `Uint8Array` ; `stateProofKey?`: `Uint8Array` ; `voteFirst`: `bigint` ; `voteKey`: `Uint8Array` ; `voteKeyDilution`: `bigint` ; `voteLast`: `bigint`  }
@@ -376,7 +389,7 @@ ___
 
 ### Txn
 
-Ƭ **Txn**: [`PaymentParams`](types_composer.md#paymentparams) & \{ `type`: ``"pay"``  } \| [`AssetCreateParams`](types_composer.md#assetcreateparams) & \{ `type`: ``"assetCreate"``  } \| [`AssetConfigParams`](types_composer.md#assetconfigparams) & \{ `type`: ``"assetConfig"``  } \| [`AssetFreezeParams`](types_composer.md#assetfreezeparams) & \{ `type`: ``"assetFreeze"``  } \| [`AssetDestroyParams`](types_composer.md#assetdestroyparams) & \{ `type`: ``"assetDestroy"``  } \| [`AssetTransferParams`](types_composer.md#assettransferparams) & \{ `type`: ``"assetTransfer"``  } \| [`AssetOptInParams`](types_composer.md#assetoptinparams) & \{ `type`: ``"assetOptIn"``  } \| [`AssetOptOutParams`](types_composer.md#assetoptoutparams) & \{ `type`: ``"assetOptOut"``  } \| [`AppCallParams`](types_composer.md#appcallparams) \| [`AppCreateParams`](types_composer.md#appcreateparams) \| [`AppUpdateParams`](types_composer.md#appupdateparams) & \{ `type`: ``"appCall"``  } \| [`OnlineKeyRegistrationParams`](types_composer.md#onlinekeyregistrationparams) & \{ `type`: ``"keyReg"``  } \| `algosdk.TransactionWithSigner` & \{ `type`: ``"txnWithSigner"``  } \| \{ `atc`: `algosdk.AtomicTransactionComposer` ; `type`: ``"atc"``  } \| [`AppCallMethodCall`](types_composer.md#appcallmethodcall) \| [`AppCreateMethodCall`](types_composer.md#appcreatemethodcall) \| [`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall) & \{ `type`: ``"methodCall"``  }
+Ƭ **Txn**: [`PaymentParams`](types_composer.md#paymentparams) & \{ `type`: ``"pay"``  } \| [`AssetCreateParams`](types_composer.md#assetcreateparams) & \{ `type`: ``"assetCreate"``  } \| [`AssetConfigParams`](types_composer.md#assetconfigparams) & \{ `type`: ``"assetConfig"``  } \| [`AssetFreezeParams`](types_composer.md#assetfreezeparams) & \{ `type`: ``"assetFreeze"``  } \| [`AssetDestroyParams`](types_composer.md#assetdestroyparams) & \{ `type`: ``"assetDestroy"``  } \| [`AssetTransferParams`](types_composer.md#assettransferparams) & \{ `type`: ``"assetTransfer"``  } \| [`AssetOptInParams`](types_composer.md#assetoptinparams) & \{ `type`: ``"assetOptIn"``  } \| [`AssetOptOutParams`](types_composer.md#assetoptoutparams) & \{ `type`: ``"assetOptOut"``  } \| [`AppCallParams`](types_composer.md#appcallparams) \| [`AppCreateParams`](types_composer.md#appcreateparams) \| [`AppUpdateParams`](types_composer.md#appupdateparams) & \{ `type`: ``"appCall"``  } \| [`OnlineKeyRegistrationParams`](types_composer.md#onlinekeyregistrationparams) \| [`OfflineKeyRegistrationParams`](types_composer.md#offlinekeyregistrationparams) & \{ `type`: ``"keyReg"``  } \| `algosdk.TransactionWithSigner` & \{ `type`: ``"txnWithSigner"``  } \| \{ `atc`: `algosdk.AtomicTransactionComposer` ; `type`: ``"atc"``  } \| [`AppCallMethodCall`](types_composer.md#appcallmethodcall) \| [`AppCreateMethodCall`](types_composer.md#appcreatemethodcall) \| [`AppUpdateMethodCall`](types_composer.md#appupdatemethodcall) & \{ `type`: ``"methodCall"``  }
 
 #### Defined in
 

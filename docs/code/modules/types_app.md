@@ -88,7 +88,7 @@ The return value of an ABI method call
 
 #### Defined in
 
-[src/types/app.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L236)
+[src/types/app.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L235)
 
 ___
 
@@ -114,7 +114,7 @@ Result from calling an app
 
 #### Defined in
 
-[src/types/app.ts:233](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L233)
+[src/types/app.ts:232](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L232)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[src/types/app.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L341)
+[src/types/app.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L340)
 
 ___
 
@@ -192,7 +192,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L358)
+[src/types/app.ts:357](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L357)
 
 ___
 
@@ -204,7 +204,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L347)
+[src/types/app.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L346)
 
 ___
 
@@ -216,7 +216,7 @@ Result from sending a single app transaction.
 
 #### Defined in
 
-[src/types/app.ts:355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L355)
+[src/types/app.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L354)
 
 ## Variables
 

@@ -21,6 +21,8 @@ To generate a typed client from an app spec file you can use [AlgoKit CLI](https
 > algokit generate client application.json --output /absolute/path/to/client.ts
 ```
 
+Note: If you are using a version of AlgoKit Utils >= 7.0.0 in your project, you will need to generate using >= 4.0.0. See [AlgoKit CLI generator version pinning](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#version-pinning) for more information on how to lock to a specific version.
+
 ## Getting a typed client instance
 
 To get an instance of a typed client you can use an [`AlgorandClient`](./algorand-client.md) instance or a typed app [`Factory`](#creating-a-typed-factory-instance) instance.

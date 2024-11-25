@@ -321,11 +321,11 @@ export type OnlineKeyRegistrationParams = CommonTransactionParams & {
   stateProofKey?: Uint8Array
 }
 
-// Not yet exposed because of bug in algosdk
-// export type OfflineKeyRegistrationParams = CommonTransactionParams & {
-//   /** Prevent this account from ever participating again. On network with rewards enabled, also disable rewards for this account */
-//   preventAddressFromEverParticipatingAgain?: boolean
-// }
+/** Parameters to define an offline key registration transaction. */
+export type OfflineKeyRegistrationParams = CommonTransactionParams & {
+  /** Prevent this account from ever participating again. The account will also no longer earn rewards */
+  preventAccountFromEverParticipatingAgain?: boolean
+}
 
 /** Common parameters for defining an application call transaction. */
 export type CommonAppCallParams = CommonTransactionParams & {
@@ -458,7 +458,7 @@ export type Txn =
   | (AssetOptInParams & { type: 'assetOptIn' })
   | (AssetOptOutParams & { type: 'assetOptOut' })
   | ((AppCallParams | AppCreateParams | AppUpdateParams) & { type: 'appCall' })
-  | (OnlineKeyRegistrationParams & { type: 'keyReg' })
+  | ((OnlineKeyRegistrationParams | OfflineKeyRegistrationParams) & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
@@ -749,6 +749,17 @@ export class TransactionComposer {
    * @returns The composer so you can chain method calls
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
+    this.txns.push({ ...params, type: 'keyReg' })
+
+    return this
+  }
+
+  /**
+   * Add an offline key registration transaction to the transaction group.
+   * @param params The offline key registration transaction parameters
+   * @returns The composer so you can chain method calls
+   */
+  addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
     this.txns.push({ ...params, type: 'keyReg' })
 
     return this
@@ -1088,17 +1099,25 @@ export class TransactionComposer {
     }
   }
 
-  private buildKeyReg(params: OnlineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
+    if ('voteKey' in params) {
+      return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
+        sender: params.sender,
+        voteKey: params.voteKey,
+        selectionKey: params.selectionKey,
+        voteFirst: params.voteFirst,
+        voteLast: params.voteLast,
+        voteKeyDilution: params.voteKeyDilution,
+        suggestedParams,
+        nonParticipation: false,
+        stateProofKey: params.stateProofKey,
+      })
+    }
+
     return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
-      voteKey: params.voteKey,
-      selectionKey: params.selectionKey,
-      voteFirst: params.voteFirst,
-      voteLast: params.voteLast,
-      voteKeyDilution: params.voteKeyDilution,
-      stateProofKey: params.stateProofKey,
-      nonParticipation: false,
       suggestedParams,
+      nonParticipation: params.preventAccountFromEverParticipatingAgain,
     })
   }
 
