@@ -65,11 +65,10 @@ describe('deploy-app', () => {
     const app1 = await algorand.send.appCreate(await getTestingAppCreateParams(testAccount, creationMetadata))
     const app2 = await algorand.send.appCreate(await getTestingAppCreateParams(testAccount, { ...creationMetadata, name: name2 }))
     const app3 = await algorand.send.appCreate(await getTestingAppCreateParams(testAccount, { ...creationMetadata, name: name3 }))
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
     const update1 = await algorand.send.appUpdate({ ...(await getTestingAppCreateParams(testAccount, updateMetadata)), appId: app1.appId })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const delete3 = await algorand.send.appDelete({ appId: app3.appId, sender: testAccount })
+    const _delete3 = await algorand.send.appDelete({ appId: app3.appId, sender: testAccount })
     await waitForIndexer()
 
     const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)

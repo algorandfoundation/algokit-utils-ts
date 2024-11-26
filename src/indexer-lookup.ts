@@ -150,7 +150,6 @@ export async function executePaginatedRequest<TResult, TRequest extends { do: ()
   const results = []
 
   let nextToken: string | undefined = undefined
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const request = buildRequest(nextToken)
     const response = await request.do()

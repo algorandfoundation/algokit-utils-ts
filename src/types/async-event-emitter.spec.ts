@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { Config } from '../config'
 import { algoKitLogCaptureFixture } from '../testing/fixtures/algokit-log-capture-fixture'

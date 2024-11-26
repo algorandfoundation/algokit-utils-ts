@@ -947,7 +947,6 @@ export class AppClient {
         Buffer.from(isClearStateProgram ? appSpec.source.clear : appSpec.source.approval, 'base64')
           .toString()
           .split('\n'),
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         getLineForPc,
       )
     }
@@ -1762,7 +1761,6 @@ export class ApplicationClient {
     if (!sender) {
       throw new Error('No sender provided, unable to deploy app')
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const from = sender ?? this.sender!
 
     if (!this._creator) {
@@ -1899,7 +1897,6 @@ export class ApplicationClient {
       )
 
       if (result.confirmation) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this._appId = result.confirmation.applicationIndex!
         this._appAddress = getApplicationAddress(this._appId).toString()
       }
@@ -1967,7 +1964,6 @@ export class ApplicationClient {
       // There isn't an ATC passed in
       !call.sendParams?.atc &&
       // The method is readonly
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.appSpec.hints[this.getABIMethodSignature(this.getABIMethod(call.method)!)].read_only
     ) {
       const atc = new AtomicTransactionComposer()
@@ -2062,7 +2058,6 @@ export class ApplicationClient {
         {
           appId: appMetadata.appId,
           callType: callType,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           from: sender,
           args: await this.getCallArgs(args, sender),
           note: note,
@@ -2336,7 +2331,6 @@ export class ApplicationClient {
    */
   async getAppReference(): Promise<AppMetadata | AppReference> {
     if (!this.existingDeployments && this._creator) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.existingDeployments = await getCreatorAppsByName(this._creator, this.indexer!)
     }
 
@@ -2376,7 +2370,6 @@ export class ApplicationClient {
         Buffer.from(isClear ? this.appSpec.source.clear : this.appSpec.source.approval, 'base64')
           .toString()
           .split('\n'),
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         (pc: number) => (isClear ? this._clearSourceMap : this._approvalSourceMap)?.getLocationForPc(pc)?.line,
       )
     else return e

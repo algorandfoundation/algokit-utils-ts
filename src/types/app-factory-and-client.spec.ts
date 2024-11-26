@@ -377,7 +377,6 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const returnValue = AppManager.getABIReturn(result.confirmations[1], getArc56Method('call_abi_txn', client.appSpec))
     expect(result.return).toBe(`Sent ${txn.payment?.amount}. test`)
     expect(returnValue?.returnValue).toBe(result.return)
@@ -609,11 +608,9 @@ describe('ARC32: app-factory-and-app-client', () => {
     const box1Value = await client.getBoxValue(boxName1)
     expect(boxValues.map((b) => b.name.nameBase64).sort()).toEqual([boxName1Base64, boxName2Base64].sort())
     const box1 = boxValues.find((b) => b.name.nameBase64 === boxName1Base64)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(box1!.value).toEqual(new Uint8Array(Buffer.from('value1')))
     expect(box1Value).toEqual(box1?.value)
     const box2 = boxValues.find((b) => b.name.nameBase64 === boxName2Base64)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(box2!.value).toEqual(new Uint8Array(Buffer.from('value2')))
 
     const expectedValue = 1234524352
