@@ -468,7 +468,6 @@ export class AppDeployer {
     // Extract all apps that account created
     const createdApps = (await indexer.lookupAccountCreatedApplicationByAddress(this._indexer, creatorAddress))
       .map((a) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return { id: a.id, createdAtRound: a.createdAtRound!, deleted: a.deleted }
       })
       .sort((a, b) => Number(a.createdAtRound - b.createdAtRound))
@@ -491,7 +490,6 @@ export class AppDeployer {
         //  * application-id is 0 when the app is first created
         //  * also verify the sender to prevent a potential security risk
         const appCreationTransaction = appTransactions.transactions.filter(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           (t) => t.applicationTransaction?.applicationId === 0n && t.sender.toString() === creatorAddress.toString(),
         )[0]
 
@@ -499,10 +497,8 @@ export class AppDeployer {
           .filter((t) => t.sender.toString() === creatorAddress.toString())
           .sort((a, b) =>
             a.confirmedRound === b.confirmedRound
-              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                (b.intraRoundOffset! - a.intraRoundOffset!) / 10
-              : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                Number(b.confirmedRound! - a.confirmedRound!),
+              ? (b.intraRoundOffset! - a.intraRoundOffset!) / 10
+              : Number(b.confirmedRound! - a.confirmedRound!),
           )[0]
 
         if (!appCreationTransaction?.note)
@@ -516,7 +512,6 @@ export class AppDeployer {
     apps
       .filter((a) => a !== null)
       .forEach((a) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { createdApp, appCreationTransaction, latestAppUpdateTransaction } = a!
 
         const parseNote = (note?: string) => {

@@ -89,7 +89,7 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L187)
+[src/types/kmd-account-manager.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L186)
 
 ___
 

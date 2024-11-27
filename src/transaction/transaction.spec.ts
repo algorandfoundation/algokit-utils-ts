@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
@@ -386,8 +385,7 @@ describe('Resource Packer: Mixed', () => {
     const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
     const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    expect(v8CallAccts!.length + v9CallAccts!.length).toBe(1)
+    expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
   })
 
   test('app account', async () => {

@@ -150,7 +150,6 @@ export class KmdAccountManager {
     await kmd.generateKey(walletHandle)
 
     // Get the account from the new KMD wallet
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const account = (await this.getWalletAccount(name))!
 
     Config.logger.info(
@@ -194,7 +193,6 @@ export class KmdAccountManager {
       throw new Error("Error retrieving LocalNet dispenser account; couldn't find the default account in KMD")
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return dispenser
   }
 }

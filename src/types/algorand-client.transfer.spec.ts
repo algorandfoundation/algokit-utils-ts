@@ -41,7 +41,6 @@ describe('Transfer capability', () => {
     expect(result.confirmation.txn.txn.payment?.amount).toBe(5_000_000n)
 
     expect(result.transaction.sender.toString()).toBe(testAccount.toString())
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(result.confirmation.txn.txn.sender.toString()).toBe(testAccount.toString())
 
     expect(accountInfo.balance.microAlgo).toBe(5_000_000n)

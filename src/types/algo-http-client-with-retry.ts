@@ -51,7 +51,6 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         Config.logger.warn(`algosdk request failed ${numTries} times. Retrying in ${delayTimeMs}ms: ${err}`)
       }
     } while (!response && ++numTries <= AlgoHttpClientWithRetry.MAX_TRIES)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return response!
   }
 
