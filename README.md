@@ -6,7 +6,7 @@ The goal of this library is to provide intuitive, productive utility functions t
 
 Note: If you prefer Python there's an equivalent [Python utility library](https://github.com/algorandfoundation/algokit-utils-py).
 
-[Install](#install) | [Documentation](docs/README.md)
+[Install](#install) | [Documentation](./docs/README.md)
 
 ## Install
 
