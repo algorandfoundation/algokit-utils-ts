@@ -49,7 +49,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L94)
+[src/types/config.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L90)
 
 ## Properties
 
@@ -59,7 +59,7 @@ Updatable AlgoKit config
 
 #### Defined in
 
-[src/types/config.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L33)
+[src/types/config.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L29)
 
 ## Accessors
 
@@ -77,7 +77,7 @@ Readonly.debug
 
 #### Defined in
 
-[src/types/config.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L43)
+[src/types/config.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L39)
 
 ___
 
@@ -95,7 +95,7 @@ Readonly.events
 
 #### Defined in
 
-[src/types/config.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L63)
+[src/types/config.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L59)
 
 ___
 
@@ -113,7 +113,7 @@ Readonly.logger
 
 #### Defined in
 
-[src/types/config.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L39)
+[src/types/config.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L35)
 
 ___
 
@@ -131,7 +131,7 @@ Readonly.maxSearchDepth
 
 #### Defined in
 
-[src/types/config.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L59)
+[src/types/config.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L55)
 
 ___
 
@@ -149,7 +149,7 @@ Readonly.populateAppCallResources
 
 #### Defined in
 
-[src/types/config.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L35)
+[src/types/config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L31)
 
 ___
 
@@ -167,7 +167,7 @@ Readonly.projectRoot
 
 #### Defined in
 
-[src/types/config.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L47)
+[src/types/config.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L43)
 
 ___
 
@@ -185,7 +185,7 @@ Readonly.traceAll
 
 #### Defined in
 
-[src/types/config.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L51)
+[src/types/config.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L47)
 
 ___
 
@@ -203,7 +203,7 @@ Readonly.traceBufferSizeMb
 
 #### Defined in
 
-[src/types/config.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L55)
+[src/types/config.ts:51](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L51)
 
 ## Methods
 
@@ -225,7 +225,7 @@ Update the AlgoKit configuration with your own configuration settings
 
 #### Defined in
 
-[src/types/config.ts:111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L111)
+[src/types/config.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L107)
 
 ___
 
@@ -249,7 +249,7 @@ The requested logger
 
 #### Defined in
 
-[src/types/config.ts:72](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L72)
+[src/types/config.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L68)
 
 ___
 
@@ -271,4 +271,4 @@ Temporarily run with debug set to true.
 
 #### Defined in
 
-[src/types/config.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L84)
+[src/types/config.ts:80](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L80)
