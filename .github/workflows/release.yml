@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - release
+      - 7.x.x
   workflow_dispatch:
 
 concurrency: release

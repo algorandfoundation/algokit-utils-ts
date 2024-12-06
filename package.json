@@ -110,7 +110,8 @@
       },
       {
         "name": "release"
-      }
+      },
+      "7.x.x"
     ],
     "plugins": [
       [
