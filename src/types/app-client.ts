@@ -1379,13 +1379,13 @@ export class AppClient {
   }
 
   /** Returns the signer for a call, using the provided signer or the `defaultSigner`
-   * if no signer was provided and the call will use default sender
+   * if no signer was provided and the sender resolves to the default sender, the call will use default signer
    * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
   private getSigner(
     sender: Address | string | undefined,
     signer: TransactionSigner | TransactionSignerAccount | undefined,
   ): TransactionSigner | TransactionSignerAccount | undefined {
-    return signer ?? (!sender ? this._defaultSigner : undefined)
+    return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 
   private getBareParams<
