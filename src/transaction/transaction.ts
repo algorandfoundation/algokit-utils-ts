@@ -590,7 +590,6 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
   const newAtc = new algosdk.AtomicTransactionComposer()
 
   group.forEach((t) => {
-    // eslint-disable-next-line no-param-reassign
     t.txn.group = undefined
     newAtc.addTransaction(t)
   })
@@ -792,7 +791,6 @@ export const sendGroupOfTransactions = async function (groupSend: TransactionGro
 
       return {
         txn,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         signer: defaultTransactionSigner!,
         sender: signer,
       }
@@ -850,7 +848,6 @@ export const waitForConfirmation = async function (
           }
         }
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: unknown) {
       if ((e as Error).name === 'URLTokenBaseHTTPError') {
         currentRound++

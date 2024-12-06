@@ -144,7 +144,7 @@ URLTokenBaseHTTPClient.delete
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L101)
+[src/types/algo-http-client-with-retry.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L100)
 
 ___
 
@@ -170,7 +170,7 @@ URLTokenBaseHTTPClient.get
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L58)
+[src/types/algo-http-client-with-retry.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L57)
 
 ___
 
@@ -197,4 +197,4 @@ URLTokenBaseHTTPClient.post
 
 #### Defined in
 
-[src/types/algo-http-client-with-retry.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L92)
+[src/types/algo-http-client-with-retry.ts:91](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algo-http-client-with-retry.ts#L91)

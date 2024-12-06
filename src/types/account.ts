@@ -66,7 +66,6 @@ export class MultisigAccount {
         signedTxn = algosdk.signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return signedTxn!
   }
 }

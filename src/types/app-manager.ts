@@ -526,7 +526,6 @@ function replaceTemplateVariable(program: string, token: string, replacement: st
     const comment = line.substring(commentIndex)
     let trailingIndex = 0
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       const tokenIndex = findTemplateToken(code, token, trailingIndex)
       if (tokenIndex === undefined) {

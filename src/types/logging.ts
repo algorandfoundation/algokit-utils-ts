@@ -45,14 +45,9 @@ export const warningConsoleLogger: Logger = {
 
 /** A logger implementation that does nothing */
 export const nullLogger: Logger = {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   error: function (message: string, ...optionalParams: unknown[]): void {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   warn: function (message: string, ...optionalParams: unknown[]): void {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   info: function (message: string, ...optionalParams: unknown[]): void {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   verbose: function (message: string, ...optionalParams: unknown[]): void {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   debug: function (message: string, ...optionalParams: unknown[]): void {},
 }

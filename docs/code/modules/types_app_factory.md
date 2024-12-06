@@ -32,7 +32,7 @@ Params to get an app client by ID from an app factory.
 
 #### Defined in
 
-[src/types/app-factory.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L133)
+[src/types/app-factory.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L134)
 
 ___
 
@@ -44,7 +44,7 @@ Params to specify a create method call for an app
 
 #### Defined in
 
-[src/types/app-factory.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L128)
+[src/types/app-factory.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L129)
 
 ___
 
@@ -56,7 +56,7 @@ Params to specify a bare (raw) create call for an app
 
 #### Defined in
 
-[src/types/app-factory.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L125)
+[src/types/app-factory.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L126)
 
 ___
 
@@ -68,7 +68,7 @@ Parameters to define a deployment for an `AppFactory`
 
 #### Defined in
 
-[src/types/app-factory.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L139)
+[src/types/app-factory.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L140)
 
 ___
 
@@ -80,7 +80,7 @@ Params to get an app client by creator address and name from an app factory.
 
 #### Defined in
 
-[src/types/app-factory.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L136)
+[src/types/app-factory.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L137)
 
 ___
 
@@ -98,7 +98,7 @@ onComplete parameter for a create app call
 
 #### Defined in
 
-[src/types/app-factory.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L101)
+[src/types/app-factory.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L102)
 
 ___
 
@@ -121,4 +121,4 @@ Specifies a schema used for creating an app
 
 #### Defined in
 
-[src/types/app-factory.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L106)
+[src/types/app-factory.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L107)

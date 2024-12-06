@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import algosdk, { Account, Address } from 'algosdk'
 import { beforeAll, describe, expect, test } from 'vitest'
 import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'

@@ -23,11 +23,23 @@ const address = (address: string | Address): Address => {
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 
-/** Options to control a simulate request */
-export type SimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>> & {
-  /** Whether or not to skip signatures for all built transactions and use an empty signer instead. */
-  skipSignatures?: boolean
-}
+/** Options to control a simulate request, that does not require transaction signing */
+export type SkipSignaturesSimulateOptions = Expand<
+  Omit<RawSimulateOptions, 'fixSigners' | 'allowEmptySignatures'> & {
+    /** Whether or not to skip signatures for all built transactions and use an empty signer instead.
+     * This will set `fixSigners` and `allowEmptySignatures` when sending the request to the algod API.
+     */
+    skipSignatures: boolean
+  }
+>
+
+/** The raw API options to control a simulate request.
+ * See algod API docs for more information: https://developer.algorand.org/docs/rest-apis/algod/#simulaterequest
+ */
+export type RawSimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
+
+/** All options to control a simulate request */
+export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
 
 /** Common parameters for defining a transaction. */
 export type CommonTransactionParams = {
@@ -1302,13 +1314,19 @@ export class TransactionComposer {
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
    */
+  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  async simulate(
+    options: SkipSignaturesSimulateOptions,
+  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
-    const atc = options?.skipSignatures ? new AtomicTransactionComposer() : this.atc
+    const { skipSignatures = false, ...rawOptions } = options ?? {}
+    const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
 
     // Build the transactions
-    if (options?.skipSignatures) {
-      options.allowEmptySignatures = true
-      options.fixSigners = true
+    if (skipSignatures) {
+      rawOptions.allowEmptySignatures = true
+      rawOptions.fixSigners = true
       // Build transactions uses empty signers
       const transactions = await this.buildTransactions()
       for (const txn of transactions.transactions) {
@@ -1324,7 +1342,7 @@ export class TransactionComposer {
       this.algod,
       new modelsv2.SimulateRequest({
         txnGroups: [],
-        ...options,
+        ...rawOptions,
         ...(Config.debug
           ? {
               allowEmptySignatures: true,

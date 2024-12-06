@@ -1,4 +1,5 @@
 import algosdk, { Address } from 'algosdk'
+import { TransactionSignerAccount } from './account'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import {
   AppCompilationResult,
@@ -554,24 +555,31 @@ export class AppFactory {
     return result
   }
 
-  private getBareParams<TParams extends { sender?: Address | string } | undefined, TOnComplete extends OnApplicationComplete>(
-    params: TParams,
-    onComplete: TOnComplete,
-  ) {
+  private getBareParams<
+    TParams extends { sender?: Address | string; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
+    TOnComplete extends OnApplicationComplete,
+  >(params: TParams, onComplete: TOnComplete) {
     return {
       ...params,
       sender: this.getSender(params?.sender),
+      signer: this.getSigner(params?.sender, params?.signer),
       onComplete,
     }
   }
 
   private getABIParams<
-    TParams extends { method: string; sender?: Address | string; args?: AppClientMethodCallParams['args'] },
+    TParams extends {
+      method: string
+      sender?: Address | string
+      signer?: TransactionSigner | TransactionSignerAccount
+      args?: AppClientMethodCallParams['args']
+    },
     TOnComplete extends OnApplicationComplete,
   >(params: TParams, onComplete: TOnComplete) {
     return {
       ...params,
       sender: this.getSender(params.sender),
+      signer: this.getSigner(params.sender, params.signer),
       method: getArc56Method(params.method, this._appSpec),
       args: this.getCreateABIArgsWithDefaultValues(params.method, params.args),
       onComplete,
@@ -608,10 +616,19 @@ export class AppFactory {
    * if none provided and throws an error if neither provided */
   private getSender(sender: string | Address | undefined): Address {
     if (!sender && !this._defaultSender) {
-      throw new Error(`No sender provided and no default sender present in app client for call to app ${this._appName}`)
+      throw new Error(`No sender provided and no default sender present in app factory for call to app ${this._appName}`)
     }
-    const s = sender ?? this._defaultSender!
-    return typeof s === 'string' ? Address.fromString(s) : s
+    return typeof sender === 'string' ? Address.fromString(sender) : (sender ?? this._defaultSender!)
+  }
+
+  /** Returns the signer for a call, using the provided signer or the `defaultSigner`
+   * if no signer was provided and the sender resolves to the default sender, the call will use default signer
+   * or `undefined` otherwise (so the signer is resolved from `AlgorandClient`) */
+  private getSigner(
+    sender: Address | string | undefined,
+    signer: TransactionSigner | TransactionSignerAccount | undefined,
+  ): TransactionSigner | TransactionSignerAccount | undefined {
+    return signer ?? (!sender || sender === this._defaultSender ? this._defaultSigner : undefined)
   }
 
   /**
