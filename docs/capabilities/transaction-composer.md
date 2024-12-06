@@ -33,10 +33,57 @@ The [methods to construct a transaction](../code/classes/types_composer.default.
 For example:
 
 ```typescript
-const result = algorand.addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (100).microAlgo() }).addAppCallMethodCall({
-  sender: 'SENDER',
-  appId: 123n,
-  method: abiMethod,
-  args: [1, 2, 3],
-}).
+const result = algorand
+  .newGroup()
+  .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (100).microAlgo() })
+  .addAppCallMethodCall({
+    sender: 'SENDER',
+    appId: 123n,
+    method: abiMethod,
+    args: [1, 2, 3],
+  })
+```
+
+## Simulating a transaction
+
+Transactions can be simulated using the simulate endpoint in algod, which enables evaluating the transaction on the network without it actually being commited to a block.
+This is a powerful feature, which has a number of options which are detailed in the [simulate API docs](https://developer.algorand.org/docs/rest-apis/algod/#post-v2transactionssimulate).
+
+For example you can simulate a transaction group like below:
+
+```typescript
+const result = await algorand
+  .newGroup()
+  .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (100).microAlgo() })
+  .addAppCallMethodCall({
+    sender: 'SENDER',
+    appId: 123n,
+    method: abiMethod,
+    args: [1, 2, 3],
+  })
+  .simulate()
+```
+
+The above will execute a simulate request asserting that all transactions in the group are correctly signed.
+
+### Simulate without signing
+
+There are situations where you may not be able to (or want to) sign the transactions when executing simulate.
+In these instances you should set `skipSignatures: true` which automatically builds empty transaction signers and sets both `fix-signers` and `allow-empty-signatures` to `true` when sending the algod API call.
+
+For example:
+
+```typescript
+const result = await algorand
+  .newGroup()
+  .addPayment({ sender: 'SENDER', receiver: 'RECEIVER', amount: (100).microAlgo() })
+  .addAppCallMethodCall({
+    sender: 'SENDER',
+    appId: 123n,
+    method: abiMethod,
+    args: [1, 2, 3],
+  })
+  .simulate({
+    skipSignatures: true,
+  })
 ```
