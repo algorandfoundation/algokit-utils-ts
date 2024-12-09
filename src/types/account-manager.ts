@@ -96,6 +96,7 @@ export class AccountManager {
    * Records the given account (that can sign) against the address of the provided account for later
    * retrieval and returns a `TransactionSignerAccount` along with the original account in an `account` property.
    */
+
   private signerAccount<T extends TransactionSignerAccount | Account | SigningAccount | LogicSigAccount | MultisigAccount>(
     account: T,
   ): Address &
@@ -108,12 +109,12 @@ export class AccountManager {
       signer: signer,
     }
     this._accounts[acc.addr.toString()] = acc
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const addressWithAccount = Address.fromString(acc.addr.toString()) as any
+
+    const addressWithAccount = Address.fromString(acc.addr.toString()) as Address & TransactionSignerAccount & { account: T }
     addressWithAccount.account = account
-    addressWithAccount.addr = acc.addr.toString()
+    addressWithAccount.addr = acc.addr
     addressWithAccount.signer = signer
-    return addressWithAccount as Address & TransactionSignerAccount & { account: T }
+    return addressWithAccount
   }
 
   /**
