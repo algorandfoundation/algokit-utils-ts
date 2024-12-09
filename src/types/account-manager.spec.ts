@@ -25,7 +25,7 @@ describe('AccountManager', () => {
     const account2 = await algorand.account.fromEnvironment(name)
 
     expect(account).not.toBe(account2)
-    expect(account.addr).toBe(account2.addr)
+    expect(account.addr).toEqual(account2.addr)
     expect(account.account.sk).toEqual(account2.account.sk)
   }, 10e6)
 
@@ -39,7 +39,7 @@ describe('AccountManager', () => {
     const account2 = await algorand.account.fromEnvironment(name2)
 
     expect(account).not.toBe(account2)
-    expect(account.addr).toBe(account2.addr)
+    expect(account.addr).toEqual(account2.addr)
     expect(account.account.sk).toEqual(account2.account.sk)
   }, 10e6)
 })
