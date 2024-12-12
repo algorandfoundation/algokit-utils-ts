@@ -16,11 +16,24 @@ Parameters to configure transaction sending.
 
 ### Properties
 
+- [coverAppCallInnerTransactionFees](types_transaction.SendParams.md#coverappcallinnertransactionfees)
 - [maxRoundsToWaitForConfirmation](types_transaction.SendParams.md#maxroundstowaitforconfirmation)
 - [populateAppCallResources](types_transaction.SendParams.md#populateappcallresources)
 - [suppressLog](types_transaction.SendParams.md#suppresslog)
 
 ## Properties
+
+### coverAppCallInnerTransactionFees
+
+• `Optional` **coverAppCallInnerTransactionFees**: `boolean`
+
+Whether to use simulate to automatically calculate required app call inner transactions fees and cover them in the parent app call transaction fee
+
+#### Defined in
+
+[src/types/transaction.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L142)
+
+___
 
 ### maxRoundsToWaitForConfirmation
 

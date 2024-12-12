@@ -66,7 +66,7 @@ export type CommonTransactionParams = {
   lease?: Uint8Array | string
   /** The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. */
   staticFee?: AlgoAmount
-  /** The fee to pay IN ADDITION to the suggested fee. Useful for covering inner transaction fees. */
+  /** The fee to pay IN ADDITION to the suggested fee. Useful for manually covering inner transaction fees. */
   extraFee?: AlgoAmount
   /** Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. */
   maxFee?: AlgoAmount
@@ -495,6 +495,20 @@ export type TransactionComposerParams = {
   appManager?: AppManager
 }
 
+/** Represents a Transaction with additional context that was used to build that transaction. */
+interface TransactionWithContext {
+  txn: Transaction
+  context: {
+    /* The logical max fee for the transaction, if one was supplied. */
+    maxFee?: AlgoAmount
+    /* The ABI method, if the app call transaction is an ABI method call. */
+    abiMethod?: algosdk.ABIMethod
+  }
+}
+
+/** Represents a TransactionWithSigner with additional context that was used to build that transaction. */
+type TransactionWithSignerAndContext = algosdk.TransactionWithSigner & TransactionWithContext
+
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
@@ -513,8 +527,10 @@ export class TransactionComposer {
   /** The ATC used to compose the group */
   private atc = new algosdk.AtomicTransactionComposer()
 
-  /** Map of txid to ABI method */
-  private txnMethodMap: Map<string, algosdk.ABIMethod> = new Map()
+  /** Map of transaction index in the atc to a max logical fee.
+   * This is set using the value of either maxFee or staticFee.
+   */
+  private txnMaxFees: Map<number, AlgoAmount> = new Map()
 
   /** Transactions that have not yet been composed */
   private txns: Txn[] = []
@@ -789,17 +805,23 @@ export class TransactionComposer {
   }
 
   /** Build an ATC and return transactions ready to be incorporated into a broader set of transactions this composer is composing */
-  private buildAtc(atc: algosdk.AtomicTransactionComposer): algosdk.TransactionWithSigner[] {
+  private buildAtc(atc: algosdk.AtomicTransactionComposer): TransactionWithSignerAndContext[] {
     const group = atc.buildGroup()
 
     const txnWithSigners = group.map((ts, idx) => {
       // Remove underlying group ID from the transaction since it will be re-grouped when this TransactionComposer is built
       ts.txn.group = undefined
-      // If this was a method call stash the ABIMethod for later
+      // If this was a method call return the ABIMethod for later
       if (atc['methodCalls'].get(idx)) {
-        this.txnMethodMap.set(ts.txn.txID(), atc['methodCalls'].get(idx))
+        return {
+          ...ts,
+          context: { abiMethod: atc['methodCalls'].get(idx) as algosdk.ABIMethod },
+        }
       }
-      return ts
+      return {
+        ...ts,
+        context: {},
+      }
     })
 
     return txnWithSigners
@@ -809,9 +831,10 @@ export class TransactionComposer {
     buildTxn: (params: TParams) => Transaction,
     params: CommonTransactionParams,
     txnParams: TParams,
-  ): Transaction {
+  ): TransactionWithContext {
     // We are going to mutate suggested params, let's create a clone first
     txnParams.suggestedParams = { ...txnParams.suggestedParams }
+
     if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies algosdk.Transaction['lease']
     if (params.rekeyTo) txnParams.rekeyTo = address(params.rekeyTo) satisfies algosdk.Transaction['rekeyTo']
     const encoder = new TextEncoder()
@@ -851,7 +874,10 @@ export class TransactionComposer {
       throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
     }
 
-    return txn
+    const logicalMaxFee =
+      params.maxFee !== undefined && params.maxFee.microAlgo > (params.staticFee?.microAlgo ?? 0n) ? params.maxFee : params.staticFee
+
+    return { txn, context: { maxFee: logicalMaxFee } }
   }
 
   /**
@@ -863,9 +889,9 @@ export class TransactionComposer {
     params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
     suggestedParams: algosdk.SuggestedParams,
     includeSigner: boolean,
-  ): Promise<algosdk.TransactionWithSigner[]> {
-    const methodArgs: algosdk.ABIArgument[] = []
-    const transactionsForGroup: TransactionWithSigner[] = []
+  ): Promise<TransactionWithSignerAndContext[]> {
+    const methodArgs: (algosdk.ABIArgument | TransactionWithSignerAndContext)[] = []
+    const transactionsForGroup: TransactionWithSignerAndContext[] = []
 
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
@@ -879,7 +905,7 @@ export class TransactionComposer {
         // An undefined transaction argument signals that the value will be supplied by a method call argument
         if (algosdk.abiTypeIsTransaction(params.method.args[i].type) && transactionsForGroup.length > 0) {
           // Move the last transaction from the group to the method call arguments to appease algosdk
-          const placeholderTransaction = transactionsForGroup.splice(-1, 1)[0]
+          const { context: _, ...placeholderTransaction } = transactionsForGroup.splice(-1, 1)[0]
           methodArgs.push(placeholderTransaction)
           continue
         }
@@ -899,7 +925,6 @@ export class TransactionComposer {
 
       if ('method' in arg) {
         const tempTxnWithSigners = await this.buildMethodCall(arg, suggestedParams, includeSigner)
-
         // If there is any transaction args, add to the atc
         // Everything else should be added as method args
 
@@ -922,7 +947,40 @@ export class TransactionComposer {
     }
 
     const methodAtc = new algosdk.AtomicTransactionComposer()
-    transactionsForGroup.reverse().forEach((txn) => methodAtc.addTransaction(txn))
+    const maxFees = new Map<number, AlgoAmount>()
+
+    transactionsForGroup.reverse().forEach(({ context, ...txnWithSigner }) => {
+      methodAtc.addTransaction(txnWithSigner)
+      const atcIndex = methodAtc.count() - 1
+      if (context.abiMethod) {
+        methodAtc['methodCalls'].set(atcIndex, context.abiMethod)
+      }
+      if (context.maxFee !== undefined) {
+        maxFees.set(atcIndex, context.maxFee)
+      }
+    })
+
+    // If any of the args are method call transactions, add that info to the methodAtc
+    methodArgs
+      .filter((arg) => {
+        if (typeof arg === 'object' && 'context' in arg) {
+          const { context, ...txnWithSigner } = arg
+          return isTransactionWithSigner(txnWithSigner)
+        }
+        return isTransactionWithSigner(arg)
+      })
+      .reverse()
+      .forEach((arg, idx) => {
+        if (typeof arg === 'object' && 'context' in arg && arg.context) {
+          const atcIndex = methodAtc.count() + idx
+          if (arg.context.abiMethod) {
+            methodAtc['methodCalls'].set(atcIndex, arg.context.abiMethod)
+          }
+          if (arg.context.maxFee !== undefined) {
+            maxFees.set(atcIndex, arg.context.maxFee)
+          }
+        }
+      })
 
     const appId = Number('appId' in params ? params.appId : 0n)
     const approvalProgram =
@@ -969,7 +1027,15 @@ export class TransactionComposer {
             : params.signer
           : this.getSigner(params.sender)
         : TransactionComposer.NULL_SIGNER,
-      methodArgs: methodArgs.reverse(),
+      methodArgs: methodArgs
+        .map((arg) => {
+          if (typeof arg === 'object' && 'context' in arg) {
+            const { context, ...txnWithSigner } = arg
+            return txnWithSigner
+          }
+          return arg
+        })
+        .reverse(),
       // note, lease, and rekeyTo are set in the common build step
       note: undefined,
       lease: undefined,
@@ -977,7 +1043,7 @@ export class TransactionComposer {
     }
 
     // Build the transaction
-    this.commonTxnBuildStep(
+    const result = this.commonTxnBuildStep(
       (txnParams) => {
         methodAtc.addMethodCall(txnParams)
         return methodAtc.buildGroup()[methodAtc.count() - 1].txn
@@ -987,7 +1053,18 @@ export class TransactionComposer {
     )
 
     // Process the ATC to get a set of transactions ready for broader grouping
-    return this.buildAtc(methodAtc)
+    return this.buildAtc(methodAtc).map(({ context: _context, ...txnWithSigner }, idx) => {
+      const maxFee = idx === methodAtc.count() - 1 ? result.context.maxFee : maxFees.get(idx)
+      const context = {
+        ..._context, // Adds method context info
+        maxFee,
+      }
+
+      return {
+        ...txnWithSigner,
+        context,
+      }
+    })
   }
 
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
@@ -1135,7 +1212,7 @@ export class TransactionComposer {
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
-  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.Transaction[]> {
+  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<TransactionWithContext[]> {
     switch (txn.type) {
       case 'pay':
         return [this.buildPayment(txn, suggestedParams)]
@@ -1162,9 +1239,14 @@ export class TransactionComposer {
     }
   }
 
-  private async buildTxnWithSigner(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<algosdk.TransactionWithSigner[]> {
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<TransactionWithSignerAndContext[]> {
     if (txn.type === 'txnWithSigner') {
-      return [txn]
+      return [
+        {
+          ...txn,
+          context: {},
+        },
+      ]
     }
 
     if (txn.type === 'atc') {
@@ -1177,7 +1259,7 @@ export class TransactionComposer {
 
     const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
 
-    return (await this.buildTxn(txn, suggestedParams)).map((txn) => ({ txn, signer }))
+    return (await this.buildTxn(txn, suggestedParams)).map(({ txn, context }) => ({ txn, signer, context }))
   }
 
   /**
@@ -1194,7 +1276,7 @@ export class TransactionComposer {
 
     for (const txn of this.txns) {
       if (!['txnWithSigner', 'atc', 'methodCall'].includes(txn.type)) {
-        transactions.push(...(await this.buildTxn(txn, suggestedParams)))
+        transactions.push(...(await this.buildTxn(txn, suggestedParams)).map((txn) => txn.txn))
       } else {
         const transactionsWithSigner =
           txn.type === 'txnWithSigner'
@@ -1205,18 +1287,17 @@ export class TransactionComposer {
                 ? await this.buildMethodCall(txn, suggestedParams, false)
                 : []
 
-        transactions.push(...transactionsWithSigner.map((ts) => ts.txn))
         transactionsWithSigner.forEach((ts, idx) => {
+          transactions.push(ts.txn)
+
           if (ts.signer && ts.signer !== TransactionComposer.NULL_SIGNER) {
             signers.set(idx, ts.signer)
           }
+          if ('context' in ts && ts.context.abiMethod) {
+            methodCalls.set(idx, ts.context.abiMethod)
+          }
         })
       }
-    }
-
-    for (let i = 0; i < transactions.length; i++) {
-      const method = this.txnMethodMap.get(transactions[i].txID())
-      if (method) methodCalls.set(i, method)
     }
 
     return { transactions, methodCalls, signers }
@@ -1243,18 +1324,24 @@ export class TransactionComposer {
       const suggestedParams = await this.getSuggestedParams()
 
       // Build all of the transactions
-      const txnWithSigners: algosdk.TransactionWithSigner[] = []
+      const txnWithSigners: TransactionWithSignerAndContext[] = []
       for (const txn of this.txns) {
         txnWithSigners.push(...(await this.buildTxnWithSigner(txn, suggestedParams)))
       }
 
       // Add all of the transactions to the underlying ATC
       const methodCalls = new Map<number, algosdk.ABIMethod>()
-      txnWithSigners.forEach((ts, idx) => {
+      txnWithSigners.forEach(({ context, ...ts }, idx) => {
         this.atc.addTransaction(ts)
+
         // Populate consolidated set of all ABI method calls
-        const method = this.txnMethodMap.get(ts.txn.txID())
-        if (method) methodCalls.set(idx, method)
+        if (context.abiMethod) {
+          methodCalls.set(idx, context.abiMethod)
+        }
+
+        if (context.maxFee !== undefined) {
+          this.txnMaxFees.set(idx, context.maxFee)
+        }
       })
       this.atc['methodCalls'] = methodCalls
     }
@@ -1281,9 +1368,13 @@ export class TransactionComposer {
     const group = (await this.build()).transactions
 
     let waitRounds = params?.maxRoundsToWaitForConfirmation
+
+    const suggestedParams =
+      waitRounds === undefined || params?.coverAppCallInnerTransactionFees ? await this.getSuggestedParams() : undefined
+
     if (waitRounds === undefined) {
       const lastRound = group.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
-      const { firstValid: firstRound } = await this.getSuggestedParams()
+      const { firstValid: firstRound } = suggestedParams!
       waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
     }
 
@@ -1293,6 +1384,13 @@ export class TransactionComposer {
         suppressLog: params?.suppressLog,
         maxRoundsToWaitForConfirmation: waitRounds,
         populateAppCallResources: params?.populateAppCallResources,
+        coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
+        executionContext: params?.coverAppCallInnerTransactionFees
+          ? {
+              maxFees: this.txnMaxFees,
+              suggestedParams: suggestedParams!,
+            }
+          : undefined,
       },
       this.algod,
     )

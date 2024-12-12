@@ -138,6 +138,8 @@ export interface SendParams {
   suppressLog?: boolean
   /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`. */
   populateAppCallResources?: boolean
+  /** Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee */
+  coverAppCallInnerTransactionFees?: boolean
 }
 
 /** An `AtomicTransactionComposer` with transactions to send. */
@@ -148,4 +150,15 @@ export interface AtomicTransactionComposerToSend extends SendParams {
    * @deprecated - set the parameters at the top level instead
    * Any parameters to control the semantics of the send to the network */
   sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
+
+  /**
+   * Additional execution context used when building the transaction group that is sent.
+   * This additional context is used when coverAppCallInnerTransactionFees is set to true.
+   **/
+  executionContext?: {
+    /** A map of the transaction index to the max fee that can be calculated for a transaction in the group */
+    maxFees: Map<number, AlgoAmount>
+    /* The suggested params for a transaction at the current time */
+    suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>
+  }
 }

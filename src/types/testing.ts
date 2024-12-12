@@ -98,6 +98,8 @@ export interface LogSnapshotConfig {
   accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount)[]
   /** Any app IDs to replace predictably */
   apps?: (string | number | bigint)[]
+  /** Optional filter predicate to filter out logs */
+  filterPredicate?: (log: string) => boolean
 }
 
 export interface AlgoKitLogCaptureFixture {

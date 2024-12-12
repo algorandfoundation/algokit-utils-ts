@@ -14,6 +14,7 @@ This helps ensure that the provided configuration items won't appear
 
 - [accounts](types_testing.LogSnapshotConfig.md#accounts)
 - [apps](types_testing.LogSnapshotConfig.md#apps)
+- [filterPredicate](types_testing.LogSnapshotConfig.md#filterpredicate)
 - [transactions](types_testing.LogSnapshotConfig.md#transactions)
 
 ## Properties
@@ -39,6 +40,32 @@ Any app IDs to replace predictably
 #### Defined in
 
 [src/types/testing.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L100)
+
+___
+
+### filterPredicate
+
+• `Optional` **filterPredicate**: (`log`: `string`) => `boolean`
+
+Optional filter predicate to filter out logs
+
+#### Type declaration
+
+▸ (`log`): `boolean`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `log` | `string` |
+
+##### Returns
+
+`boolean`
+
+#### Defined in
+
+[src/types/testing.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L102)
 
 ___
 

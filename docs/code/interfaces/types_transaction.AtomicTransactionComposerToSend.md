@@ -17,6 +17,8 @@ An `AtomicTransactionComposer` with transactions to send.
 ### Properties
 
 - [atc](types_transaction.AtomicTransactionComposerToSend.md#atc)
+- [coverAppCallInnerTransactionFees](types_transaction.AtomicTransactionComposerToSend.md#coverappcallinnertransactionfees)
+- [executionContext](types_transaction.AtomicTransactionComposerToSend.md#executioncontext)
 - [maxRoundsToWaitForConfirmation](types_transaction.AtomicTransactionComposerToSend.md#maxroundstowaitforconfirmation)
 - [populateAppCallResources](types_transaction.AtomicTransactionComposerToSend.md#populateappcallresources)
 - [sendParams](types_transaction.AtomicTransactionComposerToSend.md#sendparams)
@@ -32,7 +34,43 @@ The `AtomicTransactionComposer` with transactions loaded to send
 
 #### Defined in
 
-[src/types/transaction.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L146)
+[src/types/transaction.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L148)
+
+___
+
+### coverAppCallInnerTransactionFees
+
+• `Optional` **coverAppCallInnerTransactionFees**: `boolean`
+
+Whether to use simulate to automatically calculate required app call inner transactions fees and cover them in the parent app call transaction fee
+
+#### Inherited from
+
+[SendParams](types_transaction.SendParams.md).[coverAppCallInnerTransactionFees](types_transaction.SendParams.md#coverappcallinnertransactionfees)
+
+#### Defined in
+
+[src/types/transaction.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L142)
+
+___
+
+### executionContext
+
+• `Optional` **executionContext**: `Object`
+
+Additional execution context used when building the transaction group that is sent.
+This additional context is used when coverAppCallInnerTransactionFees is set to true.
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `maxFees` | `Map`\<`number`, [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)\> | A map of the transaction index to the max fee that can be calculated for a transaction in the group |
+| `suggestedParams` | `Pick`\<`SuggestedParams`, ``"fee"`` \| ``"minFee"``\> | - |
+
+#### Defined in
+
+[src/types/transaction.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L158)
 
 ___
 
@@ -79,7 +117,7 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L150)
+[src/types/transaction.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L152)
 
 ___
 
