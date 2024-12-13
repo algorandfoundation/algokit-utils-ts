@@ -90,7 +90,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
-    algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+    algorand = algorand ?? AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
     const testAccount = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
     algorand.setSignerFromAccount(testAccount).setSuggestedParamsCacheTimeout(0)
     // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
