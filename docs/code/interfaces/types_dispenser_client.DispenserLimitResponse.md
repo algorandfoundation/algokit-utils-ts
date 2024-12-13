@@ -22,4 +22,4 @@ The limit, in µAlgo, that you can currently fund.
 
 #### Defined in
 
-[src/types/dispenser-client.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L34)
+[src/types/dispenser-client.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/dispenser-client.ts#L35)
