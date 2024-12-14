@@ -1,6 +1,7 @@
 import algosdk, { Address } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
+import { asJson, defaultJsonValueReplacer } from '../util'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
@@ -20,8 +21,17 @@ import {
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
 
+//
+
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
-  return `${method.name}(${(args ?? []).map((a) => (typeof a === 'object' ? JSON.stringify(a, (_, v) => (typeof v === 'bigint' ? Number(v) : v instanceof Uint8Array ? Buffer.from(v).toString('base64') : v)) : a))})`
+  return `${method.name}(${(args ?? []).map((a) =>
+    typeof a === 'object'
+      ? asJson(a, (k, v) => {
+          const newV = defaultJsonValueReplacer(k, v)
+          return newV instanceof Uint8Array ? Buffer.from(newV).toString('base64') : newV
+        })
+      : a,
+  )})`
 }
 
 /** Orchestrates sending transactions for `AlgorandClient`. */
