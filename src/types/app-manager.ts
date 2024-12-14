@@ -253,8 +253,9 @@ export class AppManager {
    * @param boxName The name of the box to return either as a string, binary array or `BoxName`
    * @returns The current box value as a byte array
    */
-  public async getBoxValue(appId: bigint, boxName: BoxIdentifier): Promise<Uint8Array> {
-    const name = AppManager.getBoxReference(boxName).name
+  public async getBoxValue(appId: bigint, boxName: BoxIdentifier | BoxName): Promise<Uint8Array> {
+    const boxId = typeof boxName === 'object' && 'nameRaw' in boxName ? boxName.nameRaw : boxName
+    const name = AppManager.getBoxReference(boxId).name
     const boxResult = await this._algod.getApplicationBoxByName(Number(appId), name).do()
     return boxResult.value
   }
@@ -265,7 +266,7 @@ export class AppManager {
    * @param boxNames The names of the boxes to return either as a string, binary array or `BoxName`
    * @returns The current box values as a byte array in the same order as the passed in box names
    */
-  public async getBoxValues(appId: bigint, boxNames: BoxIdentifier[]): Promise<Uint8Array[]> {
+  public async getBoxValues(appId: bigint, boxNames: (BoxIdentifier | BoxName)[]): Promise<Uint8Array[]> {
     return await Promise.all(boxNames.map(async (boxName) => await this.getBoxValue(appId, boxName)))
   }
 
