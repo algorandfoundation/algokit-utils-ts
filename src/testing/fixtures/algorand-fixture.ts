@@ -75,6 +75,8 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig): Algorand
 export function algorandFixture(fixtureConfig: AlgorandFixtureConfig | undefined, config: AlgoConfig): AlgorandFixture
 
 export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: AlgoConfig): AlgorandFixture {
+  Config.configure({ debug: true })
+
   fixtureConfig = { ...fixtureConfig, ...config }
   if (!fixtureConfig.algod || !fixtureConfig.indexer || !fixtureConfig.kmd) {
     fixtureConfig = { ...ClientManager.getConfigFromEnvironmentOrLocalNet(), ...fixtureConfig }
@@ -83,21 +85,44 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
   const algod = fixtureConfig.algod ?? ClientManager.getAlgodClient(fixtureConfig.algodConfig!)
   const indexer = fixtureConfig.indexer ?? ClientManager.getIndexerClient(fixtureConfig.indexerConfig!)
   const kmd = fixtureConfig.kmd ?? ClientManager.getKmdClient(fixtureConfig.kmdConfig!)
+  const transactionLogger = new TransactionLogger()
+  const transactionLoggerAlgod = transactionLogger.capture(algod)
+
+  const algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+
+  const generateAccount = async (params: GetTestAccountParams) => {
+    const account = await getTestAccount(params, algorand)
+    algorand.setSignerFromAccount(account)
+    return account
+  }
+
+  // TODO: Figure out why waitForIndexer is not working
+  // The tests pass if we just wait for 15 seconds:
+  // const waitForIndexer = () => new Promise((resolve) => setTimeout(resolve, 15_000))
+  // DO NOT MERGE UNTIL WE FIX THIS
+  const waitForIndexer = () => transactionLogger.waitForIndexer(indexer)
+  const waitForIndexerTransaction = (transactionId: string) =>
+    runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(transactionId).do())
+
+  // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
+  //  otherwise we are more likely to get invalid transactions.
+  const algorandClientSetup = new Promise<void>((resolve) => {
+    algorand.client.isLocalNet().then((isLocalNet) => {
+      if (isLocalNet) {
+        algorand.setDefaultValidityWindow(1000)
+        algorand.setSuggestedParamsCacheTimeout(0)
+        resolve()
+      }
+    })
+  })
+
   let context: AlgorandTestAutomationContext
-  let algorand: AlgorandClient
 
   const beforeEach = async () => {
-    Config.configure({ debug: true })
-    const transactionLogger = new TransactionLogger()
-    const transactionLoggerAlgod = transactionLogger.capture(algod)
-    algorand = algorand ?? AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
     const testAccount = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
-    algorand.setSignerFromAccount(testAccount).setSuggestedParamsCacheTimeout(0)
-    // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
-    //  otherwise we are more likely to get invalid transactions.
-    if (await algorand.client.isLocalNet()) {
-      algorand.setDefaultValidityWindow(1000)
-    }
+    algorand.setSignerFromAccount(testAccount)
+
+    await algorandClientSetup
     algorand.account.setSignerFromAccount(testAccount)
     context = {
       algorand,
@@ -105,14 +130,10 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
       indexer: indexer,
       kmd: kmd,
       testAccount,
-      generateAccount: async (params: GetTestAccountParams) => {
-        const account = await getTestAccount(params, algorand)
-        algorand.setSignerFromAccount(account)
-        return account
-      },
-      transactionLogger: transactionLogger,
-      waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
-      waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(transactionId).do()),
+      generateAccount,
+      transactionLogger,
+      waitForIndexer,
+      waitForIndexerTransaction,
     }
   }
 
