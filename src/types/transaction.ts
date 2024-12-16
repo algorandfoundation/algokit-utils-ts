@@ -156,7 +156,7 @@ export interface AtomicTransactionComposerToSend extends SendParams {
    * This additional context is used when coverAppCallInnerTransactionFees is set to true.
    **/
   executionContext?: {
-    /** A map of the transaction index to the max fee that can be calculated for a transaction in the group */
+    /** A map of transaction index to the max fee that can be calculated for a transaction in the group */
     maxFees: Map<number, AlgoAmount>
     /* The suggested params for a transaction at the current time */
     suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>

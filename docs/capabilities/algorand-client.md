@@ -54,7 +54,7 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ### Creating transactions
 
-You can compose a transaction via `algorand.createTransaction`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
+You can compose a transaction via `algorand.createTransaction.`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
 
 The signature for the calls to send a single transaction usually look like:
 

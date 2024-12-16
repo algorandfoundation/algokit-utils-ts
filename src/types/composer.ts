@@ -905,7 +905,7 @@ export class TransactionComposer {
         // An undefined transaction argument signals that the value will be supplied by a method call argument
         if (algosdk.abiTypeIsTransaction(params.method.args[i].type) && transactionsForGroup.length > 0) {
           // Move the last transaction from the group to the method call arguments to appease algosdk
-          const { context: _, ...placeholderTransaction } = transactionsForGroup.splice(-1, 1)[0]
+          const placeholderTransaction = transactionsForGroup.splice(-1, 1)[0]
           methodArgs.push(placeholderTransaction)
           continue
         }

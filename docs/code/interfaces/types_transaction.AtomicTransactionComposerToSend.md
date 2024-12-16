@@ -42,7 +42,7 @@ ___
 
 • `Optional` **coverAppCallInnerTransactionFees**: `boolean`
 
-Whether to use simulate to automatically calculate required app call inner transactions fees and cover them in the parent app call transaction fee
+Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
 
 #### Inherited from
 
@@ -65,7 +65,7 @@ This additional context is used when coverAppCallInnerTransactionFees is set to 
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `maxFees` | `Map`\<`number`, [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)\> | A map of the transaction index to the max fee that can be calculated for a transaction in the group |
+| `maxFees` | `Map`\<`number`, [`AlgoAmount`](../classes/types_amount.AlgoAmount.md)\> | A map of transaction index to the max fee that can be calculated for a transaction in the group |
 | `suggestedParams` | `Pick`\<`SuggestedParams`, ``"fee"`` \| ``"minFee"``\> | - |
 
 #### Defined in

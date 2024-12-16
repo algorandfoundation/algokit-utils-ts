@@ -52,7 +52,7 @@ Additionally `send()` takes a number of parameters which allow you to opt-in to 
 
 ### populateAppCallResources
 
-As the name suggests, this setting automatically updates the relevant transactions in the group to include resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction.
+As the name suggests, this setting automatically updates the relevant transactions in the group to include any resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction.
 
 For example:
 
@@ -75,7 +75,7 @@ If `my_method` in the above example accesses any resources, they will be automat
 
 ### coverAppCallInnerTransactionFees
 
-This setting will automatically calculate the transaction fee needed to be set on a parent app call transaction in order for the fees of it's inner transactions to be accounted for and covered. It leverages the simulate endpoint to discover the inner transactions sent and calculates a fee delta to resolve the optimal fee. This feature also takes care of accounting for any surplus transaction fee at the various levels, so as to effectively minimise the fees needed to successfully handle complex scenarios. This setting only applies when you have constucted at least one app call transaction.
+This setting will automatically calculate the required fee for a parent app call transaction that sends inner transactions. It leverages the simulate endpoint to discover the inner transactions sent and calculates a fee delta to resolve the optimal fee. This feature also takes care of accounting for any surplus transaction fee at the various levels, so as to effectively minimise the fees needed to successfully handle complex scenarios. This setting only applies when you have constucted at least one app call transaction.
 
 For example:
 
@@ -95,9 +95,9 @@ const result = algorand
   })
 ```
 
-Assuming the app account is not covering any of the fees, if `my_method` in the above example sends 2 inner transactions, then the fee calculated for the parent transaction will be 3000 µALGO when the transaction is sent to the network.
+Assuming the app account is not covering any of the inner transaction fees, if `my_method` in the above example sends 2 inner transactions, then the fee calculated for the parent transaction will be 3000 µALGO when the transaction is sent to the network.
 
-The above example also has a `maxFee` of 5000 µALGO specified. An exception will be thrown if the transaction fee execeeds that value, which allows you to set fee limits. This field is required when enabling `coverAppCallInnerTransactionFees`.
+The above example also has a `maxFee` of 5000 µALGO specified. An exception will be thrown if the transaction fee execeeds that value, which allows you to set fee limits. The `maxFee` field is required when enabling `coverAppCallInnerTransactionFees`.
 
 Because `maxFee` is required and an `algosdk.Transaction` does not hold any max fee information, you cannot use the generic `addTransaction()` method on the composer with `coverAppCallInnerTransactionFees` enabled. Instead use the below, which provides a better overall experience:
 

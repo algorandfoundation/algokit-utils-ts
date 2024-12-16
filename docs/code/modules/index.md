@@ -574,7 +574,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:1049](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1049)
+[src/transaction/transaction.ts:1050](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1050)
 
 ___
 
@@ -638,7 +638,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:1076](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1076)
+[src/transaction/transaction.ts:1077](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1077)
 
 ___
 
@@ -965,7 +965,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:919](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L919)
+[src/transaction/transaction.ts:920](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L920)
 
 ___
 
@@ -1941,7 +1941,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:1125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1125)
+[src/transaction/transaction.ts:1126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1126)
 
 ___
 
@@ -2328,7 +2328,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:1103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1103)
+[src/transaction/transaction.ts:1104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1104)
 
 ___
 
@@ -2910,7 +2910,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L769)
+[src/transaction/transaction.ts:770](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L770)
 
 ___
 
@@ -2939,7 +2939,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Defined in
 
-[src/transaction/transaction.ts:948](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L948)
+[src/transaction/transaction.ts:949](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L949)
 
 ___
 
@@ -3212,4 +3212,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:992](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L992)
+[src/transaction/transaction.ts:993](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L993)

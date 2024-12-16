@@ -302,7 +302,7 @@ async function getGroupExecutionInfo(
 
   if (sendParams.coverAppCallInnerTransactionFees && appCallIndexesWithoutMaxFees.length > 0) {
     throw Error(
-      `Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Missing maxFee for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
+      `Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
     )
   }
 
@@ -312,7 +312,7 @@ async function getGroupExecutionInfo(
 
   if (groupResponse.failureMessage) {
     if (sendParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.match(/fee too small/)) {
-      throw Error(`Fees were too small to resolve execution info via simulate. You may need to increase the app call transaction maxFee.`)
+      throw Error(`Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.`)
     }
 
     throw Error(`Error resolving execution info via simulate in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
@@ -386,12 +386,11 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
  * @param atc The ATC containing the txn group
  * @param sendParams The send params for the transaction group
  * @param executionContext Additional execution context used to determine how best to alter transactions in the group
- * @returns A new ATC with the resources packed into the transactions
+ * @returns A new ATC with the alterations applied
  *
  * @privateRemarks
  * Parts of this function will eventually be implemented in algod. Namely:
  * - Simulate will return information on how to populate reference arrays, see https://github.com/algorand/go-algorand/pull/6015
- * - Opcode budget increases will be handled using surplus fees rather than leveraging op up transactions, see https://github.com/algorand/go-algorand/pull/5943
  */
 async function alterGroupBasedOnSendParams(
   atc: algosdk.AtomicTransactionComposer,
@@ -417,7 +416,7 @@ async function alterGroupBasedOnSendParams(
             ...txn,
             groupIndex,
             // Measures the priority level of covering the transaction fee using the surplus group fees. The higher the number, the higher the priority.
-            surplusFeePriorityLevel: maxFee !== undefined ? txn.requiredFeeDelta * priorityMultiplier : -1n,
+            surplusFeePriorityLevel: txn.requiredFeeDelta > 0n ? txn.requiredFeeDelta * priorityMultiplier : -1n,
           }
         })
         .sort((a, b) => {
@@ -491,8 +490,10 @@ async function alterGroupBasedOnSendParams(
         }
         const transactionFee = group[i].txn.fee + additionalTransactionFee
         const maxFee = executionContext?.maxFees?.get(i)?.microAlgo
-        if (maxFee !== undefined && transactionFee > maxFee) {
-          throw Error(`Calculated transaction fee ${transactionFee} µALGO is greater than max of ${maxFee} for transaction ${i}`)
+        if (maxFee === undefined || transactionFee > maxFee) {
+          throw Error(
+            `Calculated transaction fee ${transactionFee} µALGO is greater than max of ${maxFee ?? 'undefined'} for transaction ${i}`,
+          )
         }
         group[i].txn.fee = transactionFee
       }

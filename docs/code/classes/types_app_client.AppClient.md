@@ -583,7 +583,7 @@ An alias for `appClient.send.fundAppAccount(params)`.
 | `params` | `Object` | The parameters for the funding transaction |
 | `params.amount` | [`AlgoAmount`](types_amount.AlgoAmount.md) | Amount to send |
 | `params.closeRemainderTo?` | `string` \| `Address` | If given, close the sender account and send the remaining balance to this address *Warning:* Be careful with this parameter as it can lead to loss of funds if not used correctly. |
-| `params.coverAppCallInnerTransactionFees?` | `boolean` | Whether to use simulate to automatically calculate required app call inner transactions fees and cover them in the parent app call transaction fee |
+| `params.coverAppCallInnerTransactionFees?` | `boolean` | Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee |
 | `params.extraFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The fee to pay IN ADDITION to the suggested fee. Useful for manually covering inner transaction fees. |
 | `params.firstValidRound?` | `bigint` | Set the first round this transaction is valid. If left undefined, the value from algod will be used. We recommend you only set this when you intentionally want this to be some time in the future. |
 | `params.lastValidRound?` | `bigint` | The last round this transaction is valid. It is recommended to use `validityWindow` instead. |

@@ -186,7 +186,7 @@ describe('transaction', () => {
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
       expect(async () => await appClient1.send.call(params)).rejects.toThrow(
-        'Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Missing maxFee for transaction 0',
+        'Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction 0',
       )
     })
 

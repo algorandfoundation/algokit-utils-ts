@@ -27,7 +27,7 @@ Parameters to configure transaction sending.
 
 • `Optional` **coverAppCallInnerTransactionFees**: `boolean`
 
-Whether to use simulate to automatically calculate required app call inner transactions fees and cover them in the parent app call transaction fee
+Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
 
 #### Defined in
 
