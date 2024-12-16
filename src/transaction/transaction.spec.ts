@@ -185,7 +185,7 @@ describe('transaction', () => {
         coverAppCallInnerTransactionFees: true,
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-      expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
         'Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction 0',
       )
     })
@@ -199,7 +199,7 @@ describe('transaction', () => {
         coverAppCallInnerTransactionFees: false,
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-      expect(async () => await appClient1.send.call(params)).rejects.toThrow(/fee too small/)
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(/fee too small/)
     })
 
     test('does not alter fee when app call has no inners', async () => {
@@ -224,7 +224,9 @@ describe('transaction', () => {
         coverAppCallInnerTransactionFees: true,
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-      expect(async () => await appClient1.send.call(params)).rejects.toThrow(/Fees were too small to resolve execution info via simulate/)
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+        /Fees were too small to resolve execution info via simulate/,
+      )
     })
 
     test('throws when static fee is too small to cover inner transaction fees', async () => {
@@ -236,7 +238,9 @@ describe('transaction', () => {
         coverAppCallInnerTransactionFees: true,
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-      expect(async () => await appClient1.send.call(params)).rejects.toThrow(/Fees were too small to resolve execution info via simulate/)
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+        /Fees were too small to resolve execution info via simulate/,
+      )
     })
 
     test('alters fee, handling when no inner fees have been covered', async () => {
@@ -293,6 +297,38 @@ describe('transaction', () => {
 
       expect(result.transaction.fee).toBe(expectedFee)
       await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling multiple app calls in a group that send inners with varying fees', async () => {
+      const txn1ExpectedFee = 5800n
+      const txn2ExpectedFee = 6000n
+
+      const txn1Params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 1000n, 0n, 0n, [200n, 0n]]],
+        staticFee: microAlgo(txn1ExpectedFee),
+        note: 'txn1',
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      const txn2Params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [1000n, 0n, 0n, 0n, [0n, 0n]]],
+        maxFee: microAlgo(txn2ExpectedFee),
+        note: 'txn2',
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      const result = await appClient1.algorand
+        .newGroup()
+        .addAppCallMethodCall(await appClient1.params.call(txn1Params))
+        .addAppCallMethodCall(await appClient1.params.call(txn2Params))
+        .send({
+          coverAppCallInnerTransactionFees: true,
+        })
+
+      expect(result.transactions[0].fee).toBe(txn1ExpectedFee)
+      await assertMinFee(appClient1, txn1Params, txn1ExpectedFee)
+      expect(result.transactions[1].fee).toBe(txn2ExpectedFee)
+      await assertMinFee(appClient1, txn2Params, txn2ExpectedFee)
     })
 
     test('does not alter a static fee with surplus', async () => {
@@ -477,7 +513,7 @@ describe('transaction', () => {
     })
 
     test('throws when maxFee is below the calculated fee', async () => {
-      expect(
+      await expect(
         async () =>
           await appClient1.algorand
             .newGroup()
@@ -519,7 +555,7 @@ describe('transaction', () => {
         maxFee: microAlgo(2000),
       })
 
-      expect(
+      await expect(
         async () =>
           await appClient.send.call({
             method: 'nestedTxnArg',
@@ -538,7 +574,7 @@ describe('transaction', () => {
     })
 
     test('throws when staticFee is below the calculated fee', async () => {
-      expect(
+      await expect(
         async () =>
           await appClient1.algorand
             .newGroup()
@@ -564,7 +600,7 @@ describe('transaction', () => {
 
     test('throws when staticFee for non app call transaction is too low', async () => {
       const { testAccount } = localnet.context
-      expect(
+      await expect(
         async () =>
           await appClient1.algorand
             .newGroup()
