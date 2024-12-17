@@ -631,6 +631,21 @@ describe('transaction', () => {
       ).rejects.toThrow('An additional fee of 500 µALGO is required for non app call transaction 2')
     })
 
+    test('alters fee, handling expensive abi method calls that use ensure_budget to op-up', async () => {
+      const expectedFee = 10_000n
+      const params = {
+        method: 'burn_ops',
+        args: [6200],
+        coverAppCallInnerTransactionFees: true,
+        maxFee: microAlgo(12_000),
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      expect(result.confirmation.innerTxns?.length).toBe(9) // Op up transactions sent by ensure_budget
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
     const assertMinFee = async (appClient: AppClient, args: Parameters<(typeof appClient)['send']['call']>[0], fee: bigint) => {
       if (fee === 1000n) {
         return
