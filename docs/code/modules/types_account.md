@@ -62,7 +62,7 @@ Account information at a given round.
 | `appsTotalExtraPages?` | `number` | The sum of all extra application program pages for this account. |
 | `appsTotalSchema?` | `ApplicationStateSchema` | (tsch) stores the sum of all of the local schemas and global schemas in this account. Note: the raw account uses `StateSchema` for this type. |
 | `assets?` | `AssetHolding`[] | Assets held by this account. |
-| `authAddress?` | `Address` | The address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the `RekeyTo` field. |
+| `authAddr?` | `Address` | The address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the `RekeyTo` field. |
 | `balance` | [`AlgoAmount`](../classes/types_amount.AlgoAmount.md) | The balance of Algo currently held by the account. |
 | `createdApps?` | `Application`[] | Parameters of applications created by this account including app global data. |
 | `createdAssets?` | `Asset`[] | (apar) parameters of assets created by this account. Note: the raw account uses `map[int] -> Asset` for this type. |
