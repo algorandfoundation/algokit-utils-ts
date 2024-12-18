@@ -96,7 +96,7 @@ const algorand = algorandFixture({
 beforeEach(algorand.beforeEach, 10_000)
 
 test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algorand, testAccount, ...} = algorand.context
     // test things...
 })
 ```
@@ -138,7 +138,7 @@ const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
 beforeEach(algorand.beforeEach, 10_000)
 
 test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algorand, testAccount, ...} = algorand.context
     // test things...
 })
 ```

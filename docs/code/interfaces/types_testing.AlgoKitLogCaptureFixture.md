@@ -33,7 +33,7 @@ Testing framework agnostic handler method to run after each test to reset the lo
 
 #### Defined in
 
-[src/types/testing.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L113)
+[src/types/testing.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L120)
 
 ___
 
@@ -53,7 +53,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Defined in
 
-[src/types/testing.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L109)
+[src/types/testing.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L116)
 
 ## Accessors
 
@@ -69,4 +69,4 @@ The test logger instance for the current test
 
 #### Defined in
 
-[src/types/testing.ts:105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L105)
+[src/types/testing.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L112)

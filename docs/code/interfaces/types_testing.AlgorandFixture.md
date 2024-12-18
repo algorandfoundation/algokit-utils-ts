@@ -35,7 +35,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Defined in
 
-[src/types/testing.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L87)
+[src/types/testing.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L94)
 
 ## Accessors
 
@@ -43,7 +43,9 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 • `get` **algorand**(): [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)
 
-Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
+Retrieve an `AlgorandClient` loaded with either the global fixture context (if `algorandScope` was set to `fixture` when creating the fixture) or the current test context, including testAccount and any generated accounts loaded as signers.
+
+If `algorandScope` was set to `test` (default) and you haven't called `beforeEach` then this will return an `AlgorandClient` instance with no test context loaded yet and no transaction logger loaded. This is useful if you want to do some basic setup in a `beforeAll` method etc..
 
 #### Returns
 
@@ -51,7 +53,7 @@ Retrieve an `AlgorandClient` loaded with the current context, including testAcco
 
 #### Defined in
 
-[src/types/testing.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L82)
+[src/types/testing.ts:89](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L89)
 
 ___
 
@@ -59,7 +61,7 @@ ___
 
 • `get` **context**(): [`AlgorandTestAutomationContext`](types_testing.AlgorandTestAutomationContext.md)
 
-Retrieve the current context.
+Retrieve the current test context.
 Useful with destructuring.
 
 #### Returns
@@ -70,10 +72,10 @@ Useful with destructuring.
 
 ```typescript
 test('My test', () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algorand, testAccount, ...} = algorand.context
 })
 ```
 
 #### Defined in
 
-[src/types/testing.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L77)
+[src/types/testing.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L82)

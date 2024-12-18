@@ -58,26 +58,33 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   kmd?: Kmd
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
   testAccountFunding?: AlgoAmount
-  /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
+  /** Optional override for how to get an account; this allows you to retrieve test accounts from a known or cached list of accounts. */
   accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>
+  /** Optional specification of what scope to create the `AlgorandClient` instance (and associated test transaction logger), defaults to `test` so there is a fresh instance for every call to `beforeEach`.
+   *
+   * Alternatively you can set it to `fixture` which makes the algorand client and transaction logger shared across tests.
+   */
+  algorandScope?: 'fixture' | 'test'
 }
 
 /** An Algorand automated testing fixture */
 export interface AlgorandFixture {
   /**
-   * Retrieve the current context.
+   * Retrieve the current test context.
    * Useful with destructuring.
    * @example
    * ```typescript
    * test('My test', () => {
-   *     const {algod, indexer, testAccount, ...} = algorand.context
+   *     const {algorand, testAccount, ...} = algorand.context
    * })
    * ```
    */
   get context(): AlgorandTestAutomationContext
 
   /**
-   * Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
+   * Retrieve an `AlgorandClient` loaded with either the global fixture context (if `algorandScope` was set to `fixture` when creating the fixture) or the current test context, including testAccount and any generated accounts loaded as signers.
+   *
+   * If `algorandScope` was set to `test` (default) and you haven't called `beforeEach` then this will return an `AlgorandClient` instance with no test context loaded yet and no transaction logger loaded. This is useful if you want to do some basic setup in a `beforeAll` method etc..
    */
   get algorand(): AlgorandClient
 

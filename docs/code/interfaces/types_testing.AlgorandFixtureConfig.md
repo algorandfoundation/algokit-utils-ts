@@ -19,6 +19,7 @@ Configuration for creating an Algorand testing fixture.
 - [accountGetter](types_testing.AlgorandFixtureConfig.md#accountgetter)
 - [algod](types_testing.AlgorandFixtureConfig.md#algod)
 - [algodConfig](types_testing.AlgorandFixtureConfig.md#algodconfig)
+- [algorandScope](types_testing.AlgorandFixtureConfig.md#algorandscope)
 - [indexer](types_testing.AlgorandFixtureConfig.md#indexer)
 - [indexerConfig](types_testing.AlgorandFixtureConfig.md#indexerconfig)
 - [kmd](types_testing.AlgorandFixtureConfig.md#kmd)
@@ -31,7 +32,7 @@ Configuration for creating an Algorand testing fixture.
 
 • `Optional` **accountGetter**: (`algod`: `AlgodClient`, `kmd?`: `KmdClient`) => `Promise`\<`default`\>
 
-Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts.
+Optional override for how to get an account; this allows you to retrieve test accounts from a known or cached list of accounts.
 
 #### Type declaration
 
@@ -79,6 +80,20 @@ Partial.algodConfig
 #### Defined in
 
 [src/types/network-client.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/network-client.ts#L16)
+
+___
+
+### algorandScope
+
+• `Optional` **algorandScope**: ``"fixture"`` \| ``"test"``
+
+Optional specification of what scope to create the `AlgorandClient` instance (and associated test transaction logger), defaults to `test` so there is a fresh instance for every call to `beforeEach`.
+
+Alternatively you can set it to `fixture` which makes the algorand client and transaction logger shared across tests.
+
+#### Defined in
+
+[src/types/testing.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L67)
 
 ___
 

@@ -37,7 +37,7 @@ import { TransactionLogger } from '../transaction-logger'
  * beforeEach(algorand.beforeEach, 10_000)
  *
  * test('My test', async () => {
- *     const {algod, indexer, testAccount, ...} = algorand.context
+ *     const {algorand, testAccount, ...} = algorand.context
  *     // test things...
  * })
  * ```
@@ -63,7 +63,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig): Algorand
  * beforeEach(algorand.beforeEach, 10_000)
  *
  * test('My test', async () => {
- *     const {algod, indexer, testAccount, ...} = algorand.context
+ *     const {algorand, testAccount, ...} = algorand.context
  *     // test things...
  * })
  * ```
@@ -85,12 +85,30 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
   const kmd = fixtureConfig.kmd ?? ClientManager.getKmdClient(fixtureConfig.kmdConfig!)
   let context: AlgorandTestAutomationContext
   let algorand: AlgorandClient
+  let globalTransactionLogger: TransactionLogger
+
+  // If the algorandScope is fixture then we want to share the algorand client and transaction logger across tests.
+  if (fixtureConfig.algorandScope === 'fixture') {
+    globalTransactionLogger = new TransactionLogger()
+    const transactionLoggerAlgod = globalTransactionLogger.capture(algod)
+    algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+  } else {
+    // If we are relying on the developer calling `beforeEach` then in the meantime we can add a default AlgorandClient to the fixture.
+    // This might be useful for use in beforeAll calls etc.
+    algorand = AlgorandClient.fromClients({ algod, indexer, kmd })
+  }
 
   const beforeEach = async () => {
     Config.configure({ debug: true })
-    const transactionLogger = new TransactionLogger()
-    const transactionLoggerAlgod = transactionLogger.capture(algod)
-    algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+    // If the algorandScope is fixture then we want to share the transaction logger across tests.
+    const transactionLogger = fixtureConfig?.algorandScope === 'fixture' ? globalTransactionLogger : new TransactionLogger()
+
+    // If the algorandScope is test then we want to recreate the algorand client and transaction logger for each test.
+    if (fixtureConfig?.algorandScope !== 'fixture') {
+      const transactionLoggerAlgod = transactionLogger.capture(algod)
+      algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
+    }
+
     const testAccount = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
     algorand.setSignerFromAccount(testAccount).setSuggestedParamsCacheTimeout(0)
     // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
@@ -101,9 +119,9 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     algorand.account.setSignerFromAccount(testAccount)
     context = {
       algorand,
-      algod: transactionLoggerAlgod,
-      indexer: indexer,
-      kmd: kmd,
+      algod: algorand.client.algod,
+      indexer: algorand.client.indexer,
+      kmd: algorand.client.kmd,
       testAccount,
       generateAccount: async (params: GetTestAccountParams) => {
         const account = await getTestAccount(params, algorand)
