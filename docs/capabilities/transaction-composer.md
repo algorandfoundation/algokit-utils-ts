@@ -52,7 +52,7 @@ Additionally `send()` takes a number of parameters which allow you to opt-in to 
 
 ### populateAppCallResources
 
-As the name suggests, this setting automatically updates the relevant transactions in the group to include any resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction.
+As the name suggests, this setting automatically updates the relevant app call transactions in the group to include the account, app, asset and box resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction. You can read more about [resources and the reference arrays](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/?from_query=resources#reference-arrays) in the docs.
 
 For example:
 

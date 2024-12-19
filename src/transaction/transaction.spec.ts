@@ -172,8 +172,6 @@ describe('transaction', () => {
       appClient2 = (await appFactory.send.bare.create({ note: 'app2' })).appClient
       appClient3 = (await appFactory.send.bare.create({ note: 'app3' })).appClient
 
-      appFactory.send.create
-
       await appClient1.fundAppAccount({ amount: algo(2) })
       await appClient2.fundAppAccount({ amount: algo(2) })
       await appClient3.fundAppAccount({ amount: algo(2) })
@@ -225,7 +223,7 @@ describe('transaction', () => {
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
       await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
-        /Fees were too small to resolve execution info via simulate/,
+        'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
       )
     })
 
@@ -239,7 +237,7 @@ describe('transaction', () => {
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
       await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
-        /Fees were too small to resolve execution info via simulate/,
+        'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
       )
     })
 
