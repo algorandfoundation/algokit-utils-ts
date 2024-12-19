@@ -1,3 +1,5 @@
+import { asJson } from '../util'
+
 const DISPENSER_BASE_URL = 'https://api.dispenser.algorandfoundation.tools'
 const DEFAULT_DISPENSER_REQUEST_TIMEOUT = 15
 const DISPENSER_ACCESS_TOKEN_KEY = 'ALGOKIT_DISPENSER_ACCESS_TOKEN'
@@ -119,7 +121,7 @@ export class TestNetDispenserApiClient {
     }
 
     if (body) {
-      requestArgs.body = JSON.stringify(body)
+      requestArgs.body = asJson(body)
     }
 
     const response = await fetch(`${DISPENSER_BASE_URL}/${urlSuffix}`, requestArgs)

@@ -179,7 +179,7 @@ Returns the value of the given box name for the given app.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appId` | `bigint` | The ID of the app return box names for |
-| `boxName` | [`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) | The name of the box to return either as a string, binary array or `BoxName` |
+| `boxName` | [`BoxName`](../interfaces/types_app.BoxName.md) \| [`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) | The name of the box to return either as a string, binary array or `BoxName` |
 
 #### Returns
 
@@ -213,7 +213,7 @@ The current box value as an ABI value
 
 #### Defined in
 
-[src/types/app-manager.ts:279](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L279)
+[src/types/app-manager.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L280)
 
 ___
 
@@ -228,7 +228,7 @@ Returns the value of the given box names for the given app.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `appId` | `bigint` | The ID of the app return box names for |
-| `boxNames` | [`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier)[] | The names of the boxes to return either as a string, binary array or `BoxName` |
+| `boxNames` | ([`BoxName`](../interfaces/types_app.BoxName.md) \| [`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier))[] | The names of the boxes to return either as a string, binary array or `BoxName` |
 
 #### Returns
 
@@ -238,7 +238,7 @@ The current box values as a byte array in the same order as the passed in box na
 
 #### Defined in
 
-[src/types/app-manager.ts:270](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L270)
+[src/types/app-manager.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L271)
 
 ___
 
@@ -262,7 +262,7 @@ The current box values as an ABI value in the same order as the passed in box na
 
 #### Defined in
 
-[src/types/app-manager.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L290)
+[src/types/app-manager.ts:291](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L291)
 
 ___
 
@@ -391,7 +391,7 @@ An object keyeed by the UTF-8 representation of the key with various parsings of
 
 #### Defined in
 
-[src/types/app-manager.ts:319](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L319)
+[src/types/app-manager.ts:320](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L320)
 
 ___
 
@@ -416,7 +416,7 @@ The return value for the method call
 
 #### Defined in
 
-[src/types/app-manager.ts:367](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L367)
+[src/types/app-manager.ts:368](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L368)
 
 ___
 
@@ -440,7 +440,7 @@ The box reference ready to pass into a `algosdk.Transaction`
 
 #### Defined in
 
-[src/types/app-manager.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L300)
+[src/types/app-manager.ts:301](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L301)
 
 ___
 
@@ -473,7 +473,7 @@ The replaced TEAL code
 
 #### Defined in
 
-[src/types/app-manager.ts:397](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L397)
+[src/types/app-manager.ts:398](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L398)
 
 ___
 
@@ -500,7 +500,7 @@ The TEAL code with replacements
 
 #### Defined in
 
-[src/types/app-manager.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L428)
+[src/types/app-manager.ts:429](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L429)
 
 ___
 
@@ -524,4 +524,4 @@ The TEAL without comments
 
 #### Defined in
 
-[src/types/app-manager.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L463)
+[src/types/app-manager.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L464)

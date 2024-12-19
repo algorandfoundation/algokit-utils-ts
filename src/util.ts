@@ -81,3 +81,21 @@ export const binaryStartsWith = (base: Uint8Array, startsWith: Uint8Array): bool
   }
   return true
 }
+
+export const defaultJsonValueReplacer = (key: string, value: unknown) => {
+  if (typeof value === 'bigint') {
+    try {
+      return toNumber(value)
+    } catch {
+      return value.toString()
+    }
+  }
+  return value
+}
+export const asJson = (
+  value: unknown,
+  replacer: (key: string, value: unknown) => unknown = defaultJsonValueReplacer,
+  space?: string | number,
+) => {
+  return JSON.stringify(value, replacer, space)
+}

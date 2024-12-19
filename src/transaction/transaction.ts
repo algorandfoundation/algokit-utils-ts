@@ -14,7 +14,7 @@ import {
   TransactionNote,
   TransactionToSign,
 } from '../types/transaction'
-import { toNumber } from '../util'
+import { asJson, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
@@ -51,11 +51,11 @@ export function encodeTransactionNote(note?: TransactionNote): Uint8Array | unde
   } else if (typeof note === 'object' && note.constructor === Uint8Array) {
     return note
   } else if (typeof note === 'object' && 'dAppName' in note) {
-    const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : JSON.stringify(note.data)}`
+    const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : asJson(note.data)}`
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
   } else {
-    const n = typeof note === 'string' ? note : JSON.stringify(note)
+    const n = typeof note === 'string' ? note : asJson(note)
     const encoder = new TextEncoder()
     return encoder.encode(n)
   }
@@ -382,8 +382,8 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
           t.txn.appForeignApps?.map((a) => algosdk.getApplicationAddress(a)).includes(account) ||
           // account is available since it's in one of the fields
           Object.values(t.txn)
-            .map((f) => JSON.stringify(f))
-            .includes(JSON.stringify(algosdk.decodeAddress(account)))
+            .map((f) => asJson(f))
+            .includes(asJson(algosdk.decodeAddress(account)))
         )
       })
 
