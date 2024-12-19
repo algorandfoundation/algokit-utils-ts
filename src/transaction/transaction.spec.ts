@@ -441,9 +441,13 @@ describe('Resource Packer: meta', () => {
   })
 
   test('error during simulate', async () => {
-    await expect(externalClient.send.call({ method: 'error' })).rejects.toThrow(
-      'Error during resource population simulation in transaction 0',
-    )
+    try {
+      await externalClient.send.call({ method: 'error' })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e.stack).toMatch(`err <--- Error`)
+      expect(e.message).toMatch('Error during resource population simulation in transaction 0')
+    }
   })
 
   test('box with txn arg', async () => {
