@@ -274,7 +274,7 @@ export class AppDeployer {
       } else {
         composer.addAppDelete({ appId: existingApp.appId, ...deleteParams })
       }
-      const result = await composer.send({ ...sendParams, suppressLog: true })
+      const result = await composer.send({ ...sendParams })
       const confirmation = result.confirmations.at(createIndex - 1)!
       const transaction = result.transactions.at(createIndex - 1)!
       const deleteTransaction = result.transactions.at(-1)!

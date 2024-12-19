@@ -20,4 +20,4 @@ There are various variations of the `ConfirmedTransactionResult` that are expose
 
 ## Further reading
 
-To understand how to create, simulate and send transactions consult the [`AlgorandClient`](./algorand-client.md) and [`AlgorandClient`](./algokit-composer.md) documentation.
+To understand how to create, simulate and send transactions consult the [`AlgorandClient`](./algorand-client.md) and [`TransactionComposer`](./transaction-composer.md) documentation.
