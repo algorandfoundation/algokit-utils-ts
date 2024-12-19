@@ -213,7 +213,7 @@ export type AccountInformation = {
    * address of the current account is used. This field can be updated in any
    * transaction by setting the `RekeyTo` field.
    */
-  authAddress?: Address
+  authAddr?: Address
 
   /**
    * Parameters of applications created by this account including app global data.

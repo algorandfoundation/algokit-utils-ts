@@ -1,6 +1,7 @@
 import algosdk from 'algosdk'
 import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
+import { algo } from '../amount'
 import { algorandFixture } from '../testing'
 
 describe('AccountManager', () => {
@@ -41,5 +42,18 @@ describe('AccountManager', () => {
     expect(account).not.toBe(account2)
     expect(account.addr).toEqual(account2.addr)
     expect(account.account.sk).toEqual(account2.account.sk)
+  }, 10e6)
+
+  test('Rekeyed account is retrievable', async () => {
+    const { algorand, generateAccount } = localnet.context
+
+    const rekeyed = await generateAccount({ initialFunds: algo(1) })
+    const rekeyTo = await generateAccount({ initialFunds: algo(0.1) })
+
+    await algorand.account.rekeyAccount(rekeyed.addr, rekeyTo)
+
+    const accountInfo = await algorand.account.getInformation(rekeyed.addr)
+    expect(accountInfo.address.toString()).toBe(rekeyed.addr.toString())
+    expect(accountInfo.authAddr!.toString()).toBe(rekeyTo.addr.toString())
   }, 10e6)
 })

@@ -15,7 +15,7 @@ import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDe
 import { Config } from '../config'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
-import { binaryStartsWith } from '../util'
+import { asJson, binaryStartsWith } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgoAmount } from './amount'
@@ -599,7 +599,7 @@ export class AppClient {
     const networkIndex = availableAppSpecNetworks.findIndex((n) => networkNames.includes(n))
 
     if (networkIndex === -1) {
-      throw new Error(`No app ID found for network ${JSON.stringify(networkNames)} in the app spec`)
+      throw new Error(`No app ID found for network ${asJson(networkNames)} in the app spec`)
     }
 
     const appId = BigInt(appSpec.networks![networkIndex].appID)
@@ -951,8 +951,8 @@ export class AppClient {
       )
     }
     if (errorMessage) {
-      const appId = JSON.stringify(e).match(/(?<=app=)\d+/)?.[0] || ''
-      const txId = JSON.stringify(e).match(/(?<=transaction )\S+(?=:)/)?.[0]
+      const appId = asJson(e).match(/(?<=app=)\d+/)?.[0] || ''
+      const txId = asJson(e).match(/(?<=transaction )\S+(?=:)/)?.[0]
       const error = new Error(`Runtime error when executing ${appSpec.name} (appId: ${appId}) in transaction ${txId}: ${errorMessage}`)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(error as any).cause = e
