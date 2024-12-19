@@ -1,6 +1,7 @@
 import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
+import { asJson } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { APP_PAGE_MAX_SIZE } from './app'
@@ -1396,7 +1397,7 @@ export class TransactionComposer {
    * @returns The binary encoded transaction note
    */
   static arc2Note(note: Arc2TransactionNote): Uint8Array {
-    const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : JSON.stringify(note.data)}`
+    const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : asJson(note.data)}`
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
   }

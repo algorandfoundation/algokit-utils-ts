@@ -1,5 +1,6 @@
 import { Logger } from '../types/logging'
 import { LogSnapshotConfig } from '../types/testing'
+import { asJson } from '../util'
 
 /** Exposes an AlgoKit logger which captures log messages, while wrapping an original logger.
  * This is useful for automated testing.
@@ -71,22 +72,22 @@ export class TestLogger implements Logger {
 
   error(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.error(message, ...optionalParams)
-    this.logs.push(`ERROR: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`ERROR: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   warn(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.warn(message, ...optionalParams)
-    this.logs.push(`WARN: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`WARN: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   info(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.info(message, ...optionalParams)
-    this.logs.push(`INFO: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`INFO: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   verbose(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.verbose(message, ...optionalParams)
-    this.logs.push(`VERBOSE: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`VERBOSE: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   debug(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.debug(message, ...optionalParams)
-    this.logs.push(`DEBUG: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`DEBUG: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
 }
