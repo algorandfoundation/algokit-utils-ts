@@ -66,12 +66,14 @@ describe('MY MODULE', () => {
 
 ### Fixture configuration
 
-When calling `algorandFixture()` you can optionally pass in some fixture configuration, with any of these properties (all optional):
+When calling `algorandFixture()` you can optionally pass in a fixture configuration object, with any of these properties (all optional):
 
 - `algod?: Algodv2` - An optional algod client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `indexer?: Indexer` - An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `kmd?: Kmd` - An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `testAccountFunding?: AlgoAmount` - The [amount](./amount.md) of funds to allocate to the default testing account, if not specified then it will get `10` ALGO
+- `accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>` - Optional override for how to get an account; this allows you to retrieve test accounts from a known or cached list of accounts.
+- `algorandScope?: 'fixture' | 'test'` - Optional specification of what scope to create the `AlgorandClient` instance (and associated test transaction logger), defaults to `test` so there is a fresh instance for every call to `beforeEach`. Alternatively you can set it to `fixture` which makes the algorand client and transaction logger shared across tests.
 
 ### Using the fixture context
 
@@ -86,6 +88,11 @@ The `fixture.context` property is of type [`AlgorandTestAutomationContext`](../c
 - `generateAccount: (params: GetTestAccountParams) => Promise<Account>` - Generate and fund an additional ephemerally created account
 - `waitForIndexer: () => Promise<void>` - Wait for the indexer to catch up with all transactions logged by transactionLogger
 - `waitForIndexerTransaction: (transactionId: string) => Promise<TransactionLookupResult>` - Wait for the indexer to catch up with the given transaction ID
+
+The `algorand` and `transactionLogger` instances will be scoped based on the `algorandScope` [fixture configuration value](#fixture-configuration):
+
+- `test` (default) means that these values will be re-created every time `beforeEach` is called (i.e. will ensure full isolation across tests)
+- `fixture` means that these values will stay constant for the life of the fixture
 
 ## Log capture fixture
 
@@ -170,7 +177,7 @@ This means it's easy to create tests that are flaky and have intermittent test f
 The testing capability provides mechanisms for waiting for indexer to catch up, namely:
 
 - `algotesting.runWhenIndexerCaughtUp(run: () => Promise<T>)` - Executes the given action every 200ms up to 20 times until there is no longer an error with a `status` property with `404` and then returns the result of the action; this will work for any call that calls indexer APIs expecting to return a single record
-- `algorandFixture.waitForIndexer()` - Waits for indexer to catch up with all transactions that have been captured by the `transactionLogger` in the Algorand fixture
+- `algorandFixture.waitForIndexer()` - Waits for indexer to catch up with that latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
 - `algorandFixture.waitForIndexerTransaction(transactionId)` - Waits for indexer to catch up with the single transaction of the given ID
 
 ## Logging transactions
@@ -188,6 +195,11 @@ The `TransactionLogger` has the following methods:
 - `waitForIndexer(indexer)` - [Waits for the given indexer instance to catch up](#waiting-for-indexer) with the currently logged transaction IDs
 
 The easiest way to use this functionality is via the [Algorand fixture](#algorand-fixture), which automatically provides a `transactionLogger` and a proxy `algod` connected to that `transactionLogger`.
+
+The scope of the transaction logger will be scoped based on the `algorandScope` [fixture configuration value](#fixture-configuration):
+
+- `test` (default) means that the logger will be re-created every time `beforeEach` is called (i.e. the logged transactions will be cleared between tests)
+- `fixture` means that the logger will stay constant for the life of the fixture
 
 ## Getting a test account
 
