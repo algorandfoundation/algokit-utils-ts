@@ -4,7 +4,7 @@ import { generateTestAsset } from '../testing/_asset'
 
 describe('Asset capability', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 100_000)
+  beforeEach(localnet.newScope, 100_000)
 
   test('Create an asset succeeds', async () => {
     const { testAccount, algorand } = localnet.context

@@ -11,6 +11,7 @@ An Algorand automated testing fixture
 ### Properties
 
 - [beforeEach](types_testing.AlgorandFixture.md#beforeeach)
+- [newScope](types_testing.AlgorandFixture.md#newscope)
 
 ### Accessors
 
@@ -23,7 +24,10 @@ An Algorand automated testing fixture
 
 • **beforeEach**: () => `Promise`\<`void`\>
 
-Testing framework agnostic handler method to run before each test to prepare the `context` for that test.
+**`Deprecated`**
+
+Use newScope instead.
+Testing framework agnostic handler method to run before each test to prepare the `context` for that test with per test isolation.
 
 #### Type declaration
 
@@ -35,7 +39,63 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Defined in
 
-[src/types/testing.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L87)
+[src/types/testing.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L92)
+
+___
+
+### newScope
+
+• **newScope**: () => `Promise`\<`void`\>
+
+Creates a new isolated fixture scope (clean transaction logger, AlgorandClient, testAccount, etc.).
+
+You can call this from any testing framework specific hook method to control when you want a new scope.
+
+**`Example`**
+
+```typescript
+describe('MY MODULE', () => {
+  const fixture = algorandFixture()
+  beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+
+  test('MY TEST', async () => {
+    const { algorand, testAccount } = fixture.context
+
+    // Test stuff!
+  })
+})
+```
+
+**`Example`**
+
+```typescript
+describe('MY MODULE', () => {
+  const fixture = algorandFixture()
+  beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+
+  test('test1', async () => {
+    const { algorand, testAccount } = fixture.context
+
+    // Test stuff!
+  })
+  test('test2', async () => {
+    const { algorand, testAccount } = fixture.context
+    // algorand and testAccount are the same as in test1
+  })
+})
+```
+
+#### Type declaration
+
+▸ (): `Promise`\<`void`\>
+
+##### Returns
+
+`Promise`\<`void`\>
+
+#### Defined in
+
+[src/types/testing.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L132)
 
 ## Accessors
 
@@ -45,13 +105,15 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
 
+If you haven't called `newScope` then this will return an `AlgorandClient` instance with no test context loaded yet and no transaction logger loaded. This is useful if you want to do some basic setup in a `beforeAll` method etc..
+
 #### Returns
 
 [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)
 
 #### Defined in
 
-[src/types/testing.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L82)
+[src/types/testing.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L86)
 
 ___
 
@@ -62,6 +124,8 @@ ___
 Retrieve the current context.
 Useful with destructuring.
 
+If you haven't called `newScope` then this will throw an error.
+
 #### Returns
 
 [`AlgorandTestAutomationContext`](types_testing.AlgorandTestAutomationContext.md)
@@ -70,10 +134,10 @@ Useful with destructuring.
 
 ```typescript
 test('My test', () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algod, indexer, testAccount, ...} = fixture.context
 })
 ```
 
 #### Defined in
 
-[src/types/testing.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L77)
+[src/types/testing.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L79)

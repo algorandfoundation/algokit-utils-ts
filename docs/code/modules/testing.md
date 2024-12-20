@@ -75,12 +75,12 @@ The fixture
 **`Example`**
 
 ```typescript
-const algorand = algorandFixture()
+const fixture = algorandFixture()
 
-beforeEach(algorand.beforeEach, 10_000)
+beforeEach(fixture.newScope, 10_000)
 
 test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algod, indexer, testAccount, ...} = fixture.context
     // test things...
 })
 ```
@@ -88,22 +88,35 @@ test('My test', async () => {
 **`Example`**
 
 ```typescript
-const algorand = algorandFixture({
+const fixture = algorandFixture()
+
+beforeAll(fixture.newScope, 10_000)
+
+test('My test', async () => {
+    const {algod, indexer, testAccount, ...} = fixture.context
+    // test things...
+})
+```
+
+**`Example`**
+
+```typescript
+const fixture = algorandFixture({
  algod: new Algodv2('localhost', 12345, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
  // ...
 })
 
-beforeEach(algorand.beforeEach, 10_000)
+beforeEach(fixture.newScope, 10_000)
 
 test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algod, indexer, testAccount, ...} = fixture.context
     // test things...
 })
 ```
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L48)
+[src/testing/fixtures/algorand-fixture.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L60)
 
 ▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
@@ -129,19 +142,6 @@ By default it tests against an environment variable specified client
  if the standard environment variables are specified, otherwise against
  a default LocalNet instance, but you can pass in an algod, indexer
  and/or kmd if you want to test against an explicitly defined network.
-
-**`Example`**
-
-```typescript
-const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
-
-beforeEach(algorand.beforeEach, 10_000)
-
-test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
-    // test things...
-})
-```
 
 #### Defined in
 
