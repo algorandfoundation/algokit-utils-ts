@@ -134,7 +134,9 @@ All of the functionality in `ApplicationClient` is available within the new clas
 
 Version 4 of the TypeScript typed app client generator introduces breaking changes to the generated client that support the new `AppFactory` and `AppClient` functionality along with adding ARC-56 support. The generated client has better typing support for things like state commensurate with the new capabilities within ARC-56.
 
-If you are converting from an older typed client to a new one you will need to make the following changes:
+It's worth noting that because we have maintained backwards compatibility with the pre v6.1.0 stateless functions, older typed clients generated using version 3 of the TypeScript typed client generator will work against v7 and v8 of utils, however you won't have access to the new features or ARC-56 support.
+
+If you want to convert from an older typed client to a new one you will need to make the following changes:
 
 - The constructor parameters for a client are different per the above notes about `AppClient`, the recommended way of constructing a client / factory is via `algorand.client.getTyped*()` for a terse creation experience
 - The app client no longer creates or deploys contracts, you need to use the factory for that, which will in turn give you a typed client instance
@@ -172,19 +174,19 @@ Some imports have changed, which may need to updated. This only applies if you a
 
 1. The `AlgorandClient` class is no longer available as a default export.
 
-```typescript
-/**** Before ****/
-import AlgorandClient from '../../types/algorand-client'
-const algorand = AlgorandClient.fromClients({
-  //...
-})
+   ```typescript
+   /**** Before ****/
+   import AlgorandClient from '../../types/algorand-client'
+   const algorand = AlgorandClient.fromClients({
+     //...
+   })
 
-/**** After ****/
-import { AlgorandClient } from '../../types/algorand-client'
-const algorand = AlgorandClient.fromClients({
-  //...
-})
-```
+   /**** After ****/
+   import { AlgorandClient } from '../../types/algorand-client'
+   const algorand = AlgorandClient.fromClients({
+     //...
+   })
+   ```
 
 1. The `ExecuteParams` type has been renamed to `SendParams` and moved from `/types/composer` to `/types/transaction`.
 

@@ -8,7 +8,7 @@ To get an instance of `TransactionComposer` you can either get it from an [app c
 
 ```typescript
 const composerFromAlgorand = algorand.newGroup()
-const composerFromAppClient = appClient.newGroup()
+const composerFromAppClient = appClient.algorand.newGroup()
 const composerFromConstructor = new TransactionComposer({
   algod,
   /* Return the algosdk.TransactionSigner for this address*/
