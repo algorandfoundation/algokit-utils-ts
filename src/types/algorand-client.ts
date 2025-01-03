@@ -1,7 +1,6 @@
 import algosdk, { Address } from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
-import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AppDeployer } from './app-deployer'
@@ -16,7 +15,7 @@ import LogicSigAccount = algosdk.LogicSigAccount
 /**
  * A client that brokers easy access to Algorand functionality.
  */
-export class AlgorandClient implements AlgorandClientInterface {
+export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
   private _appManager: AppManager

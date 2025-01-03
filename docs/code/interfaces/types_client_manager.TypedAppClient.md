@@ -53,7 +53,7 @@ Interface to identify a typed client that can be used to interact with an applic
 
 | Name | Type |
 | :------ | :------ |
-| `params` | `Omit`\<\{ `algorand`: [`AlgorandClientInterface`](types_algorand_client_interface.AlgorandClientInterface.md) ; `appLookupCache?`: [`AppLookup`](types_app_deployer.AppLookup.md) ; `appName?`: `string` ; `appSpec`: `string` \| [`Arc56Contract`](types_app_arc56.Arc56Contract.md) \| [`AppSpec`](types_app_spec.AppSpec.md) ; `approvalSourceMap?`: `ProgramSourceMap` ; `clearSourceMap?`: `ProgramSourceMap` ; `creatorAddress`: `string` \| `Address` ; `defaultSender?`: `string` \| `Address` ; `defaultSigner?`: `TransactionSigner` ; `ignoreCache?`: `boolean`  }, ``"appSpec"``\> |
+| `params` | `Omit`\<\{ `algorand`: [`InterfaceOf`](../modules/types_instance_of.md#interfaceof)\<[`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)\> ; `appLookupCache?`: [`AppLookup`](types_app_deployer.AppLookup.md) ; `appName?`: `string` ; `appSpec`: `string` \| [`Arc56Contract`](types_app_arc56.Arc56Contract.md) \| [`AppSpec`](types_app_spec.AppSpec.md) ; `approvalSourceMap?`: `ProgramSourceMap` ; `clearSourceMap?`: `ProgramSourceMap` ; `creatorAddress`: `string` \| `Address` ; `defaultSender?`: `string` \| `Address` ; `defaultSigner?`: `TransactionSigner` ; `ignoreCache?`: `boolean`  }, ``"appSpec"``\> |
 
 #### Returns
 
