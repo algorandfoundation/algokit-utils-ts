@@ -130,14 +130,15 @@ ___
 
 ### waitForIndexer
 
-▸ **waitForIndexer**(`indexer`): `Promise`\<`void`\>
+▸ **waitForIndexer**(`algod`, `indexer`): `Promise`\<`void`\>
 
-Wait until all logged transactions IDs appear in the given `Indexer`.
+Wait until indexer has the last round from algod.
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
+| `algod` | `AlgodClient` |
 | `indexer` | `IndexerClient` |
 
 #### Returns

@@ -49,9 +49,10 @@ export class TransactionLogger {
     return new Proxy<Algodv2>(algod, new TransactionLoggingAlgodv2ProxyHandler(this))
   }
 
-  /** Wait until all logged transactions IDs appear in the given `Indexer`. */
-  async waitForIndexer(indexer: Indexer) {
-    await Promise.all(this._sentTransactionIds.map((txnId) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(txnId).do())))
+  /** Wait until indexer has the last round from algod. */
+  async waitForIndexer(algod: Algodv2, indexer: Indexer) {
+    const round = (await algod.status().do()).lastRound
+    await runWhenIndexerCaughtUp(() => indexer.lookupBlock(round).do())
   }
 }
 
