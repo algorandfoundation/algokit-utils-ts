@@ -8,7 +8,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { TransactionComposer } from './composer'
+import { ErrorCallback, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -40,6 +40,9 @@ export class AlgorandClient implements AlgorandClientInterface {
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  errorCallbacks: ErrorCallback<any>[] = []
 
   /**
    * Sets the default validity window for transactions.
@@ -157,6 +160,14 @@ export class AlgorandClient implements AlgorandClientInterface {
     return this._appDeployer
   }
 
+  /**
+   * Register a callback to use when an error is caught when simulating or executing
+   * composed transaction groups made from `newGroup`
+   */
+  public registerErrorCallback<ErrorType>(cb: ErrorCallback<ErrorType>) {
+    this.errorCallbacks.push(cb)
+  }
+
   /** Start a new `TransactionComposer` transaction group */
   public newGroup() {
     return new TransactionComposer({
@@ -165,6 +176,7 @@ export class AlgorandClient implements AlgorandClientInterface {
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
+      errorCallbacks: this.errorCallbacks,
     })
   }
 

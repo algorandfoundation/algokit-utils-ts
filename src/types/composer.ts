@@ -493,6 +493,11 @@ export type TransactionComposerParams = {
    * If not specified than an ephemeral one will be created.
    */
   appManager?: AppManager
+  /**
+   * An array of error callbacks to use when an error is caught in simulate or execute
+   * callbacks can later be registered with `registerErrorCallback`
+   */
+  errorCallbacks?: ErrorCallback<unknown>[]
 }
 
 /** Set of transactions built by `TransactionComposer`. */
@@ -539,7 +544,7 @@ export class TransactionComposer {
   private appManager: AppManager
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorCallbacks: ErrorCallback<any>[] = []
+  errorCallbacks: ErrorCallback<any>[]
 
   /**
    * Create a `TransactionComposer`.
@@ -553,6 +558,7 @@ export class TransactionComposer {
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
+    this.errorCallbacks = params.errorCallbacks ?? []
   }
 
   /**
