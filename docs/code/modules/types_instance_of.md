@@ -22,4 +22,4 @@
 
 #### Defined in
 
-src/types/instance-of.ts:1
+[src/types/instance-of.ts:1](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/instance-of.ts#L1)
