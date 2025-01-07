@@ -30,6 +30,13 @@ export class AlgorandClient {
 
   private _defaultValidityWindow: bigint | undefined = undefined
 
+  /**
+   * A set of error transformers to use when an error is caught in simulate or execute
+   * `registerErrorTransformer` and `unregisterErrorTransformer` can be used to add and remove
+   * error transformers from the set.
+   */
+  private _errorTransformers: Set<ErrorTransformer> = new Set()
+
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config, this)
     this._accountManager = new AccountManager(this._clientManager)
@@ -40,7 +47,6 @@ export class AlgorandClient {
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
-  errorTransformers: Set<ErrorTransformer> = new Set()
 
   /**
    * Sets the default validity window for transactions.
@@ -158,27 +164,16 @@ export class AlgorandClient {
     return this._appDeployer
   }
 
-  /** The ID used when registering an error transformer */
-  private errorTransformerId = 0
-
   /**
    * Register a function that will be used to transform an error caught when simulating or executing
    * composed transaction groups made from `newGroup`
-   *
-   * @returns The ID used when registering the error transformer which can be used to unregister
-   * the error transformer with `unregisterErrorTransformer`
    */
-  public registerErrorTransformer(cb: ErrorTransformer) {
-    const id = this.errorTransformerId
-    this.errorTransformerId++
-    this.errorTransformers.add(cb)
-
-    return id
+  public registerErrorTransformer(transformer: ErrorTransformer) {
+    this._errorTransformers.add(transformer)
   }
 
-
-  public unregisterErrorTransformer(cb: ErrorTransformer) {
-    this.errorTransformers.delete(cb)
+  public unregisterErrorTransformer(transformer: ErrorTransformer) {
+    this._errorTransformers.delete(transformer)
   }
 
   /** Start a new `TransactionComposer` transaction group */
@@ -189,7 +184,7 @@ export class AlgorandClient {
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
-      errorTransformers: [...this.errorTransformers.values()],
+      errorTransformers: [...this._errorTransformers.values()],
     })
   }
 

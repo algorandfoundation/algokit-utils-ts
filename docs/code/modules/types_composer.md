@@ -322,17 +322,17 @@ ___
 
 ### ErrorTransformer
 
-Ƭ **ErrorTransformer**\<`ErrorType`\>: (`error`: `unknown`) => `Promise`\<`ErrorType` \| `undefined`\>
+Ƭ **ErrorTransformer**: (`error`: `unknown`) => `Promise`\<`unknown`\>
 
-#### Type parameters
+A function that transform an error into a new error.
 
-| Name |
-| :------ |
-| `ErrorType` |
+ErrorTransformers should be pessimistic about the input, hence the unknown type.
+In most cases, an ErrorTransformer should first check if it can or should transform the error
+and return the input error if it cannot or should not transform it.
 
 #### Type declaration
 
-▸ (`error`): `Promise`\<`ErrorType` \| `undefined`\>
+▸ (`error`): `Promise`\<`unknown`\>
 
 ##### Parameters
 
@@ -342,11 +342,11 @@ ___
 
 ##### Returns
 
-`Promise`\<`ErrorType` \| `undefined`\>
+`Promise`\<`unknown`\>
 
 #### Defined in
 
-[src/types/composer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L513)
+[src/types/composer.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L487)
 
 ___
 
@@ -436,13 +436,13 @@ Parameters to create an `TransactionComposer`.
 | `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
 | `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
-| `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)\<`unknown`\>[] | An array of error callbacks to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
+| `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)[] | An array of error transformers to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
 | `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
 | `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
 
 #### Defined in
 
-[src/types/composer.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L480)
+[src/types/composer.ts:490](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L490)
 
 ___
 

@@ -476,6 +476,16 @@ export type Txn =
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
+
+/**
+ * A function that transform an error into a new error.
+ *
+ * ErrorTransformers should be pessimistic about the input, hence the unknown type.
+ * In most cases, an ErrorTransformer should first check if it can or should transform the error
+ * and return the input error if it cannot or should not transform it.
+ */
+export type ErrorTransformer = (error: unknown) => Promise<unknown>
+
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
@@ -494,7 +504,7 @@ export type TransactionComposerParams = {
    */
   appManager?: AppManager
   /**
-   * An array of error callbacks to use when an error is caught in simulate or execute
+   * An array of error transformers to use when an error is caught in simulate or execute
    * callbacks can later be registered with `registerErrorTransformer`
    */
   errorTransformers?: ErrorTransformer[]
@@ -510,7 +520,6 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
-export type ErrorTransformer = (error: unknown) => Promise<unknown>
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
@@ -565,8 +574,8 @@ export class TransactionComposer {
    *
    * @returns The composer so you can chain method calls
    */
-  registerErrorTransformer(cb: ErrorTransformer) {
-    this.errorTransformers.push(cb)
+  registerErrorTransformer(transformer: ErrorTransformer) {
+    this.errorTransformers.push(transformer)
     return this
   }
 
