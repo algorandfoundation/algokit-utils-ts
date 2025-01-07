@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { algorandFixture } from '../testing'
 
-const fixture = algorandFixture()
 describe('TransactionComposer', () => {
+  const fixture = algorandFixture()
+
   beforeEach(async () => {
     await fixture.beforeEach()
   })
