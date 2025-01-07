@@ -1420,7 +1420,10 @@ export class AppClient {
     // Only handle errors for this app.
     // Because the error type is unknown, we turn it into a string to parse app ID
     const appIdString = `app=${this._appId.toString()}`
-    if (!`${e}`.includes(appIdString)) {
+
+    if (e instanceof Error && !e.message.includes(appIdString)) {
+      return e
+    } else if (!`${e}`.includes(appIdString)) {
       return e
     }
 
