@@ -714,6 +714,28 @@ describe('ARC56: app-factory-and-app-client', () => {
     }
   })
 
+  test('AppClient registers error map function to AlgorandClient', async () => {
+    const { testAccount } = localnet.context
+    const { appClient } = await factory.deploy({
+      createParams: {
+        method: 'createApplication',
+      },
+      deployTimeParams: { bytes64TmplVar: '0'.repeat(64), uint64TmplVar: 123, bytes32TmplVar: '0'.repeat(32), bytesTmplVar: 'foo' },
+    })
+
+    try {
+      // Don't use the app client to call, but since we've instantiated one the error map function should be registered
+      await appClient.algorand
+        .newGroup()
+        .addAppCallMethodCall({ appId: appClient.appId, method: appClient.getABIMethod('throwError')!, sender: testAccount })
+        .send()
+      invariant(false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(JSON.stringify(e)).toMatch('this is an error')
+    }
+  })
+
   test('ARC56 undefined error message with dynamic template vars (cblock offset)', async () => {
     const appId = (
       await factory.deploy({
