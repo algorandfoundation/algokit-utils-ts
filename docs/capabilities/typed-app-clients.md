@@ -193,7 +193,7 @@ const factory = algorand.client.getTypedAppFactory(HelloWorldAppFactory, {
 // Create the app and get a typed app client for the created app (note: this creates a new instance of the app every time,
 //  you can use .deploy() to deploy idempotently if the app wasn't previously
 //  deployed or needs to be updated if that's allowed)
-const { appClient } = await factory.create()
+const { appClient } = await factory.send.create()
 
 // Make a call to an ABI method and print the result
 const response = await appClient.hello({ name: 'world' })
