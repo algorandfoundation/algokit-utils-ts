@@ -40,8 +40,7 @@ export class AlgorandClient {
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorTransformers: Set<ErrorTransformer<any>> = new Set()
+  errorTransformers: Set<ErrorTransformer> = new Set()
 
   /**
    * Sets the default validity window for transactions.
@@ -169,7 +168,7 @@ export class AlgorandClient {
    * @returns The ID used when registering the error transformer which can be used to unregister
    * the error transformer with `unregisterErrorTransformer`
    */
-  public registerErrorTransformer<ErrorType>(cb: ErrorTransformer<ErrorType>) {
+  public registerErrorTransformer(cb: ErrorTransformer) {
     const id = this.errorTransformerId
     this.errorTransformerId++
     this.errorTransformers.add(cb)
@@ -177,8 +176,8 @@ export class AlgorandClient {
     return id
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public unregisterErrorTransformer(cb: ErrorTransformer<any>) {
+
+  public unregisterErrorTransformer(cb: ErrorTransformer) {
     this.errorTransformers.delete(cb)
   }
 

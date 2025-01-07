@@ -497,7 +497,7 @@ export type TransactionComposerParams = {
    * An array of error callbacks to use when an error is caught in simulate or execute
    * callbacks can later be registered with `registerErrorTransformer`
    */
-  errorTransformers?: ErrorTransformer<unknown>[]
+  errorTransformers?: ErrorTransformer[]
 }
 
 /** Set of transactions built by `TransactionComposer`. */
@@ -510,7 +510,7 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
-export type ErrorTransformer<ErrorType> = (error: unknown) => Promise<ErrorType | undefined>
+export type ErrorTransformer = (error: unknown) => Promise<unknown>
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
@@ -543,8 +543,7 @@ export class TransactionComposer {
 
   private appManager: AppManager
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private errorTransformers: ErrorTransformer<any>[]
+  private errorTransformers: ErrorTransformer[]
 
   /**
    * Create a `TransactionComposer`.
@@ -566,7 +565,7 @@ export class TransactionComposer {
    *
    * @returns The composer so you can chain method calls
    */
-  registerErrorTransformer<ErrorType>(cb: ErrorTransformer<ErrorType>) {
+  registerErrorTransformer(cb: ErrorTransformer) {
     this.errorTransformers.push(cb)
     return this
   }
@@ -1392,21 +1391,24 @@ export class TransactionComposer {
     const failedGroup = simulateResponse?.txnGroups[0]
     if (failedGroup?.failureMessage) {
       const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
-      let error = new Error(errorMessage)
+      const error = new Error(errorMessage)
 
       if (Config.debug) {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
+      let transformedError: unknown = error
       for (const cb of this.errorTransformers) {
         const callbackResult = await cb(error)
         if (callbackResult !== undefined) {
-          error = callbackResult
+          transformedError = callbackResult
         }
       }
 
-      Object.assign(error, { simulateResponse })
-      throw error
+      if (transformedError instanceof Error) {
+        Object.assign(transformedError, { simulateResponse })
+      }
+      throw transformedError
     }
 
     if (Config.debug && Config.traceAll) {
