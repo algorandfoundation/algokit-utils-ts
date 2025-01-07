@@ -34,7 +34,7 @@
 - [AssetTransferParams](types_composer.md#assettransferparams)
 - [CommonAppCallParams](types_composer.md#commonappcallparams)
 - [CommonTransactionParams](types_composer.md#commontransactionparams)
-- [ErrorMapFunction](types_composer.md#errormapfunction)
+- [ErrorTransformer](types_composer.md#errortransformer)
 - [OfflineKeyRegistrationParams](types_composer.md#offlinekeyregistrationparams)
 - [OnlineKeyRegistrationParams](types_composer.md#onlinekeyregistrationparams)
 - [PaymentParams](types_composer.md#paymentparams)
@@ -320,9 +320,9 @@ Common parameters for defining a transaction.
 
 ___
 
-### ErrorMapFunction
+### ErrorTransformer
 
-Ƭ **ErrorMapFunction**\<`ErrorType`\>: (`error`: `unknown`) => `Promise`\<`ErrorType` \| `undefined`\>
+Ƭ **ErrorTransformer**\<`ErrorType`\>: (`error`: `unknown`) => `Promise`\<`ErrorType` \| `undefined`\>
 
 #### Type parameters
 
@@ -436,7 +436,7 @@ Parameters to create an `TransactionComposer`.
 | `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
 | `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
-| `errorMapFunctions?` | [`ErrorMapFunction`](types_composer.md#errormapfunction)\<`unknown`\>[] | An array of error callbacks to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorMapFunction` |
+| `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)\<`unknown`\>[] | An array of error callbacks to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
 | `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
 | `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
 

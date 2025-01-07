@@ -19,7 +19,7 @@ TransactionComposer helps you compose and execute transactions as a transaction 
 - [atc](types_composer.TransactionComposer.md#atc)
 - [defaultValidityWindow](types_composer.TransactionComposer.md#defaultvaliditywindow)
 - [defaultValidityWindowIsExplicit](types_composer.TransactionComposer.md#defaultvaliditywindowisexplicit)
-- [errorMapFunctions](types_composer.TransactionComposer.md#errormapfunctions)
+- [errorTransformers](types_composer.TransactionComposer.md#errortransformers)
 - [getSigner](types_composer.TransactionComposer.md#getsigner)
 - [getSuggestedParams](types_composer.TransactionComposer.md#getsuggestedparams)
 - [txnMethodMap](types_composer.TransactionComposer.md#txnmethodmap)
@@ -66,7 +66,7 @@ TransactionComposer helps you compose and execute transactions as a transaction 
 - [count](types_composer.TransactionComposer.md#count)
 - [execute](types_composer.TransactionComposer.md#execute)
 - [rebuild](types_composer.TransactionComposer.md#rebuild)
-- [registerErrorMapFunction](types_composer.TransactionComposer.md#registererrormapfunction)
+- [registerErrorTransformer](types_composer.TransactionComposer.md#registererrortransformer)
 - [send](types_composer.TransactionComposer.md#send)
 - [simulate](types_composer.TransactionComposer.md#simulate)
 - [arc2Note](types_composer.TransactionComposer.md#arc2note)
@@ -153,9 +153,9 @@ Whether the validity window was explicitly set on construction
 
 ___
 
-### errorMapFunctions
+### errorTransformers
 
-• `Private` **errorMapFunctions**: [`ErrorMapFunction`](../modules/types_composer.md#errormapfunction)\<`any`\>[]
+• `Private` **errorTransformers**: [`ErrorTransformer`](../modules/types_composer.md#errortransformer)\<`any`\>[]
 
 #### Defined in
 
@@ -1181,9 +1181,9 @@ The newly built atomic transaction composer and the transactions
 
 ___
 
-### registerErrorMapFunction
+### registerErrorTransformer
 
-▸ **registerErrorMapFunction**\<`ErrorType`\>(`cb`): [`TransactionComposer`](types_composer.TransactionComposer.md)
+▸ **registerErrorTransformer**\<`ErrorType`\>(`cb`): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
 Register a callback to use when an error is caught in simulate or execute
 
@@ -1197,7 +1197,7 @@ Register a callback to use when an error is caught in simulate or execute
 
 | Name | Type |
 | :------ | :------ |
-| `cb` | [`ErrorMapFunction`](../modules/types_composer.md#errormapfunction)\<`ErrorType`\> |
+| `cb` | [`ErrorTransformer`](../modules/types_composer.md#errortransformer)\<`ErrorType`\> |
 
 #### Returns
 

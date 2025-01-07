@@ -1,5 +1,5 @@
-import { algorandFixture } from '../testing'
 import { beforeEach, describe, expect, test } from 'vitest'
+import { algorandFixture } from '../testing'
 
 const fixture = algorandFixture()
 describe('TransactionComposer', () => {
@@ -7,8 +7,8 @@ describe('TransactionComposer', () => {
     await fixture.beforeEach()
   })
 
-  describe('error map functions', () => {
-    const errorMapFunction = async (e: unknown) => {
+  describe('error transformers', () => {
+    const errorTransformer = async (e: unknown) => {
       let errorString: string
       if (e instanceof Error) {
         errorString = e.message
@@ -35,7 +35,7 @@ describe('TransactionComposer', () => {
         receiver: sender,
       })
 
-      composer.registerErrorMapFunction(errorMapFunction)
+      composer.registerErrorTransformer(errorTransformer)
 
       await expect(composer.simulate()).rejects.toThrow('ASSET MISSING!')
     })
@@ -52,7 +52,7 @@ describe('TransactionComposer', () => {
         receiver: sender,
       })
 
-      composer.registerErrorMapFunction(errorMapFunction)
+      composer.registerErrorTransformer(errorTransformer)
 
       await expect(composer.send()).rejects.toThrow('ASSET MISSING!')
     })

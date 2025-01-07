@@ -504,7 +504,7 @@ export class AppClient {
     this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
-    this._algorand.registerErrorMapFunction(this.handleCallErrors)
+    this._algorand.registerErrorTransformer(this.handleCallErrors)
     this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
     this._defaultSigner = params.defaultSigner
 

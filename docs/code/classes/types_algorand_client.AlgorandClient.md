@@ -25,8 +25,8 @@ A client that brokers easy access to Algorand functionality.
 - [\_defaultValidityWindow](types_algorand_client.AlgorandClient.md#_defaultvaliditywindow)
 - [\_transactionCreator](types_algorand_client.AlgorandClient.md#_transactioncreator)
 - [\_transactionSender](types_algorand_client.AlgorandClient.md#_transactionsender)
-- [errorMapFunctionId](types_algorand_client.AlgorandClient.md#errormapfunctionid)
-- [errorMapFunctions](types_algorand_client.AlgorandClient.md#errormapfunctions)
+- [errorTransformerId](types_algorand_client.AlgorandClient.md#errortransformerid)
+- [errorTransformers](types_algorand_client.AlgorandClient.md#errortransformers)
 
 ### Accessors
 
@@ -42,14 +42,14 @@ A client that brokers easy access to Algorand functionality.
 
 - [getSuggestedParams](types_algorand_client.AlgorandClient.md#getsuggestedparams)
 - [newGroup](types_algorand_client.AlgorandClient.md#newgroup)
-- [registerErrorMapFunction](types_algorand_client.AlgorandClient.md#registererrormapfunction)
+- [registerErrorTransformer](types_algorand_client.AlgorandClient.md#registererrortransformer)
 - [setDefaultSigner](types_algorand_client.AlgorandClient.md#setdefaultsigner)
 - [setDefaultValidityWindow](types_algorand_client.AlgorandClient.md#setdefaultvaliditywindow)
 - [setSigner](types_algorand_client.AlgorandClient.md#setsigner)
 - [setSignerFromAccount](types_algorand_client.AlgorandClient.md#setsignerfromaccount)
 - [setSuggestedParamsCache](types_algorand_client.AlgorandClient.md#setsuggestedparamscache)
 - [setSuggestedParamsCacheTimeout](types_algorand_client.AlgorandClient.md#setsuggestedparamscachetimeout)
-- [unregisterErrorMapFunction](types_algorand_client.AlgorandClient.md#unregistererrormapfunction)
+- [unregisterErrorTransformer](types_algorand_client.AlgorandClient.md#unregistererrortransformer)
 - [defaultLocalNet](types_algorand_client.AlgorandClient.md#defaultlocalnet)
 - [fromClients](types_algorand_client.AlgorandClient.md#fromclients)
 - [fromConfig](types_algorand_client.AlgorandClient.md#fromconfig)
@@ -189,11 +189,11 @@ ___
 
 ___
 
-### errorMapFunctionId
+### errorTransformerId
 
-• `Private` **errorMapFunctionId**: `number` = `0`
+• `Private` **errorTransformerId**: `number` = `0`
 
-The ID used when registering an error map function
+The ID used when registering an error transformer
 
 #### Defined in
 
@@ -201,9 +201,9 @@ The ID used when registering an error map function
 
 ___
 
-### errorMapFunctions
+### errorTransformers
 
-• **errorMapFunctions**: `Map`\<`number`, [`ErrorMapFunction`](../modules/types_composer.md#errormapfunction)\<`any`\>\>
+• **errorTransformers**: `Map`\<`number`, [`ErrorTransformer`](../modules/types_composer.md#errortransformer)\<`any`\>\>
 
 #### Defined in
 
@@ -355,9 +355,9 @@ Start a new `TransactionComposer` transaction group
 
 ___
 
-### registerErrorMapFunction
+### registerErrorTransformer
 
-▸ **registerErrorMapFunction**\<`ErrorType`\>(`cb`): `number`
+▸ **registerErrorTransformer**\<`ErrorType`\>(`cb`): `number`
 
 Register a callback to use when an error is caught when simulating or executing
 composed transaction groups made from `newGroup`
@@ -372,7 +372,7 @@ composed transaction groups made from `newGroup`
 
 | Name | Type |
 | :------ | :------ |
-| `cb` | [`ErrorMapFunction`](../modules/types_composer.md#errormapfunction)\<`ErrorType`\> |
+| `cb` | [`ErrorTransformer`](../modules/types_composer.md#errortransformer)\<`ErrorType`\> |
 
 #### Returns
 
@@ -541,9 +541,9 @@ The `AlgorandClient` so method calls can be chained
 
 ___
 
-### unregisterErrorMapFunction
+### unregisterErrorTransformer
 
-▸ **unregisterErrorMapFunction**(`id`): `void`
+▸ **unregisterErrorTransformer**(`id`): `void`
 
 #### Parameters
 

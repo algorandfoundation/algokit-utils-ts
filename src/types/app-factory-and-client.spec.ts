@@ -714,7 +714,7 @@ describe('ARC56: app-factory-and-app-client', () => {
     }
   })
 
-  test('AppClient registers error map function to AlgorandClient', async () => {
+  test('AppClient registers error transformer to AlgorandClient', async () => {
     const { testAccount } = localnet.context
     const { appClient } = await factory.deploy({
       createParams: {
@@ -724,7 +724,7 @@ describe('ARC56: app-factory-and-app-client', () => {
     })
 
     try {
-      // Don't use the app client to call, but since we've instantiated one the error map function should be registered
+      // Don't use the app client to call, but since we've instantiated one the error transformer should be registered
       await appClient.algorand
         .newGroup()
         .addAppCallMethodCall({ appId: appClient.appId, method: appClient.getABIMethod('throwError')!, sender: testAccount })
