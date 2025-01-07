@@ -41,7 +41,7 @@ export class AlgorandClient {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorTransformers: Map<number, ErrorTransformer<any>> = new Map()
+  errorTransformers: Set<ErrorTransformer<any>> = new Set()
 
   /**
    * Sets the default validity window for transactions.
@@ -172,13 +172,14 @@ export class AlgorandClient {
   public registerErrorTransformer<ErrorType>(cb: ErrorTransformer<ErrorType>) {
     const id = this.errorTransformerId
     this.errorTransformerId++
-    this.errorTransformers.set(id, cb)
+    this.errorTransformers.add(cb)
 
     return id
   }
 
-  public unregisterErrorTransformer(id: number) {
-    this.errorTransformers.delete(id)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public unregisterErrorTransformer(cb: ErrorTransformer<any>) {
+    this.errorTransformers.delete(cb)
   }
 
   /** Start a new `TransactionComposer` transaction group */

@@ -203,7 +203,7 @@ ___
 
 ### errorTransformers
 
-• **errorTransformers**: `Map`\<`number`, [`ErrorTransformer`](../modules/types_composer.md#errortransformer)\<`any`\>\>
+• **errorTransformers**: `Set`\<[`ErrorTransformer`](../modules/types_composer.md#errortransformer)\<`any`\>\>
 
 #### Defined in
 
@@ -303,7 +303,7 @@ Methods for creating a transaction.
 
 #### Defined in
 
-[src/types/algorand-client.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L206)
+[src/types/algorand-client.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L207)
 
 ___
 
@@ -319,7 +319,7 @@ Methods for sending a transaction.
 
 #### Defined in
 
-[src/types/algorand-client.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L199)
+[src/types/algorand-client.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L200)
 
 ## Methods
 
@@ -351,7 +351,7 @@ Start a new `TransactionComposer` transaction group
 
 #### Defined in
 
-[src/types/algorand-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L185)
+[src/types/algorand-client.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L186)
 
 ___
 
@@ -546,13 +546,13 @@ ___
 
 ### unregisterErrorTransformer
 
-▸ **unregisterErrorTransformer**(`id`): `void`
+▸ **unregisterErrorTransformer**(`cb`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `id` | `number` |
+| `cb` | [`ErrorTransformer`](../modules/types_composer.md#errortransformer)\<`any`\> |
 
 #### Returns
 
@@ -560,7 +560,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L180)
+[src/types/algorand-client.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L181)
 
 ___
 
@@ -578,7 +578,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L216)
+[src/types/algorand-client.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L217)
 
 ___
 
@@ -602,7 +602,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L253)
+[src/types/algorand-client.ts:254](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L254)
 
 ___
 
@@ -626,7 +626,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L283)
+[src/types/algorand-client.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L284)
 
 ___
 
@@ -657,7 +657,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L274)
+[src/types/algorand-client.ts:275](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L275)
 
 ___
 
@@ -675,7 +675,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L240)
+[src/types/algorand-client.ts:241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L241)
 
 ___
 
@@ -693,4 +693,4 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L228)
+[src/types/algorand-client.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L229)
