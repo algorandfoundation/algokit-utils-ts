@@ -710,7 +710,8 @@ describe('ARC56: app-factory-and-app-client', () => {
       invariant(false)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      expect(JSON.stringify(e)).toMatch('this is an error')
+      expect(e).toBeInstanceOf(Error)
+      expect(e.message).toMatch('this is an error')
     }
   })
 
@@ -732,7 +733,8 @@ describe('ARC56: app-factory-and-app-client', () => {
       invariant(false)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      expect(JSON.stringify(e)).toMatch('this is an error')
+      expect(e).toBeInstanceOf(Error)
+      expect(e.message).toMatch('this is an error')
     }
   })
 
