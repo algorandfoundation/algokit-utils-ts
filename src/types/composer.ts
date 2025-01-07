@@ -505,6 +505,8 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
+export type ErrorCallback<ErrorType> = (error: unknown) => Promise<ErrorType | undefined>
+
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
   /** Signer used to represent a lack of signer */
@@ -536,6 +538,9 @@ export class TransactionComposer {
 
   private appManager: AppManager
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  errorCallbacks: ErrorCallback<any>[] = []
+
   /**
    * Create a `TransactionComposer`.
    * @param params The configuration for this composer
@@ -548,6 +553,13 @@ export class TransactionComposer {
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
+  }
+
+  /**
+   * Register a callback to use when an error is caught in simulate or execute
+   */
+  registerErrorCallback<ErrorType>(cb: ErrorCallback<ErrorType>) {
+    this.errorCallbacks.push(cb)
   }
 
   /**
@@ -1287,15 +1299,26 @@ export class TransactionComposer {
       waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
     }
 
-    return await sendAtomicTransactionComposer(
-      {
-        atc: this.atc,
-        suppressLog: params?.suppressLog,
-        maxRoundsToWaitForConfirmation: waitRounds,
-        populateAppCallResources: params?.populateAppCallResources,
-      },
-      this.algod,
-    )
+    try {
+      return await sendAtomicTransactionComposer(
+        {
+          atc: this.atc,
+          suppressLog: params?.suppressLog,
+          maxRoundsToWaitForConfirmation: waitRounds,
+          populateAppCallResources: params?.populateAppCallResources,
+        },
+        this.algod,
+      )
+    } catch (e: unknown) {
+      for await (const cb of this.errorCallbacks) {
+        const callbackResult = await cb(e)
+        if (callbackResult !== undefined) {
+          throw callbackResult
+        }
+      }
+
+      throw e
+    }
   }
 
   /**
@@ -1363,10 +1386,17 @@ export class TransactionComposer {
     const failedGroup = simulateResponse?.txnGroups[0]
     if (failedGroup?.failureMessage) {
       const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
-      const error = new Error(errorMessage)
+      let error = new Error(errorMessage)
 
       if (Config.debug) {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
+      }
+
+      for await (const cb of this.errorCallbacks) {
+        const callbackResult = await cb(error)
+        if (callbackResult !== undefined) {
+          error = callbackResult
+        }
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
