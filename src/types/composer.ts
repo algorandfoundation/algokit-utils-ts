@@ -562,7 +562,9 @@ export class TransactionComposer {
   }
 
   /**
-   * Register a callback to use when an error is caught in simulate or execute
+   * Register a function that will be used to transform an error caught when simulating or executing
+   *
+   * @returns The composer so you can chain method calls
    */
   registerErrorTransformer<ErrorType>(cb: ErrorTransformer<ErrorType>) {
     this.errorTransformers.push(cb)

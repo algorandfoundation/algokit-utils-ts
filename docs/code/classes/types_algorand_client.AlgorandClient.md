@@ -303,7 +303,7 @@ Methods for creating a transaction.
 
 #### Defined in
 
-[src/types/algorand-client.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L203)
+[src/types/algorand-client.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L206)
 
 ___
 
@@ -319,7 +319,7 @@ Methods for sending a transaction.
 
 #### Defined in
 
-[src/types/algorand-client.ts:196](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L196)
+[src/types/algorand-client.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L199)
 
 ## Methods
 
@@ -351,7 +351,7 @@ Start a new `TransactionComposer` transaction group
 
 #### Defined in
 
-[src/types/algorand-client.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L182)
+[src/types/algorand-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L185)
 
 ___
 
@@ -359,7 +359,7 @@ ___
 
 ▸ **registerErrorTransformer**\<`ErrorType`\>(`cb`): `number`
 
-Register a callback to use when an error is caught when simulating or executing
+Register a function that will be used to transform an error caught when simulating or executing
 composed transaction groups made from `newGroup`
 
 #### Type parameters
@@ -378,9 +378,12 @@ composed transaction groups made from `newGroup`
 
 `number`
 
+The ID used when registering the error transformer which can be used to unregister
+the error transformer with `unregisterErrorTransformer`
+
 #### Defined in
 
-[src/types/algorand-client.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L169)
+[src/types/algorand-client.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L172)
 
 ___
 
@@ -557,7 +560,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L177)
+[src/types/algorand-client.ts:180](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L180)
 
 ___
 
@@ -575,7 +578,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L213)
+[src/types/algorand-client.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L216)
 
 ___
 
@@ -599,7 +602,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L250)
+[src/types/algorand-client.ts:253](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L253)
 
 ___
 
@@ -623,7 +626,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:280](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L280)
+[src/types/algorand-client.ts:283](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L283)
 
 ___
 
@@ -654,7 +657,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L271)
+[src/types/algorand-client.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L274)
 
 ___
 
@@ -672,7 +675,7 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:237](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L237)
+[src/types/algorand-client.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L240)
 
 ___
 
@@ -690,4 +693,4 @@ The `AlgorandClient`
 
 #### Defined in
 
-[src/types/algorand-client.ts:225](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L225)
+[src/types/algorand-client.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L228)

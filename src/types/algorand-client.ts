@@ -163,8 +163,11 @@ export class AlgorandClient {
   private errorTransformerId = 0
 
   /**
-   * Register a callback to use when an error is caught when simulating or executing
+   * Register a function that will be used to transform an error caught when simulating or executing
    * composed transaction groups made from `newGroup`
+   *
+   * @returns The ID used when registering the error transformer which can be used to unregister
+   * the error transformer with `unregisterErrorTransformer`
    */
   public registerErrorTransformer<ErrorType>(cb: ErrorTransformer<ErrorType>) {
     const id = this.errorTransformerId
