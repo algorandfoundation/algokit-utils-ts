@@ -34,6 +34,7 @@
 - [AssetTransferParams](types_composer.md#assettransferparams)
 - [CommonAppCallParams](types_composer.md#commonappcallparams)
 - [CommonTransactionParams](types_composer.md#commontransactionparams)
+- [ErrorMapFunction](types_composer.md#errormapfunction)
 - [OfflineKeyRegistrationParams](types_composer.md#offlinekeyregistrationparams)
 - [OnlineKeyRegistrationParams](types_composer.md#onlinekeyregistrationparams)
 - [PaymentParams](types_composer.md#paymentparams)
@@ -319,6 +320,36 @@ Common parameters for defining a transaction.
 
 ___
 
+### ErrorMapFunction
+
+Ƭ **ErrorMapFunction**\<`ErrorType`\>: (`error`: `unknown`) => `Promise`\<`ErrorType` \| `undefined`\>
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `ErrorType` |
+
+#### Type declaration
+
+▸ (`error`): `Promise`\<`ErrorType` \| `undefined`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `error` | `unknown` |
+
+##### Returns
+
+`Promise`\<`ErrorType` \| `undefined`\>
+
+#### Defined in
+
+[src/types/composer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L513)
+
+___
+
 ### OfflineKeyRegistrationParams
 
 Ƭ **OfflineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `preventAccountFromEverParticipatingAgain?`: `boolean`  }
@@ -405,6 +436,7 @@ Parameters to create an `TransactionComposer`.
 | `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
 | `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
+| `errorMapFunctions?` | [`ErrorMapFunction`](types_composer.md#errormapfunction)\<`unknown`\>[] | An array of error callbacks to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorMapFunction` |
 | `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
 | `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
 

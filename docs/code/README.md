@@ -37,6 +37,7 @@
 - [types/client-manager](modules/types_client_manager.md)
 - [types/client-manager.spec](modules/types_client_manager_spec.md)
 - [types/composer](modules/types_composer.md)
+- [types/composer.spec](modules/types_composer_spec.md)
 - [types/config](modules/types_config.md)
 - [types/debugging](modules/types_debugging.md)
 - [types/dispenser-client](modules/types_dispenser_client.md)
