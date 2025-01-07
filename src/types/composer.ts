@@ -1320,7 +1320,7 @@ export class TransactionComposer {
       )
     } catch (e: unknown) {
       let error = e
-      for await (const cb of this.errorTransformers) {
+      for (const cb of this.errorTransformers) {
         error = await cb(e)
       }
       throw error
@@ -1398,7 +1398,7 @@ export class TransactionComposer {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
-      for await (const cb of this.errorTransformers) {
+      for (const cb of this.errorTransformers) {
         const callbackResult = await cb(error)
         if (callbackResult !== undefined) {
           error = callbackResult
