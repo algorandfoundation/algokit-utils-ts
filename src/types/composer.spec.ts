@@ -7,8 +7,8 @@ describe('TransactionComposer', () => {
     await fixture.beforeEach()
   })
 
-  describe('error callbacks', () => {
-    const errorCallback = async (e: unknown) => {
+  describe('error map functions', () => {
+    const errorMapFunction = async (e: unknown) => {
       let errorString: string
       if (e instanceof Error) {
         errorString = e.message
@@ -20,10 +20,10 @@ describe('TransactionComposer', () => {
         return new Error('ASSET MISSING!')
       }
 
-      return undefined
+      return e
     }
 
-    test('error callback throws correct error from simulate', async () => {
+    test('throws correct error from simulate', async () => {
       const algorand = fixture.context.algorand
       const sender = fixture.context.testAccount
       const composer = algorand.newGroup()
@@ -35,12 +35,12 @@ describe('TransactionComposer', () => {
         receiver: sender,
       })
 
-      composer.registerErrorCallback(errorCallback)
+      composer.registerErrorMapFunction(errorMapFunction)
 
       await expect(composer.simulate()).rejects.toThrow('ASSET MISSING!')
     })
 
-    test('error callback throws correct error from send', async () => {
+    test('throws correct error from send', async () => {
       const algorand = fixture.context.algorand
       const sender = fixture.context.testAccount
       const composer = algorand.newGroup()
@@ -52,7 +52,7 @@ describe('TransactionComposer', () => {
         receiver: sender,
       })
 
-      composer.registerErrorCallback(errorCallback)
+      composer.registerErrorMapFunction(errorMapFunction)
 
       await expect(composer.send()).rejects.toThrow('ASSET MISSING!')
     })

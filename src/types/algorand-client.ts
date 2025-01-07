@@ -7,7 +7,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { ErrorCallback, TransactionComposer } from './composer'
+import { ErrorMapFunction, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -41,7 +41,7 @@ export class AlgorandClient {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorCallbacks: ErrorCallback<any>[] = []
+  errorMapFunctions: Map<number, ErrorMapFunction<any>> = new Map()
 
   /**
    * Sets the default validity window for transactions.
@@ -159,12 +159,23 @@ export class AlgorandClient {
     return this._appDeployer
   }
 
+  /** The ID used when registering an error map function */
+  private errorMapFunctionId = 0
+
   /**
    * Register a callback to use when an error is caught when simulating or executing
    * composed transaction groups made from `newGroup`
    */
-  public registerErrorCallback<ErrorType>(cb: ErrorCallback<ErrorType>) {
-    this.errorCallbacks.push(cb)
+  public registerErrorMapFunction<ErrorType>(cb: ErrorMapFunction<ErrorType>) {
+    const id = this.errorMapFunctionId
+    this.errorMapFunctionId++
+    this.errorMapFunctions.set(id, cb)
+
+    return id
+  }
+
+  public unregisterErrorMapFunction(id: number) {
+    this.errorMapFunctions.delete(id)
   }
 
   /** Start a new `TransactionComposer` transaction group */
@@ -175,7 +186,7 @@ export class AlgorandClient {
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
-      errorCallbacks: this.errorCallbacks,
+      errorMapFunctions: [...this.errorMapFunctions.values()],
     })
   }
 

@@ -495,9 +495,9 @@ export type TransactionComposerParams = {
   appManager?: AppManager
   /**
    * An array of error callbacks to use when an error is caught in simulate or execute
-   * callbacks can later be registered with `registerErrorCallback`
+   * callbacks can later be registered with `registerErrorMapFunction`
    */
-  errorCallbacks?: ErrorCallback<unknown>[]
+  errorMapFunctions?: ErrorMapFunction<unknown>[]
 }
 
 /** Set of transactions built by `TransactionComposer`. */
@@ -510,7 +510,7 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
-export type ErrorCallback<ErrorType> = (error: unknown) => Promise<ErrorType | undefined>
+export type ErrorMapFunction<ErrorType> = (error: unknown) => Promise<ErrorType | undefined>
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
@@ -544,7 +544,7 @@ export class TransactionComposer {
   private appManager: AppManager
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorCallbacks: ErrorCallback<any>[]
+  private errorMapFunctions: ErrorMapFunction<any>[]
 
   /**
    * Create a `TransactionComposer`.
@@ -558,14 +558,15 @@ export class TransactionComposer {
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
-    this.errorCallbacks = params.errorCallbacks ?? []
+    this.errorMapFunctions = params.errorMapFunctions ?? []
   }
 
   /**
    * Register a callback to use when an error is caught in simulate or execute
    */
-  registerErrorCallback<ErrorType>(cb: ErrorCallback<ErrorType>) {
-    this.errorCallbacks.push(cb)
+  registerErrorMapFunction<ErrorType>(cb: ErrorMapFunction<ErrorType>) {
+    this.errorMapFunctions.push(cb)
+    return this
   }
 
   /**
@@ -1316,14 +1317,11 @@ export class TransactionComposer {
         this.algod,
       )
     } catch (e: unknown) {
-      for await (const cb of this.errorCallbacks) {
-        const callbackResult = await cb(e)
-        if (callbackResult !== undefined) {
-          throw callbackResult
-        }
+      let error = e
+      for await (const cb of this.errorMapFunctions) {
+        error = await cb(e)
       }
-
-      throw e
+      throw error
     }
   }
 
@@ -1398,7 +1396,7 @@ export class TransactionComposer {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
-      for await (const cb of this.errorCallbacks) {
+      for await (const cb of this.errorMapFunctions) {
         const callbackResult = await cb(error)
         if (callbackResult !== undefined) {
           error = callbackResult
