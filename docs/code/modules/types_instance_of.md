@@ -1,6 +1,6 @@
-[@algorandfoundation/algokit-utils](../README.md) / types/instance\_of
+[@algorandfoundation/algokit-utils](../README.md) / types/instance-of
 
-# Module: types/instance\_of
+# Module: types/instance-of
 
 ## Table of contents
 
@@ -22,4 +22,4 @@
 
 #### Defined in
 
-[src/types/instance_of.ts:1](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/instance_of.ts#L1)
+src/types/instance-of.ts:1
