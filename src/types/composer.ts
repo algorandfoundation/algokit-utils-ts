@@ -1405,8 +1405,7 @@ export class TransactionComposer {
         }
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(error as any).simulateResponse = simulateResponse
+      Object.assign(error, { simulateResponse })
       throw error
     }
 

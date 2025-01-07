@@ -1320,4 +1320,4 @@ The binary encoded transaction note
 
 #### Defined in
 
-[src/types/composer.ts:1435](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1435)
+[src/types/composer.ts:1434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1434)
