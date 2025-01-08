@@ -484,6 +484,12 @@ export type Txn =
  */
 export type ErrorTransformer = (error: Error) => Promise<Error>
 
+class BadTransformer extends Error {
+  constructor(originalError: unknown) {
+    super(`An error transformer returned a non-error value. The original error before any transformation: ${originalError}`)
+  }
+}
+
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
@@ -1324,10 +1330,13 @@ export class TransactionComposer {
         this.algod,
       )
     } catch (e: unknown) {
+      // Transformers expect an Error, so don't transform the exception if it's not an Error
+      if (!(e instanceof Error)) throw e
+
       let error = e
       for (const transformer of this.errorTransformers) {
         if (!(error instanceof Error)) {
-          break
+          throw new BadTransformer(e)
         }
         error = await transformer(error)
       }
