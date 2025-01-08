@@ -1417,17 +1417,15 @@ export class AppClient {
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
   private handleCallErrors = async (e: unknown) => {
+    // The later calls are only useful with Error objects and there's no safe way to serialize an unknown object,
+    // so we will simply return the error as is if it's not an Error object.
+    if (!(e instanceof Error)) return e
+
     // Only handle errors for this app.
-    // Because the error type is unknown, we turn it into a string to parse app ID
     const appIdString = `app=${this._appId.toString()}`
+    if (!e.message.includes(appIdString)) return e
 
-    if (e instanceof Error && !e.message.includes(appIdString)) {
-      return e
-    } else if (!`${e}`.includes(appIdString)) {
-      return e
-    }
-
-    const logicError = await this.exposeLogicError(e as Error)
+    const logicError = await this.exposeLogicError(e)
     if (logicError instanceof LogicError) {
       let currentLine = logicError.teal_line - logicError.lines - 1
       const stackWithLines = logicError.stack
