@@ -1329,14 +1329,14 @@ export class TransactionComposer {
         },
         this.algod,
       )
-    } catch (e: unknown) {
+    } catch (originalError: unknown) {
       // Transformers expect an Error, so don't transform the exception if it's not an Error
-      if (!(e instanceof Error)) throw e
+      if (!(originalError instanceof Error)) throw originalError
 
-      let error = e
+      let error = originalError
       for (const transformer of this.errorTransformers) {
         if (!(error instanceof Error)) {
-          throw new BadTransformer(e)
+          throw new BadTransformer(originalError)
         }
         error = await transformer(error)
       }
