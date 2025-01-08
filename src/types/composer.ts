@@ -1326,11 +1326,11 @@ export class TransactionComposer {
       )
     } catch (e: unknown) {
       let error = e
-      for (const cb of this.errorTransformers) {
+      for (const transformer of this.errorTransformers) {
         if (!(error instanceof Error)) {
           break
         }
-        error = await cb(error)
+        error = await transformer(error)
       }
 
       throw error
@@ -1408,11 +1408,11 @@ export class TransactionComposer {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
-      for (const cb of this.errorTransformers) {
+      for (const transformer of this.errorTransformers) {
         if (!(error instanceof Error)) {
           break
         }
-        error = await cb(error)
+        error = await transformer(error)
       }
 
       throw error
