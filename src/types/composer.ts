@@ -479,7 +479,6 @@ export type Txn =
 /**
  * A function that transform an error into a new error.
  *
- * ErrorTransformers should be pessimistic about the input, hence the unknown type.
  * In most cases, an ErrorTransformer should first check if it can or should transform the error
  * and return the input error if it cannot or should not transform it.
  */
