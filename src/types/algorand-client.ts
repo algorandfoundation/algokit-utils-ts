@@ -183,7 +183,7 @@ export class AlgorandClient {
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
-      errorTransformers: [...this._errorTransformers.values()],
+      errorTransformers: [...this._errorTransformers],
     })
   }
 
