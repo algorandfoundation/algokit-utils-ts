@@ -476,7 +476,6 @@ export type Txn =
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
-
 /**
  * A function that transform an error into a new error.
  *
@@ -519,7 +518,6 @@ export interface BuiltTransactions {
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
   signers: Map<number, algosdk.TransactionSigner>
 }
-
 
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {

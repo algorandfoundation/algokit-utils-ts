@@ -47,7 +47,6 @@ export class AlgorandClient {
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
   }
 
-
   /**
    * Sets the default validity window for transactions.
    * @param validityWindow The number of rounds between the first and last valid rounds

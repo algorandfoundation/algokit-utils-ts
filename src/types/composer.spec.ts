@@ -9,20 +9,22 @@ describe('TransactionComposer', () => {
   })
 
   describe('error transformers', () => {
-    const errorTransformers = [async (e: Error) => {
-      if (e.message.includes('missing from')) {
-        return new Error('ASSET MISSING???')
-      }
+    const errorTransformers = [
+      async (e: Error) => {
+        if (e.message.includes('missing from')) {
+          return new Error('ASSET MISSING???')
+        }
 
-      return e
-    },
-    async (e: Error) => {
-      if (e.message == 'ASSET MISSING???') {
-        return new Error('ASSET MISSING!')
-      }
+        return e
+      },
+      async (e: Error) => {
+        if (e.message == 'ASSET MISSING???') {
+          return new Error('ASSET MISSING!')
+        }
 
-      return e
-    }]
+        return e
+      },
+    ]
 
     test('throws correct error from simulate', async () => {
       const algorand = fixture.context.algorand
@@ -54,7 +56,6 @@ describe('TransactionComposer', () => {
         sender,
         receiver: sender,
       })
-
 
       errorTransformers.forEach((errorTransformer) => {
         composer.registerErrorTransformer(errorTransformer)

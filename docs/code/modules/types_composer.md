@@ -322,7 +322,7 @@ ___
 
 ### ErrorTransformer
 
-Ƭ **ErrorTransformer**: (`error`: `unknown`) => `Promise`\<`unknown`\>
+Ƭ **ErrorTransformer**: (`error`: `Error`) => `Promise`\<`Error`\>
 
 A function that transform an error into a new error.
 
@@ -332,21 +332,21 @@ and return the input error if it cannot or should not transform it.
 
 #### Type declaration
 
-▸ (`error`): `Promise`\<`unknown`\>
+▸ (`error`): `Promise`\<`Error`\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `error` | `unknown` |
+| `error` | `Error` |
 
 ##### Returns
 
-`Promise`\<`unknown`\>
+`Promise`\<`Error`\>
 
 #### Defined in
 
-[src/types/composer.ts:487](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L487)
+[src/types/composer.ts:486](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L486)
 
 ___
 
@@ -442,7 +442,7 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:490](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L490)
+[src/types/composer.ts:489](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L489)
 
 ___
 

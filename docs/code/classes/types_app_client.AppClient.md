@@ -803,7 +803,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1441](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1441)
+[src/types/app-client.ts:1437](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1437)
 
 ___
 
@@ -1109,13 +1109,13 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1513)
+[src/types/app-client.ts:1509](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1509)
 
 ___
 
 ### handleCallErrors
 
-▸ **handleCallErrors**(`e`): `Promise`\<`unknown`\>
+▸ **handleCallErrors**(`e`): `Promise`\<`Error`\>
 
 Make the given call and catch any errors, augmenting with debugging information before re-throwing.
 
@@ -1123,11 +1123,11 @@ Make the given call and catch any errors, augmenting with debugging information 
 
 | Name | Type |
 | :------ | :------ |
-| `e` | `unknown` |
+| `e` | `Error` |
 
 #### Returns
 
-`Promise`\<`unknown`\>
+`Promise`\<`Error`\>
 
 #### Defined in
 
