@@ -484,7 +484,7 @@ export type Txn =
  * In most cases, an ErrorTransformer should first check if it can or should transform the error
  * and return the input error if it cannot or should not transform it.
  */
-export type ErrorTransformer = (error: unknown) => Promise<unknown>
+export type ErrorTransformer = (error: Error) => Promise<Error>
 
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
@@ -1329,8 +1329,12 @@ export class TransactionComposer {
     } catch (e: unknown) {
       let error = e
       for (const cb of this.errorTransformers) {
-        error = await cb(e)
+        if (!(error instanceof Error)) {
+          break
+        }
+        error = await cb(error)
       }
+
       throw error
     }
   }
@@ -1400,24 +1404,20 @@ export class TransactionComposer {
     const failedGroup = simulateResponse?.txnGroups[0]
     if (failedGroup?.failureMessage) {
       const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
-      const error = new Error(errorMessage)
+      let error = new Error(errorMessage)
 
       if (Config.debug) {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
-      let transformedError: unknown = error
       for (const cb of this.errorTransformers) {
-        const callbackResult = await cb(error)
-        if (callbackResult !== undefined) {
-          transformedError = callbackResult
+        if (!(error instanceof Error)) {
+          break
         }
+        error = await cb(error)
       }
 
-      if (transformedError instanceof Error) {
-        Object.assign(transformedError, { simulateResponse })
-      }
-      throw transformedError
+      throw error
     }
 
     if (Config.debug && Config.traceAll) {
