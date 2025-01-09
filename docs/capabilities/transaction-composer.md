@@ -50,9 +50,9 @@ const result = algorand
 Once you have constructed all the required transactions, they can be sent by calling `send()` on the `TransactionComposer`.
 Additionally `send()` takes a number of parameters which allow you to opt-in to some additional behaviours as part of sending the transaction or transaction group, mostly significantly `populateAppCallResources` and `coverAppCallInnerTransactionFees`.
 
-### populateAppCallResources
+### Populating App Call Resource
 
-As the name suggests, this setting automatically updates the relevant app call transactions in the group to include the account, app, asset and box resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction. You can read more about [resources and the reference arrays](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/?from_query=resources#reference-arrays) in the docs.
+`populateAppCallResources` automatically updates the relevant app call transactions in the group to include the account, app, asset and box resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction. You can read more about [resources and the reference arrays](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/?from_query=resources#reference-arrays) in the docs.
 
 For example:
 
@@ -73,9 +73,9 @@ const result = algorand
 
 If `my_method` in the above example accesses any resources, they will be automatically discovered and added before sending the transaction to the network.
 
-### coverAppCallInnerTransactionFees
+### Covering App Call Inner Transaction Fees
 
-This setting will automatically calculate the required fee for a parent app call transaction that sends inner transactions. It leverages the simulate endpoint to discover the inner transactions sent and calculates a fee delta to resolve the optimal fee. This feature also takes care of accounting for any surplus transaction fee at the various levels, so as to effectively minimise the fees needed to successfully handle complex scenarios. This setting only applies when you have constucted at least one app call transaction.
+`coverAppCallInnerTransactionFees` automatically calculate the required fee for a parent app call transaction that sends inner transactions. It leverages the simulate endpoint to discover the inner transactions sent and calculates a fee delta to resolve the optimal fee. This feature also takes care of accounting for any surplus transaction fee at the various levels, so as to effectively minimise the fees needed to successfully handle complex scenarios. This setting only applies when you have constucted at least one app call transaction.
 
 For example:
 
@@ -172,6 +172,12 @@ const result = await appClient1.algorand
 ```
 
 This feature should efficiently calculate the minimum fee needed to execute an app call transaction with inners, however we always recommend testing your specific scenario behaves as expected before releasing.
+
+### Covering App Call Op Budget
+
+The high level Algorand contract authoring languages all have support for ensuring appropriate app op budget is available via `ensure_budget` in Algorand Python, `ensureBudget` in Algorand TypeScript and `increaseOpcodeBudget` in TEALScript. This is great, as it allows contract authors to ensure appropriate budget is available by automatically sending op-up inner transactions to increase the budget available. These op-up inner transactions require the fees to be covered by an account, which is generally the responsibility of the application consumer.
+
+Application consumers may not be immediately aware of the number of op-up inner transactions sent, so it can be difficult for them to determine the exact fees required to successfully execute an application call. Fortunately the `coverAppCallInnerTransactionFees` setting above can be leveraged to automatically cover the fees for any op-up inner transaction that an application sends. Additionally if a contract author decides to cover the fee for an op-up inner transaction, then the application consumer will not be charged a fee for that transaction.
 
 ## Simulating a transaction
 
