@@ -804,7 +804,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1436)
+[src/types/app-client.ts:1445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1445)
 
 ___
 
@@ -1110,7 +1110,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1508](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1508)
+[src/types/app-client.ts:1517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1517)
 
 ___
 

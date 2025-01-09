@@ -21,7 +21,7 @@ To generate a typed client from an app spec file you can use [AlgoKit CLI](https
 > algokit generate client application.json --output /absolute/path/to/client.ts
 ```
 
-Note: If you are using a version of AlgoKit Utils >= 7.0.0 in your project, you will need to generate using >= 4.0.0. See [AlgoKit CLI generator version pinning](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#version-pinning) for more information on how to lock to a specific version.
+Note: AlgoKit Utils >= 7.0.0 is compatible with the older 3.0.0 generated typed clients, however if you want to utilise the new features or leverage ARC-56 support, you will need to generate using >= 4.0.0. See [AlgoKit CLI generator version pinning](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/generate.md#version-pinning) for more information on how to lock to a specific version.
 
 ## Getting a typed client instance
 
@@ -193,7 +193,7 @@ const factory = algorand.client.getTypedAppFactory(HelloWorldAppFactory, {
 // Create the app and get a typed app client for the created app (note: this creates a new instance of the app every time,
 //  you can use .deploy() to deploy idempotently if the app wasn't previously
 //  deployed or needs to be updated if that's allowed)
-const { appClient } = await factory.create()
+const { appClient } = await factory.send.create()
 
 // Make a call to an ABI method and print the result
 const response = await appClient.hello({ name: 'world' })

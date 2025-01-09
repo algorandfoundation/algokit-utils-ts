@@ -1429,7 +1429,16 @@ export class AppClient {
     try {
       return await call()
     } catch (e) {
-      throw await this.exposeLogicError(e as Error)
+      const logicError = await this.exposeLogicError(e as Error)
+      if (logicError instanceof LogicError) {
+        let currentLine = logicError.teal_line - logicError.lines - 1
+        const stackWithLines = logicError.stack
+          ?.split('\n')
+          .map((line) => `${(currentLine += 1)}: ${line}`)
+          .join('\n')
+        Config.logger.error(`${logicError.message}\n\n${stackWithLines}`)
+      }
+      throw logicError
     }
   }
 
