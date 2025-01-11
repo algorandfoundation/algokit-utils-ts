@@ -14,7 +14,7 @@ import { getABIReturnValue, waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.newScope, 10_000)
 
   const getTestTransaction = (amount?: AlgoAmount, sender?: string) => {
     return {
@@ -179,11 +179,11 @@ const tests = (version: 8 | 9) => () => {
   let appClient: AppClient
   let externalClient: AppClient
 
-  beforeEach(fixture.beforeEach)
+  beforeEach(fixture.newScope)
 
   beforeAll(async () => {
     Config.configure({ populateAppCallResources: true })
-    await fixture.beforeEach()
+    await fixture.newScope()
     const { algorand, testAccount } = fixture.context
 
     const appFactory = algorand.client.getAppFactory({
@@ -340,12 +340,12 @@ describe('Resource Packer: Mixed', () => {
   let v9Client: AppClient
   let v8Client: AppClient
 
-  beforeEach(fixture.beforeEach)
+  beforeEach(fixture.newScope)
 
   beforeAll(async () => {
     Config.configure({ populateAppCallResources: true })
 
-    await fixture.beforeEach()
+    await fixture.newScope()
 
     const testAccount = fixture.context.testAccount
 
@@ -420,10 +420,10 @@ describe('Resource Packer: meta', () => {
 
   let externalClient: AppClient
 
-  beforeEach(fixture.beforeEach)
+  beforeEach(fixture.newScope)
 
   beforeAll(async () => {
-    await fixture.beforeEach()
+    await fixture.newScope()
     const { algorand, testAccount } = fixture.context
     Config.configure({ populateAppCallResources: true })
 

@@ -14,7 +14,7 @@ import { AppSpec } from './app-spec'
 describe('ARC32: app-factory-and-app-client', () => {
   const localnet = algorandFixture()
   beforeEach(async () => {
-    await localnet.beforeEach()
+    await localnet.newScope()
     factory = await localnet.algorand.client.getAppFactory({ appSpec, defaultSender: localnet.context.testAccount })
   }, 10_000)
 
@@ -688,7 +688,7 @@ describe('ARC56: app-factory-and-app-client', () => {
 
   const localnet = algorandFixture()
   beforeEach(async () => {
-    await localnet.beforeEach()
+    await localnet.newScope()
 
     factory = localnet.algorand.client.getAppFactory({
       // @ts-expect-error TODO: Fix this
