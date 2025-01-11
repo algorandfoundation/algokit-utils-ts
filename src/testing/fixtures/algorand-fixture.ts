@@ -84,20 +84,17 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
   const indexer = fixtureConfig.indexer ?? ClientManager.getIndexerClient(fixtureConfig.indexerConfig!)
   const kmd = fixtureConfig.kmd ?? ClientManager.getKmdClient(fixtureConfig.kmdConfig!)
   let context: AlgorandTestAutomationContext
-  let algorand = AlgorandClient.fromClients({ algod, indexer, kmd })
+  let algorand: AlgorandClient
 
   const newScope = async () => {
     Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
 
-    const previousAccountManager = algorand.account
-    algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd })
-    // Maintain signers across various AlgorandClient instances from the same fixture just in case you have shared accounts being signed from test setup
-    algorand.account.setSigners(previousAccountManager)
+    algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd }).setSuggestedParamsCacheTimeout(0)
 
     const testAccount = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
-    algorand.setSignerFromAccount(testAccount).setSuggestedParamsCacheTimeout(0)
+    algorand.setSignerFromAccount(testAccount)
 
     // If running against LocalNet we are likely in dev mode and we need to set a much higher validity window
     //  otherwise we are more likely to get invalid transactions.
