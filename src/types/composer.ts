@@ -476,6 +476,20 @@ export type Txn =
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
+/**
+ * A function that transform an error into a new error.
+ *
+ * In most cases, an ErrorTransformer should first check if it can or should transform the error
+ * and return the input error if it cannot or should not transform it.
+ */
+export type ErrorTransformer = (error: Error) => Promise<Error>
+
+class BadTransformer extends Error {
+  constructor(originalError: unknown) {
+    super(`An error transformer returned a non-error value. The original error before any transformation: ${originalError}`)
+  }
+}
+
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
@@ -493,6 +507,11 @@ export type TransactionComposerParams = {
    * If not specified than an ephemeral one will be created.
    */
   appManager?: AppManager
+  /**
+   * An array of error transformers to use when an error is caught in simulate or execute
+   * callbacks can later be registered with `registerErrorTransformer`
+   */
+  errorTransformers?: ErrorTransformer[]
 }
 
 /** Set of transactions built by `TransactionComposer`. */
@@ -536,6 +555,8 @@ export class TransactionComposer {
 
   private appManager: AppManager
 
+  private errorTransformers: ErrorTransformer[]
+
   /**
    * Create a `TransactionComposer`.
    * @param params The configuration for this composer
@@ -548,6 +569,17 @@ export class TransactionComposer {
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
+    this.errorTransformers = params.errorTransformers ?? []
+  }
+
+  /**
+   * Register a function that will be used to transform an error caught when simulating or executing
+   *
+   * @returns The composer so you can chain method calls
+   */
+  registerErrorTransformer(transformer: ErrorTransformer) {
+    this.errorTransformers.push(transformer)
+    return this
   }
 
   /**
@@ -1287,15 +1319,30 @@ export class TransactionComposer {
       waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
     }
 
-    return await sendAtomicTransactionComposer(
-      {
-        atc: this.atc,
-        suppressLog: params?.suppressLog,
-        maxRoundsToWaitForConfirmation: waitRounds,
-        populateAppCallResources: params?.populateAppCallResources,
-      },
-      this.algod,
-    )
+    try {
+      return await sendAtomicTransactionComposer(
+        {
+          atc: this.atc,
+          suppressLog: params?.suppressLog,
+          maxRoundsToWaitForConfirmation: waitRounds,
+          populateAppCallResources: params?.populateAppCallResources,
+        },
+        this.algod,
+      )
+    } catch (originalError: unknown) {
+      // Transformers expect an Error, so don't transform the exception if it's not an Error
+      if (!(originalError instanceof Error)) throw originalError
+
+      let error = originalError
+      for (const transformer of this.errorTransformers) {
+        if (!(error instanceof Error)) {
+          throw new BadTransformer(originalError)
+        }
+        error = await transformer(error)
+      }
+
+      throw error
+    }
   }
 
   /**
@@ -1363,14 +1410,19 @@ export class TransactionComposer {
     const failedGroup = simulateResponse?.txnGroups[0]
     if (failedGroup?.failureMessage) {
       const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
-      const error = new Error(errorMessage)
+      let error = new Error(errorMessage)
 
       if (Config.debug) {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(error as any).simulateResponse = simulateResponse
+      for (const transformer of this.errorTransformers) {
+        if (!(error instanceof Error)) {
+          break
+        }
+        error = await transformer(error)
+      }
+
       throw error
     }
 

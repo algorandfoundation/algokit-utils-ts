@@ -1,14 +1,13 @@
 import algosdk, { Address } from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
-import { AlgorandClientInterface } from './algorand-client-interface'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { TransactionComposer } from './composer'
+import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -16,7 +15,7 @@ import LogicSigAccount = algosdk.LogicSigAccount
 /**
  * A client that brokers easy access to Algorand functionality.
  */
-export class AlgorandClient implements AlgorandClientInterface {
+export class AlgorandClient {
   private _clientManager: ClientManager
   private _accountManager: AccountManager
   private _appManager: AppManager
@@ -30,6 +29,13 @@ export class AlgorandClient implements AlgorandClientInterface {
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
   private _defaultValidityWindow: bigint | undefined = undefined
+
+  /**
+   * A set of error transformers to use when an error is caught in simulate or execute
+   * `registerErrorTransformer` and `unregisterErrorTransformer` can be used to add and remove
+   * error transformers from the set.
+   */
+  private _errorTransformers: Set<ErrorTransformer> = new Set()
 
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config, this)
@@ -157,6 +163,18 @@ export class AlgorandClient implements AlgorandClientInterface {
     return this._appDeployer
   }
 
+  /**
+   * Register a function that will be used to transform an error caught when simulating or executing
+   * composed transaction groups made from `newGroup`
+   */
+  public registerErrorTransformer(transformer: ErrorTransformer) {
+    this._errorTransformers.add(transformer)
+  }
+
+  public unregisterErrorTransformer(transformer: ErrorTransformer) {
+    this._errorTransformers.delete(transformer)
+  }
+
   /** Start a new `TransactionComposer` transaction group */
   public newGroup() {
     return new TransactionComposer({
@@ -165,6 +183,7 @@ export class AlgorandClient implements AlgorandClientInterface {
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
+      errorTransformers: [...this._errorTransformers],
     })
   }
 
