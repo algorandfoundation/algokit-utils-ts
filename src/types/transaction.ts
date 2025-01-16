@@ -142,6 +142,15 @@ export interface SendParams {
   coverAppCallInnerTransactionFees?: boolean
 }
 
+/** Additional context about the `AtomicTransactionComposer`. */
+export interface AdditionalAtomicTransactionComposerContext {
+  /** A map of transaction index in the `AtomicTransactionComposer` to the max fee that can be calculated for a transaction in the group */
+  maxFees: Map<number, AlgoAmount>
+
+  /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
+  suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>
+}
+
 /** An `AtomicTransactionComposer` with transactions to send. */
 export interface AtomicTransactionComposerToSend extends SendParams {
   /** The `AtomicTransactionComposer` with transactions loaded to send */
@@ -152,13 +161,8 @@ export interface AtomicTransactionComposerToSend extends SendParams {
   sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
 
   /**
-   * Additional execution context used when building the transaction group that is sent.
-   * This additional context is used when coverAppCallInnerTransactionFees is set to true.
+   * Additional `AtomicTransactionComposer` context used when building the transaction group that is sent.
+   * This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
    **/
-  executionContext?: {
-    /** A map of transaction index to the max fee that can be calculated for a transaction in the group */
-    maxFees: Map<number, AlgoAmount>
-    /* The suggested params for a transaction at the current time */
-    suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>
-  }
+  additionalAtcContext?: AdditionalAtomicTransactionComposerContext
 }

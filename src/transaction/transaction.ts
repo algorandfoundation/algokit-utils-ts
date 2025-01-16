@@ -5,6 +5,7 @@ import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
 import { EventType } from '../types/lifecycle-events'
 import {
+  AdditionalAtomicTransactionComposerContext,
   AtomicTransactionComposerToSend,
   SendAtomicTransactionComposerResults,
   SendParams,
@@ -236,7 +237,7 @@ export const sendTransaction = async function (
   if (txnToSend.type === algosdk.TransactionType.appl && populateAppCallResources) {
     const newAtc = new AtomicTransactionComposer()
     newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
-    const atc = await alterGroupBasedOnSendParams(newAtc, algod, { ...sendParams, populateAppCallResources })
+    const atc = await prepareGroupForSending(newAtc, algod, { ...sendParams, populateAppCallResources })
     txnToSend = atc.buildGroup()[0].txn
   }
 
@@ -264,17 +265,15 @@ export const sendTransaction = async function (
  * @param atc The ATC containing the txn group
  * @param algod The algod client to use for the simulation
  * @param sendParams The send params for the transaction group
- * @param executionContext Additional execution context used to determine how best to alter transactions in the group
+ * @param additionalAtcContext Additional ATC context used to determine how best to alter transactions in the group
  * @returns The execution info for the group
  */
 async function getGroupExecutionInfo(
   atc: algosdk.AtomicTransactionComposer,
   algod: algosdk.Algodv2,
   sendParams: SendParams,
-  executionContext?: AtomicTransactionComposerToSend['executionContext'],
+  additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
 ) {
-  const perByteTxnFee = BigInt(executionContext?.suggestedParams.fee ?? 0n)
-  const minTxnFee = BigInt(executionContext?.suggestedParams.minFee ?? 1000n)
   const simulateRequest = new algosdk.modelsv2.SimulateRequest({
     txnGroups: [],
     allowUnnamedResources: true,
@@ -291,7 +290,11 @@ async function getGroupExecutionInfo(
     t.signer = nullSigner
 
     if (sendParams.coverAppCallInnerTransactionFees && t.txn.type === TransactionType.appl) {
-      const maxFee = executionContext?.maxFees?.get(i)?.microAlgo
+      if (!additionalAtcContext?.suggestedParams) {
+        throw Error(`Please provide additionalAtcContext.suggestedParams when coverAppCallInnerTransactionFees is enabled`)
+      }
+
+      const maxFee = additionalAtcContext?.maxFees?.get(i)?.microAlgo
       if (maxFee === undefined) {
         appCallIndexesWithoutMaxFees.push(i)
       } else {
@@ -305,6 +308,9 @@ async function getGroupExecutionInfo(
       `Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
     )
   }
+
+  const perByteTxnFee = BigInt(additionalAtcContext?.suggestedParams.fee ?? 0n)
+  const minTxnFee = BigInt(additionalAtcContext?.suggestedParams.minFee ?? 1000n)
 
   const result = await emptySignerAtc.simulate(algod, simulateRequest)
 
@@ -375,30 +381,30 @@ async function getGroupExecutionInfo(
  *
  */
 export async function populateAppCallResources(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
-  return await alterGroupBasedOnSendParams(atc, algod, { populateAppCallResources: true })
+  return await prepareGroupForSending(atc, algod, { populateAppCallResources: true })
 }
 
 /**
- * Take an existing Atomic Transaction Composer and return a new one with alterations
- * based on the supplied sendParams to ensure the transaction group is valid for sending.
+ * Take an existing Atomic Transaction Composer and return a new one with changes applied to the transactions
+ * based on the supplied sendParams to ensure the transaction group is ready for sending.
  *
  * @param algod The algod client to use for the simulation
  * @param atc The ATC containing the txn group
  * @param sendParams The send params for the transaction group
- * @param executionContext Additional execution context used to determine how best to alter transactions in the group
- * @returns A new ATC with the alterations applied
+ * @param additionalAtcContext Additional ATC context used to determine how best to change the transactions in the group
+ * @returns A new ATC with the changes applied
  *
  * @privateRemarks
  * Parts of this function will eventually be implemented in algod. Namely:
  * - Simulate will return information on how to populate reference arrays, see https://github.com/algorand/go-algorand/pull/6015
  */
-async function alterGroupBasedOnSendParams(
+export async function prepareGroupForSending(
   atc: algosdk.AtomicTransactionComposer,
   algod: algosdk.Algodv2,
   sendParams: SendParams,
-  executionContext?: AtomicTransactionComposerToSend['executionContext'],
+  additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
 ) {
-  const executionInfo = await getGroupExecutionInfo(atc, algod, sendParams, executionContext)
+  const executionInfo = await getGroupExecutionInfo(atc, algod, sendParams, additionalAtcContext)
   const group = atc.buildGroup()
 
   const [_, additionalTransactionFees] = sendParams.coverAppCallInnerTransactionFees
@@ -406,7 +412,7 @@ async function alterGroupBasedOnSendParams(
         .map((txn, i) => {
           const groupIndex = i
           const txnInGroup = group[groupIndex].txn
-          const maxFee = executionContext?.maxFees?.get(i)?.microAlgo
+          const maxFee = additionalAtcContext?.maxFees?.get(i)?.microAlgo
           const immutableFee = maxFee !== undefined && maxFee === txnInGroup.fee
           // Because we don't alter non app call transaction, they take priority
           const priorityMultiplier =
@@ -489,7 +495,7 @@ async function alterGroupBasedOnSendParams(
           throw Error(`An additional fee of ${additionalTransactionFee} µALGO is required for non app call transaction ${i}`)
         }
         const transactionFee = group[i].txn.fee + additionalTransactionFee
-        const maxFee = executionContext?.maxFees?.get(i)?.microAlgo
+        const maxFee = additionalAtcContext?.maxFees?.get(i)?.microAlgo
         if (maxFee === undefined || transactionFee > maxFee) {
           throw Error(
             `Calculated transaction fee ${transactionFee} µALGO is greater than max of ${maxFee ?? 'undefined'} for transaction ${i}`,
@@ -768,7 +774,7 @@ async function alterGroupBasedOnSendParams(
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: Algodv2) {
-  const { atc: givenAtc, sendParams, executionContext, ...executeParams } = atcSend
+  const { atc: givenAtc, sendParams, additionalAtcContext, ...executeParams } = atcSend
 
   let atc: AtomicTransactionComposer
 
@@ -785,11 +791,11 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       (populateAppCallResources || coverAppCallInnerTransactionFees) &&
       transactionsWithSigner.map((t) => t.txn.type).includes(algosdk.TransactionType.appl)
     ) {
-      atc = await alterGroupBasedOnSendParams(
+      atc = await prepareGroupForSending(
         givenAtc,
         algod,
         { ...executeParams, populateAppCallResources, coverAppCallInnerTransactionFees },
-        executionContext,
+        additionalAtcContext,
       )
     }
 

@@ -1385,7 +1385,7 @@ export class TransactionComposer {
         maxRoundsToWaitForConfirmation: waitRounds,
         populateAppCallResources: params?.populateAppCallResources,
         coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
-        executionContext: params?.coverAppCallInnerTransactionFees
+        additionalAtcContext: params?.coverAppCallInnerTransactionFees
           ? {
               maxFees: this.txnMaxFees,
               suggestedParams: suggestedParams!,
