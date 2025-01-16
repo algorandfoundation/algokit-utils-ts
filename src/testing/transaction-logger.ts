@@ -51,7 +51,9 @@ export class TransactionLogger {
 
   /** Wait until all logged transactions IDs appear in the given `Indexer`. */
   async waitForIndexer(indexer: Indexer) {
-    await Promise.all(this._sentTransactionIds.map((txnId) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(txnId).do())))
+    if (this._sentTransactionIds.length === 0) return
+    const lastTxId = this._sentTransactionIds[this._sentTransactionIds.length - 1]
+    await runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(lastTxId).do())
   }
 }
 

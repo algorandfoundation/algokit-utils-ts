@@ -6,7 +6,7 @@ import { AlgoAmount } from './types/amount'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.newScope, 10_000)
 
   const sendTestTransaction = async (amount?: AlgoAmount, from?: string) => {
     return await localnet.context.algorand.send.payment({
