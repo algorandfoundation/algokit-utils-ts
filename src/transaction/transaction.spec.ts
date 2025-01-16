@@ -15,7 +15,7 @@ import { getABIReturnValue, waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.newScope, 10_000)
 
   const getTestTransaction = (amount?: AlgoAmount, sender?: string) => {
     return {

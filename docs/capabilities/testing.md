@@ -24,7 +24,9 @@ import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 
 ### Using with Jest
 
-To integrate with [Jest](https://jestjs.io/) you need to pass the `fixture.beforeEach` method into Jest's `beforeEach` method and then within each test you can access `fixture.context` to access per-test isolated fixture values.
+To integrate with [Jest](https://jestjs.io/) you need to pass the `fixture.newScope` method into Jest's `beforeEach` method (for per test isolation) or `beforeAll` method (for test suite isolation) and then within each test you can access `fixture.context` to access the isolated fixture values.
+
+#### Per-test isolation
 
 ```typescript
 import { describe, test, beforeEach } from '@jest/globals'
@@ -32,7 +34,27 @@ import { algorandFixture } from './testing'
 
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeEach(fixture.beforeEach, 10_000)
+  beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+
+  test('MY TEST', async () => {
+    const { algorand, testAccount /* ... */ } = fixture.context
+
+    // Test stuff!
+  })
+})
+```
+
+Occasionally there may be a delay when first running the fixture setup so we add a 10s timeout to avoid intermittent test failures (`10_000`).
+
+#### Test suite isolation
+
+```typescript
+import { describe, test, beforeAll } from '@jest/globals'
+import { algorandFixture } from './testing'
+
+describe('MY MODULE', () => {
+  const fixture = algorandFixture()
+  beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
 
   test('MY TEST', async () => {
     const { algorand, testAccount /* ... */ } = fixture.context
@@ -46,7 +68,9 @@ Occasionally there may be a delay when first running the fixture setup so we add
 
 ### Using with vitest
 
-To integrate with [vitest](https://vitest.dev/) you need to pass the `fixture.beforeEach` method into vitest's `beforeEach` method and then within each test you can access `fixture.context` to access per-test isolated fixture values.
+To integrate with [vitest](https://vitest.dev/) you need to pass the `fixture.beforeEach` method into vitest's `beforeEach` method (for per test isolation) or `beforeAll` method (for test suite isolation) and then within each test you can access `fixture.context` to access the isolated fixture values.
+
+#### Per-test isolation
 
 ```typescript
 import { describe, test, beforeEach } from 'vitest'
@@ -54,7 +78,7 @@ import { algorandFixture } from './testing'
 
 describe('MY MODULE', () => {
   const fixture = algorandFixture()
-  beforeEach(fixture.beforeEach, 10_000)
+  beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
 
   test('MY TEST', async () => {
     const { algorand, testAccount /* ... */ } = fixture.context
@@ -64,6 +88,28 @@ describe('MY MODULE', () => {
 })
 ```
 
+Occasionally there may be a delay when first running the fixture setup so we add a 10s timeout to avoid intermittent test failures (`10_000`).
+
+#### Test suite isolation
+
+```typescript
+import { describe, test, beforeAll } from 'vitest'
+import { algorandFixture } from './testing'
+
+describe('MY MODULE', () => {
+  const fixture = algorandFixture()
+  beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+
+  test('MY TEST', async () => {
+    const { algorand, testAccount /* ... */ } = fixture.context
+
+    // Test stuff!
+  })
+})
+```
+
+Occasionally there may be a delay when first running the fixture setup so we add a 10s timeout to avoid intermittent test failures (`10_000`).
+
 ### Fixture configuration
 
 When calling `algorandFixture()` you can optionally pass in some fixture configuration, with any of these properties (all optional):
@@ -72,6 +118,7 @@ When calling `algorandFixture()` you can optionally pass in some fixture configu
 - `indexer?: Indexer` - An optional indexer client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `kmd?: Kmd` - An optional kmd client, if not specified then it will create one against environment variables defined network (if present) or default LocalNet
 - `testAccountFunding?: AlgoAmount` - The [amount](./amount.md) of funds to allocate to the default testing account, if not specified then it will get `10` ALGO
+- `accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>` - Optional override for how to get an account; this allows you to retrieve test accounts from a known or cached list of accounts.
 
 ### Using the fixture context
 
@@ -84,7 +131,7 @@ The `fixture.context` property is of type [`AlgorandTestAutomationContext`](../c
 - `transactionLogger: TransactionLogger` - Transaction logger that will log transaction IDs for all transactions issued by `algod`
 - `testAccount: Account` - Funded test account that is ephemerally created for each test
 - `generateAccount: (params: GetTestAccountParams) => Promise<Account>` - Generate and fund an additional ephemerally created account
-- `waitForIndexer: () => Promise<void>` - Wait for the indexer to catch up with all transactions logged by transactionLogger
+- `waitForIndexer()` - Waits for indexer to catch up with the latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
 - `waitForIndexerTransaction: (transactionId: string) => Promise<TransactionLookupResult>` - Wait for the indexer to catch up with the given transaction ID
 
 ## Log capture fixture
@@ -170,7 +217,7 @@ This means it's easy to create tests that are flaky and have intermittent test f
 The testing capability provides mechanisms for waiting for indexer to catch up, namely:
 
 - `algotesting.runWhenIndexerCaughtUp(run: () => Promise<T>)` - Executes the given action every 200ms up to 20 times until there is no longer an error with a `status` property with `404` and then returns the result of the action; this will work for any call that calls indexer APIs expecting to return a single record
-- `algorandFixture.waitForIndexer()` - Waits for indexer to catch up with all transactions that have been captured by the `transactionLogger` in the Algorand fixture
+- `algorandFixture.waitForIndexer()` - Waits for indexer to catch up with the latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
 - `algorandFixture.waitForIndexerTransaction(transactionId)` - Waits for indexer to catch up with the single transaction of the given ID
 
 ## Logging transactions

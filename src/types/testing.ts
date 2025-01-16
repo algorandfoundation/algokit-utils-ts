@@ -68,10 +68,12 @@ export interface AlgorandFixture {
   /**
    * Retrieve the current context.
    * Useful with destructuring.
+   *
+   * If you haven't called `newScope` then this will throw an error.
    * @example
    * ```typescript
    * test('My test', () => {
-   *     const {algod, indexer, testAccount, ...} = algorand.context
+   *     const {algod, indexer, testAccount, ...} = fixture.context
    * })
    * ```
    */
@@ -83,9 +85,50 @@ export interface AlgorandFixture {
   get algorand(): AlgorandClient
 
   /**
-   * Testing framework agnostic handler method to run before each test to prepare the `context` for that test.
+   * @deprecated Use newScope instead.
+   * Testing framework agnostic handler method to run before each test to prepare the `context` for that test with per test isolation.
    */
   beforeEach: () => Promise<void>
+
+  /**
+   * Creates a new isolated fixture scope (clean transaction logger, AlgorandClient, testAccount, etc.).
+   *
+   * You can call this from any testing framework specific hook method to control when you want a new scope.
+   *
+   * @example Jest / vitest - per test isolation (beforeEach)
+   * ```typescript
+   * describe('MY MODULE', () => {
+   *   const fixture = algorandFixture()
+   *   beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+   *
+   *   test('MY TEST', async () => {
+   *     const { algorand, testAccount } = fixture.context
+   *
+   *     // Test stuff!
+   *   })
+   * })
+   * ```
+   *
+   * @example Jest / vitest - test suite isolation (beforeAll)
+   * ```typescript
+   * describe('MY MODULE', () => {
+   *   const fixture = algorandFixture()
+   *   beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+   *
+   *   test('test1', async () => {
+   *     const { algorand, testAccount } = fixture.context
+   *
+   *     // Test stuff!
+   *   })
+   *   test('test2', async () => {
+   *     const { algorand, testAccount } = fixture.context
+   *     // algorand and testAccount are the same as in test1
+   *   })
+   * })
+   * ```
+   *
+   */
+  newScope: () => Promise<void>
 }
 
 /** Configuration for preparing a captured log snapshot.
