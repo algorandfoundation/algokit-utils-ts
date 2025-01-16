@@ -25,7 +25,7 @@ Sub-signature for a multisig signature https://developer.algorand.org/docs/rest-
 
 #### Defined in
 
-[src/types/indexer.ts:626](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L626)
+[src/types/indexer.ts:674](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L674)
 
 ___
 
@@ -39,4 +39,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:631](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L631)
+[src/types/indexer.ts:679](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L679)

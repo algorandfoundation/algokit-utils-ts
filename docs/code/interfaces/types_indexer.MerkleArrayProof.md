@@ -64,7 +64,7 @@ The worst case is this:
 
 #### Defined in
 
-[src/types/indexer.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L451)
+[src/types/indexer.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L499)
 
 ___
 
@@ -78,7 +78,7 @@ the path length can increase up to 2^MaxEncodedTreeDepth / 2
 
 #### Defined in
 
-[src/types/indexer.ts:459](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L459)
+[src/types/indexer.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L507)
 
 ___
 
@@ -91,4 +91,4 @@ It is the number of edges from the root to a leaf.
 
 #### Defined in
 
-[src/types/indexer.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L463)
+[src/types/indexer.ts:511](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L511)

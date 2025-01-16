@@ -164,6 +164,8 @@ export interface TransactionResult extends Record<string, any> {
   'payment-transaction'?: PaymentTransactionResult
   /** If the transaction is a `stpf` transaction this will be populated see `tx-type` */
   'state-proof-transaction'?: StateProofTransactionResult
+  /** If the transaction is a `hb` transaction this will be populated see `tx-type` */
+  'heartbeat-transaction'?: HeartbeatTransactionResult
   /** [sgnr] this is included with signed transactions when the signing address does not equal the sender.
    * The backend can use this to ensure that auth addr is equal to the accounts auth addr.
    */
@@ -407,6 +409,52 @@ export interface StateProofTransactionResult {
    *  * 0: StateProofBasic is our initial state proof setup. using falcon keys and subset-sum hash
    */
   'state-proof-type': number
+}
+
+/** Fields for a `hb` transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionheartbeat */
+export interface HeartbeatTransactionResult {
+  /** [hbad] HbAddress is the account this txn is proving onlineness for. */
+  'hb-address': string
+  /** [hbkd] HbKeyDilution must match HbAddress account's current KeyDilution. */
+  'hb-key-dilution': number
+  /** [hbprf] HbProof is a signature using HeartbeatAddress's partkey, thereby showing it is online. */
+  'hb-proof': {
+    /** [p] Public key of the heartbeat message.
+     *
+     * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+     */
+    'hb-pk'?: string
+    /** [p1s] Signature of OneTimeSignatureSubkeyOffsetID(PK, Batch, Offset) under the key PK2.
+     *
+     * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+     */
+    'hb-pk1sig'?: string
+    /** [p2] Key for new-style two-level ephemeral signature.
+     *
+     * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+     */
+    'hb-pk2'?: string
+    /** [p2s] Signature of OneTimeSignatureSubkeyBatchID(PK2, Batch) under the master key (OneTimeSignatureVerifier).
+     *
+     * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+     */
+    'hb-pk2sig'?: string
+    /** [s] Signature of the heartbeat message.
+     *
+     * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+     */
+    'hb-sig'?: string
+  }
+  /** [hbsd] HbSeed must be the block seed for the this transaction's firstValid block.
+   *
+   * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+   */
+  'hb-seed': string
+  /** [hbvid] HbVoteID must match the HbAddress account's current VoteID.
+   *
+   * *Pattern:* `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`
+   */
+  'hb-vote-id': string
 }
 
 /**
