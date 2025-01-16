@@ -80,8 +80,6 @@ export interface AlgorandFixture {
 
   /**
    * Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
-   *
-   * If you haven't called `newScope` then this will return an `AlgorandClient` instance with no test context loaded yet and no transaction logger loaded. This is useful if you want to do some basic setup in a `beforeAll` method etc..
    */
   get algorand(): AlgorandClient
 

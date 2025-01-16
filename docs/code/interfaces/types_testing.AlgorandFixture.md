@@ -39,7 +39,7 @@ Testing framework agnostic handler method to run before each test to prepare the
 
 #### Defined in
 
-[src/types/testing.ts:92](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L92)
+[src/types/testing.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L90)
 
 ___
 
@@ -95,7 +95,7 @@ describe('MY MODULE', () => {
 
 #### Defined in
 
-[src/types/testing.ts:132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L132)
+[src/types/testing.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L130)
 
 ## Accessors
 
@@ -105,15 +105,13 @@ describe('MY MODULE', () => {
 
 Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
 
-If you haven't called `newScope` then this will return an `AlgorandClient` instance with no test context loaded yet and no transaction logger loaded. This is useful if you want to do some basic setup in a `beforeAll` method etc..
-
 #### Returns
 
 [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)
 
 #### Defined in
 
-[src/types/testing.ts:86](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L86)
+[src/types/testing.ts:84](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L84)
 
 ___
 
