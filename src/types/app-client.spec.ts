@@ -22,7 +22,7 @@ import { AppSpec } from './app-spec'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.newScope, 10_000)
 
   let appSpec: AppSpec
   beforeAll(async () => {
@@ -870,7 +870,7 @@ describe('application-client', () => {
 
 describe('app-client', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.newScope, 10_000)
 
   let appSpec: AppSpec
   beforeAll(async () => {

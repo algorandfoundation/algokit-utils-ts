@@ -13,7 +13,7 @@ describe('Transfer capability', () => {
   beforeEach(async () => {
     vitest.resetModules()
     process.env = { ...env }
-    await localnet.beforeEach()
+    await localnet.newScope()
   }, 10_000)
 
   afterEach(() => {
@@ -327,7 +327,7 @@ describe('rekey', () => {
   beforeEach(async () => {
     vitest.resetModules()
     process.env = { ...env }
-    await localnet.beforeEach()
+    await localnet.newScope()
   }, 10_000)
 
   afterEach(() => {
