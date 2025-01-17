@@ -131,7 +131,7 @@ The `fixture.context` property is of type [`AlgorandTestAutomationContext`](../c
 - `transactionLogger: TransactionLogger` - Transaction logger that will log transaction IDs for all transactions issued by `algod`
 - `testAccount: Account` - Funded test account that is ephemerally created for each test
 - `generateAccount: (params: GetTestAccountParams) => Promise<Account>` - Generate and fund an additional ephemerally created account
-- `waitForIndexer()` - Waits for indexer to catch up with that latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
+- `waitForIndexer()` - Waits for indexer to catch up with the latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
 - `waitForIndexerTransaction: (transactionId: string) => Promise<TransactionLookupResult>` - Wait for the indexer to catch up with the given transaction ID
 
 ## Log capture fixture
@@ -217,7 +217,7 @@ This means it's easy to create tests that are flaky and have intermittent test f
 The testing capability provides mechanisms for waiting for indexer to catch up, namely:
 
 - `algotesting.runWhenIndexerCaughtUp(run: () => Promise<T>)` - Executes the given action every 200ms up to 20 times until there is no longer an error with a `status` property with `404` and then returns the result of the action; this will work for any call that calls indexer APIs expecting to return a single record
-- `algorandFixture.waitForIndexer()` - Waits for indexer to catch up with that latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
+- `algorandFixture.waitForIndexer()` - Waits for indexer to catch up with the latest transaction that has been captured by the `transactionLogger` in the Algorand fixture
 - `algorandFixture.waitForIndexerTransaction(transactionId)` - Waits for indexer to catch up with the single transaction of the given ID
 
 ## Logging transactions

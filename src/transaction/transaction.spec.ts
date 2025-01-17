@@ -1,9 +1,12 @@
 import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
+import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
+import innerFeeContract from '../../tests/example-contracts/inner-fee/application.json'
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
+import { algo, microAlgo } from '../amount'
 import { Config } from '../config'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from '../types/amount'
@@ -150,6 +153,514 @@ describe('transaction', () => {
       expect(e.traces[0].message).toMatch(messageRegex)
     }
   })
+
+  describe('Cover app call inner transaction fees', async () => {
+    let appClient1: AppClient
+    let appClient2: AppClient
+    let appClient3: AppClient
+
+    beforeEach(async () => {
+      const { algorand, testAccount } = localnet.context
+      Config.configure({ populateAppCallResources: true })
+
+      const appFactory = algorand.client.getAppFactory({
+        appSpec: JSON.stringify(innerFeeContract),
+        defaultSender: testAccount,
+      })
+
+      appClient1 = (await appFactory.send.bare.create({ note: 'app1' })).appClient
+      appClient2 = (await appFactory.send.bare.create({ note: 'app2' })).appClient
+      appClient3 = (await appFactory.send.bare.create({ note: 'app3' })).appClient
+
+      await appClient1.fundAppAccount({ amount: algo(2) })
+      await appClient2.fundAppAccount({ amount: algo(2) })
+      await appClient3.fundAppAccount({ amount: algo(2) })
+    })
+
+    test('throws when no max fee is supplied', async () => {
+      const params = {
+        method: 'no_op',
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+        'Please provide a maxFee for each app call transaction when coverAppCallInnerTransactionFees is enabled. Required for transaction 0',
+      )
+    })
+
+    test('throws when inner transaction fees are not covered and coverAppCallInnerTransactionFees is disabled', async () => {
+      const expectedFee = 7000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: false,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(/fee too small/)
+    })
+
+    test('does not alter fee when app call has no inners', async () => {
+      const expectedFee = 1000n
+      const params = {
+        method: 'no_op',
+        coverAppCallInnerTransactionFees: true,
+        maxFee: microAlgo(2000),
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('throws when max fee is too small to cover inner transaction fees', async () => {
+      const expectedFee = 7000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+        maxFee: microAlgo(expectedFee - 1n),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+        'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
+      )
+    })
+
+    test('throws when static fee is too small to cover inner transaction fees', async () => {
+      const expectedFee = 7000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+        staticFee: microAlgo(expectedFee - 1n),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+        'Fees were too small to resolve execution info via simulate. You may need to increase an app call transaction maxFee.',
+      )
+    })
+
+    test('alters fee, handling when no inner fees have been covered', async () => {
+      const expectedFee = 7000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling when all inner fees have been covered', async () => {
+      const expectedFee = 1000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [1000n, 1000n, 1000n, 1000n, [1000n, 1000n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling when some inner fees have been covered or partially covered', async () => {
+      const expectedFee = 5300n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [1000n, 0n, 200n, 0n, [500n, 0n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling when some inner fees have a surplus', async () => {
+      const expectedFee = 2000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 1000n, 5000n, 0n, [0n, 50n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling multiple app calls in a group that send inners with varying fees', async () => {
+      const txn1ExpectedFee = 5800n
+      const txn2ExpectedFee = 6000n
+
+      const txn1Params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 1000n, 0n, 0n, [200n, 0n]]],
+        staticFee: microAlgo(txn1ExpectedFee),
+        note: 'txn1',
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      const txn2Params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [1000n, 0n, 0n, 0n, [0n, 0n]]],
+        maxFee: microAlgo(txn2ExpectedFee),
+        note: 'txn2',
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+      const result = await appClient1.algorand
+        .newGroup()
+        .addAppCallMethodCall(await appClient1.params.call(txn1Params))
+        .addAppCallMethodCall(await appClient1.params.call(txn2Params))
+        .send({
+          coverAppCallInnerTransactionFees: true,
+        })
+
+      expect(result.transactions[0].fee).toBe(txn1ExpectedFee)
+      await assertMinFee(appClient1, txn1Params, txn1ExpectedFee)
+      expect(result.transactions[1].fee).toBe(txn2ExpectedFee)
+      await assertMinFee(appClient1, txn2Params, txn2ExpectedFee)
+    })
+
+    test('does not alter a static fee with surplus', async () => {
+      const expectedFee = 6000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [1000n, 0n, 200n, 0n, [500n, 0n]]],
+        staticFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+    })
+
+    test('alters fee, handling a large inner fee surplus pooling to lower siblings', async () => {
+      // Inner transaction fees only pool to lower sibling transactions
+      const expectedFee = 7_000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n, 20_000n, 0n, 0n, 0n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling a inner fee surplus pooling to some lower siblings', async () => {
+      // Inner transaction fees only pool to lower sibling transactions
+      const expectedFee = 6300n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 2200n, 0n, [0n, 0n, 2500n, 0n, 0n, 0n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling a large inner fee surplus with no pooling', async () => {
+      // Inner transaction fees only pool to lower sibling transactions
+      const expectedFee = 10_000n
+      const params = {
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n, 0n, 0n, 0n, 20_000n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('alters fee, handling multiple inner fee surplus poolings to lower siblings', async () => {
+      // Inner transaction fees only pool to lower sibling transactions
+      const expectedFee = 7100n
+      const params = {
+        method: 'send_inners_with_fees_2',
+        args: [appClient2.appId, appClient3.appId, [0n, 1200n, [0n, 0n, 4900n, 0n, 0n, 0n], 200n, 1100n, [0n, 0n, 2500n, 0n, 0n, 0n]]],
+        maxFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    test('does not alter fee when another transaction in the group covers the inner fees', async () => {
+      const { testAccount } = localnet.context
+      const expectedFee = 8000n
+
+      const result = await appClient1.algorand
+        .newGroup()
+        .addPayment({
+          sender: testAccount.addr,
+          receiver: testAccount.addr,
+          amount: microAlgo(0),
+          staticFee: microAlgo(expectedFee),
+        })
+        .addAppCallMethodCall(
+          await appClient1.params.call({
+            method: 'send_inners_with_fees',
+            args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+            maxFee: microAlgo(expectedFee),
+          }),
+        )
+        .send({
+          coverAppCallInnerTransactionFees: true,
+        })
+
+      expect(result.transactions[0].fee).toBe(expectedFee)
+      // We could technically reduce the below to 0, however it adds more complexity and is probably unlikely to be a common use case
+      expect(result.transactions[1].fee).toBe(1000n)
+    })
+
+    test('alters fee, allocating surplus fees to the most fee constrained transaction first', async () => {
+      const { testAccount } = localnet.context
+      const result = await appClient1.algorand
+        .newGroup()
+        .addAppCallMethodCall(
+          await appClient1.params.call({
+            method: 'send_inners_with_fees',
+            args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+            maxFee: microAlgo(2000n),
+          }),
+        )
+        .addPayment({
+          sender: testAccount.addr,
+          receiver: testAccount.addr,
+          amount: microAlgo(0),
+          staticFee: microAlgo(7500),
+        })
+        .addPayment({
+          sender: testAccount.addr,
+          receiver: testAccount.addr,
+          amount: microAlgo(0),
+          staticFee: microAlgo(0),
+        })
+        .send({
+          coverAppCallInnerTransactionFees: true,
+        })
+
+      expect(result.transactions[0].fee).toBe(1500n)
+      expect(result.transactions[1].fee).toBe(7500n)
+      expect(result.transactions[2].fee).toBe(0n)
+    })
+
+    test('alters fee, handling nested abi method calls', async () => {
+      const { algorand, testAccount } = localnet.context
+
+      const appFactory = algorand.client.getAppFactory({
+        appSpec: nestedContractAppSpec,
+        defaultSender: testAccount.addr,
+      })
+
+      const { appClient } = await appFactory.send.create({
+        method: 'createApplication',
+      })
+
+      const txnArgCall = await appClient1.params.call({
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 2000n, 0n, [0n, 0n]]],
+        maxFee: microAlgo(4000),
+      })
+
+      const paymentParams = {
+        sender: testAccount.addr,
+        receiver: testAccount.addr,
+        amount: microAlgo(0),
+        staticFee: microAlgo(1500),
+      } satisfies PaymentParams
+
+      const expectedFee = 2000n
+      const params = {
+        method: 'nestedTxnArg',
+        args: [algorand.createTransaction.payment(paymentParams), txnArgCall],
+        staticFee: microAlgo(expectedFee),
+        coverAppCallInnerTransactionFees: true,
+      }
+      const result = await appClient.send.call(params)
+
+      expect(result.transactions.length).toBe(3)
+      expect(result.transactions[0].fee).toBe(1500n)
+      expect(result.transactions[1].fee).toBe(3500n)
+      expect(result.transactions[2].fee).toBe(expectedFee)
+      await assertMinFee(
+        appClient,
+        {
+          ...params,
+          args: [algorand.createTransaction.payment(paymentParams), txnArgCall],
+        },
+        expectedFee,
+      )
+    })
+
+    test('throws when maxFee is below the calculated fee', async () => {
+      await expect(
+        async () =>
+          await appClient1.algorand
+            .newGroup()
+            .addAppCallMethodCall(
+              await appClient1.params.call({
+                method: 'send_inners_with_fees',
+                args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+                maxFee: microAlgo(1200),
+              }),
+            )
+            // This transactions allow this state to be possible, without it the simulate call to get the execution info would fail
+            .addAppCallMethodCall(
+              await appClient1.params.call({
+                method: 'no_op',
+                maxFee: microAlgo(10_000),
+              }),
+            )
+            .send({
+              coverAppCallInnerTransactionFees: true,
+            }),
+      ).rejects.toThrow('Calculated transaction fee 7000 µALGO is greater than max of 1200 for transaction 0')
+    })
+
+    test('throws when nested maxFee is below the calculated fee', async () => {
+      const { algorand, testAccount } = localnet.context
+
+      const appFactory = algorand.client.getAppFactory({
+        appSpec: nestedContractAppSpec,
+        defaultSender: testAccount.addr,
+      })
+
+      const { appClient } = await appFactory.send.create({
+        method: 'createApplication',
+      })
+
+      const txnArgCall = await appClient1.params.call({
+        method: 'send_inners_with_fees',
+        args: [appClient2.appId, appClient3.appId, [0n, 0n, 2000n, 0n, [0n, 0n]]],
+        maxFee: microAlgo(2000),
+      })
+
+      await expect(
+        async () =>
+          await appClient.send.call({
+            method: 'nestedTxnArg',
+            args: [
+              algorand.createTransaction.payment({
+                sender: testAccount.addr,
+                receiver: testAccount.addr,
+                amount: microAlgo(0),
+              }),
+              txnArgCall,
+            ],
+            coverAppCallInnerTransactionFees: true,
+            maxFee: microAlgo(10_000),
+          }),
+      ).rejects.toThrow('Calculated transaction fee 5000 µALGO is greater than max of 2000 for transaction 1')
+    })
+
+    test('throws when staticFee is below the calculated fee', async () => {
+      await expect(
+        async () =>
+          await appClient1.algorand
+            .newGroup()
+            .addAppCallMethodCall(
+              await appClient1.params.call({
+                method: 'send_inners_with_fees',
+                args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+                staticFee: microAlgo(5000),
+              }),
+            )
+            // This transactions allow this state to be possible, without it the simulate call to get the execution info would fail
+            .addAppCallMethodCall(
+              await appClient1.params.call({
+                method: 'no_op',
+                maxFee: microAlgo(10_000),
+              }),
+            )
+            .send({
+              coverAppCallInnerTransactionFees: true,
+            }),
+      ).rejects.toThrow('Calculated transaction fee 7000 µALGO is greater than max of 5000 for transaction 0')
+    })
+
+    test('throws when staticFee for non app call transaction is too low', async () => {
+      const { testAccount } = localnet.context
+      await expect(
+        async () =>
+          await appClient1.algorand
+            .newGroup()
+            .addAppCallMethodCall(
+              await appClient1.params.call({
+                method: 'send_inners_with_fees',
+                args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+                staticFee: microAlgo(13_000n),
+                maxFee: microAlgo(14_000n),
+              }),
+            )
+            .addAppCallMethodCall(
+              await appClient1.params.call({
+                method: 'send_inners_with_fees',
+                args: [appClient2.appId, appClient3.appId, [0n, 0n, 0n, 0n, [0n, 0n]]],
+                staticFee: microAlgo(1000n),
+              }),
+            )
+            .addPayment({
+              sender: testAccount.addr,
+              receiver: testAccount.addr,
+              amount: microAlgo(0),
+              staticFee: microAlgo(500),
+            })
+            .send({
+              coverAppCallInnerTransactionFees: true,
+            }),
+      ).rejects.toThrow('An additional fee of 500 µALGO is required for non app call transaction 2')
+    })
+
+    test('alters fee, handling expensive abi method calls that use ensure_budget to op-up', async () => {
+      const expectedFee = 10_000n
+      const params = {
+        method: 'burn_ops',
+        args: [6200],
+        coverAppCallInnerTransactionFees: true,
+        maxFee: microAlgo(12_000),
+      } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+      const result = await appClient1.send.call(params)
+
+      expect(result.transaction.fee).toBe(expectedFee)
+      expect(result.confirmation.innerTxns?.length).toBe(9) // Op up transactions sent by ensure_budget
+      await assertMinFee(appClient1, params, expectedFee)
+    })
+
+    const assertMinFee = async (appClient: AppClient, args: Parameters<(typeof appClient)['send']['call']>[0], fee: bigint) => {
+      if (fee === 1000n) {
+        return
+      }
+
+      await expect(
+        async () =>
+          await appClient.send.call({
+            ...args,
+            coverAppCallInnerTransactionFees: false,
+            staticFee: microAlgo(fee - 1n),
+            extraFee: undefined,
+            suppressLog: true,
+          }),
+      ).rejects.toThrowError(/fee too small/)
+    }
+  })
 })
 
 describe('arc2 transaction note', () => {
@@ -173,7 +684,7 @@ describe('arc2 transaction note', () => {
   })
 })
 
-const tests = (version: 8 | 9) => () => {
+const resourcePopulationTests = (version: 8 | 9) => () => {
   const fixture = algorandFixture()
 
   let appClient: AppClient
@@ -332,9 +843,9 @@ const tests = (version: 8 | 9) => () => {
   })
 }
 
-describe('Resource Packer: AVM8', tests(8))
-describe('Resource Packer: AVM9', tests(9))
-describe('Resource Packer: Mixed', () => {
+describe('Resource population: AVM8', resourcePopulationTests(8))
+describe('Resource population: AVM9', resourcePopulationTests(9))
+describe('Resource population: Mixed', () => {
   const fixture = algorandFixture()
 
   let v9Client: AppClient
@@ -415,7 +926,7 @@ describe('Resource Packer: Mixed', () => {
   })
 })
 
-describe('Resource Packer: meta', () => {
+describe('Resource population: meta', () => {
   const fixture = algorandFixture()
 
   let externalClient: AppClient
@@ -446,7 +957,7 @@ describe('Resource Packer: meta', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       expect(e.stack).toMatch(`err <--- Error`)
-      expect(e.message).toMatch('Error during resource population simulation in transaction 0')
+      expect(e.message).toMatch('Error resolving execution info via simulate in transaction 0')
     }
   })
 

@@ -294,6 +294,7 @@ describe('deploy-app', () => {
         accounts: [testAccount],
         transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
         apps: [result1.appId, result2.appId],
+        filterPredicate: filterVerboseAndDebugLogs,
       }),
     ).toMatchSnapshot()
   })
@@ -331,6 +332,7 @@ describe('deploy-app', () => {
           accounts: [testAccount],
           transactions: [result1.transaction, logicError!.txId],
           apps: [result1.appId],
+          filterPredicate: filterVerboseAndDebugLogs,
         }),
       ).toMatchSnapshot()
     }
@@ -374,6 +376,7 @@ describe('deploy-app', () => {
         accounts: [testAccount],
         transactions: [result1.transaction, result2.transaction, result2.deleteResult.transaction],
         apps: [result1.appId, result2.appId],
+        filterPredicate: filterVerboseAndDebugLogs,
       }),
     ).toMatchSnapshot()
   })
@@ -411,6 +414,7 @@ describe('deploy-app', () => {
           accounts: [testAccount],
           transactions: [result1.transaction, logicError!.txId],
           apps: [result1.appId],
+          filterPredicate: filterVerboseAndDebugLogs,
         }),
       ).toMatchSnapshot()
     }
@@ -561,6 +565,8 @@ describe('deploy-app', () => {
       }),
     ).toMatchSnapshot()
   })
+
+  const filterVerboseAndDebugLogs = (log: string) => !log.startsWith('VERBOSE:') && !log.startsWith('DEBUG:')
 })
 
 test('Strip comments remove comments without removing commands', async () => {

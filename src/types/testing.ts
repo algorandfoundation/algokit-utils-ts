@@ -80,8 +80,6 @@ export interface AlgorandFixture {
 
   /**
    * Retrieve an `AlgorandClient` loaded with the current context, including testAccount and any generated accounts loaded as signers.
-   *
-   * If you haven't called `newScope` then this will return an `AlgorandClient` instance with no test context loaded yet and no transaction logger loaded. This is useful if you want to do some basic setup in a `beforeAll` method etc..
    */
   get algorand(): AlgorandClient
 
@@ -143,6 +141,8 @@ export interface LogSnapshotConfig {
   accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount)[]
   /** Any app IDs to replace predictably */
   apps?: (string | number | bigint)[]
+  /** Optional filter predicate to filter out logs */
+  filterPredicate?: (log: string) => boolean
 }
 
 export interface AlgoKitLogCaptureFixture {

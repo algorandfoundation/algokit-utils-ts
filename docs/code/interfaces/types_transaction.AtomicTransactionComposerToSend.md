@@ -16,13 +16,28 @@ An `AtomicTransactionComposer` with transactions to send.
 
 ### Properties
 
+- [additionalAtcContext](types_transaction.AtomicTransactionComposerToSend.md#additionalatccontext)
 - [atc](types_transaction.AtomicTransactionComposerToSend.md#atc)
+- [coverAppCallInnerTransactionFees](types_transaction.AtomicTransactionComposerToSend.md#coverappcallinnertransactionfees)
 - [maxRoundsToWaitForConfirmation](types_transaction.AtomicTransactionComposerToSend.md#maxroundstowaitforconfirmation)
 - [populateAppCallResources](types_transaction.AtomicTransactionComposerToSend.md#populateappcallresources)
 - [sendParams](types_transaction.AtomicTransactionComposerToSend.md#sendparams)
 - [suppressLog](types_transaction.AtomicTransactionComposerToSend.md#suppresslog)
 
 ## Properties
+
+### additionalAtcContext
+
+• `Optional` **additionalAtcContext**: [`AdditionalAtomicTransactionComposerContext`](types_transaction.AdditionalAtomicTransactionComposerContext.md)
+
+Additional `AtomicTransactionComposer` context used when building the transaction group that is sent.
+This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
+
+#### Defined in
+
+[src/types/transaction.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L167)
+
+___
 
 ### atc
 
@@ -32,7 +47,23 @@ The `AtomicTransactionComposer` with transactions loaded to send
 
 #### Defined in
 
-[src/types/transaction.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L146)
+[src/types/transaction.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L157)
+
+___
+
+### coverAppCallInnerTransactionFees
+
+• `Optional` **coverAppCallInnerTransactionFees**: `boolean`
+
+Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
+
+#### Inherited from
+
+[SendParams](types_transaction.SendParams.md).[coverAppCallInnerTransactionFees](types_transaction.SendParams.md#coverappcallinnertransactionfees)
+
+#### Defined in
+
+[src/types/transaction.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L142)
 
 ___
 
@@ -79,7 +110,7 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L150)
+[src/types/transaction.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L161)
 
 ___
 

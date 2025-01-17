@@ -14,6 +14,7 @@ This helps ensure that the provided configuration items won't appear
 
 - [accounts](types_testing.LogSnapshotConfig.md#accounts)
 - [apps](types_testing.LogSnapshotConfig.md#apps)
+- [filterPredicate](types_testing.LogSnapshotConfig.md#filterpredicate)
 - [transactions](types_testing.LogSnapshotConfig.md#transactions)
 
 ## Properties
@@ -26,7 +27,7 @@ Any accounts/addresses to replace the address for predictably
 
 #### Defined in
 
-[src/types/testing.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L143)
+[src/types/testing.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L141)
 
 ___
 
@@ -35,6 +36,32 @@ ___
 • `Optional` **apps**: (`string` \| `number` \| `bigint`)[]
 
 Any app IDs to replace predictably
+
+#### Defined in
+
+[src/types/testing.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L143)
+
+___
+
+### filterPredicate
+
+• `Optional` **filterPredicate**: (`log`: `string`) => `boolean`
+
+Optional filter predicate to filter out logs
+
+#### Type declaration
+
+▸ (`log`): `boolean`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `log` | `string` |
+
+##### Returns
+
+`boolean`
 
 #### Defined in
 
@@ -50,4 +77,4 @@ Any transaction IDs or transactions to replace the ID for predictably
 
 #### Defined in
 
-[src/types/testing.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L141)
+[src/types/testing.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L139)
