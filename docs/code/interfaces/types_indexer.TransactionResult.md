@@ -32,6 +32,7 @@ Indexer result for a transaction, https://developer.algorand.org/docs/rest-apis/
 - [genesis-id](types_indexer.TransactionResult.md#genesis-id)
 - [global-state-delta](types_indexer.TransactionResult.md#global-state-delta)
 - [group](types_indexer.TransactionResult.md#group)
+- [heartbeat-transaction](types_indexer.TransactionResult.md#heartbeat-transaction)
 - [id](types_indexer.TransactionResult.md#id)
 - [inner-txns](types_indexer.TransactionResult.md#inner-txns)
 - [intra-round-offset](types_indexer.TransactionResult.md#intra-round-offset)
@@ -110,7 +111,7 @@ The backend can use this to ensure that auth addr is equal to the accounts auth 
 
 #### Defined in
 
-[src/types/indexer.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L170)
+[src/types/indexer.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L172)
 
 ___
 
@@ -122,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L205)
+[src/types/indexer.ts:207](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L207)
 
 ___
 
@@ -134,7 +135,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L172)
+[src/types/indexer.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L174)
 
 ___
 
@@ -210,7 +211,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L177)
+[src/types/indexer.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L179)
 
 ___
 
@@ -222,7 +223,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:179](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L179)
+[src/types/indexer.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L181)
 
 ___
 
@@ -234,7 +235,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L199)
+[src/types/indexer.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L201)
 
 ___
 
@@ -252,6 +253,18 @@ When present indicates that this transaction is part of a transaction group
 #### Defined in
 
 [src/types/indexer.ts:130](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L130)
+
+___
+
+### heartbeat-transaction
+
+• `Optional` **heartbeat-transaction**: [`HeartbeatTransactionResult`](types_indexer.HeartbeatTransactionResult.md)
+
+If the transaction is a `hb` transaction this will be populated see `tx-type`
+
+#### Defined in
+
+[src/types/indexer.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L168)
 
 ___
 
@@ -275,7 +288,7 @@ Inner transactions produced by application execution.
 
 #### Defined in
 
-[src/types/indexer.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L181)
+[src/types/indexer.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L183)
 
 ___
 
@@ -330,7 +343,7 @@ While this transaction possesses the lease, no other transaction specifying this
 
 #### Defined in
 
-[src/types/indexer.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L195)
+[src/types/indexer.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L197)
 
 ___
 
@@ -342,7 +355,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:197](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L197)
+[src/types/indexer.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L199)
 
 ___
 
@@ -392,7 +405,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:201](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L201)
+[src/types/indexer.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L203)
 
 ___
 
@@ -405,7 +418,7 @@ this value and future signatures must be signed with the key represented by this
 
 #### Defined in
 
-[src/types/indexer.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L185)
+[src/types/indexer.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L187)
 
 ___
 
@@ -441,7 +454,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L203)
+[src/types/indexer.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L205)
 
 ___
 

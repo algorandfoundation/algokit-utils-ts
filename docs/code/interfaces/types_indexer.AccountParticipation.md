@@ -29,7 +29,7 @@ AccountParticipation describes the parameters used by this account in consensus 
 
 #### Defined in
 
-[src/types/indexer.ts:815](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L815)
+[src/types/indexer.ts:863](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L863)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:820](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L820)
+[src/types/indexer.ts:868](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L868)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:822](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L822)
+[src/types/indexer.ts:870](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L870)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:824](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L824)
+[src/types/indexer.ts:872](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L872)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:826](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L826)
+[src/types/indexer.ts:874](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L874)
 
 ___
 
@@ -93,4 +93,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:831](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L831)
+[src/types/indexer.ts:879](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L879)

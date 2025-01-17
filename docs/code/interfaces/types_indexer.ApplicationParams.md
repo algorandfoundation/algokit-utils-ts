@@ -34,7 +34,7 @@ Approval programs may reject the transaction.
 
 #### Defined in
 
-[src/types/indexer.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L669)
+[src/types/indexer.ts:717](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L717)
 
 ___
 
@@ -52,7 +52,7 @@ Clear state programs cannot reject the transaction.
 
 #### Defined in
 
-[src/types/indexer.ts:679](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L679)
+[src/types/indexer.ts:727](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L727)
 
 ___
 
@@ -64,7 +64,7 @@ The address that created this application. This is the address where the paramet
 
 #### Defined in
 
-[src/types/indexer.ts:659](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L659)
+[src/types/indexer.ts:707](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L707)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:681](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L681)
+[src/types/indexer.ts:729](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L729)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:683](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L683)
+[src/types/indexer.ts:731](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L731)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:685](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L685)
+[src/types/indexer.ts:733](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L733)
 
 ___
 
@@ -112,4 +112,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:687](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L687)
+[src/types/indexer.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L735)

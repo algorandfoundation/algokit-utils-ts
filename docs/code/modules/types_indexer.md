@@ -34,6 +34,7 @@
 - [AssetsLookupResult](../interfaces/types_indexer.AssetsLookupResult.md)
 - [EvalDelta](../interfaces/types_indexer.EvalDelta.md)
 - [EvalDeltaKeyValue](../interfaces/types_indexer.EvalDeltaKeyValue.md)
+- [HeartbeatTransactionResult](../interfaces/types_indexer.HeartbeatTransactionResult.md)
 - [KeyRegistrationTransactionResult](../interfaces/types_indexer.KeyRegistrationTransactionResult.md)
 - [LogicTransactionSignature](../interfaces/types_indexer.LogicTransactionSignature.md)
 - [LookupAssetHoldingsOptions](../interfaces/types_indexer.LookupAssetHoldingsOptions.md)
@@ -61,4 +62,4 @@
 
 #### Defined in
 
-[src/types/indexer.ts:644](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L644)
+[src/types/indexer.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L692)

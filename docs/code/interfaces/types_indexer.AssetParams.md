@@ -37,7 +37,7 @@ clawback is not permitted.
 
 #### Defined in
 
-[src/types/indexer.ts:737](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L737)
+[src/types/indexer.ts:785](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L785)
 
 ___
 
@@ -51,7 +51,7 @@ be sent in the worst case.
 
 #### Defined in
 
-[src/types/indexer.ts:721](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L721)
+[src/types/indexer.ts:769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L769)
 
 ___
 
@@ -66,7 +66,7 @@ must be between 0 and 19 (inclusive).
 
 #### Defined in
 
-[src/types/indexer.ts:728](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L728)
+[src/types/indexer.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L776)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:741](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L741)
+[src/types/indexer.ts:789](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L789)
 
 ___
 
@@ -91,7 +91,7 @@ is not permitted.
 
 #### Defined in
 
-[src/types/indexer.ts:746](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L746)
+[src/types/indexer.ts:794](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L794)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:750](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L750)
+[src/types/indexer.ts:798](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L798)
 
 ___
 
@@ -116,7 +116,7 @@ metadata is up to the application.
 
 #### Defined in
 
-[src/types/indexer.ts:755](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L755)
+[src/types/indexer.ts:803](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L803)
 
 ___
 
@@ -129,7 +129,7 @@ asset name is composed of printable utf-8 characters.
 
 #### Defined in
 
-[src/types/indexer.ts:760](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L760)
+[src/types/indexer.ts:808](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L808)
 
 ___
 
@@ -141,7 +141,7 @@ Base64 encoded name of this asset, as supplied by the creator.
 
 #### Defined in
 
-[src/types/indexer.ts:764](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L764)
+[src/types/indexer.ts:812](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L812)
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:768](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L768)
+[src/types/indexer.ts:816](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L816)
 
 ___
 
@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:732](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L732)
+[src/types/indexer.ts:780](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L780)
 
 ___
 
@@ -178,7 +178,7 @@ when the name of a unit of this asset is composed of printable utf-8 characters.
 
 #### Defined in
 
-[src/types/indexer.ts:773](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L773)
+[src/types/indexer.ts:821](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L821)
 
 ___
 
@@ -190,7 +190,7 @@ Base64 encoded name of a unit of this asset, as supplied by the creator.
 
 #### Defined in
 
-[src/types/indexer.ts:777](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L777)
+[src/types/indexer.ts:825](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L825)
 
 ___
 
@@ -203,7 +203,7 @@ when the URL is composed of printable utf-8 characters.
 
 #### Defined in
 
-[src/types/indexer.ts:782](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L782)
+[src/types/indexer.ts:830](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L830)
 
 ___
 
@@ -215,4 +215,4 @@ Base64 encoded URL where more information about the asset can be retrieved.
 
 #### Defined in
 
-[src/types/indexer.ts:786](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L786)
+[src/types/indexer.ts:834](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L834)

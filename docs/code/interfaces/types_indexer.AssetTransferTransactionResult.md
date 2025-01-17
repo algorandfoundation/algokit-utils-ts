@@ -27,7 +27,7 @@ Fields for an asset transfer transaction. https://developer.algorand.org/docs/re
 
 #### Defined in
 
-[src/types/indexer.ts:507](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L507)
+[src/types/indexer.ts:555](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L555)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:509](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L509)
+[src/types/indexer.ts:557](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L557)
 
 ___
 
@@ -51,7 +51,7 @@ Number of assets transfered to the close-to account as part of the transaction.
 
 #### Defined in
 
-[src/types/indexer.ts:511](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L511)
+[src/types/indexer.ts:559](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L559)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L513)
+[src/types/indexer.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L561)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:515](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L515)
+[src/types/indexer.ts:563](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L563)
 
 ___
 
@@ -87,4 +87,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:517](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L517)
+[src/types/indexer.ts:565](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L565)
