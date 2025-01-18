@@ -22,4 +22,4 @@
 
 #### Defined in
 
-src/types/interface-of.ts:1
+[src/types/interface-of.ts:1](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/interface-of.ts#L1)
