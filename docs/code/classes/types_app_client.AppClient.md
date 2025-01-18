@@ -104,7 +104,7 @@ state for a specific deployed instance of an app (with a known app ID).
 
 ### \_algorand
 
-• `Private` **\_algorand**: [`InterfaceOf`](../modules/types_instance_of.md#interfaceof)\<[`AlgorandClient`](types_algorand_client.AlgorandClient.md)\>
+• `Private` **\_algorand**: [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
 
 #### Defined in
 
@@ -293,13 +293,13 @@ ___
 
 ### algorand
 
-• `get` **algorand**(): [`InterfaceOf`](../modules/types_instance_of.md#interfaceof)\<[`AlgorandClient`](types_algorand_client.AlgorandClient.md)\>
+• `get` **algorand**(): [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
 
 A reference to the underlying `AlgorandClient` this app client is using.
 
 #### Returns
 
-[`InterfaceOf`](../modules/types_instance_of.md#interfaceof)\<[`AlgorandClient`](types_algorand_client.AlgorandClient.md)\>
+[`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
 
 #### Defined in
 
@@ -1273,7 +1273,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
-| `params.algorand` | [`InterfaceOf`](../modules/types_instance_of.md#interfaceof)\<[`AlgorandClient`](types_algorand_client.AlgorandClient.md)\> | An `AlgorandClient` instance |
+| `params.algorand` | [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface) | An `AlgorandClient` instance |
 | `params.appLookupCache?` | [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) | An optional cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this `ClientManager` on construction. |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
@@ -1308,7 +1308,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
-| `params.algorand` | [`InterfaceOf`](../modules/types_instance_of.md#interfaceof)\<[`AlgorandClient`](types_algorand_client.AlgorandClient.md)\> | An `AlgorandClient` instance |
+| `params.algorand` | [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface) | An `AlgorandClient` instance |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |
