@@ -8,7 +8,7 @@ import { NetworkDetails } from './network-client'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import type { AlgorandClient } from './algorand-client'
-import { InterfaceOf } from './instance-of'
+import { InterfaceOf } from './interface-of'
 
 
 /**

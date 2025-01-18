@@ -12,7 +12,7 @@
 
 ### AlgorandClientInterface
 
-Ƭ **AlgorandClientInterface**: `OldAlgorandClientInterface` & `Partial`\<[`InterfaceOf`](types_instance_of.md#interfaceof)\<[`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)\>\>
+Ƭ **AlgorandClientInterface**: `OldAlgorandClientInterface` & `Partial`\<[`InterfaceOf`](types_interface_of.md#interfaceof)\<[`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)\>\>
 
 **`Deprecated`**
 
