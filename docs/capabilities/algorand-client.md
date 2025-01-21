@@ -54,7 +54,7 @@ The `AlgorandClient` has a number of manager class instances that help you quick
 
 ### Creating transactions
 
-You can compose a transaction via `algorand.createTransaction...`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
+You can compose a transaction via `algorand.createTransaction.`, which gives you an instance of the [`AlgorandClientTransactionCreator`](../code/classes/types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md) class. Intellisense will guide you on the different options.
 
 The signature for the calls to send a single transaction usually look like:
 
@@ -147,8 +147,10 @@ There are two common base interfaces that get reused:
 - [`SendParams`](../code/interfaces/types_transaction.SendParams.md)
   - `maxRoundsToWaitForConfirmation?: number` - The number of rounds to wait for confirmation. By default until the latest lastValid has past.
   - `suppressLog?: boolean` - Whether to suppress log messages from transaction send, default: do not suppress.
+  - `populateAppCallResources?: boolean` - Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`.
+  - `coverAppCallInnerTransactionFees?: boolean` - Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee
 
-Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`TransactionComposer`](./transaction-composer.md).
+Then on top of that the base type gets extended for the specific type of transaction you are issuing. These are all defined as part of [`TransactionComposer`](./transaction-composer.md) and we recommend reading these docs, especially when leveraging either `populateAppCallResources` or `coverAppCallInnerTransactionFees`.
 
 ### Transaction configuration
 

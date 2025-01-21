@@ -6,6 +6,7 @@
 
 ### Interfaces
 
+- [AdditionalAtomicTransactionComposerContext](../interfaces/types_transaction.AdditionalAtomicTransactionComposerContext.md)
 - [AtomicTransactionComposerToSend](../interfaces/types_transaction.AtomicTransactionComposerToSend.md)
 - [ConfirmedTransactionResult](../interfaces/types_transaction.ConfirmedTransactionResult.md)
 - [ConfirmedTransactionResults](../interfaces/types_transaction.ConfirmedTransactionResults.md)

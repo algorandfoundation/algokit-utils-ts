@@ -258,8 +258,8 @@ The ARC4 ABI specification supports ABI method calls as arguments to other ABI m
 
 To illustrate this, let's consider an example of two ABI methods with the following signatures:
 
-- `myMethod(pay, appl): void`
-- `myOtherMethod(pay): void`
+- `myMethod(pay,appl)void`
+- `myOtherMethod(pay)void`
 
 These signatures are compatible, so `myOtherMethod` can be passed as an ABI method call argument to `myMethod`, which would look like:
 

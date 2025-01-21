@@ -69,7 +69,7 @@ algosdk clients or config for interacting with the official Algorand APIs.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `clientsOrConfig` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) \| [`AlgoSdkClients`](../interfaces/types_client_manager.AlgoSdkClients.md) | The clients or config to use |
-| `algorandClient?` | [`AlgorandClientInterface`](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md) | - |
+| `algorandClient?` | [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface) | - |
 
 #### Returns
 
@@ -117,7 +117,7 @@ ___
 
 ### \_algorand
 
-• `Private` `Optional` **\_algorand**: [`AlgorandClientInterface`](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md)
+• `Private` `Optional` **\_algorand**: [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
 
 #### Defined in
 
