@@ -7,12 +7,18 @@ import { TransactionComposer } from './composer'
 import { NetworkDetails } from './network-client'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
+import type { AlgorandClient } from './algorand-client'
+import { InterfaceOf } from './interface-of'
 
-/** Interface for the bulk of the `AlgorandClient` functionality.
+
+/**
+ * @deprecated Use `AlgorandClient` with `import type` instead since this
+ * interface does not implement the full interface for the AlgorandClient
+ * and will get removed in the next major release
  *
- * Used to take a dependency on AlgorandClient without generating a circular dependency.
+ * @see https://github.com/algorandfoundation/algokit-utils-ts/pull/365
  */
-export interface AlgorandClientInterface {
+interface OldAlgorandClientInterface {
   app: AppManager
   appDeployer: AppDeployer
   send: AlgorandClientTransactionSender
@@ -27,3 +33,23 @@ export interface AlgorandClientInterface {
     isMainNet(): Promise<boolean>
   }
 }
+
+
+/**
+ * @deprecated Use `AlgorandClient` with `import type` instead since this interface
+ * will get removed in the next major release
+ *
+ * This type is a solution to the problem raised in the PR below.
+ * In summary, we needed to update the interface without making a breaking
+ * change so this was the best option. This interface has some optional properties,
+ * such as `account`, but unless you are using a custom implementation of AlgorandClient
+ * (you probably aren't) you can be sure these will always be defined.
+ *
+ * @example
+ * ```ts
+ * algorand.account!.getInformation(addr);
+ * ```
+ *
+ * @see https://github.com/algorandfoundation/algokit-utils-ts/pull/365
+ */
+export type AlgorandClientInterface = OldAlgorandClientInterface & Partial<InterfaceOf<AlgorandClient>>

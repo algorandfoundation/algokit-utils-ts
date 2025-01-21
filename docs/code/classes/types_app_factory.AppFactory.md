@@ -81,7 +81,7 @@ to interact with those (or other) app instances.
 
 ### \_algorand
 
-• `Private` **\_algorand**: [`AlgorandClientInterface`](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md)
+• `Private` **\_algorand**: [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
 
 #### Defined in
 
@@ -253,13 +253,13 @@ Send transactions to the current app
 
 ### algorand
 
-• `get` **algorand**(): [`AlgorandClientInterface`](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md)
+• `get` **algorand**(): [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
 
 Return the algorand client this factory is using.
 
 #### Returns
 
-[`AlgorandClientInterface`](../interfaces/types_algorand_client_interface.AlgorandClientInterface.md)
+[`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
 
 #### Defined in
 

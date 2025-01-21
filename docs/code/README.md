@@ -43,6 +43,7 @@
 - [types/dispenser-client.spec](modules/types_dispenser_client_spec.md)
 - [types/expand](modules/types_expand.md)
 - [types/indexer](modules/types_indexer.md)
+- [types/interface-of](modules/types_interface_of.md)
 - [types/kmd-account-manager](modules/types_kmd_account_manager.md)
 - [types/lifecycle-events](modules/types_lifecycle_events.md)
 - [types/logging](modules/types_logging.md)
