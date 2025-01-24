@@ -484,9 +484,15 @@ export type Txn =
  */
 export type ErrorTransformer = (error: Error) => Promise<Error>
 
-class BadTransformer extends Error {
-  constructor(originalError: unknown) {
-    super(`An error transformer returned a non-error value. The original error before any transformation: ${originalError}`)
+class NonErrorTransformer extends Error {
+  constructor(originalError: unknown, value: unknown) {
+    super(`An error transformer returned a non-error value: ${value}. The original error before any transformation: ${originalError}`)
+  }
+}
+
+class ErrorTransformerError extends Error {
+  constructor(originalError: Error, cause: unknown) {
+    super(`An error transformer threw an error: ${cause}. The original error before any transformation: ${originalError} `, { cause })
   }
 }
 
@@ -572,6 +578,28 @@ export class TransactionComposer {
   private appManager: AppManager
 
   private errorTransformers: ErrorTransformer[]
+
+  private async transformError(originalError: unknown): Promise<unknown> {
+    // Transformers only work with Error instances, so immediately return anything else
+    if (!(originalError instanceof Error)) {
+      return originalError
+    }
+
+    let transformedError = originalError
+
+    for (const transformer of this.errorTransformers) {
+      try {
+        transformedError = await transformer(transformedError)
+        if (!(transformedError instanceof Error)) {
+          return new NonErrorTransformer(originalError, transformedError)
+        }
+      } catch (errorFromTransformer) {
+        return new ErrorTransformerError(originalError, errorFromTransformer)
+      }
+    }
+
+    return transformedError
+  }
 
   /**
    * Create a `TransactionComposer`.
@@ -1428,18 +1456,7 @@ export class TransactionComposer {
         this.algod,
       )
     } catch (originalError: unknown) {
-      // Transformers expect an Error, so don't transform the exception if it's not an Error
-      if (!(originalError instanceof Error)) throw originalError
-
-      let error = originalError
-      for (const transformer of this.errorTransformers) {
-        if (!(error instanceof Error)) {
-          throw new BadTransformer(originalError)
-        }
-        error = await transformer(error)
-      }
-
-      throw error
+      throw await this.transformError(originalError)
     }
   }
 
@@ -1508,20 +1525,13 @@ export class TransactionComposer {
     const failedGroup = simulateResponse?.txnGroups[0]
     if (failedGroup?.failureMessage) {
       const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
-      let error = new Error(errorMessage)
+      const error = new Error(errorMessage)
 
       if (Config.debug) {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
-      for (const transformer of this.errorTransformers) {
-        if (!(error instanceof Error)) {
-          break
-        }
-        error = await transformer(error)
-      }
-
-      throw error
+      throw await this.transformError(error)
     }
 
     if (Config.debug && Config.traceAll) {

@@ -441,7 +441,7 @@ Parameters to create an `TransactionComposer`.
 
 #### Defined in
 
-[src/types/composer.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L494)
+[src/types/composer.ts:500](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L500)
 
 ___
 
