@@ -37,4 +37,4 @@ https://github.com/algorandfoundation/algokit-utils-ts/pull/365
 
 #### Defined in
 
-[src/types/algorand-client-interface.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-interface.ts#L55)
+[src/types/algorand-client-interface.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-interface.ts#L53)
