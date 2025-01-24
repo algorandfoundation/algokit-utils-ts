@@ -1448,9 +1448,9 @@ export class TransactionComposer {
           coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
           additionalAtcContext: params?.coverAppCallInnerTransactionFees
             ? {
-                maxFees: this.txnMaxFees,
-                suggestedParams: suggestedParams!,
-              }
+              maxFees: this.txnMaxFees,
+              suggestedParams: suggestedParams!,
+            }
             : undefined,
         },
         this.algod,
@@ -1508,16 +1508,16 @@ export class TransactionComposer {
         ...rawOptions,
         ...(Config.debug
           ? {
-              allowEmptySignatures: true,
-              fixSigners: true,
-              allowMoreLogging: true,
-              execTraceConfig: new modelsv2.SimulateTraceConfig({
-                enable: true,
-                scratchChange: true,
-                stackChange: true,
-                stateChange: true,
-              }),
-            }
+            allowEmptySignatures: true,
+            fixSigners: true,
+            allowMoreLogging: true,
+            execTraceConfig: new modelsv2.SimulateTraceConfig({
+              enable: true,
+              scratchChange: true,
+              stackChange: true,
+              stateChange: true,
+            }),
+          }
           : undefined),
       }),
     )
