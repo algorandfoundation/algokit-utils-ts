@@ -23,7 +23,7 @@ describe('AlgorandClient', () => {
   const fixture = algorandFixture()
 
   beforeAll(async () => {
-    await fixture.beforeEach()
+    await fixture.newScope()
 
     alice = fixture.context.testAccount
     bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.MicroAlgo(100_000) })
