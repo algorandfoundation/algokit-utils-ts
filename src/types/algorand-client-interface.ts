@@ -10,7 +10,6 @@ import Indexer = algosdk.Indexer
 import type { AlgorandClient } from './algorand-client'
 import { InterfaceOf } from './interface-of'
 
-
 /**
  * @deprecated Use `AlgorandClient` with `import type` instead since this
  * interface does not implement the full interface for the AlgorandClient
@@ -33,7 +32,6 @@ interface OldAlgorandClientInterface {
     isMainNet(): Promise<boolean>
   }
 }
-
 
 /**
  * @deprecated Use `AlgorandClient` with `import type` instead since this interface

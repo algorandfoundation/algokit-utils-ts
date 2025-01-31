@@ -1,4 +1,3 @@
 export type InterfaceOf<ClassType> = {
-  [Member in keyof ClassType]: ClassType[Member];
-};
-
+  [Member in keyof ClassType]: ClassType[Member]
+}
