@@ -519,6 +519,11 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
+/** Calculate minimum number of extra program pages required for provided approval and clear state programs */
+const extraProgramPagesRequired = (approvalProgram: Uint8Array, clearStateProgram?: Uint8Array): number => {
+  return Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0) - 1) / APP_PAGE_MAX_SIZE)
+}
+
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
   /** Signer used to represent a lack of signer */
@@ -1012,7 +1017,7 @@ export class TransactionComposer {
           ? 'extraProgramPages' in params && params.extraProgramPages !== undefined
             ? params.extraProgramPages
             : approvalProgram
-              ? Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0)) / APP_PAGE_MAX_SIZE)
+              ? extraProgramPagesRequired(approvalProgram, clearStateProgram)
               : 0
           : undefined,
       numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
@@ -1174,9 +1179,9 @@ export class TransactionComposer {
       return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, {
         ...sdkParams,
         extraPages:
-          'extraProgramPages' in params
-            ? (params.extraProgramPages ?? Math.floor((approvalProgram!.length + clearStateProgram!.length) / APP_PAGE_MAX_SIZE))
-            : 0,
+          'extraProgramPages' in params && params.extraProgramPages !== undefined
+            ? params.extraProgramPages
+            : extraProgramPagesRequired(approvalProgram!, clearStateProgram!),
         numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
         numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
         numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
