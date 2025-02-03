@@ -477,7 +477,7 @@ export type Txn =
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
 /**
- * A function that transform an error into a new error.
+ * A function that transforms an error into a new error.
  *
  * In most cases, an ErrorTransformer should first check if it can or should transform the error
  * and return the input error if it cannot or should not transform it.
@@ -510,7 +510,7 @@ export type TransactionComposerParams = {
   defaultValidityWindow?: bigint
   /** An existing `AppManager` to use to manage app compilation and cache compilation results.
    *
-   * If not specified than an ephemeral one will be created.
+   * If not specified then an ephemeral one will be created.
    */
   appManager?: AppManager
   /**
