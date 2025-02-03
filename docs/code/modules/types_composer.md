@@ -324,7 +324,7 @@ ___
 
 Ƭ **ErrorTransformer**: (`error`: `Error`) => `Promise`\<`Error`\>
 
-A function that transform an error into a new error.
+A function that transforms an error into a new error.
 
 In most cases, an ErrorTransformer should first check if it can or should transform the error
 and return the input error if it cannot or should not transform it.
@@ -433,7 +433,7 @@ Parameters to create an `TransactionComposer`.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
-| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
+| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified then an ephemeral one will be created. |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
 | `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)[] | An array of error transformers to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
 | `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
