@@ -484,7 +484,7 @@ export type Txn =
  */
 export type ErrorTransformer = (error: Error) => Promise<Error>
 
-class NonErrorTransformer extends Error {
+class InvalidErrorTransformerValue extends Error {
   constructor(originalError: unknown, value: unknown) {
     super(`An error transformer returned a non-error value: ${value}. The original error before any transformation: ${originalError}`)
   }
@@ -591,7 +591,7 @@ export class TransactionComposer {
       try {
         transformedError = await transformer(transformedError)
         if (!(transformedError instanceof Error)) {
-          return new NonErrorTransformer(originalError, transformedError)
+          return new InvalidErrorTransformerValue(originalError, transformedError)
         }
       } catch (errorFromTransformer) {
         return new ErrorTransformerError(originalError, errorFromTransformer)
