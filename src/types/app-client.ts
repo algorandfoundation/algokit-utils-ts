@@ -1300,24 +1300,48 @@ export class AppClient {
           (params.onComplete === OnApplicationComplete.NoOpOC || !params.onComplete) &&
           getArc56Method(params.method, this._appSpec).method.readonly
         ) {
-          const result = await this._algorand
-            .newGroup()
-            .addAppCallMethodCall(await this.params.call(params))
-            .simulate({
-              allowUnnamedResources: params.populateAppCallResources ?? true,
-              // Simulate calls for a readonly method shouldn't invoke signing
-              skipSignatures: true,
-            })
-          return this.processMethodCallReturn(
-            {
-              ...result,
-              transaction: result.transactions.at(-1)!,
-              confirmation: result.confirmations.at(-1)!,
-              // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-              return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
-            } satisfies SendAppTransactionResult,
-            getArc56Method(params.method, this._appSpec),
-          )
+          const readonlyParams = {
+            ...params,
+          }
+
+          // Read-only calls do not require fees to be paid, as they are only simulated on the network.
+          // Therefore there is no value in calculating the minimum fee needed for a successful app call with inner transactions.
+          // As a a result we only need to send a single simulate call,
+          // however to do this successfully we need to ensure fees for the transaction are fully covered using maxFee.
+          if (params.coverAppCallInnerTransactionFees) {
+            if (params.maxFee === undefined) {
+              throw Error(`Please provide a maxFee for the transaction when coverAppCallInnerTransactionFees is enabled.`)
+            }
+            readonlyParams.staticFee = params.maxFee
+            readonlyParams.extraFee = undefined
+          }
+
+          try {
+            const result = await this._algorand
+              .newGroup()
+              .addAppCallMethodCall(await this.params.call(readonlyParams))
+              .simulate({
+                allowUnnamedResources: params.populateAppCallResources ?? true,
+                // Simulate calls for a readonly method shouldn't invoke signing
+                skipSignatures: true,
+              })
+            return this.processMethodCallReturn(
+              {
+                ...result,
+                transaction: result.transactions.at(-1)!,
+                confirmation: result.confirmations.at(-1)!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+                return: (result.returns?.length ?? 0 > 0) ? result.returns?.at(-1)! : undefined,
+              } satisfies SendAppTransactionResult,
+              getArc56Method(params.method, this._appSpec),
+            )
+          } catch (e) {
+            const error = e as Error
+            if (params.coverAppCallInnerTransactionFees && error && error.message && error.message.match(/fee too small/)) {
+              throw Error(`Fees were too small. You may need to increase the transaction maxFee.`)
+            }
+            throw e
+          }
         }
 
         return this.handleCallErrors(async () =>

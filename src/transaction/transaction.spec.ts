@@ -644,6 +644,61 @@ describe('transaction', () => {
       await assertMinFee(appClient1, params, expectedFee)
     })
 
+    describe('readonly', () => {
+      test('alters fee, handling expensive abi method calls that use ensure_budget to op-up', async () => {
+        // The expectedFee differs to non readonly method call, as we don't want to run simulate twice (once for resolving the minimum fee and once for the actual transaction result).
+        // Because no fees are actually paid with readonly calls, we simply use the maxFee value and skip any minimum fee calculations.
+        const expectedFee = 12_000n
+        const params = {
+          method: 'burn_ops_readonly',
+          args: [6200],
+          coverAppCallInnerTransactionFees: true,
+          maxFee: microAlgo(expectedFee),
+        } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+        const result = await appClient1.send.call(params)
+
+        expect(result.transaction.fee).toBe(expectedFee)
+        expect(result.confirmation.innerTxns?.length).toBe(9) // Op up transactions sent by ensure_budget
+      })
+
+      test('throws when no max fee is supplied', async () => {
+        const params = {
+          method: 'burn_ops_readonly',
+          coverAppCallInnerTransactionFees: true,
+        } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+        await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+          'Please provide a maxFee for the transaction when coverAppCallInnerTransactionFees is enabled.',
+        )
+      })
+
+      test('throws when inner transaction fees are not covered and coverAppCallInnerTransactionFees is disabled', async () => {
+        const expectedFee = 7000n
+        const params = {
+          method: 'burn_ops_readonly',
+          args: [6200],
+          maxFee: microAlgo(expectedFee),
+          coverAppCallInnerTransactionFees: false,
+        } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+        await expect(async () => await appClient1.send.call(params)).rejects.toThrow(/fee too small/)
+      })
+
+      test('throws when max fee is too small to cover inner transaction fees', async () => {
+        const expectedFee = 7000n
+        const params = {
+          method: 'burn_ops_readonly',
+          args: [6200],
+          coverAppCallInnerTransactionFees: true,
+          maxFee: microAlgo(expectedFee),
+        } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
+
+        await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
+          'Fees were too small. You may need to increase the transaction maxFee.',
+        )
+      })
+    })
+
     const assertMinFee = async (appClient: AppClient, args: Parameters<(typeof appClient)['send']['call']>[0], fee: bigint) => {
       if (fee === 1000n) {
         return

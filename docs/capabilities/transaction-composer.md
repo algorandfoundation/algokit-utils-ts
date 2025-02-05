@@ -173,6 +173,16 @@ const result = await appClient1.algorand
 
 This feature should efficiently calculate the minimum fee needed to execute an app call transaction with inners, however we always recommend testing your specific scenario behaves as expected before releasing.
 
+#### Read-only calls
+
+When invoking a readonly method, the transaction is simulated rather than being fully processed by the network. This allows users to call these methods without paying a fee.
+
+Even though no actual fee is paid, the simulation still evaluates the transaction as if a fee was being paid, therefore op budget and fee coverage checks are still performed.
+
+Because no fee is actually paid, calculating the minimum fee required to successfully execute the transaction is not required, and therefore we don't need to send an additional simulate call to calculate the minimum fee, like we do with a non readonly method call.
+
+The behaviour of enabling `coverAppCallInnerTransactionFees` for readonly method calls is very similar to non readonly method calls, however is subtly different as we use `maxFee` as the transaction fee when executing the readonly method call.
+
 ### Covering App Call Op Budget
 
 The high level Algorand contract authoring languages all have support for ensuring appropriate app op budget is available via `ensure_budget` in Algorand Python, `ensureBudget` in Algorand TypeScript and `increaseOpcodeBudget` in TEALScript. This is great, as it allows contract authors to ensure appropriate budget is available by automatically sending op-up inner transactions to increase the budget available. These op-up inner transactions require the fees to be covered by an account, which is generally the responsibility of the application consumer.
