@@ -1,6 +1,7 @@
 import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
+import { calculateExtraProgramPages } from '../util'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {
   APP_DEPLOY_NOTE_DAPP,
@@ -334,9 +335,13 @@ export class AppDeployer {
     const existingAppRecord = await this._appManager.getById(existingApp.appId)
     const existingApproval = Buffer.from(existingAppRecord.approvalProgram).toString('base64')
     const existingClear = Buffer.from(existingAppRecord.clearStateProgram).toString('base64')
+    const existingExtraPages = calculateExtraProgramPages(existingAppRecord.approvalProgram, existingAppRecord.clearStateProgram)
 
-    const newApproval = Buffer.from(approvalProgram).toString('base64')
-    const newClear = Buffer.from(clearStateProgram).toString('base64')
+    const newApprovalBytes = Buffer.from(approvalProgram)
+    const newClearBytes = Buffer.from(clearStateProgram)
+    const newApproval = newApprovalBytes.toString('base64')
+    const newClear = newClearBytes.toString('base64')
+    const newExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
 
     // Check for changes
 
@@ -345,7 +350,8 @@ export class AppDeployer {
       existingAppRecord.localInts < (createParams.schema?.localInts ?? 0) ||
       existingAppRecord.globalInts < (createParams.schema?.globalInts ?? 0) ||
       existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0) ||
-      existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0)
+      existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0) ||
+      existingExtraPages < newExtraPages
 
     if (isSchemaBreak) {
       Config.getLogger(sendParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
@@ -354,8 +360,9 @@ export class AppDeployer {
           globalByteSlices: existingAppRecord.globalByteSlices,
           localInts: existingAppRecord.localInts,
           localByteSlices: existingAppRecord.localByteSlices,
+          extraProgramPages: existingExtraPages,
         },
-        to: createParams.schema,
+        to: { ...createParams.schema, extraProgramPages: newExtraPages },
       })
 
       if (onSchemaBreak === undefined || onSchemaBreak === 'fail' || onSchemaBreak === OnSchemaBreak.Fail) {

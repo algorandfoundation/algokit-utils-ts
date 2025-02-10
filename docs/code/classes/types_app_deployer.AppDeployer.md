@@ -47,7 +47,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-deployer.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L123)
+[src/types/app-deployer.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L124)
 
 ## Properties
 
@@ -57,7 +57,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-deployer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L115)
+[src/types/app-deployer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L116)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L112)
+[src/types/app-deployer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L113)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L114)
+[src/types/app-deployer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L115)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L113)
+[src/types/app-deployer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L114)
 
 ## Methods
 
@@ -132,7 +132,7 @@ The app reference of the new/existing app
 
 #### Defined in
 
-[src/types/app-deployer.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L142)
+[src/types/app-deployer.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L143)
 
 ___
 
@@ -163,7 +163,7 @@ A name-based lookup of the app metadata
 
 #### Defined in
 
-[src/types/app-deployer.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L456)
+[src/types/app-deployer.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L463)
 
 ___
 
@@ -184,4 +184,4 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:433](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L433)
+[src/types/app-deployer.ts:440](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L440)
