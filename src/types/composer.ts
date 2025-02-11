@@ -1,10 +1,9 @@
 import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
-import { asJson } from '../util'
+import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
@@ -519,11 +518,6 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
-/** Calculate minimum number of extra program pages required for provided approval and clear state programs */
-const extraProgramPagesRequired = (approvalProgram: Uint8Array, clearStateProgram?: Uint8Array): number => {
-  return Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0) - 1) / APP_PAGE_MAX_SIZE)
-}
-
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
   /** Signer used to represent a lack of signer */
@@ -1017,7 +1011,7 @@ export class TransactionComposer {
           ? 'extraProgramPages' in params && params.extraProgramPages !== undefined
             ? params.extraProgramPages
             : approvalProgram
-              ? extraProgramPagesRequired(approvalProgram, clearStateProgram)
+              ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
               : 0
           : undefined,
       numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
@@ -1181,7 +1175,7 @@ export class TransactionComposer {
         extraPages:
           'extraProgramPages' in params && params.extraProgramPages !== undefined
             ? params.extraProgramPages
-            : extraProgramPagesRequired(approvalProgram!, clearStateProgram!),
+            : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
         numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
         numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
         numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
