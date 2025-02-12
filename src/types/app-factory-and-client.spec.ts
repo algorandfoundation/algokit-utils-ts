@@ -303,6 +303,22 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(call.return)
     expect(call.return).toBe('Hello, test')
   })
+  test('Call app too many args', async () => {
+    const { appClient } = await factory.send.bare.create({
+      deployTimeParams: {
+        UPDATABLE: 0,
+        DELETABLE: 0,
+        VALUE: 1,
+      },
+    })
+
+    await expect(
+      appClient.send.call({
+        method: 'call_abi',
+        args: ['test', 'extra'],
+      }),
+    ).rejects.toThrow('Unexpected arg at position 1. call_abi only expects 1 args')
+  })
 
   test('Call app with rekey', async () => {
     const { testAccount, algorand } = localnet.context

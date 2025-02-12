@@ -1035,6 +1035,9 @@ export class AppClient {
     return await Promise.all(
       args?.map(async (a, i) => {
         const arg = m.args[i]
+        if (!arg) {
+          throw new Error(`Unexpected arg at position ${i}. ${m.name} only expects ${m.args.length} args`)
+        }
         if (a !== undefined) {
           // If a struct then convert to tuple for the underlying call
           return arg.struct && typeof a === 'object' && !Array.isArray(a)
