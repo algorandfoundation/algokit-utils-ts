@@ -94,7 +94,7 @@ export class AccountManager {
    * accountManager.setDefaultSigner(signer)
    *
    * // When signing a transaction, if there is no signer registered for the sender then the default signer will be used
-   * const signer = accountManager.getSigner("{SENDERADDRESS}")
+   * const signer = accountManager.getSigner("SENDERADDRESS")
    * ```
    * @returns The `AccountManager` so method calls can be chained
    */

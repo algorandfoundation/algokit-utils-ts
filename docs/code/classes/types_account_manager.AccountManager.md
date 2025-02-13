@@ -798,7 +798,7 @@ const signer = accountManager.random() // Can be anything that returns a `algosd
 accountManager.setDefaultSigner(signer)
 
 // When signing a transaction, if there is no signer registered for the sender then the default signer will be used
-const signer = accountManager.getSigner("{SENDERADDRESS}")
+const signer = accountManager.getSigner("SENDERADDRESS")
 ```
 
 #### Defined in
