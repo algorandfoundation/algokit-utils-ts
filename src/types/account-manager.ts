@@ -27,6 +27,10 @@ export interface EnsureFundedResult {
  * This function has memoization, so will return the same transaction signer for a given account.
  * @param account An account that can sign a transaction
  * @returns A transaction signer
+ * @example
+ * ```typescript
+ * const signer = getAccountTransactionSigner(account)
+ * ```
  */
 export const getAccountTransactionSigner = memoize(function (
   account: TransactionSignerAccount | Account | SigningAccount | LogicSigAccount | MultisigAccount,
@@ -66,7 +70,14 @@ export class AccountManager {
     })
   }
 
-  /** KMD account manager that allows you to easily get and create accounts using KMD. */
+  /**
+   * KMD account manager that allows you to easily get and create accounts using KMD.
+   * @returns The `KmdAccountManager` instance.
+   * @example
+   * ```typescript
+   * const kmdManager = accountManager.kmd;
+   * ```
+   */
   public get kmd() {
     return this._kmdAccountManager
   }
@@ -163,12 +174,16 @@ export class AccountManager {
    * @param anotherAccountManager Another account manager with signers registered
    * @param overwriteExisting Whether or not to overwrite any signers that have the same sender address with the ones in the other account manager or not (default: true)
    * @returns The `AccountManager` instance for method chaining
+   * @example
+   * ```typescript
+   * accountManager2.setSigners(accountManager1);
+   * ```
    */
   public setSigners(anotherAccountManager: AccountManager, overwriteExisting = true) {
     this._accounts = overwriteExisting
       ? { ...this._accounts, ...anotherAccountManager._accounts }
       : { ...anotherAccountManager._accounts, ...this._accounts }
-    return
+    return this
   }
 
   /**
@@ -278,7 +293,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = account.fromMnemonic("mnemonic secret ...")
+   * const account = accountManager.fromMnemonic("mnemonic secret ...")
    * const rekeyedAccount = accountManager.rekeyed(account, "SENDERADDRESS...")
    * ```
    * @param account The account to use as the signer for this new rekeyed account
@@ -346,7 +361,7 @@ export class AccountManager {
    * @example Get default funded account in a LocalNet
    *
    * ```typescript
-   * const defaultDispenserAccount = await account.fromKmd('unencrypted-default-wallet',
+   * const defaultDispenserAccount = await accountManager.fromKmd('unencrypted-default-wallet',
    *   a => a.status !== 'Offline' && a.amount > 1_000_000_000
    * )
    * ```
@@ -384,7 +399,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = account.logicsig(program, [new Uint8Array(3, ...)])
+   * const account = accountManager.logicsig(program, [new Uint8Array(3, ...)])
    * ```
    * @param program The bytes that make up the compiled logic signature
    * @param args The (binary) arguments to pass into the logic signature
@@ -399,7 +414,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = account.random()
+   * const account = accountManager.random()
    * ```
    * @returns The account
    */
@@ -418,7 +433,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.dispenserFromEnvironment()
+   * const account = await accountManager.dispenserFromEnvironment()
    * ```
    *
    * @returns The account
@@ -438,7 +453,7 @@ export class AccountManager {
    *
    * @example
    * ```typescript
-   * const account = await account.localNetDispenser()
+   * const account = await accountManager.localNetDispenser()
    * ```
    * @returns The account
    */
@@ -459,15 +474,15 @@ export class AccountManager {
    *
    * @example Basic example (with string addresses)
    * ```typescript
-   * await algorand.account.rekeyAccount({account: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
+   * await accountManager.rekeyAccount({account: "ACCOUNTADDRESS", rekeyTo: "NEWADDRESS"})
    * ```
    * @example Basic example (with signer accounts)
    * ```typescript
-   * await algorand.account.rekeyAccount({account: account1, rekeyTo: newSignerAccount})
+   * await accountManager.rekeyAccount({account: account1, rekeyTo: newSignerAccount})
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.account.rekeyAccount({
+   * await accountManager.rekeyAccount({
    *   account: "ACCOUNTADDRESS",
    *   rekeyTo: "NEWADDRESS",
    *   lease: 'lease',
@@ -533,9 +548,9 @@ export class AccountManager {
    * @example Example using AlgorandClient
    * ```typescript
    * // Basic example
-   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1))
+   * await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1))
    * // With configuration
-   * await algorand.account.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1),
+   * await accountManager.ensureFunded("ACCOUNTADDRESS", "DISPENSERADDRESS", algokit.algo(1),
    *  { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
    * )
    * ```
@@ -595,9 +610,9 @@ export class AccountManager {
    * @example Example using AlgorandClient
    * ```typescript
    * // Basic example
-   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1))
+   * await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1))
    * // With configuration
-   * await algorand.account.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1),
+   * await accountManager.ensureFundedFromEnvironment("ACCOUNTADDRESS", algokit.algo(1),
    *  { minFundingIncrement: algokit.algo(2), fee: (1000).microAlgo(), suppressLog: true }
    * )
    * ```
@@ -651,9 +666,9 @@ export class AccountManager {
    * @example Example using AlgorandClient
    * ```typescript
    * // Basic example
-   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1))
+   * await accountManager.ensureFundedFromTestNetDispenserApi("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1))
    * // With configuration
-   * await algorand.account.ensureFundedUsingDispenserAPI("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1),
+   * await accountManager.ensureFundedFromTestNetDispenserApi("ACCOUNTADDRESS", algorand.client.getTestNetDispenserFromEnvironment(), algokit.algo(1),
    *  { minFundingIncrement: algokit.algo(2) }
    * )
    * ```

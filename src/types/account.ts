@@ -38,6 +38,7 @@ export class MultisigAccount {
     return this._addr
   }
 
+  /** The transaction signer for the multisig account */
   get signer(): TransactionSigner {
     return this._signer
   }
@@ -56,6 +57,10 @@ export class MultisigAccount {
    * Sign the given transaction
    * @param transaction Either a transaction object or a raw, partially signed transaction
    * @returns The transaction signed by the present signers
+   * @example
+   * ```typescript
+   * const signedTxn = multisigAccount.sign(myTransaction)
+   * ```
    */
   public sign(transaction: Transaction | Uint8Array): Uint8Array {
     let signedTxn = 'sender' in transaction ? undefined : transaction

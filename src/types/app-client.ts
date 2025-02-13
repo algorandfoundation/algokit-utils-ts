@@ -498,6 +498,18 @@ export class AppClient {
     /** Interact with bare (raw) calls */ bare: ReturnType<AppClient['getBareSendMethods']>
   }
 
+  /**
+   * Create a new app client.
+   * @param params The parameters to create the app client
+   * @returns The `AppClient` instance
+   * @example
+   * ```typescript
+   * const appClient = new AppClient({
+   *   appId: 12345678n,
+   *   appSpec: appSpec,
+   *   algorand: AlgorandClient.mainNet(),
+   * })
+   */
   constructor(params: AppClientParams) {
     this._appId = params.appId
     this._appAddress = algosdk.getApplicationAddress(this._appId)
@@ -546,6 +558,10 @@ export class AppClient {
    *
    * @param params The params to use for the the cloned app client. Omit a param to keep the original value. Set a param to override the original value. Setting to undefined will clear the original value.
    * @returns A new app client with the altered params
+   * @example
+   * ```typescript
+   * const appClient2 = appClient.clone({ defaultSender: 'NEW_SENDER_ADDRESS' })
+   * ```
    */
   public clone(params: CloneAppClientParams) {
     return new AppClient({
@@ -565,6 +581,15 @@ export class AppClient {
    * Returns a new `AppClient` client, resolving the app by creator address and name
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
    * @param params The parameters to create the app client
+   * @returns The `AppClient` instance
+   * @example
+   * ```typescript
+   * const appClient = await AppClient.fromCreatorAndName({
+   *   creatorAddress: 'CREATOR_ADDRESS',
+   *   name: 'APP_NAME',
+   *   appSpec: appSpec,
+   *   algorand: AlgorandClient.mainNet(),
+   * })
    */
   public static async fromCreatorAndName(params: ResolveAppClientByCreatorAndName) {
     const appSpec = AppClient.normaliseAppSpec(params.appSpec)
@@ -587,6 +612,13 @@ export class AppClient {
    *
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
    * @param params The parameters to create the app client
+   * @returns The `AppClient` instance
+   * @example
+   * ```typescript
+   * const appClient = await AppClient.fromNetwork({
+   *   appSpec: appSpec,
+   *   algorand: AlgorandClient.mainNet(),
+   * })
    */
   public static async fromNetwork(params: ResolveAppClientByNetwork): Promise<AppClient> {
     const network = await params.algorand.client.network()
@@ -611,6 +643,10 @@ export class AppClient {
    * normalises it into a parsed ARC-56 contract object.
    * @param spec The spec to normalise
    * @returns The normalised ARC-56 contract object
+   * @example
+   * ```typescript
+   * const arc56AppSpec = AppClient.normaliseAppSpec(appSpec)
+   * ```
    */
   public static normaliseAppSpec(spec: Arc56Contract | AppSpec | string): Arc56Contract {
     const parsedSpec = typeof spec === 'string' ? (JSON.parse(spec) as AppSpec | Arc56Contract) : spec
@@ -697,6 +733,10 @@ export class AppClient {
    * An alias for `appClient.send.fundAppAccount(params)`.
    * @param params The parameters for the funding transaction
    * @returns The result of the funding
+   * @example
+   * ```typescript
+   * await appClient.fundAppAccount({ amount: algo(1) })
+   * ```
    */
   public async fundAppAccount(params: FundAppParams) {
     return this.send.fundAppAccount(params)
@@ -705,6 +745,10 @@ export class AppClient {
   /**
    * Returns raw global state for the current app.
    * @returns The global state
+   * @example
+   * ```typescript
+   * const globalState = await appClient.getGlobalState()
+   * ```
    */
   public async getGlobalState(): Promise<AppState> {
     return await this._algorand.app.getGlobalState(this.appId)
@@ -714,6 +758,10 @@ export class AppClient {
    * Returns raw local state for the given account address.
    * @param address The address of the account to get the local state for
    * @returns The local state
+   * @example
+   * ```typescript
+   * const localState = await appClient.getLocalState('ACCOUNT_ADDRESS')
+   * ```
    */
   public async getLocalState(address: Address | string): Promise<AppState> {
     return await this._algorand.app.getLocalState(this.appId, address)
@@ -722,6 +770,10 @@ export class AppClient {
   /**
    * Returns the names of all current boxes for the current app.
    * @returns The names of the boxes
+   * @example
+   * ```typescript
+   * const boxNames = await appClient.getBoxNames()
+   * ```
    */
   public async getBoxNames(): Promise<BoxName[]> {
     return await this._algorand.app.getBoxNames(this.appId)
@@ -731,6 +783,10 @@ export class AppClient {
    * Returns the value of the given box for the current app.
    * @param name The identifier of the box to return
    * @returns The current box value as a byte array
+   * @example
+   * ```typescript
+   * const boxValue = await appClient.getBoxValue('boxName')
+   * ```
    */
   public async getBoxValue(name: BoxIdentifier): Promise<Uint8Array> {
     return await this._algorand.app.getBoxValue(this.appId, name)
@@ -741,6 +797,10 @@ export class AppClient {
    * @param name The identifier of the box to return
    * @param type
    * @returns The current box value as a byte array
+   * @example
+   * ```typescript
+   * const boxValue = await appClient.getBoxValueFromABIType('boxName', new ABIUintType(32))
+   * ```
    */
   public async getBoxValueFromABIType(name: BoxIdentifier, type: ABIType): Promise<ABIValue> {
     return await this._algorand.app.getBoxValueFromABIType({
@@ -755,6 +815,10 @@ export class AppClient {
    * Note: This will issue multiple HTTP requests (one per box) and it's not an atomic operation so values may be out of sync.
    * @param filter Optional filter to filter which boxes' values are returned
    * @returns The (name, value) pair of the boxes with values as raw byte arrays
+   * @example
+   * ```typescript
+   * const boxValues = await appClient.getBoxValues()
+   * ```
    */
   public async getBoxValues(filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: Uint8Array }[]> {
     const names = (await this.getBoxNames()).filter(filter ?? ((_) => true))
@@ -771,6 +835,10 @@ export class AppClient {
    * @param type The ABI type to decode the values with
    * @param filter Optional filter to filter which boxes' values are returned
    * @returns The (name, value) pair of the boxes with values as the ABI Value
+   * @example
+   * ```typescript
+   * const boxValues = await appClient.getBoxValuesFromABIType(new ABIUintType(32))
+   * ```
    */
   public async getBoxValuesFromABIType(type: ABIType, filter?: (name: BoxName) => boolean): Promise<{ name: BoxName; value: ABIValue }[]> {
     const names = (await this.getBoxNames()).filter(filter ?? ((_) => true))
@@ -869,6 +937,8 @@ export class AppClient {
    * If no TEAL templates provided it will use any byte code provided in the app spec.
    *
    * Will store any generated source maps for later use in debugging.
+   * @param compilation Any compilation parameters to use
+   * @returns The compiled code and any compilation results (including source maps)
    */
   public async compile(compilation?: AppClientCompilationParams) {
     const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)
@@ -971,7 +1041,9 @@ export class AppClient {
    *
    * Will store any generated source maps for later use in debugging.
    * @param appSpec The app spec for the app
+   * @param appManager The app manager to use for compilation
    * @param compilation Any compilation parameters to use
+   * @returns The compiled code and any compilation results (including source maps)
    */
   public static async compile(
     appSpec: Arc56Contract,
@@ -1199,7 +1271,11 @@ export class AppClient {
 
   private getMethodCallParamsMethods() {
     return {
-      /** Return params for a payment transaction to fund the app account */
+      /**
+       * Return params for a payment transaction to fund the app account
+       * @param params The parameters for the fund app accont payment transaction
+       * @returns The parameters which can be used to create a fund app account payment transaction
+       */
       fundAppAccount: (params: FundAppParams) => {
         return {
           ...params,
@@ -1208,7 +1284,11 @@ export class AppClient {
           receiver: this.appAddress,
         } satisfies PaymentParams
       },
-      /** Return params for an update ABI call, including deploy-time TEAL template replacements and compilation if provided */
+      /**
+       * Return params for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       * @param params The parameters for the update ABI method call
+       * @returns The parameters which can be used to create an update ABI method call
+       */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
         return (await this.getABIParams(
           {
@@ -1218,19 +1298,33 @@ export class AppClient {
           OnApplicationComplete.UpdateApplicationOC,
         )) satisfies AppUpdateMethodCall
       },
-      /** Return params for an opt-in ABI call */
+      /**
+       * Return params for an opt-in ABI call
+       * @param params The parameters for the opt-in ABI method call
+       * @returns The parameters which can be used to create an opt-in ABI method call
+       */
       optIn: async (params: AppClientMethodCallParams) => {
         return (await this.getABIParams(params, OnApplicationComplete.OptInOC)) as AppCallMethodCall
       },
-      /** Return params for an delete ABI call */
+      /**
+       * Return params for an delete ABI call
+       * @param params The parameters for the delete ABI method call
+       * @returns The parameters which can be used to create a delete ABI method call
+       */
       delete: async (params: AppClientMethodCallParams) => {
         return (await this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC)) as AppDeleteMethodCall
       },
-      /** Return params for an close out ABI call */
+      /** Return params for an close out ABI call
+       * @param params The parameters for the close out ABI method call
+       * @returns The parameters which can be used to create a close out ABI method call
+       */
       closeOut: async (params: AppClientMethodCallParams) => {
         return (await this.getABIParams(params, OnApplicationComplete.CloseOutOC)) as AppCallMethodCall
       },
-      /** Return params for an ABI call */
+      /** Return params for an ABI call
+       * @param params The parameters for the ABI method call
+       * @returns The parameters which can be used to create an ABI method call
+       */
       call: async (params: AppClientMethodCallParams & CallOnComplete) => {
         return (await this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC)) as AppCallMethodCall
       },
@@ -1239,12 +1333,17 @@ export class AppClient {
 
   private getMethodCallSendMethods() {
     return {
-      /** Sign and send transactions for a payment transaction to fund the app account */
+      /** Sign and send transactions for a payment transaction to fund the app account
+       * @param params The parameters for the fund app account payment transaction
+       * @returns The result of send the fund app account payment transaction
+       */
       fundAppAccount: (params: FundAppParams & SendParams) => {
         return this._algorand.send.payment(this.params.fundAppAccount(params))
       },
       /**
        * Sign and send transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       * @param params The parameters for the update ABI method call
+       * @returns The result of sending the update ABI method call
        */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
         const compiled = await this.compile(params)
@@ -1260,6 +1359,8 @@ export class AppClient {
       },
       /**
        * Sign and send transactions for an opt-in ABI call
+       * @param params The parameters for the opt-in ABI method call
+       * @returns The result of sending the opt-in ABI method call
        */
       optIn: (params: AppClientMethodCallParams & SendParams) => {
         return this.handleCallErrors(async () =>
@@ -1271,6 +1372,8 @@ export class AppClient {
       },
       /**
        * Sign and send transactions for a delete ABI call
+       * @param params The parameters for the delete ABI method call
+       * @returns The result of sending the delete ABI method call
        */
       delete: (params: AppClientMethodCallParams & SendParams) => {
         return this.handleCallErrors(async () =>
@@ -1282,6 +1385,8 @@ export class AppClient {
       },
       /**
        * Sign and send transactions for a close out ABI call
+       * @param params The parameters for the close out ABI method call
+       * @returns The result of sending the close out ABI method call
        */
       closeOut: (params: AppClientMethodCallParams & SendParams) => {
         return this.handleCallErrors(async () =>
@@ -1293,6 +1398,8 @@ export class AppClient {
       },
       /**
        * Sign and send transactions for a call (defaults to no-op)
+       * @param params The parameters for the ABI method call
+       * @returns The result of sending the ABI method call
        */
       call: async (params: AppClientMethodCallParams & CallOnComplete & SendParams) => {
         // Read-only call - do it via simulate
@@ -1356,36 +1463,49 @@ export class AppClient {
 
   private getMethodCallCreateTransactionMethods() {
     return {
-      /** Return transaction for a payment transaction to fund the app account */
+      /** Return transaction for a payment transaction to fund the app account
+       * @param params The parameters for the fund app account payment transaction
+       * @returns A transaction which can be used to fund the app account
+       */
       fundAppAccount: (params: FundAppParams) => {
         return this._algorand.createTransaction.payment(this.params.fundAppAccount(params))
       },
       /**
        * Return transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       * @param params The parameters for the update ABI method call
+       * @returns The transactions which can be used to create an update ABI method call
        */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
         return this._algorand.createTransaction.appUpdateMethodCall(await this.params.update(params))
       },
       /**
        * Return transactions for an opt-in ABI call
+       * @param params The parameters for the opt-in ABI method call
+       * @returns The transactions which can be used to create an opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams) => {
         return this._algorand.createTransaction.appCallMethodCall(await this.params.optIn(params))
       },
       /**
        * Return transactions for a delete ABI call
+       * @param params The parameters for the delete ABI method call
+       * @returns The transactions which can be used to create a delete ABI method call
        */
       delete: async (params: AppClientMethodCallParams) => {
         return this._algorand.createTransaction.appDeleteMethodCall(await this.params.delete(params))
       },
       /**
        * Return transactions for a close out ABI call
+       * @param params The parameters for the close out ABI method call
+       * @returns The transactions which can be used to create a close out ABI method call
        */
       closeOut: async (params: AppClientMethodCallParams) => {
         return this._algorand.createTransaction.appCallMethodCall(await this.params.closeOut(params))
       },
       /**
        * Return transactions for an ABI call (defaults to no-op)
+       * @param params The parameters for the ABI method call
+       * @returns The transactions which can be used to create an ABI method call
        */
       call: async (params: AppClientMethodCallParams & CallOnComplete) => {
         return this._algorand.createTransaction.appCallMethodCall(await this.params.call(params))

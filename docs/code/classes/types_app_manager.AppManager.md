@@ -104,9 +104,15 @@ This function is re-entrant; it will only compile the same code once.
 
 The information about the compiled file
 
+**`Example`**
+
+```typescript
+const compiled = await appManager.compileTeal(tealProgram)
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L121)
+[src/types/app-manager.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L125)
 
 ___
 
@@ -138,9 +144,15 @@ if deployment metadata is specified.
 
 The information about the compiled code
 
+**`Example`**
+
+```typescript
+const compiled = await appManager.compileTealTemplate(tealTemplate, { TMPL_APP_ID: 12345n }, { updatable: true, deletable: false })
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L153)
+[src/types/app-manager.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L161)
 
 ___
 
@@ -162,9 +174,15 @@ Returns the names of the current boxes for the given app.
 
 The current box names
 
+**`Example`**
+
+```typescript
+const boxNames = await appManager.getBoxNames(12353n);
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:239](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L239)
+[src/types/app-manager.ts:263](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L263)
 
 ___
 
@@ -187,9 +205,15 @@ Returns the value of the given box name for the given app.
 
 The current box value as a byte array
 
+**`Example`**
+
+```typescript
+const boxValue = await appManager.getBoxValue(12353n, 'boxName');
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:256](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L256)
+[src/types/app-manager.ts:284](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L284)
 
 ___
 
@@ -211,9 +235,15 @@ Returns the value of the given box name for the given app decoded based on the g
 
 The current box value as an ABI value
 
+**`Example`**
+
+```typescript
+const boxValue = await appManager.getBoxValueFromABIType({ appId: 12353n, boxName: 'boxName', type: new ABIUintType(32) });
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:278](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L278)
+[src/types/app-manager.ts:314](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L314)
 
 ___
 
@@ -236,9 +266,15 @@ Returns the value of the given box names for the given app.
 
 The current box values as a byte array in the same order as the passed in box names
 
+**`Example`**
+
+```typescript
+const boxValues = await appManager.getBoxValues(12353n, ['boxName1', 'boxName2']);
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L269)
+[src/types/app-manager.ts:301](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L301)
 
 ___
 
@@ -260,9 +296,15 @@ Returns the value of the given box names for the given app decoded based on the 
 
 The current box values as an ABI value in the same order as the passed in box names
 
+**`Example`**
+
+```typescript
+const boxValues = await appManager.getBoxValuesFromABIType({ appId: 12353n, boxNames: ['boxName1', 'boxName2'], type: new ABIUintType(32) });
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:289](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L289)
+[src/types/app-manager.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L329)
 
 ___
 
@@ -292,7 +334,7 @@ const appInfo = await appManager.getById(12353n);
 
 #### Defined in
 
-[src/types/app-manager.ts:190](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L190)
+[src/types/app-manager.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L202)
 
 ___
 
@@ -315,9 +357,15 @@ Returns a previous compilation result.
 The information about the previously compiled file
  or `undefined` if that TEAL code wasn't previously compiled
 
+**`Example`**
+
+```typescript
+const compiled = appManager.getCompilationResult(tealProgram)
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L175)
+[src/types/app-manager.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L187)
 
 ___
 
@@ -339,9 +387,15 @@ Returns the current global state values for the given app ID and account address
 
 The current global state for the given app
 
+**`Example`**
+
+```typescript
+const globalState = await appManager.getGlobalState(12353n);
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L213)
+[src/types/app-manager.ts:229](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L229)
 
 ___
 
@@ -364,9 +418,15 @@ Returns the current local state values for the given app ID and account address
 
 The current local state for the given (app, account) combination
 
+**`Example`**
+
+```typescript
+const localState = await appManager.getLocalState(12353n, 'ACCOUNTADDRESS');
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L224)
+[src/types/app-manager.ts:244](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L244)
 
 ___
 
@@ -389,9 +449,15 @@ generic object keyed by the UTF-8 value of the key.
 
 An object keyeed by the UTF-8 representation of the key with various parsings of the values
 
+**`Example`**
+
+```typescript
+const stateValues = AppManager.decodeAppState(state);
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L313)
+[src/types/app-manager.ts:361](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L361)
 
 ___
 
@@ -414,9 +480,15 @@ Returns any ABI return values for the given app call arguments and transaction c
 
 The return value for the method call
 
+**`Example`**
+
+```typescript
+const returnValue = AppManager.getABIReturn(confirmation, ABIMethod.fromSignature('hello(string)void'));
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L362)
+[src/types/app-manager.ts:414](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L414)
 
 ___
 
@@ -438,9 +510,15 @@ Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
 
 The box reference ready to pass into a `algosdk.Transaction`
 
+**`Example`**
+
+```typescript
+const boxRef = AppManager.getBoxReference('boxName');
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:299](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L299)
+[src/types/app-manager.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L343)
 
 ___
 
@@ -471,9 +549,15 @@ Note: If these values are defined, but the corresponding `TMPL_*` value
 
 The replaced TEAL code
 
+**`Example`**
+
+```typescript
+const tealCode = AppManager.replaceTealTemplateDeployTimeControlParams(tealTemplate, { updatable: true, deletable: false });
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L392)
+[src/types/app-manager.ts:448](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L448)
 
 ___
 
@@ -498,9 +582,15 @@ Looks for `TMPL_{parameter}` for template replacements.
 
 The TEAL code with replacements
 
+**`Example`**
+
+```typescript
+const tealCode = AppManager.replaceTealTemplateParams(tealTemplate, { TMPL_APP_ID: 12345n });
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:423](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L423)
+[src/types/app-manager.ts:483](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L483)
 
 ___
 
@@ -522,6 +612,12 @@ Remove comments from TEAL code (useful to reduce code size before compilation).
 
 The TEAL without comments
 
+**`Example`**
+
+```typescript
+const stripped = AppManager.stripTealComments(tealProgram);
+```
+
 #### Defined in
 
-[src/types/app-manager.ts:458](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L458)
+[src/types/app-manager.ts:522](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L522)

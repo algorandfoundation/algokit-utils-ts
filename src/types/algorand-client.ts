@@ -44,6 +44,10 @@ export class AlgorandClient {
    * Sets the default validity window for transactions.
    * @param validityWindow The number of rounds between the first and last valid rounds
    * @returns The `AlgorandClient` so method calls can be chained
+   * @example
+   * ```typescript
+   * const algorand = AlgorandClient.mainNet().setDefaultValidityWindow(1000);
+   * ```
    */
   public setDefaultValidityWindow(validityWindow: number | bigint) {
     this._defaultValidityWindow = BigInt(validityWindow)
@@ -54,6 +58,11 @@ export class AlgorandClient {
    * Sets the default signer to use if no other signer is specified.
    * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
    * @returns The `AlgorandClient` so method calls can be chained
+   * @example
+   * ```typescript
+   * const signer = new SigningAccount(account, account.addr)
+   * const algorand = AlgorandClient.mainNet().setDefaultSigner(signer)
+   * ```
    */
   public setDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AlgorandClient {
     this._accountManager.setDefaultSigner(signer)
@@ -66,18 +75,16 @@ export class AlgorandClient {
    *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
    * @example
    * ```typescript
-   * const accountManager = AlgorandClient.mainnet()
+   * const accountManager = AlgorandClient.mainNet()
    *  .setSignerFromAccount(algosdk.generateAccount())
    *  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
-   *  .setSignerFromAccount(new SigningAccount(mnemonic, sender))
+   *  .setSignerFromAccount(new SigningAccount(account, sender))
    *  .setSignerFromAccount(new MultisigAccount({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]}, [account1, account2]))
    *  .setSignerFromAccount({addr: "SENDERADDRESS", signer: transactionSigner})
    * ```
    * @returns The `AlgorandClient` so method calls can be chained
    */
-  public setSignerFromAccount(
-    account: TransactionSignerAccount | TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount,
-  ) {
+  public setSignerFromAccount(account: TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
     this._accountManager.setSignerFromAccount(account)
     return this
   }
@@ -87,6 +94,11 @@ export class AlgorandClient {
    * @param sender The sender address to use this signer for
    * @param signer The signer to sign transactions with for the given sender
    * @returns The `AlgorandClient` so method calls can be chained
+   * @example
+   * ```typescript
+   * const signer = new SigningAccount(account, account.addr)
+   * const algorand = AlgorandClient.mainNet().setSigner(signer.addr, signer.signer)
+   * ```
    */
   public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
     this._accountManager.setSigner(sender, signer)
@@ -98,6 +110,10 @@ export class AlgorandClient {
    * @param suggestedParams The suggested params to use
    * @param until A date until which to cache, or if not specified then the timeout is used
    * @returns The `AlgorandClient` so method calls can be chained
+   * @example
+   * ```typescript
+   * const algorand = AlgorandClient.mainNet().setSuggestedParamsCache(suggestedParams, new Date(+new Date() + 3_600_000))
+   * ```
    */
   public setSuggestedParamsCache(suggestedParams: algosdk.SuggestedParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
@@ -109,13 +125,22 @@ export class AlgorandClient {
    * Sets the timeout for caching suggested params.
    * @param timeout The timeout in milliseconds
    * @returns The `AlgorandClient` so method calls can be chained
+   * @example
+   * ```typescript
+   * const algorand = AlgorandClient.mainNet().setSuggestedParamsCacheTimeout(10_000)
+   * ```
    */
   public setSuggestedParamsCacheTimeout(timeout: number) {
     this._cachedSuggestedParamsTimeout = timeout
     return this
   }
 
-  /** Get suggested params for a transaction (either cached or from algod if the cache is stale or empty) */
+  /**
+   * Get suggested params for a transaction (either cached or from algod if the cache is stale or empty)
+   * @returns The suggested transaction parameters.
+   * @example
+   * const params = await AlgorandClient.mainNet().getSuggestedParams();
+   */
   public async getSuggestedParams(): Promise<algosdk.SuggestedParams> {
     if (this._cachedSuggestedParams && (!this._cachedSuggestedParamsExpiry || this._cachedSuggestedParamsExpiry > new Date())) {
       return {
@@ -131,32 +156,63 @@ export class AlgorandClient {
     }
   }
 
-  /** Get clients, including algosdk clients and app clients. */
+  /**
+   * Get clients, including algosdk clients and app clients.
+   * @returns The `ClientManager` instance.
+   * @example
+   * const clientManager = AlgorandClient.mainNet().client;
+   */
   public get client() {
     return this._clientManager
   }
 
-  /** Get or create accounts that can sign transactions. */
+  /**
+   * Get or create accounts that can sign transactions.
+   * @returns The `AccountManager` instance.
+   * @example
+   * const accountManager = AlgorandClient.mainNet().account;
+   */
   public get account() {
     return this._accountManager
   }
 
-  /** Methods for interacting with assets. */
+  /**
+   * Methods for interacting with assets.
+   * @returns The `AssetManager` instance.
+   * @example
+   * const assetManager = AlgorandClient.mainNet().asset;
+   */
   public get asset() {
     return this._assetManager
   }
 
-  /** Methods for interacting with apps. */
+  /**
+   * Methods for interacting with apps.
+   * @returns The `AppManager` instance.
+   * @example
+   * const appManager = AlgorandClient.mainNet().app;
+   */
   public get app() {
     return this._appManager
   }
 
-  /** Methods for deploying apps and managing app deployment metadata. */
+  /**
+   * Methods for deploying apps and managing app deployment metadata.
+   * @returns The `AppDeployer` instance.
+   * @example
+   * const deployer = AlgorandClient.mainNet().appDeployer;
+   */
   public get appDeployer() {
     return this._appDeployer
   }
 
-  /** Start a new `TransactionComposer` transaction group */
+  /**
+   * Start a new `TransactionComposer` transaction group
+   * @returns A new instance of `TransactionComposer`.
+   * @example
+   * const composer = AlgorandClient.mainNet().newGroup();
+   * const result = await composer.addTransaction(payment).send()
+   */
   public newGroup() {
     return new TransactionComposer({
       algod: this.client.algod,
@@ -169,6 +225,13 @@ export class AlgorandClient {
 
   /**
    * Methods for sending a transaction.
+   * @returns The `AlgorandClientTransactionSender` instance.
+   * @example
+   * const result = await AlgorandClient.mainNet().send.payment({
+   *  sender: "SENDERADDRESS",
+   *  receiver: "RECEIVERADDRESS",
+   *  amount: algo(1)
+   * })
    */
   public get send() {
     return this._transactionSender
@@ -176,6 +239,13 @@ export class AlgorandClient {
 
   /**
    * Methods for creating a transaction.
+   * @returns The `AlgorandClientTransactionCreator` instance.
+   * @example
+   * const payment = await AlgorandClient.mainNet().createTransaction.payment({
+   *  sender: "SENDERADDRESS",
+   *  receiver: "RECEIVERADDRESS",
+   *  amount: algo(1)
+   * })
    */
   public get createTransaction() {
     return this._transactionCreator
@@ -184,8 +254,10 @@ export class AlgorandClient {
   // Static methods to create an `AlgorandClient`
 
   /**
-   * Returns an `AlgorandClient` pointing at default LocalNet ports and API token.
-   * @returns The `AlgorandClient`
+   * Creates an `AlgorandClient` pointing at default LocalNet ports and API token.
+   * @returns An instance of the `AlgorandClient`.
+   * @example
+   * const algorand = AlgorandClient.defaultLocalNet();
    */
   public static defaultLocalNet() {
     return new AlgorandClient({
@@ -196,8 +268,10 @@ export class AlgorandClient {
   }
 
   /**
-   * Returns an `AlgorandClient` pointing at TestNet using AlgoNode.
-   * @returns The `AlgorandClient`
+   * Creates an `AlgorandClient` pointing at TestNet using AlgoNode.
+   * @returns An instance of the `AlgorandClient`.
+   * @example
+   * const algorand = AlgorandClient.testNet();
    */
   public static testNet() {
     return new AlgorandClient({
@@ -208,8 +282,10 @@ export class AlgorandClient {
   }
 
   /**
-   * Returns an `AlgorandClient` pointing at MainNet using AlgoNode.
-   * @returns The `AlgorandClient`
+   * Creates an `AlgorandClient` pointing at MainNet using AlgoNode.
+   * @returns An instance of the `AlgorandClient`.
+   * @example
+   * const algorand = AlgorandClient.mainNet();
    */
   public static mainNet() {
     return new AlgorandClient({
@@ -220,16 +296,18 @@ export class AlgorandClient {
   }
 
   /**
-   * Returns an `AlgorandClient` pointing to the given client(s).
-   * @param clients The clients to use
-   * @returns The `AlgorandClient`
+   * Creates an `AlgorandClient` pointing to the given client(s).
+   * @param clients The clients to use.
+   * @returns An instance of the `AlgorandClient`.
+   * @example
+   * const algorand = AlgorandClient.fromClients({ algod, indexer, kmd });
    */
   public static fromClients(clients: AlgoSdkClients) {
     return new AlgorandClient(clients)
   }
 
   /**
-   * Returns an `AlgorandClient` loading the configuration from environment variables.
+   * Creates an `AlgorandClient` loading the configuration from environment variables.
    *
    * Retrieve configurations from environment variables when defined or get default LocalNet configuration if they aren't defined.
    *
@@ -243,16 +321,20 @@ export class AlgorandClient {
    *
    * It will return a KMD configuration that uses `process.env.KMD_PORT` (or port 4002) if `process.env.ALGOD_SERVER` is defined,
    * otherwise it will use the default LocalNet config unless it detects testnet or mainnet.
-   * @returns The `AlgorandClient`
+   * @returns An instance of the `AlgorandClient`.
+   * @example
+   * const client = AlgorandClient.fromEnvironment();
    */
   public static fromEnvironment() {
     return new AlgorandClient(ClientManager.getConfigFromEnvironmentOrLocalNet())
   }
 
   /**
-   * Returns an `AlgorandClient` from the given config.
-   * @param config The config to use
-   * @returns The `AlgorandClient`
+   * Creates  an `AlgorandClient` from the given config.
+   * @param config The config to use.
+   * @returns An instance of the `AlgorandClient`.
+   * @example
+   * const client = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig });
    */
   public static fromConfig(config: AlgoConfig) {
     return new AlgorandClient(config)

@@ -120,6 +120,10 @@ export class AppDeployer {
    * @param appManager An `AppManager` instance
    * @param transactionSender An `AlgorandClientTransactionSender` instance
    * @param indexer An optional indexer instance; supply if you want to indexer to look up app metadata
+   * @example
+   * ```ts
+   * const deployer = new AppDeployer(appManager, transactionSender, indexer)
+   * ```
    */
   constructor(appManager: AppManager, transactionSender: AlgorandClientTransactionSender, indexer?: algosdk.Indexer) {
     this._appManager = appManager
@@ -138,7 +142,32 @@ export class AppDeployer {
    *
    * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
    * @param deployment The arguments to control the app deployment
-   * @returns The app reference of the new/existing app
+   * @returns The result of the deployment
+   * @example
+   * ```ts
+   * const deployResult = await deployer.deploy({
+   *   createParams: {
+   *     sender: 'SENDER_ADDRESS',
+   *     approvalProgram: 'APPROVAL PROGRAM',
+   *     clearStateProgram: 'CLEAR PROGRAM',
+   *     schema: {
+   *       globalByteSlices: 0,
+   *       globalInts: 0,
+   *       localByteSlices: 0,
+   *       localInts: 0
+   *     }
+   *   },
+   *   updateParams: {
+   *     sender: 'SENDER_ADDRESS'
+   *   },
+   *   deleteParams: {
+   *     sender: 'SENDER_ADDRESS'
+   *   },
+   *   metadata: { name: 'my_app', version: '2.0', updatable: false, deletable: false },
+   *   onSchemaBreak: 'append',
+   *   onUpdate: 'append'
+   *  })
+   * ```
    */
   async deploy(deployment: AppDeployParams): Promise<AppDeployResult> {
     const {
@@ -459,6 +488,9 @@ export class AppDeployer {
    * @param creatorAddress The address of the account that is the creator of the apps you want to search for
    * @param ignoreCache Whether or not to ignore the cache and force a lookup, default: use the cache
    * @returns A name-based lookup of the app metadata
+   * @example
+   * ```ts
+   * const result = await deployer.getCreatorAppsByName(creator)
    */
   async getCreatorAppsByName(creatorAddress: string | Address, ignoreCache?: boolean): Promise<AppLookup> {
     const appLookup: Record<string, AppMetadata> = {}

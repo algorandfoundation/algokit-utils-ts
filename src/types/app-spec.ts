@@ -4,6 +4,15 @@ import ABIContractParams = algosdk.ABIContractParams
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIMethod = algosdk.ABIMethod
 
+/**
+ * Converts an ARC-32 Application Specification to an ARC-56 Contract
+ * @param appSpec The ARC-32 Application Specification
+ * @returns The ARC-56 Contract
+ * @example
+ * ```typescript
+ * const arc56AppSpec = arc32ToArc56(arc32AppSpec)
+ * ```
+ */
 export function arc32ToArc56(appSpec: AppSpec): Arc56Contract {
   const arc32Structs = Object.values(appSpec.hints).flatMap((hint) => Object.entries(hint.structs ?? {}))
   const structs = Object.fromEntries(
