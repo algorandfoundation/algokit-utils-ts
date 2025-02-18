@@ -57,7 +57,8 @@
     "semver": "7.5.2",
     "braces": "3.0.3",
     "micromatch": "4.0.8",
-    "cross-spawn": "^7.0.6"
+    "cross-spawn": "^7.0.6",
+    "esbuild": "0.25.0"
   },
   "dependencies": {
     "buffer": "^6.0.3"
