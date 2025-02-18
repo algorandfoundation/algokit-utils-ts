@@ -21,8 +21,6 @@ import {
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import Transaction = algosdk.Transaction
 
-//
-
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>
     typeof a === 'object'
@@ -44,6 +42,11 @@ export class AlgorandClientTransactionSender {
    * Creates a new `AlgorandClientSender`
    * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @param assetManager An `AssetManager` instance
+   * @param appManager An `AppManager` instance
+   * @example
+   * ```typescript
+   * const transactionSender = new AlgorandClientTransactionSender(() => new TransactionComposer(), assetManager, appManager)
+   * ```
    */
   constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
     this._newGroup = newGroup
@@ -51,6 +54,13 @@ export class AlgorandClientTransactionSender {
     this._appManager = appManager
   }
 
+  /**
+   * Start a new `TransactionComposer` transaction group
+   * @returns A new instance of `TransactionComposer`.
+   * @example
+   * const composer = AlgorandClient.mainNet().send.newGroup();
+   * const result = await composer.addTransaction(payment).send()
+   */
   newGroup() {
     return this._newGroup()
   }
@@ -189,8 +199,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   *
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the payment transaction and the transaction that was sent
    */
   payment = this._send((c) => c.addPayment, {
     preLog: (params, transaction) =>
@@ -206,7 +215,7 @@ export class AlgorandClientTransactionSender {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.send.assetCreate({sender: "CREATORADDRESS", total: 100n})
+   * await algorand.send.assetCreate({ sender: "CREATORADDRESS", total: 100n})
    * ```
    * @example Advanced example
    * ```typescript
@@ -241,7 +250,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the asset create transaction and the transaction that was sent
    */
   assetCreate = async (params: AssetCreateParams & SendParams) => {
     const result = await this._send((c) => c.addAssetCreate, {
@@ -261,7 +270,7 @@ export class AlgorandClientTransactionSender {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.send.assetConfig({sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+   * await algorand.send.assetConfig({ sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
    * ```
    * @example Advanced example
    * ```typescript
@@ -290,7 +299,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the asset config transaction and the transaction that was sent
    */
   assetConfig = this._send((c) => c.addAssetConfig, {
     preLog: (params, transaction) => `Configuring asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
@@ -302,7 +311,7 @@ export class AlgorandClientTransactionSender {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.send.assetFreeze({sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+   * await algorand.send.assetFreeze({ sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
    * ```
    * @example Advanced example
    * ```typescript
@@ -329,7 +338,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the asset freeze transaction and the transaction that was sent
    */
   assetFreeze = this._send((c) => c.addAssetFreeze, {
     preLog: (params, transaction) => `Freezing asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
@@ -345,7 +354,7 @@ export class AlgorandClientTransactionSender {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.send.assetDestroy({sender: "MANAGERADDRESS", assetId: 123456n })
+   * await algorand.send.assetDestroy({ sender: "MANAGERADDRESS", assetId: 123456n })
    * ```
    * @example Advanced example
    * ```typescript
@@ -370,7 +379,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the asset destroy transaction and the transaction that was sent
    */
   assetDestroy = this._send((c) => c.addAssetDestroy, {
     preLog: (params, transaction) => `Destroying asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
@@ -382,7 +391,7 @@ export class AlgorandClientTransactionSender {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.send.assetTransfer({sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+   * await algorand.send.assetTransfer({ sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
    * ```
    * @example Advanced example (with clawback)
    * ```typescript
@@ -412,7 +421,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the asset transfer transaction and the transaction that was sent
    */
   assetTransfer = this._send((c) => c.addAssetTransfer, {
     preLog: (params, transaction) =>
@@ -425,7 +434,7 @@ export class AlgorandClientTransactionSender {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.send.assetOptIn({sender: "SENDERADDRESS", assetId: 123456n })
+   * await algorand.send.assetOptIn({ sender: "SENDERADDRESS", assetId: 123456n })
    * ```
    * @example Advanced example
    * ```typescript
@@ -450,7 +459,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the asset opt-in transaction and the transaction that was sent
    */
   assetOptIn = this._send((c) => c.addAssetOptIn, {
     preLog: (params, transaction) => `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
@@ -466,11 +475,11 @@ export class AlgorandClientTransactionSender {
    *
    * @example Basic example (without creator, will be retrieved from algod)
    * ```typescript
-   * await algorand.send.assetOptOut({sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
+   * await algorand.send.assetOptOut({ sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
    * ```
    * @example Basic example (with creator)
    * ```typescript
-   * await algorand.send.assetOptOut({sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n, ensureZeroBalance: true })
+   * await algorand.send.assetOptOut({ sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n, ensureZeroBalance: true })
    * ```
    * @example Advanced example
    * ```typescript
@@ -497,7 +506,7 @@ export class AlgorandClientTransactionSender {
    *   suppressLog: true,
    * })
    * ```
-   * @returns The result of the transaction and the transaction that was sent
+   * @returns The result of the asset opt-out transaction and the transaction that was sent
    */
   assetOptOut = async (
     params: Omit<AssetOptOutParams, 'creator'> & {
@@ -580,6 +589,7 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the app create transaction and the transaction that was sent
    */
   appCreate = this._sendAppCreateCall((c) => c.addAppCreate, {
     postLog: (params, result) =>
@@ -626,6 +636,7 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the app update transaction and the transaction that was sent
    */
   appUpdate = this._sendAppUpdateCall((c) => c.addAppUpdate, {
     postLog: (params, result) =>
@@ -670,6 +681,7 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the app delete transaction and the transaction that was sent
    */
   appDelete = this._sendAppCall((c) => c.addAppDelete, {
     postLog: (params, result) =>
@@ -714,6 +726,7 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the app call transaction and the transaction that was sent
    */
   appCall = this._sendAppCall((c) => c.addAppCall, {
     postLog: (params, result) =>
@@ -743,7 +756,7 @@ export class AlgorandClientTransactionSender {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.send.appCreate({
+   * await algorand.send.appCreateMethodCall({
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
@@ -780,6 +793,7 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the application ABI method create transaction and the transaction that was sent
    */
   appCreateMethodCall = this._sendAppCreateCall((c) => c.addAppCreateMethodCall, {
     postLog: (params, result) =>
@@ -838,6 +852,7 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the application ABI method update transaction and the transaction that was sent
    */
   appUpdateMethodCall = this._sendAppUpdateCall((c) => c.addAppUpdateMethodCall, {
     postLog: (params, result) =>
@@ -894,6 +909,7 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the application ABI method delete transaction and the transaction that was sent
    */
   appDeleteMethodCall = this._sendAppCall((c) => c.addAppDeleteMethodCall, {
     postLog: (params, result) =>
@@ -950,18 +966,87 @@ export class AlgorandClientTransactionSender {
    *  suppressLog: true,
    *})
    * ```
+   * @returns The result of the application ABI method call transaction and the transaction that was sent
    */
   appCallMethodCall = this._sendAppCall((c) => c.addAppCallMethodCall, {
     postLog: (params, result) =>
       `App ${params.appId} called with ${getMethodCallForLog(params)} by ${params.sender} via transaction ${result.txIds.at(-1)}`,
   })
 
-  /** Register an online key. */
+  /**
+   * Register an online key.
+   * @param params The parameters for the key registration transaction
+   * @example Basic example
+   * ```typescript
+   * const result = await algorand.send.onlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+   *   selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+   *   stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+   *   voteFirst: 1n,
+   *   voteLast: 1000n,
+   *   voteKeyDilution: 1n,
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const result = await algorand.send.onlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+   *   selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+   *   stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+   *   voteFirst: 1n,
+   *   voteLast: 1000n,
+   *   voteKeyDilution: 1n,
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+   *   rekeyTo: 'REKEYTOADDRESS',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
+   * @returns The result of the online key registration transaction and the transaction that was sent
+   */
   onlineKeyRegistration = this._send((c) => c.addOnlineKeyRegistration, {
     preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${transaction.txID()}`,
   })
 
-  /** Register an offline key. */
+  /**
+   * Register an offline key.
+   * @param params The parameters for the key registration transaction
+   * @example Basic example
+   * ```typescript
+   * const result = await algorand.send.offlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const result = await algorand.send.offlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+   *   rekeyTo: 'REKEYTOADDRESS',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
+   * @returns The result of the offline key registration transaction and the transaction that was sent
+   */
   offlineKeyRegistration = this._send((c) => c.addOfflineKeyRegistration, {
     preLog: (params, transaction) => `Registering offline key for ${params.sender} via transaction ${transaction.txID()}`,
   })

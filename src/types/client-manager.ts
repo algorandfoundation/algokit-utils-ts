@@ -86,23 +86,37 @@ export class ClientManager {
     this._algorand = algorandClient
   }
 
-  /** Returns an algosdk Algod API client. */
+  /**
+   * Returns an algosdk Algod API client.
+   * @returns The Algod client
+   */
   public get algod(): algosdk.Algodv2 {
     return this._algod
   }
 
-  /** Returns an algosdk Indexer API client or throws an error if it's not been provided. */
+  /**
+   * Returns an algosdk Indexer API client or throws an error if it's not been provided.
+   * @returns The Indexer client
+   * @throws Error if no Indexer client is configured
+   */
   public get indexer(): algosdk.Indexer {
     if (!this._indexer) throw new Error('Attempt to use Indexer client in AlgoKit instance with no Indexer configured')
     return this._indexer
   }
 
-  /** Returns an algosdk Indexer API client or `undefined` if it's not been provided. */
+  /**
+   * Returns an algosdk Indexer API client or `undefined` if it's not been provided.
+   * @returns The Indexer client or `undefined`
+   */
   public get indexerIfPresent(): algosdk.Indexer | undefined {
     return this._indexer
   }
 
-  /** Returns an algosdk KMD API client or throws an error if it's not been provided. */
+  /**
+   * Returns an algosdk KMD API client or throws an error if it's not been provided.
+   * @returns The KMD client
+   * @throws Error if no KMD client is configured
+   */
   public get kmd(): algosdk.Kmd {
     if (!this._kmd) throw new Error('Attempt to use Kmd client in AlgoKit instance with no Kmd configured')
     return this._kmd
@@ -137,6 +151,10 @@ export class ClientManager {
    * Returns true if the given network genesisId is associated with a LocalNet network.
    * @param genesisId The network genesis ID
    * @returns Whether the given genesis ID is associated with a LocalNet network
+   * @example
+   * ```typescript
+   * const isLocalNet = ClientManager.genesisIdIsLocalNet('testnet-v1.0')
+   * ```
    */
   public static genesisIdIsLocalNet(genesisId: string) {
     return genesisIdIsLocalNet(genesisId)
@@ -145,6 +163,10 @@ export class ClientManager {
   /**
    * Returns true if the current network is LocalNet.
    * @returns True if the current network is LocalNet.
+   * @example
+   * ```typescript
+   * const isLocalNet = await clientManager.isLocalNet()
+   * ```
    */
   public async isLocalNet() {
     return (await this.network()).isLocalNet
@@ -153,6 +175,10 @@ export class ClientManager {
   /**
    * Returns true if the current network is TestNet.
    * @returns True if the current network is TestNet.
+   * @example
+   * ```typescript
+   * const isTestNet = await clientManager.isTestNet()
+   * ```
    */
   public async isTestNet() {
     return (await this.network()).isTestNet
@@ -161,6 +187,10 @@ export class ClientManager {
   /**
    * Returns true if the current network is MainNet.
    * @returns True if the current network is MainNet.
+   * @example
+   * ```typescript
+   * const isMainNet = await clientManager.isMainNet()
+   * ```
    */
   public async isMainNet() {
     return (await this.network()).isMainNet
@@ -207,15 +237,16 @@ export class ClientManager {
 
   /**
    * Returns a new `AppFactory` client
+   * @param params The parameters to create the app factory
    * @example Basic example
    * ```typescript
-   * const factory = algorand.client.getAppFactory({
+   * const factory = clientManager.getAppFactory({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\/}',
    * })
    * ```
    * @example Advanced example
    * ```typescript
-   * const factory = algorand.client.getAppFactory({
+   * const factory = clientManager.getAppFactory({
    *   appSpec: parsedAppSpec_AppSpec_or_Arc56Contract,
    *   defaultSender: "SENDERADDRESS",
    *   appName: "OverriddenAppName",
@@ -225,6 +256,7 @@ export class ClientManager {
    *   deployTimeParams: { ONE: 1, TWO: 'value' }
    * })
    * ```
+   * @returns The `AppFactory` instance
    */
   public getAppFactory(params: ClientAppFactoryParams) {
     if (!this._algorand) {
@@ -241,13 +273,13 @@ export class ClientManager {
    * @param params The parameters to create the app client
    * @example Basic
    * ```typescript
-   * const appClient = algorand.client.getAppClientByCreatorAndName({
+   * const appClient = clientManager.getAppClientByCreatorAndName({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   // appId resolved by looking for app ID of named app by this creator
    *   creatorAddress: 'CREATORADDRESS',
    * })
    * ```
-   * @returns The `AppClient`
+   * @returns The `AppClient` instance
    */
   public getAppClientByCreatorAndName(params: ClientResolveAppClientByCreatorAndNameParams) {
     if (!this._algorand) {
@@ -265,12 +297,12 @@ export class ClientManager {
    * @param params The parameters to create the app client
    * @example Basic
    * ```typescript
-   * const appClient = algorand.client.getAppClientById({
+   * const appClient = clientManager.getAppClientById({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   appId: 12345n,
    * })
    * ```
-   * @returns The `AppClient`
+   * @returns The `AppClient` instance
    */
   public getAppClientById(params: ClientAppClientParams) {
     if (!this._algorand) {
@@ -288,12 +320,12 @@ export class ClientManager {
    * @param params The parameters to create the app client
    * @example Basic
    * ```typescript
-   * const appClient = algorand.client.getAppClientByNetwork({
+   * const appClient = clientManager.getAppClientByNetwork({
    *   appSpec: '{/* ARC-56 or ARC-32 compatible JSON *\}',
    *   // appId resolved by using ARC-56 spec to find app ID for current network
    * })
    * ```
-   * @returns The `AppClient`
+   * @returns The `AppClient` instance
    */
   public async getAppClientByNetwork(params: ClientAppClientByNetworkParams) {
     if (!this._algorand) {
@@ -308,14 +340,14 @@ export class ClientManager {
    * @param params The params to resolve the app by creator address and name
    * @example Use name in ARC-32 / ARC-56 app spec
    * ```typescript
-   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   * const appClient = clientManager.getTypedAppClientByCreatorAndName(MyContractClient, {
    *   creatorAddress: "CREATORADDRESS",
    *   defaultSender: alice,
    * })
    * ```
    * @example Specify name
    * ```typescript
-   * const appClient = algorand.client.getTypedAppClientByCreatorAndName(MyContractClient, {
+   * const appClient = clientManager.getTypedAppClientByCreatorAndName(MyContractClient, {
    *   creatorAddress: "CREATORADDRESS",
    *   name: "contract-name",
    *   defaultSender: alice,
@@ -340,7 +372,7 @@ export class ClientManager {
    * @param params The params to resolve the app by ID
    * @example
    * ```typescript
-   * const appClient = algorand.client.getTypedAppClientById(MyContractClient, {
+   * const appClient = clientManager.getTypedAppClientById(MyContractClient, {
    *   appId: 12345n,
    *   defaultSender: alice,
    * })
@@ -367,7 +399,7 @@ export class ClientManager {
    * @param params The params to resolve the app by network
    * @example
    * ```typescript
-   * const appClient = algorand.client.getTypedAppClientByNetwork(MyContractClient, {
+   * const appClient = clientManager.getTypedAppClientByNetwork(MyContractClient, {
    *   defaultSender: alice,
    * })
    * ```
@@ -390,7 +422,7 @@ export class ClientManager {
    * @param params The params to resolve the factory by
    * @example
    * ```typescript
-   * const appFactory = algorand.client.getTypedAppFactory(MyContractClient, {
+   * const appFactory = clientManager.getTypedAppFactory(MyContractClient, {
    *   sender: alice,
    * })
    * ```
@@ -446,9 +478,16 @@ export class ClientManager {
     }
   }
 
-  /** Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment)
+  /**
+   * Retrieve the algod configuration from environment variables (expects to be called from a Node.js environment)
    *
    * Expects `process.env.ALGOD_SERVER` to be defined, and you can also specify `process.env.ALGOD_PORT` and `process.env.ALGOD_TOKEN`.
+   * @returns The Algod client configuration
+   * @throws Error if `process.env.ALGOD_SERVER` is not defined
+   * @example
+   * ```typescript
+   * const config = ClientManager.getAlgodConfigFromEnvironment()
+   * ```
    */
   public static getAlgodConfigFromEnvironment(): AlgoClientConfig {
     if (!process || !process.env) {
@@ -470,6 +509,12 @@ export class ClientManager {
    * Retrieve the indexer configuration from environment variables (expects to be called from a Node.js environment).
    *
    * Expects `process.env.INDEXER_SERVER` to be defined, and you can also specify `process.env.INDEXER_PORT` and `process.env.INDEXER_TOKEN`.
+   * @returns The Indexer client configuration
+   * @throws Error if `process.env.INDEXER_SERVER` is not defined
+   * @example
+   * ```typescript
+   * const config = ClientManager.getIndexerConfigFromEnvironment()
+   * ```
    */
   public static getIndexerConfigFromEnvironment(): AlgoClientConfig {
     if (!process || !process.env) {
@@ -491,6 +536,11 @@ export class ClientManager {
    *
    * @param network Which network to connect to - TestNet or MainNet
    * @param config Which algod config to return - Algod or Indexer
+   * @returns The AlgoNode client configuration
+   * @example
+   * ```typescript
+   * const config = ClientManager.getAlgoNodeConfig('testnet', 'algod')
+   * ```
    */
   public static getAlgoNodeConfig(network: 'testnet' | 'mainnet', config: 'algod' | 'indexer'): AlgoClientConfig {
     return {
@@ -502,6 +552,11 @@ export class ClientManager {
   /** Returns the Algorand configuration to point to the default LocalNet.
    *
    * @param configOrPort Which algod config to return - algod, kmd, or indexer OR a port number
+   * @returns The LocalNet client configuration
+   * @example
+   * ```typescript
+   * const config = ClientManager.getDefaultLocalNetConfig('algod')
+   * ```
    */
   public static getDefaultLocalNetConfig(configOrPort: 'algod' | 'indexer' | 'kmd' | number): AlgoClientConfig {
     return {
@@ -515,6 +570,7 @@ export class ClientManager {
    * Returns an algod SDK client that automatically retries on idempotent calls.
    *
    * @param config The config of the client
+   * @returns The Algod client
    * @example AlgoNode (testnet)
    * ```typescript
    *  const algod = ClientManager.getAlgodClient(ClientManager.getAlgoNodeConfig('testnet', 'algod'))
@@ -541,6 +597,7 @@ export class ClientManager {
   /**
    * Returns an algod SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
    *
+   * @returns The Algod client
    * @example
    *  ```typescript
    *  // Uses process.env.ALGOD_SERVER, process.env.ALGOD_PORT and process.env.ALGOD_TOKEN
@@ -556,6 +613,7 @@ export class ClientManager {
    * Returns an indexer SDK client that automatically retries on idempotent calls
    *
    * @param config The config of the client
+   * @returns The Indexer client
    * @example AlgoNode (testnet)
    * ```typescript
    *  const indexer = ClientManager.getIndexerClient(ClientManager.getAlgoNodeConfig('testnet', 'indexer'))
@@ -582,6 +640,7 @@ export class ClientManager {
   /**
    * Returns an indexer SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
    *
+   * @returns The Indexer client
    * @example
    *
    *  ```typescript
@@ -600,6 +659,7 @@ export class ClientManager {
    * KMD client allows you to export private keys, which is useful to (for instance) get the default account in a LocalNet network.
    *
    * @param config The config for the client
+   * @returns The KMD client
    * @example Custom (e.g. default LocalNet, although we recommend loading this into a .env and using the Default option instead)
    * ```typescript
    *  const kmd = ClientManager.getKmdClient({server: 'http://localhost', port: '4002', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
@@ -613,6 +673,7 @@ export class ClientManager {
   /**
    * Returns a KMD SDK client that automatically retries on idempotent calls loaded from environment variables (expects to be called from a Node.js environment).
    *
+   * @returns The KMD client
    * @example
    *  ```typescript
    *  // Uses process.env.ALGOD_SERVER, process.env.KMD_PORT (or if not specified: port 4002) and process.env.ALGOD_TOKEN

@@ -63,7 +63,7 @@ The next step is to get an `AlgorandClient` instance at the same place(s) you ha
 You can retrieve an algod / indexer / kmd object to avoid the need to immediately have to rewrite all of the old calls by accessing them from the `AlgorandClient` instance, e.g.:
 
 ```typescript
-const algorand = AlgorandClient.mainnet() // ... or whichever other method you want to get a client
+const algorand = AlgorandClient.mainNet() // ... or whichever other method you want to get a client
 const algod = algorand.client.algod
 // And if you need these...
 const indexer = algorand.client.indexer

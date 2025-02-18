@@ -37,6 +37,12 @@ This function has memoization, so will return the same transaction signer for a 
 
 A transaction signer
 
+**`Example`**
+
+```typescript
+const signer = getAccountTransactionSigner(account)
+```
+
 #### Defined in
 
-[src/types/account-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L31)
+[src/types/account-manager.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L35)

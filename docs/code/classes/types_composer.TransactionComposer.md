@@ -87,9 +87,11 @@ Create a `TransactionComposer`.
 
 [`TransactionComposer`](types_composer.TransactionComposer.md)
 
+The `TransactionComposer` instance
+
 #### Defined in
 
-[src/types/composer.ts:558](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L558)
+[src/types/composer.ts:559](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L559)
 
 ## Properties
 
@@ -256,9 +258,39 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAppCall({ sender: 'CREATORADDRESS' })
+```
+
+**`Example`**
+
+```typescript
+composer.addAppCall({
+ sender: 'CREATORADDRESS',
+ onComplete: algosdk.OnApplicationComplete.OptInOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:720](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L720)
+[src/types/composer.ts:1046](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1046)
 
 ___
 
@@ -282,9 +314,51 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppCallMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+```
+
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppCallMethodCall({
+ sender: 'CREATORADDRESS',
+ method: method,
+ args: ["arg1_value"],
+ onComplete: algosdk.OnApplicationComplete.OptInOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L769)
+[src/types/composer.ts:1258](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1258)
 
 ___
 
@@ -333,9 +407,54 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAppCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+```
+
+**`Example`**
+
+```typescript
+composer.addAppCreate({
+ sender: 'CREATORADDRESS',
+ approvalProgram: "TEALCODE",
+ clearStateProgram: "TEALCODE",
+ schema: {
+   globalInts: 1,
+   globalByteSlices: 2,
+   localInts: 3,
+   localByteSlices: 4
+ },
+ extraProgramPages: 1,
+ onComplete: algosdk.OnApplicationComplete.OptInOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+ // Signer only needed if you want to provide one,
+ //  generally you'd register it with AlgorandClient
+ //  against the sender and not need to pass it in
+ signer: transactionSigner,
+ maxRoundsToWaitForConfirmation: 5,
+ suppressLog: true,
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:679](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L679)
+[src/types/composer.ts:925](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L925)
 
 ___
 
@@ -359,9 +478,60 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+```
+
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppCreateMethodCall({
+ sender: 'CREATORADDRESS',
+ method: method,
+ args: ["arg1_value"],
+ approvalProgram: "TEALCODE",
+ clearStateProgram: "TEALCODE",
+ schema: {
+   globalInts: 1,
+   globalByteSlices: 2,
+   localInts: 3,
+   localByteSlices: 4
+ },
+ extraProgramPages: 1,
+ onComplete: algosdk.OnApplicationComplete.OptInOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:733](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L733)
+[src/types/composer.ts:1106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1106)
 
 ___
 
@@ -385,9 +555,39 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAppDelete({ sender: 'CREATORADDRESS' })
+```
+
+**`Example`**
+
+```typescript
+composer.addAppDelete({
+ sender: 'CREATORADDRESS',
+ onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:705](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L705)
+[src/types/composer.ts:1005](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1005)
 
 ___
 
@@ -411,9 +611,51 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppDeleteMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+```
+
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppDeleteMethodCall({
+ sender: 'CREATORADDRESS',
+ method: method,
+ args: ["arg1_value"],
+ onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:757](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L757)
+[src/types/composer.ts:1208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1208)
 
 ___
 
@@ -457,9 +699,41 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAppUpdate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+```
+
+**`Example`**
+
+```typescript
+composer.addAppUpdate({
+ sender: 'CREATORADDRESS',
+ approvalProgram: "TEALCODE",
+ clearStateProgram: "TEALCODE",
+ onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L692)
+[src/types/composer.ts:966](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L966)
 
 ___
 
@@ -483,9 +757,53 @@ Note: we recommend using app clients to make it easier to make app calls.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppUpdateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+```
+
+**`Example`**
+
+```typescript
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+composer.addAppUpdateMethodCall({
+ sender: 'CREATORADDRESS',
+ method: method,
+ args: ["arg1_value"],
+ approvalProgram: "TEALCODE",
+ clearStateProgram: "TEALCODE",
+ onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+ args: [new Uint8Array(1, 2, 3, 4)]
+ accountReferences: ["ACCOUNT_1"]
+ appReferences: [123n, 1234n]
+ assetReferences: [12345n]
+ boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ lease: 'lease',
+ note: 'note',
+ // You wouldn't normally set this field
+ firstValidRound: 1000n,
+ validityWindow: 10,
+ extraFee: (1000).microAlgo(),
+ staticFee: (1000).microAlgo(),
+ // Max fee doesn't make sense with extraFee AND staticFee
+ //  already specified, but here for completeness
+ maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:745](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L745)
+[src/types/composer.ts:1158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1158)
 
 ___
 
@@ -507,9 +825,37 @@ Add an asset config transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAssetConfig({ sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetConfig({
+  sender: 'MANAGERADDRESS',
+  assetId: 123456n,
+  manager: 'MANAGERADDRESS',
+  reserve: 'RESERVEADDRESS',
+  freeze: 'FREEZEADDRESS',
+  clawback: 'CLAWBACKADDRESS',
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+
 #### Defined in
 
-[src/types/composer.ts:611](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L611)
+[src/types/composer.ts:698](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L698)
 
 ___
 
@@ -531,9 +877,43 @@ Add an asset create transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAssetCreate({ sender: "CREATORADDRESS", total: 100n})
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetCreate({
+  sender: 'CREATORADDRESS',
+  total: 100n,
+  decimals: 2,
+  assetName: 'asset',
+  unitName: 'unit',
+  url: 'url',
+  metadataHash: 'metadataHash',
+  defaultFrozen: false,
+  manager: 'MANAGERADDRESS',
+  reserve: 'RESERVEADDRESS',
+  freeze: 'FREEZEADDRESS',
+  clawback: 'CLAWBACKADDRESS',
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+
 #### Defined in
 
-[src/types/composer.ts:600](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L600)
+[src/types/composer.ts:663](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L663)
 
 ___
 
@@ -555,9 +935,34 @@ Add an asset destroy transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAssetDestroy({ sender: "MANAGERADDRESS", assetId: 123456n })
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetDestroy({
+  sender: 'MANAGERADDRESS',
+  assetId: 123456n,
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:633](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L633)
+[src/types/composer.ts:764](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L764)
 
 ___
 
@@ -579,9 +984,36 @@ Add an asset freeze transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAssetFreeze({ sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetFreeze({
+  sender: 'MANAGERADDRESS',
+  assetId: 123456n,
+  account: 'ACCOUNTADDRESS',
+  frozen: true,
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:622](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L622)
+[src/types/composer.ts:732](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L732)
 
 ___
 
@@ -603,9 +1035,34 @@ Add an asset opt-in transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAssetOptIn({ sender: "SENDERADDRESS", assetId: 123456n })
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetOptIn({
+  sender: 'SENDERADDRESS',
+  assetId: 123456n,
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:655](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L655)
+[src/types/composer.ts:833](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L833)
 
 ___
 
@@ -627,9 +1084,42 @@ Add an asset opt-out transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAssetOptOut({ sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetOptOut({ sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n, ensureZeroBalance: true })
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetOptOut({
+  sender: 'SENDERADDRESS',
+  assetId: 123456n,
+  creator: 'CREATORADDRESS',
+  ensureZeroBalance: true,
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:666](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L666)
+[src/types/composer.ts:871](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L871)
 
 ___
 
@@ -651,9 +1141,39 @@ Add an asset transfer transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addAssetTransfer({ sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+```
+
+**`Example`**
+
+```typescript
+composer.addAssetTransfer({
+  sender: 'CLAWBACKADDRESS',
+  assetId: 123456n,
+  amount: 1n,
+  receiver: 'RECEIVERADDRESS',
+  clawbackTarget: 'HOLDERADDRESS',
+  // This field needs to be used with caution
+  closeAssetTo: 'ADDRESSTOCLOSETO'
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:644](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L644)
+[src/types/composer.ts:801](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L801)
 
 ___
 
@@ -675,9 +1195,17 @@ Add the transactions within an `AtomicTransactionComposer` to the transaction gr
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+const atc = new AtomicTransactionComposer()
+  .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: 1000n })
+composer.addAtc(atc)
+```
+
 #### Defined in
 
-[src/types/composer.ts:801](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L801)
+[src/types/composer.ts:1356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1356)
 
 ___
 
@@ -699,9 +1227,37 @@ Add an offline key registration transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addOfflineKeyRegistration({
+  sender: 'SENDERADDRESS',
+})
+```
+
+**`Example`**
+
+```typescript
+composer.addOfflineKeyRegistration({
+  sender: 'SENDERADDRESS',
+  lease: 'lease',
+  note: 'note',
+  // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+  rekeyTo: 'REKEYTOADDRESS',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:790](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L790)
+[src/types/composer.ts:1339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1339)
 
 ___
 
@@ -723,9 +1279,49 @@ Add an online key registration transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addOnlineKeyRegistration({
+  sender: 'SENDERADDRESS',
+  voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+  selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+  stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+  voteFirst: 1n,
+  voteLast: 1000n,
+  voteKeyDilution: 1n,
+})
+```
+
+**`Example`**
+
+```typescript
+composer.addOnlineKeyRegistration({
+  sender: 'SENDERADDRESS',
+  voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+  selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+  stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+  voteFirst: 1n,
+  voteLast: 1000n,
+  voteKeyDilution: 1n,
+  lease: 'lease',
+  note: 'note',
+  // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+  rekeyTo: 'REKEYTOADDRESS',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:779](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L779)
+[src/types/composer.ts:1304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1304)
 
 ___
 
@@ -747,9 +1343,41 @@ Add a payment transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addPayment({
+  sender: 'SENDERADDRESS',
+  receiver: 'RECEIVERADDRESS',
+  amount: (4).algo(),
+})
+```
+
+**`Example`**
+
+```typescript
+composer.addPayment({
+  amount: (4).algo(),
+  receiver: 'RECEIVERADDRESS',
+  sender: 'SENDERADDRESS',
+  closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
+  lease: 'lease',
+  note: 'note',
+  // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+  rekeyTo: 'REKEYTOADDRESS',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+
 #### Defined in
 
-[src/types/composer.ts:589](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L589)
+[src/types/composer.ts:622](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L622)
 
 ___
 
@@ -772,9 +1400,15 @@ Add a pre-built transaction to the transaction group.
 
 The composer so you can chain method calls
 
+**`Example`**
+
+```typescript
+composer.addTransaction(txn)
+```
+
 #### Defined in
 
-[src/types/composer.ts:574](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L574)
+[src/types/composer.ts:579](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L579)
 
 ___
 
@@ -793,11 +1427,17 @@ You can safely call this method multiple times to get the same result.
 
 `Promise`\<\{ `atc`: `AtomicTransactionComposer` ; `methodCalls`: `any` ; `transactions`: `TransactionWithSigner`[]  }\>
 
-The built atomic transaction composer and the transactions
+The built atomic transaction composer, the transactions and any corresponding method calls
+
+**`Example`**
+
+```typescript
+const { atc, transactions, methodCalls } = await composer.build()
+```
 
 #### Defined in
 
-[src/types/composer.ts:1321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1321)
+[src/types/composer.ts:1885](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1885)
 
 ___
 
@@ -818,7 +1458,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1140)
+[src/types/composer.ts:1695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1695)
 
 ___
 
@@ -839,7 +1479,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1097](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1097)
+[src/types/composer.ts:1652](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1652)
 
 ___
 
@@ -860,7 +1500,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1079](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1079)
+[src/types/composer.ts:1634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1634)
 
 ___
 
@@ -881,7 +1521,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1110)
+[src/types/composer.ts:1665](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1665)
 
 ___
 
@@ -902,7 +1542,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1118)
+[src/types/composer.ts:1673](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1673)
 
 ___
 
@@ -923,7 +1563,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1128)
+[src/types/composer.ts:1683](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1683)
 
 ___
 
@@ -945,7 +1585,7 @@ Build an ATC and return transactions ready to be incorporated into a broader set
 
 #### Defined in
 
-[src/types/composer.ts:807](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L807)
+[src/types/composer.ts:1362](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1362)
 
 ___
 
@@ -966,7 +1606,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1191](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1191)
+[src/types/composer.ts:1746](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1746)
 
 ___
 
@@ -990,7 +1630,7 @@ Builds an ABI method call transaction and any other associated transactions repr
 
 #### Defined in
 
-[src/types/composer.ts:887](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L887)
+[src/types/composer.ts:1442](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1442)
 
 ___
 
@@ -1011,7 +1651,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1069](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1069)
+[src/types/composer.ts:1624](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1624)
 
 ___
 
@@ -1027,9 +1667,15 @@ Compose all of the transactions without signers and return the transaction objec
 
 The array of built transactions and any corresponding method calls
 
+**`Example`**
+
+```typescript
+const { transactions, methodCalls, signers } = await composer.buildTransactions()
+```
+
 #### Defined in
 
-[src/types/composer.ts:1269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1269)
+[src/types/composer.ts:1828](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1828)
 
 ___
 
@@ -1052,7 +1698,7 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 
 #### Defined in
 
-[src/types/composer.ts:1214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1214)
+[src/types/composer.ts:1769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1769)
 
 ___
 
@@ -1073,7 +1719,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1241](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1241)
+[src/types/composer.ts:1796](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1796)
 
 ___
 
@@ -1101,7 +1747,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:829](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L829)
+[src/types/composer.ts:1384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1384)
 
 ___
 
@@ -1115,9 +1761,11 @@ Get the number of transactions currently added to this composer.
 
 `Promise`\<`number`\>
 
+The number of transactions currently added to this composer
+
 #### Defined in
 
-[src/types/composer.ts:1308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1308)
+[src/types/composer.ts:1868](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1868)
 
 ___
 
@@ -1147,7 +1795,7 @@ An alias for `composer.send(params)`.
 
 #### Defined in
 
-[src/types/composer.ts:1407](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1407)
+[src/types/composer.ts:1981](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1981)
 
 ___
 
@@ -1164,9 +1812,15 @@ This will potentially cause new signers and suggested params to be used if the c
 
 The newly built atomic transaction composer and the transactions
 
+**`Example`**
+
+```typescript
+const { atc, transactions, methodCalls } = await composer.rebuild()
+```
+
 #### Defined in
 
-[src/types/composer.ts:1356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1356)
+[src/types/composer.ts:1924](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1924)
 
 ___
 
@@ -1188,9 +1842,17 @@ Compose the atomic transaction group and send it to the network.
 
 The execution result
 
+**`Example`**
+
+```typescript
+const result = await composer.send({
+  populateAppCallResources: true,
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:1366](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1366)
+[src/types/composer.ts:1940](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1940)
 
 ___
 
@@ -1206,11 +1868,19 @@ Compose the atomic transaction group and simulate sending it to the network
 
 The simulation result
 
+**`Example`**
+
+```typescript
+const result = await composer.simulate()
+```
+
 #### Defined in
 
-[src/types/composer.ts:1415](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1415)
+[src/types/composer.ts:1993](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1993)
 
 ▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+
+Compose the atomic transaction group and simulate sending it to the network
 
 #### Parameters
 
@@ -1228,11 +1898,23 @@ The simulation result
 
 `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
 
+The simulation result
+
+**`Example`**
+
+```typescript
+const result = await composer.simulate({
+  skipSignatures: true,
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:1416](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1416)
+[src/types/composer.ts:2004](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2004)
 
 ▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
+
+Compose the atomic transaction group and simulate sending it to the network
 
 #### Parameters
 
@@ -1251,9 +1933,19 @@ The simulation result
 
 `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
 
+The simulation result
+
+**`Example`**
+
+```typescript
+const result = await composer.simulate({
+  extraOpcodeBudget: 1000,
+})
+```
+
 #### Defined in
 
-[src/types/composer.ts:1419](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1419)
+[src/types/composer.ts:2017](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2017)
 
 ___
 
@@ -1279,4 +1971,4 @@ The binary encoded transaction note
 
 #### Defined in
 
-[src/types/composer.ts:1496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1496)
+[src/types/composer.ts:2094](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2094)
