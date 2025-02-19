@@ -3,8 +3,12 @@ import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
 import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
+import largeAppArc56Json from '../../tests/example-contracts/extra-pages/large.arc56.json'
+import smallAppArc56Json from '../../tests/example-contracts/extra-pages/small.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
+import { asJson } from '../util'
+import { OnSchemaBreak, OnUpdate } from './app'
 import { getArc56Method } from './app-arc56'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
@@ -182,6 +186,46 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.return).toBe('arg_io')
   })
 
+  test('Deploy app - update detects extra pages as breaking change', async () => {
+    let appFactory = localnet.algorand.client.getAppFactory({
+      appSpec: asJson(smallAppArc56Json),
+      defaultSender: localnet.context.testAccount,
+    })
+
+    const { result: appCreateResult } = await appFactory.deploy({
+      updatable: true,
+    })
+
+    expect(appCreateResult.operationPerformed).toBe('create')
+
+    // Update the app to a larger program which needs more pages
+    appFactory = localnet.algorand.client.getAppFactory({
+      appSpec: asJson(largeAppArc56Json),
+      defaultSender: localnet.context.testAccount,
+    })
+
+    // Update fails when OnSchemaBreak.Fail is used
+    await expect(async () => {
+      await appFactory.deploy({
+        updatable: true,
+        onSchemaBreak: OnSchemaBreak.Fail,
+        onUpdate: OnUpdate.UpdateApp,
+      })
+    }).rejects.toThrowError(
+      'Schema break detected and onSchemaBreak=OnSchemaBreak.Fail, stopping deployment. If you want to try deleting and recreating the app then re-run with onSchemaBreak=OnSchemaBreak.ReplaceApp',
+    )
+
+    // Update succeeds when OnSchemaBreak.AppendApp is used
+    const { result: appAppendResult } = await appFactory.deploy({
+      updatable: true,
+      onSchemaBreak: OnSchemaBreak.AppendApp,
+      onUpdate: OnUpdate.UpdateApp,
+    })
+
+    expect(appAppendResult.operationPerformed).toBe('create')
+    expect(appCreateResult.appId).not.toEqual(appAppendResult.appId)
+  })
+
   test('Deploy app - replace', async () => {
     const { result: createdApp } = await factory.deploy({
       deployTimeParams: {
@@ -258,6 +302,22 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     invariant(call.return)
     expect(call.return).toBe('Hello, test')
+  })
+  test('Call app too many args', async () => {
+    const { appClient } = await factory.send.bare.create({
+      deployTimeParams: {
+        UPDATABLE: 0,
+        DELETABLE: 0,
+        VALUE: 1,
+      },
+    })
+
+    await expect(
+      appClient.send.call({
+        method: 'call_abi',
+        args: ['test', 'extra'],
+      }),
+    ).rejects.toThrow('Unexpected arg at position 1. call_abi only expects 1 args')
   })
 
   test('Call app with rekey', async () => {

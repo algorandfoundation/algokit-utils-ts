@@ -1,3 +1,5 @@
+import { APP_PAGE_MAX_SIZE } from './types/app'
+
 /**
  * Converts a value which might be a number or a bigint into a number to be used with apis that don't support bigint.
  *
@@ -98,4 +100,9 @@ export const asJson = (
   space?: string | number,
 ) => {
   return JSON.stringify(value, replacer, space)
+}
+
+/** Calculate minimum number of extra program pages required for provided approval and clear state programs */
+export const calculateExtraProgramPages = (approvalProgram: Uint8Array, clearStateProgram?: Uint8Array): number => {
+  return Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0) - 1) / APP_PAGE_MAX_SIZE)
 }

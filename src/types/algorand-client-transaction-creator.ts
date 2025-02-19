@@ -11,6 +11,10 @@ export class AlgorandClientTransactionCreator {
   /**
    * Creates a new `AlgorandClientTransactionCreator`
    * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
+   * @example
+   * ```typescript
+   * const transactionCreator = new AlgorandClientTransactionCreator(() => new TransactionComposer())
+   * ```
    */
   constructor(newGroup: () => TransactionComposer) {
     this._newGroup = newGroup
@@ -38,15 +42,15 @@ export class AlgorandClientTransactionCreator {
    * @param params The parameters for the payment transaction
    * @example Basic example
    * ```typescript
-   * const result = await algorand.send.payment({
-   *  sender: 'SENDERADDRESS',
-   *  receiver: 'RECEIVERADDRESS',
-   *  amount: (4).algo(),
+   * await algorand.createTransaction.payment({
+   *   sender: 'SENDERADDRESS',
+   *   receiver: 'RECEIVERADDRESS',
+   *   amount: (4).algo(),
    * })
    * ```
    * @example Advanced example
    * ```typescript
-   * const result = await algorand.send.payment({
+   * await algorand.createTransaction.payment({
    *   amount: (4).algo(),
    *   receiver: 'RECEIVERADDRESS',
    *   sender: 'SENDERADDRESS',
@@ -65,7 +69,6 @@ export class AlgorandClientTransactionCreator {
    *   maxFee: (3000).microAlgo(),
    * })
    * ```
-   *
    * @returns The payment transaction
    */
   payment = this._transaction((c) => c.addPayment)
@@ -78,7 +81,7 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.createTransaction.assetCreate({sender: "CREATORADDRESS", total: 100n})
+   * await algorand.createTransaction.assetCreate({ sender: "CREATORADDRESS", total: 100n})
    * ```
    * @example Advanced example
    * ```typescript
@@ -120,7 +123,7 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.createTransaction.assetConfig({sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+   * await algorand.createTransaction.assetConfig({ sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
    * ```
    * @example Advanced example
    * ```typescript
@@ -152,7 +155,7 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.createTransaction.assetFreeze({sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+   * await algorand.createTransaction.assetFreeze({ sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
    * ```
    * @example Advanced example
    * ```typescript
@@ -186,7 +189,7 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.createTransaction.assetDestroy({sender: "MANAGERADDRESS", assetId: 123456n })
+   * await algorand.createTransaction.assetDestroy({ sender: "MANAGERADDRESS", assetId: 123456n })
    * ```
    * @example Advanced example
    * ```typescript
@@ -214,7 +217,7 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.createTransaction.assetTransfer({sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+   * await algorand.createTransaction.assetTransfer({ sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
    * ```
    * @example Advanced example (with clawback)
    * ```typescript
@@ -247,7 +250,7 @@ export class AlgorandClientTransactionCreator {
    *
    * @example Basic example
    * ```typescript
-   * await algorand.createTransaction.assetOptIn({sender: "SENDERADDRESS", assetId: 123456n })
+   * await algorand.createTransaction.assetOptIn({ sender: "SENDERADDRESS", assetId: 123456n })
    * ```
    * @example Advanced example
    * ```typescript
@@ -276,13 +279,17 @@ export class AlgorandClientTransactionCreator {
    *
    * @param params The parameters for the asset opt-out transaction
    *
-   * @example Basic example
+   * @example Basic example (without creator, will be retrieved from algod)
    * ```typescript
-   * await algorand.createTransaction.assetOptOut({sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n })
+   * await algorand.createTransaction.assetOptOut({ sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
+   * ```
+   * @example Basic example (with creator)
+   * ```typescript
+   * await algorand.createTransaction.assetOptOut({ sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n, ensureZeroBalance: true })
    * ```
    * @example Advanced example
    * ```typescript
-   * await algorand.createTransaction.assetOptIn({
+   * await algorand.createTransaction.assetOptOut({
    *   sender: 'SENDERADDRESS',
    *   assetId: 123456n,
    *   creator: 'CREATORADDRESS',
@@ -309,8 +316,7 @@ export class AlgorandClientTransactionCreator {
    * @param params The parameters for the app creation transaction
    * @example Basic example
    * ```typescript
-   * const result = await algorand.createTransaction.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
-   * const createdAppId = result.appId
+   * await algorand.createTransaction.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
    * ```
    * @example Advanced example
    * ```typescript
@@ -341,14 +347,9 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application create transaction
    */
   appCreate = this._transaction((c) => c.addAppCreate)
   /** Create an application update transaction.
@@ -382,14 +383,9 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application update transaction
    */
   appUpdate = this._transaction((c) => c.addAppUpdate)
   /** Create an application delete transaction.
@@ -421,14 +417,9 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application delete transaction
    */
   appDelete = this._transaction((c) => c.addAppDelete)
   /** Create an application call transaction.
@@ -460,14 +451,9 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application call transaction
    */
   appCall = this._transaction((c) => c.addAppCall)
   /** Create an application create call with ABI method call transaction.
@@ -482,8 +468,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * const result = await algorand.createTransaction.appCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
-   * const createdAppId = result.appId
+   * await algorand.createTransaction.appCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
    * ```
    * @example Advanced example
    * ```typescript
@@ -492,7 +477,7 @@ export class AlgorandClientTransactionCreator {
    *   args: [{ name: 'arg1', type: 'string' }],
    *   returns: { type: 'string' },
    * })
-   * await algorand.createTransaction.appCreate({
+   * await algorand.createTransaction.appCreateMethodCall({
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
@@ -521,14 +506,9 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application ABI method create transaction
    */
   appCreateMethodCall = this._transactions((c) => c.addAppCreateMethodCall)
   /** Create an application update call with ABI method call transaction.
@@ -574,14 +554,9 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application ABI method update transaction
    */
   appUpdateMethodCall = this._transactions((c) => c.addAppUpdateMethodCall)
   /** Create an application delete call with ABI method call transaction.
@@ -625,14 +600,9 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application ABI method delete transaction
    */
   appDeleteMethodCall = this._transactions((c) => c.addAppDeleteMethodCall)
   /** Create an application call with ABI method call transaction.
@@ -676,18 +646,81 @@ export class AlgorandClientTransactionCreator {
    *  // Max fee doesn't make sense with extraFee AND staticFee
    *  //  already specified, but here for completeness
    *  maxFee: (3000).microAlgo(),
-   *  // Signer only needed if you want to provide one,
-   *  //  generally you'd register it with AlgorandClient
-   *  //  against the sender and not need to pass it in
-   *  signer: transactionSigner,
-   *  maxRoundsToWaitForConfirmation: 5,
-   *  suppressLog: true,
    *})
    * ```
+   * @returns The application ABI method call transaction
    */
   appCallMethodCall = this._transactions((c) => c.addAppCallMethodCall)
-  /** Create an online key registration transaction. */
+  /**
+   * Create an online key registration transaction.
+   * @param params The parameters for the key registration transaction
+   * @example Basic example
+   * ```typescript
+   * await algorand.createTransaction.onlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+   *   selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+   *   stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+   *   voteFirst: 1n,
+   *   voteLast: 1000n,
+   *   voteKeyDilution: 1n,
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.createTransaction.onlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+   *   selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+   *   stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+   *   voteFirst: 1n,
+   *   voteLast: 1000n,
+   *   voteKeyDilution: 1n,
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+   *   rekeyTo: 'REKEYTOADDRESS',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
+   * @returns The online key registration transaction
+   */
   onlineKeyRegistration = this._transaction((c) => c.addOnlineKeyRegistration)
-  /** Create an offline key registration transaction. */
+  /**
+   * Create an offline key registration transaction.
+   * @param params The parameters for the key registration transaction
+   * @example Basic example
+   * ```typescript
+   * await algorand.createTransaction.offlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * await algorand.createTransaction.offlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+   *   rekeyTo: 'REKEYTOADDRESS',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
+   * @returns The offline key registration transaction
+   */
   offlineKeyRegistration = this._transaction((c) => c.addOfflineKeyRegistration)
 }

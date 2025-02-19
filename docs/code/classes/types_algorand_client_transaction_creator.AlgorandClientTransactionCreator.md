@@ -57,9 +57,15 @@ Creates a new `AlgorandClientTransactionCreator`
 
 [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
 
+**`Example`**
+
+```typescript
+const transactionCreator = new AlgorandClientTransactionCreator(() => new TransactionComposer())
+```
+
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L15)
+[src/types/algorand-client-transaction-creator.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L19)
 
 ## Properties
 
@@ -116,12 +122,6 @@ await algorand.createTransaction.appCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -141,7 +141,7 @@ await algorand.createTransaction.appCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:472](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L472)
+[src/types/algorand-client-transaction-creator.ts:458](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L458)
 
 ___
 
@@ -192,12 +192,6 @@ await algorand.createTransaction.appCallMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -217,7 +211,7 @@ await algorand.createTransaction.appCallMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:688](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L688)
+[src/types/algorand-client-transaction-creator.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L653)
 
 ___
 
@@ -232,8 +226,7 @@ Note: you may prefer to use `algorand.client` to get an app client for more adva
 **`Example`**
 
 ```typescript
-const result = await algorand.createTransaction.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
-const createdAppId = result.appId
+await algorand.createTransaction.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
 ```
 
 **`Example`**
@@ -266,12 +259,6 @@ await algorand.createTransaction.appCreate({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -316,7 +303,7 @@ await algorand.createTransaction.appCreate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:353](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L353)
+[src/types/algorand-client-transaction-creator.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L354)
 
 ___
 
@@ -336,8 +323,7 @@ const method = new ABIMethod({
   args: [{ name: 'arg1', type: 'string' }],
   returns: { type: 'string' },
 })
-const result = await algorand.createTransaction.appCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
-const createdAppId = result.appId
+await algorand.createTransaction.appCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
 ```
 
 **`Example`**
@@ -348,7 +334,7 @@ const method = new ABIMethod({
   args: [{ name: 'arg1', type: 'string' }],
   returns: { type: 'string' },
 })
-await algorand.createTransaction.appCreate({
+await algorand.createTransaction.appCreateMethodCall({
  sender: 'CREATORADDRESS',
  method: method,
  args: ["arg1_value"],
@@ -377,12 +363,6 @@ await algorand.createTransaction.appCreate({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -402,7 +382,7 @@ await algorand.createTransaction.appCreate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:533](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L533)
+[src/types/algorand-client-transaction-creator.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L513)
 
 ___
 
@@ -441,12 +421,6 @@ await algorand.createTransaction.appDelete({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -466,7 +440,7 @@ await algorand.createTransaction.appDelete({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:433](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L433)
+[src/types/algorand-client-transaction-creator.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L424)
 
 ___
 
@@ -517,12 +491,6 @@ await algorand.createTransaction.appDeleteMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -542,7 +510,7 @@ await algorand.createTransaction.appDeleteMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:637](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L637)
+[src/types/algorand-client-transaction-creator.ts:607](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L607)
 
 ___
 
@@ -583,12 +551,6 @@ await algorand.createTransaction.appUpdate({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -628,7 +590,7 @@ await algorand.createTransaction.appUpdate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L394)
+[src/types/algorand-client-transaction-creator.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L390)
 
 ___
 
@@ -681,12 +643,6 @@ await algorand.createTransaction.appUpdateMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
- // Signer only needed if you want to provide one,
- //  generally you'd register it with AlgorandClient
- //  against the sender and not need to pass it in
- signer: transactionSigner,
- maxRoundsToWaitForConfirmation: 5,
- suppressLog: true,
 })
 ```
 
@@ -706,7 +662,7 @@ await algorand.createTransaction.appUpdateMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:586](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L586)
+[src/types/algorand-client-transaction-creator.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L561)
 
 ___
 
@@ -723,7 +679,7 @@ all fields are immutable from that point forward.
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetConfig({sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+await algorand.createTransaction.assetConfig({ sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
 ```
 
 **`Example`**
@@ -765,7 +721,7 @@ await algorand.createTransaction.assetConfig({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L148)
+[src/types/algorand-client-transaction-creator.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L151)
 
 ___
 
@@ -781,7 +737,7 @@ opted in to the asset and will hold all units after creation.
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetCreate({sender: "CREATORADDRESS", total: 100n})
+await algorand.createTransaction.assetCreate({ sender: "CREATORADDRESS", total: 100n})
 ```
 
 **`Example`**
@@ -829,7 +785,7 @@ await algorand.createTransaction.assetCreate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L112)
+[src/types/algorand-client-transaction-creator.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L115)
 
 ___
 
@@ -846,7 +802,7 @@ the asset can be deleted.
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetDestroy({sender: "MANAGERADDRESS", assetId: 123456n })
+await algorand.createTransaction.assetDestroy({ sender: "MANAGERADDRESS", assetId: 123456n })
 ```
 
 **`Example`**
@@ -884,7 +840,7 @@ await algorand.createTransaction.assetDestroy({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:210](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L210)
+[src/types/algorand-client-transaction-creator.ts:213](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L213)
 
 ___
 
@@ -897,7 +853,7 @@ Create an Algorand Standard Asset freeze transaction.
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetFreeze({sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+await algorand.createTransaction.assetFreeze({ sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
 ```
 
 **`Example`**
@@ -937,7 +893,7 @@ await algorand.createTransaction.assetFreeze({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:178](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L178)
+[src/types/algorand-client-transaction-creator.ts:181](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L181)
 
 ___
 
@@ -950,7 +906,7 @@ Create an Algorand Standard Asset opt-in transaction.
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetOptIn({sender: "SENDERADDRESS", assetId: 123456n })
+await algorand.createTransaction.assetOptIn({ sender: "SENDERADDRESS", assetId: 123456n })
 ```
 
 **`Example`**
@@ -988,7 +944,7 @@ await algorand.createTransaction.assetOptIn({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:271](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L271)
+[src/types/algorand-client-transaction-creator.ts:274](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L274)
 
 ___
 
@@ -1004,13 +960,19 @@ it will lose those assets
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetOptOut({sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n })
+await algorand.createTransaction.assetOptOut({ sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
 ```
 
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetOptIn({
+await algorand.createTransaction.assetOptOut({ sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n, ensureZeroBalance: true })
+```
+
+**`Example`**
+
+```typescript
+await algorand.createTransaction.assetOptOut({
   sender: 'SENDERADDRESS',
   assetId: 123456n,
   creator: 'CREATORADDRESS',
@@ -1044,7 +1006,7 @@ await algorand.createTransaction.assetOptIn({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:304](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L304)
+[src/types/algorand-client-transaction-creator.ts:311](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L311)
 
 ___
 
@@ -1057,7 +1019,7 @@ Create an Algorand Standard Asset transfer transaction.
 **`Example`**
 
 ```typescript
-await algorand.createTransaction.assetTransfer({sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+await algorand.createTransaction.assetTransfer({ sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
 ```
 
 **`Example`**
@@ -1100,7 +1062,7 @@ await algorand.createTransaction.assetTransfer({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:243](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L243)
+[src/types/algorand-client-transaction-creator.ts:246](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L246)
 
 ___
 
@@ -1110,15 +1072,43 @@ ___
 
 Create an offline key registration transaction.
 
+**`Example`**
+
+```typescript
+await algorand.createTransaction.offlineKeyRegistration({
+  sender: 'SENDERADDRESS',
+})
+```
+
+**`Example`**
+
+```typescript
+await algorand.createTransaction.offlineKeyRegistration({
+  sender: 'SENDERADDRESS',
+  lease: 'lease',
+  note: 'note',
+  // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+  rekeyTo: 'REKEYTOADDRESS',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Type declaration
 
 ▸ (`params`): `Promise`\<`Transaction`\>
 
 ##### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`OfflineKeyRegistrationParams`](../modules/types_composer.md#offlinekeyregistrationparams) | The parameters for the key registration transaction |
 
 ##### Returns
 
@@ -1126,7 +1116,7 @@ Create an offline key registration transaction.
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L692)
+[src/types/algorand-client-transaction-creator.ts:725](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L725)
 
 ___
 
@@ -1136,15 +1126,55 @@ ___
 
 Create an online key registration transaction.
 
+**`Example`**
+
+```typescript
+await algorand.createTransaction.onlineKeyRegistration({
+  sender: 'SENDERADDRESS',
+  voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+  selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+  stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+  voteFirst: 1n,
+  voteLast: 1000n,
+  voteKeyDilution: 1n,
+})
+```
+
+**`Example`**
+
+```typescript
+await algorand.createTransaction.onlineKeyRegistration({
+  sender: 'SENDERADDRESS',
+  voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+  selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+  stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+  voteFirst: 1n,
+  voteLast: 1000n,
+  voteKeyDilution: 1n,
+  lease: 'lease',
+  note: 'note',
+  // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+  rekeyTo: 'REKEYTOADDRESS',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+})
+```
+
 #### Type declaration
 
 ▸ (`params`): `Promise`\<`Transaction`\>
 
 ##### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `params` | [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams) | The parameters for the key registration transaction |
 
 ##### Returns
 
@@ -1152,7 +1182,7 @@ Create an online key registration transaction.
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:690](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L690)
+[src/types/algorand-client-transaction-creator.ts:695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L695)
 
 ___
 
@@ -1165,17 +1195,17 @@ Create a payment transaction to transfer Algo between accounts.
 **`Example`**
 
 ```typescript
-const result = await algorand.send.payment({
- sender: 'SENDERADDRESS',
- receiver: 'RECEIVERADDRESS',
- amount: (4).algo(),
+await algorand.createTransaction.payment({
+  sender: 'SENDERADDRESS',
+  receiver: 'RECEIVERADDRESS',
+  amount: (4).algo(),
 })
 ```
 
 **`Example`**
 
 ```typescript
-const result = await algorand.send.payment({
+await algorand.createTransaction.payment({
   amount: (4).algo(),
   receiver: 'RECEIVERADDRESS',
   sender: 'SENDERADDRESS',
@@ -1211,7 +1241,7 @@ const result = await algorand.send.payment({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L71)
+[src/types/algorand-client-transaction-creator.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L74)
 
 ## Methods
 
@@ -1249,7 +1279,7 @@ const result = await algorand.send.payment({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L19)
+[src/types/algorand-client-transaction-creator.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L23)
 
 ___
 
@@ -1287,4 +1317,4 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L27)
+[src/types/algorand-client-transaction-creator.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L31)

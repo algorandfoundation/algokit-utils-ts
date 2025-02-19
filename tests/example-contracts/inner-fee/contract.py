@@ -21,6 +21,10 @@ class InnerFeeContract(ARC4Contract):
             sqrt = op.bsqrt(BigUInt(i))
             assert(sqrt >= 0) # Prevent optimiser removing the sqrt
 
+    @arc4.abimethod(readonly=True)
+    def burn_ops_readonly(self, op_budget: UInt64) -> None:
+        self.burn_ops(op_budget)
+
     @arc4.abimethod
     def no_op(self) -> None:
         pass

@@ -181,6 +181,8 @@ Some of this functionality is directly exposed from [`AccountManager`](#accountm
 const localNetDispenser = await algorand.account.localNetDispenser()
 // Get and register a dispenser by environment variable, or if not set then LocalNet dispenser via KMD
 const dispenser = await algorand.account.dispenserFromEnvironment()
+// Get an account from KMD idempotently by name. In this case we'll get the default dispenser account
+const account1 = await algorand.account.fromKmd('unencrypted-default-wallet', (a) => a.status !== 'Offline' && a.amount > 1_000_000_000)
 // Get / create and register account from KMD idempotently by name
-const account1 = await algorand.account.fromKmd('account1', (2).algo())
+const account1 = await algorand.account.kmd.getOrCreateWalletAccount('account1', (2).algo())
 ```

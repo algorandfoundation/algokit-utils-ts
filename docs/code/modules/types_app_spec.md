@@ -42,7 +42,7 @@ The string name of an ABI type
 
 #### Defined in
 
-[src/types/app-spec.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L203)
+[src/types/app-spec.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L212)
 
 ___
 
@@ -54,7 +54,7 @@ AVM data type
 
 #### Defined in
 
-[src/types/app-spec.ts:259](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L259)
+[src/types/app-spec.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L268)
 
 ___
 
@@ -70,7 +70,7 @@ The various call configs:
 
 #### Defined in
 
-[src/types/app-spec.ts:174](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L174)
+[src/types/app-spec.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L183)
 
 ___
 
@@ -82,7 +82,7 @@ Defines a strategy for obtaining a default value for a given ABI arg.
 
 #### Defined in
 
-[src/types/app-spec.ts:219](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L219)
+[src/types/app-spec.ts:228](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L228)
 
 ___
 
@@ -94,7 +94,7 @@ The name of a field
 
 #### Defined in
 
-[src/types/app-spec.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L200)
+[src/types/app-spec.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L209)
 
 ___
 
@@ -106,7 +106,7 @@ A lookup of encoded method call spec to hint
 
 #### Defined in
 
-[src/types/app-spec.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L158)
+[src/types/app-spec.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L167)
 
 ___
 
@@ -125,7 +125,7 @@ Schema spec summary for global or local storage
 
 #### Defined in
 
-[src/types/app-spec.ts:308](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L308)
+[src/types/app-spec.ts:317](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L317)
 
 ___
 
@@ -137,7 +137,7 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 #### Defined in
 
-[src/types/app-spec.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L206)
+[src/types/app-spec.ts:215](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L215)
 
 ## Functions
 
@@ -145,16 +145,26 @@ The elements of the struct/tuple: `FieldName`, `ABIType`
 
 ▸ **arc32ToArc56**(`appSpec`): [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md)
 
+Converts an ARC-32 Application Specification to an ARC-56 Contract
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `appSpec` | [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `appSpec` | [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-32 Application Specification |
 
 #### Returns
 
 [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md)
 
+The ARC-56 Contract
+
+**`Example`**
+
+```typescript
+const arc56AppSpec = arc32ToArc56(arc32AppSpec)
+```
+
 #### Defined in
 
-[src/types/app-spec.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L7)
+[src/types/app-spec.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-spec.ts#L16)

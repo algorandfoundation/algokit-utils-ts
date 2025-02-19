@@ -121,7 +121,7 @@ An Algorand account with private key loaded - either one that already existed in
 **`Example`**
 
 ```typescript
-// Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
+// Idempotently get (if exists) or create (if it doesn't exist yet) an account by name using KMD
 // if creating it then fund it with 2 ALGO from the default dispenser account
 const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algo())
 // This will return the same account as above since the name matches

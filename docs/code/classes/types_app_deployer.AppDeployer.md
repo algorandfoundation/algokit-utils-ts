@@ -45,9 +45,15 @@ Creates an `AppManager`
 
 [`AppDeployer`](types_app_deployer.AppDeployer.md)
 
+**`Example`**
+
+```ts
+const deployer = new AppDeployer(appManager, transactionSender, indexer)
+```
+
 #### Defined in
 
-[src/types/app-deployer.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L123)
+[src/types/app-deployer.ts:128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L128)
 
 ## Properties
 
@@ -57,7 +63,7 @@ Creates an `AppManager`
 
 #### Defined in
 
-[src/types/app-deployer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L115)
+[src/types/app-deployer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L116)
 
 ___
 
@@ -67,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L112)
+[src/types/app-deployer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L113)
 
 ___
 
@@ -77,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L114)
+[src/types/app-deployer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L115)
 
 ___
 
@@ -87,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L113)
+[src/types/app-deployer.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L114)
 
 ## Methods
 
@@ -128,11 +134,38 @@ To understand the architecture decisions behind this functionality please see ht
 
 `Promise`\<[`AppDeployResult`](../modules/types_app_deployer.md#appdeployresult)\>
 
-The app reference of the new/existing app
+The result of the deployment
+
+**`Example`**
+
+```ts
+const deployResult = await deployer.deploy({
+  createParams: {
+    sender: 'SENDER_ADDRESS',
+    approvalProgram: 'APPROVAL PROGRAM',
+    clearStateProgram: 'CLEAR PROGRAM',
+    schema: {
+      globalByteSlices: 0,
+      globalInts: 0,
+      localByteSlices: 0,
+      localInts: 0
+    }
+  },
+  updateParams: {
+    sender: 'SENDER_ADDRESS'
+  },
+  deleteParams: {
+    sender: 'SENDER_ADDRESS'
+  },
+  metadata: { name: 'my_app', version: '2.0', updatable: false, deletable: false },
+  onSchemaBreak: 'append',
+  onUpdate: 'append'
+ })
+```
 
 #### Defined in
 
-[src/types/app-deployer.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L142)
+[src/types/app-deployer.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L172)
 
 ___
 
@@ -161,9 +194,14 @@ If the `AppManager` instance wasn't created with an indexer client, this functio
 
 A name-based lookup of the app metadata
 
+**`Example`**
+
+```ts
+const result = await deployer.getCreatorAppsByName(creator)
+
 #### Defined in
 
-[src/types/app-deployer.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L456)
+[src/types/app-deployer.ts:495](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L495)
 
 ___
 
@@ -184,4 +222,4 @@ ___
 
 #### Defined in
 
-[src/types/app-deployer.ts:433](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L433)
+[src/types/app-deployer.ts:469](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-deployer.ts#L469)
