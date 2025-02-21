@@ -386,7 +386,8 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 
 /**
  * Take an existing Atomic Transaction Composer and return a new one with changes applied to the transactions
- * based on the supplied sendParams to ensure the transaction group is ready for sending.
+ * based on the supplied sendParams to prepare it for sending.
+ * Please note, that before calling `.execute()` on the returned ATC, you must call `.buildGroup()`.
  *
  * @param algod The algod client to use for the simulation
  * @param atc The ATC containing the txn group
@@ -799,7 +800,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
     }
 
-    const transactionsToSend = transactionsWithSigner.map((t) => {
+    // atc.buildGroup() is needed to ensure that any changes made by prepareGroupForSending are reflected and the group id is set
+    const transactionsToSend = atc.buildGroup().map((t) => {
       return t.txn
     })
     let groupId: string | undefined = undefined

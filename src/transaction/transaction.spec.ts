@@ -460,6 +460,13 @@ describe('transaction', () => {
       expect(result.transactions[0].fee).toBe(1500n)
       expect(result.transactions[1].fee).toBe(7500n)
       expect(result.transactions[2].fee).toBe(0n)
+      expect(result.groupId).not.toBe('')
+      await Promise.all(
+        result.transactions.map(async (txn) => {
+          expect(Buffer.from(txn.group!).toString('base64')).toBe(result.groupId)
+          await localnet.context.waitForIndexerTransaction(txn.txID())
+        }),
+      )
     })
 
     test('alters fee, handling nested abi method calls', async () => {
