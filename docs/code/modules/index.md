@@ -575,7 +575,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:1056](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1056)
+[src/transaction/transaction.ts:1058](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1058)
 
 ___
 
@@ -639,7 +639,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:1083](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1083)
+[src/transaction/transaction.ts:1085](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1085)
 
 ___
 
@@ -966,7 +966,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:926](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L926)
+[src/transaction/transaction.ts:928](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L928)
 
 ___
 
@@ -1942,7 +1942,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:1132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1132)
+[src/transaction/transaction.ts:1134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1134)
 
 ___
 
@@ -2329,7 +2329,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:1110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1110)
+[src/transaction/transaction.ts:1112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1112)
 
 ___
 
@@ -2770,7 +2770,8 @@ ___
 ▸ **prepareGroupForSending**(`atc`, `algod`, `sendParams`, `additionalAtcContext?`): `Promise`\<`AtomicTransactionComposer`\>
 
 Take an existing Atomic Transaction Composer and return a new one with changes applied to the transactions
-based on the supplied sendParams to ensure the transaction group is ready for sending.
+based on the supplied sendParams to prepare it for sending.
+Please note, that before calling `.execute()` on the returned ATC, you must call `.buildGroup()`.
 
 #### Parameters
 
@@ -2789,7 +2790,7 @@ A new ATC with the changes applied
 
 #### Defined in
 
-[src/transaction/transaction.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L401)
+[src/transaction/transaction.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L402)
 
 ___
 
@@ -2939,7 +2940,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L776)
+[src/transaction/transaction.ts:777](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L777)
 
 ___
 
@@ -2968,7 +2969,7 @@ Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-de
 
 #### Defined in
 
-[src/transaction/transaction.ts:955](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L955)
+[src/transaction/transaction.ts:957](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L957)
 
 ___
 
@@ -3241,4 +3242,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:999](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L999)
+[src/transaction/transaction.ts:1001](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1001)
