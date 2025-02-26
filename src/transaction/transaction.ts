@@ -487,6 +487,11 @@ export async function prepareGroupForSending(
 
   // Populate Group App Call Resources
   if (executionInfo.populatedResourceArrays) {
+    // In the future, we could just add the txns to the group. Perhaps this would be a seperate option in addition to populateAppCallResources
+    if (executionInfo.extraResourceArrays?.length || 0 != 0) {
+      throw Error('Transaction group requires extra transactions to name all resources. Empty app calls must be added to the group')
+    }
+
     executionInfo.populatedResourceArrays.forEach((r, i) => {
       const txn = group[i].txn.applicationCall
       if (r === undefined || txn === undefined) return
