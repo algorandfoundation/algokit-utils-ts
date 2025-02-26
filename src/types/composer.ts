@@ -1845,14 +1845,15 @@ export class TransactionComposer {
                 ? await this.buildMethodCall(txn, suggestedParams, false)
                 : []
 
-        transactionsWithSigner.forEach((ts, idx) => {
+        transactionsWithSigner.forEach((ts) => {
           transactions.push(ts.txn)
+          const groupIdx = transactions.length - 1
 
           if (ts.signer && ts.signer !== TransactionComposer.NULL_SIGNER) {
-            signers.set(idx, ts.signer)
+            signers.set(groupIdx, ts.signer)
           }
           if ('context' in ts && ts.context.abiMethod) {
-            methodCalls.set(idx, ts.context.abiMethod)
+            methodCalls.set(groupIdx, ts.context.abiMethod)
           }
         })
       }

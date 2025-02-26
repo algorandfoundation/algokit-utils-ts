@@ -3,11 +3,11 @@ import algosdk, {
   Account,
   Address,
   Algodv2,
+  getApplicationAddress,
   Indexer,
   OnApplicationComplete,
   TransactionSigner,
   TransactionType,
-  getApplicationAddress,
 } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
@@ -928,5 +928,49 @@ describe('app-client', () => {
     expect(appClient.appName).toBe('overridden')
     expect(clonedAppClient.appId).toBe(appClient.appId)
     expect(clonedAppClient.appName).toBe(appSpec.contract.name)
+  })
+
+  test('simulated transaction group result should match sent transaction group result', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount)
+
+    const appCall1Params = {
+      sender: testAccount,
+      appId: appClient.appId,
+      method: algosdk.ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
+      args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])],
+    }
+
+    const paymentParams = {
+      sender: testAccount,
+      receiver: testAccount,
+      amount: algo(0.01),
+    }
+
+    const appCall2Params = {
+      sender: testAccount,
+      appId: appClient.appId,
+      method: algosdk.ABIMethod.fromSignature('call_abi(string)string'),
+      args: ['test'],
+    }
+
+    const simulateResult = await appClient.algorand
+      .newGroup()
+      .addAppCallMethodCall(appCall1Params)
+      .addPayment(paymentParams)
+      .addAppCallMethodCall(appCall2Params)
+      .simulate({ skipSignatures: true })
+
+    const sendResult = await appClient.algorand
+      .newGroup()
+      .addAppCallMethodCall(appCall1Params)
+      .addPayment(paymentParams)
+      .addAppCallMethodCall(appCall2Params)
+      .send()
+
+    expect(simulateResult.transactions.length).toBe(sendResult.transactions.length)
+    expect(simulateResult.returns!.length).toBe(sendResult.returns!.length)
+    expect(simulateResult.returns![0]).toEqual(sendResult.returns![0])
+    expect(simulateResult.returns![1]).toEqual(sendResult.returns![1])
   })
 })
