@@ -52,14 +52,14 @@ export type CommonTransactionParams = {
   signer?: algosdk.TransactionSigner | TransactionSignerAccount
   /** Change the signing key of the sender to the given address.
    *
-   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
    */
   rekeyTo?: string | Address
   /** Note to attach to the transaction. Max of 1000 bytes. */
   note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window.
    *
-   * A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/)
+   * A [lease](https://dev.algorand.co/concepts/transactions/leases)
    *  enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios).
    */
   lease?: Uint8Array | string

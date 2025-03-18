@@ -465,7 +465,7 @@ export class AccountManager {
   /**
    * Rekey an account to a new address.
    *
-   * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
    *
    * @param account The account to rekey
    * @param rekeyTo The account address or signing account of the account that will be used to authorise transactions for the rekeyed account going forward.

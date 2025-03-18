@@ -25,7 +25,7 @@ The recommended way of interacting with apps is via [Typed app clients](./typed-
 When calling an app there are two types of transactions:
 
 - Raw app transactions - Constructing a raw Algorand transaction to call the method; you have full control and are dealing with binary values directly
-- ABI method calls - Constructing a call to an [ABI method](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI)
+- ABI method calls - Constructing a call to an [ABI method](https://dev.algorand.co/concepts/smart-contracts/abi)
 
 Calling an app involves providing some [common parameters](#common-app-parameters) and some parameters that will depend on the type of app call (create vs update vs other) per below sections.
 
