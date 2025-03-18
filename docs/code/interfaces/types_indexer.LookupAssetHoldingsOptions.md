@@ -4,7 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).LookupAssetHoldingsOptions
 
-Options when looking up an asset's account holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-idbalances
+Options when looking up an asset's account holdings, https://dev.algorand.co/reference/rest-api/indexer/#lookupassetbalances
 
 ## Table of contents
 

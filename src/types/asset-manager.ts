@@ -197,7 +197,7 @@ export class AssetManager {
    * const accountInfo = await assetManager.getAccountInformation(address, assetId);
    * ```
    *
-   * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+   * [Response data schema details](https://dev.algorand.co/reference/rest-api/algod/#accountassetinformation)
    * @param sender The address of the sender/account to look up
    * @param assetId The ID of the asset to return a holding for
    * @returns The account asset holding information

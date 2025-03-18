@@ -228,7 +228,7 @@ export class AccountManager {
   /**
    * Returns the given sender account's current status, balance and spendable amounts.
    *
-   * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+   * [Response data schema details](https://dev.algorand.co/reference/rest-api/algod/#accountinformation)
    * @example
    * ```typescript
    * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
@@ -539,7 +539,7 @@ export class AccountManager {
    * the given account has a certain amount of Algo free to spend (accounting for
    * Algo locked in minimum balance requirement).
    *
-   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   * https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
    *
    * @param accountToFund The account to fund
    * @param dispenserAccount The account to use as a dispenser funding source
@@ -602,7 +602,7 @@ export class AccountManager {
    * process.env.DISPENSER_MNEMONIC and optionally process.env.DISPENSER_SENDER
    * if it's a rekeyed account, or against default LocalNet if no environment variables present.
    *
-   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   * https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
    *
    * @param accountToFund The account to fund
    * @param minSpendingBalance The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement)
@@ -657,7 +657,7 @@ export class AccountManager {
    * the account has a certain amount of Algo free to spend (accounting for Algo locked
    * in minimum balance requirement).
    *
-   * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+   * https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
    *
    * @param accountToFund The account to fund
    * @param dispenserClient The TestNet dispenser funding client

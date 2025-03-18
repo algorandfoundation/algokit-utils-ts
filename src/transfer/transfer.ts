@@ -14,7 +14,7 @@ import Kmd = algosdk.Kmd
  *
  * Funds a given account using a funding source such that it has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
  *
- * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+ * https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
  *
  * @param funding The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables.
  * @param algod An instance of the Algodv2 client.

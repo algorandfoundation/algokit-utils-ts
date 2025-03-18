@@ -12,11 +12,11 @@ import Algodv2 = algosdk.Algodv2
 
 /** Clients from algosdk that interact with the official Algorand APIs */
 export interface AlgoSdkClients {
-  /** Algod client, see https://developer.algorand.org/docs/rest-apis/algod/ */
+  /** Algod client, see https://dev.algorand.co/reference/rest-api/algod/ */
   algod: algosdk.Algodv2
-  /** Optional indexer client, see https://developer.algorand.org/docs/rest-apis/indexer/ */
+  /** Optional indexer client, see https://dev.algorand.co/reference/rest-api/indexer */
   indexer?: algosdk.Indexer
-  /** Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/ */
+  /** Optional KMD client, see https://dev.algorand.co/reference/rest-api/kmd/ */
   kmd?: algosdk.Kmd
 }
 

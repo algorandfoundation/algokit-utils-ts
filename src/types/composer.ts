@@ -34,7 +34,7 @@ export type SkipSignaturesSimulateOptions = Expand<
 >
 
 /** The raw API options to control a simulate request.
- * See algod API docs for more information: https://developer.algorand.org/docs/rest-apis/algod/#simulaterequest
+ * See algod API docs for more information: https://dev.algorand.co/reference/rest-api/algod/#simulatetransaction
  */
 export type RawSimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
 
@@ -343,17 +343,17 @@ export type OfflineKeyRegistrationParams = CommonTransactionParams & {
 export type CommonAppCallParams = CommonTransactionParams & {
   /** ID of the application; 0 if the application is being created. */
   appId: bigint
-  /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call; defaults to no-op. */
+  /** The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. */
   onComplete?: algosdk.OnApplicationComplete
-  /** Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/avm/teal/#argument-passing). */
+  /** Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). */
   args?: Uint8Array[]
-  /** Any account addresses to add to the [accounts array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
+  /** Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   accountReferences?: (string | Address)[]
-  /** The ID of any apps to load to the [foreign apps array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
+  /** The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   appReferences?: bigint[]
-  /** The ID of any assets to load to the [foreign assets array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
+  /** The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   assetReferences?: bigint[]
-  /** Any boxes to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays).
+  /** Any boxes to load to the [boxes array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
    *
    * Either the name identifier (which will be set against app ID of `0` i.e.
    *  the current app), or a box identifier with the name identifier and app ID.

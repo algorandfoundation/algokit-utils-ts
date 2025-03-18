@@ -4,7 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationOnComplete
 
-Defines the what additional actions occur with the transaction https://developer.algorand.org/docs/rest-apis/indexer/#oncompletion
+Defines the what additional actions occur with the transaction https://dev.algorand.co/reference/rest-api/indexer/#oncompletion
 
 ## Table of contents
 
