@@ -1,6 +1,6 @@
 import algosdk, { Address } from 'algosdk'
 import { TransactionSignerAccount } from './account'
-import { AlgorandClientInterface } from './algorand-client-interface'
+import { type AlgorandClient } from './algorand-client'
 import {
   AppCompilationResult,
   AppReturn,
@@ -53,7 +53,7 @@ export interface AppFactoryParams {
   appSpec: Arc56Contract | AppSpec | string
 
   /** `AlgorandClient` instance */
-  algorand: AlgorandClientInterface
+  algorand: AlgorandClient
 
   /**
    * Optional override for the app name; used for on-chain metadata and lookups.
@@ -170,7 +170,7 @@ export type AppFactoryDeployParams = Expand<
 export class AppFactory {
   private _appSpec: Arc56Contract
   private _appName: string
-  private _algorand: AlgorandClientInterface
+  private _algorand: AlgorandClient
   private _version: string
   private _defaultSender?: Address
   private _defaultSigner?: TransactionSigner

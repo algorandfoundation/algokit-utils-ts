@@ -24,7 +24,7 @@ Parameters to create an app client
 
 ### algorand
 
-• **algorand**: [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
+• **algorand**: [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md)
 
 `AlgorandClient` instance
 

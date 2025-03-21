@@ -93,7 +93,7 @@ const appFactory = new AppFactory({
 
 ### \_algorand
 
-• `Private` **\_algorand**: [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
+• `Private` **\_algorand**: [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 #### Defined in
 
@@ -265,13 +265,13 @@ Send transactions to the current app
 
 ### algorand
 
-• `get` **algorand**(): [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
+• `get` **algorand**(): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 Return the algorand client this factory is using.
 
 #### Returns
 
-[`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
+[`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 #### Defined in
 
