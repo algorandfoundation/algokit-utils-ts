@@ -1933,9 +1933,7 @@ export class TransactionComposer {
    * @returns The execution result
    * @example
    * ```typescript
-   * const result = await composer.send({
-   *   populateAppCallResources: true,
-   * })
+   * const result = await composer.send()
    * ```
    */
   async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {

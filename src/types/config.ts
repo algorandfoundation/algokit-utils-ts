@@ -95,7 +95,7 @@ export class UpdatableConfig implements Readonly<Config> {
       traceAll: false,
       traceBufferSizeMb: 256,
       maxSearchDepth: 10,
-      populateAppCallResources: false,
+      populateAppCallResources: true,
       events: new AsyncEventEmitter(),
     }
   }
