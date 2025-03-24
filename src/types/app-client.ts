@@ -17,7 +17,7 @@ import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { asJson, binaryStartsWith } from '../util'
 import { TransactionSignerAccount } from './account'
-import { AlgorandClientInterface } from './algorand-client-interface'
+import { type AlgorandClient } from './algorand-client'
 import { AlgoAmount } from './amount'
 import {
   ABIAppCallArg,
@@ -325,7 +325,7 @@ export interface AppClientParams {
   appSpec: Arc56Contract | AppSpec | string
 
   /** An `AlgorandClient` instance */
-  algorand: AlgorandClientInterface
+  algorand: AlgorandClient
 
   /**
    * Optional override for the app name; used for on-chain metadata and lookups.
@@ -477,7 +477,7 @@ export class AppClient {
   private _appAddress: Address
   private _appName: string
   private _appSpec: Arc56Contract
-  private _algorand: AlgorandClientInterface
+  private _algorand: AlgorandClient
   private _defaultSender?: Address
   private _defaultSigner?: TransactionSigner
 
@@ -675,7 +675,7 @@ export class AppClient {
   }
 
   /** A reference to the underlying `AlgorandClient` this app client is using. */
-  public get algorand(): AlgorandClientInterface {
+  public get algorand(): AlgorandClient {
     return this._algorand
   }
 
