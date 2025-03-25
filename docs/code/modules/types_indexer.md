@@ -61,7 +61,7 @@
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AccountResponse`. Indexer result for an account lookup, https://dev.algorand.co/reference/rest-api/indexer#get-v2accountsaccount-id
+Use `algosdk.indexerModels.AccountResponse`. Indexer result for an account lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-id
 
 #### Defined in
 
@@ -75,7 +75,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AccountParticipation`. Indexer AccountParticipation describes the parameters used by this account in consensus protocol. https://dev.algorand.co/reference/rest-api/indexer#accountparticipation
+Use `algosdk.indexerModels.AccountParticipation`. Indexer AccountParticipation describes the parameters used by this account in consensus protocol. https://dev.algorand.co/reference/rest-apis/indexer#accountparticipation
 
 #### Defined in
 
@@ -89,7 +89,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.Account`. Indexer Account information at a given round https://dev.algorand.co/reference/rest-api/indexer#account
+Use `algosdk.indexerModels.Account`. Indexer Account information at a given round https://dev.algorand.co/reference/rest-apis/indexer#account
 
 #### Defined in
 
@@ -117,7 +117,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationLocalState`. Indexer Stores local state associated with an application. https://dev.algorand.co/reference/rest-api/indexer#applicationlocalstate
+Use `algosdk.indexerModels.ApplicationLocalState`. Indexer Stores local state associated with an application. https://dev.algorand.co/reference/rest-apis/indexer#applicationlocalstate
 
 #### Defined in
 
@@ -131,7 +131,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationsResponse`. Indexer result for an account's created applications, https://dev.algorand.co/reference/rest-api/indexer#get-v2accountsaccount-idcreated-applications
+Use `algosdk.indexerModels.ApplicationsResponse`. Indexer result for an account's created applications, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-idcreated-applications
 
 #### Defined in
 
@@ -145,7 +145,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationResponse`. Indexer result for an application lookup, https://dev.algorand.co/reference/rest-api/indexer#get-v2applicationsapplication-id
+Use `algosdk.indexerModels.ApplicationResponse`. Indexer result for an application lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2applicationsapplication-id
 
 #### Defined in
 
@@ -159,7 +159,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationParams`. Indexer Stores the global information associated with an application https://dev.algorand.co/reference/rest-api/indexer#applicationparams
+Use `algosdk.indexerModels.ApplicationParams`. Indexer Stores the global information associated with an application https://dev.algorand.co/reference/rest-apis/indexer#applicationparams
 
 #### Defined in
 
@@ -187,7 +187,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionApplication`. Indexer Fields for an application transaction https://dev.algorand.co/reference/rest-api/indexer#transactionapplication
+Use `algosdk.indexerModels.TransactionApplication`. Indexer Fields for an application transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionapplication
 
 #### Defined in
 
@@ -201,7 +201,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetBalancesResponse`. Indexer result for an asset's account holdings, https://dev.algorand.co/reference/rest-api/indexer#get-v2assetsasset-idbalances
+Use `algosdk.indexerModels.AssetBalancesResponse`. Indexer result for an asset's account holdings, https://dev.algorand.co/reference/rest-apis/indexer#get-v2assetsasset-idbalances
 
 #### Defined in
 
@@ -216,7 +216,7 @@ ___
 **`Deprecated`**
 
 Use `algosdk.indexerModels.TransactionAssetConfig`. Indexer Fields for asset allocation, re-configuration, and destruction.
-https://dev.algorand.co/reference/rest-api/indexer#transactionassetconfig
+https://dev.algorand.co/reference/rest-apis/indexer#transactionassetconfig
 
 A zero value for asset-id indicates asset creation. A zero value for the params indicates asset destruction.
 
@@ -232,7 +232,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionAssetFreeze`. Indexer Fields for an asset freeze transaction. https://dev.algorand.co/reference/rest-api/indexer#transactionassetfreeze
+Use `algosdk.indexerModels.TransactionAssetFreeze`. Indexer Fields for an asset freeze transaction. https://dev.algorand.co/reference/rest-apis/indexer#transactionassetfreeze
 
 #### Defined in
 
@@ -246,7 +246,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetHolding`. Indexer Describes an asset held by an account. https://dev.algorand.co/reference/rest-api/indexer#assetholding
+Use `algosdk.indexerModels.AssetHolding`. Indexer Describes an asset held by an account. https://dev.algorand.co/reference/rest-apis/indexer#assetholding
 
 #### Defined in
 
@@ -260,7 +260,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetResponse`. Indexer result for an asset lookup, https://dev.algorand.co/reference/rest-api/indexer#get-v2assetsasset-id
+Use `algosdk.indexerModels.AssetResponse`. Indexer result for an asset lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2assetsasset-id
 
 #### Defined in
 
@@ -274,7 +274,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetParams`. Indexer AssetParams specifies the parameters for an asset. https://dev.algorand.co/reference/rest-api/indexer#assetparams
+Use `algosdk.indexerModels.AssetParams`. Indexer AssetParams specifies the parameters for an asset. https://dev.algorand.co/reference/rest-apis/indexer#assetparams
 
 #### Defined in
 
@@ -288,7 +288,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.Asset`. Indexer Fields to specify both the unique identifier and the parameters for an asset. https://dev.algorand.co/reference/rest-api/indexer#asset
+Use `algosdk.indexerModels.Asset`. Indexer Fields to specify both the unique identifier and the parameters for an asset. https://dev.algorand.co/reference/rest-apis/indexer#asset
 
 #### Defined in
 
@@ -302,7 +302,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionAssetTransfer`. Indexer Fields for an asset transfer transaction. https://dev.algorand.co/reference/rest-api/indexer#transactionassettransfer
+Use `algosdk.indexerModels.TransactionAssetTransfer`. Indexer Fields for an asset transfer transaction. https://dev.algorand.co/reference/rest-apis/indexer#transactionassettransfer
 
 #### Defined in
 
@@ -316,7 +316,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetsResponse`. Indexer result for an account's created assets, https://dev.algorand.co/reference/rest-api/indexer#get-v2accountsaccount-idcreated-assets
+Use `algosdk.indexerModels.AssetsResponse`. Indexer result for an account's created assets, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-idcreated-assets
 
 #### Defined in
 
@@ -330,7 +330,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetHoldingsResponse`. Indexer result for an account's asset holdings, https://dev.algorand.co/reference/rest-api/indexer#get-v2accountsaccount-idassets
+Use `algosdk.indexerModels.AssetHoldingsResponse`. Indexer result for an account's asset holdings, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-idassets
 
 #### Defined in
 
@@ -344,7 +344,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.EvalDelta`. Indexer Represents a TEAL value delta. https://dev.algorand.co/reference/rest-api/indexer#evaldelta
+Use `algosdk.indexerModels.EvalDelta`. Indexer Represents a TEAL value delta. https://dev.algorand.co/reference/rest-apis/indexer#evaldelta
 
 #### Defined in
 
@@ -372,7 +372,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionKeyreg`. Indexer Fields for a `keyreg` transaction https://dev.algorand.co/reference/rest-api/indexer#transactionkeyreg
+Use `algosdk.indexerModels.TransactionKeyreg`. Indexer Fields for a `keyreg` transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionkeyreg
 
 #### Defined in
 
@@ -388,7 +388,7 @@ ___
 
 Use `algosdk.indexerModels.TransactionSignatureLogicsig`. Indexer [lsig] Programatic transaction signature.
 
-https://dev.algorand.co/reference/rest-api/indexer#transactionsignaturelogicsig
+https://dev.algorand.co/reference/rest-apis/indexer#transactionsignaturelogicsig
 
 https://dev.algorand.co/concepts/smart-contracts/logic-sigs
 
@@ -452,7 +452,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.MiniAssetHolding`. Indexer Describes an asset holding for an account of a known asset. https://dev.algorand.co/reference/rest-api/indexer#miniassetholding
+Use `algosdk.indexerModels.MiniAssetHolding`. Indexer Describes an asset holding for an account of a known asset. https://dev.algorand.co/reference/rest-apis/indexer#miniassetholding
 
 #### Defined in
 
@@ -466,7 +466,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionSignatureMultisig`. Indexer [msig] structure holding multiple subsignatures. https://dev.algorand.co/reference/rest-api/indexer#transactionsignaturemultisig
+Use `algosdk.indexerModels.TransactionSignatureMultisig`. Indexer [msig] structure holding multiple subsignatures. https://dev.algorand.co/reference/rest-apis/indexer#transactionsignaturemultisig
 
 #### Defined in
 
@@ -480,7 +480,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionSignatureMultisigSubsignature`. Indexer Sub-signature for a multisig signature https://dev.algorand.co/reference/rest-api/indexer#transactionsignaturemultisigsubsignature
+Use `algosdk.indexerModels.TransactionSignatureMultisigSubsignature`. Indexer Sub-signature for a multisig signature https://dev.algorand.co/reference/rest-apis/indexer#transactionsignaturemultisigsubsignature
 
 #### Defined in
 
@@ -494,7 +494,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionPayment`. Indexer Fields for a payment transaction https://dev.algorand.co/reference/rest-api/indexer#transactionpayment
+Use `algosdk.indexerModels.TransactionPayment`. Indexer Fields for a payment transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionpayment
 
 #### Defined in
 
@@ -522,13 +522,13 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionStateProof`. Indexer Fields for a state proof transaction https://dev.algorand.co/reference/rest-api/indexer#transactionstateproof.
+Use `algosdk.indexerModels.TransactionStateProof`. Indexer Fields for a state proof transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionstateproof.
 
-See also https://dev.algorand.co/protocol/state-proofs/,
+See also https://dev.algorand.co/concepts/protocol/state-proofs/,
 https://github.com/algorand/go-algorand/blob/master/data/transactions/stateproof.go,
 https://github.com/algorand/go-algorand/blob/master/crypto/stateproof/structs.go,
 https://github.com/algorand/go-algorand/blob/master/data/stateproofmsg/message.go, and
-https://dev.algorand.co/reference/rest-api/algod/#stateproof.
+https://dev.algorand.co/reference/rest-apis/algod/#stateproof.
 
 #### Defined in
 
@@ -543,7 +543,7 @@ ___
 **`Deprecated`**
 
 Use `algosdk.indexerModels.StateSchema`. Indexer Represents a [apls] local-state or [apgs] global-state schema.
-https://dev.algorand.co/reference/rest-api/indexer#stateschema
+https://dev.algorand.co/reference/rest-apis/indexer#stateschema
 
 These schemas determine how much storage may be used in a local-state or global-state for an application.
 
@@ -561,7 +561,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionResponse`. Indexer result for a transaction lookup, https://dev.algorand.co/reference/rest-api/indexer#get-v2transactionstxid
+Use `algosdk.indexerModels.TransactionResponse`. Indexer result for a transaction lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2transactionstxid
 
 #### Defined in
 
@@ -575,7 +575,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.Transaction`. Indexer result for a transaction, https://dev.algorand.co/reference/rest-api/indexer#transaction
+Use `algosdk.indexerModels.Transaction`. Indexer result for a transaction, https://dev.algorand.co/reference/rest-apis/indexer#transaction
 
 #### Defined in
 
@@ -589,7 +589,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionsResponse`. Indexer result for a transaction search, https://dev.algorand.co/reference/rest-api/indexer#get-v2transactions
+Use `algosdk.indexerModels.TransactionsResponse`. Indexer result for a transaction search, https://dev.algorand.co/reference/rest-apis/indexer#get-v2transactions
 
 #### Defined in
 
@@ -603,7 +603,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionSignature`. Indexer Validation signature associated with some data. Only one of the signatures should be provided. https://dev.algorand.co/reference/rest-api/indexer#transactionsignature
+Use `algosdk.indexerModels.TransactionSignature`. Indexer Validation signature associated with some data. Only one of the signatures should be provided. https://dev.algorand.co/reference/rest-apis/indexer#transactionsignature
 
 #### Defined in
 
