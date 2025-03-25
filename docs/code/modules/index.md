@@ -1141,7 +1141,7 @@ const assetId = 123345;
 const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
 ```
 
-[Response data schema details](https://dev.algorand.co/reference/rest-api/algod/#accountassetinformation)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
 
 #### Defined in
 
@@ -1212,7 +1212,7 @@ const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
 const accountInfo = await account.getInformation(address, algod);
 ```
 
-[Response data schema details](https://dev.algorand.co/reference/rest-api/algod/#accountinformation)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountinformation)
 
 #### Defined in
 

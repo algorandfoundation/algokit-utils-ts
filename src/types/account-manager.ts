@@ -228,7 +228,7 @@ export class AccountManager {
   /**
    * Returns the given sender account's current status, balance and spendable amounts.
    *
-   * [Response data schema details](https://dev.algorand.co/reference/rest-api/algod/#accountinformation)
+   * [Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountinformation)
    * @example
    * ```typescript
    * const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";

@@ -148,7 +148,7 @@ export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 
  * const accountInfo = await account.getInformation(address, algod);
  * ```
  *
- * [Response data schema details](https://dev.algorand.co/reference/rest-api/algod/#accountinformation)
+ * [Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountinformation)
  * @param sender The address of the sender/account to look up
  * @param algod The algod instance
  * @returns The account information
@@ -192,7 +192,7 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
  * const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
  * ```
  *
- * [Response data schema details](https://dev.algorand.co/reference/rest-api/algod/#accountassetinformation)
+ * [Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
  * @param sender The address of the sender/account to look up
  * @param assetId The ID of the asset to return a holding for
  * @param algod The algod instance

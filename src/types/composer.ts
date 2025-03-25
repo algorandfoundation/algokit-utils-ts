@@ -34,7 +34,7 @@ export type SkipSignaturesSimulateOptions = Expand<
 >
 
 /** The raw API options to control a simulate request.
- * See algod API docs for more information: https://dev.algorand.co/reference/rest-api/algod/#simulatetransaction
+ * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
 export type RawSimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
 

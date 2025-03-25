@@ -192,7 +192,7 @@ Application consumers may not be immediately aware of the number of op-up inner 
 ## Simulating a transaction
 
 Transactions can be simulated using the simulate endpoint in algod, which enables evaluating the transaction on the network without it actually being commited to a block.
-This is a powerful feature, which has a number of options which are detailed in the [simulate API docs](https://dev.algorand.co/reference/rest-api/output/#simulatetransaction).
+This is a powerful feature, which has a number of options which are detailed in the [simulate API docs](https://dev.algorand.co/reference/rest-apis/output/#simulatetransaction).
 
 For example you can simulate a transaction group like below:
 
