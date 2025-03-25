@@ -46,7 +46,7 @@ If you're targetting v8, please refer to the [v8 migration guide](./docs/v8-migr
 
 This library follows the [Guiding Principles of AlgoKit](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/algokit.md#guiding-principles).
 
-## Contributing
+# Contributing
 
 This is an open source project managed by the Algorand Foundation. See the [AlgoKit contributing page](https://github.com/algorandfoundation/algokit-cli/blob/main/CONTRIBUTING.md) to learn about making improvements.
 
