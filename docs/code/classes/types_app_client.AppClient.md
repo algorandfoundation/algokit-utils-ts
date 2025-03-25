@@ -117,7 +117,7 @@ const appClient = new AppClient({
 
 ### \_algorand
 
-• `Private` **\_algorand**: [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
+• `Private` **\_algorand**: [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 #### Defined in
 
@@ -306,13 +306,13 @@ ___
 
 ### algorand
 
-• `get` **algorand**(): [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
+• `get` **algorand**(): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 A reference to the underlying `AlgorandClient` this app client is using.
 
 #### Returns
 
-[`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface)
+[`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 #### Defined in
 
@@ -608,12 +608,12 @@ An alias for `appClient.send.fundAppAccount(params)`.
 | `params.extraFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The fee to pay IN ADDITION to the suggested fee. Useful for manually covering inner transaction fees. |
 | `params.firstValidRound?` | `bigint` | Set the first round this transaction is valid. If left undefined, the value from algod will be used. We recommend you only set this when you intentionally want this to be some time in the future. |
 | `params.lastValidRound?` | `bigint` | The last round this transaction is valid. It is recommended to use `validityWindow` instead. |
-| `params.lease?` | `string` \| `Uint8Array` | Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios). |
+| `params.lease?` | `string` \| `Uint8Array` | Prevent multiple transactions with the same lease being included within the validity window. A [lease](https://dev.algorand.co/concepts/transactions/leases) enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios). |
 | `params.maxFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | Throw an error if the fee for the transaction is more than this amount; prevents overspending on fees during high congestion periods. |
 | `params.maxRoundsToWaitForConfirmation?` | `number` | The number of rounds to wait for confirmation. By default until the latest lastValid has past. |
 | `params.note?` | `string` \| `Uint8Array` | Note to attach to the transaction. Max of 1000 bytes. |
 | `params.populateAppCallResources?` | `boolean` | Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`. |
-| `params.rekeyTo?` | `string` \| `Address` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/). |
+| `params.rekeyTo?` | `string` \| `Address` | Change the signing key of the sender to the given address. **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying). |
 | `params.sender?` | `string` \| `Address` | The optional sender to send the transaction from, will use the application client's default sender by default if specified |
 | `params.signer?` | `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) | The function used to sign transaction(s); if not specified then an attempt will be made to find a registered signer for the given `sender` or use a default signer (if configured). |
 | `params.staticFee?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The static transaction fee. In most cases you want to use `extraFee` unless setting the fee to 0 to be covered by another transaction. |
@@ -1345,7 +1345,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
-| `params.algorand` | [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface) | An `AlgorandClient` instance |
+| `params.algorand` | [`AlgorandClient`](types_algorand_client.AlgorandClient.md) | An `AlgorandClient` instance |
 | `params.appLookupCache?` | [`AppLookup`](../interfaces/types_app_deployer.AppLookup.md) | An optional cached app lookup that matches a name to on-chain details; either this is needed or indexer is required to be passed in to this `ClientManager` on construction. |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
@@ -1392,7 +1392,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters to create the app client |
-| `params.algorand` | [`AlgorandClientInterface`](../modules/types_algorand_client_interface.md#algorandclientinterface) | An `AlgorandClient` instance |
+| `params.algorand` | [`AlgorandClient`](types_algorand_client.AlgorandClient.md) | An `AlgorandClient` instance |
 | `params.appName?` | `string` | Optional override for the app name; used for on-chain metadata and lookups. Defaults to the ARC-32/ARC-56 app spec name |
 | `params.appSpec` | `string` \| [`Arc56Contract`](../interfaces/types_app_arc56.Arc56Contract.md) \| [`AppSpec`](../interfaces/types_app_spec.AppSpec.md) | The ARC-56 or ARC-32 application spec as either: * Parsed JSON ARC-56 `Contract` * Parsed JSON ARC-32 `AppSpec` * Raw JSON string (in either ARC-56 or ARC-32 format) |
 | `params.approvalSourceMap?` | `ProgramSourceMap` | Optional source map for the approval program |

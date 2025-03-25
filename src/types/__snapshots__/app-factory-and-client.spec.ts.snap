@@ -5,8 +5,8 @@ exports[`ARC32: app-factory-and-app-client > Errors > Display nice error message
 INFO: App TestingApp not found in apps created by ACCOUNT_1; deploying app with version 1.0.
 VERBOSE: Sent transaction ID TXID_1 appl from ACCOUNT_1
 DEBUG: App created by ACCOUNT_1 with ID APP_1 via transaction TXID_1
-ERROR: Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information | [{"cause":{"response":{"text":"{\\"data\\":{\\"app-index\\":APP_1,\\"eval-states\\":[{\\"stack\\":[0]}],\\"group-index\\":0,\\"pc\\":885},\\"message\\":\\"TransactionPool.Remember: transaction TXID_2: logic eval error: assert failed pc=885. Details: app=APP_1, pc=885, opcodes=proto 0 0; intc_0 // 0; assert\\"}\\n","format":"application/json","status":400,"ok":false},"name":"URLTokenBaseHTTPError","status":400},"response":{"text":"{\\"data\\":{\\"app-index\\":APP_1,\\"eval-states\\":[{\\"stack\\":[0]}],\\"group-index\\":0,\\"pc\\":885},\\"message\\":\\"TransactionPool.Remember: transaction TXID_2: logic eval error: assert failed pc=885. Details: app=APP_1, pc=885, opcodes=proto 0 0; intc_0 // 0; assert\\"}\\n","format":"application/json","status":400,"ok":false},"name":"URLTokenBaseHTTPError","traces":[]}]
-ERROR: assert failed pc=885. at:469. Network request error. Received status 400 (Bad Request): TransactionPool.Remember: transaction TXID_2: logic eval error: assert failed pc=885. Details: app=APP_1, pc=885, opcodes=proto 0 0; intc_0 // 0; assert
+ERROR: Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information | [{"cause":{},"name":"Error","traces":[]}]
+ERROR: assert failed pc=885. at:469. Error resolving execution info via simulate in transaction 0: transaction TXID_2: logic eval error: assert failed pc=885. Details: app=APP_1, pc=885, opcodes=proto 0 0; intc_0 // 0; assert
 
 464: // error
 465: error_7:

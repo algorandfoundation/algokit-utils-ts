@@ -61,7 +61,7 @@
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AccountResponse`. Indexer result for an account lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-id
+Use `algosdk.indexerModels.AccountResponse`. Indexer result for an account lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-id
 
 #### Defined in
 
@@ -75,11 +75,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AccountParticipation`. Indexer AccountParticipation describes the parameters used by this account in consensus protocol. https://developer.algorand.org/docs/rest-apis/indexer/#accountparticipation
+Use `algosdk.indexerModels.AccountParticipation`. Indexer AccountParticipation describes the parameters used by this account in consensus protocol. https://dev.algorand.co/reference/rest-apis/indexer#accountparticipation
 
 #### Defined in
 
-[src/types/indexer.ts:200](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L200)
+[src/types/indexer.ts:199](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L199)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.Account`. Indexer Account information at a given round https://developer.algorand.org/docs/rest-apis/indexer/#account
+Use `algosdk.indexerModels.Account`. Indexer Account information at a given round https://dev.algorand.co/reference/rest-apis/indexer#account
 
 #### Defined in
 
@@ -107,7 +107,7 @@ Use `algosdk.indexerModels.AccountStateDelta`.
 
 #### Defined in
 
-[src/types/indexer.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L146)
+[src/types/indexer.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L145)
 
 ___
 
@@ -117,11 +117,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationLocalState`. Indexer Stores local state associated with an application. https://developer.algorand.org/docs/rest-apis/indexer/#applicationlocalstate
+Use `algosdk.indexerModels.ApplicationLocalState`. Indexer Stores local state associated with an application. https://dev.algorand.co/reference/rest-apis/indexer#applicationlocalstate
 
 #### Defined in
 
-[src/types/indexer.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L203)
+[src/types/indexer.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L202)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationsResponse`. Indexer result for an account's created applications, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-applications
+Use `algosdk.indexerModels.ApplicationsResponse`. Indexer result for an account's created applications, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-idcreated-applications
 
 #### Defined in
 
@@ -145,7 +145,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationResponse`. Indexer result for an application lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2applicationsapplication-id
+Use `algosdk.indexerModels.ApplicationResponse`. Indexer result for an application lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2applicationsapplication-id
 
 #### Defined in
 
@@ -159,11 +159,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.ApplicationParams`. Indexer Stores the global information associated with an application https://developer.algorand.org/docs/rest-apis/indexer/#applicationparams
+Use `algosdk.indexerModels.ApplicationParams`. Indexer Stores the global information associated with an application https://dev.algorand.co/reference/rest-apis/indexer#applicationparams
 
 #### Defined in
 
-[src/types/indexer.ts:155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L155)
+[src/types/indexer.ts:154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L154)
 
 ___
 
@@ -177,7 +177,7 @@ Use `algosdk.indexerModels.Application`. Indexer result of looking up an applica
 
 #### Defined in
 
-[src/types/indexer.ts:123](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L123)
+[src/types/indexer.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L122)
 
 ___
 
@@ -187,11 +187,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionApplication`. Indexer Fields for an application transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionapplication
+Use `algosdk.indexerModels.TransactionApplication`. Indexer Fields for an application transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionapplication
 
 #### Defined in
 
-[src/types/indexer.ts:100](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L100)
+[src/types/indexer.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L99)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetBalancesResponse`. Indexer result for an asset's account holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-idbalances
+Use `algosdk.indexerModels.AssetBalancesResponse`. Indexer result for an asset's account holdings, https://dev.algorand.co/reference/rest-apis/indexer#get-v2assetsasset-idbalances
 
 #### Defined in
 
@@ -216,13 +216,13 @@ ___
 **`Deprecated`**
 
 Use `algosdk.indexerModels.TransactionAssetConfig`. Indexer Fields for asset allocation, re-configuration, and destruction.
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetconfig
+https://dev.algorand.co/reference/rest-apis/indexer#transactionassetconfig
 
 A zero value for asset-id indicates asset creation. A zero value for the params indicates asset destruction.
 
 #### Defined in
 
-[src/types/indexer.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L107)
+[src/types/indexer.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L106)
 
 ___
 
@@ -232,11 +232,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionAssetFreeze`. Indexer Fields for an asset freeze transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassetfreeze
+Use `algosdk.indexerModels.TransactionAssetFreeze`. Indexer Fields for an asset freeze transaction. https://dev.algorand.co/reference/rest-apis/indexer#transactionassetfreeze
 
 #### Defined in
 
-[src/types/indexer.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L110)
+[src/types/indexer.ts:109](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L109)
 
 ___
 
@@ -246,11 +246,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetHolding`. Indexer Describes an asset held by an account. https://developer.algorand.org/docs/rest-apis/indexer/#assetholding
+Use `algosdk.indexerModels.AssetHolding`. Indexer Describes an asset held by an account. https://dev.algorand.co/reference/rest-apis/indexer#assetholding
 
 #### Defined in
 
-[src/types/indexer.ts:206](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L206)
+[src/types/indexer.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L205)
 
 ___
 
@@ -260,7 +260,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetResponse`. Indexer result for an asset lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2assetsasset-id
+Use `algosdk.indexerModels.AssetResponse`. Indexer result for an asset lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2assetsasset-id
 
 #### Defined in
 
@@ -274,11 +274,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetParams`. Indexer AssetParams specifies the parameters for an asset. https://developer.algorand.org/docs/rest-apis/indexer/#assetparams
+Use `algosdk.indexerModels.AssetParams`. Indexer AssetParams specifies the parameters for an asset. https://dev.algorand.co/reference/rest-apis/indexer#assetparams
 
 #### Defined in
 
-[src/types/indexer.ts:177](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L177)
+[src/types/indexer.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L176)
 
 ___
 
@@ -288,11 +288,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.Asset`. Indexer Fields to specify both the unique identifier and the parameters for an asset. https://developer.algorand.org/docs/rest-apis/indexer/#asset
+Use `algosdk.indexerModels.Asset`. Indexer Fields to specify both the unique identifier and the parameters for an asset. https://dev.algorand.co/reference/rest-apis/indexer#asset
 
 #### Defined in
 
-[src/types/indexer.ts:119](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L119)
+[src/types/indexer.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L118)
 
 ___
 
@@ -302,11 +302,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionAssetTransfer`. Indexer Fields for an asset transfer transaction. https://developer.algorand.org/docs/rest-apis/indexer/#transactionassettransfer
+Use `algosdk.indexerModels.TransactionAssetTransfer`. Indexer Fields for an asset transfer transaction. https://dev.algorand.co/reference/rest-apis/indexer#transactionassettransfer
 
 #### Defined in
 
-[src/types/indexer.ts:113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L113)
+[src/types/indexer.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L112)
 
 ___
 
@@ -316,7 +316,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetsResponse`. Indexer result for an account's created assets, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idcreated-assets
+Use `algosdk.indexerModels.AssetsResponse`. Indexer result for an account's created assets, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-idcreated-assets
 
 #### Defined in
 
@@ -330,7 +330,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.AssetHoldingsResponse`. Indexer result for an account's asset holdings, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2accountsaccount-idassets
+Use `algosdk.indexerModels.AssetHoldingsResponse`. Indexer result for an account's asset holdings, https://dev.algorand.co/reference/rest-apis/indexer#get-v2accountsaccount-idassets
 
 #### Defined in
 
@@ -344,11 +344,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.EvalDelta`. Indexer Represents a TEAL value delta. https://developer.algorand.org/docs/rest-apis/indexer/#evaldelta
+Use `algosdk.indexerModels.EvalDelta`. Indexer Represents a TEAL value delta. https://dev.algorand.co/reference/rest-apis/indexer#evaldelta
 
 #### Defined in
 
-[src/types/indexer.ts:152](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L152)
+[src/types/indexer.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L151)
 
 ___
 
@@ -362,7 +362,7 @@ Use `algosdk.indexerModels.EvalDeltaKeyValue`.
 
 #### Defined in
 
-[src/types/indexer.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L143)
+[src/types/indexer.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L142)
 
 ___
 
@@ -372,11 +372,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionKeyreg`. Indexer Fields for a `keyreg` transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionkeyreg
+Use `algosdk.indexerModels.TransactionKeyreg`. Indexer Fields for a `keyreg` transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionkeyreg
 
 #### Defined in
 
-[src/types/indexer.ts:116](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L116)
+[src/types/indexer.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L115)
 
 ___
 
@@ -388,13 +388,13 @@ ___
 
 Use `algosdk.indexerModels.TransactionSignatureLogicsig`. Indexer [lsig] Programatic transaction signature.
 
-https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturelogicsig
+https://dev.algorand.co/reference/rest-apis/indexer#transactionsignaturelogicsig
 
-https://developer.algorand.org/docs/get-details/transactions/signatures/#logic-signatures
+https://dev.algorand.co/concepts/smart-contracts/logic-sigs
 
 #### Defined in
 
-[src/types/indexer.ts:134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L134)
+[src/types/indexer.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L133)
 
 ___
 
@@ -442,7 +442,7 @@ The worst case is this:
 
 #### Defined in
 
-[src/types/indexer.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L97)
+[src/types/indexer.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L96)
 
 ___
 
@@ -452,11 +452,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.MiniAssetHolding`. Indexer Describes an asset holding for an account of a known asset. https://developer.algorand.org/docs/rest-apis/indexer/#miniassetholding
+Use `algosdk.indexerModels.MiniAssetHolding`. Indexer Describes an asset holding for an account of a known asset. https://dev.algorand.co/reference/rest-apis/indexer#miniassetholding
 
 #### Defined in
 
-[src/types/indexer.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L209)
+[src/types/indexer.ts:208](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L208)
 
 ___
 
@@ -466,11 +466,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionSignatureMultisig`. Indexer [msig] structure holding multiple subsignatures. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisig
+Use `algosdk.indexerModels.TransactionSignatureMultisig`. Indexer [msig] structure holding multiple subsignatures. https://dev.algorand.co/reference/rest-apis/indexer#transactionsignaturemultisig
 
 #### Defined in
 
-[src/types/indexer.ts:137](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L137)
+[src/types/indexer.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L136)
 
 ___
 
@@ -480,11 +480,11 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionSignatureMultisigSubsignature`. Indexer Sub-signature for a multisig signature https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignaturemultisigsubsignature
+Use `algosdk.indexerModels.TransactionSignatureMultisigSubsignature`. Indexer Sub-signature for a multisig signature https://dev.algorand.co/reference/rest-apis/indexer#transactionsignaturemultisigsubsignature
 
 #### Defined in
 
-[src/types/indexer.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L140)
+[src/types/indexer.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L139)
 
 ___
 
@@ -494,7 +494,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionPayment`. Indexer Fields for a payment transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionpayment
+Use `algosdk.indexerModels.TransactionPayment`. Indexer Fields for a payment transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionpayment
 
 #### Defined in
 
@@ -512,7 +512,7 @@ Use `algosdk.indexerModels.EvalDeltaKeyValue[]`.
 
 #### Defined in
 
-[src/types/indexer.ts:149](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L149)
+[src/types/indexer.ts:148](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L148)
 
 ___
 
@@ -522,18 +522,17 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionStateProof`. Indexer Fields for a state proof transaction https://developer.algorand.org/docs/rest-apis/indexer/#transactionstateproof.
+Use `algosdk.indexerModels.TransactionStateProof`. Indexer Fields for a state proof transaction https://dev.algorand.co/reference/rest-apis/indexer#transactionstateproof.
 
-See also https://developer.algorand.org/docs/get-details/stateproofs/,
-https://developer.algorand.org/docs/get-details/stateproofs/light_client/,
+See also https://dev.algorand.co/concepts/protocol/state-proofs/,
 https://github.com/algorand/go-algorand/blob/master/data/transactions/stateproof.go,
 https://github.com/algorand/go-algorand/blob/master/crypto/stateproof/structs.go,
 https://github.com/algorand/go-algorand/blob/master/data/stateproofmsg/message.go, and
-https://developer.algorand.org/docs/rest-apis/algod/#stateproof.
+https://dev.algorand.co/reference/rest-apis/algod/#stateproof.
 
 #### Defined in
 
-[src/types/indexer.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L59)
+[src/types/indexer.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L58)
 
 ___
 
@@ -544,7 +543,7 @@ ___
 **`Deprecated`**
 
 Use `algosdk.indexerModels.StateSchema`. Indexer Represents a [apls] local-state or [apgs] global-state schema.
-https://developer.algorand.org/docs/rest-apis/indexer/#stateschema
+https://dev.algorand.co/reference/rest-apis/indexer#stateschema
 
 These schemas determine how much storage may be used in a local-state or global-state for an application.
 
@@ -552,7 +551,7 @@ The more space used, the larger minimum balance must be maintained in the accoun
 
 #### Defined in
 
-[src/types/indexer.ts:164](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L164)
+[src/types/indexer.ts:163](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L163)
 
 ___
 
@@ -562,7 +561,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionResponse`. Indexer result for a transaction lookup, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactionstxid
+Use `algosdk.indexerModels.TransactionResponse`. Indexer result for a transaction lookup, https://dev.algorand.co/reference/rest-apis/indexer#get-v2transactionstxid
 
 #### Defined in
 
@@ -576,7 +575,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.Transaction`. Indexer result for a transaction, https://developer.algorand.org/docs/rest-apis/indexer/#transaction
+Use `algosdk.indexerModels.Transaction`. Indexer result for a transaction, https://dev.algorand.co/reference/rest-apis/indexer#transaction
 
 #### Defined in
 
@@ -590,7 +589,7 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionsResponse`. Indexer result for a transaction search, https://developer.algorand.org/docs/rest-apis/indexer/#get-v2transactions
+Use `algosdk.indexerModels.TransactionsResponse`. Indexer result for a transaction search, https://dev.algorand.co/reference/rest-apis/indexer#get-v2transactions
 
 #### Defined in
 
@@ -604,8 +603,8 @@ ___
 
 **`Deprecated`**
 
-Use `algosdk.indexerModels.TransactionSignature`. Indexer Validation signature associated with some data. Only one of the signatures should be provided. https://developer.algorand.org/docs/rest-apis/indexer/#transactionsignature
+Use `algosdk.indexerModels.TransactionSignature`. Indexer Validation signature associated with some data. Only one of the signatures should be provided. https://dev.algorand.co/reference/rest-apis/indexer#transactionsignature
 
 #### Defined in
 
-[src/types/indexer.ts:126](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L126)
+[src/types/indexer.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L125)

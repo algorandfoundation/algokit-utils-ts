@@ -227,7 +227,7 @@ Funds a given account using a dispenser account as a funding source such that
 the given account has a certain amount of Algo free to spend (accounting for
 Algo locked in minimum balance requirement).
 
-https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 #### Parameters
 
@@ -277,7 +277,7 @@ The dispenser account is retrieved from the account mnemonic stored in
 process.env.DISPENSER_MNEMONIC and optionally process.env.DISPENSER_SENDER
 if it's a rekeyed account, or against default LocalNet if no environment variables present.
 
-https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 #### Parameters
 
@@ -319,7 +319,7 @@ Funds a given account using the TestNet Dispenser API as a funding source such t
 the account has a certain amount of Algo free to spend (accounting for Algo locked
 in minimum balance requirement).
 
-https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 #### Parameters
 
@@ -507,7 +507,7 @@ ___
 
 Returns the given sender account's current status, balance and spendable amounts.
 
-[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountinformation)
 
 #### Parameters
 
@@ -684,7 +684,7 @@ ___
 
 Rekey an account to a new address.
 
-**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
 
 #### Parameters
 

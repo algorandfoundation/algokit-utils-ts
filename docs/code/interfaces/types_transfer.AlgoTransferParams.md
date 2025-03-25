@@ -95,7 +95,7 @@ ___
 
 • `Optional` **lease**: `string` \| `Uint8Array`
 
-An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply
+An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply
 
 #### Defined in
 

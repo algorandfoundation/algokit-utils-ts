@@ -575,7 +575,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:1058](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1058)
+[src/transaction/transaction.ts:1057](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1057)
 
 ___
 
@@ -639,7 +639,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:1085](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1085)
+[src/transaction/transaction.ts:1084](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1084)
 
 ___
 
@@ -882,7 +882,7 @@ Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnviro
 
 Funds a given account using a funding source such that it has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
 
-https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 #### Defined in
 
@@ -966,7 +966,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:928](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L928)
+[src/transaction/transaction.ts:927](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L927)
 
 ___
 
@@ -1141,7 +1141,7 @@ const assetId = 123345;
 const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
 ```
 
-[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
 
 #### Defined in
 
@@ -1212,7 +1212,7 @@ const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
 const accountInfo = await account.getInformation(address, algod);
 ```
 
-[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountinformation)
 
 #### Defined in
 
@@ -1942,7 +1942,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:1134](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1134)
+[src/transaction/transaction.ts:1133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1133)
 
 ___
 
@@ -2329,7 +2329,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:1112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1112)
+[src/transaction/transaction.ts:1111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1111)
 
 ___
 
@@ -2761,7 +2761,7 @@ A new ATC with the resources populated into the transactions
 
 #### Defined in
 
-[src/transaction/transaction.ts:383](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L383)
+[src/transaction/transaction.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L382)
 
 ___
 
@@ -2790,7 +2790,7 @@ A new ATC with the changes applied
 
 #### Defined in
 
-[src/transaction/transaction.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L402)
+[src/transaction/transaction.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L401)
 
 ___
 
@@ -2839,7 +2839,7 @@ Use `algorand.account.rekeyAccount()` instead
 
 Rekey an account to a new address.
 
-**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
 
 **`Example`**
 
@@ -2940,7 +2940,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:777](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L777)
+[src/transaction/transaction.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L776)
 
 ___
 
@@ -2965,11 +2965,11 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
 
-Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
+Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transactions/atomic-txn-groups/#create-transactions) transactions to the chain
 
 #### Defined in
 
-[src/transaction/transaction.ts:957](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L957)
+[src/transaction/transaction.ts:956](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L956)
 
 ___
 
@@ -3242,4 +3242,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:1001](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1001)
+[src/transaction/transaction.ts:1000](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1000)

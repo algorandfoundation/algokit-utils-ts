@@ -116,7 +116,7 @@ export interface TransactionToSign {
 }
 
 /** A group of transactions to send together as an atomic group
- * https://developer.algorand.org/docs/get-details/atomic_transfers/
+ * https://dev.algorand.co/concepts/transactions/atomic-txn-groups/
  */
 export interface TransactionGroupToSend {
   /** Any parameters to control the semantics of the send to the network */

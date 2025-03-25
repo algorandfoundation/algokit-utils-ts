@@ -16,7 +16,7 @@ export interface AlgoTransferParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
@@ -30,7 +30,7 @@ export interface AlgoRekeyParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
@@ -48,7 +48,7 @@ export interface EnsureFundedParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note, default: "Funding account to meet minimum requirement" */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
@@ -68,7 +68,7 @@ export interface TransferAssetParams extends SendTransactionParams {
   clawbackFrom?: SendTransactionFrom | string
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 

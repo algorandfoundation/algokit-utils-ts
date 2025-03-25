@@ -1,6 +1,6 @@
 import algosdk, { SuggestedParams } from 'algosdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
-import { AlgorandClientInterface } from './algorand-client-interface'
+import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
 import { AppFactory, AppFactoryParams } from './app-factory'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
@@ -12,11 +12,11 @@ import Algodv2 = algosdk.Algodv2
 
 /** Clients from algosdk that interact with the official Algorand APIs */
 export interface AlgoSdkClients {
-  /** Algod client, see https://developer.algorand.org/docs/rest-apis/algod/ */
+  /** Algod client, see https://dev.algorand.co/reference/rest-apis/algod/ */
   algod: algosdk.Algodv2
-  /** Optional indexer client, see https://developer.algorand.org/docs/rest-apis/indexer/ */
+  /** Optional indexer client, see https://dev.algorand.co/reference/rest-apis/indexer */
   indexer?: algosdk.Indexer
-  /** Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/ */
+  /** Optional KMD client, see https://dev.algorand.co/reference/rest-apis/kmd/ */
   kmd?: algosdk.Kmd
 }
 
@@ -49,7 +49,7 @@ export class ClientManager {
   private _algod: algosdk.Algodv2
   private _indexer?: algosdk.Indexer
   private _kmd?: algosdk.Kmd
-  private _algorand?: AlgorandClientInterface
+  private _algorand?: AlgorandClient
 
   /**
    * algosdk clients or config for interacting with the official Algorand APIs.
@@ -71,7 +71,7 @@ export class ClientManager {
    * const clientManager = new ClientManager({ algodConfig, indexerConfig, kmdConfig })
    * ```
    */
-  constructor(clientsOrConfig: AlgoConfig | AlgoSdkClients, algorandClient?: AlgorandClientInterface) {
+  constructor(clientsOrConfig: AlgoConfig | AlgoSdkClients, algorandClient?: AlgorandClient) {
     const _clients =
       'algod' in clientsOrConfig
         ? clientsOrConfig

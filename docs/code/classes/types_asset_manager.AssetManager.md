@@ -184,7 +184,7 @@ const assetId = 123345n;
 const accountInfo = await assetManager.getAccountInformation(address, assetId);
 ```
 
-[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
 
 #### Defined in
 
