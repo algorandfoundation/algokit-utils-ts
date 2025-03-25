@@ -20,7 +20,7 @@ Clients from algosdk that interact with the official Algorand APIs
 
 • **algod**: `AlgodClient`
 
-Algod client, see https://developer.algorand.org/docs/rest-apis/algod/
+Algod client, see https://dev.algorand.co/reference/rest-apis/algod/
 
 #### Defined in
 
@@ -32,7 +32,7 @@ ___
 
 • `Optional` **indexer**: `IndexerClient`
 
-Optional indexer client, see https://developer.algorand.org/docs/rest-apis/indexer/
+Optional indexer client, see https://dev.algorand.co/reference/rest-apis/indexer
 
 #### Defined in
 
@@ -44,7 +44,7 @@ ___
 
 • `Optional` **kmd**: `KmdClient`
 
-Optional KMD client, see https://developer.algorand.org/docs/rest-apis/kmd/
+Optional KMD client, see https://dev.algorand.co/reference/rest-apis/kmd/
 
 #### Defined in
 

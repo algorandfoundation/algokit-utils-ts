@@ -62,7 +62,7 @@ export interface CreateAssetParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
@@ -76,7 +76,7 @@ export interface AssetOptInParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 

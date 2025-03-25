@@ -83,7 +83,7 @@ export interface CoreAppCallArgs {
   assets?: number[]
   /** Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
    *
-   * **Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+   * **Note:** Use with extreme caution and review the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying) first.
    */
   rekeyTo?: SendTransactionFrom | string
 }
@@ -166,7 +166,7 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
 /**
  * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
  *
- * The type of call / [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for a smart contract call.
+ * The type of call / [on-completion action](https://dev.algorand.co/concepts/smart-contracts/overview#smart-contract-lifecycle) for a smart contract call.
  *
  * Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
  *

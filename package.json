@@ -38,7 +38,7 @@
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
     "build:1-compile": "rollup -c --configPlugin typescript",
-    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@latest copy-package-json --custom-sections module main type types exports",
+    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@4.0.0-beta.22 copy-package-json --custom-sections module main type types exports",
     "build:4-copy-readme": "cpy README.md LICENSE dist",
     "build:5-fix-readme-links": "replace-in-files --string '(./' --replacement '(https://github.com/algorandfoundation/algokit-utils-ts/blob/main/' dist/README.md",
     "test": "vitest run --coverage --passWithNoTests",

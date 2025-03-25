@@ -882,7 +882,7 @@ Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnviro
 
 Funds a given account using a funding source such that it has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
 
-https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
 
 #### Defined in
 
@@ -1141,7 +1141,7 @@ const assetId = 123345;
 const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
 ```
 
-[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
 
 #### Defined in
 
@@ -1212,7 +1212,7 @@ const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
 const accountInfo = await account.getInformation(address, algod);
 ```
 
-[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountinformation)
 
 #### Defined in
 
@@ -2839,7 +2839,7 @@ Use `algorand.account.rekeyAccount()` instead
 
 Rekey an account to a new address.
 
-**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+**Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
 
 **`Example`**
 
@@ -2965,7 +2965,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
 
-Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
+Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transactions/atomic-txn-groups/#create-transactions) transactions to the chain
 
 #### Defined in
 
