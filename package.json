@@ -61,13 +61,13 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
+    "@algorandfoundation/tealscript": "^0.106.3",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
     "algosdk": "^3.0.0"
   },
   "devDependencies": {
-    "@algorandfoundation/tealscript": "^0.105.3",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
     "@eslint/js": "^9.15.0",

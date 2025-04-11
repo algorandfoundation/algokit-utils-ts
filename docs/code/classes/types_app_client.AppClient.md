@@ -1179,7 +1179,7 @@ ___
 
 #### Defined in
 
-[src/types/app-client.ts:1664](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1664)
+[src/types/app-client.ts:1662](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L1662)
 
 ___
 

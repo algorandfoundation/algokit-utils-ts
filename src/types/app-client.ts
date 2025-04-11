@@ -1647,11 +1647,9 @@ export class AppClient {
             boxNames
               .filter((b) => binaryStartsWith(b.nameRaw, prefix))
               .map(async (b) => {
-                const encodedKey = Buffer.concat([prefix, b.nameRaw])
-                const base64Key = Buffer.from(encodedKey).toString('base64')
                 return [
                   getABIDecodedValue(b.nameRaw.slice(prefix.length), metadata.keyType, that._appSpec.structs),
-                  getABIDecodedValue(await that.getBoxValue(Buffer.from(base64Key, 'base64')), metadata.valueType, that._appSpec.structs),
+                  getABIDecodedValue(await that.getBoxValue(b.nameRaw), metadata.valueType, that._appSpec.structs),
                 ] as const
               }),
           ),
