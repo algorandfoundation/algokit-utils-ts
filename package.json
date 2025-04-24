@@ -62,6 +62,7 @@
   },
   "dependencies": {
     "@algorandfoundation/tealscript": "^0.106.3",
+    "algokit_transact": "file:../algokit-core/algokit_transact-0.1.0.tgz",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {

@@ -1,3 +1,4 @@
+import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from 'algokit_transact'
 import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
@@ -1621,8 +1622,10 @@ export class TransactionComposer {
     })
   }
 
+  // TODO: make sure that this is the only place a payment txn is built
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
+    return this.commonTxnBuildStep(buildPaymentWithAlgokitCore, params, {
+      // return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
       amount: params.amount.microAlgo,
@@ -2095,4 +2098,57 @@ export class TransactionComposer {
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
   }
+}
+
+function getAlgokitCoreAddress(address: string | Address) {
+  return addressFromString(typeof address === 'string' ? address : address.toString())
+}
+
+function buildPaymentWithAlgokitCore({
+  sender,
+  receiver,
+  amount,
+  closeRemainderTo,
+  rekeyTo,
+  note,
+  lease,
+  suggestedParams,
+}: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams) {
+  const txnModel: AlgokitCoreTransaction = {
+    header: {
+      sender: getAlgokitCoreAddress(sender),
+      transactionType: 'Payment',
+      fee: BigInt(suggestedParams.fee),
+      firstValid: BigInt(suggestedParams.firstValid),
+      lastValid: BigInt(suggestedParams.lastValid),
+      genesisHash: suggestedParams.genesisHash,
+      genesisId: suggestedParams.genesisID,
+      rekeyTo: rekeyTo ? getAlgokitCoreAddress(rekeyTo) : undefined,
+      note: note,
+      lease: lease,
+    },
+    payFields: {
+      amount: BigInt(amount),
+      receiver: getAlgokitCoreAddress(receiver),
+      closeRemainderTo: closeRemainderTo ? getAlgokitCoreAddress(closeRemainderTo) : undefined,
+    },
+  }
+
+  // TODO: do we need to move this logic to Rust core?
+
+  let fee = BigInt(suggestedParams.fee)
+  if (!suggestedParams.flatFee) {
+    const minFee = BigInt(suggestedParams.minFee)
+    const numAddlBytesAfterSigning = 75
+    const estimateTxnSize = encodeTransactionRaw(txnModel).length + numAddlBytesAfterSigning
+
+    fee *= BigInt(estimateTxnSize)
+    // If suggested fee too small and will be rejected, set to min tx fee
+    if (fee < minFee) {
+      fee = minFee
+    }
+  }
+  txnModel.header.fee = fee
+
+  return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnModel))
 }
