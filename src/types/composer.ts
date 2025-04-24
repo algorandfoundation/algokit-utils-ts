@@ -1625,7 +1625,6 @@ export class TransactionComposer {
   // TODO: make sure that this is the only place a payment txn is built
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(buildPaymentWithAlgokitCore, params, {
-      // return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
       amount: params.amount.microAlgo,

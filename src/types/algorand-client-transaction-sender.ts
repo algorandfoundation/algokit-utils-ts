@@ -201,6 +201,7 @@ export class AlgorandClientTransactionSender {
    * ```
    * @returns The result of the payment transaction and the transaction that was sent
    */
+  // TODO: PD - convert this to use algokit core completely
   payment = this._send((c) => c.addPayment, {
     preLog: (params, transaction) =>
       `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
