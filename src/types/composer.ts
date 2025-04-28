@@ -1624,7 +1624,7 @@ export class TransactionComposer {
 
   // TODO: make sure that this is the only place a payment txn is built
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
-    return this.commonTxnBuildStep(buildPaymentWithAlgokitCore, params, {
+    return this.commonTxnBuildStep(buildPaymentWithAlgoKitCore, params, {
       sender: params.sender,
       receiver: params.receiver,
       amount: params.amount.microAlgo,
@@ -2103,7 +2103,7 @@ function getAlgokitCoreAddress(address: string | Address) {
   return addressFromString(typeof address === 'string' ? address : address.toString())
 }
 
-function buildPaymentWithAlgokitCore({
+function buildPaymentWithAlgoKitCore({
   sender,
   receiver,
   amount,
@@ -2132,8 +2132,6 @@ function buildPaymentWithAlgokitCore({
       closeRemainderTo: closeRemainderTo ? getAlgokitCoreAddress(closeRemainderTo) : undefined,
     },
   }
-
-  // TODO: do we need to move this logic to Rust core?
 
   let fee = BigInt(suggestedParams.fee)
   if (!suggestedParams.flatFee) {

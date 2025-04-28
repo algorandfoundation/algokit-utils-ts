@@ -47,7 +47,7 @@ export interface SendTransactionParams {
 }
 
 /** Result from sending a single transaction. */
-export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerResults & ConfirmedTransactionResult>
+export type SendSingleTransactionResult = Expand<Omit<SendAtomicTransactionComposerResults, 'groupId'> & ConfirmedTransactionResult>
 
 /** The result of sending a transaction */
 export interface SendTransactionResult {

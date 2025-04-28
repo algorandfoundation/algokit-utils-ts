@@ -1,7 +1,9 @@
-import algosdk, { Address } from 'algosdk'
+import algosdk, { Address, Algodv2 } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
+import { waitForConfirmation } from '../transaction'
 import { asJson, defaultJsonValueReplacer } from '../util'
+import { AlgoAmount } from './amount'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
@@ -16,6 +18,7 @@ import {
   AppUpdateParams,
   AssetCreateParams,
   AssetOptOutParams,
+  CommonTransactionParams,
   TransactionComposer,
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
@@ -37,6 +40,7 @@ export class AlgorandClientTransactionSender {
   private _newGroup: () => TransactionComposer
   private _assetManager: AssetManager
   private _appManager: AppManager
+  private _algod: Algodv2
 
   /**
    * Creates a new `AlgorandClientSender`
@@ -48,10 +52,11 @@ export class AlgorandClientTransactionSender {
    * const transactionSender = new AlgorandClientTransactionSender(() => new TransactionComposer(), assetManager, appManager)
    * ```
    */
-  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
+  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager, algod: Algodv2) {
     this._newGroup = newGroup
     this._assetManager = assetManager
     this._appManager = appManager
+    this._algod = algod
   }
 
   /**
@@ -201,11 +206,39 @@ export class AlgorandClientTransactionSender {
    * ```
    * @returns The result of the payment transaction and the transaction that was sent
    */
-  // TODO: PD - convert this to use algokit core completely
-  payment = this._send((c) => c.addPayment, {
-    preLog: (params, transaction) =>
+  payment = async (
+    params: CommonTransactionParams & {
+      receiver: string | Address
+      amount: AlgoAmount
+      closeRemainderTo?: string | Address
+    } & SendParams,
+  ): Promise<SendSingleTransactionResult> => {
+    const composer = this._newGroup()
+    composer.addPayment(params)
+    const { atc, transactions } = await composer.build()
+
+    const transaction = transactions[0].txn
+
+    Config.getLogger(params?.suppressLog).debug(
       `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-  })
+    )
+
+    atc.buildGroup()
+    const signedTxns = await atc.gatherSignatures()
+
+    await this._algod.sendRawTransaction(signedTxns).do()
+    const confirmation = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algod)
+
+    return {
+      txIds: [transaction.txID()],
+      returns: undefined,
+      confirmation: confirmation,
+      transaction: transaction,
+      confirmations: [confirmation],
+      transactions: [transaction],
+    } satisfies SendSingleTransactionResult
+  }
+
   /**
    * Create a new Algorand Standard Asset.
    *

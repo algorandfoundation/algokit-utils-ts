@@ -50,7 +50,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
       getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.getTransactionParams().do()),
       appManager,
     })
-  const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager)
+  const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager, algod)
   const transactionCreator = new AlgorandClientTransactionCreator(newGroup)
 
   if (sendParams.fee) {
