@@ -167,6 +167,7 @@ export class AlgorandClientTransactionSender {
   }
 
   /**
+   * Experimental feature:
    * Send a payment transaction to transfer Algo between accounts.
    * @param params The parameters for the payment transaction
    * @example Basic example
@@ -226,6 +227,7 @@ export class AlgorandClientTransactionSender {
     atc.buildGroup()
     const signedTxns = await atc.gatherSignatures()
 
+    // TODO: replace this with the generated http client
     await this._algod.sendRawTransaction(signedTxns).do()
     const confirmation = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algod)
 

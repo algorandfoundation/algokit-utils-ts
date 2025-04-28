@@ -1,9 +1,9 @@
-import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from 'algokit_transact'
 import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
+import { buildPayment as buildPaymentWithAlgoKitCore } from './algokit-core-bridge'
 import { AlgoAmount } from './amount'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
@@ -1622,7 +1622,6 @@ export class TransactionComposer {
     })
   }
 
-  // TODO: make sure that this is the only place a payment txn is built
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
     return this.commonTxnBuildStep(buildPaymentWithAlgoKitCore, params, {
       sender: params.sender,
@@ -2097,55 +2096,4 @@ export class TransactionComposer {
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
   }
-}
-
-function getAlgokitCoreAddress(address: string | Address) {
-  return addressFromString(typeof address === 'string' ? address : address.toString())
-}
-
-function buildPaymentWithAlgoKitCore({
-  sender,
-  receiver,
-  amount,
-  closeRemainderTo,
-  rekeyTo,
-  note,
-  lease,
-  suggestedParams,
-}: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams) {
-  const txnModel: AlgokitCoreTransaction = {
-    header: {
-      sender: getAlgokitCoreAddress(sender),
-      transactionType: 'Payment',
-      fee: BigInt(suggestedParams.fee),
-      firstValid: BigInt(suggestedParams.firstValid),
-      lastValid: BigInt(suggestedParams.lastValid),
-      genesisHash: suggestedParams.genesisHash,
-      genesisId: suggestedParams.genesisID,
-      rekeyTo: rekeyTo ? getAlgokitCoreAddress(rekeyTo) : undefined,
-      note: note,
-      lease: lease,
-    },
-    payFields: {
-      amount: BigInt(amount),
-      receiver: getAlgokitCoreAddress(receiver),
-      closeRemainderTo: closeRemainderTo ? getAlgokitCoreAddress(closeRemainderTo) : undefined,
-    },
-  }
-
-  let fee = BigInt(suggestedParams.fee)
-  if (!suggestedParams.flatFee) {
-    const minFee = BigInt(suggestedParams.minFee)
-    const numAddlBytesAfterSigning = 75
-    const estimateTxnSize = encodeTransactionRaw(txnModel).length + numAddlBytesAfterSigning
-
-    fee *= BigInt(estimateTxnSize)
-    // If suggested fee too small and will be rejected, set to min tx fee
-    if (fee < minFee) {
-      fee = minFee
-    }
-  }
-  txnModel.header.fee = fee
-
-  return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnModel))
 }
