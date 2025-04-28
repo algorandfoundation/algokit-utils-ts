@@ -3,6 +3,7 @@ import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { waitForConfirmation } from '../transaction'
 import { asJson, defaultJsonValueReplacer } from '../util'
+import { sendRawTransaction } from './algokit-core-bridge'
 import { AlgoAmount } from './amount'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
@@ -228,7 +229,7 @@ export class AlgorandClientTransactionSender {
     const signedTxns = await atc.gatherSignatures()
 
     // TODO: replace this with the generated http client
-    await this._algod.sendRawTransaction(signedTxns).do()
+    await sendRawTransaction(signedTxns[0])
     const confirmation = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algod)
 
     return {
