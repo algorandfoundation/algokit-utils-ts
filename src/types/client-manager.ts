@@ -1,3 +1,4 @@
+import * as algodApi from '@algorand/algod-client'
 import algosdk, { SuggestedParams } from 'algosdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
@@ -47,6 +48,7 @@ export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algoran
 /** Exposes access to various API clients. */
 export class ClientManager {
   private _algod: algosdk.Algodv2
+  private _algoKitCoreAlgod: algodApi.AlgodApi | undefined
   private _indexer?: algosdk.Indexer
   private _kmd?: algosdk.Kmd
   private _algorand?: AlgorandClient
@@ -77,10 +79,12 @@ export class ClientManager {
         ? clientsOrConfig
         : {
             algod: ClientManager.getAlgodClient(clientsOrConfig.algodConfig),
+            algoKitCoreAlgod: ClientManager.getAlgoKitCoreAlgodClient(clientsOrConfig.algodConfig),
             indexer: clientsOrConfig.indexerConfig ? ClientManager.getIndexerClient(clientsOrConfig.indexerConfig) : undefined,
             kmd: clientsOrConfig.kmdConfig ? ClientManager.getKmdClient(clientsOrConfig.kmdConfig) : undefined,
           }
     this._algod = _clients.algod
+    this._algoKitCoreAlgod = 'algoKitCoreAlgod' in _clients ? _clients.algoKitCoreAlgod : undefined
     this._indexer = _clients.indexer
     this._kmd = _clients.kmd
     this._algorand = algorandClient
@@ -92,6 +96,10 @@ export class ClientManager {
    */
   public get algod(): algosdk.Algodv2 {
     return this._algod
+  }
+
+  public get algoKitCoreAlgod(): algodApi.AlgodApi | undefined {
+    return this._algoKitCoreAlgod
   }
 
   /**
@@ -592,6 +600,31 @@ export class ClientManager {
     const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
     return new algosdk.Algodv2(httpClientWithRetry, server)
+  }
+
+  // TODO: write test for this
+  public static getAlgoKitCoreAlgodClient(algoClientConfig: AlgoClientConfig): algodApi.AlgodApi {
+    const { token, server, port } = algoClientConfig
+
+    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
+
+    // Covers all auth methods included in your OpenAPI yaml definition
+    const authConfig: algodApi.AuthMethodsConfiguration = {
+      api_key: token,
+    }
+
+    // Create configuration parameter object
+    const serverConfig = new algodApi.ServerConfiguration(`${server}:${port}`, {})
+    const configurationParameters = {
+      httpApi: new algodApi.IsomorphicFetchHttpLibrary(), // Can also be ignored - default is usually fine
+      baseServer: serverConfig, // First server is default
+      authMethods: authConfig, // No auth is default
+      promiseMiddleware: [],
+    }
+
+    // Convert to actual configuration
+    const config = algodApi.createConfiguration(configurationParameters)
+    return new algodApi.AlgodApi(config)
   }
 
   /**

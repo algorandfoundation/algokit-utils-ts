@@ -1,3 +1,4 @@
+import { AlgodApi } from '@algorand/algod-client'
 import algosdk, { Address, Algodv2 } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
@@ -42,22 +43,32 @@ export class AlgorandClientTransactionSender {
   private _assetManager: AssetManager
   private _appManager: AppManager
   private _algod: Algodv2
+  private _algoKitCoreAlgod?: AlgodApi
 
   /**
    * Creates a new `AlgorandClientSender`
    * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @param assetManager An `AssetManager` instance
    * @param appManager An `AppManager` instance
+   * @param algod An `Algodv2` instance
+   * @param algoKitCoreAlgod An optional `AlgodApi` instance for AlgoKit core
    * @example
    * ```typescript
    * const transactionSender = new AlgorandClientTransactionSender(() => new TransactionComposer(), assetManager, appManager)
    * ```
    */
-  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager, algod: Algodv2) {
+  constructor(
+    newGroup: () => TransactionComposer,
+    assetManager: AssetManager,
+    appManager: AppManager,
+    algod: Algodv2,
+    algoKitCoreAlgod?: AlgodApi,
+  ) {
     this._newGroup = newGroup
     this._assetManager = assetManager
     this._appManager = appManager
     this._algod = algod
+    this._algoKitCoreAlgod = algoKitCoreAlgod
   }
 
   /**
@@ -215,6 +226,12 @@ export class AlgorandClientTransactionSender {
       closeRemainderTo?: string | Address
     } & SendParams,
   ): Promise<SendSingleTransactionResult> => {
+    if (!this._algoKitCoreAlgod) {
+      return this._send((c) => c.addPayment, {
+        preLog: (params, transaction) =>
+          `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+      })(params)
+    }
     const composer = this._newGroup()
     composer.addPayment(params)
     const { atc, transactions } = await composer.build()
