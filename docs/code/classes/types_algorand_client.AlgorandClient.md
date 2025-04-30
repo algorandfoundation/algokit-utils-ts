@@ -15,31 +15,37 @@ A client that brokers easy access to Algorand functionality.
 ### Properties
 
 - [\_accountManager](types_algorand_client.AlgorandClient.md#_accountmanager)
+- [\_appDeployer](types_algorand_client.AlgorandClient.md#_appdeployer)
+- [\_appManager](types_algorand_client.AlgorandClient.md#_appmanager)
+- [\_assetManager](types_algorand_client.AlgorandClient.md#_assetmanager)
 - [\_cachedSuggestedParams](types_algorand_client.AlgorandClient.md#_cachedsuggestedparams)
 - [\_cachedSuggestedParamsExpiry](types_algorand_client.AlgorandClient.md#_cachedsuggestedparamsexpiry)
 - [\_cachedSuggestedParamsTimeout](types_algorand_client.AlgorandClient.md#_cachedsuggestedparamstimeout)
 - [\_clientManager](types_algorand_client.AlgorandClient.md#_clientmanager)
 - [\_defaultValidityWindow](types_algorand_client.AlgorandClient.md#_defaultvaliditywindow)
-- [send](types_algorand_client.AlgorandClient.md#send)
-- [transactions](types_algorand_client.AlgorandClient.md#transactions)
+- [\_transactionCreator](types_algorand_client.AlgorandClient.md#_transactioncreator)
+- [\_transactionSender](types_algorand_client.AlgorandClient.md#_transactionsender)
 
 ### Accessors
 
 - [account](types_algorand_client.AlgorandClient.md#account)
+- [app](types_algorand_client.AlgorandClient.md#app)
+- [appDeployer](types_algorand_client.AlgorandClient.md#appdeployer)
+- [asset](types_algorand_client.AlgorandClient.md#asset)
 - [client](types_algorand_client.AlgorandClient.md#client)
+- [createTransaction](types_algorand_client.AlgorandClient.md#createtransaction)
+- [send](types_algorand_client.AlgorandClient.md#send)
 
 ### Methods
 
-- [\_send](types_algorand_client.AlgorandClient.md#_send)
-- [\_transaction](types_algorand_client.AlgorandClient.md#_transaction)
 - [getSuggestedParams](types_algorand_client.AlgorandClient.md#getsuggestedparams)
 - [newGroup](types_algorand_client.AlgorandClient.md#newgroup)
 - [setDefaultSigner](types_algorand_client.AlgorandClient.md#setdefaultsigner)
 - [setDefaultValidityWindow](types_algorand_client.AlgorandClient.md#setdefaultvaliditywindow)
 - [setSigner](types_algorand_client.AlgorandClient.md#setsigner)
 - [setSignerFromAccount](types_algorand_client.AlgorandClient.md#setsignerfromaccount)
-- [setSuggestedParams](types_algorand_client.AlgorandClient.md#setsuggestedparams)
-- [setSuggestedParamsTimeout](types_algorand_client.AlgorandClient.md#setsuggestedparamstimeout)
+- [setSuggestedParamsCache](types_algorand_client.AlgorandClient.md#setsuggestedparamscache)
+- [setSuggestedParamsCacheTimeout](types_algorand_client.AlgorandClient.md#setsuggestedparamscachetimeout)
 - [defaultLocalNet](types_algorand_client.AlgorandClient.md#defaultlocalnet)
 - [fromClients](types_algorand_client.AlgorandClient.md#fromclients)
 - [fromConfig](types_algorand_client.AlgorandClient.md#fromconfig)
@@ -65,7 +71,7 @@ A client that brokers easy access to Algorand functionality.
 
 #### Defined in
 
-[src/types/algorand-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L27)
+[src/types/algorand-client.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L33)
 
 ## Properties
 
@@ -75,7 +81,37 @@ A client that brokers easy access to Algorand functionality.
 
 #### Defined in
 
-[src/types/algorand-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L19)
+[src/types/algorand-client.ts:20](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L20)
+
+___
+
+### \_appDeployer
+
+• `Private` **\_appDeployer**: [`AppDeployer`](types_app_deployer.AppDeployer.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L22)
+
+___
+
+### \_appManager
+
+• `Private` **\_appManager**: [`AppManager`](types_app_manager.AppManager.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L21)
+
+___
+
+### \_assetManager
+
+• `Private` **\_assetManager**: [`AssetManager`](types_asset_manager.AssetManager.md)
+
+#### Defined in
+
+[src/types/algorand-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L23)
 
 ___
 
@@ -85,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L21)
+[src/types/algorand-client.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L27)
 
 ___
 
@@ -95,7 +131,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L22)
+[src/types/algorand-client.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L28)
 
 ___
 
@@ -105,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L23)
+[src/types/algorand-client.ts:29](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L29)
 
 ___
 
@@ -115,13 +151,23 @@ ___
 
 #### Defined in
 
-[src/types/algorand-client.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L18)
+[src/types/algorand-client.ts:19](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L19)
 
 ___
 
 ### \_defaultValidityWindow
 
-• `Private` **\_defaultValidityWindow**: `number` = `10`
+• `Private` **\_defaultValidityWindow**: `undefined` \| `bigint` = `undefined`
+
+#### Defined in
+
+[src/types/algorand-client.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L31)
+
+___
+
+### \_transactionCreator
+
+• `Private` **\_transactionCreator**: [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
 
 #### Defined in
 
@@ -129,57 +175,13 @@ ___
 
 ___
 
-### send
+### \_transactionSender
 
-• **send**: `Object`
-
-Methods for sending a single transaction.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `appCall` | (`params`: [`AppCallParams`](../modules/types_composer.md#appcallparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetConfig` | (`params`: [`AssetConfigParams`](../modules/types_composer.md#assetconfigparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetCreate` | (`params`: [`AssetCreateParams`](../modules/types_composer.md#assetcreateparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetDestroy` | (`params`: [`AssetDestroyParams`](../modules/types_composer.md#assetdestroyparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetFreeze` | (`params`: [`AssetFreezeParams`](../modules/types_composer.md#assetfreezeparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetOptIn` | (`params`: [`AssetOptInParams`](../modules/types_composer.md#assetoptinparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `assetTransfer` | (`params`: [`AssetTransferParams`](../modules/types_composer.md#assettransferparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `methodCall` | (`params`: [`MethodCallParams`](../modules/types_composer.md#methodcallparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `onlineKeyRegistration` | (`params`: [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
-| `payment` | (`params`: [`PaymentParams`](../modules/types_composer.md#paymentparams), `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\> | - |
+• `Private` **\_transactionSender**: [`AlgorandClientTransactionSender`](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
 
 #### Defined in
 
-[src/types/algorand-client.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L169)
-
-___
-
-### transactions
-
-• **transactions**: `Object`
-
-Methods for building transactions
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `appCall` | (`params`: [`AppCallParams`](../modules/types_composer.md#appcallparams)) => `Promise`\<`Transaction`\> | - |
-| `assetConfig` | (`params`: [`AssetConfigParams`](../modules/types_composer.md#assetconfigparams)) => `Promise`\<`Transaction`\> | - |
-| `assetCreate` | (`params`: [`AssetCreateParams`](../modules/types_composer.md#assetcreateparams)) => `Promise`\<`Transaction`\> | - |
-| `assetDestroy` | (`params`: [`AssetDestroyParams`](../modules/types_composer.md#assetdestroyparams)) => `Promise`\<`Transaction`\> | - |
-| `assetFreeze` | (`params`: [`AssetFreezeParams`](../modules/types_composer.md#assetfreezeparams)) => `Promise`\<`Transaction`\> | - |
-| `assetOptIn` | (`params`: [`AssetOptInParams`](../modules/types_composer.md#assetoptinparams)) => `Promise`\<`Transaction`\> | - |
-| `assetTransfer` | (`params`: [`AssetTransferParams`](../modules/types_composer.md#assettransferparams)) => `Promise`\<`Transaction`\> | - |
-| `methodCall` | (`params`: [`MethodCallParams`](../modules/types_composer.md#methodcallparams)) => `Promise`\<`Transaction`[]\> | - |
-| `onlineKeyRegistration` | (`params`: [`OnlineKeyRegistrationParams`](../modules/types_composer.md#onlinekeyregistrationparams)) => `Promise`\<`Transaction`\> | - |
-| `payment` | (`params`: [`PaymentParams`](../modules/types_composer.md#paymentparams)) => `Promise`\<`Transaction`\> | - |
-
-#### Defined in
-
-[src/types/algorand-client.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L245)
+[src/types/algorand-client.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L24)
 
 ## Accessors
 
@@ -193,9 +195,89 @@ Get or create accounts that can sign transactions.
 
 [`AccountManager`](types_account_manager.AccountManager.md)
 
+The `AccountManager` instance.
+
+**`Example`**
+
+```ts
+const accountManager = AlgorandClient.mainNet().account;
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L117)
+[src/types/algorand-client.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L175)
+
+___
+
+### app
+
+• `get` **app**(): [`AppManager`](types_app_manager.AppManager.md)
+
+Methods for interacting with apps.
+
+#### Returns
+
+[`AppManager`](types_app_manager.AppManager.md)
+
+The `AppManager` instance.
+
+**`Example`**
+
+```ts
+const appManager = AlgorandClient.mainNet().app;
+```
+
+#### Defined in
+
+[src/types/algorand-client.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L195)
+
+___
+
+### appDeployer
+
+• `get` **appDeployer**(): [`AppDeployer`](types_app_deployer.AppDeployer.md)
+
+Methods for deploying apps and managing app deployment metadata.
+
+#### Returns
+
+[`AppDeployer`](types_app_deployer.AppDeployer.md)
+
+The `AppDeployer` instance.
+
+**`Example`**
+
+```ts
+const deployer = AlgorandClient.mainNet().appDeployer;
+```
+
+#### Defined in
+
+[src/types/algorand-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L205)
+
+___
+
+### asset
+
+• `get` **asset**(): [`AssetManager`](types_asset_manager.AssetManager.md)
+
+Methods for interacting with assets.
+
+#### Returns
+
+[`AssetManager`](types_asset_manager.AssetManager.md)
+
+The `AssetManager` instance.
+
+**`Example`**
+
+```ts
+const assetManager = AlgorandClient.mainNet().asset;
+```
+
+#### Defined in
+
+[src/types/algorand-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L185)
 
 ___
 
@@ -209,91 +291,75 @@ Get clients, including algosdk clients and app clients.
 
 [`ClientManager`](types_client_manager.ClientManager.md)
 
+The `ClientManager` instance.
+
+**`Example`**
+
+```ts
+const clientManager = AlgorandClient.mainNet().client;
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L112)
+[src/types/algorand-client.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L165)
+
+___
+
+### createTransaction
+
+• `get` **createTransaction**(): [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
+
+Methods for creating a transaction.
+
+#### Returns
+
+[`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
+
+The `AlgorandClientTransactionCreator` instance.
+
+**`Example`**
+
+```ts
+const payment = await AlgorandClient.mainNet().createTransaction.payment({
+ sender: "SENDERADDRESS",
+ receiver: "RECEIVERADDRESS",
+ amount: algo(1)
+})
+```
+
+#### Defined in
+
+[src/types/algorand-client.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L250)
+
+___
+
+### send
+
+• `get` **send**(): [`AlgorandClientTransactionSender`](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
+
+Methods for sending a transaction.
+
+#### Returns
+
+[`AlgorandClientTransactionSender`](types_algorand_client_transaction_sender.AlgorandClientTransactionSender.md)
+
+The `AlgorandClientTransactionSender` instance.
+
+**`Example`**
+
+```ts
+const result = await AlgorandClient.mainNet().send.payment({
+ sender: "SENDERADDRESS",
+ receiver: "RECEIVERADDRESS",
+ amount: algo(1)
+})
+```
+
+#### Defined in
+
+[src/types/algorand-client.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L236)
 
 ## Methods
-
-### \_send
-
-▸ **_send**\<`T`\>(`c`, `log?`): (`params`: `T`, `config?`: [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md)) => `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `c` | (`c`: [`default`](types_composer.default.md)) => (`params`: `T`) => [`default`](types_composer.default.md) |
-| `log?` | `Object` |
-| `log.postLog?` | (`params`: `T`, `result`: [`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)) => `string` |
-| `log.preLog?` | (`params`: `T`, `transaction`: `Transaction`) => `string` |
-
-#### Returns
-
-`fn`
-
-▸ (`params`, `config?`): `Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `params` | `T` |
-| `config?` | [`ExecuteParams`](../interfaces/types_composer.ExecuteParams.md) |
-
-##### Returns
-
-`Promise`\<[`SendSingleTransactionResult`](../modules/types_algorand_client.md#sendsingletransactionresult)\>
-
-#### Defined in
-
-[src/types/algorand-client.ts:131](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L131)
-
-___
-
-### \_transaction
-
-▸ **_transaction**\<`T`\>(`c`): (`params`: `T`) => `Promise`\<`Transaction`\>
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `c` | (`c`: [`default`](types_composer.default.md)) => (`params`: `T`) => [`default`](types_composer.default.md) |
-
-#### Returns
-
-`fn`
-
-▸ (`params`): `Promise`\<`Transaction`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `params` | `T` |
-
-##### Returns
-
-`Promise`\<`Transaction`\>
-
-#### Defined in
-
-[src/types/algorand-client.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L234)
-
-___
 
 ### getSuggestedParams
 
@@ -305,25 +371,42 @@ Get suggested params for a transaction (either cached or from algod if the cache
 
 `Promise`\<`SuggestedParams`\>
 
+The suggested transaction parameters.
+
+**`Example`**
+
+```ts
+const params = await AlgorandClient.mainNet().getSuggestedParams();
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:96](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L96)
+[src/types/algorand-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L144)
 
 ___
 
 ### newGroup
 
-▸ **newGroup**(): [`default`](types_composer.default.md)
+▸ **newGroup**(): [`TransactionComposer`](types_composer.TransactionComposer.md)
 
-Start a new `AlgokitComposer` transaction group
+Start a new `TransactionComposer` transaction group
 
 #### Returns
 
-[`default`](types_composer.default.md)
+[`TransactionComposer`](types_composer.TransactionComposer.md)
+
+A new instance of `TransactionComposer`.
+
+**`Example`**
+
+```ts
+const composer = AlgorandClient.mainNet().newGroup();
+const result = await composer.addTransaction(payment).send()
+```
 
 #### Defined in
 
-[src/types/algorand-client.ts:122](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L122)
+[src/types/algorand-client.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L216)
 
 ___
 
@@ -345,9 +428,16 @@ Sets the default signer to use if no other signer is specified.
 
 The `AlgorandClient` so method calls can be chained
 
+**`Example`**
+
+```typescript
+const signer = new SigningAccount(account, account.addr)
+const algorand = AlgorandClient.mainNet().setDefaultSigner(signer)
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L47)
+[src/types/algorand-client.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L67)
 
 ___
 
@@ -361,7 +451,7 @@ Sets the default validity window for transactions.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `validityWindow` | `number` | The number of rounds between the first and last valid rounds |
+| `validityWindow` | `number` \| `bigint` | The number of rounds between the first and last valid rounds |
 
 #### Returns
 
@@ -369,9 +459,15 @@ Sets the default validity window for transactions.
 
 The `AlgorandClient` so method calls can be chained
 
+**`Example`**
+
+```typescript
+const algorand = AlgorandClient.mainNet().setDefaultValidityWindow(1000);
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L37)
+[src/types/algorand-client.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L52)
 
 ___
 
@@ -379,13 +475,13 @@ ___
 
 ▸ **setSigner**(`sender`, `signer`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Tracks the given account for later signing.
+Tracks the given signer against the given sender for later signing.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `sender` | `string` | The sender address to use this signer for |
+| `sender` | `string` \| `Address` | The sender address to use this signer for |
 | `signer` | `TransactionSigner` | The signer to sign transactions with for the given sender |
 
 #### Returns
@@ -394,9 +490,16 @@ Tracks the given account for later signing.
 
 The `AlgorandClient` so method calls can be chained
 
+**`Example`**
+
+```typescript
+const signer = new SigningAccount(account, account.addr)
+const algorand = AlgorandClient.mainNet().setSigner(signer.addr, signer.signer)
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:68](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L68)
+[src/types/algorand-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L103)
 
 ___
 
@@ -404,13 +507,13 @@ ___
 
 ▸ **setSignerFromAccount**(`account`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Tracks the given account for later signing.
+Tracks the given account (object that encapsulates an address and a signer) for later signing.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom) | The account to register |
+| `account` | [`MultisigAccount`](types_account.MultisigAccount.md) \| `default` \| [`SigningAccount`](types_account.SigningAccount.md) \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) \| `LogicSigAccount` | The account to register, which can be a `TransactionSignerAccount` or a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount` |
 
 #### Returns
 
@@ -418,17 +521,28 @@ Tracks the given account for later signing.
 
 The `AlgorandClient` so method calls can be chained
 
+**`Example`**
+
+```typescript
+const accountManager = AlgorandClient.mainNet()
+ .setSignerFromAccount(algosdk.generateAccount())
+ .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
+ .setSignerFromAccount(new SigningAccount(account, sender))
+ .setSignerFromAccount(new MultisigAccount({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]}, [account1, account2]))
+ .setSignerFromAccount({addr: "SENDERADDRESS", signer: transactionSigner})
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L57)
+[src/types/algorand-client.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L87)
 
 ___
 
-### setSuggestedParams
+### setSuggestedParamsCache
 
-▸ **setSuggestedParams**(`suggestedParams`, `until?`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
+▸ **setSuggestedParamsCache**(`suggestedParams`, `until?`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Sets a cache value to use for suggested params.
+Sets a cache value to use for suggested transaction params.
 
 #### Parameters
 
@@ -443,15 +557,21 @@ Sets a cache value to use for suggested params.
 
 The `AlgorandClient` so method calls can be chained
 
+**`Example`**
+
+```typescript
+const algorand = AlgorandClient.mainNet().setSuggestedParamsCache(suggestedParams, new Date(+new Date() + 3_600_000))
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L79)
+[src/types/algorand-client.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L118)
 
 ___
 
-### setSuggestedParamsTimeout
+### setSuggestedParamsCacheTimeout
 
-▸ **setSuggestedParamsTimeout**(`timeout`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
+▸ **setSuggestedParamsCacheTimeout**(`timeout`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
 Sets the timeout for caching suggested params.
 
@@ -467,9 +587,15 @@ Sets the timeout for caching suggested params.
 
 The `AlgorandClient` so method calls can be chained
 
+**`Example`**
+
+```typescript
+const algorand = AlgorandClient.mainNet().setSuggestedParamsCacheTimeout(10_000)
+```
+
 #### Defined in
 
-[src/types/algorand-client.ts:90](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L90)
+[src/types/algorand-client.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L133)
 
 ___
 
@@ -477,17 +603,23 @@ ___
 
 ▸ **defaultLocalNet**(): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Returns an `AlgorandClient` pointing at default LocalNet ports and API token.
+Creates an `AlgorandClient` pointing at default LocalNet ports and API token.
 
 #### Returns
 
 [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-The `AlgorandClient`
+An instance of the `AlgorandClient`.
+
+**`Example`**
+
+```ts
+const algorand = AlgorandClient.defaultLocalNet();
+```
 
 #### Defined in
 
-[src/types/algorand-client.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L276)
+[src/types/algorand-client.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L262)
 
 ___
 
@@ -495,23 +627,29 @@ ___
 
 ▸ **fromClients**(`clients`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Returns an `AlgorandClient` pointing to the given client(s).
+Creates an `AlgorandClient` pointing to the given client(s).
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `clients` | [`AlgoSdkClients`](../interfaces/types_client_manager.AlgoSdkClients.md) | The clients to use |
+| `clients` | [`AlgoSdkClients`](../interfaces/types_client_manager.AlgoSdkClients.md) | The clients to use. |
 
 #### Returns
 
 [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-The `AlgorandClient`
+An instance of the `AlgorandClient`.
+
+**`Example`**
+
+```ts
+const algorand = AlgorandClient.fromClients({ algod, indexer, kmd });
+```
 
 #### Defined in
 
-[src/types/algorand-client.ts:313](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L313)
+[src/types/algorand-client.ts:305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L305)
 
 ___
 
@@ -519,23 +657,29 @@ ___
 
 ▸ **fromConfig**(`config`): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Returns an `AlgorandClient` from the given config.
+Creates  an `AlgorandClient` from the given config.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The config to use |
+| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The config to use. |
 
 #### Returns
 
 [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-The `AlgorandClient`
+An instance of the `AlgorandClient`.
+
+**`Example`**
+
+```ts
+const client = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig });
+```
 
 #### Defined in
 
-[src/types/algorand-client.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L343)
+[src/types/algorand-client.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L339)
 
 ___
 
@@ -543,7 +687,7 @@ ___
 
 ▸ **fromEnvironment**(): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Returns an `AlgorandClient` loading the configuration from environment variables.
+Creates an `AlgorandClient` loading the configuration from environment variables.
 
 Retrieve configurations from environment variables when defined or get default LocalNet configuration if they aren't defined.
 
@@ -562,11 +706,17 @@ otherwise it will use the default LocalNet config unless it detects testnet or m
 
 [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-The `AlgorandClient`
+An instance of the `AlgorandClient`.
+
+**`Example`**
+
+```ts
+const client = AlgorandClient.fromEnvironment();
+```
 
 #### Defined in
 
-[src/types/algorand-client.ts:334](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L334)
+[src/types/algorand-client.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L328)
 
 ___
 
@@ -574,17 +724,23 @@ ___
 
 ▸ **mainNet**(): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Returns an `AlgorandClient` pointing at MainNet using AlgoNode.
+Creates an `AlgorandClient` pointing at MainNet using AlgoNode.
 
 #### Returns
 
 [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-The `AlgorandClient`
+An instance of the `AlgorandClient`.
+
+**`Example`**
+
+```ts
+const algorand = AlgorandClient.mainNet();
+```
 
 #### Defined in
 
-[src/types/algorand-client.ts:300](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L300)
+[src/types/algorand-client.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L290)
 
 ___
 
@@ -592,14 +748,20 @@ ___
 
 ▸ **testNet**(): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-Returns an `AlgorandClient` pointing at TestNet using AlgoNode.
+Creates an `AlgorandClient` pointing at TestNet using AlgoNode.
 
 #### Returns
 
 [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
 
-The `AlgorandClient`
+An instance of the `AlgorandClient`.
+
+**`Example`**
+
+```ts
+const algorand = AlgorandClient.testNet();
+```
 
 #### Defined in
 
-[src/types/algorand-client.ts:288](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L288)
+[src/types/algorand-client.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L276)

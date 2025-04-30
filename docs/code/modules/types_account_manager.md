@@ -8,6 +8,10 @@
 
 - [AccountManager](../classes/types_account_manager.AccountManager.md)
 
+### Interfaces
+
+- [EnsureFundedResult](../interfaces/types_account_manager.EnsureFundedResult.md)
+
 ### Functions
 
 - [getAccountTransactionSigner](types_account_manager.md#getaccounttransactionsigner)
@@ -33,6 +37,12 @@ This function has memoization, so will return the same transaction signer for a 
 
 A transaction signer
 
+**`Example`**
+
+```typescript
+const signer = getAccountTransactionSigner(account)
+```
+
 #### Defined in
 
-[src/types/account-manager.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L26)
+[src/types/account-manager.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account-manager.ts#L35)

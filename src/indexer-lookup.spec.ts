@@ -1,88 +1,85 @@
-import { describe, test } from '@jest/globals'
-import algosdk from 'algosdk'
-import { getTestingAppCreateParams } from '../tests/example-contracts/testing-app/contract'
-import * as algokit from './'
+import { Address } from 'algosdk'
+import { beforeEach, describe, expect, test } from 'vitest'
+import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
+import * as indexer from './indexer-lookup'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
+import { AlgoAmount } from './types/amount'
 
 describe('indexer-lookup', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.newScope, 10_000)
 
-  const getTestTransaction = async (amount?: number, from?: string) => {
-    return algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      from: from ?? localnet.context.testAccount.addr,
-      to: localnet.context.testAccount.addr,
-      amount: amount ?? 1,
-      suggestedParams: await localnet.context.algod.getTransactionParams().do(),
+  const sendTestTransaction = async (amount?: AlgoAmount, from?: Address) => {
+    return await localnet.context.algorand.send.payment({
+      sender: from ?? localnet.context.testAccount,
+      receiver: localnet.context.testAccount,
+      amount: amount ?? (1).microAlgo(),
     })
   }
 
   test('Transaction is found by id', async () => {
-    const { algod, indexer, testAccount, waitForIndexer } = localnet.context
-    const { transaction } = await algokit.sendTransaction({ transaction: await getTestTransaction(), from: testAccount }, algod)
+    const { algorand, waitForIndexer } = localnet.context
+    const { transaction } = await sendTestTransaction()
     await waitForIndexer()
 
-    const txn = await algokit.lookupTransactionById(transaction.txID(), indexer)
+    const txn = await algorand.client.indexer.lookupTransactionByID(transaction.txID()).do()
 
     expect(txn.transaction.id).toBe(transaction.txID())
-    expect(txn['current-round']).toBeGreaterThanOrEqual(transaction.firstRound)
+    expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)
   }, 20_000)
 
   test('Account is found by id', async () => {
-    const { indexer, testAccount } = localnet.context
-    await runWhenIndexerCaughtUp(() => algokit.lookupAccountByAddress(testAccount.addr, indexer))
+    const { algorand, testAccount } = localnet.context
+    await runWhenIndexerCaughtUp(() => algorand.client.indexer.lookupAccountByID(testAccount.addr).do())
 
-    const account = await algokit.lookupAccountByAddress(testAccount.addr, indexer)
+    const account = await algorand.client.indexer.lookupAccountByID(testAccount.addr).do()
 
-    expect(account.account.address).toBe(testAccount.addr)
+    expect(account.account.address).toBe(testAccount.addr.toString())
   }, 20_000)
 
   test('Transactions are searched with pagination', async () => {
-    const { algod, indexer, testAccount, generateAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
     const secondAccount = await generateAccount({
-      initialFunds: algokit.algos(1),
+      initialFunds: (1).algo(),
       suppressLog: true,
     })
-    const { transaction: transaction1 } = await algokit.sendTransaction(
-      { transaction: await getTestTransaction(1), from: testAccount },
-      algod,
-    )
-    const { transaction: transaction2 } = await algokit.sendTransaction(
-      { transaction: await getTestTransaction(1), from: testAccount },
-      algod,
-    )
-    await algokit.sendTransaction({ transaction: await getTestTransaction(1, secondAccount.addr), from: secondAccount }, algod)
+    const { transaction: transaction1 } = await sendTestTransaction((1).microAlgo())
+    const { transaction: transaction2 } = await sendTestTransaction((2).microAlgo())
+    await sendTestTransaction((1).microAlgo(), secondAccount)
     await waitForIndexer()
 
-    const transactions = await algokit.searchTransactions(
-      indexer,
-      (s) => s.txType('pay').addressRole('sender').address(testAccount.addr),
+    const transactions = await indexer.searchTransactions(
+      algorand.client.indexer,
+      (s) => s.txType('pay').addressRole('sender').address(testAccount),
       1,
     )
 
-    expect(Number(transactions['current-round'])).toBeGreaterThan(0)
+    expect(transactions.currentRound).toBeGreaterThan(0n)
     expect(transactions.transactions.map((t) => t.id).sort()).toEqual([transaction1.txID(), transaction2.txID()].sort())
   }, 20_000)
 
   test('Application create transactions are found by creator with pagination', async () => {
-    const { algod, indexer, testAccount, generateAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
     const secondAccount = await generateAccount({
-      initialFunds: algokit.algos(1),
+      initialFunds: (1).algo(),
       suppressLog: true,
     })
-    const createParams = await getTestingAppCreateParams(testAccount, {
-      name: 'test',
-      version: '1.0',
-      updatable: false,
+
+    const app = await getTestingAppContract()
+    const factory = algorand.client.getAppFactory({
+      appSpec: app.appSpec,
+      defaultSender: testAccount,
       deletable: false,
+      updatable: false,
+      deployTimeParams: { VALUE: 1 },
     })
-    const app1 = await algokit.createApp(createParams, algod)
-    const app2 = await algokit.createApp(createParams, algod)
-    await algokit.createApp({ ...createParams, from: secondAccount }, algod)
+    const { result: app1 } = await factory.send.bare.create()
+    const { result: app2 } = await factory.send.bare.create({ deployTimeParams: { VALUE: 2 } })
+    await factory.send.bare.create({ sender: secondAccount })
     await waitForIndexer()
 
-    const apps = await algokit.lookupAccountCreatedApplicationByAddress(indexer, testAccount.addr, true, 1)
+    const apps = await indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, testAccount, true, 1)
 
-    expect(apps.map((a) => a.id).sort()).toEqual([app1.appId, app2.appId].sort())
+    expect(apps.map((a) => BigInt(a.id)).sort()).toEqual([app1.appId, app2.appId].sort())
   }, 20_000)
 })

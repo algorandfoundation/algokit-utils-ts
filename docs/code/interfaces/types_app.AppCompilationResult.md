@@ -4,7 +4,7 @@
 
 [types/app](../modules/types_app.md).AppCompilationResult
 
-The result of compiling the approval and clear TEAL for an app
+The result of compiling the approval and clear state TEAL programs for an app
 
 ## Table of contents
 
@@ -19,11 +19,11 @@ The result of compiling the approval and clear TEAL for an app
 
 • **compiledApproval**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
-The compilation result of approval
+The result of compiling the approval program
 
 #### Defined in
 
-[src/types/app.ts:316](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L316)
+[src/types/app.ts:335](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L335)
 
 ___
 
@@ -31,8 +31,8 @@ ___
 
 • **compiledClear**: [`CompiledTeal`](types_app.CompiledTeal.md)
 
-The compilation result of clear
+The result of compiling the clear state program
 
 #### Defined in
 
-[src/types/app.ts:318](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L318)
+[src/types/app.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L337)

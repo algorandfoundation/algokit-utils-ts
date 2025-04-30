@@ -75,12 +75,12 @@ The fixture
 **`Example`**
 
 ```typescript
-const algorand = algorandFixture()
+const fixture = algorandFixture()
 
-beforeEach(algorand.beforeEach, 10_000)
+beforeEach(fixture.newScope, 10_000)
 
 test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algod, indexer, testAccount, ...} = fixture.context
     // test things...
 })
 ```
@@ -88,22 +88,35 @@ test('My test', async () => {
 **`Example`**
 
 ```typescript
-const algorand = algorandFixture({
+const fixture = algorandFixture()
+
+beforeAll(fixture.newScope, 10_000)
+
+test('My test', async () => {
+    const {algod, indexer, testAccount, ...} = fixture.context
+    // test things...
+})
+```
+
+**`Example`**
+
+```typescript
+const fixture = algorandFixture({
  algod: new Algodv2('localhost', 12345, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
  // ...
 })
 
-beforeEach(algorand.beforeEach, 10_000)
+beforeEach(fixture.newScope, 10_000)
 
 test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
+    const {algod, indexer, testAccount, ...} = fixture.context
     // test things...
 })
 ```
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L48)
+[src/testing/fixtures/algorand-fixture.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L60)
 
 ▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
@@ -112,7 +125,7 @@ test('My test', async () => {
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `fixtureConfig` | `undefined` \| [`AlgorandFixtureConfig`](../interfaces/types_testing.AlgorandFixtureConfig.md) | The fixture configuration |
-| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The algo configuration |
+| `config` | [`AlgoConfig`](../interfaces/types_network_client.AlgoConfig.md) | The fixture configuration |
 
 #### Returns
 
@@ -130,19 +143,6 @@ By default it tests against an environment variable specified client
  a default LocalNet instance, but you can pass in an algod, indexer
  and/or kmd if you want to test against an explicitly defined network.
 
-**`Example`**
-
-```typescript
-const algorand = algorandFixture(undefined, getConfigFromEnvOrDefaults())
-
-beforeEach(algorand.beforeEach, 10_000)
-
-test('My test', async () => {
-    const {algod, indexer, testAccount, ...} = algorand.context
-    // test things...
-})
-```
-
 #### Defined in
 
 [src/testing/fixtures/algorand-fixture.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L75)
@@ -151,7 +151,36 @@ ___
 
 ### getTestAccount
 
-▸ **getTestAccount**(`param0`, `algorand`): `Promise`\<`Account`\>
+▸ **getTestAccount**(`params`, `algod`, `kmd?`): `Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
+| `algod` | `AlgodClient` | An algod client |
+| `kmd?` | `KmdClient` | A KMD client, if not specified then a default KMD client will be loaded from environment variables and if not found fallback to the default LocalNet KMD client |
+
+#### Returns
+
+`Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
+
+The account, with private key loaded
+
+**`Deprecated`**
+
+Use `getTestAccount(params, algorandClient)` instead. The `algorandClient` object can be created using `AlgorandClient.fromClients({ algod, kmd })`.
+
+Creates an ephemeral Algorand account for the purposes of testing.
+Returns a newly created random test account that is funded from the dispenser
+DO NOT USE THIS TO CREATE A MAINNET ACCOUNT!
+Note: By default this will log the mnemonic of the account.
+
+#### Defined in
+
+[src/testing/account.ts:21](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L21)
+
+▸ **getTestAccount**(`params`, `algorand`): `Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
 
 Creates an ephemeral Algorand account for the purposes of testing.
 Returns a newly created random test account that is funded from the dispenser
@@ -162,18 +191,18 @@ Note: By default this will log the mnemonic of the account.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `param0` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
+| `params` | [`GetTestAccountParams`](../interfaces/types_testing.GetTestAccountParams.md) | The config for the test account to generate |
 | `algorand` | [`AlgorandClient`](../classes/types_algorand_client.AlgorandClient.md) | An AlgorandClient client |
 
 #### Returns
 
-`Promise`\<`Account`\>
+`Promise`\<`Address` & `Account` & [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md)\>
 
 The account, with private key loaded
 
 #### Defined in
 
-[src/testing/account.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L15)
+[src/testing/account.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/account.ts#L35)
 
 ___
 

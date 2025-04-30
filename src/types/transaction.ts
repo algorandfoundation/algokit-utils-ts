@@ -2,6 +2,7 @@ import algosdk from 'algosdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
+import { Expand } from './expand'
 import Account = algosdk.Account
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -41,13 +42,16 @@ export interface SendTransactionParams {
   maxFee?: AlgoAmount
   /** The maximum number of rounds to wait for confirmation, only applies if `skipWaiting` is `undefined` or `false`, default: wait up to 5 rounds */
   maxRoundsToWaitForConfirmation?: number
-  /** **WARNING**: Not recommended for production use due to https://github.com/algorand/go-algorand/issues/5914. Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.  */
+  /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.  */
   populateAppCallResources?: boolean
   /** If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod */
   firstValid?: number
   /** If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod */
   lastValid?: number
 }
+
+/** Result from sending a single transaction. */
+export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerResults & ConfirmedTransactionResult>
 
 /** The result of sending a transaction */
 export interface SendTransactionResult {
@@ -103,7 +107,7 @@ export interface ConfirmedTransactionResults extends SendTransactionResult, Send
  * * `SigningAccount` - An AlgoKit Utils class that wraps Account to provide support for rekeyed accounts
  * * `LogicSigAccount` - The in-built `algosdk.LogicSigAccount` type for logic signatures
  * * `MultisigAccount` - An AlgoKit Utils class that wraps a multisig account and provides mechanisms to get a multisig account
- * * `TransactionSignerAccount` - An AlgoKitUtils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
+ * * `TransactionSignerAccount` - An AlgoKit Utils class that wraps the in-built `algosdk.TransactionSigner` along with the sender address
  */
 export type SendTransactionFrom = Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount
 
@@ -116,7 +120,7 @@ export interface TransactionToSign {
 }
 
 /** A group of transactions to send together as an atomic group
- * https://developer.algorand.org/docs/get-details/atomic_transfers/
+ * https://dev.algorand.co/concepts/transactions/atomic-txn-groups/
  */
 export interface TransactionGroupToSend {
   /** Any parameters to control the semantics of the send to the network */
@@ -130,10 +134,39 @@ export interface TransactionGroupToSend {
   signer?: SendTransactionFrom
 }
 
+/** Parameters to configure transaction sending. */
+export interface SendParams {
+  /** The number of rounds to wait for confirmation. By default until the latest lastValid has past. */
+  maxRoundsToWaitForConfirmation?: number
+  /** Whether to suppress log messages from transaction send, default: do not suppress. */
+  suppressLog?: boolean
+  /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to `Config.populateAppCallResources`. */
+  populateAppCallResources?: boolean
+  /** Whether to use simulate to automatically calculate required app call inner transaction fees and cover them in the parent app call transaction fee */
+  coverAppCallInnerTransactionFees?: boolean
+}
+
+/** Additional context about the `AtomicTransactionComposer`. */
+export interface AdditionalAtomicTransactionComposerContext {
+  /** A map of transaction index in the `AtomicTransactionComposer` to the max fee that can be calculated for a transaction in the group */
+  maxFees: Map<number, AlgoAmount>
+
+  /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
+  suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>
+}
+
 /** An `AtomicTransactionComposer` with transactions to send. */
-export interface AtomicTransactionComposerToSend {
+export interface AtomicTransactionComposerToSend extends SendParams {
   /** The `AtomicTransactionComposer` with transactions loaded to send */
   atc: AtomicTransactionComposer
-  /** Any parameters to control the semantics of the send to the network */
+  /**
+   * @deprecated - set the parameters at the top level instead
+   * Any parameters to control the semantics of the send to the network */
   sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
+
+  /**
+   * Additional `AtomicTransactionComposer` context used when building the transaction group that is sent.
+   * This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
+   **/
+  additionalAtcContext?: AdditionalAtomicTransactionComposerContext
 }

@@ -1,9 +1,12 @@
+import algosdk, { Address } from 'algosdk'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'
 import { APP_DEPLOY_NOTE_DAPP, AppDeployMetadata, OnSchemaBreak, OnUpdate } from '../../../src/types/app'
+import { AppDeployParams } from '../../../src/types/app-deployer'
 import { AppSpec } from '../../../src/types/app-spec'
-import { Arc2TransactionNote, SendTransactionFrom } from '../../../src/types/transaction'
+import { AppCreateParams } from '../../../src/types/composer'
+import { Arc2TransactionNote } from '../../../src/types/transaction'
 
 export const getTestingAppContract = async () => {
   const appSpecFile = await readFile(path.join(__dirname, 'application.json'), 'utf-8')
@@ -22,10 +25,10 @@ export const getTestingAppContract = async () => {
   }
 }
 
-export const getTestingAppCreateParams = async (from: SendTransactionFrom, metadata: AppDeployMetadata) => {
+export const getTestingAppCreateParams = async (from: algosdk.Account, metadata: AppDeployMetadata) => {
   const contract = await getTestingAppContract()
   return {
-    from: from,
+    sender: from.addr,
     approvalProgram: replaceDeployTimeControlParams(contract.approvalProgram, metadata).replace('TMPL_VALUE', '1'),
     clearStateProgram: contract.clearStateProgram,
     schema: contract.stateSchema,
@@ -34,11 +37,11 @@ export const getTestingAppCreateParams = async (from: SendTransactionFrom, metad
       data: metadata,
       format: 'j',
     } as Arc2TransactionNote),
-  }
+  } satisfies AppCreateParams
 }
 
 export const getTestingAppDeployParams = async (deployment: {
-  from: SendTransactionFrom
+  sender: Address | string
   metadata: AppDeployMetadata
   codeInjectionValue?: number
   onSchemaBreak?: 'replace' | 'fail' | 'append' | OnSchemaBreak
@@ -47,20 +50,28 @@ export const getTestingAppDeployParams = async (deployment: {
 }) => {
   const contract = await getTestingAppContract()
   return {
-    approvalProgram: contract.approvalProgram,
-    clearStateProgram: contract.clearStateProgram,
-    from: deployment.from,
+    createParams: {
+      sender: deployment.sender,
+      approvalProgram: contract.approvalProgram,
+      clearStateProgram: contract.clearStateProgram,
+      schema: deployment.breakSchema
+        ? {
+            ...contract.stateSchema,
+            globalByteSlices: contract.stateSchema.globalByteSlices + 1,
+          }
+        : contract.stateSchema,
+    },
+    updateParams: {
+      sender: deployment.sender,
+    },
+    deleteParams: {
+      sender: deployment.sender,
+    },
     metadata: deployment.metadata,
-    schema: deployment.breakSchema
-      ? {
-          ...contract.stateSchema,
-          globalByteSlices: contract.stateSchema.globalByteSlices + 1,
-        }
-      : contract.stateSchema,
     deployTimeParams: {
       VALUE: deployment.codeInjectionValue ?? 1,
     },
     onSchemaBreak: deployment.onSchemaBreak,
     onUpdate: deployment.onUpdate,
-  }
+  } satisfies AppDeployParams
 }

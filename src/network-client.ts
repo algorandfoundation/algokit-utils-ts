@@ -4,7 +4,6 @@ import { AlgoClientConfig, AlgoConfig } from './types/network-client'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
-import IntDecoding = algosdk.IntDecoding
 
 /**
  * @deprecated Use `ClientManager.getConfigFromEnvironmentOrLocalNet()` instead.
@@ -96,7 +95,6 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  * Returns an indexer SDK client that automatically retries transient failures on idempotent calls
  *
  * @param config The config if you want to override the default (getting config from process.env)
- * @param overrideIntDecoding Override the default int decoding for responses, uses MIXED by default to avoid lost precision for big integers
  * @example Default (load from environment variables)
  *
  *  ```typescript
@@ -119,15 +117,9 @@ export function getAlgoClient(config?: AlgoClientConfig): Algodv2 {
  *  const indexer = getAlgoIndexerClient({server: 'http://localhost', port: '8980', token: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'})
  *  await indexer.makeHealthCheck().do()
  * ```
- * @example Override int decoding for responses
- * ```typescript
- *  const indexer = getAlgoIndexerClient(config, IntDecoding.BIGINT)
- * ```
  */
-export function getAlgoIndexerClient(config?: AlgoClientConfig, overrideIntDecoding?: IntDecoding): Indexer {
-  return config
-    ? ClientManager.getIndexerClient(config, overrideIntDecoding)
-    : ClientManager.getIndexerClientFromEnvironment(overrideIntDecoding)
+export function getAlgoIndexerClient(config?: AlgoClientConfig): Indexer {
+  return config ? ClientManager.getIndexerClient(config) : ClientManager.getIndexerClientFromEnvironment()
 }
 
 /**
@@ -153,12 +145,12 @@ export function getAlgoKmdClient(config?: AlgoClientConfig): Kmd {
   return config ? ClientManager.getKmdClient(config) : ClientManager.getKmdClientFromEnvironment()
 }
 
-/** @deprecated Use `await algorandClient.client.isTestNet()` or `await new ClientManager({ algod }).isTestNet()` instead. */
+/** @deprecated Use `await algorand.client.isTestNet()` or `await new ClientManager({ algod }).isTestNet()` instead. */
 export async function isTestNet(algod: Algodv2): Promise<boolean> {
   return await new ClientManager({ algod }).isTestNet()
 }
 
-/** @deprecated Use `await algorandClient.client.isMainNet()` or `await new ClientManager({ algod }).isMainNet()` instead. */
+/** @deprecated Use `await algorand.client.isMainNet()` or `await new ClientManager({ algod }).isMainNet()` instead. */
 export async function isMainNet(algod: Algodv2): Promise<boolean> {
   return await new ClientManager({ algod }).isMainNet()
 }

@@ -33,7 +33,7 @@ The address of any accounts to load in
 
 #### Defined in
 
-[src/types/app.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L73)
+[src/types/app.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L79)
 
 ___
 
@@ -45,7 +45,7 @@ IDs of any apps to load into the foreignApps array
 
 #### Defined in
 
-[src/types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
+[src/types/app.ts:81](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L81)
 
 ___
 
@@ -57,7 +57,7 @@ IDs of any assets to load into the foreignAssets array
 
 #### Defined in
 
-[src/types/app.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L77)
+[src/types/app.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L83)
 
 ___
 
@@ -69,7 +69,7 @@ Any box references to load
 
 #### Defined in
 
-[src/types/app.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L71)
+[src/types/app.ts:77](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L77)
 
 ___
 
@@ -81,7 +81,7 @@ The optional lease for the transaction
 
 #### Defined in
 
-[src/types/app.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L69)
+[src/types/app.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L75)
 
 ___
 
@@ -91,8 +91,8 @@ ___
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 
-**Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+**Note:** Use with extreme caution and review the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying) first.
 
 #### Defined in
 
-[src/types/app.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L82)
+[src/types/app.ts:88](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L88)

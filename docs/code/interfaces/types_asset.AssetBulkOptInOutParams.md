@@ -4,6 +4,8 @@
 
 [types/asset](../modules/types_asset.md).AssetBulkOptInOutParams
 
+**`Deprecated`**
+
 Parameters for `assetBulkOptIn` / `assetBulkOptOut` call.
 
 ## Table of contents

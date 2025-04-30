@@ -2,174 +2,441 @@
 
 App management is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It allows you to create, update, delete, call (ABI and otherwise) smart contract apps and the metadata associated with them (including state and boxes).
 
-## `AppCallArgs`
+## `AppManager`
 
-All calls to smart contracts will allow you to optionally specify the arguments you want to pass in to the call.
+The [`AppManager`](../code/classes/types_app_manager.AppManager.md) is a class that is used to manage app information.
 
-This [type](../code/modules/types_app.md#appcallargs) is a union of two types: `RawAppCallArgs` and `ABIAppCallArgs`.
+To get an instance of `AppManager` you can use either [`AlgorandClient`](./algorand-client.md) via `algorand.app` or instantiate it directly (passing in an algod client instance):
 
-### `RawAppCallArgs`
+```typescript
+import { AppManager } from '@algorandfoundation/algokit-utils/types/app-manager'
 
-[`RawAppCallArgs`](../code/interfaces/types_app.RawAppCallArgs.md) allows you to explicitly specify all of the arguments and has the following properties (all of which are optional):
+const appManager = new AppManager(algod)
+```
 
-- `accounts: (string | algosdk.Address)[]` - Any accounts to add to the [accounts array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays) either as the `string` or `algosdk.Address` representation of the public address of the account(s)
-- `appArgs: (Uint8Array | string)[]` - Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays), either as the binary representation or a string (that will be encoded to binary using `TextEncoder`)
-- `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-- `apps: number[]`: The ID of any apps to load to the [foreign apps array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-- `assets: number[]`: The ID of any assets to load to the [foreign assets array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-- `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
-- `rekeyTo: string | SendTransactionFrom`: An account or account address that should be authorised to transact on behalf of the account the app call is sent from after the app transaction is processed; **note:** use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first
+## Calling apps
 
-### `ABIAppCallArgs`
+### App Clients
 
-[`ABIAppCallArgs`](../code/modules/types_app.md#abiappcallargs) allows you to specify an [ARC-0004 ABI call](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/ABI/)
+The recommended way of interacting with apps is via [Typed app clients](./typed-app-clients.md) or if you can't use a typed app client then an [untyped app client](./app-client.md). The methods shown on this page are the underlying mechanisms that app clients use and are for advanced use cases when you want more control.
 
-- `method: algosdk.ABIMethodParams | algosdk.ABIMethod` - The ABI method to call
-- `methodArgs: ABIAppCallArg[]` - The arguments to pass to the ABI call, which can be one of:
-  - `algosdk.ABIArgument` - Which can be one of:
+### Calling an app
+
+When calling an app there are two types of transactions:
+
+- Raw app transactions - Constructing a raw Algorand transaction to call the method; you have full control and are dealing with binary values directly
+- ABI method calls - Constructing a call to an [ABI method](https://dev.algorand.co/concepts/smart-contracts/abi)
+
+Calling an app involves providing some [common parameters](#common-app-parameters) and some parameters that will depend on the type of app call (create vs update vs other) per below sections.
+
+When [sending transactions directly via AlgorandClient](./algorand-client.md#sending-a-single-transaction) the `SingleSendTransactionResult` return value is expanded with extra fields depending on the type of app call:
+
+- All app calls extend [`SendAppTransactionResult`](../code/modules/types_transaction.md#sendapptransactionresult), which has:
+  - `return?: ABIReturn` - Which will contain an ABI return value if a non-void ABI method was called:
+    - `rawReturnValue: Uint8Array` - The raw binary of the return value
+    - `returnValue: ABIValue` - The decoded value in the appropriate JavaScript object
+    - `decodeError: Error` - If there was a decoding error the above 2 values will be `undefined` and this will have the error
+- Update and create calls extend [`SendAppUpdateTransactionResult`](../code/modules/types_transaction.md#sendappupdatetransactionresult), which has:
+  - `compiledApproval: CompiledTeal | undefined` - The compilation result of approval, if approval program was supplied as a string and thus compiled by algod
+  - `compiledClear: CompiledTeal | undefined` - The compilation result of clear state, if clear state program was supplied as a string and thus compiled by algod
+- Create calls extend [`SendAppCreateTransactionResult`](../code/modules/types_transaction.md#sendappcreatetransactionresult), which has:
+  - `appId: bigint` - The id of the created app
+  - `appAddress: string` - The Algorand address of the account associated with the app
+
+There is a static method on [`AppManager`](#appmanager) that allows you to parse an ABI return value from an algod transaction confirmation:
+
+```typescript
+const confirmation = modelsv2.PendingTransactionResponse.from_obj_for_encoding(
+  await algod.pendingTransactionInformation(transactionId).do(),
+)
+
+const abiReturn = AppManager.getABIReturn(confirmation, abiMethod)
+```
+
+### Creation
+
+To create an app via a raw app transaction you can use `algorand.send.appCreate(params)` (immediately send a single app creation transaction), `algorand.createTransaction.appCreate(params)` (construct an app creation transaction), or `algorand.newGroup().addAppCreate(params)` (add app creation to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+
+To create an app via an ABI method call you can use `algorand.send.appCreateMethodCall(params)` (immediately send a single app creation transaction), `algorand.createTransaction.appCreateMethodCall(params)` (construct an app creation transaction), or `algorand.newGroup().addAppCreateMethodCall(params)` (add app creation to a group of transactions).
+
+The base type for specifying an app creation transaction is [`AppCreateParams`](../code/modules/types_composer.md#appcreateparams) (extended as [`AppCreateMethodCall`](../code/modules/types_composer.md#appcreatemethodcall) for ABI method call version), which has the following parameters in addition to the [common parameters](#common-app-parameters):
+
+- `onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.ClearStateOC>` - The on-completion action to specify for the call; defaults to NoOp and allows any on-completion apart from clear state.
+- `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
+- `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
+- `schema?` - The storage schema to request for the created app. This is immutable once the app is created. It is an object with:
+  - `globalInts: number` - The number of integers saved in global state.
+  - `globalByteSlices: number` - The number of byte slices saved in global state.
+  - `localInts: number` - The number of integers saved in local state.
+  - `localByteSlices: number` - The number of byte slices saved in local state.
+- `extraProgramPages?: number` - Number of extra pages required for the programs. This is immutable once the app is created.
+
+If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via [`algorand.app.getCompilationResult`](../code/classes/types_app_manager.AppManager.md#getcompilationresult) (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
+
+```typescript
+// Basic raw example
+const result = await algorand.send.appCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+const createdAppId = result.appId
+
+// Advanced raw example
+await algorand.send.appCreate({
+  sender: 'CREATORADDRESS',
+  approvalProgram: "TEALCODE",
+  clearStateProgram: "TEALCODE",
+  schema: {
+    globalInts: 1,
+    globalByteSlices: 2,
+    localInts: 3,
+    localByteSlices: 4
+  },
+  extraProgramPages: 1,
+  onComplete: algosdk.OnApplicationComplete.OptInOC,
+  args: [new Uint8Array(1, 2, 3, 4)]
+  accountReferences: ["ACCOUNT_1"]
+  appReferences: [123n, 1234n]
+  assetReferences: [12345n]
+  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+  // Signer only needed if you want to provide one,
+  //  generally you'd register it with AlgorandClient
+  //  against the sender and not need to pass it in
+  signer: transactionSigner,
+  maxRoundsToWaitForConfirmation: 5,
+  suppressLog: true,
+})
+
+// Basic ABI call example
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+const result = await algorand.send.appCreateMethodCall({
+  sender: 'CREATORADDRESS',
+  approvalProgram: 'TEALCODE',
+  clearStateProgram: 'TEALCODE',
+  method: method,
+  args: ["arg1_value"]
+})
+const createdAppId = result.appId
+```
+
+### Updating
+
+To update an app via a raw app transaction you can use `algorand.send.appUpdate(params)` (immediately send a single app update transaction), `algorand.createTransaction.appUpdate(params)` (construct an app update transaction), or `algorand.newGroup().addAppUpdate(params)` (add app update to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+
+To create an app via an ABI method call you can use `algorand.send.appUpdateMethodCall(params)` (immediately send a single app update transaction), `algorand.createTransaction.appUpdateMethodCall(params)` (construct an app update transaction), or `algorand.newGroup().addAppUpdateMethodCall(params)` (add app update to a group of transactions).
+
+The base type for specifying an app update transaction is [`AppUpdateParams`](../code/modules/types_composer.md#appupdateparams) (extended as [`AppUpdateMethodCall`](../code/modules/types_composer.md#appupdatemethodcall) for ABI method call version), which has the following parameters in addition to the [common parameters](#common-app-parameters):
+
+- `onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC` - On Complete can either be omitted or set to update
+- `approvalProgram: Uint8Array | string` - The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
+- `clearStateProgram: Uint8Array | string` - The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)).
+
+If you pass in `approvalProgram` or `clearStateProgram` as a string then it will automatically be compiled using Algod and the compilation result will be available via [`algorand.app.getCompilationResult`](../code/classes/types_app_manager.AppManager.md#getcompilationresult) (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
+
+```typescript
+// Basic raw example
+await algorand.send.appUpdate({ sender: 'SENDERADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+
+// Advanced raw example
+await algorand.send.appUpdate({
+  sender: 'SENDERADDRESS',
+  approvalProgram: "TEALCODE",
+  clearStateProgram: "TEALCODE",
+  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+  args: [new Uint8Array(1, 2, 3, 4)]
+  accountReferences: ["ACCOUNT_1"]
+  appReferences: [123n, 1234n]
+  assetReferences: [12345n]
+  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+  // Signer only needed if you want to provide one,
+  //  generally you'd register it with AlgorandClient
+  //  against the sender and not need to pass it in
+  signer: transactionSigner,
+  maxRoundsToWaitForConfirmation: 5,
+  suppressLog: true,
+})
+
+// Basic ABI call example
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+await algorand.send.appUpdateMethodCall({
+  sender: 'SENDERADDRESS',
+  approvalProgram: 'TEALCODE',
+  clearStateProgram: 'TEALCODE',
+  method: method,
+  args: ["arg1_value"]
+})
+```
+
+### Deleting
+
+To delete an app via a raw app transaction you can use `algorand.send.appDelete(params)` (immediately send a single app deletion transaction), `algorand.createTransaction.appDelete(params)` (construct an app deletion transaction), or `algorand.newGroup().addAppDelete(params)` (add app deletion to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+
+To delete an app via an ABI method call you can use `algorand.send.appDeleteMethodCall(params)` (immediately send a single app deletion transaction), `algorand.createTransaction.appDeleteMethodCall(params)` (construct an app deletion transaction), or `algorand.newGroup().addAppDeleteMethodCall(params)` (add app deletion to a group of transactions).
+
+The base type for specifying an app deletion transaction is [`AppDeleteParams`](../code/modules/types_composer.md#appdeleteparams) (extended as [`AppDeleteMethodCall`](../code/modules/types_composer.md#appdeletemethodcall) for ABI method call version), which has the following parameters in addition to the [common parameters](#common-app-parameters):
+
+- `onComplete?: algosdk.OnApplicationComplete.DeleteApplicationOC` - On Complete can either be omitted or set to delete
+
+```typescript
+// Basic raw example
+await algorand.send.appDelete({ sender: 'SENDERADDRESS' })
+
+// Advanced raw example
+await algorand.send.appDelete({
+  sender: 'SENDERADDRESS',
+  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+  args: [new Uint8Array(1, 2, 3, 4)]
+  accountReferences: ["ACCOUNT_1"]
+  appReferences: [123n, 1234n]
+  assetReferences: [12345n]
+  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+  // Signer only needed if you want to provide one,
+  //  generally you'd register it with AlgorandClient
+  //  against the sender and not need to pass it in
+  signer: transactionSigner,
+  maxRoundsToWaitForConfirmation: 5,
+  suppressLog: true,
+})
+
+// Basic ABI call example
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+await algorand.send.appDeleteMethodCall({
+  sender: 'SENDERADDRESS',
+  method: method,
+  args: ["arg1_value"]
+})
+```
+
+## Calling
+
+To call an app via a raw app transaction you can use `algorand.send.appCall(params)` (immediately send a single app call transaction), `algorand.createTransaction.appCall(params)` (construct an app call transaction), or `algorand.newGroup().addAppCall(params)` (add app deletion to a group of transactions) per [`AlgorandClient`](./algorand-client.md) [transaction semantics](./algorand-client.md#creating-and-issuing-transactions).
+
+To call an app via an ABI method call you can use `algorand.send.appCallMethodCall(params)` (immediately send a single app call transaction), `algorand.createTransaction.appCallMethodCall(params)` (construct an app call transaction), or `algorand.newGroup().addAppCallMethodCall(params)` (add app call to a group of transactions).
+
+The base type for specifying an app call transaction is [`AppCallParams`](../code/modules/types_composer.md#appcallparams) (extended as [`AppCallMethodCall`](../code/modules/types_composer.md#appcallmethodcall) for ABI method call version), which has the following parameters in addition to the [common parameters](#common-app-parameters):
+
+- `onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>` - On Complete can either be omitted (which will result in no-op) or set to any on-complete apart from update
+
+```typescript
+// Basic raw example
+await algorand.send.appCall({ sender: 'SENDERADDRESS' })
+
+// Advanced raw example
+await algorand.send.appCall({
+  sender: 'SENDERADDRESS',
+  onComplete: algosdk.OnApplicationComplete.OptInOC,
+  args: [new Uint8Array(1, 2, 3, 4)]
+  accountReferences: ["ACCOUNT_1"]
+  appReferences: [123n, 1234n]
+  assetReferences: [12345n]
+  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+  lease: 'lease',
+  note: 'note',
+  // You wouldn't normally set this field
+  firstValidRound: 1000n,
+  validityWindow: 10,
+  extraFee: (1000).microAlgo(),
+  staticFee: (1000).microAlgo(),
+  // Max fee doesn't make sense with extraFee AND staticFee
+  //  already specified, but here for completeness
+  maxFee: (3000).microAlgo(),
+  // Signer only needed if you want to provide one,
+  //  generally you'd register it with AlgorandClient
+  //  against the sender and not need to pass it in
+  signer: transactionSigner,
+  maxRoundsToWaitForConfirmation: 5,
+  suppressLog: true,
+})
+
+// Basic ABI call example
+const method = new ABIMethod({
+  name: 'method',
+  args: [{ name: 'arg1', type: 'string' }],
+  returns: { type: 'string' },
+})
+await algorand.send.appCallMethodCall({
+  sender: 'SENDERADDRESS',
+  method: method,
+  args: ["arg1_value"]
+})
+```
+
+## Accessing state
+
+### Global state
+
+To access local state you can use the following method from an [`AppManager`](#appmanager) instance:
+
+- [`algorand.app.getLocalState(appId, address)`](../code/classes/types_app_manager.AppManager.md#getlocalstate) - Returns the current local state for the given app ID and account address decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
+
+```typescript
+const globalState = await algorand.app.getGlobalState(12345n)
+```
+
+Global state is parsed from the underlying algod response via the following static method from [`AppManager`](#appmanager):
+
+- [`AppManager.decodeAppState(state)`](../code/classes/types_app_manager.AppManager.md#decodeappstate) - Takes the raw response from the algod API for global state and returns a friendly generic object keyed by the UTF-8 value of the key
+
+```typescript
+const globalAppState = /* value from algod */
+const appState = AppManager.decodeAppState(globalAppState)
+
+const keyAsBinary = appState['value1'].keyRaw
+const keyAsBase64 = appState['value1'].keyBase64
+if (typeof appState['value1'].value === 'string') {
+  const valueAsString = appState['value1'].value
+  const valueAsBinary = appState['value1'].valueRaw
+  const valueAsBase64 = appState['value1'].valueBase64
+} else {
+  const valueAsNumberOrBigInt = appState['value1'].value
+}
+```
+
+### Local state
+
+To access local state you can use the following method from an [`AppManager`](#appmanager) instance:
+
+- [`algorand.app.getLocalState(appId, address)`](../code/classes/types_app_manager.AppManager.md#getlocalstate) - Returns the current local state for the given app ID and account address decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
+
+```typescript
+const localState = await algorand.app.getLocalState(12345n, 'ACCOUNTADDRESS')
+```
+
+### Boxes
+
+To access and parse box values and names for an app you can use the following methods from an [`AppManager`](#appmanager) instance:
+
+- [`algorand.app.getBoxNames(appId: bigint)`](../code/modules/index.md#getboxnames) - Returns the current [box names](#boxname) for the given app ID
+- [`algorand.app.getBoxValue(appId: bigint, boxName: BoxIdentifier)`](../code/modules/index.md#getboxvalue) - Returns the binary value of the given box name for the given app ID
+- [`algorand.app.getBoxValues(appId: bigint, boxNames: BoxIdentifier[])`](../code/modules/index.md#getboxvalues) - Returns the binary values of the given box names for the given app ID
+- [`algorand.app.getBoxValueFromABIType(request: {appId: bigint, boxName: BoxIdentifier, type: algosdk.ABIType}})`](../code/modules/index.md#getboxvaluefromabitype) - Returns the parsed ABI value of the given box name for the given app ID for the provided ABI type
+- [`algorand.app.getBoxValuesFromABIType(request: {appId: bigint, boxNames: BoxIdentifier[], type: algosdk.ABIType})`](../code/modules/index.md#getboxvaluesfromabitype) - Returns the parsed ABI values of the given box names for the given app ID for the provided ABI type
+- [`AppManager.getBoxReference(boxId)`](../code/modules/index.md#getboxreference) - Returns a `algosdk.BoxReference` representation of the given [box identifier / reference](#box-references), which is useful when constructing a raw `algosdk.Transaction`
+
+```typescript
+const appId = 12345n
+const boxName: BoxReference = 'my-box'
+const boxName2: BoxReference = 'my-box2'
+
+const boxNames = algorand.app.getBoxNames(appId)
+const boxValue = algorand.app.getBoxValue(appId, boxName)
+const boxValues = algorand.app.getBoxValues(appId, [boxName, boxName2])
+const boxABIValue = algorand.app.getBoxValueFromABIType(appId, boxName, algosdk.ABIStringType)
+const boxABIValues = algorand.app.getBoxValuesFromABIType(appId, [boxName, boxName2], algosdk.ABIStringType)
+```
+
+## Getting app information
+
+To get reference information and metadata about an existing app you can use the following methods:
+
+- [`algorand.app.getById(appId)`](../code/classes/types_app_manager.AppManager.md#getbyid) - Returns current app information by app ID from an [`AppManager`](#appmanager) instance
+- [`indexer.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)`](../code/modules/index.indexer.md#lookupaccountcreatedapplicationbyaddress) - Returns all apps created by a given account from [indexer](./indexer.md)
+
+## Common app parameters
+
+When interacting with apps (creating, updating, deleting, calling), there are some [`CommonAppCallParams`](../code/modules/types_composer.md#commonappcallparams) that you will be able to pass in to all calls in addition to the [common transaction parameters](./algorand-client.md#transaction-parameters):
+
+- `appId: bigint` - ID of the application; only specified if the application is not being created.
+- `onComplete?: algosdk.OnApplicationComplete` - The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call (noting each call type will have restrictions that affect this value).
+- `args?: Uint8Array[]` - Any [arguments to pass to the smart contract call](https://dev.algorand.co/concepts/smart-contracts/languages/teal/#argument-passing).
+- `accountReferences?: string[]` - Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
+- `appReferences?: bigint[]` - The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
+- `assetReferences?: bigint[]` - The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
+- `boxReferences?: (BoxReference | BoxIdentifier)[]` - Any [boxes](#box-references) to load to the [boxes array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays)
+
+When making an ABI call, the `args` parameter is replaced with a different type and there is also a `method` parameter per the [`AppMethodCall`](../code/modules/types_composer.md#appmethodcall) type:
+
+- `method: algosdk.ABIMethod`
+- `args: ABIArgument[]` The arguments to pass to the ABI call, which can be one of:
+  - `algosdk.ABIValue` - Which can be one of:
     - `boolean`
     - `number`
     - `bigint`
     - `string`
     - `Uint8Array`
     - An array of one of the above types
-    - `algosdk.TransactionWithSigner`
-  - [`TransactionToSign`](transaction.md#signing)
+  - `algosdk.TransactionWithSigner`
   - `algosdk.Transaction`
-  - `Promise<SendTransactionResult>` - which allows you to use an AlgoKit Utils method call that [returns a transaction](transaction.md#sendtransactionresult) without needing to await the call and extract the transaction, if you do this be sure to use `skipWaiting: true` when specifying the [sending parameters](transaction.md#sendtransactionparams) so you get the transaction without sending it to the network
-- `boxes: (BoxReference | BoxIdentifier | algosdk.BoxReference)[]` - Any [boxes](#referencing-boxes) to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays)
-- `lease: string | Uint8Array`: A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to assign to the transaction to enforce a mutually exclusive transaction (useful to prevent double-posting and other scenarios)
-- `rekeyTo: string | SendTransactionFrom`: An account or account address that should be authorised to transact on behalf of the account the app call is sent from after the app transaction is processed; **note:** use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first
+  - `Promise<Transaction>` - which allows you to use an AlgorandClient call that [returns a transaction](./algorand-client.md#creating-single-transactions) without needing to await the call
+  - `AppMethodCall` - parameters that define another (nested) ABI method call, which will in turn get resolved to one or more transactions
 
-### Utility methods
+## Box references
 
-> [!NOTE]
-> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
+Referencing boxes can by done by either `BoxIdentifier` (which identifies the name of the box and app ID `0` will be used (i.e. the current app)) or `BoxReference`:
 
-If you want to manually construct a transaction, but use these types to specify the arguments then you can use the following methods:
+```typescript
+/**
+ * Something that identifies an app box name - either a:
+ *  * `Uint8Array` (the actual binary of the box name)
+ *  * `string` (that will be encoded to a `Uint8Array`)
+ *  * `TransactionSignerAccount` (that will be encoded into the
+ *    public key address of the corresponding account)
+ */
+export type BoxIdentifier = string | Uint8Array | TransactionSignerAccount
 
-- [`algokit.getAppArgsForTransaction`](../code/modules/index.md#getappargsfortransaction) - Takes a `RawAppCallArgs` object and returns the corresponding fields ready to set onto an `algosdk.Transaction`
-- [`algokit.getAppArgsForABICall`](../code/modules/index.md#getappargsforabicall) - Takes a `ABIAppCallArgs` object and returns the corresponding fields ready to pass into `addMethodCall` on `AtomicTransactionComposer`
+/**
+ * A grouping of the app ID and name identifier to reference an app box.
+ */
+export interface BoxReference {
+  /**
+   * A unique application id
+   */
+  appId: bigint
+  /**
+   * Identifier for a box name
+   */
+  name: BoxIdentifier
+}
+```
 
-## Referencing boxes
+## Compilation
 
-To reference a box in a transaction using AlgoKit Utils, you can specify one of the following types:
+The [`AppManager`](#appmanager) class allows you to compile TEAL code with caching semantics that allows you to avoid duplicate compilation and keep track of source maps from compiled code.
 
-- `BoxIdentifier` - Which can be one of:
-  - `string` - Which will be encoded as a box name using `TextEncoder`
-  - `Uint8Array` - Which will be used directly
-  - `SendTransactionFrom` - Which will be converted into the public address of the [sender corresponding to the account](account.md) and the public key encoded to binary
-    - This type of encoding is compatible with directly referencing an account address within the smart contract (e.g. `(address := pt.abi.Address()).set(pt.Txn.sender())` in PyTEAL)
-- `BoxReference` - Which is an interface that has two fields:
-  - `appId: number` - The app ID
-  - `name: BoxIdentifier` - The name, per the above type
-- `algosdk.BoxReference` - The in-built algosdk `BoxReference` type, which has two properties:
-  - `appIndex: number`
-  - `name: UInt8Array` - The name in binary
+If you call `algorand.app.compileTeal(tealCode)` then the compilation result will be stored and retrievable from `algorand.app.getCompilationResult(tealCode)`.
 
-If you specify a `BoxIdentifier` directly outside of the `BoxReference` type then the behaviour is to load the box from the current app the transaction that box identifier appears in. To see more about how box references work consult the [official documentation](https://developer.algorand.org/articles/smart-contract-storage-boxes/).
-
-### `BoxName`
-
-To get a box reference when reading box state there is a helpful [`BoxName`](../code/interfaces/types_app.BoxName.md) type that is exposed, which provides the following properties:
-
-- `name: string`
-- `nameBase64: string`
-- `nameRaw: Uint8Array`
-
-## Creating and updating apps
-
-> [!NOTE]
-> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
-
-### `createApp`
-
-To create an app you can call [`algokit.createApp(createPayload, algod)`](../code/modules/index.md#createapp). See the tests for an [example](../../src/app.spec.ts).
-
-The payload to configure an app consists of a union of [`SendTransactionParams`](transaction.md#sendtransactionparams) and the [following properties](../code/interfaces/types_app.CreateAppParams.md):
-
-- Required
-  - `from: SendTransactionFrom` - The [account](account.md) (with private key loaded) that will send the transaction
-  - `approvalProgram: Uint8Array | string` - The approval program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array)
-  - `clearStateProgram: Uint8Array | string` - The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array)
-  - `schema: AppStorageSchema` - The storage schema to request for the created app
-  - `onCompleteAction?: algosdk.OnApplicationComplete` - The on-completion action to specify for the call; defaults to NoOp
-- Optional:
-  - `transactionParams: SuggestedParams` - Any [transaction parameters](transaction.md#transaction-params)
-  - `note: TransactionNote` - A [transaction note](transaction.md#transaction-notes)
-  - `args: AppCallArgs` - Any [arguments](#appcallargs) passed in to the app call
-
-If you pass in `approvalProgram` or `clearProgram` as a string then it will automatically be compiled using Algod and the compilation result will be returned from the function (including the source map). To skip this behaviour you can pass in the compiled TEAL as `Uint8Array`.
-
-If you pass in args that represent an ABI then it will use an `AtomicTransactionComposer` to construct and send the transaction(s). Because it's possible that other transactions may be present as ABI arguments, the full set of transactions that were sent are returned in `transactions` and the primary transaction for the create call will also be available in `transaction`. If you pass in the `atc` or `skipSending: true` then it won't execute the transaction and will simply return the transaction(s). The `return` value will have any ABI return value within it.
-
-### `updateApp`
-
-To update an app you can call [`algokit.updateApp(updatePayload, algod)`](../code/modules/index.md#updateapp).
-
-The update payload and behaviour is the same as `createApp` with two payload differences:
-
-- `schema` is not present, since it can only be set when creating a smart contract
-- `appId: number` is present (required), which specifies the ID of the app to update
-
-## Calling an app
-
-> [!NOTE]
-> This method requires the [legacy AlgoKit Utils import method to access it](../README.md#usage).
-
-To call an app outside of creation or update you can call [`algokit.callApp(callPayload, algod)`](../code/modules/index.md#callapp).
-
-The payload to configure an app call consists of a union of [`SendTransactionParams`](transaction.md#sendtransactionparams) and the [following properties](../code/interfaces/types_app.AppCallParams.md):
-
-- Required:
-
-  - `appId: number` - The ID of the app to call
-  - `callType: AppCallType | algosdk.OnApplicationComplete` - The [on-completion action](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#the-lifecycle-of-a-smart-contract) for the call (either as an `algosdk.OnApplicationComplete` enum or a [string enum](../code/modules/types_app.md#appcalltype))
-  - `from: SendTransactionFrom` - The [account](account.md) (with private key loaded) that will send the transaction
-
-- Optional:
-  - `transactionParams: SuggestedParams` - Any [transaction parameters](transaction.md#transaction-params)
-  - `note: TransactionNote` - A [transaction note](transaction.md#transaction-notes)
-  - `args: AppCallArgs` - Any [arguments](#appcallargs) passed in to the app call
-
-If you pass in args that represent an ABI then it will use an `AtomicTransactionComposer` to construct and send the transaction(s). Because it's possible that other transactions may be present as ABI arguments, the full set of transactions that were sent are returned in `transactions` and the primary transaction for the create call will also be available in `transaction`. If you pass in the `atc` or `skipSending: true` then it won't execute the transaction and will simply return the transaction(s). The `return` value will have any ABI return value within it.
-
-## Accessing state
-
-> [!NOTE]
-> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
-
-### Global state
-
-To access and parse global state you can use the following methods:
-
-- [`algokit.getAppGlobalState(appId, algod)`](../code/modules/index.md#getappglobalstate) - Returns the current global state for the given app ID decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
-- [`decodeAppState(state)`](../code/modules/index.md#decodeappstate) - Takes the raw response from algod API for global state and returned a friendly decoded object (this is automatically used by `getAppGlobalState`)
-
-### Local state
-
-To access and parse local state you can use the following methods:
-
-- [`algokit.getAppLocalState(appId, algod)`](../code/modules/index.md#getapplocalstate) - Returns the current local state for the given app ID decoded into an object keyed by the UTF-8 representation of the state key with various parsed versions of the value (base64, UTF-8 and raw binary)
-- [`decodeAppState(state)`](../code/modules/index.md#decodeappstate) - Takes the raw response from algod API for local state and returned a friendly decoded object (this is automatically used by `getAppLocalState`)
-
-### Boxes
-
-To access and parse box values and names for an app you can use the following methods:
-
-- [`algokit.getAppBoxNames(appId, algod)`](../code/modules/index.md#getappboxnames) - Returns the current [box names](#boxname) for the given app ID
-- [`algokit.getAppBoxValue(appId, boxName, algod)`](../code/modules/index.md#getappboxvalue) - Returns the binary value of the given box name for the given app ID
-- [`algokit.getAppBoxValues(appId, boxNames, algod)`](../code/modules/index.md#getappboxvalues) - Returns the binary values of the given box names for the given app ID
-- [`algokit.getAppBoxValueFromABIType(request, algod)`](../code/modules/index.md#getappboxvaluefromabitype) - Returns the parsed ABI value of the given box name for the given app ID for the provided ABI type
-- [`algokit.getAppBoxValuesFromABIType(request, algod)`](../code/modules/index.md#getappboxvaluesfromabitype) - Returns the parsed ABI values of the given box names for the given app ID for the provided ABI type
-- [`algokit.getBoxReference(box)`](../code/modules/index.md#getboxreference) - Returns an `algosdk.BoxReference` representation of the given [box identifier](#referencing-boxes), which is useful when constructing a raw `algosdk.Transaction`
-
-## Getting an app reference
-
-> [!NOTE]
-> These methods require the [legacy AlgoKit Utils import method to access them](../README.md#usage).
-
-To get reference information and metadata about an existing app you can use the following methods:
-
-- [`algokit.getAppById(appId, algod)`](../code/modules/index.md#getappbyindex) - Returns an app reference by ID from algod
-- [`algokit.lookupAccountCreatedApplicationByAddress(indexer, address, getAll?, paginationLimit?)`](../code/modules/index.md#lookupaccountcreatedapplicationbyaddress) - Returns all apps created by a given account from indexer
+```typescript
+const tealCode = 'return 1'
+const compilationResult = await algorand.app.compileTeal(tealCode)
+// ...
+const previousCompilationResult = algorand.app.getCompilationResult(tealCode)
+```

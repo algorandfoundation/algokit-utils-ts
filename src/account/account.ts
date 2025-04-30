@@ -1,7 +1,8 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { getSenderAddress } from '../transaction/transaction'
-import { AccountAssetInformation, AccountInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
+import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
+import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
@@ -10,9 +11,10 @@ import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 import MultisigMetadata = algosdk.MultisigMetadata
 import TransactionSigner = algosdk.TransactionSigner
+import AccountInformationModel = algosdk.modelsv2.Account
 
 /**
- * @deprecated Use `algorandClient.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
+ * @deprecated Use `algorand.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
  *
  * Returns an account wrapper that supports partial or full multisig signing.
  * @param multisigParams The parameters that define the multisig account
@@ -24,7 +26,7 @@ export function multisigAccount(multisigParams: MultisigMetadata, signingAccount
 }
 
 /**
- * @deprecated Use `algorandClient.account.rekeyed(account, sender)` or `new SigningAccount(account, sender)` instead.
+ * @deprecated Use `algorand.account.rekeyed(sender, account)` or `new SigningAccount(account, sender)` instead.
  *
  * Returns an account wrapper that supports a rekeyed account.
  * @param signer The account, with private key loaded, that is signing
@@ -36,7 +38,7 @@ export function rekeyedAccount(signer: Account, sender: string) {
 }
 
 /**
- * @deprecated Use `algorandClient.account.getSigner(sender)` (after previously registering the signer with `setSigner`) or `{ addr: sender, signer }` instead.
+ * @deprecated Use `algorand.account.getSigner(sender)` (after previously registering the signer with `setSigner`) or `{ addr: sender, signer }` instead.
  *
  * Returns an account wrapper that supports a transaction signer with associated sender address.
  * @param signer The transaction signer
@@ -44,11 +46,11 @@ export function rekeyedAccount(signer: Account, sender: string) {
  * @returns The SigningAccount wrapper
  */
 export function transactionSignerAccount(signer: TransactionSigner, sender: string): TransactionSignerAccount {
-  return { addr: sender, signer }
+  return { addr: Address.fromString(sender), signer }
 }
 
 /**
- * @deprecated Use `algorandClient.account.random()` or `algosdk.generateAccount()` instead.
+ * @deprecated Use `algorand.account.random()` or `algosdk.generateAccount()` instead.
  *
  * Returns a new, random Algorand account with secret key loaded.
  *
@@ -61,7 +63,7 @@ export function randomAccount(): Account {
 }
 
 /**
- * @deprecated Use `algorandClient.account.fromEnvironment(name, fundWith)` or `new AccountManager(clientManager).fromEnvironment()` instead.
+ * @deprecated Use `algorand.account.fromEnvironment(name, fundWith)` or `new AccountManager(clientManager).fromEnvironment()` instead.
  *
  * Returns an Algorand account with private key loaded by convention from environment variables based on the given name identifier.
  *
@@ -82,12 +84,12 @@ export function randomAccount(): Account {
  * const account = await mnemonicAccountFromEnvironment('MY_ACCOUNT', algod)
  * ```
  *
- * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGOs from the default LocalNet dispenser.
+ * If that code runs against LocalNet then a wallet called `MY_ACCOUNT` will automatically be created with an account that is automatically funded with 1000 (default) ALGO from the default LocalNet dispenser.
  * If not running against LocalNet then it will use proces.env.MY_ACCOUNT_MNEMONIC as the private key and (if present) process.env.MY_ACCOUNT_SENDER as the sender address.
  *
  * @param account The details of the account to get, either the name identifier (string) or an object with:
  *   * `name`: string: The name identifier of the account
- *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 Algos will be funded from the dispenser account
+ *   * `fundWith`: The amount to fund the account with when it gets created (when targeting LocalNet), if not specified then 1000 ALGO will be funded from the dispenser account
  * @param algod An algod client
  * @param kmdClient An optional KMD client to use to create an account (when targeting LocalNet), if not specified then a default KMD client will be loaded from environment variables
  * @returns The requested account with private key loaded from the environment variables or when targeting LocalNet from KMD (idempotently creating and funding the account)
@@ -127,8 +129,16 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
   return algosdk.encodeAddress(Buffer.from(addressEncodedInB64, 'base64'))
 }
 
+export type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
+type ToNumberIfExtends<K, E> = K extends E ? number : K
+/** @deprecated Account information at a given round. */
+export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'getEncodingSchema' | 'toEncodingData' | 'authAddr'> & {
+  /** (spend) the address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field. */
+  authAddr?: string
+}
+
 /**
- * @deprecated Use `algorandClient.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
+ * @deprecated Use `algorand.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
  *
  * Returns the given sender account's current status, balance and spendable amounts.
  *
@@ -138,17 +148,40 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
  * const accountInfo = await account.getInformation(address, algod);
  * ```
  *
- * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddress)
+ * [Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountinformation)
  * @param sender The address of the sender/account to look up
  * @param algod The algod instance
  * @returns The account information
  */
 export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
-  return new AccountManager(new ClientManager({ algod })).getInformation(getSenderAddress(sender))
+  const account = await algod.accountInformation(getSenderAddress(sender)).do()
+
+  return {
+    ...account,
+    address: account.address.toString(),
+    authAddr: account.authAddr ? account.authAddr.toString() : undefined,
+    // None of these can practically overflow 2^53
+    amount: Number(account.amount),
+    amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
+    minBalance: Number(account.minBalance),
+    pendingRewards: Number(account.pendingRewards),
+    rewards: Number(account.rewards),
+    round: Number(account.round),
+    totalAppsOptedIn: Number(account.totalAppsOptedIn),
+    totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
+    totalCreatedApps: Number(account.totalCreatedApps),
+    totalCreatedAssets: Number(account.totalCreatedAssets),
+    appsTotalExtraPages: account.appsTotalExtraPages !== undefined ? Number(account.appsTotalExtraPages) : undefined,
+    rewardBase: account.rewardBase !== undefined ? Number(account.rewardBase) : undefined,
+    totalBoxBytes: account.totalBoxBytes !== undefined ? Number(account.totalBoxBytes) : undefined,
+    totalBoxes: account.totalBoxes !== undefined ? Number(account.totalBoxes) : undefined,
+    lastHeartbeat: account.lastHeartbeat !== undefined ? Number(account.lastHeartbeat) : undefined,
+    lastProposed: account.lastProposed !== undefined ? Number(account.lastProposed) : undefined,
+  }
 }
 
 /**
- * @deprecated Use `algorandClient.account.getAssetInformation(sender, assetId)` or `new AccountManager(clientManager).getAssetInformation(sender, assetId)` instead.
+ * @deprecated Use `algorand.asset.getAccountInformation(sender, assetId)` or `new AssetManager(...).getAccountInformation(sender, assetId)` instead.
  *
  * Returns the given sender account's asset holding for a given asset.
  *
@@ -159,7 +192,7 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
  * const accountInfo = await account.getAccountAssetInformation(address, assetId, algod);
  * ```
  *
- * [Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+ * [Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
  * @param sender The address of the sender/account to look up
  * @param assetId The ID of the asset to return a holding for
  * @param algod The algod instance
@@ -170,5 +203,5 @@ export async function getAccountAssetInformation(
   assetId: number | bigint,
   algod: Algodv2,
 ): Promise<AccountAssetInformation> {
-  return new AccountManager(new ClientManager({ algod })).getAssetInformation(getSenderAddress(sender), assetId)
+  return AlgorandClient.fromClients({ algod }).asset.getAccountInformation(getSenderAddress(sender), BigInt(assetId))
 }

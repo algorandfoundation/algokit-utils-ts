@@ -1,6 +1,6 @@
-import { getSenderAddress } from '../'
 import { Logger } from '../types/logging'
 import { LogSnapshotConfig } from '../types/testing'
+import { asJson } from '../util'
 
 /** Exposes an AlgoKit logger which captures log messages, while wrapping an original logger.
  * This is useful for automated testing.
@@ -46,13 +46,25 @@ export class TestLogger implements Logger {
    */
   getLogSnapshot(config?: LogSnapshotConfig) {
     const { transactions: transactionIds, accounts, apps } = config ?? {}
-    let snapshot = this.capturedLogs.join('\n')
+    let snapshot = this.capturedLogs.filter(config?.filterPredicate ?? (() => true)).join('\n')
     transactionIds?.forEach(
       (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txID(), 'g'), `TXID_${id + 1}`)),
     )
     accounts?.forEach(
       (sender, id) =>
-        (snapshot = snapshot.replace(new RegExp(typeof sender === 'string' ? sender : getSenderAddress(sender), 'g'), `ACCOUNT_${id + 1}`)),
+        (snapshot = snapshot.replace(
+          new RegExp(
+            typeof sender === 'string'
+              ? sender
+              : 'addr' in sender
+                ? sender.addr.toString()
+                : 'address' in sender
+                  ? sender.address().toString()
+                  : sender.toString(),
+            'g',
+          ),
+          `ACCOUNT_${id + 1}`,
+        )),
     )
     apps?.forEach((app, id) => (snapshot = snapshot.replace(new RegExp(`\\b${app.toString()}\\b(?! bytes)`, 'g'), `APP_${id + 1}`)))
     return snapshot
@@ -60,22 +72,22 @@ export class TestLogger implements Logger {
 
   error(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.error(message, ...optionalParams)
-    this.logs.push(`ERROR: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`ERROR: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   warn(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.warn(message, ...optionalParams)
-    this.logs.push(`WARN: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`WARN: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   info(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.info(message, ...optionalParams)
-    this.logs.push(`INFO: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`INFO: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   verbose(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.verbose(message, ...optionalParams)
-    this.logs.push(`VERBOSE: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`VERBOSE: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
   debug(message: string, ...optionalParams: unknown[]): void {
     this.originalLogger?.debug(message, ...optionalParams)
-    this.logs.push(`DEBUG: ${message}${optionalParams.length ? ` | ${JSON.stringify(optionalParams)}` : ''}`)
+    this.logs.push(`DEBUG: ${message}${optionalParams.length ? ` | ${asJson(optionalParams)}` : ''}`)
   }
 }

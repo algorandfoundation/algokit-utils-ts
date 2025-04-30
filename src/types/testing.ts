@@ -1,16 +1,15 @@
-import algosdk from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
-import { SendTransactionFrom } from '../types/transaction'
-import { TransactionSignerAccount } from './account'
-import AlgorandClient from './algorand-client'
-import { TransactionLookupResult } from './indexer'
+import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
+import { AlgorandClient } from './algorand-client'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
+import LogicSigAccount = algosdk.LogicSigAccount
 import Transaction = algosdk.Transaction
 
 /**
@@ -28,13 +27,13 @@ export interface AlgorandTestAutomationContext {
   /** Transaction logger that will log transaction IDs for all transactions issued by `algod` */
   transactionLogger: TransactionLogger
   /** Default, funded test account that is ephemerally created */
-  testAccount: Account & TransactionSignerAccount
+  testAccount: Address & TransactionSignerAccount & Account
   /** Generate and fund an additional ephemerally created account */
-  generateAccount: (params: GetTestAccountParams) => Promise<Account & TransactionSignerAccount>
+  generateAccount: (params: GetTestAccountParams) => Promise<Address & Account & TransactionSignerAccount>
   /** Wait for the indexer to catch up with all transactions logged by `transactionLogger` */
   waitForIndexer: () => Promise<void>
   /** Wait for the indexer to catch up with the given transaction ID */
-  waitForIndexerTransaction: (transactionId: string) => Promise<TransactionLookupResult>
+  waitForIndexerTransaction: (transactionId: string) => Promise<algosdk.indexerModels.TransactionResponse>
 }
 
 /**
@@ -57,7 +56,7 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   indexer?: Indexer
   /** An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   kmd?: Kmd
-  /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGOs. */
+  /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
   testAccountFunding?: AlgoAmount
   /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
   accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>
@@ -68,10 +67,12 @@ export interface AlgorandFixture {
   /**
    * Retrieve the current context.
    * Useful with destructuring.
+   *
+   * If you haven't called `newScope` then this will throw an error.
    * @example
    * ```typescript
    * test('My test', () => {
-   *     const {algod, indexer, testAccount, ...} = algorand.context
+   *     const {algod, indexer, testAccount, ...} = fixture.context
    * })
    * ```
    */
@@ -83,9 +84,50 @@ export interface AlgorandFixture {
   get algorand(): AlgorandClient
 
   /**
-   * Testing framework agnostic handler method to run before each test to prepare the `context` for that test.
+   * @deprecated Use newScope instead.
+   * Testing framework agnostic handler method to run before each test to prepare the `context` for that test with per test isolation.
    */
   beforeEach: () => Promise<void>
+
+  /**
+   * Creates a new isolated fixture scope (clean transaction logger, AlgorandClient, testAccount, etc.).
+   *
+   * You can call this from any testing framework specific hook method to control when you want a new scope.
+   *
+   * @example Jest / vitest - per test isolation (beforeEach)
+   * ```typescript
+   * describe('MY MODULE', () => {
+   *   const fixture = algorandFixture()
+   *   beforeEach(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+   *
+   *   test('MY TEST', async () => {
+   *     const { algorand, testAccount } = fixture.context
+   *
+   *     // Test stuff!
+   *   })
+   * })
+   * ```
+   *
+   * @example Jest / vitest - test suite isolation (beforeAll)
+   * ```typescript
+   * describe('MY MODULE', () => {
+   *   const fixture = algorandFixture()
+   *   beforeAll(fixture.newScope, 10_000) // Add a 10s timeout to cater for occasionally slow LocalNet calls
+   *
+   *   test('test1', async () => {
+   *     const { algorand, testAccount } = fixture.context
+   *
+   *     // Test stuff!
+   *   })
+   *   test('test2', async () => {
+   *     const { algorand, testAccount } = fixture.context
+   *     // algorand and testAccount are the same as in test1
+   *   })
+   * })
+   * ```
+   *
+   */
+  newScope: () => Promise<void>
 }
 
 /** Configuration for preparing a captured log snapshot.
@@ -96,9 +138,11 @@ export interface LogSnapshotConfig {
   /** Any transaction IDs or transactions to replace the ID for predictably */
   transactions?: (string | Transaction)[]
   /** Any accounts/addresses to replace the address for predictably */
-  accounts?: (string | SendTransactionFrom)[]
+  accounts?: (string | Address | Account | SigningAccount | LogicSigAccount | MultisigAccount | TransactionSignerAccount)[]
   /** Any app IDs to replace predictably */
   apps?: (string | number | bigint)[]
+  /** Optional filter predicate to filter out logs */
+  filterPredicate?: (log: string) => boolean
 }
 
 export interface AlgoKitLogCaptureFixture {

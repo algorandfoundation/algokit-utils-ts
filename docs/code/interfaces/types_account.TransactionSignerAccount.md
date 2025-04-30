@@ -17,11 +17,11 @@ A wrapper around `TransactionSigner` that also has the sender address.
 
 ### addr
 
-• **addr**: `string`
+• **addr**: `Readonly`\<`Address`\>
 
 #### Defined in
 
-[src/types/account.ts:114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L114)
+[src/types/account.ts:124](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L124)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[src/types/account.ts:115](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L115)
+[src/types/account.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L125)

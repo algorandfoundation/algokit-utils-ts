@@ -4,7 +4,7 @@
 
 [types/indexer](../modules/types_indexer.md).ApplicationOnComplete
 
-Defines the what additional actions occur with the transaction https://developer.algorand.org/docs/rest-apis/indexer/#oncompletion
+Defines the what additional actions occur with the transaction https://dev.algorand.co/reference/rest-apis/indexer/#oncompletion
 
 ## Table of contents
 
@@ -25,7 +25,7 @@ Defines the what additional actions occur with the transaction https://developer
 
 #### Defined in
 
-[src/types/indexer.ts:697](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L697)
+[src/types/indexer.ts:170](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L170)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:696](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L696)
+[src/types/indexer.ts:169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L169)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:699](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L699)
+[src/types/indexer.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L172)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:694](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L694)
+[src/types/indexer.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L167)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L695)
+[src/types/indexer.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L168)
 
 ___
 
@@ -75,4 +75,4 @@ ___
 
 #### Defined in
 
-[src/types/indexer.ts:698](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L698)
+[src/types/indexer.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/indexer.ts#L171)

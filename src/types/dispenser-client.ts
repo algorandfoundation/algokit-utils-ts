@@ -1,6 +1,13 @@
-const baseUrl = 'https://api.dispenser.algorandfoundation.tools'
-const dispenserRequestTimeout = 15
-const dispenserAccessTokenKey = 'ALGOKIT_DISPENSER_ACCESS_TOKEN'
+import { Address } from 'algosdk'
+import { asJson } from '../util'
+
+const DISPENSER_BASE_URL = 'https://api.dispenser.algorandfoundation.tools'
+const DEFAULT_DISPENSER_REQUEST_TIMEOUT = 15
+const DISPENSER_ACCESS_TOKEN_KEY = 'ALGOKIT_DISPENSER_ACCESS_TOKEN'
+
+interface ErrorResponse {
+  code?: string
+}
 
 enum DispenserAssetName {
   Algo = 0,
@@ -14,23 +21,31 @@ const dispenserAssets = {
   },
 }
 
+/** The TestNet Dispenser API response when funding. */
 export interface DispenserFundResponse {
+  /** The ID of the transaction that was issued to fund the account. */
   txId: string
+  /** The number of µAlgo that was funded. */
   amount: number
 }
 
+/** The TestNet Dispenser API response when getting the current limit.  */
 export interface DispenserLimitResponse {
+  /** The limit, in µAlgo, that you can currently fund. */
   amount: number
 }
 
+/** The parameters to construct a TestNet Dispenser API client. */
 export interface TestNetDispenserApiClientParams {
+  /** The API auth token */
   authToken: string
-  requestTimeout: number | null
+  /** The request timeout in seconds */
+  requestTimeout?: number
 }
 
 /**
  * `TestNetDispenserApiClient` is a class that provides methods to interact with the [Algorand TestNet Dispenser API](https://github.com/algorandfoundation/algokit/blob/main/docs/testnet_api.md).
- * It allows you to fund an address with Algos, refund a transaction, and get the funding limit for the Algo asset.
+ * It allows you to fund an address with Algo, refund a transaction, and get the funding limit for the Algo asset.
  *
  * The class requires an authentication token and a request timeout to be initialized. The authentication token can be provided
  * either directly as a parameter or through an `ALGOKIT_DISPENSER_ACCESS_TOKEN` environment variable. If neither is provided, an error is thrown.
@@ -58,8 +73,8 @@ export class TestNetDispenserApiClient {
   private _authToken: string
   private _requestTimeout: number
 
-  constructor(params: TestNetDispenserApiClientParams | null) {
-    const authTokenFromEnv = process.env[dispenserAccessTokenKey]
+  constructor(params?: TestNetDispenserApiClientParams) {
+    const authTokenFromEnv = process?.env?.[DISPENSER_ACCESS_TOKEN_KEY]
 
     if (params?.authToken) {
       this._authToken = params.authToken
@@ -67,11 +82,11 @@ export class TestNetDispenserApiClient {
       this._authToken = authTokenFromEnv
     } else {
       throw new Error(
-        `Can't init AlgoKit TestNet Dispenser API client because neither environment variable ${dispenserAccessTokenKey} or the authToken were provided.`,
+        `Can't init AlgoKit TestNet Dispenser API client because neither environment variable ${DISPENSER_ACCESS_TOKEN_KEY} or the authToken were provided.`,
       )
     }
 
-    this._requestTimeout = params?.requestTimeout || dispenserRequestTimeout
+    this._requestTimeout = params?.requestTimeout || DEFAULT_DISPENSER_REQUEST_TIMEOUT
   }
 
   get authToken(): string {
@@ -107,23 +122,24 @@ export class TestNetDispenserApiClient {
     }
 
     if (body) {
-      requestArgs.body = JSON.stringify(body)
+      requestArgs.body = asJson(body)
     }
 
-    const response = await fetch(`${baseUrl}/${urlSuffix}`, requestArgs)
+    const response = await fetch(`${DISPENSER_BASE_URL}/${urlSuffix}`, requestArgs)
     if (!response.ok) {
       let error_message = `Error processing dispenser API request: ${response.status}`
       let error_response = null
       try {
         error_response = await response.json()
-      } catch (err) {
+      } catch {
         // suppress exception
       }
 
-      if (error_response && error_response.code) {
-        error_message = error_response.code
+      if (error_response && (error_response as ErrorResponse).code) {
+        error_message = (error_response as ErrorResponse).code!
       } else if (response.status === 400) {
-        error_message = (await response.json()).message
+        const errorResponse = (await response.json()) as { message: string }
+        error_message = errorResponse.message
       }
 
       throw new Error(error_message)
@@ -135,19 +151,23 @@ export class TestNetDispenserApiClient {
    * Sends a funding request to the dispenser API to fund the specified address with the given amount of Algo.
    *
    * @param address - The address to fund.
-   * @param amount - The amount of Algo to fund.
+   * @param amount - The amount of µAlgo to fund.
    *
    * @returns DispenserFundResponse: An object containing the transaction ID and funded amount.
    */
-  async fund(address: string, amount: number): Promise<DispenserFundResponse> {
+  async fund(address: string | Address, amount: number | bigint): Promise<DispenserFundResponse> {
     const response = await this.processDispenserRequest(
       this.authToken,
       `fund/${dispenserAssets[DispenserAssetName.Algo].assetId}`,
-      { receiver: address, amount: amount, assetID: dispenserAssets[DispenserAssetName.Algo].assetId },
+      {
+        receiver: typeof address === 'string' ? address : address.toString(),
+        amount: Number(amount),
+        assetID: dispenserAssets[DispenserAssetName.Algo].assetId,
+      },
       'POST',
     )
 
-    const content = await response.json()
+    const content = (await response.json()) as { txID: string; amount: number }
     return { txId: content.txID, amount: content.amount }
   }
 
@@ -172,7 +192,7 @@ export class TestNetDispenserApiClient {
       null,
       'GET',
     )
-    const content = await response.json()
+    const content = (await response.json()) as { amount: number }
 
     return { amount: content.amount }
   }

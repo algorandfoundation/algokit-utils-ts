@@ -14,19 +14,20 @@ This helps ensure that the provided configuration items won't appear
 
 - [accounts](types_testing.LogSnapshotConfig.md#accounts)
 - [apps](types_testing.LogSnapshotConfig.md#apps)
+- [filterPredicate](types_testing.LogSnapshotConfig.md#filterpredicate)
 - [transactions](types_testing.LogSnapshotConfig.md#transactions)
 
 ## Properties
 
 ### accounts
 
-• `Optional` **accounts**: (`string` \| [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom))[]
+• `Optional` **accounts**: (`string` \| [`MultisigAccount`](../classes/types_account.MultisigAccount.md) \| `default` \| [`SigningAccount`](../classes/types_account.SigningAccount.md) \| `Address` \| [`TransactionSignerAccount`](types_account.TransactionSignerAccount.md) \| `LogicSigAccount`)[]
 
 Any accounts/addresses to replace the address for predictably
 
 #### Defined in
 
-[src/types/testing.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L99)
+[src/types/testing.ts:141](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L141)
 
 ___
 
@@ -38,7 +39,33 @@ Any app IDs to replace predictably
 
 #### Defined in
 
-[src/types/testing.ts:101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L101)
+[src/types/testing.ts:143](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L143)
+
+___
+
+### filterPredicate
+
+• `Optional` **filterPredicate**: (`log`: `string`) => `boolean`
+
+Optional filter predicate to filter out logs
+
+#### Type declaration
+
+▸ (`log`): `boolean`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `log` | `string` |
+
+##### Returns
+
+`boolean`
+
+#### Defined in
+
+[src/types/testing.ts:145](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L145)
 
 ___
 
@@ -50,4 +77,4 @@ Any transaction IDs or transactions to replace the ID for predictably
 
 #### Defined in
 
-[src/types/testing.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L97)
+[src/types/testing.ts:139](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/testing.ts#L139)

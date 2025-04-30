@@ -1,37 +1,30 @@
-import algosdk from 'algosdk'
-import type SearchForTransactions from 'algosdk/dist/types/client/v2/indexer/searchForTransactions'
-import {
-  AccountLookupResult,
-  ApplicationCreatedLookupResult,
-  ApplicationResult,
-  AssetBalancesLookupResult,
-  LookupAssetHoldingsOptions,
-  MiniAssetHolding,
-  TransactionLookupResult,
-  TransactionSearchResults,
-} from './types/indexer'
+import algosdk, { Address } from 'algosdk'
+import { LookupAssetHoldingsOptions } from './types/indexer'
 import Indexer = algosdk.Indexer
+export type SearchForTransactions = ReturnType<Indexer['searchForTransactions']>
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific
 
 /**
+ * @deprecated Use `indexer.lookupTransactionByID(transactionId).do()`.
  * Looks up a transaction by ID using Indexer.
  * @param transactionId The ID of the transaction to look up
  * @param indexer An indexer client
  * @returns The result of the look-up
  */
-export async function lookupTransactionById(transactionId: string, indexer: Indexer): Promise<TransactionLookupResult> {
-  return (await indexer.lookupTransactionByID(transactionId).do()) as TransactionLookupResult
+export async function lookupTransactionById(transactionId: string, indexer: Indexer) {
+  return await indexer.lookupTransactionByID(transactionId).do()
 }
 
 /**
+ * @deprecated Use `indexer.lookupAccountByID(accountAddress).do()`.
  * Looks up an account by address using Indexer.
  * @param accountAddress The address of the account to look up
  * @param indexer An indexer client
  * @returns The result of the look-up
  */
-export async function lookupAccountByAddress(accountAddress: string, indexer: Indexer): Promise<AccountLookupResult> {
-  return (await indexer.lookupAccountByID(accountAddress).do()) as AccountLookupResult
+export async function lookupAccountByAddress(accountAddress: string | Address, indexer: Indexer) {
+  return await indexer.lookupAccountByID(accountAddress).do()
 }
 
 /**
@@ -44,12 +37,12 @@ export async function lookupAccountByAddress(accountAddress: string, indexer: In
  */
 export async function lookupAccountCreatedApplicationByAddress(
   indexer: Indexer,
-  address: string,
+  address: string | Address,
   getAll: boolean | undefined = undefined,
   paginationLimit?: number,
-): Promise<ApplicationResult[]> {
+): Promise<algosdk.indexerModels.Application[]> {
   return await executePaginatedRequest(
-    (response: ApplicationCreatedLookupResult | { message: string }) => {
+    (response: algosdk.indexerModels.ApplicationsResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
@@ -81,9 +74,9 @@ export async function lookupAssetHoldings(
   assetId: number | bigint,
   options?: LookupAssetHoldingsOptions,
   paginationLimit?: number,
-): Promise<MiniAssetHolding[]> {
+): Promise<algosdk.indexerModels.MiniAssetHolding[]> {
   return await executePaginatedRequest(
-    (response: AssetBalancesLookupResult | { message: string }) => {
+    (response: algosdk.indexerModels.AssetBalancesResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
@@ -119,15 +112,15 @@ export async function searchTransactions(
   indexer: Indexer,
   searchCriteria: (s: SearchForTransactions) => SearchForTransactions,
   paginationLimit?: number,
-): Promise<TransactionSearchResults> {
-  let currentRound = 0
+): Promise<algosdk.indexerModels.TransactionsResponse> {
+  let currentRound = 0n
   const transactions = await executePaginatedRequest(
-    (response: TransactionSearchResults | { message: string }) => {
+    (response: algosdk.indexerModels.TransactionsResponse | { message: string }) => {
       if ('message' in response) {
         throw { status: 404, ...response }
       }
-      if (response['current-round'] > currentRound) {
-        currentRound = response['current-round']
+      if (response.currentRound > currentRound) {
+        currentRound = response.currentRound
       }
       return response.transactions
     },
@@ -140,14 +133,14 @@ export async function searchTransactions(
     },
   )
 
-  return {
-    'current-round': currentRound,
-    'next-token': '',
+  return new algosdk.indexerModels.TransactionsResponse({
+    currentRound,
+    nextToken: undefined,
     transactions: transactions,
-  }
+  })
 }
 
-// https://developer.algorand.org/docs/get-details/indexer/#paginated-results
+// https://dev.algorand.co/reference/rest-apis/indexer
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function executePaginatedRequest<TResult, TRequest extends { do: () => Promise<any> }>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -157,7 +150,6 @@ export async function executePaginatedRequest<TResult, TRequest extends { do: ()
   const results = []
 
   let nextToken: string | undefined = undefined
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const request = buildRequest(nextToken)
     const response = await request.do()
@@ -166,7 +158,7 @@ export async function executePaginatedRequest<TResult, TRequest extends { do: ()
       break
     }
     results.push(...items)
-    nextToken = response['next-token']
+    nextToken = response['nextToken']
     if (!nextToken) {
       break
     }

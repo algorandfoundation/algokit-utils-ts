@@ -4,11 +4,11 @@ import { TestNetDispenserApiClient } from './dispenser-client'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 import SuggestedParams = algosdk.SuggestedParams
 
-/** Parameters for `transferAlgos` call. */
+/** @deprecated Parameters for `transferAlgos` call. */
 export interface AlgoTransferParams extends SendTransactionParams {
-  /** The account that will send the ALGOs */
+  /** The account that will send the Algo */
   from: SendTransactionFrom
-  /** The account / account address that will receive the ALGOs */
+  /** The account / account address that will receive the Algo */
   to: SendTransactionFrom | string
   /** The amount to send */
   amount: AlgoAmount
@@ -16,11 +16,11 @@ export interface AlgoTransferParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
-/** Parameters for `rekeyAccount` call. */
+/** @deprecated Parameters for `rekeyAccount` call. */
 export interface AlgoRekeyParams extends SendTransactionParams {
   /** The account that will be rekeyed */
   from: SendTransactionFrom
@@ -30,17 +30,17 @@ export interface AlgoRekeyParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
-/** Parameters for `ensureFunded` call. */
+/** @deprecated Parameters for `ensureFunded` call. */
 export interface EnsureFundedParams extends SendTransactionParams {
   /** The account to fund */
   accountToFund: SendTransactionFrom | string
   /** The account to use as a funding source, will default to using the dispenser account returned by `algokit.getDispenserAccount` */
   fundingSource?: SendTransactionFrom | TestNetDispenserApiClient
-  /** The minimum balance of ALGOs that the account should have available to spend (i.e. on top of minimum balance requirement) */
+  /** The minimum balance of Algo that the account should have available to spend (i.e. on top of minimum balance requirement) */
   minSpendingBalance: AlgoAmount
   /** When issuing a funding amount, the minimum amount to transfer (avoids many small transfers if this gets called often on an active account) */
   minFundingIncrement?: AlgoAmount
@@ -48,11 +48,11 @@ export interface EnsureFundedParams extends SendTransactionParams {
   transactionParams?: SuggestedParams
   /** The (optional) transaction note, default: "Funding account to meet minimum requirement" */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
-/** Parameters for `transferAsset` call. */
+/** @deprecated Parameters for `transferAsset` call. */
 export interface TransferAssetParams extends SendTransactionParams {
   /** The account that will send the asset */
   from: SendTransactionFrom
@@ -68,10 +68,11 @@ export interface TransferAssetParams extends SendTransactionParams {
   clawbackFrom?: SendTransactionFrom | string
   /** The (optional) transaction note */
   note?: TransactionNote
-  /** An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply */
+  /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
   lease?: string | Uint8Array
 }
 
+/** @deprecated */
 export interface EnsureFundedReturnType {
   /** The transaction */
   transactionId: string

@@ -11,6 +11,7 @@ The AlgoKit configuration type
 ### Properties
 
 - [debug](types_config.Config.md#debug)
+- [events](types_config.Config.md#events)
 - [logger](types_config.Config.md#logger)
 - [maxSearchDepth](types_config.Config.md#maxsearchdepth)
 - [populateAppCallResources](types_config.Config.md#populateappcallresources)
@@ -29,6 +30,16 @@ Whether or not debug mode is enabled
 #### Defined in
 
 [src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
+
+___
+
+### events
+
+• **events**: [`AsyncEventEmitter`](../classes/types_async_event_emitter.AsyncEventEmitter.md)
+
+#### Defined in
+
+[src/types/config.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L24)
 
 ___
 
@@ -60,16 +71,12 @@ ___
 
 • **populateAppCallResources**: `boolean`
 
-**WARNING**: This is not production-ready due incompatability with rekeyed
-accounts and simulate. This will eventually be enabled by default once
-[this issue](https://github.com/algorand/go-algorand/issues/5914) is closed.
-
 Whether to enable populateAppCallResources in sendParams by default.
 Default value is false.
 
 #### Defined in
 
-[src/types/config.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L26)
+[src/types/config.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L22)
 
 ___
 

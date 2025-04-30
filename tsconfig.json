@@ -1,11 +1,11 @@
 {
-  "extends": "@makerx/ts-config",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "module": "ESNext",
     "target": "ES2020",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
-    "types": ["node", "jest"],
+    "types": ["node"],
     "outDir": "dist",
     "declaration": true,
     "importHelpers": true,

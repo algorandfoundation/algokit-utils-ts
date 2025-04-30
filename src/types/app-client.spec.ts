@@ -1,38 +1,43 @@
-import { describe, test } from '@jest/globals'
 import algosdk, {
   ABIUintType,
   Account,
+  Address,
   Algodv2,
+  getApplicationAddress,
   Indexer,
   OnApplicationComplete,
   TransactionSigner,
   TransactionType,
-  getApplicationAddress,
 } from 'algosdk'
 import invariant from 'tiny-invariant'
+import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
+import { algo } from '..'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
+import boxMapAppSpec from '../../tests/example-contracts/box_map/artifacts/BoxMapTest.arc56.json'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { ABIAppCallArg } from './app'
-import { ApplicationClient } from './app-client'
+import { AppClient, ApplicationClient } from './app-client'
+import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
+import { AlgoAmount } from './amount'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
-  beforeEach(localnet.beforeEach, 10_000)
+  beforeEach(localnet.newScope, 10_000)
 
   let appSpec: AppSpec
   beforeAll(async () => {
     appSpec = (await getTestingAppContract()).appSpec
   })
 
-  const deploy = async (account: Account, algod: Algodv2, indexer: Indexer) => {
+  const deploy = async (account: Address & Account, algod: Algodv2, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: account,
-        creatorAddress: account.addr,
+        creatorAddress: account,
         findExistingUsing: indexer,
       },
       algod,
@@ -50,7 +55,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -68,8 +73,8 @@ describe('application-client', () => {
     })
 
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -102,7 +107,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -117,10 +122,10 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -131,7 +136,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -156,7 +161,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -171,8 +176,8 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -184,7 +189,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -203,8 +208,8 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
-    expect(app.appAddress).toBe(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex).toBe(app.appId)
+    expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
+    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -215,7 +220,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -241,7 +246,7 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
+    expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
   })
 
   test('Deploy app - update (abi)', async () => {
@@ -251,7 +256,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -281,8 +286,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
-    expect(app.updatedRound).toBe(app.confirmation.confirmedRound)
-    expect(app.transaction.appOnComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -293,7 +298,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -315,12 +320,12 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId).toString())
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -330,7 +335,7 @@ describe('application-client', () => {
         resolveBy: 'creatorAndName',
         app: appSpec,
         sender: testAccount,
-        creatorAddress: testAccount.addr,
+        creatorAddress: testAccount,
         findExistingUsing: indexer,
       },
       algod,
@@ -362,12 +367,12 @@ describe('application-client', () => {
 
     invariant(app.operationPerformed === 'replace')
     expect(app.appId).toBeGreaterThan(createdApp.appId)
-    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId))
+    expect(app.appAddress).toBe(algosdk.getApplicationAddress(app.appId).toString())
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.appOnComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
     expect(app.deleteReturn?.returnValue).toBe('arg2_io')
   })
@@ -427,15 +432,12 @@ describe('application-client', () => {
     })
 
     // If the rekey didn't work this will throw
-    const rekeyedAccount = algorand.account.rekeyed(rekeyTo, testAccount.addr)
-    await algokit.transferAlgos(
-      {
-        amount: (0).algos(),
-        from: rekeyedAccount,
-        to: testAccount,
-      },
-      algod,
-    )
+    const rekeyedAccount = algorand.account.rekeyed(testAccount, rekeyTo)
+    await algorand.send.payment({
+      amount: (0).algo(),
+      sender: rekeyedAccount,
+      receiver: testAccount,
+    })
   })
 
   test('Create app with abi', async () => {
@@ -538,46 +540,37 @@ describe('application-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.boxes).toEqual([{ appIndex: 0, name: encoder.encode('1') }])
+    expect(call.transaction.applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const txn = await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: testAccount.addr,
-        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
-        skipSending: true,
-      },
-      algod,
-    )
+    const { algod, algorand, indexer, testAccount } = localnet.context
+    const txn = await algorand.createTransaction.payment({
+      sender: testAccount,
+      receiver: testAccount,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     const result = await client.call({
       method: 'call_abi_txn',
-      methodArgs: [txn.transaction, 'test'],
+      methodArgs: [txn, 'test'],
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[1])
     expect(result.transactions.length).toBe(2)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const returnValue = algokit.getABIReturn({ method: client.getABIMethod('call_abi_txn')!, methodArgs: [] }, result.confirmations[1])
-    expect(returnValue?.returnValue).toBe(`Sent ${txn.transaction.amount}. test`)
+    const returnValue = AppManager.getABIReturn(result.confirmations[1], client.getABIMethod('call_abi_txn')!)
+    expect(returnValue?.returnValue).toBe(`Sent ${txn.payment?.amount}. test`)
   })
 
   test('Sign all transactions in group with abi call with transaction arg', async () => {
-    const { algod, indexer, testAccount } = localnet.context
-    const txn = await algokit.transferAlgos(
-      {
-        from: testAccount,
-        to: testAccount.addr,
-        amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
-        skipSending: true,
-      },
-      algod,
-    )
+    const { algod, algorand, indexer, testAccount } = localnet.context
+    const txn = await algorand.createTransaction.payment({
+      sender: testAccount,
+      receiver: testAccount,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     let indexes: number[] = []
@@ -588,27 +581,21 @@ describe('application-client', () => {
 
     await client.call({
       method: 'call_abi_txn',
-      methodArgs: [txn.transaction, 'test'],
-      sender: { addr: testAccount.addr, signer },
+      methodArgs: [txn, 'test'],
+      sender: { addr: testAccount, signer },
     })
 
     expect(indexes).toEqual([0, 1])
   })
 
   test('Sign transaction in group with different signer if provided', async () => {
-    const { algod, indexer, testAccount, generateAccount } = localnet.context
-    const signer = await generateAccount({ initialFunds: (1).algos() })
-    const transaction = (
-      await algokit.transferAlgos(
-        {
-          from: signer,
-          to: signer.addr,
-          amount: algokit.microAlgos(Math.ceil(Math.random() * 10000)),
-          skipSending: true,
-        },
-        algod,
-      )
-    ).transaction
+    const { algod, algorand, indexer, testAccount, generateAccount } = localnet.context
+    const signer = await generateAccount({ initialFunds: (1).algo() })
+    const transaction = await algorand.createTransaction.payment({
+      sender: signer,
+      receiver: signer,
+      amount: algokit.microAlgo(Math.ceil(Math.random() * 10000)),
+    })
     const { client } = await deploy(testAccount, algod, indexer)
 
     await client.call({
@@ -626,19 +613,15 @@ describe('application-client', () => {
       method: 'call_abi_foreign_refs',
       methodArgs: [],
       apps: [345],
-      accounts: [testAccount.addr],
+      accounts: [testAccount],
       assets: [567],
     })
 
     invariant(result.confirmations)
     invariant(result.confirmations[0])
     expect(result.transactions.length).toBe(1)
-    const returnValue = algokit.getABIReturn(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      { method: client.getABIMethod('call_abi_foreign_refs')!, methodArgs: [] },
-      result.confirmations[0],
-    )
-    const testAccountPublicKey = algosdk.decodeAddress(testAccount.addr).publicKey
+    const returnValue = AppManager.getABIReturn(result.confirmations[0], client.getABIMethod('call_abi_foreign_refs')!)
+    const testAccountPublicKey = testAccount.publicKey
     expect(returnValue?.returnValue).toBe(`App: 345, Asset: 567, Account: ${testAccountPublicKey[0]}:${testAccountPublicKey[1]}`)
   })
 
@@ -746,19 +729,19 @@ describe('application-client', () => {
 
   test('Fund app account', async () => {
     const { algod, indexer, testAccount } = localnet.context
-    const fundAmount = algokit.microAlgos(200_000)
+    const fundAmount = algokit.microAlgo(200_000)
     const { client, app } = await deploy(testAccount, algod, indexer)
 
     const result = await client.fundAppAccount({
       amount: fundAmount,
     })
 
-    expect(result.transaction.amount).toBe(fundAmount.microAlgos)
+    expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
     expect(result.transaction.type).toBe(TransactionType.pay)
-    expect(algosdk.encodeAddress(result.transaction.to.publicKey)).toBe(app.appAddress)
-    expect(algosdk.encodeAddress(result.transaction.from.publicKey)).toBe(testAccount.addr)
+    expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress)
+    expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)
-    expect(result.confirmation.confirmedRound).toBeGreaterThan(0)
+    expect(result.confirmation.confirmedRound).toBeGreaterThan(0n)
   })
 
   test('Retrieve state', async () => {
@@ -774,8 +757,8 @@ describe('application-client', () => {
     invariant(globalState.bytes2)
     invariant('valueRaw' in globalState.bytes2)
     expect(Object.keys(globalState).sort()).toEqual(['bytes1', 'bytes2', 'int1', 'int2', 'value'])
-    expect(globalState.int1.value).toBe(1)
-    expect(globalState.int2.value).toBe(2)
+    expect(globalState.int1.value).toBe(1n)
+    expect(globalState.int2.value).toBe(2n)
     expect(globalState.bytes1.value).toBe('asdf')
     expect(globalState.bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
 
@@ -789,8 +772,8 @@ describe('application-client', () => {
     invariant(localState.local_bytes2)
     invariant('valueRaw' in localState.local_bytes2)
     expect(Object.keys(localState).sort()).toEqual(['local_bytes1', 'local_bytes2', 'local_int1', 'local_int2'])
-    expect(localState.local_int1.value).toBe(1)
-    expect(localState.local_int2.value).toBe(2)
+    expect(localState.local_int1.value).toBe(1n)
+    expect(localState.local_int2.value).toBe(2n)
     expect(localState.local_bytes1.value).toBe('asdf')
     expect(localState.local_bytes2.valueRaw).toEqual(new Uint8Array([1, 2, 3, 4]))
 
@@ -798,7 +781,7 @@ describe('application-client', () => {
     const boxName1Base64 = Buffer.from(boxName1).toString('base64')
     const boxName2 = new Uint8Array([0, 0, 0, 2])
     const boxName2Base64 = Buffer.from(boxName2).toString('base64')
-    await client.fundAppAccount(algokit.algos(1))
+    await client.fundAppAccount(algokit.algo(1))
     await client.call({
       method: 'set_box',
       methodArgs: [boxName1, 'value1'],
@@ -814,11 +797,9 @@ describe('application-client', () => {
     const box1Value = await client.getBoxValue(boxName1)
     expect(boxValues.map((b) => b.name.nameBase64).sort()).toEqual([boxName1Base64, boxName2Base64].sort())
     const box1 = boxValues.find((b) => b.name.nameBase64 === boxName1Base64)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(box1!.value).toEqual(new Uint8Array(Buffer.from('value1')))
     expect(box1Value).toEqual(box1?.value)
     const box2 = boxValues.find((b) => b.name.nameBase64 === boxName2Base64)
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(box2!.value).toEqual(new Uint8Array(Buffer.from('value2')))
 
     const expectedValue = 1234524352
@@ -886,5 +867,138 @@ describe('application-client', () => {
       })
       expect(defaultValueResult.return?.returnValue).toBe(defaultValueReturnValue)
     }
+  })
+})
+
+describe('app-client', () => {
+  const localnet = algorandFixture()
+  beforeEach(localnet.newScope, 10_000)
+
+  let appSpec: AppSpec
+  beforeAll(async () => {
+    appSpec = (await getTestingAppContract()).appSpec
+  })
+
+  const deploy = async (account: Account, appName?: string) => {
+    const appFactory = localnet.algorand.client.getAppFactory({
+      appSpec,
+      defaultSender: account.addr,
+      appName: appName,
+    })
+
+    const { appClient } = await appFactory.deploy({
+      deployTimeParams: { VALUE: 1 },
+    })
+
+    return appClient
+  }
+
+  test('clone overriding the defaultSender and inheriting appName', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount, 'overridden')
+    const testAccount2 = await localnet.context.generateAccount({ initialFunds: algo(0.1) })
+
+    const clonedAppClient = appClient.clone({
+      defaultSender: testAccount2.addr,
+    })
+
+    expect(appClient.appName).toBe('overridden')
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe(appClient.appName)
+    expect(algosdk.encodeAddress((await clonedAppClient.createTransaction.bare.call()).sender.publicKey)).toBe(testAccount2.addr.toString())
+  })
+
+  test('clone overriding appName', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount)
+
+    const clonedAppClient = appClient.clone({
+      appName: 'cloned',
+    })
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe('cloned')
+  })
+
+  test('clone inheriting appName based on default handling', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount, 'overridden')
+
+    const clonedAppClient = appClient.clone({
+      appName: undefined,
+    })
+
+    expect(appClient.appName).toBe('overridden')
+    expect(clonedAppClient.appId).toBe(appClient.appId)
+    expect(clonedAppClient.appName).toBe(appSpec.contract.name)
+  })
+
+  test('simulated transaction group result should match sent transaction group result', async () => {
+    const { testAccount } = localnet.context
+    const appClient = await deploy(testAccount)
+
+    const appCall1Params = {
+      sender: testAccount,
+      appId: appClient.appId,
+      method: algosdk.ABIMethod.fromSignature('set_global(uint64,uint64,string,byte[4])void'),
+      args: [1, 2, 'asdf', new Uint8Array([1, 2, 3, 4])],
+    }
+
+    const paymentParams = {
+      sender: testAccount,
+      receiver: testAccount,
+      amount: algo(0.01),
+    }
+
+    const appCall2Params = {
+      sender: testAccount,
+      appId: appClient.appId,
+      method: algosdk.ABIMethod.fromSignature('call_abi(string)string'),
+      args: ['test'],
+    }
+
+    const simulateResult = await appClient.algorand
+      .newGroup()
+      .addAppCallMethodCall(appCall1Params)
+      .addPayment(paymentParams)
+      .addAppCallMethodCall(appCall2Params)
+      .simulate({ skipSignatures: true })
+
+    const sendResult = await appClient.algorand
+      .newGroup()
+      .addAppCallMethodCall(appCall1Params)
+      .addPayment(paymentParams)
+      .addAppCallMethodCall(appCall2Params)
+      .send()
+
+    expect(simulateResult.transactions.length).toBe(sendResult.transactions.length)
+    expect(simulateResult.returns!.length).toBe(sendResult.returns!.length)
+    expect(simulateResult.returns![0]).toEqual(sendResult.returns![0])
+    expect(simulateResult.returns![1]).toEqual(sendResult.returns![1])
+  })
+
+  describe('ARC56 BoxMap', () => {
+    let appClient: AppClient
+
+    beforeEach(async () => {
+      localnet.newScope()
+      const { testAccount, algorand } = localnet.context
+      const factory = algorand.client.getAppFactory({
+        appSpec: JSON.stringify(boxMapAppSpec),
+        defaultSender: testAccount,
+      })
+
+      appClient = (await factory.send.create({ method: 'createApplication' })).appClient
+
+      await algorand.account.ensureFunded(appClient.appAddress, testAccount, AlgoAmount.Algo(1))
+
+      await appClient.send.call({ method: 'setValue', args: [1n, 'foo'] })
+    })
+
+    test('getMap with prefix', async () => {
+      expect(await appClient.state.box.getMap('bMap')).toEqual(new Map().set(1n, 'foo'))
+    })
+    test('getMapValue with prefix', async () => {
+      expect(await appClient.state.box.getMapValue('bMap', 1n)).toEqual('foo')
+    })
   })
 })

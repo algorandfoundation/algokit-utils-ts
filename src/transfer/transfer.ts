@@ -1,83 +1,20 @@
 import algosdk from 'algosdk'
-import { microAlgos } from '../amount'
-import { Config } from '../config'
-import { encodeLease, encodeTransactionNote, getSenderAddress, getTransactionParams, sendTransaction } from '../transaction/transaction'
-import { AccountManager } from '../types/account-manager'
-import { AlgoAmount } from '../types/amount'
-import { ClientManager } from '../types/client-manager'
+import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
+import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
+import { AlgorandClient } from '../types/algorand-client'
 import { TestNetDispenserApiClient } from '../types/dispenser-client'
-import { SendTransactionResult, TransactionNote } from '../types/transaction'
+import { SendTransactionResult } from '../types/transaction'
 import { AlgoRekeyParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from '../types/transfer'
-import { calculateFundAmount } from '../util'
-import { transferAlgos } from './transfer-algos'
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
-async function fundUsingDispenserApi(
-  dispenserClient: TestNetDispenserApiClient,
-  addressToFund: string,
-  fundAmount: number,
-): Promise<EnsureFundedReturnType> {
-  const response = await dispenserClient.fund(addressToFund, fundAmount)
-  return { transactionId: response.txId, amount: response.amount }
-}
-
-async function fundUsingTransfer({
-  algod,
-  addressToFund,
-  funding,
-  fundAmount,
-  transactionParams,
-  sendParams,
-  note,
-  kmd,
-}: {
-  algod: Algodv2
-  addressToFund: string
-  funding: EnsureFundedParams
-  fundAmount: number
-  transactionParams: algosdk.SuggestedParams | undefined
-  sendParams: {
-    skipSending?: boolean | undefined
-    skipWaiting?: boolean | undefined
-    atc?: algosdk.AtomicTransactionComposer | undefined
-    suppressLog?: boolean | undefined
-    fee?: AlgoAmount | undefined
-    maxFee?: AlgoAmount | undefined
-    maxRoundsToWaitForConfirmation?: number | undefined
-  }
-  note: TransactionNote
-  kmd?: Kmd
-}): Promise<EnsureFundedReturnType> {
-  if (funding.fundingSource instanceof TestNetDispenserApiClient) {
-    throw new Error('Dispenser API client is not supported in this context.')
-  }
-
-  const from = funding.fundingSource ?? (await new AccountManager(new ClientManager({ algod, kmd })).dispenserFromEnvironment())
-  const amount = microAlgos(Math.max(fundAmount, funding.minFundingIncrement?.microAlgos ?? 0))
-  const response = await transferAlgos(
-    {
-      from,
-      to: addressToFund,
-      note: note ?? 'Funding account to meet minimum requirement',
-      amount: amount,
-      transactionParams: transactionParams,
-      lease: funding.lease,
-      ...sendParams,
-    },
-    algod,
-  )
-
-  return {
-    transactionId: response.transaction.txID(),
-    amount: Number(response.transaction.amount),
-  }
-}
-
 /**
- * Funds a given account using a funding source such that it has a certain amount of algos free to spend (accounting for ALGOs locked in minimum balance requirement).
+ * @deprecated Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnvironment()`
+ * / `algorand.account.ensureFundedFromTestNetDispenserApi()` instead
  *
- * https://developer.algorand.org/docs/get-details/accounts/#minimum-balance
+ * Funds a given account using a funding source such that it has a certain amount of Algo free to spend (accounting for Algo locked in minimum balance requirement).
+ *
+ * https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
  *
  * @param funding The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables.
  * @param algod An instance of the Algodv2 client.
@@ -91,42 +28,55 @@ export async function ensureFunded<T extends EnsureFundedParams>(
   algod: Algodv2,
   kmd?: Kmd,
 ): Promise<EnsureFundedReturnType | undefined> {
-  const { accountToFund, fundingSource, minSpendingBalance, minFundingIncrement, transactionParams, note, ...sendParams } = funding
+  const algorand = AlgorandClient.fromClients({ algod, kmd })
 
-  const addressToFund = typeof accountToFund === 'string' ? accountToFund : getSenderAddress(accountToFund)
-
-  const accountInfo = await algod.accountInformation(addressToFund).do()
-  const balance = Number(accountInfo.amount)
-  const minimumBalanceRequirement = microAlgos(Number(accountInfo['min-balance']))
-  const currentSpendingBalance = microAlgos(balance - minimumBalanceRequirement.microAlgos)
-
-  const fundAmount = calculateFundAmount(
-    minSpendingBalance.microAlgos,
-    currentSpendingBalance.microAlgos,
-    minFundingIncrement?.microAlgos ?? 0,
-  )
-
-  if (fundAmount !== null) {
-    if ((await new ClientManager({ algod }).isTestNet()) && fundingSource instanceof TestNetDispenserApiClient) {
-      return await fundUsingDispenserApi(fundingSource, addressToFund, fundAmount)
-    } else {
-      return await fundUsingTransfer({
-        algod,
-        addressToFund,
-        funding,
-        fundAmount,
-        transactionParams,
-        sendParams,
-        note,
-        kmd,
-      })
+  if (funding.fundingSource instanceof TestNetDispenserApiClient) {
+    const result = await algorand.account.ensureFundedFromTestNetDispenserApi(
+      getSenderAddress(funding.accountToFund),
+      funding.fundingSource,
+      funding.minSpendingBalance,
+      {
+        minFundingIncrement: funding.minFundingIncrement,
+      },
+    )
+    if (!result) return undefined
+    return {
+      amount: Number(result.amountFunded.microAlgo),
+      transactionId: result.transactionId,
     }
-  }
+  } else {
+    const sender = funding.fundingSource ?? (await algorand.account.dispenserFromEnvironment())
+    if (funding.fundingSource) {
+      algorand.setSignerFromAccount(funding.fundingSource)
+    }
 
-  return undefined
+    const result = await algorand.account.ensureFunded(
+      getSenderAddress(funding.accountToFund),
+      getSenderAddress(sender),
+      funding.minSpendingBalance,
+      {
+        minFundingIncrement: funding.minFundingIncrement,
+        note: encodeTransactionNote(funding.note),
+        staticFee: funding.fee,
+        lease: funding.lease,
+        maxFee: funding.maxFee,
+        maxRoundsToWaitForConfirmation: funding.maxRoundsToWaitForConfirmation,
+        suppressLog: funding.suppressLog,
+      },
+    )
+
+    return result
+      ? {
+          amount: Number(result.amountFunded.microAlgo),
+          transactionId: result.txIds[0],
+        }
+      : undefined
+  }
 }
 
 /**
+ * @deprecated Use `algorand.send.assetTransfer()` / `algorand.createTransaction.assetTransfer()` instead
+ *
  * Transfer asset between two accounts.
  * @param transfer The transfer definition
  * @param algod An algod client
@@ -138,37 +88,30 @@ export async function ensureFunded<T extends EnsureFundedParams>(
  * ```
  */
 export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const { from, to, assetId, amount, transactionParams, clawbackFrom, note, lease, ...sendParams } = transfer
-  const transaction = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-    from: getSenderAddress(from),
-    to: getSenderAddress(to),
-    closeRemainderTo: undefined,
-    revocationTarget: clawbackFrom ? getSenderAddress(clawbackFrom) : undefined,
-    amount: amount,
-    note: encodeTransactionNote(note),
-    assetIndex: assetId,
-    suggestedParams: await getTransactionParams(transactionParams, algod),
-    rekeyTo: undefined,
-  })
-
-  const encodedLease = encodeLease(lease)
-  if (encodedLease) {
-    transaction.addLease(encodedLease)
-  }
-
-  if (!sendParams.skipSending) {
-    Config.getLogger(sendParams.suppressLog).debug(
-      `Transferring ASA (${assetId}) of amount ${amount} from ${getSenderAddress(from)} to ${getSenderAddress(to)}`,
-    )
-  }
-
-  return sendTransaction({ transaction, from, sendParams }, algod)
+  return legacySendTransactionBridge(
+    algod,
+    transfer.from,
+    transfer,
+    {
+      assetId: BigInt(transfer.assetId),
+      sender: getSenderAddress(transfer.from),
+      receiver: getSenderAddress(transfer.to),
+      clawbackTarget: transfer.clawbackFrom ? getSenderAddress(transfer.clawbackFrom) : undefined,
+      amount: BigInt(transfer.amount),
+      note: encodeTransactionNote(transfer.note),
+      lease: transfer.lease,
+    },
+    (c) => c.assetTransfer,
+    (c) => c.assetTransfer,
+  )
 }
 
 /**
+ * @deprecated Use `algorand.account.rekeyAccount()` instead
+ *
  * Rekey an account to a new address.
  *
- * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+ * **Note:** Please be careful with this function and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
  *
  * @param rekey The rekey definition
  * @param algod An algod client
@@ -180,26 +123,19 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
  * ```
  */
 export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const { from, rekeyTo, note, transactionParams, lease, ...sendParams } = rekey
-
-  const transaction = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-    from: getSenderAddress(from),
-    to: getSenderAddress(from),
-    rekeyTo: getSenderAddress(rekeyTo),
-    amount: 0,
-    note: encodeTransactionNote(note),
-    suggestedParams: await getTransactionParams(transactionParams, algod),
-    closeRemainderTo: undefined,
-  })
-
-  const encodedLease = encodeLease(lease)
-  if (encodedLease) {
-    transaction.addLease(encodedLease)
-  }
-
-  if (!sendParams.skipSending) {
-    Config.getLogger(sendParams.suppressLog).debug(`Rekeying ${getSenderAddress(from)} to ${getSenderAddress(rekeyTo)}`)
-  }
-
-  return sendTransaction({ transaction, from, sendParams }, algod)
+  return legacySendTransactionBridge(
+    algod,
+    rekey.from,
+    rekey,
+    {
+      sender: getSenderAddress(rekey.from),
+      receiver: getSenderAddress(rekey.from),
+      amount: (0).microAlgo(),
+      rekeyTo: typeof rekey.rekeyTo === 'string' ? rekey.rekeyTo : getSenderAddress(rekey.rekeyTo),
+      note: encodeTransactionNote(rekey.note),
+      lease: rekey.lease,
+    },
+    (c) => c.payment,
+    (c) => c.payment,
+  )
 }

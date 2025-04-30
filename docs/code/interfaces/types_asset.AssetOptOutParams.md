@@ -4,6 +4,8 @@
 
 [types/asset](../modules/types_asset.md).AssetOptOutParams
 
+**`Deprecated`**
+
 Parameters for `assetOptOut` call.
 
 ## Hierarchy
@@ -92,7 +94,7 @@ An optional `AtomicTransactionComposer` to add the transaction to, if specified 
 
 #### Defined in
 
-[src/types/transaction.ts:35](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L35)
+[src/types/transaction.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L36)
 
 ___
 
@@ -120,7 +122,7 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 #### Defined in
 
-[src/types/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L39)
+[src/types/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L40)
 
 ___
 
@@ -136,7 +138,7 @@ If provided, explicitly set the first round this transaction will be valid. If n
 
 #### Defined in
 
-[src/types/transaction.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L47)
+[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
 
 ___
 
@@ -152,7 +154,7 @@ If provided, explicitly set the last round this transaction will be valid.  If n
 
 #### Defined in
 
-[src/types/transaction.ts:49](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L49)
+[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
 
 ___
 
@@ -160,7 +162,7 @@ ___
 
 • `Optional` **lease**: `string` \| `Uint8Array`
 
-An (optional) [transaction lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/) to apply
+An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply
 
 #### Inherited from
 
@@ -184,7 +186,7 @@ The maximum fee that you are happy to pay (default: unbounded) - if this is set 
 
 #### Defined in
 
-[src/types/transaction.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L41)
+[src/types/transaction.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L42)
 
 ___
 
@@ -200,7 +202,7 @@ The maximum number of rounds to wait for confirmation, only applies if `skipWait
 
 #### Defined in
 
-[src/types/transaction.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L43)
+[src/types/transaction.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L44)
 
 ___
 
@@ -224,7 +226,7 @@ ___
 
 • `Optional` **populateAppCallResources**: `boolean`
 
-**WARNING**: Not recommended for production use due to https://github.com/algorand/go-algorand/issues/5914. Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.
+Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.
 
 #### Inherited from
 
@@ -232,7 +234,7 @@ ___
 
 #### Defined in
 
-[src/types/transaction.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L45)
+[src/types/transaction.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L46)
 
 ___
 
@@ -249,7 +251,7 @@ and instead just return the raw transaction, e.g. so you can add it to a group o
 
 #### Defined in
 
-[src/types/transaction.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L31)
+[src/types/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L32)
 
 ___
 
@@ -265,7 +267,7 @@ Whether to skip waiting for the submitted transaction (only relevant if `skipSen
 
 #### Defined in
 
-[src/types/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L33)
+[src/types/transaction.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L34)
 
 ___
 
@@ -281,7 +283,7 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L37)
+[src/types/transaction.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L38)
 
 ___
 

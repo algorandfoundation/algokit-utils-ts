@@ -16,12 +16,14 @@ that makes it easier to get and manage accounts using KMD.
 ### Properties
 
 - [\_clientManager](types_kmd_account_manager.KmdAccountManager.md#_clientmanager)
+- [\_kmd](types_kmd_account_manager.KmdAccountManager.md#_kmd)
 
 ### Methods
 
 - [getLocalNetDispenserAccount](types_kmd_account_manager.KmdAccountManager.md#getlocalnetdispenseraccount)
 - [getOrCreateWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getorcreatewalletaccount)
 - [getWalletAccount](types_kmd_account_manager.KmdAccountManager.md#getwalletaccount)
+- [kmd](types_kmd_account_manager.KmdAccountManager.md#kmd)
 
 ## Constructors
 
@@ -43,17 +45,27 @@ Create a new KMD manager.
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L17)
+[src/types/kmd-account-manager.ts:18](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L18)
 
 ## Properties
 
 ### \_clientManager
 
-• `Private` **\_clientManager**: [`ClientManager`](types_client_manager.ClientManager.md)
+• `Private` **\_clientManager**: `Omit`\<[`ClientManager`](types_client_manager.ClientManager.md), ``"kmd"``\>
 
 #### Defined in
 
 [src/types/kmd-account-manager.ts:11](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L11)
+
+___
+
+### \_kmd
+
+• `Private` `Optional` **\_kmd**: ``null`` \| `KmdClient`
+
+#### Defined in
+
+[src/types/kmd-account-manager.ts:12](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L12)
 
 ## Methods
 
@@ -77,7 +89,7 @@ const dispenser = await kmdAccountManager.getLocalNetDispenserAccount()
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:158](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L158)
+[src/types/kmd-account-manager.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L186)
 
 ___
 
@@ -98,7 +110,7 @@ If this is used via `mnemonicAccountFromEnvironment`, then you can even use the 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `string` | The name of the wallet to retrieve / create |
-| `fundWith?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The number of Algos to fund the account with when it gets created, if not specified then 1000 Algos will be funded from the dispenser account |
+| `fundWith?` | [`AlgoAmount`](types_amount.AlgoAmount.md) | The number of Algo to fund the account with when it gets created, if not specified then 1000 ALGO will be funded from the dispenser account |
 
 #### Returns
 
@@ -109,16 +121,16 @@ An Algorand account with private key loaded - either one that already existed in
 **`Example`**
 
 ```typescript
-// Idempotently get (if exists) or crate (if it doesn't exist yet) an account by name using KMD
-// if creating it then fund it with 2 Algos from the default dispenser account
-const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algos())
+// Idempotently get (if exists) or create (if it doesn't exist yet) an account by name using KMD
+// if creating it then fund it with 2 ALGO from the default dispenser account
+const newAccount = await kmdAccountManager.getOrCreateWalletAccount('account1', (2).algo())
 // This will return the same account as above since the name matches
 const existingAccount = await kmdAccountManager.getOrCreateWalletAccount('account1')
 ```
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L108)
+[src/types/kmd-account-manager.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L135)
 
 ___
 
@@ -134,7 +146,7 @@ Returns an Algorand signing account with private key loaded from the given KMD w
 | :------ | :------ | :------ |
 | `walletName` | `string` | The name of the wallet to retrieve an account from |
 | `predicate?` | (`account`: `Record`\<`string`, `any`\>) => `boolean` | An optional filter to use to find the account (otherwise it will return a random account from the wallet) |
-| `sender?` | `string` | The optional sender address to use this signer for (aka a rekeyed account) |
+| `sender?` | `string` \| `Address` | The optional sender address to use this signer for (aka a rekeyed account) |
 
 #### Returns
 
@@ -153,4 +165,18 @@ const defaultDispenserAccount = await kmdAccountManager.getWalletAccount(
 
 #### Defined in
 
-[src/types/kmd-account-manager.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L37)
+[src/types/kmd-account-manager.ts:62](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L62)
+
+___
+
+### kmd
+
+▸ **kmd**(): `Promise`\<`KmdClient`\>
+
+#### Returns
+
+`Promise`\<`KmdClient`\>
+
+#### Defined in
+
+[src/types/kmd-account-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/kmd-account-manager.ts#L27)
