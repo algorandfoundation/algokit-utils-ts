@@ -231,6 +231,7 @@ export class AlgorandClientTransactionSender {
           `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
       })(params)
     }
+
     const composer = this._newGroup()
     composer.addPayment(params)
     const { atc, transactions } = await composer.build()
@@ -244,7 +245,7 @@ export class AlgorandClientTransactionSender {
     atc.buildGroup()
     const signedTxns = await atc.gatherSignatures()
 
-    const httpFile = new File(signedTxns, '', { type: 'application/x-binary' })
+    const httpFile = new File(signedTxns, '')
     await this._algoKitCoreAlgod.rawTransaction(httpFile)
     const confirmation = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algod)
 

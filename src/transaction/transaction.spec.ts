@@ -1,16 +1,18 @@
 import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
 import invariant from 'tiny-invariant'
-import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
 import innerFeeContract from '../../tests/example-contracts/inner-fee/application.json'
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
-import { algo, microAlgo } from '../amount'
+import { algo, algos, microAlgo } from '../amount'
 import { Config } from '../config'
-import { algorandFixture } from '../testing'
+import { algorandFixture, getTestAccount } from '../testing'
+import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
+import { ClientManager } from '../types/client-manager'
 import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { getABIReturnValue, waitForConfirmation } from './transaction'
@@ -1155,5 +1157,30 @@ describe('abi return', () => {
       [1, 2, 3],
       [1n, 2n, 3n],
     ])
+  })
+})
+
+describe('When create algorand client with config from environment', () => {
+  test('payment transactions are sent by algokit core algod client', async () => {
+    const algorandClient = AlgorandClient.fromConfig(ClientManager.getConfigFromEnvironmentOrLocalNet())
+    const algodSpy = vi.spyOn(algorandClient.client.algod, 'sendRawTransaction')
+    const algoKitCoreAlgodSpy = vi.spyOn(algorandClient.client.algoKitCoreAlgod!, 'rawTransaction')
+
+    const testAccount = await getTestAccount({ initialFunds: algos(10), suppressLog: true }, algorandClient)
+    algorandClient.setSignerFromAccount(testAccount)
+
+    const testPayTransaction = {
+      sender: testAccount,
+      receiver: testAccount,
+      amount: (1).microAlgo(),
+    } as PaymentParams
+
+    const fee = (1).algo()
+    const { confirmation } = await algorandClient.send.payment({ ...testPayTransaction, staticFee: fee })
+
+    expect(algodSpy).not.toHaveBeenCalled()
+    expect(algorandClient.client.algoKitCoreAlgod).toBeDefined()
+    expect(algoKitCoreAlgodSpy).toBeCalledTimes(2)
+    expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
   })
 })
