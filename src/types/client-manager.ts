@@ -1,6 +1,7 @@
 import * as algodApi from '@algorand/algod-client'
 import algosdk, { SuggestedParams } from 'algosdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
+import { TokenHeaderAuthenticationMethod } from './algokit-core-bridge'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
 import { AppFactory, AppFactoryParams } from './app-factory'
@@ -606,19 +607,24 @@ export class ClientManager {
   public static getAlgoKitCoreAlgodClient(algoClientConfig: AlgoClientConfig): algodApi.AlgodApi {
     const { token, server, port } = algoClientConfig
 
-    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
+    const authMethodConfig =
+      token === undefined
+        ? undefined
+        : typeof token === 'string'
+          ? new TokenHeaderAuthenticationMethod({ 'X-Algo-API-Token': token })
+          : new TokenHeaderAuthenticationMethod(token)
 
     // Covers all auth methods included in your OpenAPI yaml definition
     const authConfig: algodApi.AuthMethodsConfiguration = {
-      api_key: token,
+      default: authMethodConfig,
     }
 
     // Create configuration parameter object
     const serverConfig = new algodApi.ServerConfiguration(`${server}:${port}`, {})
     const configurationParameters = {
-      httpApi: new algodApi.IsomorphicFetchHttpLibrary(), // Can also be ignored - default is usually fine
-      baseServer: serverConfig, // First server is default
-      authMethods: authConfig, // No auth is default
+      httpApi: new algodApi.IsomorphicFetchHttpLibrary(),
+      baseServer: serverConfig,
+      authMethods: authConfig,
       promiseMiddleware: [],
     }
 

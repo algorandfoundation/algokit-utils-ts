@@ -40,6 +40,7 @@ export class AlgorandClient {
       this._assetManager,
       this._appManager,
       this._clientManager.algod,
+      this._clientManager.algoKitCoreAlgod,
     )
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
     this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)

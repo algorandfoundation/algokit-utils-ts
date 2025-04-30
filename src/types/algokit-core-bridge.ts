@@ -1,6 +1,7 @@
 import * as algodApi from '@algorand/algod-client'
+import { RequestContext, SecurityAuthentication } from '@algorand/algod-client'
 import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from 'algokit_transact'
-import algosdk, { Address } from 'algosdk'
+import algosdk, { Address, TokenHeader } from 'algosdk'
 
 function getAlgokitCoreAddress(address: string | Address) {
   return addressFromString(typeof address === 'string' ? address : address.toString())
@@ -75,4 +76,23 @@ export function sendRawTransaction(signedTxn: Uint8Array) {
 
   const httpFile = new File([signedTxn], '', { type: 'application/x-binary' })
   return api.rawTransaction(httpFile)
+}
+
+export class TokenHeaderAuthenticationMethod implements SecurityAuthentication {
+  private _header: string
+  private _key: string
+
+  public constructor(tokenHeader: TokenHeader) {
+    const [header, key] = Object.entries(tokenHeader)[0]
+    this._header = header
+    this._key = key
+  }
+
+  public getName(): string {
+    return 'custom_header'
+  }
+
+  public applySecurityAuthentication(context: RequestContext) {
+    context.setHeaderParam(this._header, this._key)
+  }
 }
