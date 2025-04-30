@@ -1,6 +1,8 @@
-import { IntDecoding, parseJSON, stringifyJSON } from 'algosdk'
+import * as algodApi from '@algorand/algod-client'
+import { decodeSignedTransaction, IntDecoding, parseJSON, SignedTransaction, stringifyJSON, TokenHeader, TransactionType } from 'algosdk'
 import { BaseHTTPClientResponse, Query, URLTokenBaseHTTPClient } from 'algosdk/client'
 import { Config } from '../config'
+import { TokenHeaderAuthenticationMethod } from './algokit-core-bridge'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */
 export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
@@ -94,6 +96,45 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     query?: Query<string>,
     requestHeaders: Record<string, string> = {},
   ): Promise<BaseHTTPClientResponse> {
+    if (relativePath.startsWith('/v2/transactions')) {
+      let signedTxn: SignedTransaction | undefined = undefined
+      try {
+        // Try to decode the data into a single transaction
+        // This will fail when sending a transaction group, in that case, we will ignore the error
+        signedTxn = decodeSignedTransaction(data)
+      } catch {
+        // Ignore errors here
+      }
+      if (signedTxn && signedTxn.txn.type === TransactionType.pay) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const baseUrl = (this as any).baseURL as URL
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const tokenHeader = (this as any).tokenHeader as TokenHeader
+
+        const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
+        return await this.callWithRetry(async () => {
+          try {
+            const response = await algoKitCoreAlgod.rawTransaction(new File([data], ''))
+            const json = JSON.stringify(response)
+            const encoder = new TextEncoder()
+            return {
+              status: 200,
+              headers: {}, // TODO: PD - do we need the headers?
+              body: encoder.encode(json),
+            }
+          } catch (e) {
+            if (e instanceof algodApi.ApiException) {
+              return {
+                body: e.body,
+                status: e.code,
+                headers: e.headers,
+              }
+            }
+            throw e
+          }
+        })
+      }
+    }
     return await this.callWithRetry(() => super.post(relativePath, data, query, requestHeaders))
   }
 
@@ -105,4 +146,26 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
   ): Promise<BaseHTTPClientResponse> {
     return await this.callWithRetry(() => super.delete(relativePath, data, query, requestHeaders))
   }
+}
+
+function getAlgoKitCoreAlgodClient(baseUrl: string, tokenHeader: TokenHeader): algodApi.AlgodApi {
+  const authMethodConfig = new TokenHeaderAuthenticationMethod(tokenHeader)
+  // Covers all auth methods included in your OpenAPI yaml definition
+  const authConfig: algodApi.AuthMethodsConfiguration = {
+    default: authMethodConfig,
+  }
+
+  // Create configuration parameter object
+  const fixedBaseUrl = baseUrl.replace(/\/+$/, '')
+  const serverConfig = new algodApi.ServerConfiguration(fixedBaseUrl, {})
+  const configurationParameters = {
+    httpApi: new algodApi.IsomorphicFetchHttpLibrary(),
+    baseServer: serverConfig,
+    authMethods: authConfig,
+    promiseMiddleware: [],
+  }
+
+  // Convert to actual configuration
+  const config = algodApi.createConfiguration(configurationParameters)
+  return new algodApi.AlgodApi(config)
 }

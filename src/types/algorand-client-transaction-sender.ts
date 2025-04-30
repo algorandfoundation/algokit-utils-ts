@@ -3,7 +3,6 @@ import algosdk, { Address } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, defaultJsonValueReplacer } from '../util'
-import { waitForConfirmation } from './algokit-core-bridge'
 import { AlgoAmount } from './amount'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
@@ -216,41 +215,39 @@ export class AlgorandClientTransactionSender {
       closeRemainderTo?: string | Address
     } & SendParams,
   ): Promise<SendSingleTransactionResult> => {
-    if (!this._algoKitCoreAlgod) {
-      return this._send((c) => c.addPayment, {
-        preLog: (params, transaction) =>
-          `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-      })(params)
-    }
+    return this._send((c) => c.addPayment, {
+      preLog: (params, transaction) =>
+        `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+    })(params)
 
-    const composer = this._newGroup()
-    composer.addPayment(params)
-    const { atc, transactions } = await composer.build()
+    // const composer = this._newGroup()
+    // composer.addPayment(params)
+    // const { atc, transactions } = await composer.build()
 
-    const transaction = transactions[0].txn
+    // const transaction = transactions[0].txn
 
-    Config.getLogger(params?.suppressLog).debug(
-      `AlgoKit core: sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-    )
+    // Config.getLogger(params?.suppressLog).debug(
+    //   `AlgoKit core: sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+    // )
 
-    atc.buildGroup()
-    const signedTxns = await atc.gatherSignatures()
+    // atc.buildGroup()
+    // const signedTxns = await atc.gatherSignatures()
 
-    const httpFile = new File(signedTxns, '')
-    await this._algoKitCoreAlgod.rawTransaction(httpFile)
-    // TODO: check the support for msgpack in pendingTransactionInformation
-    // TODO: conversation about decoding generic types in Rust (whenever we have to do it with algosdk)
-    const confirmation1 = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algoKitCoreAlgod)
-    const confirmation = confirmation1 as algosdk.modelsv2.PendingTransactionResponse
+    // const httpFile = new File(signedTxns, '')
+    // await this._algoKitCoreAlgod.rawTransaction(httpFile)
+    // // TODO: check the support for msgpack in pendingTransactionInformation
+    // // TODO: conversation about decoding generic types in Rust (whenever we have to do it with algosdk)
+    // const confirmation = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algoKitCoreAlgod)
+    // // const confirmation = confirmation1 as algosdk.modelsv2.PendingTransactionResponse
 
-    return {
-      txIds: [transaction.txID()],
-      returns: undefined,
-      confirmation: confirmation,
-      transaction: transaction,
-      confirmations: [confirmation],
-      transactions: [transaction],
-    } satisfies SendSingleTransactionResult
+    // return {
+    //   txIds: [transaction.txID()],
+    //   returns: undefined,
+    //   confirmation: confirmation,
+    //   transaction: transaction,
+    //   confirmations: [confirmation],
+    //   transactions: [transaction],
+    // } satisfies SendSingleTransactionResult
   }
 
   /**

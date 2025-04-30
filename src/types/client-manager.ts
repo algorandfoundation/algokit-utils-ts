@@ -603,7 +603,6 @@ export class ClientManager {
     return new algosdk.Algodv2(httpClientWithRetry, server)
   }
 
-  // TODO: write test for this
   public static getAlgoKitCoreAlgodClient(algoClientConfig: AlgoClientConfig): algodApi.AlgodApi {
     const { token, server, port } = algoClientConfig
 
