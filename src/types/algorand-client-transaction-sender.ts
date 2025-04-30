@@ -239,7 +239,7 @@ export class AlgorandClientTransactionSender {
     const transaction = transactions[0].txn
 
     Config.getLogger(params?.suppressLog).debug(
-      `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+      `AlgoKit core: sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
     )
 
     atc.buildGroup()

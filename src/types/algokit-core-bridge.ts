@@ -1,4 +1,3 @@
-import * as algodApi from '@algorand/algod-client'
 import { RequestContext, SecurityAuthentication } from '@algorand/algod-client'
 import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from 'algokit_transact'
 import algosdk, { Address, TokenHeader } from 'algosdk'
@@ -53,29 +52,6 @@ export function buildPayment({
   txnModel.header.fee = fee
 
   return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnModel))
-}
-
-export function sendRawTransaction(signedTxn: Uint8Array) {
-  // Covers all auth methods included in your OpenAPI yaml definition
-  const authConfig: algodApi.AuthMethodsConfiguration = {
-    api_key: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-  }
-
-  // Create configuration parameter object
-  const serverConfig = new algodApi.ServerConfiguration('http://localhost:4001', {})
-  const configurationParameters = {
-    httpApi: new algodApi.IsomorphicFetchHttpLibrary(), // Can also be ignored - default is usually fine
-    baseServer: serverConfig, // First server is default
-    authMethods: authConfig, // No auth is default
-    promiseMiddleware: [],
-  }
-
-  // Convert to actual configuration
-  const config = algodApi.createConfiguration(configurationParameters)
-  const api = new algodApi.AlgodApi(config)
-
-  const httpFile = new File([signedTxn], '', { type: 'application/x-binary' })
-  return api.rawTransaction(httpFile)
 }
 
 export class TokenHeaderAuthenticationMethod implements SecurityAuthentication {
