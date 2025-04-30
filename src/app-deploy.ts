@@ -77,7 +77,7 @@ export async function deployApp(
     })
   const deployer = new AppDeployer(
     appManager,
-    new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager, algod),
+    new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager),
     indexer,
   )
 

@@ -1,9 +1,9 @@
 import { AlgodApi } from '@algorand/algod-client'
-import algosdk, { Address, Algodv2 } from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
-import { waitForConfirmation } from '../transaction'
 import { asJson, defaultJsonValueReplacer } from '../util'
+import { waitForConfirmation } from './algokit-core-bridge'
 import { AlgoAmount } from './amount'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
@@ -41,7 +41,6 @@ export class AlgorandClientTransactionSender {
   private _newGroup: () => TransactionComposer
   private _assetManager: AssetManager
   private _appManager: AppManager
-  private _algod: Algodv2
   private _algoKitCoreAlgod?: AlgodApi
 
   /**
@@ -49,24 +48,16 @@ export class AlgorandClientTransactionSender {
    * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @param assetManager An `AssetManager` instance
    * @param appManager An `AppManager` instance
-   * @param algod An `Algodv2` instance
    * @param algoKitCoreAlgod An optional `AlgodApi` instance for AlgoKit core
    * @example
    * ```typescript
    * const transactionSender = new AlgorandClientTransactionSender(() => new TransactionComposer(), assetManager, appManager)
    * ```
    */
-  constructor(
-    newGroup: () => TransactionComposer,
-    assetManager: AssetManager,
-    appManager: AppManager,
-    algod: Algodv2,
-    algoKitCoreAlgod?: AlgodApi,
-  ) {
+  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager, algoKitCoreAlgod?: AlgodApi) {
     this._newGroup = newGroup
     this._assetManager = assetManager
     this._appManager = appManager
-    this._algod = algod
     this._algoKitCoreAlgod = algoKitCoreAlgod
   }
 
@@ -247,7 +238,10 @@ export class AlgorandClientTransactionSender {
 
     const httpFile = new File(signedTxns, '')
     await this._algoKitCoreAlgod.rawTransaction(httpFile)
-    const confirmation = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algod)
+    // TODO: check the support for msgpack in pendingTransactionInformation
+    // TODO: conversation about decoding generic types in Rust (whenever we have to do it with algosdk)
+    const confirmation1 = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algoKitCoreAlgod)
+    const confirmation = confirmation1 as algosdk.modelsv2.PendingTransactionResponse
 
     return {
       txIds: [transaction.txID()],
