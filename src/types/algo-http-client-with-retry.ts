@@ -106,6 +106,8 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         // Ignore errors here
       }
       if (signedTxn && signedTxn.txn.type === TransactionType.pay) {
+        const encoder = new TextEncoder()
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const baseUrl = (this as any).baseURL as URL
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,24 +115,12 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
 
         const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
         return await this.callWithRetry(async () => {
-          try {
-            const response = await algoKitCoreAlgod.rawTransaction(new File([data], ''))
-            const json = JSON.stringify(response)
-            const encoder = new TextEncoder()
-            return {
-              status: 200,
-              headers: {}, // TODO: PD - do we need the headers?
-              body: encoder.encode(json),
-            }
-          } catch (e) {
-            if (e instanceof algodApi.ApiException) {
-              return {
-                body: e.body,
-                status: e.code,
-                headers: e.headers,
-              }
-            }
-            throw e
+          const response = await algoKitCoreAlgod.rawTransaction(new File([data], ''))
+          const json = JSON.stringify(response)
+          return {
+            status: 200,
+            headers: {}, // TODO: PD - do we need the headers?
+            body: encoder.encode(json),
           }
         })
       }
