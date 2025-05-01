@@ -57,6 +57,30 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
   }
 
   async get(relativePath: string, query?: Query<string>, requestHeaders: Record<string, string> = {}): Promise<BaseHTTPClientResponse> {
+    if (relativePath.startsWith('/v2/transactions/pending/')) {
+      const possibleTxnId = relativePath.replace('/v2/transactions/pending/', '').replace(/\/+$/, '')
+      // TODO: test for possibleTxnId
+      if (possibleTxnId) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const baseUrl = (this as any).baseURL as URL
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const tokenHeader = (this as any).tokenHeader as TokenHeader
+        const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
+
+        return await this.callWithRetry(async () => {
+          const httpInfo = await algoKitCoreAlgod.pendingTransactionInformationWithHttpInfo(possibleTxnId, 'msgpack')
+          const binary = await httpInfo.body.binary()
+          const arrayBuffer = await binary.arrayBuffer()
+          const uint8Array = new Uint8Array(arrayBuffer)
+          return {
+            status: httpInfo.httpStatusCode,
+            headers: httpInfo.headers,
+            body: uint8Array,
+          }
+        })
+      }
+    }
+
     const response = await this.callWithRetry(() => super.get(relativePath, query, requestHeaders))
     if (
       relativePath.startsWith('/v2/accounts/') &&
@@ -90,6 +114,7 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     return response
   }
 
+  // TODO: verify error handling
   async post(
     relativePath: string,
     data: Uint8Array,
@@ -106,8 +131,6 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         // Ignore errors here
       }
       if (signedTxn && signedTxn.txn.type === TransactionType.pay) {
-        const encoder = new TextEncoder()
-
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const baseUrl = (this as any).baseURL as URL
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,12 +138,14 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
 
         const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
         return await this.callWithRetry(async () => {
-          const response = await algoKitCoreAlgod.rawTransaction(new File([data], ''))
-          const json = JSON.stringify(response)
+          const httpInfo = await algoKitCoreAlgod.rawTransactionWithHttpInfo(new File([data], ''))
+          const binary = await httpInfo.body.binary()
+          const arrayBuffer = await binary.arrayBuffer()
+          const uint8Array = new Uint8Array(arrayBuffer)
           return {
-            status: 200,
-            headers: {}, // TODO: PD - do we need the headers?
-            body: encoder.encode(json),
+            status: httpInfo.httpStatusCode,
+            headers: httpInfo.headers,
+            body: uint8Array,
           }
         })
       }
