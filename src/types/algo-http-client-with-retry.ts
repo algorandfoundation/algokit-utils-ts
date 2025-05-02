@@ -1,5 +1,14 @@
 import * as algodApi from '@algorand/algod-client'
-import { decodeSignedTransaction, IntDecoding, parseJSON, SignedTransaction, stringifyJSON, TokenHeader, TransactionType } from 'algosdk'
+import {
+  BaseHTTPClientError,
+  decodeSignedTransaction,
+  IntDecoding,
+  parseJSON,
+  SignedTransaction,
+  stringifyJSON,
+  TokenHeader,
+  TransactionType,
+} from 'algosdk'
 import { BaseHTTPClientResponse, Query, URLTokenBaseHTTPClient } from 'algosdk/client'
 import { Config } from '../config'
 import { TokenHeaderAuthenticationMethod } from './algokit-core-bridge'
@@ -35,6 +44,7 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         if (numTries >= AlgoHttpClientWithRetry.MAX_TRIES) {
           throw err
         }
+
         // Only retry for one of the hardcoded conditions
         if (
           !(
@@ -68,7 +78,7 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
 
         return await this.callWithRetry(async () => {
-          const httpInfo = await algoKitCoreAlgod.pendingTransactionInformationWithHttpInfo(possibleTxnId, 'msgpack')
+          const httpInfo = await algoKitCoreAlgod.pendingTransactionInformationResponse(possibleTxnId, 'msgpack')
           const binary = await httpInfo.body.binary()
           const arrayBuffer = await binary.arrayBuffer()
           const uint8Array = new Uint8Array(arrayBuffer)
@@ -138,13 +148,41 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
 
         const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
         return await this.callWithRetry(async () => {
-          const httpInfo = await algoKitCoreAlgod.rawTransactionWithHttpInfo(new File([data], ''))
-          const binary = await httpInfo.body.binary()
+          const responseContext = await algoKitCoreAlgod.rawTransactionResponse(new File([data], ''))
+
+          const binary = await responseContext.body.binary()
           const arrayBuffer = await binary.arrayBuffer()
           const uint8Array = new Uint8Array(arrayBuffer)
+
+          if (responseContext.httpStatusCode !== 200) {
+            let bodyErrorMessage: string | undefined
+
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const decoded: Record<string, any> = JSON.parse(new TextDecoder().decode(uint8Array))
+              if (decoded.message) {
+                bodyErrorMessage = decoded.message
+              }
+            } catch {
+              // ignore any error that happened while we are parsing the error response
+            }
+
+            let message = `Network request error. Received status ${responseContext.httpStatusCode} (${responseContext.httpStatusText})`
+            if (bodyErrorMessage) {
+              message += `: ${bodyErrorMessage}`
+            }
+
+            throw new URLTokenBaseHTTPError(message, {
+              body: uint8Array,
+              status: responseContext.httpStatusCode,
+              headers: responseContext.headers,
+            })
+          }
+
           return {
-            status: httpInfo.httpStatusCode,
-            headers: httpInfo.headers,
+            status: responseContext.httpStatusCode,
+            statusText: responseContext.httpStatusText,
+            headers: responseContext.headers,
             body: uint8Array,
           }
         })
@@ -183,4 +221,15 @@ function getAlgoKitCoreAlgodClient(baseUrl: string, tokenHeader: TokenHeader): a
   // Convert to actual configuration
   const config = algodApi.createConfiguration(configurationParameters)
   return new algodApi.AlgodApi(config)
+}
+
+class URLTokenBaseHTTPError extends Error implements BaseHTTPClientError {
+  constructor(
+    message: string,
+    public response: BaseHTTPClientResponse,
+  ) {
+    super(message)
+    this.name = 'URLTokenBaseHTTPError'
+    this.response = response
+  }
 }
