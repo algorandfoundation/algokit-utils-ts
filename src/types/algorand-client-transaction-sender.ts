@@ -205,7 +205,6 @@ export class AlgorandClientTransactionSender {
     preLog: (params, transaction) =>
       `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
   })
-
   /**
    * Create a new Algorand Standard Asset.
    *

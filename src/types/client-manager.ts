@@ -1,4 +1,3 @@
-import * as algodApi from '@algorand/algod-client'
 import algosdk, { SuggestedParams } from 'algosdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
@@ -48,7 +47,6 @@ export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algoran
 /** Exposes access to various API clients. */
 export class ClientManager {
   private _algod: algosdk.Algodv2
-  private _algoKitCoreAlgod: algodApi.AlgodApi | undefined
   private _indexer?: algosdk.Indexer
   private _kmd?: algosdk.Kmd
   private _algorand?: AlgorandClient
@@ -94,10 +92,6 @@ export class ClientManager {
    */
   public get algod(): algosdk.Algodv2 {
     return this._algod
-  }
-
-  public get algoKitCoreAlgod(): algodApi.AlgodApi | undefined {
-    return this._algoKitCoreAlgod
   }
 
   /**
