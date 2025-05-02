@@ -1160,12 +1160,21 @@ describe('abi return', () => {
   })
 })
 
-// TODO: PD - fix this test, how???
 describe('When create algorand client with config from environment', () => {
-  test('payment transactions are sent by algokit core algod client', async () => {
+  test('payment transactions are sent and waited for by algokit core algod client', async () => {
     const algorandClient = AlgorandClient.fromConfig(ClientManager.getConfigFromEnvironmentOrLocalNet())
-    const algodSpy = vi.spyOn(algorandClient.client.algod, 'sendRawTransaction')
-    const algoKitCoreAlgodSpy = vi.spyOn(algorandClient.client.algoKitCoreAlgod!, 'rawTransaction')
+
+    const sendRawTransactionWithAlgoKitCoreAlgod = vi.spyOn(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (algorandClient.client.algod.c as any).bc._algoKitCoreAlgod,
+      'rawTransactionResponse',
+    )
+
+    const sendPendingTransactionInformationResponseWithAlgoKitCoreAlgod = vi.spyOn(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (algorandClient.client.algod.c as any).bc._algoKitCoreAlgod,
+      'pendingTransactionInformationResponse',
+    )
 
     const testAccount = await getTestAccount({ initialFunds: algos(10), suppressLog: true }, algorandClient)
     algorandClient.setSignerFromAccount(testAccount)
@@ -1179,9 +1188,8 @@ describe('When create algorand client with config from environment', () => {
     const fee = (1).algo()
     const { confirmation } = await algorandClient.send.payment({ ...testPayTransaction, staticFee: fee })
 
-    // expect(algodSpy).not.toHaveBeenCalled()
-    // expect(algorandClient.client.algoKitCoreAlgod).toBeDefined()
-    // expect(algoKitCoreAlgodSpy).toBeCalledTimes(2)
+    expect(sendRawTransactionWithAlgoKitCoreAlgod).toBeCalledTimes(2)
+    expect(sendPendingTransactionInformationResponseWithAlgoKitCoreAlgod).toBeCalled()
     expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
   })
 })

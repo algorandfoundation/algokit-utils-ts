@@ -59,6 +59,10 @@ export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthent
   private _key: string
 
   public constructor(tokenHeader: TokenHeader) {
+    if (Object.entries(tokenHeader).length === 0) {
+      throw new Error('Cannot construct empty token header auth')
+    }
+
     const [header, key] = Object.entries(tokenHeader)[0]
     this._header = header
     this._key = key
@@ -73,14 +77,14 @@ export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthent
   }
 }
 
-export function buildAlgoKitCoreAlgodClient(baseUrl: string, tokenHeader: TokenHeader): algodApi.AlgodApi {
-  const authMethodConfig = new TokenHeaderAuthenticationMethod(tokenHeader)
+export function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): algodApi.AlgodApi {
+  const authMethodConfig = Object.entries(tokenHeader).length > 0 ? new TokenHeaderAuthenticationMethod(tokenHeader) : undefined
   const authConfig: algodApi.AuthMethodsConfiguration = {
     default: authMethodConfig,
   }
 
   // Create configuration parameter object
-  const fixedBaseUrl = baseUrl.replace(/\/+$/, '')
+  const fixedBaseUrl = baseUrl.toString().replace(/\/+$/, '')
   const serverConfig = new algodApi.ServerConfiguration(fixedBaseUrl, {})
   const configurationParameters = {
     httpApi: new algodApi.IsomorphicFetchHttpLibrary(),

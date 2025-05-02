@@ -1,3 +1,4 @@
+import { AlgodApi } from '@algorand/algod-client'
 import {
   BaseHTTPClientError,
   decodeSignedTransaction,
@@ -14,6 +15,15 @@ import { buildAlgoKitCoreAlgodClient } from './algokit-core-bridge'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */
 export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
+  private _algoKitCoreAlgod: AlgodApi
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(tokenHeader: TokenHeader, baseServer: string, port?: string | number, defaultHeaders?: Record<string, any>) {
+    super(tokenHeader, baseServer, port, defaultHeaders)
+
+    this._algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(this.buildBaseServerUrl(baseServer, port), tokenHeader)
+  }
+
   private static readonly MAX_TRIES = 5
   private static readonly MAX_BACKOFF_MS = 10000
 
@@ -31,6 +41,21 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     'EAI_AGAIN',
     'EPROTO', // We get this intermittently with AlgoNode API
   ]
+
+  private buildBaseServerUrl(baseServer: string, port?: string | number) {
+    // This logic is copied from algosdk to make sure that we have the same base server config
+
+    // Append a trailing slash so we can use relative paths. Without the trailing
+    // slash, the last path segment will be replaced by the relative path. See
+    // usage in `addressWithPath`.
+    const fixedBaseServer = baseServer.endsWith('/') ? baseServer : `${baseServer}/`
+    const baseServerURL = new URL(fixedBaseServer)
+    if (typeof port !== 'undefined') {
+      baseServerURL.port = port.toString()
+    }
+
+    return baseServerURL
+  }
 
   private async callWithRetry(func: () => Promise<BaseHTTPClientResponse>): Promise<BaseHTTPClientResponse> {
     let response: BaseHTTPClientResponse | undefined
@@ -70,14 +95,8 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
       const possibleTxnId = relativePath.replace('/v2/transactions/pending/', '').replace(/\/+$/, '')
       // TODO: test for possibleTxnId
       if (possibleTxnId) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const baseUrl = (this as any).baseURL as URL
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tokenHeader = (this as any).tokenHeader as TokenHeader
-        const algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
-
         return await this.callWithRetry(async () => {
-          const httpInfo = await algoKitCoreAlgod.pendingTransactionInformationResponse(possibleTxnId, 'msgpack')
+          const httpInfo = await this._algoKitCoreAlgod.pendingTransactionInformationResponse(possibleTxnId, 'msgpack')
           const binary = await httpInfo.body.binary()
           const arrayBuffer = await binary.arrayBuffer()
           const uint8Array = new Uint8Array(arrayBuffer)
@@ -139,20 +158,15 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         // Ignore errors here
       }
       if (signedTxn && signedTxn.txn.type === TransactionType.pay) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const baseUrl = (this as any).baseURL as URL
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tokenHeader = (this as any).tokenHeader as TokenHeader
-
-        const algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
         return await this.callWithRetry(async () => {
-          const responseContext = await algoKitCoreAlgod.rawTransactionResponse(new File([data], ''))
+          const responseContext = await this._algoKitCoreAlgod.rawTransactionResponse(new File([data], ''))
 
           const binary = await responseContext.body.binary()
           const arrayBuffer = await binary.arrayBuffer()
           const uint8Array = new Uint8Array(arrayBuffer)
 
           if (responseContext.httpStatusCode !== 200) {
+            // This logic is copied from algosdk to make sure that we produce the same errors
             let bodyErrorMessage: string | undefined
 
             try {
