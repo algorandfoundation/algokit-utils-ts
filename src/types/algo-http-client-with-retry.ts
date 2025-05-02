@@ -1,4 +1,3 @@
-import * as algodApi from '@algorand/algod-client'
 import {
   BaseHTTPClientError,
   decodeSignedTransaction,
@@ -11,7 +10,7 @@ import {
 } from 'algosdk'
 import { BaseHTTPClientResponse, Query, URLTokenBaseHTTPClient } from 'algosdk/client'
 import { Config } from '../config'
-import { TokenHeaderAuthenticationMethod } from './algokit-core-bridge'
+import { buildAlgoKitCoreAlgodClient } from './algokit-core-bridge'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */
 export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
@@ -75,7 +74,7 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         const baseUrl = (this as any).baseURL as URL
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const tokenHeader = (this as any).tokenHeader as TokenHeader
-        const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
+        const algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
 
         return await this.callWithRetry(async () => {
           const httpInfo = await algoKitCoreAlgod.pendingTransactionInformationResponse(possibleTxnId, 'msgpack')
@@ -145,7 +144,7 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const tokenHeader = (this as any).tokenHeader as TokenHeader
 
-        const algoKitCoreAlgod = getAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
+        const algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(baseUrl.toString(), tokenHeader)
         return await this.callWithRetry(async () => {
           const responseContext = await algoKitCoreAlgod.rawTransactionResponse(new File([data], ''))
 
@@ -198,28 +197,6 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
   ): Promise<BaseHTTPClientResponse> {
     return await this.callWithRetry(() => super.delete(relativePath, data, query, requestHeaders))
   }
-}
-
-function getAlgoKitCoreAlgodClient(baseUrl: string, tokenHeader: TokenHeader): algodApi.AlgodApi {
-  const authMethodConfig = new TokenHeaderAuthenticationMethod(tokenHeader)
-  // Covers all auth methods included in your OpenAPI yaml definition
-  const authConfig: algodApi.AuthMethodsConfiguration = {
-    default: authMethodConfig,
-  }
-
-  // Create configuration parameter object
-  const fixedBaseUrl = baseUrl.replace(/\/+$/, '')
-  const serverConfig = new algodApi.ServerConfiguration(fixedBaseUrl, {})
-  const configurationParameters = {
-    httpApi: new algodApi.IsomorphicFetchHttpLibrary(),
-    baseServer: serverConfig,
-    authMethods: authConfig,
-    promiseMiddleware: [],
-  }
-
-  // Convert to actual configuration
-  const config = algodApi.createConfiguration(configurationParameters)
-  return new algodApi.AlgodApi(config)
 }
 
 // This is a copy of URLTokenBaseHTTPError from algosdk

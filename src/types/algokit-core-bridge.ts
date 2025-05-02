@@ -1,4 +1,4 @@
-import { RequestContext, SecurityAuthentication } from '@algorand/algod-client'
+import * as algodApi from '@algorand/algod-client'
 import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from 'algokit_transact'
 import algosdk, { Address, TokenHeader } from 'algosdk'
 
@@ -54,7 +54,7 @@ export function buildPayment({
   return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnModel))
 }
 
-export class TokenHeaderAuthenticationMethod implements SecurityAuthentication {
+export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthentication {
   private _header: string
   private _key: string
 
@@ -68,7 +68,28 @@ export class TokenHeaderAuthenticationMethod implements SecurityAuthentication {
     return 'custom_header'
   }
 
-  public applySecurityAuthentication(context: RequestContext) {
+  public applySecurityAuthentication(context: algodApi.RequestContext) {
     context.setHeaderParam(this._header, this._key)
   }
+}
+
+export function buildAlgoKitCoreAlgodClient(baseUrl: string, tokenHeader: TokenHeader): algodApi.AlgodApi {
+  const authMethodConfig = new TokenHeaderAuthenticationMethod(tokenHeader)
+  const authConfig: algodApi.AuthMethodsConfiguration = {
+    default: authMethodConfig,
+  }
+
+  // Create configuration parameter object
+  const fixedBaseUrl = baseUrl.replace(/\/+$/, '')
+  const serverConfig = new algodApi.ServerConfiguration(fixedBaseUrl, {})
+  const configurationParameters = {
+    httpApi: new algodApi.IsomorphicFetchHttpLibrary(),
+    baseServer: serverConfig,
+    authMethods: authConfig,
+    promiseMiddleware: [],
+  }
+
+  // Convert to actual configuration
+  const config = algodApi.createConfiguration(configurationParameters)
+  return new algodApi.AlgodApi(config)
 }
