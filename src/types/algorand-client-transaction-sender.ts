@@ -1,9 +1,7 @@
-import { AlgodApi } from '@algorand/algod-client'
 import algosdk, { Address } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, defaultJsonValueReplacer } from '../util'
-import { AlgoAmount } from './amount'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
@@ -18,7 +16,6 @@ import {
   AppUpdateParams,
   AssetCreateParams,
   AssetOptOutParams,
-  CommonTransactionParams,
   TransactionComposer,
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
@@ -40,24 +37,21 @@ export class AlgorandClientTransactionSender {
   private _newGroup: () => TransactionComposer
   private _assetManager: AssetManager
   private _appManager: AppManager
-  private _algoKitCoreAlgod?: AlgodApi
 
   /**
    * Creates a new `AlgorandClientSender`
    * @param newGroup A lambda that starts a new `TransactionComposer` transaction group
    * @param assetManager An `AssetManager` instance
    * @param appManager An `AppManager` instance
-   * @param algoKitCoreAlgod An optional `AlgodApi` instance for AlgoKit core
    * @example
    * ```typescript
    * const transactionSender = new AlgorandClientTransactionSender(() => new TransactionComposer(), assetManager, appManager)
    * ```
    */
-  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager, algoKitCoreAlgod?: AlgodApi) {
+  constructor(newGroup: () => TransactionComposer, assetManager: AssetManager, appManager: AppManager) {
     this._newGroup = newGroup
     this._assetManager = assetManager
     this._appManager = appManager
-    this._algoKitCoreAlgod = algoKitCoreAlgod
   }
 
   /**
@@ -168,7 +162,6 @@ export class AlgorandClientTransactionSender {
   }
 
   /**
-   * Experimental feature:
    * Send a payment transaction to transfer Algo between accounts.
    * @param params The parameters for the payment transaction
    * @example Basic example
@@ -208,47 +201,10 @@ export class AlgorandClientTransactionSender {
    * ```
    * @returns The result of the payment transaction and the transaction that was sent
    */
-  payment = async (
-    params: CommonTransactionParams & {
-      receiver: string | Address
-      amount: AlgoAmount
-      closeRemainderTo?: string | Address
-    } & SendParams,
-  ): Promise<SendSingleTransactionResult> => {
-    return this._send((c) => c.addPayment, {
-      preLog: (params, transaction) =>
-        `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-    })(params)
-
-    // const composer = this._newGroup()
-    // composer.addPayment(params)
-    // const { atc, transactions } = await composer.build()
-
-    // const transaction = transactions[0].txn
-
-    // Config.getLogger(params?.suppressLog).debug(
-    //   `AlgoKit core: sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
-    // )
-
-    // atc.buildGroup()
-    // const signedTxns = await atc.gatherSignatures()
-
-    // const httpFile = new File(signedTxns, '')
-    // await this._algoKitCoreAlgod.rawTransaction(httpFile)
-    // // TODO: check the support for msgpack in pendingTransactionInformation
-    // // TODO: conversation about decoding generic types in Rust (whenever we have to do it with algosdk)
-    // const confirmation = await waitForConfirmation(transaction.txID(), params.maxRoundsToWaitForConfirmation ?? 5, this._algoKitCoreAlgod)
-    // // const confirmation = confirmation1 as algosdk.modelsv2.PendingTransactionResponse
-
-    // return {
-    //   txIds: [transaction.txID()],
-    //   returns: undefined,
-    //   confirmation: confirmation,
-    //   transaction: transaction,
-    //   confirmations: [confirmation],
-    //   transactions: [transaction],
-    // } satisfies SendSingleTransactionResult
-  }
+  payment = this._send((c) => c.addPayment, {
+    preLog: (params, transaction) =>
+      `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+  })
 
   /**
    * Create a new Algorand Standard Asset.

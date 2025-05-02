@@ -124,7 +124,6 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     return response
   }
 
-  // TODO: verify error handling
   async post(
     relativePath: string,
     data: Uint8Array,
@@ -223,6 +222,7 @@ function getAlgoKitCoreAlgodClient(baseUrl: string, tokenHeader: TokenHeader): a
   return new algodApi.AlgodApi(config)
 }
 
+// This is a copy of URLTokenBaseHTTPError from algosdk
 class URLTokenBaseHTTPError extends Error implements BaseHTTPClientError {
   constructor(
     message: string,
