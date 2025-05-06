@@ -602,11 +602,7 @@ export class AppClient {
     if (!appMetadata) {
       throw new Error(`App not found for creator ${params.creatorAddress} and name ${params.appName ?? appSpec.name}`)
     }
-    return new AppClient({
-      ...params,
-      algorand: params.algorand,
-      appId: appMetadata.appId,
-    })
+    return new AppClient({ ...params, algorand: params.algorand, appId: appMetadata.appId })
   }
 
   /**
@@ -806,11 +802,7 @@ export class AppClient {
    * ```
    */
   public async getBoxValueFromABIType(name: BoxIdentifier, type: ABIType): Promise<ABIValue> {
-    return await this._algorand.app.getBoxValueFromABIType({
-      appId: this.appId,
-      boxName: name,
-      type,
-    })
+    return await this._algorand.app.getBoxValueFromABIType({ appId: this.appId, boxName: name, type })
   }
 
   /**
@@ -889,10 +881,7 @@ export class AppClient {
       )
     }
 
-    return {
-      approvalSourceMap: this._approvalSourceMap,
-      clearSourceMap: this._clearSourceMap,
-    }
+    return { approvalSourceMap: this._approvalSourceMap, clearSourceMap: this._clearSourceMap }
   }
 
   /**
@@ -1070,10 +1059,7 @@ export class AppClient {
     }
 
     const approvalTemplate = Buffer.from(appSpec.source.approval, 'base64').toString('utf-8')
-    const compiledApproval = await appManager.compileTealTemplate(approvalTemplate, deployTimeParams, {
-      updatable,
-      deletable,
-    })
+    const compiledApproval = await appManager.compileTealTemplate(approvalTemplate, deployTimeParams, { updatable, deletable })
 
     const clearTemplate = Buffer.from(appSpec.source.clear, 'base64').toString('utf-8')
     const compiledClear = await appManager.compileTealTemplate(clearTemplate, deployTimeParams)
@@ -1133,16 +1119,17 @@ export class AppClient {
               ) as ABIValue
             case 'method': {
               const method = this.getABIMethod(defaultValue.data)
-              const result = await this.send.call({
-                method: defaultValue.data,
-                args: method.args.map(() => undefined),
-                sender,
-              })
+              const result = await this.send.call({ method: defaultValue.data, args: method.args.map(() => undefined), sender })
 
               if (result.return === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
-              if (typeof result.return === 'object' && !(result.return instanceof Uint8Array) && !Array.isArray(result.return)) {
+              if (
+                typeof result.return === 'object' &&
+                !(result.return instanceof Uint8Array) &&
+                !Array.isArray(result.return) &&
+                !(result.return instanceof Address)
+              ) {
                 return getABITupleFromABIStruct(result.return, this._appSpec.structs[method.returns.struct!], this._appSpec.structs)
               }
               return result.return
@@ -1186,10 +1173,7 @@ export class AppClient {
       /** Return params for an update call, including deploy-time TEAL template replacements and compilation if provided */
       update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
         return this.getBareParams(
-          {
-            ...params,
-            ...(await this.compile(params)),
-          },
+          { ...params, ...(await this.compile(params)) },
           OnApplicationComplete.UpdateApplicationOC,
         ) as AppUpdateParams
       },
@@ -1300,10 +1284,7 @@ export class AppClient {
        */
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
         return (await this.getABIParams(
-          {
-            ...params,
-            ...(await this.compile(params)),
-          },
+          { ...params, ...(await this.compile(params)) },
           OnApplicationComplete.UpdateApplicationOC,
         )) satisfies AppUpdateMethodCall
       },
@@ -1408,9 +1389,7 @@ export class AppClient {
           (params.onComplete === OnApplicationComplete.NoOpOC || !params.onComplete) &&
           getArc56Method(params.method, this._appSpec).method.readonly
         ) {
-          const readonlyParams = {
-            ...params,
-          }
+          const readonlyParams = { ...params }
 
           // Read-only calls do not require fees to be paid, as they are only simulated on the network.
           // Therefore there is no value in calculating the minimum fee needed for a successful app call with inner transactions.
@@ -1556,15 +1535,7 @@ export class AppClient {
     const sender = this.getSender(params.sender)
     const method = getArc56Method(params.method, this._appSpec)
     const args = await this.getABIArgsWithDefaultValues(params.method, params.args, sender)
-    return {
-      ...params,
-      appId: this._appId,
-      sender: sender,
-      signer: this.getSigner(params.sender, params.signer),
-      method,
-      onComplete,
-      args,
-    }
+    return { ...params, appId: this._appId, sender: sender, signer: this.getSigner(params.sender, params.signer), method, onComplete, args }
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
@@ -1686,12 +1657,8 @@ export class AppClient {
 
   private getStateMethods(
     stateGetter: () => Promise<AppState>,
-    keyGetter: () => {
-      [name: string]: StorageKey
-    },
-    mapGetter: () => {
-      [name: string]: StorageMap
-    },
+    keyGetter: () => { [name: string]: StorageKey },
+    mapGetter: () => { [name: string]: StorageMap },
   ) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
@@ -1857,10 +1824,7 @@ export class ApplicationClient {
     const approvalTemplate = Buffer.from(this.appSpec.source.approval, 'base64').toString('utf-8')
     const approval = replaceDeployTimeControlParams(
       performTemplateSubstitution(approvalTemplate, deployTimeParams ?? this.deployTimeParams),
-      {
-        updatable,
-        deletable,
-      },
+      { updatable, deletable },
     )
     const approvalCompiled = await compileTeal(approval, this.algod)
     this._approvalSourceMap = approvalCompiled?.sourceMap
@@ -1892,10 +1856,7 @@ export class ApplicationClient {
       )
     }
 
-    return {
-      approvalSourceMap: this._approvalSourceMap,
-      clearSourceMap: this._clearSourceMap,
-    }
+    return { approvalSourceMap: this._approvalSourceMap, clearSourceMap: this._clearSourceMap }
   }
 
   /**
@@ -1978,12 +1939,7 @@ export class ApplicationClient {
           from: sender,
           approvalProgram: approvalCompiled.compiledBase64ToBytes,
           clearStateProgram: clearCompiled.compiledBase64ToBytes,
-          metadata: {
-            name: this._appName,
-            version: version ?? '1.0',
-            updatable: compilation.updatable,
-            deletable: compilation.deletable,
-          },
+          metadata: { name: this._appName, version: version ?? '1.0', updatable: compilation.updatable, deletable: compilation.deletable },
           schema: {
             globalByteSlices: this.appSpec.state.global.num_byte_slices,
             globalInts: this.appSpec.state.global.num_uints,
@@ -2269,12 +2225,7 @@ export class ApplicationClient {
       this.algod,
       sender ?? this.sender!,
       sendParams ?? {},
-      {
-        receiver: ref.appAddress,
-        sender: getSenderAddress(sender ?? this.sender!),
-        amount: amount,
-        note: encodeTransactionNote(note),
-      },
+      { receiver: ref.appAddress, sender: getSenderAddress(sender ?? this.sender!), amount: amount, note: encodeTransactionNote(note) },
       (c) => c.payment,
       (c) => c.payment,
       this.params,
@@ -2391,10 +2342,12 @@ export class ApplicationClient {
 
     const names = await this.getBoxNames()
     return await Promise.all(
-      names.filter(filter ?? ((_) => true)).map(async (boxName) => ({
-        name: boxName,
-        value: await getAppBoxValueFromABIType({ appId: appRef.appId, boxName, type }, this.algod),
-      })),
+      names
+        .filter(filter ?? ((_) => true))
+        .map(async (boxName) => ({
+          name: boxName,
+          value: await getAppBoxValueFromABIType({ appId: appRef.appId, boxName, type }, this.algod),
+        })),
     )
   }
 
@@ -2438,11 +2391,7 @@ export class ApplicationClient {
               case 'abi-method': {
                 const method = defaultValueStrategy.data as ABIMethodParams
                 const result = await this.callOfType(
-                  {
-                    method: this.getABIMethodSignature(method),
-                    methodArgs: method.args.map(() => undefined),
-                    sender,
-                  },
+                  { method: this.getABIMethodSignature(method), methodArgs: method.args.map(() => undefined), sender },
                   'no_op',
                 )
                 return result.return?.returnValue
@@ -2518,18 +2467,12 @@ export class ApplicationClient {
     if (this.existingDeployments && this._appId === 0) {
       const app = this.existingDeployments.apps[this._appName]
       if (!app) {
-        return {
-          appId: 0,
-          appAddress: getApplicationAddress(0).toString(),
-        }
+        return { appId: 0, appAddress: getApplicationAddress(0).toString() }
       }
       return app
     }
 
-    return {
-      appId: this._appId,
-      appAddress: this._appAddress,
-    } as AppReference
+    return { appId: this._appId, appAddress: this._appAddress } as AppReference
   }
 
   /**
