@@ -9,6 +9,6 @@
   "cleanOutputDir": true,
   "githubPages": false,
   "readme": "none",
-  "entryDocument": "README.md",
+  "entryFileName": "README.md",
   "gitRevision": "main"
 }
