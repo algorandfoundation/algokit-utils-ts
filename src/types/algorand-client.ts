@@ -7,7 +7,7 @@ import { AppDeployer } from './app-deployer'
 import { AppManager } from './app-manager'
 import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
-import { TransactionComposer } from './composer'
+import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
 import Account = algosdk.Account
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -29,6 +29,13 @@ export class AlgorandClient {
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
   private _defaultValidityWindow: bigint | undefined = undefined
+
+  /**
+   * A set of error transformers to use when an error is caught in simulate or execute
+   * `registerErrorTransformer` and `unregisterErrorTransformer` can be used to add and remove
+   * error transformers from the set.
+   */
+  private _errorTransformers: Set<ErrorTransformer> = new Set()
 
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config, this)
@@ -207,7 +214,18 @@ export class AlgorandClient {
   }
 
   /**
-   * Start a new `TransactionComposer` transaction group
+   * Register a function that will be used to transform an error caught when simulating or executing
+   * composed transaction groups made from `newGroup`
+   */
+  public registerErrorTransformer(transformer: ErrorTransformer) {
+    this._errorTransformers.add(transformer)
+  }
+
+  public unregisterErrorTransformer(transformer: ErrorTransformer) {
+    this._errorTransformers.delete(transformer)
+  }
+
+  /** Start a new `TransactionComposer` transaction group
    * @returns A new instance of `TransactionComposer`.
    * @example
    * const composer = AlgorandClient.mainNet().newGroup();
@@ -220,6 +238,7 @@ export class AlgorandClient {
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
+      errorTransformers: [...this._errorTransformers],
     })
   }
 

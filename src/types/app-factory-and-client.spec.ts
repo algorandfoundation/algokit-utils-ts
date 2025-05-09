@@ -770,7 +770,31 @@ describe('ARC56: app-factory-and-app-client', () => {
       invariant(false)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      expect(JSON.stringify(e)).toMatch('this is an error')
+      expect(e).toBeInstanceOf(Error)
+      expect(e.message).toMatch('this is an error')
+    }
+  })
+
+  test('AppClient registers error transformer to AlgorandClient', async () => {
+    const { testAccount } = localnet.context
+    const { appClient } = await factory.deploy({
+      createParams: {
+        method: 'createApplication',
+      },
+      deployTimeParams: { bytes64TmplVar: '0'.repeat(64), uint64TmplVar: 123, bytes32TmplVar: '0'.repeat(32), bytesTmplVar: 'foo' },
+    })
+
+    try {
+      // Don't use the app client to call, but since we've instantiated one the error transformer should be registered
+      await appClient.algorand
+        .newGroup()
+        .addAppCallMethodCall({ appId: appClient.appId, method: appClient.getABIMethod('throwError')!, sender: testAccount })
+        .send()
+      invariant(false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      expect(e).toBeInstanceOf(Error)
+      expect(e.message).toMatch('this is an error')
     }
   })
 
