@@ -5,6 +5,9 @@ import * as algokit from '..'
 import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
 import largeAppArc56Json from '../../tests/example-contracts/extra-pages/large.arc56.json'
 import smallAppArc56Json from '../../tests/example-contracts/extra-pages/small.arc56.json'
+import errorInnerAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/InnerApp.arc56.json'
+import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/MiddleApp.arc56.json'
+import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
@@ -756,6 +759,36 @@ describe('ARC56: app-factory-and-app-client', () => {
       defaultSender: localnet.context.testAccount.addr,
     })
   }, 10_000)
+
+  test('ARC56 error messages from inner app error', async () => {
+    const innerFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
+      appSpec: errorInnerAppArc56Json,
+      defaultSender: localnet.context.testAccount.addr,
+    })
+
+    const { appClient: innerClient } = await innerFactory.deploy({ createParams: { method: 'createApplication' } })
+
+    const middleFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
+      appSpec: errorMiddleAppArc56Json,
+      defaultSender: localnet.context.testAccount.addr,
+    })
+
+    const { appClient: middleClient } = await middleFactory.deploy({ createParams: { method: 'createApplication' } })
+
+    const outerFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
+      appSpec: errorOuterAppArc56Json,
+      defaultSender: localnet.context.testAccount.addr,
+    })
+
+    const { appClient: outerClient } = await outerFactory.deploy({ createParams: { method: 'createApplication' } })
+
+    await expect(
+      outerClient.send.call({ method: 'callMiddle', args: [middleClient.appId, innerClient.appId], extraFee: algokit.microAlgos(2000) }),
+    ).rejects.toThrow('custom error message')
+  })
 
   test('ARC56 error messages with dynamic template vars (cblock offset)', async () => {
     const { appClient } = await factory.deploy({
