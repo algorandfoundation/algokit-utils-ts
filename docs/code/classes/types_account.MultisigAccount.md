@@ -49,7 +49,7 @@ Account wrapper that supports partial or full multisig signing.
 
 #### Defined in
 
-[src/types/account.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L45)
+[src/types/account.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L46)
 
 ## Properties
 
@@ -129,13 +129,15 @@ ___
 
 • `get` **signer**(): `TransactionSigner`
 
+The transaction signer for the multisig account
+
 #### Returns
 
 `TransactionSigner`
 
 #### Defined in
 
-[src/types/account.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L41)
+[src/types/account.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L42)
 
 ___
 
@@ -173,6 +175,12 @@ Sign the given transaction
 
 The transaction signed by the present signers
 
+**`Example`**
+
+```typescript
+const signedTxn = multisigAccount.sign(myTransaction)
+```
+
 #### Defined in
 
-[src/types/account.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L60)
+[src/types/account.ts:65](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L65)

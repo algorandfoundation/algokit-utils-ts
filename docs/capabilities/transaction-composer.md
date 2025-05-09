@@ -52,7 +52,7 @@ Additionally `send()` takes a number of parameters which allow you to opt-in to 
 
 ### Populating App Call Resource
 
-`populateAppCallResources` automatically updates the relevant app call transactions in the group to include the account, app, asset and box resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction. You can read more about [resources and the reference arrays](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/?from_query=resources#reference-arrays) in the docs.
+`populateAppCallResources` automatically updates the relevant app call transactions in the group to include the account, app, asset and box resources required for the transactions to execute successfully. It leverages the simulate endpoint to discover the accessed resources, which have not been explicitly specified. This setting only applies when you have constucted at least one app call transaction. You can read more about [resources and the reference arrays](https://dev.algorand.co/concepts/smart-contracts/resource-usage/#what-are-reference-arrays) in the docs.
 
 For example:
 
@@ -173,6 +173,16 @@ const result = await appClient1.algorand
 
 This feature should efficiently calculate the minimum fee needed to execute an app call transaction with inners, however we always recommend testing your specific scenario behaves as expected before releasing.
 
+#### Read-only calls
+
+When invoking a readonly method, the transaction is simulated rather than being fully processed by the network. This allows users to call these methods without paying a fee.
+
+Even though no actual fee is paid, the simulation still evaluates the transaction as if a fee was being paid, therefore op budget and fee coverage checks are still performed.
+
+Because no fee is actually paid, calculating the minimum fee required to successfully execute the transaction is not required, and therefore we don't need to send an additional simulate call to calculate the minimum fee, like we do with a non readonly method call.
+
+The behaviour of enabling `coverAppCallInnerTransactionFees` for readonly method calls is very similar to non readonly method calls, however is subtly different as we use `maxFee` as the transaction fee when executing the readonly method call.
+
 ### Covering App Call Op Budget
 
 The high level Algorand contract authoring languages all have support for ensuring appropriate app op budget is available via `ensure_budget` in Algorand Python, `ensureBudget` in Algorand TypeScript and `increaseOpcodeBudget` in TEALScript. This is great, as it allows contract authors to ensure appropriate budget is available by automatically sending op-up inner transactions to increase the budget available. These op-up inner transactions require the fees to be covered by an account, which is generally the responsibility of the application consumer.
@@ -182,7 +192,7 @@ Application consumers may not be immediately aware of the number of op-up inner 
 ## Simulating a transaction
 
 Transactions can be simulated using the simulate endpoint in algod, which enables evaluating the transaction on the network without it actually being commited to a block.
-This is a powerful feature, which has a number of options which are detailed in the [simulate API docs](https://developer.algorand.org/docs/rest-apis/algod/#post-v2transactionssimulate).
+This is a powerful feature, which has a number of options which are detailed in the [simulate API docs](https://dev.algorand.co/reference/rest-apis/output/#simulatetransaction).
 
 For example you can simulate a transaction group like below:
 

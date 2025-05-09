@@ -109,9 +109,9 @@ An array of records matching asset ID to transaction ID of the opt in
 
 ```typescript
 // Basic example
-algorand.asset.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n])
+assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n])
 // With configuration
-algorand.asset.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).microAlgo(), suppressLog: true })
+assetManager.bulkOptIn("ACCOUNTADDRESS", [12345n, 67890n], { maxFee: (1000).microAlgo(), suppressLog: true })
 ```
 
 #### Defined in
@@ -146,9 +146,9 @@ An array of records matching asset ID to transaction ID of the opt in
 
 ```typescript
 // Basic example
-algorand.asset.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n])
+assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n])
 // With configuration
-algorand.asset.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance: true, maxFee: (1000).microAlgo(), suppressLog: true })
+assetManager.bulkOptOut("ACCOUNTADDRESS", [12345n, 67890n], { ensureZeroBalance: true, maxFee: (1000).microAlgo(), suppressLog: true })
 ```
 
 #### Defined in
@@ -181,10 +181,10 @@ The account asset holding information
 ```typescript
 const address = "XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA";
 const assetId = 123345n;
-const accountInfo = await algorand.asset.getAccountInformation(address, assetId);
+const accountInfo = await assetManager.getAccountInformation(address, assetId);
 ```
 
-[Response data schema details](https://developer.algorand.org/docs/rest-apis/algod/#get-v2accountsaddressassetsasset-id)
+[Response data schema details](https://dev.algorand.co/reference/rest-apis/algod/#accountassetinformation)
 
 #### Defined in
 

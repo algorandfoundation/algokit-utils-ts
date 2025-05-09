@@ -139,7 +139,7 @@ ___
 
 Optional account / account address that should be authorised to transact on behalf of the from account the app call is sent from after this transaction.
 
-**Note:** Use with extreme caution and review the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/) first.
+**Note:** Use with extreme caution and review the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying) first.
 
 #### Inherited from
 

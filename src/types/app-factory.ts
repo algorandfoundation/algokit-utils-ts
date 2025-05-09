@@ -1,6 +1,6 @@
 import algosdk, { Address } from 'algosdk'
 import { TransactionSignerAccount } from './account'
-import { AlgorandClientInterface } from './algorand-client-interface'
+import { type AlgorandClient } from './algorand-client'
 import {
   AppCompilationResult,
   AppReturn,
@@ -53,7 +53,7 @@ export interface AppFactoryParams {
   appSpec: Arc56Contract | AppSpec | string
 
   /** `AlgorandClient` instance */
-  algorand: AlgorandClientInterface
+  algorand: AlgorandClient
 
   /**
    * Optional override for the app name; used for on-chain metadata and lookups.
@@ -170,7 +170,7 @@ export type AppFactoryDeployParams = Expand<
 export class AppFactory {
   private _appSpec: Arc56Contract
   private _appName: string
-  private _algorand: AlgorandClientInterface
+  private _algorand: AlgorandClient
   private _version: string
   private _defaultSender?: Address
   private _defaultSigner?: TransactionSigner
@@ -183,6 +183,17 @@ export class AppFactory {
 
   private _paramsMethods: ReturnType<AppFactory['getParamsMethods']>
 
+  /**
+   * Create a new app factory.
+   * @param params The parameters to create the app factory
+   * @returns The `AppFactory` instance
+   * @example
+   * ```typescript
+   * const appFactory = new AppFactory({
+   *   appSpec: appSpec,
+   *   algorand: AlgorandClient.mainNet(),
+   * })
+   */
   constructor(params: AppFactoryParams) {
     this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
     this._appName = params.appName ?? this._appSpec.name
@@ -234,13 +245,25 @@ export class AppFactory {
   readonly createTransaction = {
     /** Create bare (raw) transactions for the current app */
     bare: {
-      /** Create a create call transaction, including deploy-time TEAL template replacements and compilation if provided */
+      /**
+       * Create a create app call transaction using a bare (raw) create call.
+       *
+       * Performs deploy-time TEAL template placeholder substitutions (if specified).
+       * @param params The parameters to create the create call transaction
+       * @returns The create call transaction
+       */
       create: async (params?: AppFactoryCreateParams) => {
         return this._algorand.createTransaction.appCreate(await this.params.bare.create(params))
       },
     },
 
-    /** Create a create ABI call transaction, including deploy-time TEAL template replacements and compilation if provided */
+    /**
+     * Create a create app call transaction using an ABI create call.
+     *
+     * Performs deploy-time TEAL template placeholder substitutions (if specified).
+     * @param params The parameters to create the create call transaction
+     * @returns The create call transaction
+     */
     create: async (params: AppFactoryCreateMethodCallParams) => {
       return this._algorand.createTransaction.appCreateMethodCall(await this.params.create(params))
     },
@@ -250,6 +273,14 @@ export class AppFactory {
   readonly send = {
     /** Send bare (raw) transactions for the current app */
     bare: {
+      /**
+       * Creates an instance of the app using a bare (raw) create call and returns the result
+       * of the creation transaction and an app client to interact with that app instance.
+       *
+       * Performs deploy-time TEAL template placeholder substitutions (if specified).
+       * @param params The parameters to create the app
+       * @returns The app client and the result of the creation transaction
+       */
       create: async (params?: AppFactoryCreateParams & SendParams) => {
         const updatable = params?.updatable ?? this._updatable
         const deletable = params?.deletable ?? this._deletable
@@ -312,6 +343,31 @@ export class AppFactory {
    * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
    * @param params The arguments to control the app deployment
    * @returns The app client and the result of the deployment
+   * @example
+   * ```ts
+   * const { appClient, result } = await factory.deploy({
+   *   createParams: {
+   *     sender: 'SENDER_ADDRESS',
+   *     approvalProgram: 'APPROVAL PROGRAM',
+   *     clearStateProgram: 'CLEAR PROGRAM',
+   *     schema: {
+   *       globalByteSlices: 0,
+   *       globalInts: 0,
+   *       localByteSlices: 0,
+   *       localInts: 0
+   *     }
+   *   },
+   *   updateParams: {
+   *     sender: 'SENDER_ADDRESS'
+   *   },
+   *   deleteParams: {
+   *     sender: 'SENDER_ADDRESS'
+   *   },
+   *   metadata: { name: 'my_app', version: '2.0', updatable: false, deletable: false },
+   *   onSchemaBreak: 'append',
+   *   onUpdate: 'append'
+   *  })
+   * ```
    */
   public async deploy(params: AppFactoryDeployParams) {
     const updatable = params.updatable ?? this._updatable ?? this.getDeployTimeControl('updatable')
@@ -374,7 +430,11 @@ export class AppFactory {
    * Automatically populates appName, defaultSender and source maps from the factory
    * if not specified in the params.
    * @param params The parameters to create the app client
-   * @returns The `AppClient`
+   * @returns The `AppClient` instance
+   * @example
+   * ```typescript
+   * const appClient = factory.getAppClientById({ appId: 12345n })
+   * ```
    */
   public getAppClientById(params: AppFactoryAppClientParams) {
     return new AppClient({
@@ -396,7 +456,11 @@ export class AppFactory {
    * Automatically populates appName, defaultSender and source maps from the factory
    * if not specified in the params.
    * @param params The parameters to create the app client
-   * @returns The `AppClient`
+   * @returns The `AppClient` instance
+   * @example
+   * ```typescript
+   * const appClient = factory.getAppClientByCreatorAndName({ creatorAddress: 'CREATOR_ADDRESS', appName: 'my_app' })
+   * ```
    */
   public getAppClientByCreatorAndName(params: AppFactoryResolveAppClientByCreatorAndNameParams) {
     return AppClient.fromCreatorAndName({
@@ -541,6 +605,12 @@ export class AppFactory {
    * If no TEAL templates provided it will use any byte code provided in the app spec.
    *
    * Will store any generated source maps for later use in debugging.
+   * @param compilation Optional compilation parameters to use for the compilation
+   * @returns The compilation result
+   * @example
+   * ```typescript
+   * const result = await factory.compile()
+   * ```
    */
   public async compile(compilation?: AppClientCompilationParams) {
     const result = await AppClient.compile(this._appSpec, this._algorand.app, compilation)

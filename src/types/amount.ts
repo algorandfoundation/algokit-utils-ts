@@ -24,6 +24,16 @@ export class AlgoAmount {
     return algosdk.microalgosToAlgos(Number(this.amountInMicroAlgo))
   }
 
+  /**
+   * Create a new `AlgoAmount` instance.
+   *
+   * @param amount - An object specifying the amount in Algo or µALGO. Use the key 'algo' for Algo amounts and 'microAlgo' for µALGO.
+   * @returns A new instance of `AlgoAmount` representing the specified amount.
+   * @example
+   * ```typescript
+   * const amount = new AlgoAmount({ algo: 5 });
+   * ```
+   */
   constructor(
     amount: { algos: number | bigint } | { algo: number | bigint } | { microAlgos: number | bigint } | { microAlgo: number | bigint },
   ) {

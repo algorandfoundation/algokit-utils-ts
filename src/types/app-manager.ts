@@ -117,6 +117,10 @@ export class AppManager {
    *
    * @param tealCode The TEAL code
    * @returns The information about the compiled file
+   * @example
+   * ```typescript
+   * const compiled = await appManager.compileTeal(tealProgram)
+   * ```
    */
   async compileTeal(tealCode: string): Promise<CompiledTeal> {
     if (this._compilationResults[tealCode]) {
@@ -149,6 +153,10 @@ export class AppManager {
    * @param templateParams Any parameters to replace in the .teal file before compiling
    * @param deploymentMetadata The deployment metadata the app will be deployed with
    * @returns The information about the compiled code
+   * @example
+   * ```typescript
+   * const compiled = await appManager.compileTealTemplate(tealTemplate, { TMPL_APP_ID: 12345n }, { updatable: true, deletable: false })
+   * ```
    */
   async compileTealTemplate(
     tealTemplateCode: string,
@@ -171,6 +179,10 @@ export class AppManager {
    * @param tealCode The TEAL code
    * @returns The information about the previously compiled file
    *  or `undefined` if that TEAL code wasn't previously compiled
+   * @example
+   * ```typescript
+   * const compiled = appManager.getCompilationResult(tealProgram)
+   * ```
    */
   getCompilationResult(tealCode: string): CompiledTeal | undefined {
     return this._compilationResults[tealCode]
@@ -209,6 +221,10 @@ export class AppManager {
    *
    * @param appId The ID of the app to return global state for
    * @returns The current global state for the given app
+   * @example
+   * ```typescript
+   * const globalState = await appManager.getGlobalState(12353n);
+   * ```
    */
   public async getGlobalState(appId: bigint) {
     return (await this.getById(appId)).globalState
@@ -220,6 +236,10 @@ export class AppManager {
    * @param appId The ID of the app to return local state for
    * @param address The string address of the account to get local state for the given app
    * @returns The current local state for the given (app, account) combination
+   * @example
+   * ```typescript
+   * const localState = await appManager.getLocalState(12353n, 'ACCOUNTADDRESS');
+   * ```
    */
   public async getLocalState(appId: bigint, address: Address | string) {
     const appInfo = await this._algod.accountApplicationInformation(address, appId).do()
@@ -235,6 +255,10 @@ export class AppManager {
    * Returns the names of the current boxes for the given app.
    * @param appId The ID of the app return box names for
    * @returns The current box names
+   * @example
+   * ```typescript
+   * const boxNames = await appManager.getBoxNames(12353n);
+   * ```
    */
   public async getBoxNames(appId: bigint): Promise<BoxName[]> {
     const boxResult = await this._algod.getApplicationBoxes(appId).do()
@@ -252,6 +276,10 @@ export class AppManager {
    * @param appId The ID of the app return box names for
    * @param boxName The name of the box to return either as a string, binary array or `BoxName`
    * @returns The current box value as a byte array
+   * @example
+   * ```typescript
+   * const boxValue = await appManager.getBoxValue(12353n, 'boxName');
+   * ```
    */
   public async getBoxValue(appId: bigint, boxName: BoxIdentifier | BoxName): Promise<Uint8Array> {
     const boxId = typeof boxName === 'object' && 'nameRaw' in boxName ? boxName.nameRaw : boxName
@@ -265,6 +293,10 @@ export class AppManager {
    * @param appId The ID of the app return box names for
    * @param boxNames The names of the boxes to return either as a string, binary array or `BoxName`
    * @returns The current box values as a byte array in the same order as the passed in box names
+   * @example
+   * ```typescript
+   * const boxValues = await appManager.getBoxValues(12353n, ['boxName1', 'boxName2']);
+   * ```
    */
   public async getBoxValues(appId: bigint, boxNames: (BoxIdentifier | BoxName)[]): Promise<Uint8Array[]> {
     return await Promise.all(boxNames.map(async (boxName) => await this.getBoxValue(appId, boxName)))
@@ -274,6 +306,10 @@ export class AppManager {
    * Returns the value of the given box name for the given app decoded based on the given ABI type.
    * @param request The parameters for the box value request
    * @returns The current box value as an ABI value
+   * @example
+   * ```typescript
+   * const boxValue = await appManager.getBoxValueFromABIType({ appId: 12353n, boxName: 'boxName', type: new ABIUintType(32) });
+   * ```
    */
   public async getBoxValueFromABIType(request: BoxValueRequestParams): Promise<algosdk.ABIValue> {
     const { appId, boxName, type } = request
@@ -285,6 +321,10 @@ export class AppManager {
    * Returns the value of the given box names for the given app decoded based on the given ABI type.
    * @param request The parameters for the box value request
    * @returns The current box values as an ABI value in the same order as the passed in box names
+   * @example
+   * ```typescript
+   * const boxValues = await appManager.getBoxValuesFromABIType({ appId: 12353n, boxNames: ['boxName1', 'boxName2'], type: new ABIUintType(32) });
+   * ```
    */
   public async getBoxValuesFromABIType(request: BoxValuesRequestParams): Promise<algosdk.ABIValue[]> {
     const { appId, boxNames, type } = request
@@ -295,6 +335,10 @@ export class AppManager {
    * Returns a `algosdk.BoxReference` given a `BoxIdentifier` or `BoxReference`.
    * @param boxId The box to return a reference for
    * @returns The box reference ready to pass into a `algosdk.Transaction`
+   * @example
+   * ```typescript
+   * const boxRef = AppManager.getBoxReference('boxName');
+   * ```
    */
   public static getBoxReference(boxId: BoxIdentifier | BoxReference): algosdk.BoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
@@ -309,6 +353,10 @@ export class AppManager {
    * generic object keyed by the UTF-8 value of the key.
    * @param state A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas`
    * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
+   * @example
+   * ```typescript
+   * const stateValues = AppManager.decodeAppState(state);
+   * ```
    */
   public static decodeAppState(state: { key: Uint8Array; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
     const stateValues = {} as AppState
@@ -358,6 +406,10 @@ export class AppManager {
    * @param confirmation The transaction confirmation from algod
    * @param method The ABI method
    * @returns The return value for the method call
+   * @example
+   * ```typescript
+   * const returnValue = AppManager.getABIReturn(confirmation, ABIMethod.fromSignature('hello(string)void'));
+   * ```
    */
   public static getABIReturn(
     confirmation: modelsv2.PendingTransactionResponse | undefined,
@@ -388,6 +440,10 @@ export class AppManager {
    * @param tealTemplateCode The TEAL template code to substitute
    * @param params The deploy-time deployment control parameter value to replace
    * @returns The replaced TEAL code
+   * @example
+   * ```typescript
+   * const tealCode = AppManager.replaceTealTemplateDeployTimeControlParams(tealTemplate, { updatable: true, deletable: false });
+   * ```
    */
   static replaceTealTemplateDeployTimeControlParams(tealTemplateCode: string, params: { updatable?: boolean; deletable?: boolean }) {
     if (params.updatable !== undefined) {
@@ -419,6 +475,10 @@ export class AppManager {
    * @param tealTemplateCode The TEAL template code to make parameter replacements in
    * @param templateParams Any parameters to replace in the teal code
    * @returns The TEAL code with replacements
+   * @example
+   * ```typescript
+   * const tealCode = AppManager.replaceTealTemplateParams(tealTemplate, { TMPL_APP_ID: 12345n });
+   * ```
    */
   static replaceTealTemplateParams(tealTemplateCode: string, templateParams?: TealTemplateParams) {
     if (templateParams !== undefined) {
@@ -454,6 +514,10 @@ export class AppManager {
    *
    * @param tealCode The TEAL logic to strip
    * @returns The TEAL without comments
+   * @example
+   * ```typescript
+   * const stripped = AppManager.stripTealComments(tealProgram);
+   * ```
    */
   static stripTealComments(tealCode: string) {
     const stripCommentFromLine = (line: string) => {

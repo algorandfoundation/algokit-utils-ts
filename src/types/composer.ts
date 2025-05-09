@@ -1,10 +1,9 @@
 import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
-import { asJson } from '../util'
+import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { APP_PAGE_MAX_SIZE } from './app'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
@@ -35,7 +34,7 @@ export type SkipSignaturesSimulateOptions = Expand<
 >
 
 /** The raw API options to control a simulate request.
- * See algod API docs for more information: https://developer.algorand.org/docs/rest-apis/algod/#simulaterequest
+ * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
 export type RawSimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
 
@@ -53,14 +52,14 @@ export type CommonTransactionParams = {
   signer?: algosdk.TransactionSigner | TransactionSignerAccount
   /** Change the signing key of the sender to the given address.
    *
-   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+   * **Warning:** Please be careful with this parameter and be sure to read the [official rekey guidance](https://dev.algorand.co/concepts/accounts/rekeying).
    */
   rekeyTo?: string | Address
   /** Note to attach to the transaction. Max of 1000 bytes. */
   note?: Uint8Array | string
   /** Prevent multiple transactions with the same lease being included within the validity window.
    *
-   * A [lease](https://developer.algorand.org/articles/leased-transactions-securing-advanced-smart-contract-design/)
+   * A [lease](https://dev.algorand.co/concepts/transactions/leases)
    *  enforces a mutually exclusive transaction (useful to prevent double-posting and other scenarios).
    */
   lease?: Uint8Array | string
@@ -344,17 +343,17 @@ export type OfflineKeyRegistrationParams = CommonTransactionParams & {
 export type CommonAppCallParams = CommonTransactionParams & {
   /** ID of the application; 0 if the application is being created. */
   appId: bigint
-  /** The [on-complete](https://developer.algorand.org/docs/get-details/dapps/avm/teal/specification/#oncomplete) action of the call; defaults to no-op. */
+  /** The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. */
   onComplete?: algosdk.OnApplicationComplete
-  /** Any [arguments to pass to the smart contract call](https://developer.algorand.org/docs/get-details/dapps/avm/teal/#argument-passing). */
+  /** Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). */
   args?: Uint8Array[]
-  /** Any account addresses to add to the [accounts array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
+  /** Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   accountReferences?: (string | Address)[]
-  /** The ID of any apps to load to the [foreign apps array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
+  /** The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   appReferences?: bigint[]
-  /** The ID of any assets to load to the [foreign assets array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays). */
+  /** The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
   assetReferences?: bigint[]
-  /** Any boxes to load to the [boxes array](https://developer.algorand.org/docs/get-details/dapps/smart-contracts/apps/#reference-arrays).
+  /** Any boxes to load to the [boxes array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
    *
    * Either the name identifier (which will be set against app ID of `0` i.e.
    *  the current app), or a box identifier with the name identifier and app ID.
@@ -604,6 +603,7 @@ export class TransactionComposer {
   /**
    * Create a `TransactionComposer`.
    * @param params The configuration for this composer
+   * @returns The `TransactionComposer` instance
    */
   constructor(params: TransactionComposerParams) {
     this.algod = params.algod
@@ -631,6 +631,10 @@ export class TransactionComposer {
    * @param transaction The pre-built transaction
    * @param signer Optional signer override for the transaction
    * @returns The composer so you can chain method calls
+   * @example
+   * ```typescript
+   * composer.addTransaction(txn)
+   * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
     this.txns.push({
@@ -646,6 +650,34 @@ export class TransactionComposer {
    * Add a payment transaction to the transaction group.
    * @param params The payment transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addPayment({
+   *   sender: 'SENDERADDRESS',
+   *   receiver: 'RECEIVERADDRESS',
+   *   amount: (4).algo(),
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addPayment({
+   *   amount: (4).algo(),
+   *   receiver: 'RECEIVERADDRESS',
+   *   sender: 'SENDERADDRESS',
+   *   closeRemainderTo: 'CLOSEREMAINDERTOADDRESS',
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+   *   rekeyTo: 'REKEYTOADDRESS',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
    */
   addPayment(params: PaymentParams): TransactionComposer {
     this.txns.push({ ...params, type: 'pay' })
@@ -657,6 +689,36 @@ export class TransactionComposer {
    * Add an asset create transaction to the transaction group.
    * @param params The asset create transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAssetCreate({ sender: "CREATORADDRESS", total: 100n})
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAssetCreate({
+   *   sender: 'CREATORADDRESS',
+   *   total: 100n,
+   *   decimals: 2,
+   *   assetName: 'asset',
+   *   unitName: 'unit',
+   *   url: 'url',
+   *   metadataHash: 'metadataHash',
+   *   defaultFrozen: false,
+   *   manager: 'MANAGERADDRESS',
+   *   reserve: 'RESERVEADDRESS',
+   *   freeze: 'FREEZEADDRESS',
+   *   clawback: 'CLAWBACKADDRESS',
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
    */
   addAssetCreate(params: AssetCreateParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetCreate' })
@@ -668,6 +730,30 @@ export class TransactionComposer {
    * Add an asset config transaction to the transaction group.
    * @param params The asset config transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAssetConfig({ sender: "MANAGERADDRESS", assetId: 123456n, manager: "MANAGERADDRESS" })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAssetConfig({
+   *   sender: 'MANAGERADDRESS',
+   *   assetId: 123456n,
+   *   manager: 'MANAGERADDRESS',
+   *   reserve: 'RESERVEADDRESS',
+   *   freeze: 'FREEZEADDRESS',
+   *   clawback: 'CLAWBACKADDRESS',
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
    */
   addAssetConfig(params: AssetConfigParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetConfig' })
@@ -679,6 +765,29 @@ export class TransactionComposer {
    * Add an asset freeze transaction to the transaction group.
    * @param params The asset freeze transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAssetFreeze({ sender: "MANAGERADDRESS", assetId: 123456n, account: "ACCOUNTADDRESS", frozen: true })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAssetFreeze({
+   *   sender: 'MANAGERADDRESS',
+   *   assetId: 123456n,
+   *   account: 'ACCOUNTADDRESS',
+   *   frozen: true,
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
    */
   addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetFreeze' })
@@ -690,6 +799,27 @@ export class TransactionComposer {
    * Add an asset destroy transaction to the transaction group.
    * @param params The asset destroy transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAssetDestroy({ sender: "MANAGERADDRESS", assetId: 123456n })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAssetDestroy({
+   *   sender: 'MANAGERADDRESS',
+   *   assetId: 123456n,
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
    */
   addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetDestroy' })
@@ -701,6 +831,32 @@ export class TransactionComposer {
    * Add an asset transfer transaction to the transaction group.
    * @param params The asset transfer transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAssetTransfer({ sender: "HOLDERADDRESS", assetId: 123456n, amount: 1n, receiver: "RECEIVERADDRESS" })
+   * ```
+   * @example Advanced example (with clawback)
+   * ```typescript
+   * composer.addAssetTransfer({
+   *   sender: 'CLAWBACKADDRESS',
+   *   assetId: 123456n,
+   *   amount: 1n,
+   *   receiver: 'RECEIVERADDRESS',
+   *   clawbackTarget: 'HOLDERADDRESS',
+   *   // This field needs to be used with caution
+   *   closeAssetTo: 'ADDRESSTOCLOSETO'
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
    */
   addAssetTransfer(params: AssetTransferParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetTransfer' })
@@ -712,6 +868,27 @@ export class TransactionComposer {
    * Add an asset opt-in transaction to the transaction group.
    * @param params The asset opt-in transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAssetOptIn({ sender: "SENDERADDRESS", assetId: 123456n })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAssetOptIn({
+   *   sender: 'SENDERADDRESS',
+   *   assetId: 123456n,
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
    */
   addAssetOptIn(params: AssetOptInParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetOptIn' })
@@ -723,6 +900,33 @@ export class TransactionComposer {
    * Add an asset opt-out transaction to the transaction group.
    * @param params The asset opt-out transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example (without creator, will be retrieved from algod)
+   * ```typescript
+   * composer.addAssetOptOut({ sender: "SENDERADDRESS", assetId: 123456n, ensureZeroBalance: true })
+   * ```
+   * @example Basic example (with creator)
+   * ```typescript
+   * composer.addAssetOptOut({ sender: "SENDERADDRESS", creator: "CREATORADDRESS", assetId: 123456n, ensureZeroBalance: true })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAssetOptOut({
+   *   sender: 'SENDERADDRESS',
+   *   assetId: 123456n,
+   *   creator: 'CREATORADDRESS',
+   *   ensureZeroBalance: true,
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
    */
   addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
     this.txns.push({ ...params, type: 'assetOptOut' })
@@ -736,6 +940,47 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The application create transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAppCreate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAppCreate({
+   *  sender: 'CREATORADDRESS',
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  schema: {
+   *    globalInts: 1,
+   *    globalByteSlices: 2,
+   *    localInts: 3,
+   *    localByteSlices: 4
+   *  },
+   *  extraProgramPages: 1,
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *  // Signer only needed if you want to provide one,
+   *  //  generally you'd register it with AlgorandClient
+   *  //  against the sender and not need to pass it in
+   *  signer: transactionSigner,
+   *  maxRoundsToWaitForConfirmation: 5,
+   *  suppressLog: true,
+   *})
+   * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall' })
@@ -749,6 +994,34 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The application update transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAppUpdate({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE' })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAppUpdate({
+   *  sender: 'CREATORADDRESS',
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *})
+   * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
@@ -762,6 +1035,32 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The application delete transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAppDelete({ sender: 'CREATORADDRESS' })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAppDelete({
+   *  sender: 'CREATORADDRESS',
+   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *})
+   * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
@@ -777,6 +1076,32 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The application call transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addAppCall({ sender: 'CREATORADDRESS' })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addAppCall({
+   *  sender: 'CREATORADDRESS',
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *})
+   * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
     this.txns.push({ ...params, type: 'appCall' })
@@ -790,6 +1115,53 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The ABI create method application call transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppCreateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppCreateMethodCall({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  schema: {
+   *    globalInts: 1,
+   *    globalByteSlices: 2,
+   *    localInts: 3,
+   *    localByteSlices: 4
+   *  },
+   *  extraProgramPages: 1,
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *})
+   * ```
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
     this.txns.push({ ...params, type: 'methodCall' })
@@ -802,6 +1174,46 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The ABI update method application call transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppUpdateMethodCall({ sender: 'CREATORADDRESS', approvalProgram: 'TEALCODE', clearStateProgram: 'TEALCODE', method: method, args: ["arg1_value"] })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppUpdateMethodCall({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  approvalProgram: "TEALCODE",
+   *  clearStateProgram: "TEALCODE",
+   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *})
+   * ```
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
     this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
@@ -814,6 +1226,44 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The ABI delete method application call transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppDeleteMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppDeleteMethodCall({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *})
+   * ```
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
     this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
@@ -826,6 +1276,44 @@ export class TransactionComposer {
    * Note: we recommend using app clients to make it easier to make app calls.
    * @param params The ABI method application call transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppCallMethodCall({ sender: 'CREATORADDRESS', method: method, args: ["arg1_value"] })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * const method = new ABIMethod({
+   *   name: 'method',
+   *   args: [{ name: 'arg1', type: 'string' }],
+   *   returns: { type: 'string' },
+   * })
+   * composer.addAppCallMethodCall({
+   *  sender: 'CREATORADDRESS',
+   *  method: method,
+   *  args: ["arg1_value"],
+   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  args: [new Uint8Array(1, 2, 3, 4)]
+   *  accountReferences: ["ACCOUNT_1"]
+   *  appReferences: [123n, 1234n]
+   *  assetReferences: [12345n]
+   *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  lease: 'lease',
+   *  note: 'note',
+   *  // You wouldn't normally set this field
+   *  firstValidRound: 1000n,
+   *  validityWindow: 10,
+   *  extraFee: (1000).microAlgo(),
+   *  staticFee: (1000).microAlgo(),
+   *  // Max fee doesn't make sense with extraFee AND staticFee
+   *  //  already specified, but here for completeness
+   *  maxFee: (3000).microAlgo(),
+   *})
+   * ```
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
     this.txns.push({ ...params, type: 'methodCall' })
@@ -836,6 +1324,42 @@ export class TransactionComposer {
    * Add an online key registration transaction to the transaction group.
    * @param params The online key registration transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addOnlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+   *   selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+   *   stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+   *   voteFirst: 1n,
+   *   voteLast: 1000n,
+   *   voteKeyDilution: 1n,
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addOnlineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   voteKey: Uint8Array.from(Buffer.from("voteKeyBase64", 'base64')),
+   *   selectionKey: Uint8Array.from(Buffer.from("selectionKeyBase64", 'base64')),
+   *   stateProofKey: Uint8Array.from(Buffer.from("stateProofKeyBase64", 'base64')),
+   *   voteFirst: 1n,
+   *   voteLast: 1000n,
+   *   voteKeyDilution: 1n,
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+   *   rekeyTo: 'REKEYTOADDRESS',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
     this.txns.push({ ...params, type: 'keyReg' })
@@ -847,6 +1371,30 @@ export class TransactionComposer {
    * Add an offline key registration transaction to the transaction group.
    * @param params The offline key registration transaction parameters
    * @returns The composer so you can chain method calls
+   * @example Basic example
+   * ```typescript
+   * composer.addOfflineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   * })
+   * ```
+   * @example Advanced example
+   * ```typescript
+   * composer.addOfflineKeyRegistration({
+   *   sender: 'SENDERADDRESS',
+   *   lease: 'lease',
+   *   note: 'note',
+   *   // Use this with caution, it's generally better to use algorand.account.rekeyAccount
+   *   rekeyTo: 'REKEYTOADDRESS',
+   *   // You wouldn't normally set this field
+   *   firstValidRound: 1000n,
+   *   validityWindow: 10,
+   *   extraFee: (1000).microAlgo(),
+   *   staticFee: (1000).microAlgo(),
+   *   // Max fee doesn't make sense with extraFee AND staticFee
+   *   //  already specified, but here for completeness
+   *   maxFee: (3000).microAlgo(),
+   * })
+   * ```
    */
   addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
     this.txns.push({ ...params, type: 'keyReg' })
@@ -858,6 +1406,12 @@ export class TransactionComposer {
    * Add the transactions within an `AtomicTransactionComposer` to the transaction group.
    * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
    * @returns The composer so you can chain method calls
+   * @example
+   * ```typescript
+   * const atc = new AtomicTransactionComposer()
+   *   .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: 1000n })
+   * composer.addAtc(atc)
+   * ```
    */
   addAtc(atc: algosdk.AtomicTransactionComposer): TransactionComposer {
     this.txns.push({ atc, type: 'atc' })
@@ -1072,7 +1626,7 @@ export class TransactionComposer {
           ? 'extraProgramPages' in params && params.extraProgramPages !== undefined
             ? params.extraProgramPages
             : approvalProgram
-              ? Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0)) / APP_PAGE_MAX_SIZE)
+              ? calculateExtraProgramPages(approvalProgram, clearStateProgram)
               : 0
           : undefined,
       numLocalInts: appId === 0 ? ('schema' in params ? (params.schema?.localInts ?? 0) : 0) : undefined,
@@ -1234,9 +1788,9 @@ export class TransactionComposer {
       return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, {
         ...sdkParams,
         extraPages:
-          'extraProgramPages' in params
-            ? (params.extraProgramPages ?? Math.floor((approvalProgram!.length + clearStateProgram!.length) / APP_PAGE_MAX_SIZE))
-            : 0,
+          'extraProgramPages' in params && params.extraProgramPages !== undefined
+            ? params.extraProgramPages
+            : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
         numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
         numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
         numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
@@ -1326,6 +1880,10 @@ export class TransactionComposer {
    * Compose all of the transactions without signers and return the transaction objects directly along with any ABI method calls.
    *
    * @returns The array of built transactions and any corresponding method calls
+   * @example
+   * ```typescript
+   * const { transactions, methodCalls, signers } = await composer.buildTransactions()
+   * ```
    */
   async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
@@ -1347,14 +1905,15 @@ export class TransactionComposer {
                 ? await this.buildMethodCall(txn, suggestedParams, false)
                 : []
 
-        transactionsWithSigner.forEach((ts, idx) => {
+        transactionsWithSigner.forEach((ts) => {
           transactions.push(ts.txn)
+          const groupIdx = transactions.length - 1
 
           if (ts.signer && ts.signer !== TransactionComposer.NULL_SIGNER) {
-            signers.set(idx, ts.signer)
+            signers.set(groupIdx, ts.signer)
           }
           if ('context' in ts && ts.context.abiMethod) {
-            methodCalls.set(idx, ts.context.abiMethod)
+            methodCalls.set(groupIdx, ts.context.abiMethod)
           }
         })
       }
@@ -1365,6 +1924,7 @@ export class TransactionComposer {
 
   /**
    * Get the number of transactions currently added to this composer.
+   * @returns The number of transactions currently added to this composer
    */
   async count() {
     return (await this.buildTransactions()).transactions.length
@@ -1377,7 +1937,11 @@ export class TransactionComposer {
    *
    * Once this method is called, no further transactions will be able to be added.
    * You can safely call this method multiple times to get the same result.
-   * @returns The built atomic transaction composer and the transactions
+   * @returns The built atomic transaction composer, the transactions and any corresponding method calls
+   * @example
+   * ```typescript
+   * const { atc, transactions, methodCalls } = await composer.build()
+   * ```
    */
   async build() {
     if (this.atc.getStatus() === algosdk.AtomicTransactionComposerStatus.BUILDING) {
@@ -1413,6 +1977,10 @@ export class TransactionComposer {
    * Rebuild the group, discarding any previously built transactions.
    * This will potentially cause new signers and suggested params to be used if the callbacks return a new value compared to the first build.
    * @returns The newly built atomic transaction composer and the transactions
+   * @example
+   * ```typescript
+   * const { atc, transactions, methodCalls } = await composer.rebuild()
+   * ```
    */
   async rebuild() {
     this.atc = new algosdk.AtomicTransactionComposer()
@@ -1423,6 +1991,10 @@ export class TransactionComposer {
    * Compose the atomic transaction group and send it to the network.
    * @param params The parameters to control execution with
    * @returns The execution result
+   * @example
+   * ```typescript
+   * const result = await composer.send()
+   * ```
    */
   async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
     const group = (await this.build()).transactions
@@ -1448,9 +2020,9 @@ export class TransactionComposer {
           coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
           additionalAtcContext: params?.coverAppCallInnerTransactionFees
             ? {
-              maxFees: this.txnMaxFees,
-              suggestedParams: suggestedParams!,
-            }
+                maxFees: this.txnMaxFees,
+                suggestedParams: suggestedParams!,
+              }
             : undefined,
         },
         this.algod,
@@ -1476,11 +2048,35 @@ export class TransactionComposer {
   /**
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
+   * @example
+   * ```typescript
+   * const result = await composer.simulate()
+   * ```
    */
   async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  /**
+   * Compose the atomic transaction group and simulate sending it to the network
+   * @returns The simulation result
+   * @example
+   * ```typescript
+   * const result = await composer.simulate({
+   *   skipSignatures: true,
+   * })
+   * ```
+   */
   async simulate(
     options: SkipSignaturesSimulateOptions,
   ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  /**
+   * Compose the atomic transaction group and simulate sending it to the network
+   * @returns The simulation result
+   * @example
+   * ```typescript
+   * const result = await composer.simulate({
+   *   extraOpcodeBudget: 1000,
+   * })
+   * ```
+   */
   async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
@@ -1508,16 +2104,16 @@ export class TransactionComposer {
         ...rawOptions,
         ...(Config.debug
           ? {
-            allowEmptySignatures: true,
-            fixSigners: true,
-            allowMoreLogging: true,
-            execTraceConfig: new modelsv2.SimulateTraceConfig({
-              enable: true,
-              scratchChange: true,
-              stackChange: true,
-              stateChange: true,
-            }),
-          }
+              allowEmptySignatures: true,
+              fixSigners: true,
+              allowMoreLogging: true,
+              execTraceConfig: new modelsv2.SimulateTraceConfig({
+                enable: true,
+                scratchChange: true,
+                stackChange: true,
+                stateChange: true,
+              }),
+            }
           : undefined),
       }),
     )

@@ -84,7 +84,7 @@ While `TransactionSignerAccount` is the main class used to represent an account 
 
 ## Rekey account
 
-One of the unique features of Algorand is the ability to change the private key that can authorise transactions for an account. This is called [rekeying](https://developer.algorand.org/docs/get-details/accounts/rekey/).
+One of the unique features of Algorand is the ability to change the private key that can authorise transactions for an account. This is called [rekeying](https://dev.algorand.co/concepts/accounts/rekeying).
 
 > [!WARNING]
 > Rekeying should be done with caution as a rekey transaction can result in permanent loss of control of an account.
@@ -181,6 +181,8 @@ Some of this functionality is directly exposed from [`AccountManager`](#accountm
 const localNetDispenser = await algorand.account.localNetDispenser()
 // Get and register a dispenser by environment variable, or if not set then LocalNet dispenser via KMD
 const dispenser = await algorand.account.dispenserFromEnvironment()
+// Get an account from KMD idempotently by name. In this case we'll get the default dispenser account
+const account1 = await algorand.account.fromKmd('unencrypted-default-wallet', (a) => a.status !== 'Offline' && a.amount > 1_000_000_000)
 // Get / create and register account from KMD idempotently by name
-const account1 = await algorand.account.fromKmd('account1', (2).algo())
+const account1 = await algorand.account.kmd.getOrCreateWalletAccount('account1', (2).algo())
 ```

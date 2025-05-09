@@ -233,7 +233,6 @@ export const sendTransaction = async function (
   const populateAppCallResources = sendParams?.populateAppCallResources ?? Config.populateAppCallResources
 
   // Populate resources if the transaction is an appcall and populateAppCallResources wasn't explicitly set to false
-  // NOTE: Temporary false by default until this algod bug is fixed: https://github.com/algorand/go-algorand/issues/5914
   if (txnToSend.type === algosdk.TransactionType.appl && populateAppCallResources) {
     const newAtc = new AtomicTransactionComposer()
     newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
@@ -386,7 +385,8 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 
 /**
  * Take an existing Atomic Transaction Composer and return a new one with changes applied to the transactions
- * based on the supplied sendParams to ensure the transaction group is ready for sending.
+ * based on the supplied sendParams to prepare it for sending.
+ * Please note, that before calling `.execute()` on the returned ATC, you must call `.buildGroup()`.
  *
  * @param algod The algod client to use for the simulation
  * @param atc The ATC containing the txn group
@@ -799,7 +799,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
     }
 
-    const transactionsToSend = transactionsWithSigner.map((t) => {
+    // atc.buildGroup() is needed to ensure that any changes made by prepareGroupForSending are reflected and the group id is set
+    const transactionsToSend = atc.buildGroup().map((t) => {
       return t.txn
     })
     let groupId: string | undefined = undefined
@@ -944,7 +945,7 @@ export function getABIReturnValue(result: algosdk.ABIResult): ABIReturn {
 /**
  * @deprecated Use `TransactionComposer` (`algorand.newGroup()`) or `AtomicTransactionComposer` to construct and send group transactions instead.
  *
- * Signs and sends a group of [up to 16](https://developer.algorand.org/docs/get-details/atomic_transfers/#create-transactions) transactions to the chain
+ * Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transactions/atomic-txn-groups/#create-transactions) transactions to the chain
  *
  * @param groupSend The group details to send, with:
  *   * `transactions`: The array of transactions to send along with their signing account

@@ -1,6 +1,7 @@
 import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
+import { calculateExtraProgramPages } from '../util'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {
   APP_DEPLOY_NOTE_DAPP,
@@ -119,6 +120,10 @@ export class AppDeployer {
    * @param appManager An `AppManager` instance
    * @param transactionSender An `AlgorandClientTransactionSender` instance
    * @param indexer An optional indexer instance; supply if you want to indexer to look up app metadata
+   * @example
+   * ```ts
+   * const deployer = new AppDeployer(appManager, transactionSender, indexer)
+   * ```
    */
   constructor(appManager: AppManager, transactionSender: AlgorandClientTransactionSender, indexer?: algosdk.Indexer) {
     this._appManager = appManager
@@ -137,7 +142,32 @@ export class AppDeployer {
    *
    * **Note:** if there is an update (different TEAL code) to an existing app (and `onUpdate` is set to `'replace'`) the existing app will be deleted and re-created.
    * @param deployment The arguments to control the app deployment
-   * @returns The app reference of the new/existing app
+   * @returns The result of the deployment
+   * @example
+   * ```ts
+   * const deployResult = await deployer.deploy({
+   *   createParams: {
+   *     sender: 'SENDER_ADDRESS',
+   *     approvalProgram: 'APPROVAL PROGRAM',
+   *     clearStateProgram: 'CLEAR PROGRAM',
+   *     schema: {
+   *       globalByteSlices: 0,
+   *       globalInts: 0,
+   *       localByteSlices: 0,
+   *       localInts: 0
+   *     }
+   *   },
+   *   updateParams: {
+   *     sender: 'SENDER_ADDRESS'
+   *   },
+   *   deleteParams: {
+   *     sender: 'SENDER_ADDRESS'
+   *   },
+   *   metadata: { name: 'my_app', version: '2.0', updatable: false, deletable: false },
+   *   onSchemaBreak: 'append',
+   *   onUpdate: 'append'
+   *  })
+   * ```
    */
   async deploy(deployment: AppDeployParams): Promise<AppDeployResult> {
     const {
@@ -334,9 +364,13 @@ export class AppDeployer {
     const existingAppRecord = await this._appManager.getById(existingApp.appId)
     const existingApproval = Buffer.from(existingAppRecord.approvalProgram).toString('base64')
     const existingClear = Buffer.from(existingAppRecord.clearStateProgram).toString('base64')
+    const existingExtraPages = calculateExtraProgramPages(existingAppRecord.approvalProgram, existingAppRecord.clearStateProgram)
 
-    const newApproval = Buffer.from(approvalProgram).toString('base64')
-    const newClear = Buffer.from(clearStateProgram).toString('base64')
+    const newApprovalBytes = Buffer.from(approvalProgram)
+    const newClearBytes = Buffer.from(clearStateProgram)
+    const newApproval = newApprovalBytes.toString('base64')
+    const newClear = newClearBytes.toString('base64')
+    const newExtraPages = calculateExtraProgramPages(newApprovalBytes, newClearBytes)
 
     // Check for changes
 
@@ -345,7 +379,8 @@ export class AppDeployer {
       existingAppRecord.localInts < (createParams.schema?.localInts ?? 0) ||
       existingAppRecord.globalInts < (createParams.schema?.globalInts ?? 0) ||
       existingAppRecord.localByteSlices < (createParams.schema?.localByteSlices ?? 0) ||
-      existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0)
+      existingAppRecord.globalByteSlices < (createParams.schema?.globalByteSlices ?? 0) ||
+      existingExtraPages < newExtraPages
 
     if (isSchemaBreak) {
       Config.getLogger(sendParams?.suppressLog).warn(`Detected a breaking app schema change in app ${existingApp.appId}:`, {
@@ -354,8 +389,9 @@ export class AppDeployer {
           globalByteSlices: existingAppRecord.globalByteSlices,
           localInts: existingAppRecord.localInts,
           localByteSlices: existingAppRecord.localByteSlices,
+          extraProgramPages: existingExtraPages,
         },
-        to: createParams.schema,
+        to: { ...createParams.schema, extraProgramPages: newExtraPages },
       })
 
       if (onSchemaBreak === undefined || onSchemaBreak === 'fail' || onSchemaBreak === OnSchemaBreak.Fail) {
@@ -452,6 +488,9 @@ export class AppDeployer {
    * @param creatorAddress The address of the account that is the creator of the apps you want to search for
    * @param ignoreCache Whether or not to ignore the cache and force a lookup, default: use the cache
    * @returns A name-based lookup of the app metadata
+   * @example
+   * ```ts
+   * const result = await deployer.getCreatorAppsByName(creator)
    */
   async getCreatorAppsByName(creatorAddress: string | Address, ignoreCache?: boolean): Promise<AppLookup> {
     const appLookup: Record<string, AppMetadata> = {}
