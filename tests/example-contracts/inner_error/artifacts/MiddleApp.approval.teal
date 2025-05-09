@@ -23,47 +23,39 @@ switch *call_NoOp *NOT_IMPLEMENTED *NOT_IMPLEMENTED *NOT_IMPLEMENTED *NOT_IMPLEM
 	// The requested action is not implemented in this contract. Are you using the correct OnComplete? Did you set your app ID?
 	err
 
-// callMiddle(uint64,uint64)void
-*abi_route_callMiddle:
-	// innerId: uint64
-	txna ApplicationArgs 2
-	btoi
-
-	// middleId: uint64
+// callInner(uint64)void
+*abi_route_callInner:
+	// id: uint64
 	txna ApplicationArgs 1
 	btoi
 
-	// execute callMiddle(uint64,uint64)void
-	callsub callMiddle
+	// execute callInner(uint64)void
+	callsub callInner
 	intc 0 // 1
 	return
 
-// callMiddle(middleId: AppID, innerId: AppID): void
-callMiddle:
-	proto 2 0
+// callInner(id: AppID): void
+callInner:
+	proto 1 0
 
-	// inner_error.algo.ts:20
-	// sendMethodCall<typeof MiddleApp.prototype.callInner>({
-	//       applicationID: middleId,
-	//       methodArgs: [innerId],
+	// inner_error.algo.ts:11
+	// sendMethodCall<typeof InnerApp.prototype.throwError>({
+	//       applicationID: id,
+	//       methodArgs: [],
 	//     })
 	itxn_begin
 	intc 1 //  appl
 	itxn_field TypeEnum
-	pushbytes 0xf925a882 // method "callInner(uint64)void"
+	pushbytes 0x3d870d87 // method "throwError()void"
 	itxn_field ApplicationArgs
 
-	// inner_error.algo.ts:21
-	// applicationID: middleId
-	frame_dig -1 // middleId: AppID
+	// inner_error.algo.ts:12
+	// applicationID: id
+	frame_dig -1 // id: AppID
 	itxn_field ApplicationID
 
-	// inner_error.algo.ts:22
-	// methodArgs: [innerId]
-	frame_dig -2 // innerId: AppID
-	itob
-	itxn_field ApplicationArgs
-
+	// inner_error.algo.ts:13
+	// methodArgs: []
 	// Fee field not set, defaulting to 0
 	pushint 0
 	itxn_field Fee
@@ -85,9 +77,9 @@ callMiddle:
 	err
 
 *call_NoOp:
-	pushbytes 0x8aaafb4c // method "callMiddle(uint64,uint64)void"
+	pushbytes 0xf925a882 // method "callInner(uint64)void"
 	txna ApplicationArgs 0
-	match *abi_route_callMiddle
+	match *abi_route_callInner
 
 	// this contract does not implement the given ABI method for call NoOp
 	err
