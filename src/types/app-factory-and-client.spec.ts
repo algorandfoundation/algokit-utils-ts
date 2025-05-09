@@ -17,7 +17,6 @@ import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
-import { LogicError } from './logic-error'
 
 describe('ARC32: app-factory-and-app-client', () => {
   const localnet = algorandFixture()
