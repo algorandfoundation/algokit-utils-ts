@@ -516,6 +516,7 @@ export class AppClient {
     this._appSpec = AppClient.normaliseAppSpec(params.appSpec)
     this._appName = params.appName ?? this._appSpec.name
     this._algorand = params.algorand
+    this._algorand.registerErrorTransformer!(this.handleCallErrors)
     this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
     this._defaultSigner = params.defaultSigner
 
@@ -1245,29 +1246,29 @@ export class AppClient {
       update: async (params?: AppClientBareCallParams & AppClientCompilationParams & SendParams) => {
         const compiled = await this.compile(params)
         return {
-          ...(await this.handleCallErrors(async () => this._algorand.send.appUpdate(await this.params.bare.update(params)))),
+          ...(await this._algorand.send.appUpdate(await this.params.bare.update(params))),
           ...(compiled as Partial<AppCompilationResult>),
         }
       },
       /** Signs and sends an opt-in call */
       optIn: (params?: AppClientBareCallParams & SendParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.optIn(params)))
+        return this._algorand.send.appCall(this.params.bare.optIn(params))
       },
       /** Signs and sends a delete call */
       delete: (params?: AppClientBareCallParams & SendParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appDelete(this.params.bare.delete(params)))
+        return this._algorand.send.appDelete(this.params.bare.delete(params))
       },
       /** Signs and sends a clear state call */
       clearState: (params?: AppClientBareCallParams & SendParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.clearState(params)))
+        return this._algorand.send.appCall(this.params.bare.clearState(params))
       },
       /** Signs and sends a close out call */
       closeOut: (params?: AppClientBareCallParams & SendParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.closeOut(params)))
+        return this._algorand.send.appCall(this.params.bare.closeOut(params))
       },
       /** Signs and sends a call (defaults to no-op) */
       call: (params?: AppClientBareCallParams & CallOnComplete & SendParams) => {
-        return this.handleCallErrors(() => this._algorand.send.appCall(this.params.bare.call(params)))
+        return this._algorand.send.appCall(this.params.bare.call(params))
       },
     }
   }
@@ -1351,11 +1352,9 @@ export class AppClient {
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
         const compiled = await this.compile(params)
         return {
-          ...(await this.handleCallErrors(async () =>
-            this.processMethodCallReturn(
-              this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })),
-              getArc56Method(params.method, this._appSpec),
-            ),
+          ...(await this.processMethodCallReturn(
+            this._algorand.send.appUpdateMethodCall(await this.params.update({ ...params })),
+            getArc56Method(params.method, this._appSpec),
           )),
           ...(compiled as Partial<AppCompilationResult>),
         }
@@ -1365,12 +1364,10 @@ export class AppClient {
        * @param params The parameters for the opt-in ABI method call
        * @returns The result of sending the opt-in ABI method call
        */
-      optIn: (params: AppClientMethodCallParams & SendParams) => {
-        return this.handleCallErrors(async () =>
-          this.processMethodCallReturn(
-            this._algorand.send.appCallMethodCall(await this.params.optIn(params)),
-            getArc56Method(params.method, this._appSpec),
-          ),
+      optIn: async (params: AppClientMethodCallParams & SendParams) => {
+        return this.processMethodCallReturn(
+          this._algorand.send.appCallMethodCall(await this.params.optIn(params)),
+          getArc56Method(params.method, this._appSpec),
         )
       },
       /**
@@ -1378,12 +1375,10 @@ export class AppClient {
        * @param params The parameters for the delete ABI method call
        * @returns The result of sending the delete ABI method call
        */
-      delete: (params: AppClientMethodCallParams & SendParams) => {
-        return this.handleCallErrors(async () =>
-          this.processMethodCallReturn(
-            this._algorand.send.appDeleteMethodCall(await this.params.delete(params)),
-            getArc56Method(params.method, this._appSpec),
-          ),
+      delete: async (params: AppClientMethodCallParams & SendParams) => {
+        return this.processMethodCallReturn(
+          this._algorand.send.appDeleteMethodCall(await this.params.delete(params)),
+          getArc56Method(params.method, this._appSpec),
         )
       },
       /**
@@ -1391,12 +1386,10 @@ export class AppClient {
        * @param params The parameters for the close out ABI method call
        * @returns The result of sending the close out ABI method call
        */
-      closeOut: (params: AppClientMethodCallParams & SendParams) => {
-        return this.handleCallErrors(async () =>
-          this.processMethodCallReturn(
-            this._algorand.send.appCallMethodCall(await this.params.closeOut(params)),
-            getArc56Method(params.method, this._appSpec),
-          ),
+      closeOut: async (params: AppClientMethodCallParams & SendParams) => {
+        return this.processMethodCallReturn(
+          this._algorand.send.appCallMethodCall(await this.params.closeOut(params)),
+          getArc56Method(params.method, this._appSpec),
         )
       },
       /**
@@ -1454,11 +1447,9 @@ export class AppClient {
           }
         }
 
-        return this.handleCallErrors(async () =>
-          this.processMethodCallReturn(
-            this._algorand.send.appCallMethodCall(await this.params.call(params)),
-            getArc56Method(params.method, this._appSpec),
-          ),
+        return this.processMethodCallReturn(
+          this._algorand.send.appCallMethodCall(await this.params.call(params)),
+          getArc56Method(params.method, this._appSpec),
         )
       },
     }
@@ -1572,21 +1563,22 @@ export class AppClient {
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
-  private async handleCallErrors<TResult>(call: () => Promise<TResult>) {
-    try {
-      return await call()
-    } catch (e) {
-      const logicError = await this.exposeLogicError(e as Error)
-      if (logicError instanceof LogicError) {
-        let currentLine = logicError.teal_line - logicError.lines - 1
-        const stackWithLines = logicError.stack
-          ?.split('\n')
-          .map((line) => `${(currentLine += 1)}: ${line}`)
-          .join('\n')
-        Config.logger.error(`${logicError.message}\n\n${stackWithLines}`)
-      }
-      throw logicError
+  private handleCallErrors = async (e: Error) => {
+    // Only handle errors for this app.
+    const appIdString = `app=${this._appId.toString()}`
+    if (!e.message.includes(appIdString)) return e
+
+    const logicError = await this.exposeLogicError(e)
+    if (logicError instanceof LogicError) {
+      let currentLine = logicError.teal_line - logicError.lines - 1
+      const stackWithLines = logicError.stack
+        ?.split('\n')
+        .map((line) => `${(currentLine += 1)}: ${line}`)
+        .join('\n')
+      Config.logger.error(`${logicError.message}\n\n${stackWithLines}`)
     }
+
+    return logicError
   }
 
   private getBoxMethods() {

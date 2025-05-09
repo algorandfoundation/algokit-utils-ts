@@ -1,4 +1,6 @@
 const LOGIC_ERROR = /transaction ([A-Z0-9]+): logic eval error: (.*). Details: .*pc=([0-9]+).*/
+// inner tx 0 failed: logic eval error: err opcode executed. Details: app=6248, pc=29, opcodes=tx
+const INNER_LOGIC_ERROR = /inner tx (\d+) failed:.*?pc=([0-9]+)/
 
 /**
  * Details about a smart contract logic error
@@ -26,13 +28,15 @@ export class LogicError extends Error {
   static parseLogicError(error: any): LogicErrorDetails | undefined {
     const errorMessage = error.message
     const res = LOGIC_ERROR.exec(errorMessage)
+    const innerRes = INNER_LOGIC_ERROR.exec(errorMessage)
+
     if (res === null || res.length <= 3) return undefined
 
     return {
       txId: res[1],
       msg: res[2],
       desc: errorMessage,
-      pc: parseInt(res[3] ? res[3] : '0'),
+      pc: parseInt(innerRes?.[2] ?? res[3] ?? '0'),
       traces: error.traces,
     } as LogicErrorDetails
   }

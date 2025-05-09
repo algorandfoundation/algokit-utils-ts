@@ -23,6 +23,7 @@ A client that brokers easy access to Algorand functionality.
 - [\_cachedSuggestedParamsTimeout](types_algorand_client.AlgorandClient.md#_cachedsuggestedparamstimeout)
 - [\_clientManager](types_algorand_client.AlgorandClient.md#_clientmanager)
 - [\_defaultValidityWindow](types_algorand_client.AlgorandClient.md#_defaultvaliditywindow)
+- [\_errorTransformers](types_algorand_client.AlgorandClient.md#_errortransformers)
 - [\_transactionCreator](types_algorand_client.AlgorandClient.md#_transactioncreator)
 - [\_transactionSender](types_algorand_client.AlgorandClient.md#_transactionsender)
 
@@ -40,12 +41,14 @@ A client that brokers easy access to Algorand functionality.
 
 - [getSuggestedParams](types_algorand_client.AlgorandClient.md#getsuggestedparams)
 - [newGroup](types_algorand_client.AlgorandClient.md#newgroup)
+- [registerErrorTransformer](types_algorand_client.AlgorandClient.md#registererrortransformer)
 - [setDefaultSigner](types_algorand_client.AlgorandClient.md#setdefaultsigner)
 - [setDefaultValidityWindow](types_algorand_client.AlgorandClient.md#setdefaultvaliditywindow)
 - [setSigner](types_algorand_client.AlgorandClient.md#setsigner)
 - [setSignerFromAccount](types_algorand_client.AlgorandClient.md#setsignerfromaccount)
 - [setSuggestedParamsCache](types_algorand_client.AlgorandClient.md#setsuggestedparamscache)
 - [setSuggestedParamsCacheTimeout](types_algorand_client.AlgorandClient.md#setsuggestedparamscachetimeout)
+- [unregisterErrorTransformer](types_algorand_client.AlgorandClient.md#unregistererrortransformer)
 - [defaultLocalNet](types_algorand_client.AlgorandClient.md#defaultlocalnet)
 - [fromClients](types_algorand_client.AlgorandClient.md#fromclients)
 - [fromConfig](types_algorand_client.AlgorandClient.md#fromconfig)
@@ -71,7 +74,7 @@ A client that brokers easy access to Algorand functionality.
 
 #### Defined in
 
-[src/types/algorand-client.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L33)
+[src/types/algorand-client.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L40)
 
 ## Properties
 
@@ -165,6 +168,20 @@ ___
 
 ___
 
+### \_errorTransformers
+
+• `Private` **\_errorTransformers**: `Set`\<[`ErrorTransformer`](../modules/types_composer.md#errortransformer)\>
+
+A set of error transformers to use when an error is caught in simulate or execute
+`registerErrorTransformer` and `unregisterErrorTransformer` can be used to add and remove
+error transformers from the set.
+
+#### Defined in
+
+[src/types/algorand-client.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L38)
+
+___
+
 ### \_transactionCreator
 
 • `Private` **\_transactionCreator**: [`AlgorandClientTransactionCreator`](types_algorand_client_transaction_creator.AlgorandClientTransactionCreator.md)
@@ -205,7 +222,7 @@ const accountManager = AlgorandClient.mainNet().account;
 
 #### Defined in
 
-[src/types/algorand-client.ts:175](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L175)
+[src/types/algorand-client.ts:182](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L182)
 
 ___
 
@@ -229,7 +246,7 @@ const appManager = AlgorandClient.mainNet().app;
 
 #### Defined in
 
-[src/types/algorand-client.ts:195](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L195)
+[src/types/algorand-client.ts:202](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L202)
 
 ___
 
@@ -253,7 +270,7 @@ const deployer = AlgorandClient.mainNet().appDeployer;
 
 #### Defined in
 
-[src/types/algorand-client.ts:205](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L205)
+[src/types/algorand-client.ts:212](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L212)
 
 ___
 
@@ -277,7 +294,7 @@ const assetManager = AlgorandClient.mainNet().asset;
 
 #### Defined in
 
-[src/types/algorand-client.ts:185](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L185)
+[src/types/algorand-client.ts:192](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L192)
 
 ___
 
@@ -301,7 +318,7 @@ const clientManager = AlgorandClient.mainNet().client;
 
 #### Defined in
 
-[src/types/algorand-client.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L165)
+[src/types/algorand-client.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L172)
 
 ___
 
@@ -329,7 +346,7 @@ const payment = await AlgorandClient.mainNet().createTransaction.payment({
 
 #### Defined in
 
-[src/types/algorand-client.ts:250](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L250)
+[src/types/algorand-client.ts:269](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L269)
 
 ___
 
@@ -357,7 +374,7 @@ const result = await AlgorandClient.mainNet().send.payment({
 
 #### Defined in
 
-[src/types/algorand-client.ts:236](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L236)
+[src/types/algorand-client.ts:255](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L255)
 
 ## Methods
 
@@ -381,7 +398,7 @@ const params = await AlgorandClient.mainNet().getSuggestedParams();
 
 #### Defined in
 
-[src/types/algorand-client.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L144)
+[src/types/algorand-client.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L151)
 
 ___
 
@@ -406,7 +423,30 @@ const result = await composer.addTransaction(payment).send()
 
 #### Defined in
 
-[src/types/algorand-client.ts:216](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L216)
+[src/types/algorand-client.ts:234](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L234)
+
+___
+
+### registerErrorTransformer
+
+▸ **registerErrorTransformer**(`transformer`): `void`
+
+Register a function that will be used to transform an error caught when simulating or executing
+composed transaction groups made from `newGroup`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `transformer` | [`ErrorTransformer`](../modules/types_composer.md#errortransformer) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/types/algorand-client.ts:220](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L220)
 
 ___
 
@@ -437,7 +477,7 @@ const algorand = AlgorandClient.mainNet().setDefaultSigner(signer)
 
 #### Defined in
 
-[src/types/algorand-client.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L67)
+[src/types/algorand-client.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L74)
 
 ___
 
@@ -467,7 +507,7 @@ const algorand = AlgorandClient.mainNet().setDefaultValidityWindow(1000);
 
 #### Defined in
 
-[src/types/algorand-client.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L52)
+[src/types/algorand-client.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L59)
 
 ___
 
@@ -499,7 +539,7 @@ const algorand = AlgorandClient.mainNet().setSigner(signer.addr, signer.signer)
 
 #### Defined in
 
-[src/types/algorand-client.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L103)
+[src/types/algorand-client.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L110)
 
 ___
 
@@ -534,7 +574,7 @@ const accountManager = AlgorandClient.mainNet()
 
 #### Defined in
 
-[src/types/algorand-client.ts:87](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L87)
+[src/types/algorand-client.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L94)
 
 ___
 
@@ -565,7 +605,7 @@ const algorand = AlgorandClient.mainNet().setSuggestedParamsCache(suggestedParam
 
 #### Defined in
 
-[src/types/algorand-client.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L118)
+[src/types/algorand-client.ts:125](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L125)
 
 ___
 
@@ -595,7 +635,27 @@ const algorand = AlgorandClient.mainNet().setSuggestedParamsCacheTimeout(10_000)
 
 #### Defined in
 
-[src/types/algorand-client.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L133)
+[src/types/algorand-client.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L140)
+
+___
+
+### unregisterErrorTransformer
+
+▸ **unregisterErrorTransformer**(`transformer`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `transformer` | [`ErrorTransformer`](../modules/types_composer.md#errortransformer) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/types/algorand-client.ts:224](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L224)
 
 ___
 
@@ -619,7 +679,7 @@ const algorand = AlgorandClient.defaultLocalNet();
 
 #### Defined in
 
-[src/types/algorand-client.ts:262](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L262)
+[src/types/algorand-client.ts:281](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L281)
 
 ___
 
@@ -649,7 +709,7 @@ const algorand = AlgorandClient.fromClients({ algod, indexer, kmd });
 
 #### Defined in
 
-[src/types/algorand-client.ts:305](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L305)
+[src/types/algorand-client.ts:324](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L324)
 
 ___
 
@@ -679,7 +739,7 @@ const client = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig
 
 #### Defined in
 
-[src/types/algorand-client.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L339)
+[src/types/algorand-client.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L358)
 
 ___
 
@@ -716,7 +776,7 @@ const client = AlgorandClient.fromEnvironment();
 
 #### Defined in
 
-[src/types/algorand-client.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L328)
+[src/types/algorand-client.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L347)
 
 ___
 
@@ -740,7 +800,7 @@ const algorand = AlgorandClient.mainNet();
 
 #### Defined in
 
-[src/types/algorand-client.ts:290](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L290)
+[src/types/algorand-client.ts:309](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L309)
 
 ___
 
@@ -764,4 +824,4 @@ const algorand = AlgorandClient.testNet();
 
 #### Defined in
 
-[src/types/algorand-client.ts:276](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L276)
+[src/types/algorand-client.ts:295](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client.ts#L295)
