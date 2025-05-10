@@ -26,7 +26,9 @@ Parameters that are passed in when updating an app.
 - [atc](types_app.UpdateAppParams.md#atc)
 - [clearStateProgram](types_app.UpdateAppParams.md#clearstateprogram)
 - [fee](types_app.UpdateAppParams.md#fee)
+- [firstValid](types_app.UpdateAppParams.md#firstvalid)
 - [from](types_app.UpdateAppParams.md#from)
+- [lastValid](types_app.UpdateAppParams.md#lastvalid)
 - [maxFee](types_app.UpdateAppParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_app.UpdateAppParams.md#maxroundstowaitforconfirmation)
 - [note](types_app.UpdateAppParams.md#note)
@@ -130,6 +132,22 @@ CreateOrUpdateAppParams.fee
 
 ___
 
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod
+
+#### Inherited from
+
+CreateOrUpdateAppParams.firstValid
+
+#### Defined in
+
+[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
+
+___
+
 ### from
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -143,6 +161,22 @@ CreateOrUpdateAppParams.from
 #### Defined in
 
 [src/types/app.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app.ts#L133)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod
+
+#### Inherited from
+
+CreateOrUpdateAppParams.lastValid
+
+#### Defined in
+
+[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
 
 ___
 

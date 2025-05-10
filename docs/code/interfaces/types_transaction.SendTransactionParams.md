@@ -30,6 +30,8 @@ The sending configuration for a transaction
 
 - [atc](types_transaction.SendTransactionParams.md#atc)
 - [fee](types_transaction.SendTransactionParams.md#fee)
+- [firstValid](types_transaction.SendTransactionParams.md#firstvalid)
+- [lastValid](types_transaction.SendTransactionParams.md#lastvalid)
 - [maxFee](types_transaction.SendTransactionParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transaction.SendTransactionParams.md#maxroundstowaitforconfirmation)
 - [populateAppCallResources](types_transaction.SendTransactionParams.md#populateappcallresources)
@@ -60,6 +62,30 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 #### Defined in
 
 [src/types/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L40)
+
+___
+
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod
+
+#### Defined in
+
+[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod
+
+#### Defined in
+
+[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
 
 ___
 

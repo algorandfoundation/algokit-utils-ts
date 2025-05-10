@@ -44,6 +44,10 @@ export interface SendTransactionParams {
   maxRoundsToWaitForConfirmation?: number
   /** Whether to use simulate to automatically populate app call resources in the txn objects. Defaults to true when there are app calls in the group.  */
   populateAppCallResources?: boolean
+  /** If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod */
+  firstValid?: number
+  /** If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod */
+  lastValid?: number
 }
 
 /** Result from sending a single transaction. */

@@ -48,7 +48,7 @@ Result from sending a single transaction.
 
 #### Defined in
 
-[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
+[src/types/transaction.ts:54](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L54)
 
 ___
 
@@ -68,7 +68,7 @@ many types of accounts, including:
 
 #### Defined in
 
-[src/types/transaction.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L108)
+[src/types/transaction.ts:112](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L112)
 
 ___
 

@@ -24,6 +24,8 @@ Parameters for `assetOptOut` call.
 - [atc](types_asset.AssetOptOutParams.md#atc)
 - [ensureZeroBalance](types_asset.AssetOptOutParams.md#ensurezerobalance)
 - [fee](types_asset.AssetOptOutParams.md#fee)
+- [firstValid](types_asset.AssetOptOutParams.md#firstvalid)
+- [lastValid](types_asset.AssetOptOutParams.md#lastvalid)
 - [lease](types_asset.AssetOptOutParams.md#lease)
 - [maxFee](types_asset.AssetOptOutParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_asset.AssetOptOutParams.md#maxroundstowaitforconfirmation)
@@ -121,6 +123,38 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 #### Defined in
 
 [src/types/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L40)
+
+___
+
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod
+
+#### Inherited from
+
+[AssetOptInParams](types_asset.AssetOptInParams.md).[firstValid](types_asset.AssetOptInParams.md#firstvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod
+
+#### Inherited from
+
+[AssetOptInParams](types_asset.AssetOptInParams.md).[lastValid](types_asset.AssetOptInParams.md#lastvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
 
 ___
 

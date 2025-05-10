@@ -37,7 +37,7 @@ The response from sending and waiting for the primary transaction
 
 #### Defined in
 
-[src/types/transaction.ts:93](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L93)
+[src/types/transaction.ts:97](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L97)
 
 ___
 
@@ -53,7 +53,7 @@ The response from sending and waiting for the transactions
 
 #### Defined in
 
-[src/types/transaction.ts:95](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L95)
+[src/types/transaction.ts:99](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L99)
 
 ___
 
@@ -69,7 +69,7 @@ The transaction
 
 #### Defined in
 
-[src/types/transaction.ts:55](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L55)
+[src/types/transaction.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L59)
 
 ___
 
@@ -85,4 +85,4 @@ The transactions that have been prepared and/or sent
 
 #### Defined in
 
-[src/types/transaction.ts:63](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L63)
+[src/types/transaction.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L67)

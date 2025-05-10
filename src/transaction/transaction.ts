@@ -217,6 +217,11 @@ export const sendTransaction = async function (
   const { transaction, from, sendParams } = send
   const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, atc } = sendParams ?? {}
 
+  // @ts-expect-error firstValid is marked as read only
+  if (sendParams?.firstValid) transaction.firstValid = sendParams.firstValid
+  // @ts-expect-error lastValid is marked as read only
+  if (sendParams?.lastValid) transaction.lastValid = sendParams.lastValid
+
   controlFees(transaction, { fee, maxFee })
 
   if (atc) {

@@ -35,7 +35,7 @@ This additional context is used and must be supplied when coverAppCallInnerTrans
 
 #### Defined in
 
-[src/types/transaction.ts:167](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L167)
+[src/types/transaction.ts:171](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L171)
 
 ___
 
@@ -47,7 +47,7 @@ The `AtomicTransactionComposer` with transactions loaded to send
 
 #### Defined in
 
-[src/types/transaction.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L157)
+[src/types/transaction.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L161)
 
 ___
 
@@ -63,7 +63,7 @@ Whether to use simulate to automatically calculate required app call inner trans
 
 #### Defined in
 
-[src/types/transaction.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L142)
+[src/types/transaction.ts:146](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L146)
 
 ___
 
@@ -79,7 +79,7 @@ The number of rounds to wait for confirmation. By default until the latest lastV
 
 #### Defined in
 
-[src/types/transaction.ts:136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L136)
+[src/types/transaction.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L140)
 
 ___
 
@@ -95,7 +95,7 @@ Whether to use simulate to automatically populate app call resources in the txn 
 
 #### Defined in
 
-[src/types/transaction.ts:140](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L140)
+[src/types/transaction.ts:144](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L144)
 
 ___
 
@@ -110,7 +110,7 @@ Any parameters to control the semantics of the send to the network
 
 #### Defined in
 
-[src/types/transaction.ts:161](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L161)
+[src/types/transaction.ts:165](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L165)
 
 ___
 
@@ -126,4 +126,4 @@ Whether to suppress log messages from transaction send, default: do not suppress
 
 #### Defined in
 
-[src/types/transaction.ts:138](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L138)
+[src/types/transaction.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L142)

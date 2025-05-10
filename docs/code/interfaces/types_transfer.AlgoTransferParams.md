@@ -21,7 +21,9 @@ Parameters for `transferAlgos` call.
 - [amount](types_transfer.AlgoTransferParams.md#amount)
 - [atc](types_transfer.AlgoTransferParams.md#atc)
 - [fee](types_transfer.AlgoTransferParams.md#fee)
+- [firstValid](types_transfer.AlgoTransferParams.md#firstvalid)
 - [from](types_transfer.AlgoTransferParams.md#from)
+- [lastValid](types_transfer.AlgoTransferParams.md#lastvalid)
 - [lease](types_transfer.AlgoTransferParams.md#lease)
 - [maxFee](types_transfer.AlgoTransferParams.md#maxfee)
 - [maxRoundsToWaitForConfirmation](types_transfer.AlgoTransferParams.md#maxroundstowaitforconfirmation)
@@ -79,6 +81,22 @@ The flat fee you want to pay, useful for covering extra fees in a transaction gr
 
 ___
 
+### firstValid
+
+• `Optional` **firstValid**: `number`
+
+If provided, explicitly set the first round this transaction will be valid. If not set, the suggested round will be retrieved from algod
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[firstValid](types_transaction.SendTransactionParams.md#firstvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L48)
+
+___
+
 ### from
 
 • **from**: [`SendTransactionFrom`](../modules/types_transaction.md#sendtransactionfrom)
@@ -88,6 +106,22 @@ The account that will send the Algo
 #### Defined in
 
 [src/types/transfer.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transfer.ts#L10)
+
+___
+
+### lastValid
+
+• `Optional` **lastValid**: `number`
+
+If provided, explicitly set the last round this transaction will be valid.  If not set, the suggested round will be retrieved from algod
+
+#### Inherited from
+
+[SendTransactionParams](types_transaction.SendTransactionParams.md).[lastValid](types_transaction.SendTransactionParams.md#lastvalid)
+
+#### Defined in
+
+[src/types/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L50)
 
 ___
 
