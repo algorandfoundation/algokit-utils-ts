@@ -114,6 +114,10 @@
       },
       {
         "name": "release"
+      },
+      {
+        "name": "algokit-core",
+        "prerelease": "alpha"
       }
     ],
     "plugins": [
