@@ -52,7 +52,7 @@ jobs:
           # Add untracked files as empty so they come up in diff
           git add -N .
           # Print changed files and error out if there are changes after generating docs
-          git diff --exit-code --name-only
+          git diff --exit-code
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
