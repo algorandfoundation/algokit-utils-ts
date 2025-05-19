@@ -25,8 +25,8 @@ jobs:
         npx --yes wait-on tcp:4001 -t 30000
       audit-script: |
         npm run audit
-      secrets: |
-        npm-auth-token: ${{ secrets.NPM_AUTH_TOKEN }}
+    secrets:
+      npm-auth-token: ${{ secrets.NPM_AUTH_TOKEN }}
 
   check_docs:
     runs-on: ubuntu-latest
