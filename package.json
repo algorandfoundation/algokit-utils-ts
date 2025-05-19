@@ -117,7 +117,7 @@
       },
       {
         "name": "algokit-core",
-        "prerelease": "alpha"
+        "prerelease": "future"
       }
     ],
     "plugins": [
