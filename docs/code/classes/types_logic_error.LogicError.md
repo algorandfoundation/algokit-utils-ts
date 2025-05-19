@@ -62,7 +62,7 @@ Error.constructor
 
 #### Defined in
 
-[src/types/logic-error.ts:52](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L52)
+[src/types/logic-error.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L56)
 
 ## Properties
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L40)
+[src/types/logic-error.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L42)
+[src/types/logic-error.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L46)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L41)
+[src/types/logic-error.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L45)
 
 ___
 
@@ -148,7 +148,7 @@ Error.stack
 
 #### Defined in
 
-[src/types/logic-error.ts:44](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L44)
+[src/types/logic-error.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L48)
 
 ___
 
@@ -158,7 +158,7 @@ ___
 
 #### Defined in
 
-[src/types/logic-error.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L43)
+[src/types/logic-error.ts:47](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L47)
 
 ___
 
@@ -258,4 +258,4 @@ The logic error details if any, or undefined
 
 #### Defined in
 
-[src/types/logic-error.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L26)
+[src/types/logic-error.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/logic-error.ts#L28)

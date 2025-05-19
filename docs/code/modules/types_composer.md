@@ -34,6 +34,7 @@
 - [AssetTransferParams](types_composer.md#assettransferparams)
 - [CommonAppCallParams](types_composer.md#commonappcallparams)
 - [CommonTransactionParams](types_composer.md#commontransactionparams)
+- [ErrorTransformer](types_composer.md#errortransformer)
 - [OfflineKeyRegistrationParams](types_composer.md#offlinekeyregistrationparams)
 - [OnlineKeyRegistrationParams](types_composer.md#onlinekeyregistrationparams)
 - [PaymentParams](types_composer.md#paymentparams)
@@ -319,6 +320,35 @@ Common parameters for defining a transaction.
 
 ___
 
+### ErrorTransformer
+
+Ƭ **ErrorTransformer**: (`error`: `Error`) => `Promise`\<`Error`\>
+
+A function that transforms an error into a new error.
+
+In most cases, an ErrorTransformer should first check if it can or should transform the error
+and return the input error if it cannot or should not transform it.
+
+#### Type declaration
+
+▸ (`error`): `Promise`\<`Error`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `error` | `Error` |
+
+##### Returns
+
+`Promise`\<`Error`\>
+
+#### Defined in
+
+[src/types/composer.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L484)
+
+___
+
 ### OfflineKeyRegistrationParams
 
 Ƭ **OfflineKeyRegistrationParams**: [`CommonTransactionParams`](types_composer.md#commontransactionparams) & \{ `preventAccountFromEverParticipatingAgain?`: `boolean`  }
@@ -403,14 +433,15 @@ Parameters to create an `TransactionComposer`.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `algod` | `algosdk.Algodv2` | The algod client to use to get suggestedParams and send the transaction group |
-| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified than an ephemeral one will be created. |
+| `appManager?` | [`AppManager`](../classes/types_app_manager.AppManager.md) | An existing `AppManager` to use to manage app compilation and cache compilation results. If not specified then an ephemeral one will be created. |
 | `defaultValidityWindow?` | `bigint` | How many rounds a transaction should be valid for by default; if not specified then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet). |
+| `errorTransformers?` | [`ErrorTransformer`](types_composer.md#errortransformer)[] | An array of error transformers to use when an error is caught in simulate or execute callbacks can later be registered with `registerErrorTransformer` |
 | `getSigner` | (`address`: `string` \| `Address`) => `algosdk.TransactionSigner` | - |
 | `getSuggestedParams?` | () => `Promise`\<`algosdk.SuggestedParams`\> | - |
 
 #### Defined in
 
-[src/types/composer.ts:479](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L479)
+[src/types/composer.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L499)
 
 ___
 

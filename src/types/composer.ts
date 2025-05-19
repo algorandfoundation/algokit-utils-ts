@@ -476,6 +476,26 @@ export type Txn =
   | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
+/**
+ * A function that transforms an error into a new error.
+ *
+ * In most cases, an ErrorTransformer should first check if it can or should transform the error
+ * and return the input error if it cannot or should not transform it.
+ */
+export type ErrorTransformer = (error: Error) => Promise<Error>
+
+class InvalidErrorTransformerValue extends Error {
+  constructor(originalError: unknown, value: unknown) {
+    super(`An error transformer returned a non-error value: ${value}. The original error before any transformation: ${originalError}`)
+  }
+}
+
+class ErrorTransformerError extends Error {
+  constructor(originalError: Error, cause: unknown) {
+    super(`An error transformer threw an error: ${cause}. The original error before any transformation: ${originalError} `, { cause })
+  }
+}
+
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
@@ -490,9 +510,14 @@ export type TransactionComposerParams = {
   defaultValidityWindow?: bigint
   /** An existing `AppManager` to use to manage app compilation and cache compilation results.
    *
-   * If not specified than an ephemeral one will be created.
+   * If not specified then an ephemeral one will be created.
    */
   appManager?: AppManager
+  /**
+   * An array of error transformers to use when an error is caught in simulate or execute
+   * callbacks can later be registered with `registerErrorTransformer`
+   */
+  errorTransformers?: ErrorTransformer[]
 }
 
 /** Represents a Transaction with additional context that was used to build that transaction. */
@@ -552,6 +577,30 @@ export class TransactionComposer {
 
   private appManager: AppManager
 
+  private errorTransformers: ErrorTransformer[]
+
+  private async transformError(originalError: unknown): Promise<unknown> {
+    // Transformers only work with Error instances, so immediately return anything else
+    if (!(originalError instanceof Error)) {
+      return originalError
+    }
+
+    let transformedError = originalError
+
+    for (const transformer of this.errorTransformers) {
+      try {
+        transformedError = await transformer(transformedError)
+        if (!(transformedError instanceof Error)) {
+          return new InvalidErrorTransformerValue(originalError, transformedError)
+        }
+      } catch (errorFromTransformer) {
+        return new ErrorTransformerError(originalError, errorFromTransformer)
+      }
+    }
+
+    return transformedError
+  }
+
   /**
    * Create a `TransactionComposer`.
    * @param params The configuration for this composer
@@ -565,6 +614,17 @@ export class TransactionComposer {
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
+    this.errorTransformers = params.errorTransformers ?? []
+  }
+
+  /**
+   * Register a function that will be used to transform an error caught when simulating or executing
+   *
+   * @returns The composer so you can chain method calls
+   */
+  registerErrorTransformer(transformer: ErrorTransformer) {
+    this.errorTransformers.push(transformer)
+    return this
   }
 
   /**
@@ -1951,22 +2011,26 @@ export class TransactionComposer {
       waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
     }
 
-    return await sendAtomicTransactionComposer(
-      {
-        atc: this.atc,
-        suppressLog: params?.suppressLog,
-        maxRoundsToWaitForConfirmation: waitRounds,
-        populateAppCallResources: params?.populateAppCallResources,
-        coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
-        additionalAtcContext: params?.coverAppCallInnerTransactionFees
-          ? {
-              maxFees: this.txnMaxFees,
-              suggestedParams: suggestedParams!,
-            }
-          : undefined,
-      },
-      this.algod,
-    )
+    try {
+      return await sendAtomicTransactionComposer(
+        {
+          atc: this.atc,
+          suppressLog: params?.suppressLog,
+          maxRoundsToWaitForConfirmation: waitRounds,
+          populateAppCallResources: params?.populateAppCallResources,
+          coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
+          additionalAtcContext: params?.coverAppCallInnerTransactionFees
+            ? {
+                maxFees: this.txnMaxFees,
+                suggestedParams: suggestedParams!,
+              }
+            : undefined,
+        },
+        this.algod,
+      )
+    } catch (originalError: unknown) {
+      throw await this.transformError(originalError)
+    }
   }
 
   /**
@@ -2064,9 +2128,7 @@ export class TransactionComposer {
         await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(error as any).simulateResponse = simulateResponse
-      throw error
+      throw await this.transformError(error)
     }
 
     if (Config.debug && Config.traceAll) {
