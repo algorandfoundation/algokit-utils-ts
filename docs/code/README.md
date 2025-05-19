@@ -12,6 +12,7 @@
 - [types/account-manager](modules/types_account_manager.md)
 - [types/account-manager.spec](modules/types_account_manager_spec.md)
 - [types/algo-http-client-with-retry](modules/types_algo_http_client_with_retry.md)
+- [types/algokit-core-bridge](modules/types_algokit_core_bridge.md)
 - [types/algorand-client](modules/types_algorand_client.md)
 - [types/algorand-client-transaction-creator](modules/types_algorand_client_transaction_creator.md)
 - [types/algorand-client-transaction-sender](modules/types_algorand_client_transaction_sender.md)
