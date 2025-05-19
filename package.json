@@ -61,9 +61,9 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
-    "@algorand/algod-client": "file:../algokit-core/api/api_clients/typescript/algorand-algod-client-0.0.1.tgz",
+    "@algorandfoundation/algokit-algod-api": "file:../algokit-core/algorandfoundation-algokit-algod-api-0.0.1.tgz",
+    "@algorandfoundation/algokit-transact": "file:../algokit-core/algorandfoundation-algokit-transact-0.1.0.tgz",
     "@algorandfoundation/tealscript": "^0.106.3",
-    "algokit_transact": "file:../algokit-core/algokit_transact-0.1.0.tgz",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {

@@ -1,5 +1,5 @@
-import * as algodApi from '@algorand/algod-client'
-import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from 'algokit_transact'
+import * as algodApi from '@algorandfoundation/algokit-algod-api'
+import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
 import algosdk, { Address, TokenHeader } from 'algosdk'
 
 function getAlgokitCoreAddress(address: string | Address) {
@@ -18,19 +18,17 @@ export function buildPayment({
   suggestedParams,
 }: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams) {
   const txnModel: AlgokitCoreTransaction = {
-    header: {
-      sender: getAlgokitCoreAddress(sender),
-      transactionType: 'Payment',
-      fee: BigInt(suggestedParams.fee),
-      firstValid: BigInt(suggestedParams.firstValid),
-      lastValid: BigInt(suggestedParams.lastValid),
-      genesisHash: suggestedParams.genesisHash,
-      genesisId: suggestedParams.genesisID,
-      rekeyTo: rekeyTo ? getAlgokitCoreAddress(rekeyTo) : undefined,
-      note: note,
-      lease: lease,
-    },
-    payFields: {
+    sender: getAlgokitCoreAddress(sender),
+    transactionType: 'Payment',
+    fee: BigInt(suggestedParams.fee),
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisID,
+    rekeyTo: rekeyTo ? getAlgokitCoreAddress(rekeyTo) : undefined,
+    note: note,
+    lease: lease,
+    payment: {
       amount: BigInt(amount),
       receiver: getAlgokitCoreAddress(receiver),
       closeRemainderTo: closeRemainderTo ? getAlgokitCoreAddress(closeRemainderTo) : undefined,
@@ -49,7 +47,7 @@ export function buildPayment({
       fee = minFee
     }
   }
-  txnModel.header.fee = fee
+  txnModel.fee = fee
 
   return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnModel))
 }

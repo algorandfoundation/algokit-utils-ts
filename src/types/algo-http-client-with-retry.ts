@@ -1,4 +1,4 @@
-import { AlgodApi } from '@algorand/algod-client'
+import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
 import {
   BaseHTTPClientError,
   decodeSignedTransaction,
