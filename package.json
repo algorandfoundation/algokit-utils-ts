@@ -4,6 +4,10 @@
   "private": false,
   "description": "A set of core Algorand utilities written in TypeScript and released via npm that make it easier to build solutions on Algorand.",
   "author": "Algorand Foundation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/algorandfoundation/algokit-utils-ts.git"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=20.0"
@@ -61,6 +65,8 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
+    "@algorandfoundation/algokit-algod-api": "1.0.0-alpha.3",
+    "@algorandfoundation/algokit-transact": "1.0.0-alpha.5",
     "@algorandfoundation/tealscript": "^0.106.3",
     "buffer": "^6.0.3"
   },
@@ -112,6 +118,10 @@
       },
       {
         "name": "release"
+      },
+      {
+        "name": "algokit-core",
+        "prerelease": "future"
       }
     ],
     "plugins": [
@@ -170,5 +180,8 @@
       ],
       "@semantic-release/github"
     ]
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }

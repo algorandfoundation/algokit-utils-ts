@@ -1,9 +1,29 @@
-import { IntDecoding, parseJSON, stringifyJSON } from 'algosdk'
+import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
+import {
+  BaseHTTPClientError,
+  decodeSignedTransaction,
+  IntDecoding,
+  parseJSON,
+  SignedTransaction,
+  stringifyJSON,
+  TokenHeader,
+  TransactionType,
+} from 'algosdk'
 import { BaseHTTPClientResponse, Query, URLTokenBaseHTTPClient } from 'algosdk/client'
 import { Config } from '../config'
+import { buildAlgoKitCoreAlgodClient } from './algokit-core-bridge'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */
 export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
+  private _algoKitCoreAlgod: AlgodApi
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(tokenHeader: TokenHeader, baseServer: string, port?: string | number, defaultHeaders?: Record<string, any>) {
+    super(tokenHeader, baseServer, port, defaultHeaders)
+
+    this._algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(this.buildBaseServerUrl(baseServer, port), tokenHeader)
+  }
+
   private static readonly MAX_TRIES = 5
   private static readonly MAX_BACKOFF_MS = 10000
 
@@ -22,6 +42,21 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     'EPROTO', // We get this intermittently with AlgoNode API
   ]
 
+  private buildBaseServerUrl(baseServer: string, port?: string | number) {
+    // This logic is copied from algosdk to make sure that we have the same base server config
+
+    // Append a trailing slash so we can use relative paths. Without the trailing
+    // slash, the last path segment will be replaced by the relative path. See
+    // usage in `addressWithPath`.
+    const fixedBaseServer = baseServer.endsWith('/') ? baseServer : `${baseServer}/`
+    const baseServerURL = new URL(fixedBaseServer)
+    if (typeof port !== 'undefined') {
+      baseServerURL.port = port.toString()
+    }
+
+    return baseServerURL
+  }
+
   private async callWithRetry(func: () => Promise<BaseHTTPClientResponse>): Promise<BaseHTTPClientResponse> {
     let response: BaseHTTPClientResponse | undefined
     let numTries = 1
@@ -33,6 +68,7 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
         if (numTries >= AlgoHttpClientWithRetry.MAX_TRIES) {
           throw err
         }
+
         // Only retry for one of the hardcoded conditions
         if (
           !(
@@ -55,6 +91,24 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
   }
 
   async get(relativePath: string, query?: Query<string>, requestHeaders: Record<string, string> = {}): Promise<BaseHTTPClientResponse> {
+    if (relativePath.startsWith('/v2/transactions/pending/')) {
+      const possibleTxnId = relativePath.replace('/v2/transactions/pending/', '').replace(/\/+$/, '')
+      // TODO: test for possibleTxnId
+      if (possibleTxnId) {
+        return await this.callWithRetry(async () => {
+          const httpInfo = await this._algoKitCoreAlgod.pendingTransactionInformationResponse(possibleTxnId, 'msgpack')
+          const binary = await httpInfo.body.binary()
+          const arrayBuffer = await binary.arrayBuffer()
+          const uint8Array = new Uint8Array(arrayBuffer)
+          return {
+            status: httpInfo.httpStatusCode,
+            headers: httpInfo.headers,
+            body: uint8Array,
+          }
+        })
+      }
+    }
+
     const response = await this.callWithRetry(() => super.get(relativePath, query, requestHeaders))
     if (
       relativePath.startsWith('/v2/accounts/') &&
@@ -94,6 +148,58 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     query?: Query<string>,
     requestHeaders: Record<string, string> = {},
   ): Promise<BaseHTTPClientResponse> {
+    if (relativePath.startsWith('/v2/transactions')) {
+      let signedTxn: SignedTransaction | undefined = undefined
+      try {
+        // Try to decode the data into a single transaction
+        // This will fail when sending a transaction group, in that case, we will ignore the error
+        signedTxn = decodeSignedTransaction(data)
+      } catch {
+        // Ignore errors here
+      }
+      if (signedTxn && signedTxn.txn.type === TransactionType.pay) {
+        return await this.callWithRetry(async () => {
+          const responseContext = await this._algoKitCoreAlgod.rawTransactionResponse(new File([data], ''))
+
+          const binary = await responseContext.body.binary()
+          const arrayBuffer = await binary.arrayBuffer()
+          const uint8Array = new Uint8Array(arrayBuffer)
+
+          if (responseContext.httpStatusCode !== 200) {
+            // This logic is copied from algosdk to make sure that we produce the same errors
+            let bodyErrorMessage: string | undefined
+
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const decoded: Record<string, any> = JSON.parse(new TextDecoder().decode(uint8Array))
+              if (decoded.message) {
+                bodyErrorMessage = decoded.message
+              }
+            } catch {
+              // ignore any error that happened while we are parsing the error response
+            }
+
+            let message = `Network request error. Received status ${responseContext.httpStatusCode} (${responseContext.httpStatusText})`
+            if (bodyErrorMessage) {
+              message += `: ${bodyErrorMessage}`
+            }
+
+            throw new URLTokenBaseHTTPError(message, {
+              body: uint8Array,
+              status: responseContext.httpStatusCode,
+              headers: responseContext.headers,
+            })
+          }
+
+          return {
+            status: responseContext.httpStatusCode,
+            statusText: responseContext.httpStatusText,
+            headers: responseContext.headers,
+            body: uint8Array,
+          }
+        })
+      }
+    }
     return await this.callWithRetry(() => super.post(relativePath, data, query, requestHeaders))
   }
 
@@ -104,5 +210,17 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
     requestHeaders: Record<string, string> = {},
   ): Promise<BaseHTTPClientResponse> {
     return await this.callWithRetry(() => super.delete(relativePath, data, query, requestHeaders))
+  }
+}
+
+// This is a copy of URLTokenBaseHTTPError from algosdk
+class URLTokenBaseHTTPError extends Error implements BaseHTTPClientError {
+  constructor(
+    message: string,
+    public response: BaseHTTPClientResponse,
+  ) {
+    super(message)
+    this.name = 'URLTokenBaseHTTPError'
+    this.response = response
   }
 }

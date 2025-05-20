@@ -3,6 +3,7 @@ import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
+import { buildPayment as buildPaymentWithAlgoKitCore } from './algokit-core-bridge'
 import { AlgoAmount } from './amount'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
@@ -1682,7 +1683,7 @@ export class TransactionComposer {
   }
 
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
-    return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
+    return this.commonTxnBuildStep(buildPaymentWithAlgoKitCore, params, {
       sender: params.sender,
       receiver: params.receiver,
       amount: params.amount.microAlgo,
