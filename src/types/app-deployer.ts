@@ -25,6 +25,7 @@ import {
 } from './composer'
 import { Expand } from './expand'
 import { ConfirmedTransactionResult, SendParams } from './transaction'
+import { AppClient } from './app-client'
 
 /** Params to specify an update transaction for an app deployment */
 export type DeployAppUpdateParams = Expand<Omit<AppUpdateParams, 'appId' | 'approvalProgram' | 'clearStateProgram'>>
@@ -252,18 +253,18 @@ export class AppDeployer {
       )
       const result = await ('method' in updateParams
         ? this._transactionSender.appUpdateMethodCall({
+            ...updateParams,
+            ...sendParams,
             appId: existingApp.appId,
             approvalProgram,
             clearStateProgram,
-            ...updateParams,
-            ...sendParams,
           })
         : this._transactionSender.appUpdate({
+            ...updateParams,
+            ...sendParams,
             appId: existingApp.appId,
             approvalProgram,
             clearStateProgram,
-            ...updateParams,
-            ...sendParams,
           }))
       const appMetadata: AppMetadata = {
         appId: existingApp.appId,
@@ -300,9 +301,9 @@ export class AppDeployer {
       }
       const createIndex = await composer.count()
       if ('method' in deleteParams) {
-        composer.addAppDeleteMethodCall({ appId: existingApp.appId, ...deleteParams })
+        composer.addAppDeleteMethodCall({ ...deleteParams, appId: existingApp.appId })
       } else {
-        composer.addAppDelete({ appId: existingApp.appId, ...deleteParams })
+        composer.addAppDelete({ ...deleteParams, appId: existingApp.appId })
       }
       const result = await composer.send({ ...sendParams })
       const confirmation = result.confirmations.at(createIndex - 1)!

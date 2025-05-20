@@ -61,6 +61,7 @@ import { AppSpec, arc32ToArc56 } from './app-spec'
 import {
   AppCallMethodCall,
   AppCallParams,
+  AppCreateMethodCall,
   AppDeleteMethodCall,
   AppDeleteParams,
   AppMethodCall,
@@ -260,9 +261,9 @@ export interface FundAppAccountParams {
 /** Source maps for an Algorand app */
 export interface AppSourceMaps {
   /** The source map of the approval program */
-  approvalSourceMap: SourceMapExport
+  approvalSourceMap: algosdk.ProgramSourceMap
   /** The source map of the clear program */
-  clearSourceMap: SourceMapExport
+  clearSourceMap: algosdk.ProgramSourceMap
 }
 
 export interface SourceMapExport {
@@ -353,7 +354,14 @@ export type CallOnComplete = {
 
 /** AppClient common parameters for a bare app call */
 export type AppClientBareCallParams = Expand<
-  Omit<CommonAppCallParams, 'appId' | 'sender' | 'onComplete'> & {
+  Omit<CommonAppCallParams, 'appId' | 'sender'> & {
+    /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
+    sender?: Address | string
+  }
+>
+
+export type AppClientBareCreateParams = Expand<
+  Omit<CommonAppCallParams, 'appId' | 'sender'> & {
     /** The address of the account sending the transaction, if undefined then the app client's defaultSender is used. */
     sender?: Address | string
   }
@@ -1193,6 +1201,15 @@ export class AppClient {
           OnApplicationComplete.UpdateApplicationOC,
         ) as AppUpdateParams
       },
+      create: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
+        return this.getBareParams(
+          {
+            ...params,
+            ...(await this.compile(params)),
+          },
+          params?.onComplete,
+        ) as AppUpdateParams
+      },
       /** Return params for an opt-in call */
       optIn: (params?: AppClientBareCallParams) => {
         return this.getBareParams(params, OnApplicationComplete.OptInOC) as AppCallParams
@@ -1221,6 +1238,9 @@ export class AppClient {
       /** Returns a transaction for an update call, including deploy-time TEAL template replacements and compilation if provided */
       update: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
         return this._algorand.createTransaction.appUpdate(await this.params.bare.update(params))
+      },
+      create: async (params?: AppClientBareCallParams & AppClientCompilationParams) => {
+        return this._algorand.createTransaction.appCreate(await this.params.bare.update(params))
       },
       /** Returns a transaction for an opt-in call */
       optIn: (params?: AppClientBareCallParams) => {
@@ -1254,6 +1274,16 @@ export class AppClient {
           ...(await this._algorand.send.appUpdate(await this.params.bare.update(params))),
           ...(compiled as Partial<AppCompilationResult>),
         }
+      },
+      create: async (params?: AppClientBareCallParams & AppClientCompilationParams & SendParams) => {
+        const compiled = await this.compile(params)
+        const results = {
+          ...(await this._algorand.send.appCreate(await this.params.bare.create(params))),
+          ...(compiled as Partial<AppCompilationResult>),
+        }
+
+        this._appId = results.appId
+        return results
       },
       /** Signs and sends an opt-in call */
       optIn: (params?: AppClientBareCallParams & SendParams) => {
@@ -1306,6 +1336,19 @@ export class AppClient {
           },
           OnApplicationComplete.UpdateApplicationOC,
         )) satisfies AppUpdateMethodCall
+      },
+      create: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
+        if (params.onComplete === OnApplicationComplete.ClearStateOC) {
+          throw new Error(`Cannot create with an OnComplete value of ${params.onComplete}`)
+        }
+
+        return (await this.getABIParams(
+          {
+            ...params,
+            ...(await this.compile(params)),
+          },
+          params.onComplete,
+        )) satisfies AppCreateMethodCall
       },
       /**
        * Return params for an opt-in ABI call
@@ -1363,6 +1406,24 @@ export class AppClient {
           )),
           ...(compiled as Partial<AppCompilationResult>),
         }
+      },
+      /**
+       * Sign and send transactions for an update ABI call, including deploy-time TEAL template replacements and compilation if provided
+       * @param params The parameters for the update ABI method call
+       * @returns The result of sending the update ABI method call
+       */
+      create: async (params: AppClientMethodCallParams & AppClientCompilationParams & SendParams) => {
+        const compiled = await this.compile(params)
+        const results = {
+          ...(await this.processMethodCallReturn(
+            this._algorand.send.appCreateMethodCall(await this.params.create({ ...params })),
+            getArc56Method(params.method, this._appSpec),
+          )),
+          ...(compiled as Partial<AppCompilationResult>),
+        }
+
+        this._appId = results.appId
+        return results
       },
       /**
        * Sign and send transactions for an opt-in ABI call
@@ -1477,6 +1538,9 @@ export class AppClient {
       update: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
         return this._algorand.createTransaction.appUpdateMethodCall(await this.params.update(params))
       },
+      create: async (params: AppClientMethodCallParams & AppClientCompilationParams) => {
+        return this._algorand.createTransaction.appCreateMethodCall(await this.params.update(params))
+      },
       /**
        * Return transactions for an opt-in ABI call
        * @param params The parameters for the opt-in ABI method call
@@ -1534,7 +1598,7 @@ export class AppClient {
   private getBareParams<
     TParams extends { sender?: Address | string; signer?: TransactionSigner | TransactionSignerAccount } | undefined,
     TOnComplete extends OnApplicationComplete,
-  >(params: TParams, onComplete: TOnComplete) {
+  >(params: TParams, onComplete?: TOnComplete) {
     return {
       ...params,
       appId: this._appId,
@@ -1552,7 +1616,7 @@ export class AppClient {
       args?: AppClientMethodCallParams['args']
     },
     TOnComplete extends OnApplicationComplete,
-  >(params: TParams, onComplete: TOnComplete) {
+  >(params: TParams, onComplete?: TOnComplete) {
     const sender = this.getSender(params.sender)
     const method = getArc56Method(params.method, this._appSpec)
     const args = await this.getABIArgsWithDefaultValues(params.method, params.args, sender)
