@@ -497,6 +497,7 @@ export class AppClient {
   private _sendMethods: ReturnType<AppClient['getMethodCallSendMethods']> & {
     /** Interact with bare (raw) calls */ bare: ReturnType<AppClient['getBareSendMethods']>
   }
+  private _lastCompiled: { clear?: Uint8Array; approval?: Uint8Array }
 
   /**
    * Create a new app client.
@@ -519,6 +520,7 @@ export class AppClient {
     this._algorand.registerErrorTransformer!(this.handleCallErrors)
     this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
     this._defaultSigner = params.defaultSigner
+    this._lastCompiled = {}
 
     this._approvalSourceMap = params.approvalSourceMap
     this._clearSourceMap = params.clearSourceMap
@@ -946,9 +948,12 @@ export class AppClient {
 
     if (result.compiledApproval) {
       this._approvalSourceMap = result.compiledApproval.sourceMap
+
+      this._lastCompiled.approval = result.compiledApproval.compiledBase64ToBytes
     }
     if (result.compiledClear) {
       this._clearSourceMap = result.compiledClear.sourceMap
+      this._lastCompiled.clear = result.compiledClear.compiledBase64ToBytes
     }
 
     return result
@@ -1563,10 +1568,27 @@ export class AppClient {
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
-  private handleCallErrors = async (e: Error) => {
-    // Only handle errors for this app.
-    const appIdString = `app=${this._appId.toString()}`
-    if (!e.message.includes(appIdString)) return e
+  private handleCallErrors = async (e: Error & { sentTransactions?: algosdk.Transaction[] }) => {
+    // We can't use the app ID in an error to identify new apps, so instead we check the programs
+    // to identify if this is the correct app
+    if (this.appId === 0n) {
+      if (e.sentTransactions === undefined) return e
+
+      const txns = e.sentTransactions
+
+      const txn = txns.find((t) => e.message.includes(t.txID()))
+
+      if (
+        txn?.applicationCall?.approvalProgram.toString() !== this._lastCompiled?.approval?.toString() ||
+        txn?.applicationCall?.clearProgram.toString() !== this._lastCompiled.clear?.toString()
+      ) {
+        return e
+      }
+    } else {
+      // Only handle errors for this app.
+      const appIdString = `app=${this._appId.toString()}`
+      if (!e.message.includes(appIdString)) return e
+    }
 
     const logicError = await this.exposeLogicError(e)
     if (logicError instanceof LogicError) {

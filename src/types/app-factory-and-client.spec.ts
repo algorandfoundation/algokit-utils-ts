@@ -8,6 +8,7 @@ import smallAppArc56Json from '../../tests/example-contracts/extra-pages/small.a
 import errorInnerAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/InnerApp.arc56.json'
 import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/MiddleApp.arc56.json'
 import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
+import deployErrorAppArc56Json from '../../tests/example-contracts/deploy_error/artifacts/DeployError.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
@@ -788,6 +789,16 @@ describe('ARC56: app-factory-and-app-client', () => {
     await expect(
       outerClient.send.call({ method: 'callMiddle', args: [middleClient.appId, innerClient.appId], extraFee: algokit.microAlgos(2000) }),
     ).rejects.toThrow('custom error message')
+  })
+
+  test('ARC56 error message on deploy', async () => {
+    const deployErrorFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
+      appSpec: deployErrorAppArc56Json,
+      defaultSender: localnet.context.testAccount.addr,
+    })
+
+    await expect(deployErrorFactory.deploy({ createParams: { method: 'createApplication' } })).rejects.toThrow('custom error message')
   })
 
   test('ARC56 error messages with dynamic template vars (cblock offset)', async () => {
