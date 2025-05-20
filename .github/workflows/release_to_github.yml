@@ -104,12 +104,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: uncomment once we are happy with the release channel name
-      # - name: 'Semantic release'
-      #   run: npx semantic-release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     # This is needed because there is a custom .npmrc file
-      #     # we can remove this once we don't need any packages from github registry anymore
-      #     NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Semantic release'
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # This is needed because there is a custom .npmrc file
+          # we can remove this once we don't need any packages from github registry anymore
+          # NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
