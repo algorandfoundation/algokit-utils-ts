@@ -1578,7 +1578,7 @@ export class AppClient {
 
       const txn = txns.find((t) => e.message.includes(t.txID()))
 
-      const programsEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
+      const programsDefinedAndEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
         if (a === undefined || b === undefined) return false
         if (a.length !== b.length) return false
 
@@ -1590,8 +1590,8 @@ export class AppClient {
       }
 
       if (
-        !programsEqual(txn?.applicationCall?.clearProgram, this._lastCompiled.clear) ||
-        !programsEqual(txn?.applicationCall?.approvalProgram, this._lastCompiled?.approval)
+        !programsDefinedAndEqual(txn?.applicationCall?.clearProgram, this._lastCompiled.clear) ||
+        !programsDefinedAndEqual(txn?.applicationCall?.approvalProgram, this._lastCompiled?.approval)
       ) {
         return e
       }
