@@ -11,7 +11,7 @@ concurrency: release_to_github
 permissions:
   contents: write
   issues: read
-  packages: write # to be able to publish packages
+  packages: write # to be able to publish packages.
 
 jobs:
   ci:
