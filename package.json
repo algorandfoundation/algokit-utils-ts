@@ -120,7 +120,7 @@
         "name": "release"
       },
       {
-        "name": "algokit-core",
+        "name": "future",
         "prerelease": "future"
       }
     ],

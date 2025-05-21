@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - algokit-core
+      - future
   workflow_dispatch:
 
 concurrency: release_to_github
