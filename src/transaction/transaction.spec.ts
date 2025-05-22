@@ -747,6 +747,45 @@ describe('transaction', () => {
     const aliceInfo = await algorand.account.getInformation(alice.addr)
     expect(aliceInfo.balance.microAlgos).toBe(senderInfoBefore.balance.microAlgos - paymentTransaction.transaction.fee)
   })
+
+  test('Sign payment transaction with rekey account', async () => {
+    const { algorand, testAccount, generateAccount } = localnet.context
+
+    // Create Alice and Tom
+    const alice = await generateAccount({ initialFunds: (0).microAlgo(), suppressLog: true })
+    const tom = await generateAccount({ initialFunds: (0).microAlgo(), suppressLog: true })
+
+    // Send some algos to Tom, rekey testAccount to Alice
+    await algorand.send.payment({
+      sender: testAccount,
+      receiver: tom.addr,
+      amount: (100_000).microAlgo(),
+      rekeyTo: alice.addr,
+    })
+
+    // Transaction from testAccount, signed by Alice (should succeed)
+    await expect(
+      algorand.send.payment({
+        sender: testAccount,
+        receiver: tom.addr,
+        amount: (1_000).microAlgo(),
+        signer: alice.signer,
+      }),
+    ).resolves.toBeDefined()
+
+    // Transaction from testAccount, no signer (should fail)
+    await expect(
+      algorand.send.payment({
+        sender: testAccount,
+        receiver: tom.addr,
+        amount: (1_000).microAlgo(),
+      }),
+    ).rejects.toThrow(
+      new RegExp(
+        `Network request error\\. Received status 400 \\(Bad Request\\): TransactionPool\\.Remember: transaction [A-Z0-9]{52}: should have been authorized by ${alice.addr.toString()} but was actually authorized by ${testAccount.addr.toString()}`,
+      ),
+    )
+  })
 })
 
 describe('arc2 transaction note', () => {
