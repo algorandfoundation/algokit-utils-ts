@@ -1,4 +1,5 @@
 import { APP_PAGE_MAX_SIZE } from './types/app'
+import { ABIArrayDynamicType, ABIArrayStaticType, ABIByteType, ABIReturnType, ABITupleType, ABIType, ABIValue } from 'algosdk'
 
 /**
  * Converts a value which might be a number or a bigint into a number to be used with apis that don't support bigint.
@@ -105,4 +106,42 @@ export const asJson = (
 /** Calculate minimum number of extra program pages required for provided approval and clear state programs */
 export const calculateExtraProgramPages = (approvalProgram: Uint8Array, clearStateProgram?: Uint8Array): number => {
   return Math.floor((approvalProgram.length + (clearStateProgram?.length ?? 0) - 1) / APP_PAGE_MAX_SIZE)
+}
+
+/** Take a decoded ABI value and convert all byte arrays (including nested ones) from number[] to Uint8Arrays */
+export function convertAbiByteArrays(value: ABIValue, type: ABIReturnType): ABIValue {
+  // Return value as is if the type doesn't have any bytes or if it's already an Uint8Array
+  if (!ABIType.toString().includes('byte') || value instanceof Uint8Array) {
+    return value
+  }
+
+  // Handle byte arrays (byte[N] or byte[])
+  if (
+    (type instanceof ABIArrayStaticType || type instanceof ABIArrayDynamicType) &&
+    type.childType instanceof ABIByteType &&
+    Array.isArray(value)
+  ) {
+    return new Uint8Array(value as number[])
+  }
+
+  // Handle other arrays (for nested structures)
+  if ((type instanceof ABIArrayStaticType || type instanceof ABIArrayDynamicType) && Array.isArray(value)) {
+    const result = []
+    for (let i = 0; i < value.length; i++) {
+      result.push(convertAbiByteArrays(value[i], type.childType))
+    }
+    return result
+  }
+
+  // Handle tuples (for nested structures)
+  if (type instanceof ABITupleType && Array.isArray(value)) {
+    const result = []
+    for (let i = 0; i < value.length && i < type.childTypes.length; i++) {
+      result.push(convertAbiByteArrays(value[i], type.childTypes[i]))
+    }
+    return result
+  }
+
+  // For other types, return the value as is
+  return value
 }
