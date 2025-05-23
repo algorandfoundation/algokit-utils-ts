@@ -1,5 +1,5 @@
 import { APP_PAGE_MAX_SIZE } from './types/app'
-import { ABIArrayDynamicType, ABIArrayStaticType, ABIByteType, ABIReturnType, ABITupleType, ABIType, ABIValue } from 'algosdk'
+import { ABIArrayDynamicType, ABIArrayStaticType, ABIByteType, ABIReturnType, ABITupleType, ABIValue } from 'algosdk'
 
 /**
  * Converts a value which might be a number or a bigint into a number to be used with apis that don't support bigint.
@@ -111,7 +111,7 @@ export const calculateExtraProgramPages = (approvalProgram: Uint8Array, clearSta
 /** Take a decoded ABI value and convert all byte arrays (including nested ones) from number[] to Uint8Arrays */
 export function convertAbiByteArrays(value: ABIValue, type: ABIReturnType): ABIValue {
   // Return value as is if the type doesn't have any bytes or if it's already an Uint8Array
-  if (!ABIType.toString().includes('byte') || value instanceof Uint8Array) {
+  if (!type.toString().includes('byte') || value instanceof Uint8Array) {
     return value
   }
 
