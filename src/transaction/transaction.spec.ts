@@ -1081,7 +1081,7 @@ describe('abi return', () => {
       returnValue: abiType.decode(abiType.encode(value)),
       txID: '',
     } as algosdk.ABIResult
-    return getABIReturnValue(result)
+    return getABIReturnValue(result, abiType)
   }
 
   test('uint32', () => {

@@ -1,4 +1,4 @@
-import algosdk, { Address } from 'algosdk'
+import algosdk, { ABIMethod, Address } from 'algosdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
@@ -2135,13 +2135,14 @@ export class TransactionComposer {
     }
 
     const transactions = atc.buildGroup().map((t) => t.txn)
+    const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
     return {
       confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
       transactions: transactions,
       txIds: transactions.map((t) => t.txID()),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
-      returns: methodResults.map(getABIReturnValue),
+      returns: methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),
     }
   }
 

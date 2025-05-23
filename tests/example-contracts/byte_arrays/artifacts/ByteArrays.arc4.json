@@ -1,0 +1,48 @@
+{
+  "name": "ByteArrays",
+  "desc": "",
+  "methods": [
+    {
+      "name": "createApplication",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "setBoxValues",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "dynamicByteArray",
+      "args": [],
+      "returns": {
+        "type": "byte[]"
+      }
+    },
+    {
+      "name": "staticByteArray",
+      "args": [],
+      "returns": {
+        "type": "byte[4]"
+      }
+    },
+    {
+      "name": "nestedByteArrays",
+      "args": [],
+      "returns": {
+        "type": "(byte[],byte[4])"
+      }
+    },
+    {
+      "name": "byteArraysInStruct",
+      "args": [],
+      "returns": {
+        "type": "(byte[],byte[4],(byte[],uint64))"
+      }
+    }
+  ]
+}
