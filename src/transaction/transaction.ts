@@ -899,6 +899,9 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         err,
       )
     }
+
+    // Attach the sent transactions so we can use them in error transformers
+    err.sentTransactions = atc.buildGroup().map((t) => t.txn)
     throw err
   }
 }
