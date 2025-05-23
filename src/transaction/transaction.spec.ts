@@ -773,7 +773,7 @@ describe('transaction', () => {
       }),
     ).resolves.toBeDefined()
 
-    // Transaction from testAccount, no signer (should fail)
+    // Transaction from testAccount, default signer (should fail)
     await expect(
       algorand.send.payment({
         sender: testAccount,
@@ -1254,7 +1254,7 @@ describe('When create algorand client with config from environment', () => {
     expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
   })
 
-  test('payment transactions are sent and waited for by algokit core algod client', async () => {
+  test('transaction suggested params are requested by algokit core algod client', async () => {
     const algorandClient = AlgorandClient.fromConfig(ClientManager.getConfigFromEnvironmentOrLocalNet())
 
     const getTransactionParamsWithAlgoKitCoreAlgod = vi.spyOn(
