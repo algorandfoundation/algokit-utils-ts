@@ -109,6 +109,18 @@ export class AlgoHttpClientWithRetry extends URLTokenBaseHTTPClient {
       }
     }
 
+    if (relativePath.startsWith('/v2/transactions/params')) {
+      const httpInfo = await this._algoKitCoreAlgod.transactionParamsResponse()
+      const binary = await httpInfo.body.binary()
+      const arrayBuffer = await binary.arrayBuffer()
+      const uint8Array = new Uint8Array(arrayBuffer)
+      return {
+        status: httpInfo.httpStatusCode,
+        headers: httpInfo.headers,
+        body: uint8Array,
+      }
+    }
+
     const response = await this.callWithRetry(() => super.get(relativePath, query, requestHeaders))
     if (
       relativePath.startsWith('/v2/accounts/') &&

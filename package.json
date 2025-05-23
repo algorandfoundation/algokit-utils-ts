@@ -65,7 +65,7 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
-    "@algorandfoundation/algokit-algod-api": "1.0.0-alpha.3",
+    "@algorandfoundation/algokit-algod-api": "^1.0.0-alpha.3",
     "@algorandfoundation/algokit-transact": "1.0.0-alpha.6",
     "buffer": "^6.0.3"
   },

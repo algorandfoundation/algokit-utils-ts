@@ -725,6 +725,67 @@ describe('transaction', () => {
       ).rejects.toThrowError(/fee too small/)
     }
   })
+
+  test('Close remainder when making payment transaction', async () => {
+    const { algorand, testAccount, generateAccount } = localnet.context
+
+    const alice = await generateAccount({ initialFunds: (0).microAlgo(), suppressLog: true })
+
+    const senderAddr = testAccount.addr ?? testAccount
+    const senderInfoBefore = await algorand.account.getInformation(senderAddr)
+
+    const paymentTransaction = await algorand.send.payment({
+      sender: testAccount,
+      receiver: testAccount,
+      amount: (0).microAlgo(),
+      closeRemainderTo: alice.addr,
+    })
+
+    const senderInfoAfter = await algorand.account.getInformation(senderAddr)
+    expect(senderInfoAfter.balance.algos).toBe(0)
+
+    const aliceInfo = await algorand.account.getInformation(alice.addr)
+    expect(aliceInfo.balance.microAlgos).toBe(senderInfoBefore.balance.microAlgos - paymentTransaction.transaction.fee)
+  })
+
+  test('Sign payment transaction with rekey account', async () => {
+    const { algorand, testAccount, generateAccount } = localnet.context
+
+    // Create Alice and Tom
+    const alice = await generateAccount({ initialFunds: (0).microAlgo(), suppressLog: true })
+    const tom = await generateAccount({ initialFunds: (0).microAlgo(), suppressLog: true })
+
+    // Send some algos to Tom, rekey testAccount to Alice
+    await algorand.send.payment({
+      sender: testAccount,
+      receiver: tom.addr,
+      amount: (100_000).microAlgo(),
+      rekeyTo: alice.addr,
+    })
+
+    // Transaction from testAccount, signed by Alice (should succeed)
+    await expect(
+      algorand.send.payment({
+        sender: testAccount,
+        receiver: tom.addr,
+        amount: (1_000).microAlgo(),
+        signer: alice.signer,
+      }),
+    ).resolves.toBeDefined()
+
+    // Transaction from testAccount, default signer (should fail)
+    await expect(
+      algorand.send.payment({
+        sender: testAccount,
+        receiver: tom.addr,
+        amount: (1_000).microAlgo(),
+      }),
+    ).rejects.toThrow(
+      new RegExp(
+        `Network request error\\. Received status 400 \\(Bad Request\\): TransactionPool\\.Remember: transaction [A-Z0-9]{52}: should have been authorized by ${alice.addr.toString()} but was actually authorized by ${testAccount.addr.toString()}`,
+      ),
+    )
+  })
 })
 
 describe('arc2 transaction note', () => {
@@ -1190,6 +1251,30 @@ describe('When create algorand client with config from environment', () => {
 
     expect(sendRawTransactionWithAlgoKitCoreAlgod).toBeCalledTimes(2)
     expect(sendPendingTransactionInformationResponseWithAlgoKitCoreAlgod).toBeCalled()
+    expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
+  })
+
+  test('transaction suggested params are requested by algokit core algod client', async () => {
+    const algorandClient = AlgorandClient.fromConfig(ClientManager.getConfigFromEnvironmentOrLocalNet())
+
+    const getTransactionParamsWithAlgoKitCoreAlgod = vi.spyOn(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (algorandClient.client.algod.c as any).bc._algoKitCoreAlgod,
+      'transactionParamsResponse',
+    )
+    const testAccount = await getTestAccount({ initialFunds: algos(10), suppressLog: true }, algorandClient)
+    algorandClient.setSignerFromAccount(testAccount)
+
+    const testPayTransaction = {
+      sender: testAccount,
+      receiver: testAccount,
+      amount: (1).microAlgo(),
+    } as PaymentParams
+
+    const fee = (1).algo()
+    const { confirmation } = await algorandClient.send.payment({ ...testPayTransaction, staticFee: fee })
+
+    expect(getTransactionParamsWithAlgoKitCoreAlgod).toBeCalledTimes(2)
     expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
   })
 })
