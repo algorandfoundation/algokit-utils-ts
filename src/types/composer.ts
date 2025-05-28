@@ -1443,7 +1443,33 @@ export class TransactionComposer {
   }
 
   private commonTxnBuildStep<TParams extends algosdk.CommonTransactionParams>(
-    buildTxn: (params: TParams) => Transaction,
+    buildTxn: (txnParams: TParams) => Transaction,
+    params: CommonTransactionParams,
+    txnParams: TParams,
+  ): TransactionWithContext {
+    return this.commonTxnBuildStepCore(
+      (params: CommonTransactionParams, txnParams: TParams) => {
+        if (params.staticFee !== undefined) {
+          txnParams.suggestedParams.fee = params.staticFee.microAlgo
+          txnParams.suggestedParams.flatFee = true
+        }
+
+        const txn = buildTxn(txnParams)
+
+        if (params.extraFee) txn.fee += params.extraFee.microAlgo
+        if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
+          throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
+        }
+
+        return txn
+      },
+      params,
+      txnParams,
+    )
+  }
+
+  private commonTxnBuildStepCore<TParams extends algosdk.CommonTransactionParams>(
+    buildTxn: (params: CommonTransactionParams, txnParams: TParams) => Transaction,
     params: CommonTransactionParams,
     txnParams: TParams,
   ): TransactionWithContext {
@@ -1477,17 +1503,7 @@ export class TransactionComposer {
       throw Error('Cannot set both staticFee and extraFee')
     }
 
-    if (params.staticFee !== undefined) {
-      txnParams.suggestedParams.fee = params.staticFee.microAlgo
-      txnParams.suggestedParams.flatFee = true
-    }
-
-    const txn = buildTxn(txnParams)
-
-    if (params.extraFee) txn.fee += params.extraFee.microAlgo
-    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
-      throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
-    }
+    const txn = buildTxn(params, txnParams)
 
     const logicalMaxFee =
       params.maxFee !== undefined && params.maxFee.microAlgo > (params.staticFee?.microAlgo ?? 0n) ? params.maxFee : params.staticFee
@@ -1675,15 +1691,12 @@ export class TransactionComposer {
         maxFee,
       }
 
-      return {
-        ...txnWithSigner,
-        context,
-      }
+      return { ...txnWithSigner, context }
     })
   }
 
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
-    return this.commonTxnBuildStep(buildPaymentWithAlgoKitCore, params, {
+    return this.commonTxnBuildStepCore(buildPaymentWithAlgoKitCore, params, {
       sender: params.sender,
       receiver: params.receiver,
       amount: params.amount.microAlgo,
