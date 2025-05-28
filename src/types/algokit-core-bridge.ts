@@ -1,23 +1,32 @@
 import * as algodApi from '@algorandfoundation/algokit-algod-api'
 import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
 import algosdk, { Address, TokenHeader } from 'algosdk'
+import { CommonTransactionParams } from './composer'
 
 function getAlgokitCoreAddress(address: string | Address) {
   return addressFromString(typeof address === 'string' ? address : address.toString())
 }
 
 // Experimental feature to build algosdk payment transactions with algokit-core
-export function buildPayment({
-  sender,
-  receiver,
-  amount,
-  closeRemainderTo,
-  rekeyTo,
-  note,
-  lease,
-  suggestedParams,
-}: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams) {
-  const txnModel: AlgokitCoreTransaction = {
+export function buildPayment(
+  params: CommonTransactionParams,
+  {
+    sender,
+    receiver,
+    amount,
+    closeRemainderTo,
+    rekeyTo,
+    note,
+    lease,
+    suggestedParams,
+  }: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams,
+) {
+  if (params.staticFee !== undefined) {
+    suggestedParams.fee = params.staticFee.microAlgo
+    suggestedParams.flatFee = true
+  }
+
+  const txn: AlgokitCoreTransaction = {
     sender: getAlgokitCoreAddress(sender),
     transactionType: 'Payment',
     fee: BigInt(suggestedParams.fee),
@@ -39,7 +48,7 @@ export function buildPayment({
   if (!suggestedParams.flatFee) {
     const minFee = BigInt(suggestedParams.minFee)
     const numAddlBytesAfterSigning = 75
-    const estimateTxnSize = encodeTransactionRaw(txnModel).length + numAddlBytesAfterSigning
+    const estimateTxnSize = encodeTransactionRaw(txn).length + numAddlBytesAfterSigning
 
     fee *= BigInt(estimateTxnSize)
     // If suggested fee too small and will be rejected, set to min tx fee
@@ -47,9 +56,14 @@ export function buildPayment({
       fee = minFee
     }
   }
-  txnModel.fee = fee
+  txn.fee = fee
 
-  return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnModel))
+  if (params.extraFee) txn.fee += params.extraFee.microAlgo
+  if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
+    throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
+  }
+
+  return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txn))
 }
 
 export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthentication {
@@ -77,9 +91,7 @@ export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthent
 
 export function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): algodApi.AlgodApi {
   const authMethodConfig = Object.entries(tokenHeader).length > 0 ? new TokenHeaderAuthenticationMethod(tokenHeader) : undefined
-  const authConfig: algodApi.AuthMethodsConfiguration = {
-    default: authMethodConfig,
-  }
+  const authConfig: algodApi.AuthMethodsConfiguration = { default: authMethodConfig }
 
   // Create configuration parameter object
   const fixedBaseUrl = baseUrl.toString().replace(/\/+$/, '')
