@@ -1,14 +1,14 @@
 import * as algodApi from '@algorandfoundation/algokit-algod-api'
 import {
   addressFromString,
-  Transaction as AlgokitCoreTransaction,
+  Transaction as AlgoKitCoreTransaction,
   assignFee,
   encodeTransactionRaw,
 } from '@algorandfoundation/algokit-transact'
 import algosdk, { Address, TokenHeader } from 'algosdk'
 import { CommonTransactionParams } from './composer'
 
-function getAlgokitCoreAddress(address: string | Address) {
+function getAlgoKitCoreAddress(address: string | Address) {
   return addressFromString(typeof address === 'string' ? address : address.toString())
 }
 
@@ -26,21 +26,21 @@ export function buildPayment(
     suggestedParams,
   }: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams,
 ) {
-  const txn: AlgokitCoreTransaction = {
-    sender: getAlgokitCoreAddress(sender),
+  const txn: AlgoKitCoreTransaction = {
+    sender: getAlgoKitCoreAddress(sender),
     transactionType: 'Payment',
     fee: params.staticFee?.microAlgo,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisID,
-    rekeyTo: rekeyTo ? getAlgokitCoreAddress(rekeyTo) : undefined,
+    rekeyTo: rekeyTo ? getAlgoKitCoreAddress(rekeyTo) : undefined,
     note: note,
     lease: lease,
     payment: {
       amount: BigInt(amount),
-      receiver: getAlgokitCoreAddress(receiver),
-      closeRemainderTo: closeRemainderTo ? getAlgokitCoreAddress(closeRemainderTo) : undefined,
+      receiver: getAlgoKitCoreAddress(receiver),
+      closeRemainderTo: closeRemainderTo ? getAlgoKitCoreAddress(closeRemainderTo) : undefined,
     },
   }
 
@@ -82,9 +82,7 @@ export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthent
 
 export function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): algodApi.AlgodApi {
   const authMethodConfig = Object.entries(tokenHeader).length > 0 ? new TokenHeaderAuthenticationMethod(tokenHeader) : undefined
-  const authConfig: algodApi.AuthMethodsConfiguration = {
-    default: authMethodConfig,
-  }
+  const authConfig: algodApi.AuthMethodsConfiguration = { default: authMethodConfig }
 
   // Create configuration parameter object
   const fixedBaseUrl = baseUrl.toString().replace(/\/+$/, '')
