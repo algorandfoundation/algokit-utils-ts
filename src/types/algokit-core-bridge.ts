@@ -82,7 +82,9 @@ export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthent
 
 export function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): algodApi.AlgodApi {
   const authMethodConfig = Object.entries(tokenHeader).length > 0 ? new TokenHeaderAuthenticationMethod(tokenHeader) : undefined
-  const authConfig: algodApi.AuthMethodsConfiguration = { default: authMethodConfig }
+  const authConfig: algodApi.AuthMethodsConfiguration = {
+    default: authMethodConfig,
+  }
 
   // Create configuration parameter object
   const fixedBaseUrl = baseUrl.toString().replace(/\/+$/, '')

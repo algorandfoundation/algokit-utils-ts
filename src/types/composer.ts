@@ -1691,7 +1691,10 @@ export class TransactionComposer {
         maxFee,
       }
 
-      return { ...txnWithSigner, context }
+      return {
+        ...txnWithSigner,
+        context,
+      }
     })
   }
 
