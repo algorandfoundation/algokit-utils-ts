@@ -8,7 +8,7 @@
 
 > **sendGroupOfTransactions**(`groupSend`, `algod`): `Promise`\<`Omit`\<[`SendAtomicTransactionComposerResults`](../../types/transaction/interfaces/SendAtomicTransactionComposerResults.md), `"returns"`\>\>
 
-Defined in: [src/transaction/transaction.ts:956](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L956)
+Defined in: [src/transaction/transaction.ts:959](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L959)
 
 ## Parameters
 

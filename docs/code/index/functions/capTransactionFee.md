@@ -8,7 +8,7 @@
 
 > **capTransactionFee**(`transaction`, `maxAcceptableFee`): `void`
 
-Defined in: [src/transaction/transaction.ts:1057](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1057)
+Defined in: [src/transaction/transaction.ts:1060](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1060)
 
 ## Parameters
 

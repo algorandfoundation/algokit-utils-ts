@@ -8,7 +8,7 @@
 
 > **getTransactionParams**(`params`, `algod`): `Promise`\<`SuggestedParams`\>
 
-Defined in: [src/transaction/transaction.ts:1111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1111)
+Defined in: [src/transaction/transaction.ts:1114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1114)
 
 ## Parameters
 

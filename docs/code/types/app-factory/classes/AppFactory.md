@@ -1553,7 +1553,7 @@ How many rounds the transaction should be valid for, if not specified then the r
 
 > **compile**(`compilation?`): `Promise`\<[`AppClientCompilationResult`](../../app-client/interfaces/AppClientCompilationResult.md)\>
 
-Defined in: [src/types/app-factory.ts:615](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L615)
+Defined in: [src/types/app-factory.ts:620](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L620)
 
 Compiles the approval and clear state programs (if TEAL templates provided),
 performing any provided deploy-time parameter replacement and stores
@@ -1745,7 +1745,7 @@ const { appClient, result } = await factory.deploy({
 
 > **exportSourceMaps**(): [`AppSourceMaps`](../../app-client/interfaces/AppSourceMaps.md)
 
-Defined in: [src/types/app-factory.ts:496](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L496)
+Defined in: [src/types/app-factory.ts:501](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L501)
 
 Export the current source maps for the app.
 
@@ -1761,7 +1761,7 @@ The source maps
 
 > **exposeLogicError**(`e`, `isClearStateProgram?`): `Error`
 
-Defined in: [src/types/app-factory.ts:484](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L484)
+Defined in: [src/types/app-factory.ts:489](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L489)
 
 Takes an error that may include a logic error from a call to the current app and re-exposes the
 error to include source code information via the source map and ARC-56 spec.
@@ -1792,7 +1792,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 > **getAppClientByCreatorAndName**(`params`): `Promise`\<[`AppClient`](../../app-client/classes/AppClient.md)\>
 
-Defined in: [src/types/app-factory.ts:465](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L465)
+Defined in: [src/types/app-factory.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L470)
 
 Returns a new `AppClient` client, resolving the app by creator address and name
 using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
@@ -1874,7 +1874,7 @@ const appClient = factory.getAppClientByCreatorAndName({ creatorAddress: 'CREATO
 
 > **getAppClientById**(`params`): [`AppClient`](../../app-client/classes/AppClient.md)
 
-Defined in: [src/types/app-factory.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L439)
+Defined in: [src/types/app-factory.ts:444](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L444)
 
 Returns a new `AppClient` client for an app instance of the given ID.
 
@@ -1942,7 +1942,7 @@ const appClient = factory.getAppClientById({ appId: 12345n })
 
 > **importSourceMaps**(`sourceMaps`): `void`
 
-Defined in: [src/types/app-factory.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L513)
+Defined in: [src/types/app-factory.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L518)
 
 Import source maps for the app.
 
@@ -1964,7 +1964,7 @@ The source maps to import
 
 > **parseMethodCallReturn**\<`TReturn`, `TResult`\>(`result`, `method`): `Promise`\<`Omit`\<`TResult`, `"return"`\> & [`AppReturn`](../../app/type-aliases/AppReturn.md)\<`TReturn`\>\>
 
-Defined in: [src/types/app-factory.ts:714](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L714)
+Defined in: [src/types/app-factory.ts:719](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L719)
 
 Checks for decode errors on the SendAppTransactionResult and maps the return value to the specified type
 on the ARC-56 method.
