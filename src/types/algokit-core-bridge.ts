@@ -26,15 +26,10 @@ export function buildPayment(
     suggestedParams,
   }: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams,
 ) {
-  if (params.staticFee !== undefined) {
-    suggestedParams.fee = params.staticFee.microAlgo
-    suggestedParams.flatFee = true
-  }
-
   const txn: AlgokitCoreTransaction = {
     sender: getAlgokitCoreAddress(sender),
     transactionType: 'Payment',
-    fee: BigInt(suggestedParams.fee),
+    fee: params.staticFee?.microAlgo,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
@@ -49,16 +44,16 @@ export function buildPayment(
     },
   }
 
-  if (suggestedParams.flatFee) {
+  if (params.staticFee) {
     return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txn))
   } else {
-    const updatedTxn = assignFee(txn, {
+    const txnWithFee = assignFee(txn, {
       feePerByte: BigInt(suggestedParams.fee),
       minFee: BigInt(suggestedParams.minFee),
       maxFee: params.maxFee?.microAlgo,
       extraFee: params.extraFee?.microAlgo,
     })
-    return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(updatedTxn))
+    return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnWithFee))
   }
 }
 
