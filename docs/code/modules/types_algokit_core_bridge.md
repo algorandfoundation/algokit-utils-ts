@@ -32,7 +32,7 @@
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L83)
+[src/types/algokit-core-bridge.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L85)
 
 ___
 
