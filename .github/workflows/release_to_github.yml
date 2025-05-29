@@ -30,32 +30,10 @@ jobs:
       npm-auth-token: ${{ secrets.GITHUB_TOKEN }}
 
   check_docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          registry-url: 'https://npm.pkg.github.com'
-          cache: 'npm'
-          cache-dependency-path: ./package-lock.json
-
-      - name: Check docs are up to date
-        shell: bash
-        run: |
-          npm ci --ignore-scripts
-          npm run generate:code-docs
-          # Add untracked files as empty so they come up in diff
-          git add -N .
-          # Print changed files and error out if there are changes after generating docs
-          git diff --exit-code --name-only
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    name: Check docs
+    uses: ./.github/workflows/check-docs
+    secrets:
+      node-auth-token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     name: Build
