@@ -27,4 +27,4 @@ jobs:
     name: Check docs
     uses: ./.github/workflows/check_docs.yml
     secrets:
-      node-auth-token: ${{ secrets.GITHUB_TOKEN }}
+      npm-auth-token: ${{ secrets.GITHUB_TOKEN }}
