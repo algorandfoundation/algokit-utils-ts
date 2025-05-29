@@ -24,6 +24,6 @@ A map of transaction index in the `AtomicTransactionComposer` to the max fee tha
 
 ### suggestedParams
 
-> **suggestedParams**: `Pick`\<`SuggestedParams`, `"fee"` \| `"minFee"`\>
+> **suggestedParams**: `Pick`\<`algosdk.SuggestedParams`, `"fee"` \| `"minFee"`\>
 
 Defined in: [src/types/transaction.ts:151](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/transaction.ts#L151)

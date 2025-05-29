@@ -46,7 +46,7 @@ Defined in: [src/types/client-manager.ts:696](https://github.com/algorandfoundat
 
 ##### params
 
-`Omit`\<\{ `algorand`: [`AlgorandClient`](../../algorand-client/classes/AlgorandClient.md); `appLookupCache?`: [`AppLookup`](../../app-deployer/interfaces/AppLookup.md); `appName?`: `string`; `approvalSourceMap?`: `ProgramSourceMap`; `appSpec`: `string` \| [`Arc56Contract`](../../app-arc56/interfaces/Arc56Contract.md) \| [`AppSpec`](../../app-spec/interfaces/AppSpec.md); `clearSourceMap?`: `ProgramSourceMap`; `creatorAddress`: `string` \| `Address`; `defaultSender?`: `string` \| `Address`; `defaultSigner?`: `TransactionSigner`; `ignoreCache?`: `boolean`; \}, `"appSpec"`\>
+`Omit`\<[`ResolveAppClientByCreatorAndName`](../../app-client/type-aliases/ResolveAppClientByCreatorAndName.md), `"appSpec"`\>
 
 #### Returns
 

@@ -94,7 +94,7 @@ Transaction signer for the underlying signing account
 
 #### Get Signature
 
-> **get** **sk**(): `Readonly`\<`Uint8Array`\<`ArrayBufferLike`\>\>
+> **get** **sk**(): `Readonly`\<`Uint8Array`\>
 
 Defined in: [src/types/account.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L94)
 
@@ -102,7 +102,7 @@ Secret key belonging to the signer
 
 ##### Returns
 
-`Readonly`\<`Uint8Array`\<`ArrayBufferLike`\>\>
+`Readonly`\<`Uint8Array`\>
 
 #### Implementation of
 

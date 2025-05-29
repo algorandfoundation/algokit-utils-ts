@@ -86,7 +86,7 @@ The address of the multisig account
 
 #### Get Signature
 
-> **get** **params**(): `Readonly`\<`MultisigMetadata`\>
+> **get** **params**(): `Readonly`\<`algosdk.MultisigMetadata`\>
 
 Defined in: [src/types/account.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/account.ts#L27)
 
@@ -94,7 +94,7 @@ The parameters for the multisig account
 
 ##### Returns
 
-`Readonly`\<`MultisigMetadata`\>
+`Readonly`\<`algosdk.MultisigMetadata`\>
 
 ***
 
