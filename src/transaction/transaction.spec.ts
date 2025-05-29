@@ -33,7 +33,7 @@ describe('transaction', () => {
     const { algorand } = localnet.context
     await expect(async () => {
       await algorand.send.payment({ ...getTestTransaction(), maxFee: (1).microAlgo() })
-    }).rejects.toThrowError('Transaction fee 1000 µALGO is greater than maxFee 1 µALGO')
+    }).rejects.toThrowError('Transaction fee 1000 µALGO is greater than max fee 1 µALGO')
   })
 
   test('Transaction cap is ignored if higher than fee', async () => {

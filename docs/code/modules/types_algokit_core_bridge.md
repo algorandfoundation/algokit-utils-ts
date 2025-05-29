@@ -32,18 +32,19 @@
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:78](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L78)
+[src/types/algokit-core-bridge.ts:85](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L85)
 
 ___
 
 ### buildPayment
 
-▸ **buildPayment**(`«destructured»`): `Transaction`
+▸ **buildPayment**(`params`, `«destructured»`): `Transaction`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
+| `params` | [`CommonTransactionParams`](types_composer.md#commontransactionparams) |
 | `«destructured»` | `PaymentTransactionParams` & `CommonTransactionParams` |
 
 #### Returns
@@ -52,4 +53,4 @@ ___
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:10](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L10)
+[src/types/algokit-core-bridge.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L16)

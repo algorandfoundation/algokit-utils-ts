@@ -1,55 +1,62 @@
 import * as algodApi from '@algorandfoundation/algokit-algod-api'
-import { addressFromString, Transaction as AlgokitCoreTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
+import {
+  addressFromString,
+  Transaction as AlgoKitCoreTransaction,
+  assignFee,
+  encodeTransactionRaw,
+} from '@algorandfoundation/algokit-transact'
 import algosdk, { Address, TokenHeader } from 'algosdk'
+import { CommonTransactionParams } from './composer'
 
-function getAlgokitCoreAddress(address: string | Address) {
+function getAlgoKitCoreAddress(address: string | Address) {
   return addressFromString(typeof address === 'string' ? address : address.toString())
 }
 
 // Experimental feature to build algosdk payment transactions with algokit-core
-export function buildPayment({
-  sender,
-  receiver,
-  amount,
-  closeRemainderTo,
-  rekeyTo,
-  note,
-  lease,
-  suggestedParams,
-}: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams) {
-  const txnModel: AlgokitCoreTransaction = {
-    sender: getAlgokitCoreAddress(sender),
+export function buildPayment(
+  params: CommonTransactionParams,
+  {
+    sender,
+    receiver,
+    amount,
+    closeRemainderTo,
+    rekeyTo,
+    note,
+    lease,
+    suggestedParams,
+  }: algosdk.PaymentTransactionParams & algosdk.CommonTransactionParams,
+) {
+  const staticFee = params.staticFee ? params.staticFee.microAlgo : suggestedParams.flatFee ? BigInt(suggestedParams.fee) : undefined
+
+  const baseTxn: AlgoKitCoreTransaction = {
+    sender: getAlgoKitCoreAddress(sender),
     transactionType: 'Payment',
-    fee: BigInt(suggestedParams.fee),
+    fee: staticFee,
     firstValid: BigInt(suggestedParams.firstValid),
     lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisID,
-    rekeyTo: rekeyTo ? getAlgokitCoreAddress(rekeyTo) : undefined,
+    rekeyTo: rekeyTo ? getAlgoKitCoreAddress(rekeyTo) : undefined,
     note: note,
     lease: lease,
     payment: {
       amount: BigInt(amount),
-      receiver: getAlgokitCoreAddress(receiver),
-      closeRemainderTo: closeRemainderTo ? getAlgokitCoreAddress(closeRemainderTo) : undefined,
+      receiver: getAlgoKitCoreAddress(receiver),
+      closeRemainderTo: closeRemainderTo ? getAlgoKitCoreAddress(closeRemainderTo) : undefined,
     },
   }
 
-  let fee = BigInt(suggestedParams.fee)
-  if (!suggestedParams.flatFee) {
-    const minFee = BigInt(suggestedParams.minFee)
-    const numAddlBytesAfterSigning = 75
-    const estimateTxnSize = encodeTransactionRaw(txnModel).length + numAddlBytesAfterSigning
-
-    fee *= BigInt(estimateTxnSize)
-    // If suggested fee too small and will be rejected, set to min tx fee
-    if (fee < minFee) {
-      fee = minFee
-    }
+  if (baseTxn.fee !== undefined) {
+    return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(baseTxn))
+  } else {
+    const txn = assignFee(baseTxn, {
+      feePerByte: BigInt(suggestedParams.fee),
+      minFee: BigInt(suggestedParams.minFee),
+      maxFee: params.maxFee?.microAlgo,
+      extraFee: params.extraFee?.microAlgo,
+    })
+    return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txn))
   }
-  txnModel.fee = fee
-
-  return algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txnModel))
 }
 
 export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthentication {
@@ -77,9 +84,7 @@ export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthent
 
 export function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): algodApi.AlgodApi {
   const authMethodConfig = Object.entries(tokenHeader).length > 0 ? new TokenHeaderAuthenticationMethod(tokenHeader) : undefined
-  const authConfig: algodApi.AuthMethodsConfiguration = {
-    default: authMethodConfig,
-  }
+  const authConfig: algodApi.AuthMethodsConfiguration = { default: authMethodConfig }
 
   // Create configuration parameter object
   const fixedBaseUrl = baseUrl.toString().replace(/\/+$/, '')
