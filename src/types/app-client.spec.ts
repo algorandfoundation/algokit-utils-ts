@@ -13,14 +13,14 @@ import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
 import { algo } from '..'
-import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import boxMapAppSpec from '../../tests/example-contracts/box_map/artifacts/BoxMapTest.arc56.json'
+import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
+import { AlgoAmount } from './amount'
 import { ABIAppCallArg } from './app'
 import { AppClient, ApplicationClient } from './app-client'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
-import { AlgoAmount } from './amount'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
@@ -793,6 +793,12 @@ describe('application-client', () => {
       boxes: [boxName2],
     })
 
+    // HACK: walkaround to wait for the box info to catch up
+    for (let i = 0; i < 40; i++) {
+      const note = `test${i + 1}`
+      await localnet.context.algorand.send.payment({ sender: testAccount, receiver: testAccount, amount: algo(0), note })
+    }
+
     const boxValues = await client.getBoxValues()
     const box1Value = await client.getBoxValue(boxName1)
     expect(boxValues.map((b) => b.name.nameBase64).sort()).toEqual([boxName1Base64, boxName2Base64].sort())
@@ -995,6 +1001,17 @@ describe('app-client', () => {
     })
 
     test('getMap with prefix', async () => {
+      // HACK: walkaround to wait for the box info to catch up
+      for (let i = 0; i < 40; i++) {
+        const note = `test${i + 1}`
+        await localnet.context.algorand.send.payment({
+          sender: localnet.context.testAccount,
+          receiver: localnet.context.testAccount,
+          amount: algo(0),
+          note,
+        })
+      }
+
       expect(await appClient.state.box.getMap('bMap')).toEqual(new Map().set(1n, 'foo'))
     })
     test('getMapValue with prefix', async () => {

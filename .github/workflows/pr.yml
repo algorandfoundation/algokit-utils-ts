@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: read
-  package: read
+  packages: read
 
 jobs:
   pull_request:
