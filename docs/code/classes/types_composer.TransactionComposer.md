@@ -63,6 +63,7 @@ TransactionComposer helps you compose and execute transactions as a transaction 
 - [buildTxn](types_composer.TransactionComposer.md#buildtxn)
 - [buildTxnWithSigner](types_composer.TransactionComposer.md#buildtxnwithsigner)
 - [commonTxnBuildStep](types_composer.TransactionComposer.md#commontxnbuildstep)
+- [commonTxnBuildStepCore](types_composer.TransactionComposer.md#commontxnbuildstepcore)
 - [count](types_composer.TransactionComposer.md#count)
 - [execute](types_composer.TransactionComposer.md#execute)
 - [rebuild](types_composer.TransactionComposer.md#rebuild)
@@ -1450,7 +1451,7 @@ const { atc, transactions, methodCalls } = await composer.build()
 
 #### Defined in
 
-[src/types/composer.ts:1947](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1947)
+[src/types/composer.ts:1960](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1960)
 
 ___
 
@@ -1471,7 +1472,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1756](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1756)
+[src/types/composer.ts:1769](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1769)
 
 ___
 
@@ -1492,7 +1493,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1713](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1713)
+[src/types/composer.ts:1726](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1726)
 
 ___
 
@@ -1513,7 +1514,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1695)
+[src/types/composer.ts:1708](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1708)
 
 ___
 
@@ -1534,7 +1535,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1726](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1726)
+[src/types/composer.ts:1739](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1739)
 
 ___
 
@@ -1555,7 +1556,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1734](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1734)
+[src/types/composer.ts:1747](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1747)
 
 ___
 
@@ -1576,7 +1577,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1744](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1744)
+[src/types/composer.ts:1757](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1757)
 
 ___
 
@@ -1619,7 +1620,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1807](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1807)
+[src/types/composer.ts:1820](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1820)
 
 ___
 
@@ -1643,7 +1644,7 @@ Builds an ABI method call transaction and any other associated transactions repr
 
 #### Defined in
 
-[src/types/composer.ts:1503](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1503)
+[src/types/composer.ts:1519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1519)
 
 ___
 
@@ -1664,7 +1665,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1685](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1685)
+[src/types/composer.ts:1698](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1698)
 
 ___
 
@@ -1688,7 +1689,7 @@ const { transactions, methodCalls, signers } = await composer.buildTransactions(
 
 #### Defined in
 
-[src/types/composer.ts:1889](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1889)
+[src/types/composer.ts:1902](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1902)
 
 ___
 
@@ -1711,7 +1712,7 @@ Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` 
 
 #### Defined in
 
-[src/types/composer.ts:1830](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1830)
+[src/types/composer.ts:1843](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1843)
 
 ___
 
@@ -1732,7 +1733,7 @@ ___
 
 #### Defined in
 
-[src/types/composer.ts:1857](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1857)
+[src/types/composer.ts:1870](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1870)
 
 ___
 
@@ -1750,7 +1751,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `buildTxn` | (`params`: `TParams`) => `Transaction` |
+| `buildTxn` | (`txnParams`: `TParams`) => `Transaction` |
 | `params` | [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) |
 | `txnParams` | `TParams` |
 
@@ -1761,6 +1762,34 @@ ___
 #### Defined in
 
 [src/types/composer.ts:1445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1445)
+
+___
+
+### commonTxnBuildStepCore
+
+▸ **commonTxnBuildStepCore**\<`TParams`\>(`buildTxn`, `params`, `txnParams`): `TransactionWithContext`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `TParams` | extends `CommonTransactionParams` |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `buildTxn` | (`params`: [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams), `txnParams`: `TParams`) => `Transaction` |
+| `params` | [`CommonTransactionParams`](../modules/types_composer.md#commontransactionparams) |
+| `txnParams` | `TParams` |
+
+#### Returns
+
+`TransactionWithContext`
+
+#### Defined in
+
+[src/types/composer.ts:1471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1471)
 
 ___
 
@@ -1778,7 +1807,7 @@ The number of transactions currently added to this composer
 
 #### Defined in
 
-[src/types/composer.ts:1930](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1930)
+[src/types/composer.ts:1943](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1943)
 
 ___
 
@@ -1808,7 +1837,7 @@ An alias for `composer.send(params)`.
 
 #### Defined in
 
-[src/types/composer.ts:2045](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2045)
+[src/types/composer.ts:2058](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2058)
 
 ___
 
@@ -1833,7 +1862,7 @@ const { atc, transactions, methodCalls } = await composer.rebuild()
 
 #### Defined in
 
-[src/types/composer.ts:1986](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1986)
+[src/types/composer.ts:1999](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L1999)
 
 ___
 
@@ -1887,7 +1916,7 @@ const result = await composer.send()
 
 #### Defined in
 
-[src/types/composer.ts:2000](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2000)
+[src/types/composer.ts:2013](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2013)
 
 ___
 
@@ -1911,7 +1940,7 @@ const result = await composer.simulate()
 
 #### Defined in
 
-[src/types/composer.ts:2057](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2057)
+[src/types/composer.ts:2070](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2070)
 
 ▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
 
@@ -1945,7 +1974,7 @@ const result = await composer.simulate({
 
 #### Defined in
 
-[src/types/composer.ts:2068](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2068)
+[src/types/composer.ts:2081](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2081)
 
 ▸ **simulate**(`options`): `Promise`\<[`SendAtomicTransactionComposerResults`](../interfaces/types_transaction.SendAtomicTransactionComposerResults.md) & \{ `simulateResponse`: `SimulateResponse`  }\>
 
@@ -1980,7 +2009,7 @@ const result = await composer.simulate({
 
 #### Defined in
 
-[src/types/composer.ts:2081](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2081)
+[src/types/composer.ts:2094](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2094)
 
 ___
 
@@ -2026,4 +2055,4 @@ The binary encoded transaction note
 
 #### Defined in
 
-[src/types/composer.ts:2156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2156)
+[src/types/composer.ts:2169](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2169)

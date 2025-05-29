@@ -42,7 +42,7 @@
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:59](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L59)
+[src/types/algokit-core-bridge.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L69)
 
 ## Properties
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:56](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L56)
+[src/types/algokit-core-bridge.ts:66](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L66)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:57](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L57)
+[src/types/algokit-core-bridge.ts:67](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L67)
 
 ## Methods
 
@@ -86,7 +86,7 @@ algodApi.SecurityAuthentication.applySecurityAuthentication
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:73](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L73)
+[src/types/algokit-core-bridge.ts:83](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L83)
 
 ___
 
@@ -104,4 +104,4 @@ algodApi.SecurityAuthentication.getName
 
 #### Defined in
 
-[src/types/algokit-core-bridge.ts:69](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L69)
+[src/types/algokit-core-bridge.ts:79](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algokit-core-bridge.ts#L79)
