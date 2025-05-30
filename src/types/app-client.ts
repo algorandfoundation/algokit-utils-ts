@@ -1715,6 +1715,8 @@ export class AppClient {
       getValue: async (name: string, appState?: AppState) => {
         const state = Object.values(appState ?? (await stateGetter()))
         const metadata = keyGetter()[name]
+
+        if (metadata === undefined) throw new Error(`Attempted to get state value ${name}, but it does not exist`)
         const value = state.find((s) => s.keyBase64 === metadata.key)
 
         if (value && 'valueRaw' in value) {

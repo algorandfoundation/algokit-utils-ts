@@ -425,7 +425,7 @@ export class AppManager {
       method,
       rawReturnValue: new Uint8Array(),
     }
-    return getABIReturnValue(algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation))
+    return getABIReturnValue(algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation), method.returns.type)
   }
 
   /**
