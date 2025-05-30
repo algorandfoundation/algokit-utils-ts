@@ -4,12 +4,12 @@ import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest
 import * as algokit from '..'
 import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
 import byteArraysAr56Json from '../../tests/example-contracts/byte_arrays/artifacts/ByteArrays.arc56.json'
+import deployErrorAppArc56Json from '../../tests/example-contracts/deploy_error/artifacts/DeployError.arc56.json'
 import largeAppArc56Json from '../../tests/example-contracts/extra-pages/large.arc56.json'
 import smallAppArc56Json from '../../tests/example-contracts/extra-pages/small.arc56.json'
 import errorInnerAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/InnerApp.arc56.json'
 import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/MiddleApp.arc56.json'
 import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
-import deployErrorAppArc56Json from '../../tests/example-contracts/deploy_error/artifacts/DeployError.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
@@ -668,6 +668,17 @@ describe('ARC32: app-factory-and-app-client', () => {
       args: [boxName2, 'value2'],
       boxReferences: [boxName2],
     })
+
+    // HACK: walkaround to wait for the box info to catch up
+    for (let i = 0; i < 40; i++) {
+      const note = `test${i + 1}`
+      await localnet.context.algorand.send.payment({
+        sender: localnet.context.testAccount,
+        receiver: localnet.context.testAccount,
+        amount: algokit.algo(0),
+        note,
+      })
+    }
 
     const boxValues = await client.getBoxValues()
     const box1Value = await client.getBoxValue(boxName1)
