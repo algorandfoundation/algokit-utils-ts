@@ -8,7 +8,7 @@
 
 > **getABITupleFromABIStruct**(`struct`, `structFields`, `structs`): `ABIValue`[]
 
-Defined in: [src/types/app-arc56.ts:94](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L94)
+Defined in: [src/types/app-arc56.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L103)
 
 Converts an ARC-56 struct as an ABI tuple.
 

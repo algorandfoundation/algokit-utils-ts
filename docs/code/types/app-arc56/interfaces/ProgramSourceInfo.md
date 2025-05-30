@@ -6,7 +6,7 @@
 
 # Interface: ProgramSourceInfo
 
-Defined in: [src/types/app-arc56.ts:497](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L497)
+Defined in: [src/types/app-arc56.ts:508](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L508)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [src/types/app-arc56.ts:497](https://github.com/algorandfoundation/a
 
 > **pcOffsetMethod**: `"none"` \| `"cblocks"`
 
-Defined in: [src/types/app-arc56.ts:504](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L504)
+Defined in: [src/types/app-arc56.ts:515](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L515)
 
 How the program counter offset is calculated
 - none: The pc values in sourceInfo are not offset
@@ -26,6 +26,6 @@ How the program counter offset is calculated
 
 > **sourceInfo**: `SourceInfo`[]
 
-Defined in: [src/types/app-arc56.ts:499](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L499)
+Defined in: [src/types/app-arc56.ts:510](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L510)
 
 The source information for the program

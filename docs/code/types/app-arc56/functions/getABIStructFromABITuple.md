@@ -8,7 +8,7 @@
 
 > **getABIStructFromABITuple**\<`TReturn`\>(`decodedABITuple`, `structFields`, `structs`): `TReturn`
 
-Defined in: [src/types/app-arc56.ts:70](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L70)
+Defined in: [src/types/app-arc56.ts:71](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L71)
 
 Converts a decoded ABI tuple as a struct.
 

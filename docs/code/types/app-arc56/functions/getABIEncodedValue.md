@@ -8,7 +8,7 @@
 
 > **getABIEncodedValue**(`value`, `type`, `structs`): `Uint8Array`
 
-Defined in: [src/types/app-arc56.ts:142](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L142)
+Defined in: [src/types/app-arc56.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L153)
 
 Returns the ABI-encoded value for the given value.
 

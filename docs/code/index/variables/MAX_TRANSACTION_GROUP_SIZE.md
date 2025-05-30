@@ -8,4 +8,4 @@
 
 > `const` **MAX\_TRANSACTION\_GROUP\_SIZE**: `16` = `16`
 
-Defined in: [src/transaction/transaction.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L31)
+Defined in: [src/transaction/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L39)

@@ -8,7 +8,7 @@
 
 > **getABIDecodedValue**(`value`, `type`, `structs`): `ABIValue` \| [`ABIStruct`](../type-aliases/ABIStruct.md)
 
-Defined in: [src/types/app-arc56.ts:120](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L120)
+Defined in: [src/types/app-arc56.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L129)
 
 Returns the decoded ABI value (or struct for a struct type)
 for the given raw Algorand value given an ARC-56 type and defined ARC-56 structs.

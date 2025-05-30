@@ -8,4 +8,4 @@
 
 > `const` **MAX\_APP\_CALL\_ACCOUNT\_REFERENCES**: `4` = `4`
 
-Defined in: [src/transaction/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L33)
+Defined in: [src/transaction/transaction.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L41)

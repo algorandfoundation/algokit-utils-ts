@@ -6,7 +6,7 @@
 
 # Class: Arc56Method
 
-Defined in: [src/types/app-arc56.ts:22](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L22)
+Defined in: [src/types/app-arc56.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L23)
 
 Wrapper around `algosdk.ABIMethod` that represents an ARC-56 ABI method.
 
@@ -20,7 +20,7 @@ Wrapper around `algosdk.ABIMethod` that represents an ARC-56 ABI method.
 
 > **new Arc56Method**(`method`): `Arc56Method`
 
-Defined in: [src/types/app-arc56.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L26)
+Defined in: [src/types/app-arc56.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L27)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [src/types/app-arc56.ts:26](https://github.com/algorandfoundation/al
 
 > `readonly` **args**: `object`[]
 
-Defined in: [src/types/app-arc56.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L23)
+Defined in: [src/types/app-arc56.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L24)
 
 #### defaultValue?
 
@@ -129,7 +129,7 @@ Defined in: node\_modules/algosdk/dist/types/abi/method.d.ts:38
 
 > **method**: [`Method`](../interfaces/Method.md)
 
-Defined in: [src/types/app-arc56.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L26)
+Defined in: [src/types/app-arc56.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L27)
 
 ***
 
@@ -161,7 +161,7 @@ Defined in: node\_modules/algosdk/dist/types/abi/method.d.ts:39
 
 > `readonly` **returns**: `object`
 
-Defined in: [src/types/app-arc56.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L24)
+Defined in: [src/types/app-arc56.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L25)
 
 #### desc?
 
@@ -221,7 +221,7 @@ Defined in: node\_modules/algosdk/dist/types/abi/method.d.ts:41
 
 > **toJSON**(): [`Method`](../interfaces/Method.md)
 
-Defined in: [src/types/app-arc56.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L38)
+Defined in: [src/types/app-arc56.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L39)
 
 #### Returns
 

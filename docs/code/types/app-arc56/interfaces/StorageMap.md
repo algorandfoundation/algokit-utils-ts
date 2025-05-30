@@ -6,7 +6,7 @@
 
 # Interface: StorageMap
 
-Defined in: [src/types/app-arc56.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L475)
+Defined in: [src/types/app-arc56.ts:486](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L486)
 
 Describes a mapping of key-value pairs in storage
 
@@ -16,7 +16,7 @@ Describes a mapping of key-value pairs in storage
 
 > `optional` **desc**: `string`
 
-Defined in: [src/types/app-arc56.ts:477](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L477)
+Defined in: [src/types/app-arc56.ts:488](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L488)
 
 Description of what the key-value pairs in this mapping hold
 
@@ -26,7 +26,7 @@ Description of what the key-value pairs in this mapping hold
 
 > **keyType**: `string`
 
-Defined in: [src/types/app-arc56.ts:479](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L479)
+Defined in: [src/types/app-arc56.ts:490](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L490)
 
 The type of the keys in the map
 
@@ -36,7 +36,7 @@ The type of the keys in the map
 
 > `optional` **prefix**: `string`
 
-Defined in: [src/types/app-arc56.ts:483](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L483)
+Defined in: [src/types/app-arc56.ts:494](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L494)
 
 The base64-encoded prefix of the map keys
 
@@ -46,6 +46,6 @@ The base64-encoded prefix of the map keys
 
 > **valueType**: `string`
 
-Defined in: [src/types/app-arc56.ts:481](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L481)
+Defined in: [src/types/app-arc56.ts:492](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L492)
 
 The type of the values in the map

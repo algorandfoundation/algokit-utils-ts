@@ -8,7 +8,7 @@
 
 > **sendAtomicTransactionComposer**(`atcSend`, `algod`): `Promise`\<[`SendAtomicTransactionComposerResults`](../../types/transaction/interfaces/SendAtomicTransactionComposerResults.md)\>
 
-Defined in: [src/transaction/transaction.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L776)
+Defined in: [src/transaction/transaction.ts:784](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L784)
 
 Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
 

@@ -8,7 +8,7 @@
 
 > **getSenderAddress**(`sender`): `string`
 
-Defined in: [src/transaction/transaction.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L110)
+Defined in: [src/transaction/transaction.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L118)
 
 ## Parameters
 

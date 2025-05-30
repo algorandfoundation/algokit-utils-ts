@@ -1733,7 +1733,7 @@ const result = await composer.simulate({
 
 > `static` **arc2Note**(`note`): `Uint8Array`
 
-Defined in: [src/types/composer.ts:2155](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2155)
+Defined in: [src/types/composer.ts:2156](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/composer.ts#L2156)
 
 Create an encoded transaction note that follows the ARC-2 spec.
 

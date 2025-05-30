@@ -6,7 +6,7 @@
 
 # Interface: Event
 
-Defined in: [src/types/app-arc56.ts:417](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L417)
+Defined in: [src/types/app-arc56.ts:428](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L428)
 
 ARC-28 event
 
@@ -16,7 +16,7 @@ ARC-28 event
 
 > **args**: `object`[]
 
-Defined in: [src/types/app-arc56.ts:423](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L423)
+Defined in: [src/types/app-arc56.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L434)
 
 The arguments of the event, in order
 
@@ -50,7 +50,7 @@ The type of the argument. The `struct` field should also be checked to determine
 
 > `optional` **desc**: `string`
 
-Defined in: [src/types/app-arc56.ts:421](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L421)
+Defined in: [src/types/app-arc56.ts:432](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L432)
 
 Optional, user-friendly description for the event
 
@@ -60,6 +60,6 @@ Optional, user-friendly description for the event
 
 > **name**: `string`
 
-Defined in: [src/types/app-arc56.ts:419](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L419)
+Defined in: [src/types/app-arc56.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L430)
 
 The name of the event

@@ -8,6 +8,6 @@
 
 > **Arc56MethodReturnType** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`Method`](../interfaces/Method.md)\[`"returns"`\], `"type"`\> & `object`\>
 
-Defined in: [src/types/app-arc56.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L13)
+Defined in: [src/types/app-arc56.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L14)
 
 Type to describe a return type within an `Arc56Method`.

@@ -8,7 +8,7 @@
 
 > **getArc56ReturnValue**\<`TReturn`\>(`returnValue`, `method`, `structs`): `TReturn`
 
-Defined in: [src/types/app-arc56.ts:203](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L203)
+Defined in: [src/types/app-arc56.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L214)
 
 Checks for decode errors on the AppCallTransactionResult and maps the return value to the specified generic type
 

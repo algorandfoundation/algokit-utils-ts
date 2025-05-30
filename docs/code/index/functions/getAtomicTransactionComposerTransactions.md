@@ -8,7 +8,7 @@
 
 > **getAtomicTransactionComposerTransactions**(`atc`): `TransactionWithSigner`[]
 
-Defined in: [src/transaction/transaction.ts:1136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1136)
+Defined in: [src/transaction/transaction.ts:1150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1150)
 
 ## Parameters
 

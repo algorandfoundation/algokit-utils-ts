@@ -8,7 +8,7 @@
 
 > **controlFees**\<`T`\>(`transaction`, `feeControl`): `T`
 
-Defined in: [src/transaction/transaction.ts:1087](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1087)
+Defined in: [src/transaction/transaction.ts:1101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1101)
 
 ## Type Parameters
 

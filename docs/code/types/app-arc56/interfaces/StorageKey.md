@@ -6,7 +6,7 @@
 
 # Interface: StorageKey
 
-Defined in: [src/types/app-arc56.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L462)
+Defined in: [src/types/app-arc56.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L473)
 
 Describes a single key in app storage
 
@@ -16,7 +16,7 @@ Describes a single key in app storage
 
 > `optional` **desc**: `string`
 
-Defined in: [src/types/app-arc56.ts:464](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L464)
+Defined in: [src/types/app-arc56.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L475)
 
 Description of what this storage key holds
 
@@ -26,7 +26,7 @@ Description of what this storage key holds
 
 > **key**: `string`
 
-Defined in: [src/types/app-arc56.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L471)
+Defined in: [src/types/app-arc56.ts:482](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L482)
 
 The bytes of the key encoded as base64
 
@@ -36,7 +36,7 @@ The bytes of the key encoded as base64
 
 > **keyType**: `string`
 
-Defined in: [src/types/app-arc56.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L466)
+Defined in: [src/types/app-arc56.ts:477](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L477)
 
 The type of the key
 
@@ -46,6 +46,6 @@ The type of the key
 
 > **valueType**: `string`
 
-Defined in: [src/types/app-arc56.ts:469](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L469)
+Defined in: [src/types/app-arc56.ts:480](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L480)
 
 The type of the value

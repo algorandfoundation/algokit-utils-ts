@@ -6,9 +6,9 @@
 
 # Function: getABIReturnValue()
 
-> **getABIReturnValue**(`result`): [`ABIReturn`](../../types/app/type-aliases/ABIReturn.md)
+> **getABIReturnValue**(`result`, `type`): [`ABIReturn`](../../types/app/type-aliases/ABIReturn.md)
 
-Defined in: [src/transaction/transaction.ts:930](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L930)
+Defined in: [src/transaction/transaction.ts:940](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L940)
 
 Takes an algosdk `ABIResult` and converts it to an `ABIReturn`.
 Converts `bigint`'s for Uint's < 64 to `number` for easier use.
@@ -20,6 +20,10 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 `ABIResult`
 
 The `ABIReturn`
+
+### type
+
+`ABIReturnType`
 
 ## Returns
 

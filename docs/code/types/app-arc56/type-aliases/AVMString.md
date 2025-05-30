@@ -8,6 +8,6 @@
 
 > **AVMString** = `"AVMString"`
 
-Defined in: [src/types/app-arc56.ts:445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L445)
+Defined in: [src/types/app-arc56.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L456)
 
 A utf-8 string without the length prefix that is specified in ARC-4

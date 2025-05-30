@@ -8,7 +8,7 @@
 
 > **populateAppCallResources**(`atc`, `algod`): `Promise`\<`AtomicTransactionComposer`\>
 
-Defined in: [src/transaction/transaction.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L382)
+Defined in: [src/transaction/transaction.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L390)
 
 Take an existing Atomic Transaction Composer and return a new one with the required
 app call resources populated into it

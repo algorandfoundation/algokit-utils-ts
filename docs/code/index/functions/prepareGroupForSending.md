@@ -8,7 +8,7 @@
 
 > **prepareGroupForSending**(`atc`, `algod`, `sendParams`, `additionalAtcContext?`): `Promise`\<`AtomicTransactionComposer`\>
 
-Defined in: [src/transaction/transaction.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L401)
+Defined in: [src/transaction/transaction.ts:409](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L409)
 
 Take an existing Atomic Transaction Composer and return a new one with changes applied to the transactions
 based on the supplied sendParams to prepare it for sending.

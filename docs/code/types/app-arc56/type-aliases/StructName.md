@@ -8,6 +8,6 @@
 
 > **StructName** = `string`
 
-Defined in: [src/types/app-arc56.ts:439](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L439)
+Defined in: [src/types/app-arc56.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L450)
 
 The name of a defined struct

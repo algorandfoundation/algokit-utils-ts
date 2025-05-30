@@ -8,7 +8,7 @@
 
 > **signTransaction**(`transaction`, `signer`): `Promise`\<`Uint8Array`\<`ArrayBufferLike`\>\>
 
-Defined in: [src/transaction/transaction.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L186)
+Defined in: [src/transaction/transaction.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L194)
 
 ## Parameters
 

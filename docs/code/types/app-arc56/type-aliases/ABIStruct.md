@@ -8,7 +8,7 @@
 
 > **ABIStruct** = `object`
 
-Defined in: [src/types/app-arc56.ts:108](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L108)
+Defined in: [src/types/app-arc56.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L117)
 
 Decoded ARC-56 struct as a struct rather than a tuple.
 

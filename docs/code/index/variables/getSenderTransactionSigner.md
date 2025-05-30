@@ -8,7 +8,7 @@
 
 > `const` **getSenderTransactionSigner**: (`val`) => `TransactionSigner`
 
-Defined in: [src/transaction/transaction.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L168)
+Defined in: [src/transaction/transaction.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L176)
 
 ## Parameters
 

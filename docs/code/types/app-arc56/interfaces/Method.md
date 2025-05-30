@@ -6,7 +6,7 @@
 
 # Interface: Method
 
-Defined in: [src/types/app-arc56.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L341)
+Defined in: [src/types/app-arc56.ts:352](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L352)
 
 Describes a method in the contract. This interface is an extension of the interface described in ARC-4
 
@@ -16,7 +16,7 @@ Describes a method in the contract. This interface is an extension of the interf
 
 > **actions**: `object`
 
-Defined in: [src/types/app-arc56.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L382)
+Defined in: [src/types/app-arc56.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L393)
 
 an action is a combination of call/create and an OnComplete
 
@@ -38,7 +38,7 @@ OnCompletes this method allows when appID === 0
 
 > **args**: `object`[]
 
-Defined in: [src/types/app-arc56.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L347)
+Defined in: [src/types/app-arc56.ts:358](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L358)
 
 The arguments of the method, in order
 
@@ -101,7 +101,7 @@ The type of the argument. The `struct` field should also be checked to determine
 
 > `optional` **desc**: `string`
 
-Defined in: [src/types/app-arc56.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L345)
+Defined in: [src/types/app-arc56.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L356)
 
 Optional, user-friendly description for the method
 
@@ -111,7 +111,7 @@ Optional, user-friendly description for the method
 
 > `optional` **events**: [`Event`](Event.md)[]
 
-Defined in: [src/types/app-arc56.ts:391](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L391)
+Defined in: [src/types/app-arc56.ts:402](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L402)
 
 ARC-28 events that MAY be emitted by this method
 
@@ -121,7 +121,7 @@ ARC-28 events that MAY be emitted by this method
 
 > **name**: `string`
 
-Defined in: [src/types/app-arc56.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L343)
+Defined in: [src/types/app-arc56.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L354)
 
 The name of the method
 
@@ -131,7 +131,7 @@ The name of the method
 
 > `optional` **readonly**: `boolean`
 
-Defined in: [src/types/app-arc56.ts:389](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L389)
+Defined in: [src/types/app-arc56.ts:400](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L400)
 
 If this method does not write anything to the ledger (ARC-22)
 
@@ -141,7 +141,7 @@ If this method does not write anything to the ledger (ARC-22)
 
 > `optional` **recommendations**: `object`
 
-Defined in: [src/types/app-arc56.ts:393](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L393)
+Defined in: [src/types/app-arc56.ts:404](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L404)
 
 Information that clients can use when calling the method
 
@@ -205,7 +205,7 @@ The number of inner transactions the caller should cover the fees for
 
 > **returns**: `object`
 
-Defined in: [src/types/app-arc56.ts:373](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L373)
+Defined in: [src/types/app-arc56.ts:384](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L384)
 
 Information about the method's return value
 

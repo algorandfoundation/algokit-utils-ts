@@ -8,7 +8,7 @@
 
 > **encodeTransactionNote**(`note?`): `undefined` \| `Uint8Array`\<`ArrayBufferLike`\>
 
-Defined in: [src/transaction/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L50)
+Defined in: [src/transaction/transaction.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L58)
 
 ## Parameters
 

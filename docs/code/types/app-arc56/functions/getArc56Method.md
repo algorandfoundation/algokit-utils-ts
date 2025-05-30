@@ -8,7 +8,7 @@
 
 > **getArc56Method**(`methodNameOrSignature`, `appSpec`): [`Arc56Method`](../classes/Arc56Method.md)
 
-Defined in: [src/types/app-arc56.ts:172](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L172)
+Defined in: [src/types/app-arc56.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L183)
 
 Returns the ARC-56 ABI method object for a given method name or signature and ARC-56 app spec.
 

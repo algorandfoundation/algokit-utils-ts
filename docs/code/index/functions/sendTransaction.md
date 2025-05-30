@@ -8,7 +8,7 @@
 
 > **sendTransaction**(`send`, `algod`): `Promise`\<[`SendTransactionResult`](../../types/transaction/interfaces/SendTransactionResult.md)\>
 
-Defined in: [src/transaction/transaction.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L209)
+Defined in: [src/transaction/transaction.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L217)
 
 ## Parameters
 

@@ -8,6 +8,6 @@
 
 > **Arc56MethodArg** = [`Expand`](../../expand/type-aliases/Expand.md)\<`Omit`\<[`Method`](../interfaces/Method.md)\[`"args"`\]\[`number`\], `"type"`\> & `object`\>
 
-Defined in: [src/types/app-arc56.ts:6](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L6)
+Defined in: [src/types/app-arc56.ts:7](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L7)
 
 Type to describe an argument within an `Arc56Method`.

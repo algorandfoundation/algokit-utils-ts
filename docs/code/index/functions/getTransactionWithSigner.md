@@ -8,7 +8,7 @@
 
 > **getTransactionWithSigner**(`transaction`, `defaultSender?`): `Promise`\<`TransactionWithSigner`\>
 
-Defined in: [src/transaction/transaction.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L127)
+Defined in: [src/transaction/transaction.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L135)
 
 ## Parameters
 
