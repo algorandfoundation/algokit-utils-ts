@@ -285,7 +285,7 @@ export class AppManager {
     const boxId = typeof boxName === 'object' && 'nameRaw' in boxName ? boxName.nameRaw : boxName
     const name = AppManager.getBoxReference(boxId).name
     const boxResult = await this._algod.getApplicationBoxByName(Number(appId), name).do()
-    return boxResult.value
+    return boxResult.value ?? new Uint8Array()
   }
 
   /**
