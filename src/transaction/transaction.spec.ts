@@ -1227,13 +1227,13 @@ describe('When create algorand client with config from environment', () => {
 
     const sendRawTransactionWithAlgoKitCoreAlgod = vi.spyOn(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (algorandClient.client.algod.c as any).bc._algoKitCoreAlgod,
+      (algorandClient.client.algod as any)._algoKitCoreAlgod,
       'rawTransactionResponse',
     )
 
     const sendPendingTransactionInformationResponseWithAlgoKitCoreAlgod = vi.spyOn(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (algorandClient.client.algod.c as any).bc._algoKitCoreAlgod,
+      (algorandClient.client.algod as any)._algoKitCoreAlgod,
       'pendingTransactionInformationResponse',
     )
 
@@ -1259,7 +1259,7 @@ describe('When create algorand client with config from environment', () => {
 
     const getTransactionParamsWithAlgoKitCoreAlgod = vi.spyOn(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (algorandClient.client.algod.c as any).bc._algoKitCoreAlgod,
+      (algorandClient.client.algod as any)._algoKitCoreAlgod,
       'transactionParamsResponse',
     )
     const testAccount = await getTestAccount({ initialFunds: algos(10), suppressLog: true }, algorandClient)

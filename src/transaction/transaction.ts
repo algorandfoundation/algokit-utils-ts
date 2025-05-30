@@ -774,6 +774,9 @@ export async function prepareGroupForSending(
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
 export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: Algodv2) {
+  // TODO: update the below logic
+  // - if only 1 payment transaction, switch to use the new "ATC" that leverage algokit core
+  // - also, skip some of the app call related logic
   const { atc: givenAtc, sendParams, additionalAtcContext, ...executeParams } = atcSend
 
   let atc: AtomicTransactionComposer
