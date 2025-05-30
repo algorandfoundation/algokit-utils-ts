@@ -1227,7 +1227,7 @@ describe('When create algorand client with config from environment', () => {
 
     const sendRawTransactionWithAlgoKitCoreAlgod = vi.spyOn(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (algorandClient.client.algod.c as any).bc._algoKitCoreAlgod,
+      (algorandClient.client.algod as any)._algoKitCoreAlgod,
       'rawTransactionResponse',
     )
 
