@@ -8,7 +8,7 @@ import { SuggestedParamsProxy, SuggestedParamsRequest } from './algod-request-pr
 
 /// This component is the wrapper around algosdk.Algod and algod-api Algod
 export class AlgodClient extends algosdk.Algodv2 {
-  private _algoKitCoreAlgod: AlgodApi
+  public algoKitCoreAlgod: AlgodApi
 
   constructor(config: AlgoClientConfig) {
     const { token, server, port } = config
@@ -16,7 +16,7 @@ export class AlgodClient extends algosdk.Algodv2 {
     const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
     super(httpClientWithRetry, server)
 
-    this._algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(this.buildBaseServerUrl(server, port), tokenHeader)
+    this.algoKitCoreAlgod = buildAlgoKitCoreAlgodClient(this.buildBaseServerUrl(server, port), tokenHeader)
   }
 
   private buildBaseServerUrl(baseServer: string, port?: string | number) {
@@ -36,16 +36,16 @@ export class AlgodClient extends algosdk.Algodv2 {
 
   pendingTransactionInformation(txid: string): PendingTransactionInformationRequest {
     const request = super.pendingTransactionInformation(txid)
-    return new Proxy<PendingTransactionInformationRequest>(request, new PendingTransactionInformationProxy(this._algoKitCoreAlgod, txid))
+    return new Proxy<PendingTransactionInformationRequest>(request, new PendingTransactionInformationProxy(this.algoKitCoreAlgod, txid))
   }
 
   getTransactionParams(): SuggestedParamsRequest {
     const request = super.getTransactionParams()
-    return new Proxy<SuggestedParamsRequest>(request, new SuggestedParamsProxy(this._algoKitCoreAlgod))
+    return new Proxy<SuggestedParamsRequest>(request, new SuggestedParamsProxy(this.algoKitCoreAlgod))
   }
 }
 
-export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthentication {
+class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthentication {
   private _header: string
   private _key: string
 
@@ -68,7 +68,7 @@ export class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthent
   }
 }
 
-export function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): algodApi.AlgodApi {
+function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): algodApi.AlgodApi {
   const authMethodConfig = Object.entries(tokenHeader).length > 0 ? new TokenHeaderAuthenticationMethod(tokenHeader) : undefined
   const authConfig: algodApi.AuthMethodsConfiguration = { default: authMethodConfig }
 
@@ -85,4 +85,9 @@ export function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHead
   // Convert to actual configuration
   const config = algodApi.createConfiguration(configurationParameters)
   return new algodApi.AlgodApi(config)
+}
+
+export const isAlgoKitCoreBridgeAlgodClient = (algod: algosdk.Algodv2): algod is AlgodClient => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return !!(algod as any).algoKitCoreAlgod
 }

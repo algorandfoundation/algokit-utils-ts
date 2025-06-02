@@ -6,6 +6,7 @@ import innerFeeContract from '../../tests/example-contracts/inner-fee/applicatio
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
+import { AlgodClient } from '../algokit-core-bridge/algod-client'
 import { algo, algos, microAlgo } from '../amount'
 import { Config } from '../config'
 import { algorandFixture, getTestAccount } from '../testing'
@@ -1224,16 +1225,11 @@ describe('abi return', () => {
 describe('When create algorand client with config from environment', () => {
   test('payment transactions are sent and waited for by algokit core algod client', async () => {
     const algorandClient = AlgorandClient.fromConfig(ClientManager.getConfigFromEnvironmentOrLocalNet())
-
-    const sendRawTransactionWithAlgoKitCoreAlgod = vi.spyOn(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (algorandClient.client.algod as any)._algoKitCoreAlgod,
-      'rawTransactionResponse',
-    )
+    const algodClient = algorandClient.client.algod as AlgodClient
+    const sendRawTransactionWithAlgoKitCoreAlgod = vi.spyOn(algodClient.algoKitCoreAlgod, 'rawTransactionResponse')
 
     const sendPendingTransactionInformationResponseWithAlgoKitCoreAlgod = vi.spyOn(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (algorandClient.client.algod as any)._algoKitCoreAlgod,
+      algodClient.algoKitCoreAlgod,
       'pendingTransactionInformationResponse',
     )
 
@@ -1256,12 +1252,9 @@ describe('When create algorand client with config from environment', () => {
 
   test('transaction suggested params are requested by algokit core algod client', async () => {
     const algorandClient = AlgorandClient.fromConfig(ClientManager.getConfigFromEnvironmentOrLocalNet())
+    const algodClient = algorandClient.client.algod as AlgodClient
 
-    const getTransactionParamsWithAlgoKitCoreAlgod = vi.spyOn(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (algorandClient.client.algod as any)._algoKitCoreAlgod,
-      'transactionParamsResponse',
-    )
+    const getTransactionParamsWithAlgoKitCoreAlgod = vi.spyOn(algodClient.algoKitCoreAlgod, 'transactionParamsResponse')
     const testAccount = await getTestAccount({ initialFunds: algos(10), suppressLog: true }, algorandClient)
     algorandClient.setSignerFromAccount(testAccount)
 

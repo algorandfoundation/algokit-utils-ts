@@ -1,6 +1,7 @@
 import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
 import algosdk, { TransactionSigner } from 'algosdk'
 import { callWithRetry } from '../types/call-http-with-retry'
+import { AlgodClient } from './algod-client'
 import { handleJSONResponse } from './algod-request-proxies/utils'
 
 export type ExecuteParams = {
@@ -8,17 +9,10 @@ export type ExecuteParams = {
 }
 
 export class AtomicTransactionComposer {
-  private _algodApi: AlgodApi
+  private _algoKitCoreAlgod: AlgodApi
 
-  constructor(private _algodClient: algosdk.Algodv2) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const algodClient = (this._algodClient as any)._algoKitCoreAlgod as AlgodApi
-
-    if (!algodClient) {
-      throw new Error('The input algod client must be the AlgoKit core algod client')
-    }
-
-    this._algodApi = algodClient
+  constructor(private _algodClient: AlgodClient) {
+    this._algoKitCoreAlgod = this._algodClient.algoKitCoreAlgod
   }
 
   // Inspired by algosdk AtomicTransactionComposer.gatherSignatures
@@ -67,7 +61,7 @@ export class AtomicTransactionComposer {
     const txIDs = transactionsWithSigner.map(({ txn }) => txn.txID())
     const signedTxns = await this.signTransactions(transactionsWithSigner)
 
-    const responseContext = await callWithRetry(() => this._algodApi.rawTransactionResponse(new File(signedTxns, '')))
+    const responseContext = await callWithRetry(() => this._algoKitCoreAlgod.rawTransactionResponse(new File(signedTxns, '')))
     // Call handle response for error handling purposes only
     await handleJSONResponse(responseContext, algosdk.modelsv2.PostTransactionsResponse)
 
