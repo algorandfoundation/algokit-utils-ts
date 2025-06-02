@@ -1,3 +1,4 @@
+import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
 import algosdk from 'algosdk'
 import { runWhenIndexerCaughtUp } from './indexer'
 import Algodv2 = algosdk.Algodv2
@@ -49,6 +50,10 @@ export class TransactionLogger {
     return new Proxy<Algodv2>(algod, new TransactionLoggingAlgodv2ProxyHandler(this))
   }
 
+  captureAlgoKitCoreAlgod(algod: AlgodApi): AlgodApi {
+    return new Proxy<AlgodApi>(algod, new TransactionLoggingAlgoKitCoreAlgodApiProxyHandler(this))
+  }
+
   /** Wait until all logged transactions IDs appear in the given `Indexer`. */
   async waitForIndexer(indexer: Indexer) {
     if (this._sentTransactionIds.length === 0) return
@@ -72,6 +77,31 @@ class TransactionLoggingAlgodv2ProxyHandler implements ProxyHandler<Algodv2> {
         return target[property].call(receiver, stxOrStxs)
       }
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (target as any)[property]
+  }
+}
+
+class TransactionLoggingAlgoKitCoreAlgodApiProxyHandler implements ProxyHandler<AlgodApi> {
+  private transactionLogger: TransactionLogger
+
+  constructor(transactionLogger: TransactionLogger) {
+    this.transactionLogger = transactionLogger
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get(target: AlgodApi, property: string | symbol, receiver: any) {
+    if (property === 'rawTransactionResponse') {
+      return async (file: File) => {
+        const buffer = await file.arrayBuffer()
+        const bytes = new Uint8Array(buffer)
+        this.transactionLogger.logRawTransaction(bytes)
+
+        return target[property].call(receiver, file)
+      }
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target as any)[property]
   }

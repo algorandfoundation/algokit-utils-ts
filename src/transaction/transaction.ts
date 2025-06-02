@@ -1,5 +1,6 @@
 import algosdk, { Address, ApplicationTransactionFields, TransactionBoxReference, TransactionType, stringifyJSON } from 'algosdk'
 import { Buffer } from 'buffer'
+import { AtomicTransactionComposer as AlgoKitCoreAtomicTransactionComposer } from '../algokit-core-bridge/atomic-transaction-composer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
@@ -803,7 +804,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     }
 
     // atc.buildGroup() is needed to ensure that any changes made by prepareGroupForSending are reflected and the group id is set
-    const transactionsToSend = atc.buildGroup().map((t) => {
+    const transactionsWithSignerToSend = atc.buildGroup()
+    const transactionsToSend = transactionsWithSignerToSend.map((t) => {
       return t.txn
     })
     let groupId: string | undefined = undefined
@@ -829,10 +831,14 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         simulateResponse,
       })
     }
-    const result = await atc.execute(
-      algod,
-      executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5,
-    )
+
+    const maxRoundsToWait = executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5
+    const shouldBeSentWithAlgoKitCore = transactionsToSend.length === 1 && transactionsToSend[0].type === algosdk.TransactionType.pay
+    const result = shouldBeSentWithAlgoKitCore
+      ? await new AlgoKitCoreAtomicTransactionComposer(algod).execute(transactionsWithSignerToSend, {
+          maxRoundsToWaitForConfirmation: maxRoundsToWait,
+        })
+      : await atc.execute(algod, maxRoundsToWait)
 
     if (transactionsToSend.length > 1) {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
@@ -858,6 +864,8 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
+    // TODO: the error message can be different
+
     // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const err = new Error(typeof e === 'object' ? e?.message : 'Received error executing Atomic Transaction Composer') as any as any

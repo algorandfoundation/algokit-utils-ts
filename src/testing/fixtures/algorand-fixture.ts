@@ -91,6 +91,14 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
 
+    // HACK: make the transaction logger capture the algoKit core algod too
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const algoKitCoreAlgod = (algod as any)._algoKitCoreAlgod
+    if (algoKitCoreAlgod) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(algod as any)._algoKitCoreAlgod = transactionLogger.captureAlgoKitCoreAlgod(algoKitCoreAlgod)
+    }
+
     algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd }).setSuggestedParamsCacheTimeout(0)
 
     const testAccount = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)

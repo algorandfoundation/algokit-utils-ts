@@ -4,11 +4,9 @@ import algosdk, { TokenHeader } from 'algosdk'
 import { AlgoHttpClientWithRetry } from '../types/algo-http-client-with-retry'
 import { AlgoClientConfig } from '../types/network-client'
 import { PendingTransactionInformationProxy, PendingTransactionInformationRequest } from './algod-request-proxies/pending-transaction-info'
-import { SendRawTransactionProxy, SendRawTransactionRequest } from './algod-request-proxies/send-raw-transaction'
 import { SuggestedParamsProxy, SuggestedParamsRequest } from './algod-request-proxies/suggested-params'
 
-// TODO: comment
-// This is the wrapper for algosdk.algod and algod-api
+/// This component is the wrapper around algosdk.Algod and algod-api Algod
 export class AlgodClient extends algosdk.Algodv2 {
   private _algoKitCoreAlgod: AlgodApi
 
@@ -34,11 +32,6 @@ export class AlgodClient extends algosdk.Algodv2 {
     }
 
     return baseServerURL
-  }
-
-  sendRawTransaction(stxOrStxs: Uint8Array | Uint8Array[]): SendRawTransactionRequest {
-    const request = super.sendRawTransaction(stxOrStxs)
-    return new Proxy<SendRawTransactionRequest>(request, new SendRawTransactionProxy(this._algoKitCoreAlgod, stxOrStxs))
   }
 
   pendingTransactionInformation(txid: string): PendingTransactionInformationRequest {
