@@ -15,6 +15,7 @@ Useful for automated tests.
 
 ### Properties
 
+- [\_latestLastValidRound](testing.TransactionLogger.md#_latestlastvalidround)
 - [\_sentTransactionIds](testing.TransactionLogger.md#_senttransactionids)
 
 ### Accessors
@@ -23,6 +24,7 @@ Useful for automated tests.
 
 ### Methods
 
+- [\_pushTxn](testing.TransactionLogger.md#_pushtxn)
 - [capture](testing.TransactionLogger.md#capture)
 - [clear](testing.TransactionLogger.md#clear)
 - [logRawTransaction](testing.TransactionLogger.md#lograwtransaction)
@@ -39,6 +41,16 @@ Useful for automated tests.
 [`TransactionLogger`](testing.TransactionLogger.md)
 
 ## Properties
+
+### \_latestLastValidRound
+
+• `Private` `Optional` **\_latestLastValidRound**: `bigint`
+
+#### Defined in
+
+[src/testing/transaction-logger.ts:13](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L13)
+
+___
 
 ### \_sentTransactionIds
 
@@ -62,9 +74,29 @@ readonly `string`[]
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:17](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L17)
+[src/testing/transaction-logger.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L26)
 
 ## Methods
+
+### \_pushTxn
+
+▸ **_pushTxn**(`stxn`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `stxn` | `Uint8Array` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/testing/transaction-logger.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L15)
+
+___
 
 ### capture
 
@@ -86,7 +118,7 @@ The wrapped `Algodv2`, any transactions sent using this algod instance will be l
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:48](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L48)
+[src/testing/transaction-logger.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L53)
 
 ___
 
@@ -102,7 +134,7 @@ Clear all logged IDs.
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L24)
+[src/testing/transaction-logger.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L33)
 
 ___
 
@@ -124,7 +156,7 @@ The method that captures raw transactions and stores the transaction IDs.
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L31)
+[src/testing/transaction-logger.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L40)
 
 ___
 
@@ -146,4 +178,4 @@ Wait until all logged transactions IDs appear in the given `Indexer`.
 
 #### Defined in
 
-[src/testing/transaction-logger.ts:53](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L53)
+[src/testing/transaction-logger.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/transaction-logger.ts#L58)

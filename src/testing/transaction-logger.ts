@@ -10,6 +10,15 @@ import Indexer = algosdk.Indexer
  */
 export class TransactionLogger {
   private _sentTransactionIds: string[] = []
+  private _latestLastValidRound?: bigint
+
+  private _pushTxn(stxn: Uint8Array) {
+    const decoded = decodeSignedTransaction(stxn)
+    if (decoded.txn.lastValid > (this._latestLastValidRound ?? BigInt(0))) {
+      this._latestLastValidRound = BigInt(decoded.txn.lastValid)
+    }
+    this._sentTransactionIds.push(decoded.txn.txID())
+  }
 
   /**
    * The list of transaction IDs that has been logged thus far.
@@ -30,13 +39,9 @@ export class TransactionLogger {
    */
   logRawTransaction(signedTransactions: Uint8Array | Uint8Array[]) {
     if (Array.isArray(signedTransactions)) {
-      for (const stxn of signedTransactions) {
-        const decoded = decodeSignedTransaction(stxn)
-        this._sentTransactionIds.push(decoded.txn.txID())
-      }
+      signedTransactions.forEach((stxn) => this._pushTxn(stxn))
     } else {
-      const decoded = decodeSignedTransaction(signedTransactions)
-      this._sentTransactionIds.push(decoded.txn.txID())
+      this._pushTxn(signedTransactions)
     }
   }
 
@@ -53,7 +58,22 @@ export class TransactionLogger {
   async waitForIndexer(indexer: Indexer) {
     if (this._sentTransactionIds.length === 0) return
     const lastTxId = this._sentTransactionIds[this._sentTransactionIds.length - 1]
-    await runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(lastTxId).do())
+    await runWhenIndexerCaughtUp(async () => {
+      try {
+        await indexer.lookupTransactionByID(lastTxId).do()
+      } catch (e) {
+        // If the txid lookup failed, then try to look up the last valid round
+        // If that round exists, then we know indexer is caught up
+        if (this._latestLastValidRound) {
+          await indexer.lookupBlock(this._latestLastValidRound ?? BigInt(0)).do()
+          console.debug(
+            `waitForIndexer has waited until the last valid round ${this._latestLastValidRound} was indexed, but did not find transaction ${lastTxId} in the indexer.`,
+          )
+        } else {
+          throw e
+        }
+      }
+    })
   }
 }
 
