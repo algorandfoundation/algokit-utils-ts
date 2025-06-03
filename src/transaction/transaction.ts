@@ -1,7 +1,5 @@
 import algosdk, { Address, ApplicationTransactionFields, TransactionBoxReference, TransactionType, stringifyJSON } from 'algosdk'
 import { Buffer } from 'buffer'
-import { isAlgoKitCoreBridgeAlgodClient } from '../algokit-core-bridge/algod-client'
-import { AtomicTransactionComposer as AlgoKitCoreAtomicTransactionComposer } from '../algokit-core-bridge/atomic-transaction-composer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
@@ -831,14 +829,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     }
 
     const maxRoundsToWait = executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5
-    const shouldBeSentWithAlgoKitCore =
-      isAlgoKitCoreBridgeAlgodClient(algod) && transactionsToSend.every((t) => t.type === TransactionType.pay)
-
-    const result = shouldBeSentWithAlgoKitCore
-      ? await new AlgoKitCoreAtomicTransactionComposer(algod).execute(transactionsWithSignerToSend, {
-          maxRoundsToWaitForConfirmation: maxRoundsToWait,
-        })
-      : await atc.execute(algod, maxRoundsToWait)
+    const result = await atc.execute(algod, maxRoundsToWait)
 
     if (transactionsToSend.length > 1) {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
@@ -864,8 +855,6 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
-    // TODO: the error message can be different
-
     // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const err = new Error(typeof e === 'object' ? e?.message : 'Received error executing Atomic Transaction Composer') as any as any
