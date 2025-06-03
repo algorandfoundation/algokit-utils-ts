@@ -93,7 +93,6 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     const transactionLoggerAlgod = transactionLogger.capture(algod)
 
     if (isAlgoKitCoreBridgeAlgodClient(algod)) {
-      // HACK: make the transaction logger capture the algoKit core algod too
       algod.algoKitCoreAlgod = transactionLogger.captureAlgoKitCoreAlgod(algod.algoKitCoreAlgod)
     }
 

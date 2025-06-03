@@ -16,7 +16,7 @@ export class AtomicTransactionComposer {
   }
 
   // Inspired by algosdk AtomicTransactionComposer.gatherSignatures
-  private async signTransactions(transactionsWithSigner: algosdk.TransactionWithSigner[]) {
+  private async signTransactions(transactionsWithSigner: algosdk.TransactionWithSigner[]): Promise<Uint8Array[]> {
     const txnGroup = transactionsWithSigner.map((txnWithSigner) => txnWithSigner.txn)
 
     const indexesPerSigner: Map<TransactionSigner, number[]> = new Map()
@@ -47,7 +47,7 @@ export class AtomicTransactionComposer {
       throw new Error(`Missing signatures. Got ${signedTxns}`)
     }
 
-    return signedTxns as Array<Uint8Array>
+    return signedTxns
   }
 
   public async execute(
@@ -68,6 +68,8 @@ export class AtomicTransactionComposer {
     // TODO: when app call is supported, this should be the txId of the first app call txn
     const txIDToWaitFor = txIDs[0]
 
+    // TODO: can we use utils waitForConfirmation here?
+    // use core for waitForConfirmation?
     const confirmedTxnInfo = await algosdk.waitForConfirmation(this._algodClient, txIDToWaitFor, params.maxRoundsToWaitForConfirmation ?? 5)
 
     return {

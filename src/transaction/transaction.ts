@@ -832,7 +832,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
     const maxRoundsToWait = executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5
     const shouldBeSentWithAlgoKitCore =
-      isAlgoKitCoreBridgeAlgodClient(algod) && transactionsToSend.length === 1 && transactionsToSend[0].type === algosdk.TransactionType.pay
+      isAlgoKitCoreBridgeAlgodClient(algod) && transactionsToSend.every((t) => t.type === TransactionType.pay)
 
     const result = shouldBeSentWithAlgoKitCore
       ? await new AlgoKitCoreAtomicTransactionComposer(algod).execute(transactionsWithSignerToSend, {
