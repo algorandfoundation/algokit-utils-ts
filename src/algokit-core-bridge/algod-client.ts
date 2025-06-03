@@ -88,6 +88,5 @@ function buildAlgoKitCoreAlgodClient(baseUrl: URL, tokenHeader: TokenHeader): al
 }
 
 export const isAlgoKitCoreBridgeAlgodClient = (algod: algosdk.Algodv2): algod is AlgodClient => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return !!(algod as any).algoKitCoreAlgod
+  return !!(algod as AlgodClient).algoKitCoreAlgod
 }
