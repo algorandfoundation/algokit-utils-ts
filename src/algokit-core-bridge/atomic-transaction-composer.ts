@@ -326,10 +326,8 @@ export class TransactionComposer {
 
     const txns = txnWithSigners.map((txnWithSigner) => txnWithSigner.txn)
     if (txns.length > 1) {
-      // HACK: update group id
-      const foos = groupTransactions(txns)
-      const groupId = foos[0].group
-      txnWithSigners.forEach((txnWithSigner) => (txnWithSigner.txn.group = groupId))
+      const txnsWithGroup = groupTransactions(txns)
+      txnWithSigners.forEach((txnWithSigner, index) => (txnWithSigner.txn = txnsWithGroup[index]))
     }
 
     return {
