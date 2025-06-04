@@ -727,6 +727,11 @@ export class TransactionComposer {
         maxFee: params.maxFee,
         lease: encodeLease(params.lease),
         staticFee: params.staticFee,
+        signer: params.signer
+          ? 'signer' in params.signer
+            ? getSignerFromAlgosdkSinger(params.signer.signer)
+            : getSignerFromAlgosdkSinger(params.signer)
+          : undefined,
       })
     }
 
