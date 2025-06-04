@@ -56,8 +56,6 @@ export type SuggestedParams = {
 export type CommonTransactionParams = {
   /** Algorand address of sender */
   sender: Address
-  /** Suggested parameters relevant to the network that will accept this transaction */
-  suggestedParams: SuggestedParams
   /** Optional, arbitrary data to be stored in the transaction's note field */
   note?: Uint8Array
   /**
@@ -72,6 +70,7 @@ export type CommonTransactionParams = {
   staticFee?: AlgoAmount
   maxFee?: AlgoAmount
   extraFee?: AlgoAmount
+  signer?: TransactionSigner
 }
 
 export type PaymentTransactionParams = CommonTransactionParams & {
@@ -100,6 +99,8 @@ export type TransactionWithContext = {
     // abiMethod?: algosdk.ABIMethod
   }
 }
+
+export type TransactionWithSignerAndContext = TransactionWithSigner & TransactionWithContext
 
 export type SendAtomicTransactionComposerResults = {
   transactions: Transaction[]
@@ -133,6 +134,8 @@ export type TransactionComposerParams = {
   defaultValidityWindowIsExplicit?: boolean
 }
 
+export type Txn = PaymentTransactionParams & { type: 'pay' }
+
 export class TransactionComposer {
   private algosdkAlgod: algosdk.Algodv2
   private algod: AlgodApi
@@ -143,6 +146,7 @@ export class TransactionComposer {
   /** Whether the validity window was explicitly set on construction */
   private defaultValidityWindowIsExplicit = false
   errorTransformers: ErrorTransformer[]
+  private txns: Txn[] = []
 
   /**
    * Create a `TransactionComposer`.
@@ -192,15 +196,21 @@ export class TransactionComposer {
     return transformedError
   }
 
+  addPayment(params: PaymentTransactionParams): TransactionComposer {
+    this.txns.push({ ...params, type: 'pay' })
+    return this
+  }
+
   private commonTxnBuildStep<TParams extends CommonTransactionParams>(
-    buildTxn: (txnParams: TParams) => Transaction,
+    buildTxn: (txnParams: TParams, txnSuggestedParams: SuggestedParams) => Transaction,
     params: TParams,
+    suggestedParams: SuggestedParams,
   ): TransactionWithContext {
     if (params.staticFee !== undefined && params.extraFee !== undefined) {
       throw Error('Cannot set both staticFee and extraFee')
     }
 
-    const txn = buildTxn(params)
+    const txn = buildTxn(params, suggestedParams)
 
     const logicalMaxFee =
       params.maxFee !== undefined && params.maxFee.microAlgo > (params.staticFee?.microAlgo ?? 0n) ? params.maxFee : params.staticFee
@@ -208,19 +218,22 @@ export class TransactionComposer {
     return { txn, context: { maxFee: logicalMaxFee } }
   }
 
-  buildPaymentStep({
-    sender,
-    receiver,
-    amount,
-    closeRemainderTo,
-    rekeyTo,
-    note,
-    lease,
-    suggestedParams,
-    staticFee,
-    maxFee,
-    extraFee,
-  }: PaymentTransactionParams) {
+  private async getSuggestedParams(): Promise<SuggestedParams> {
+    const transactionParams = await this.getTransactionParams()
+    return {
+      feePerByte: transactionParams.fee,
+      firstValid: transactionParams.lastRound,
+      lastValid: transactionParams.lastRound + BigInt(1000),
+      minFee: transactionParams.minFee,
+      genesisHash: new Uint8Array(Buffer.from(transactionParams.genesisHash, 'base64')),
+      genesisId: transactionParams.genesisId,
+    }
+  }
+
+  buildPaymentStep(
+    { sender, receiver, amount, closeRemainderTo, rekeyTo, note, lease, staticFee, maxFee, extraFee }: PaymentTransactionParams,
+    suggestedParams: SuggestedParams,
+  ) {
     const baseTxn: Transaction = {
       sender: sender,
       transactionType: 'Payment',
@@ -252,8 +265,8 @@ export class TransactionComposer {
     }
   }
 
-  public buildPayment(params: PaymentTransactionParams) {
-    return this.commonTxnBuildStep(this.buildPaymentStep, params)
+  public buildPayment(params: PaymentTransactionParams, suggestedParams: SuggestedParams) {
+    return this.commonTxnBuildStep(this.buildPaymentStep, params, suggestedParams)
   }
 
   // Inspired by algosdk AtomicTransactionComposer.gatherSignatures
@@ -291,21 +304,48 @@ export class TransactionComposer {
     return signedTxns
   }
 
-  public async send(
-    transactionsWithSigner: TransactionWithSigner[],
-    params: {
-      suppressLog?: boolean
-      maxRoundsToWaitForConfirmation?: number
-      skipWaiting?: boolean // TODO: confirm, this doesn't seem to be used
-    },
-  ): Promise<SendAtomicTransactionComposerResults> {
-    let transactionsToSend = transactionsWithSigner.map((txnWithSigner) => txnWithSigner.txn)
+  private async buildTxn(txn: Txn, suggestedParams: SuggestedParams) {
+    switch (txn.type) {
+      case 'pay':
+        return [this.buildPayment(txn, suggestedParams)]
+    }
+  }
+
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: SuggestedParams): Promise<TransactionWithSigner[]> {
+    const signer = txn.signer ? txn.signer : this.getSigner(txn.sender)
+
+    return (await this.buildTxn(txn, suggestedParams)).map(({ txn, context }) => ({ txn, signer, context }))
+  }
+
+  public async build() {
+    const suggestedParams = await this.getSuggestedParams()
+    const txnWithSigners: TransactionWithSigner[] = []
+    for (const txn of this.txns) {
+      txnWithSigners.push(...(await this.buildTxnWithSigner(txn, suggestedParams)))
+    }
+
+    const txns = txnWithSigners.map((txnWithSigner) => txnWithSigner.txn)
+    if (txns.length > 1) {
+      // HACK: update group id
+      const foos = groupTransactions(txns)
+      const groupId = foos[0].group
+      txnWithSigners.forEach((txnWithSigner) => (txnWithSigner.txn.group = groupId))
+    }
+
+    return {
+      transactions: txnWithSigners,
+    }
+  }
+
+  public async send(params: {
+    suppressLog?: boolean
+    maxRoundsToWaitForConfirmation?: number
+    skipWaiting?: boolean // TODO: confirm, this doesn't seem to be used
+  }): Promise<SendAtomicTransactionComposerResults> {
+    const { transactions: transactionsWithSigner } = await this.build()
+    const transactionsToSend = transactionsWithSigner.map((txnWithSigner) => txnWithSigner.txn)
 
     try {
-      if (transactionsToSend.length > 1) {
-        transactionsToSend = groupTransactions(transactionsToSend)
-      }
-
       const txIDs = transactionsToSend.map((txn) => getTransactionId(txn))
 
       let groupId: string | undefined = undefined
