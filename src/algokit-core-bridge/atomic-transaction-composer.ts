@@ -341,6 +341,35 @@ export class TransactionComposer {
     skipWaiting?: boolean // TODO: confirm, this doesn't seem to be used
   }): Promise<SendAtomicTransactionComposerResults> {
     const { transactions: transactionsWithSigner } = await this.build()
+
+    let waitRounds = params?.maxRoundsToWaitForConfirmation
+
+    const suggestedParams = waitRounds === undefined ? await this.getSuggestedParams() : undefined
+
+    if (waitRounds === undefined) {
+      const lastRound = transactionsWithSigner.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
+      const { firstValid: firstRound } = suggestedParams!
+      waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
+    }
+
+    try {
+      return await this._send(transactionsWithSigner, {
+        suppressLog: params?.suppressLog,
+        maxRoundsToWaitForConfirmation: waitRounds,
+      })
+    } catch (originalError: unknown) {
+      throw await this.transformError(originalError)
+    }
+  }
+
+  private async _send(
+    transactionsWithSigner: TransactionWithSigner[],
+    params: {
+      suppressLog?: boolean
+      maxRoundsToWaitForConfirmation?: number
+      skipWaiting?: boolean // TODO: confirm, this doesn't seem to be used
+    },
+  ) {
     const transactionsToSend = transactionsWithSigner.map((txnWithSigner) => txnWithSigner.txn)
 
     try {
