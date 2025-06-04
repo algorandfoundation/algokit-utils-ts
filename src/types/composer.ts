@@ -1,23 +1,13 @@
 import { PromiseAlgodApi as AlgodApi } from '@algorandfoundation/algokit-algod-api/types/PromiseAPI'
-import {
-  Transaction as AlgoKitCoreTransaction,
-  decodeTransaction,
-  encodeTransactionRaw,
-  getTransactionId,
-  groupTransactions,
-} from '@algorandfoundation/algokit-transact'
-import algosdk, { Address, TransactionType } from 'algosdk'
+import algosdk, { Address } from 'algosdk'
 import { isAlgoKitCoreBridgeAlgodClient } from '../algokit-core-bridge/algod-client'
-import { handleJSONResponse } from '../algokit-core-bridge/algod-request-proxies/utils'
 import { buildPayment as buildPaymentWithAlgoKitCore } from '../algokit-core-bridge/transaction-builders'
 import { Config } from '../config'
-import { performAtomicTransactionComposerSimulateFoo } from '../transaction/perform-atomic-transaction-composer-simulate'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
-import { callWithRetry } from './call-http-with-retry'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
@@ -2022,176 +2012,6 @@ export class TransactionComposer {
     return await this.build()
   }
 
-  // Inspired by algosdk AtomicTransactionComposer.gatherSignatures
-  private async signTransactions(
-    transactionsWithSigner: { txn: AlgoKitCoreTransaction; signer: TransactionSigner }[],
-  ): Promise<Uint8Array[]> {
-    const unsignedAlgosdkTxns = transactionsWithSigner
-      .map((txnWithSigner) => txnWithSigner.txn)
-      .map((txn) => encodeTransactionRaw(txn))
-      .map((bytes) => algosdk.decodeUnsignedTransaction(bytes))
-
-    const indexesPerSigner: Map<TransactionSigner, number[]> = new Map()
-
-    for (let i = 0; i < transactionsWithSigner.length; i++) {
-      const { signer } = transactionsWithSigner[i]
-
-      if (!indexesPerSigner.has(signer)) {
-        indexesPerSigner.set(signer, [])
-      }
-
-      indexesPerSigner.get(signer)!.push(i)
-    }
-
-    const orderedSigners = Array.from(indexesPerSigner)
-
-    const batchedSigs = await Promise.all(orderedSigners.map(([signer, indexes]) => signer(unsignedAlgosdkTxns, indexes)))
-
-    const signedTxns = orderedSigners.reduce((acc, [, indexes], signerIndex) => {
-      indexes.forEach((txnIndex, i) => {
-        acc[txnIndex] = batchedSigs[signerIndex][i]
-      })
-      return acc
-    }, Array<Uint8Array | null>(transactionsWithSigner.length).fill(null))
-
-    const fullyPopulated = signedTxns.every((s) => s != null)
-    if (!fullyPopulated) {
-      throw new Error(`Missing signatures. Got ${signedTxns}`)
-    }
-
-    return signedTxns
-  }
-
-  // TODO: maybe create our own TransactionSigner in bridge
-  public async foo(
-    transactionsWithSigner: { txn: AlgoKitCoreTransaction; signer: TransactionSigner }[],
-    params: {
-      suppressLog?: boolean
-      maxRoundsToWaitForConfirmation?: number
-      skipWaiting?: boolean // TODO: confirm, this doesn't seem to be used
-    },
-  ): Promise<SendAtomicTransactionComposerResults> {
-    if (this.algoKitCoreAlgod === undefined) {
-      throw new Error('algoKitCoreAlgod must be set')
-    }
-
-    let transactionsToSend = transactionsWithSigner.map((txnWithSigner) => txnWithSigner.txn)
-
-    try {
-      if (transactionsToSend.length > 1) {
-        transactionsToSend = groupTransactions(transactionsToSend)
-      }
-
-      const txIDs = transactionsToSend.map((txn) => getTransactionId(txn))
-
-      let groupId: string | undefined = undefined
-      if (transactionsToSend.length > 1) {
-        groupId = transactionsToSend[0].group ? Buffer.from(transactionsToSend[0].group).toString('base64') : ''
-        Config.getLogger(params.suppressLog).verbose(`Sending group of ${transactionsToSend.length} transactions (${groupId})`, {
-          transactionsToSend,
-        })
-
-        Config.getLogger(params.suppressLog).debug(`Transaction IDs (${groupId})`, txIDs)
-      }
-
-      if (Config.debug && Config.traceAll) {
-        // Emit the simulate response for use with AlgoKit AVM debugger
-        const simulateResponse = await performAtomicTransactionComposerSimulateFoo(transactionsToSend, this.algod)
-        await Config.events.emitAsync(EventType.TxnGroupSimulated, {
-          simulateResponse,
-        })
-      }
-
-      const signedTxns = await this.signTransactions(transactionsWithSigner)
-
-      const responseContext = await callWithRetry(() => this.algoKitCoreAlgod!.rawTransactionResponse(new File(signedTxns, '')))
-      // Call handle response for error handling purposes only
-      await handleJSONResponse(responseContext, algosdk.modelsv2.PostTransactionsResponse)
-
-      // TODO: when app call is supported, this should be the txId of the first app call txn
-      const txIDToWaitFor = txIDs[0]
-
-      // TODO: can we use utils waitForConfirmation here?
-      // use core for waitForConfirmation?
-      await algosdk.waitForConfirmation(this.algod, txIDToWaitFor, params.maxRoundsToWaitForConfirmation ?? 5)
-
-      if (transactionsToSend.length > 1) {
-        Config.getLogger(params.suppressLog).verbose(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
-      } else {
-        Config.getLogger(params.suppressLog).verbose(
-          `Sent transaction ID ${txIDs[0]} ${transactionsToSend[0].transactionType} from ${transactionsToSend[0].sender.address}`,
-        )
-      }
-
-      let confirmations: modelsv2.PendingTransactionResponse[] | undefined = undefined
-      if (!params.skipWaiting) {
-        confirmations = await Promise.all(txIDs.map(async (txID) => await this.algod.pendingTransactionInformation(txID).do()))
-      }
-
-      return {
-        groupId: groupId ?? '',
-        confirmations: confirmations ?? [],
-        transactions: transactionsToSend.map((txn) => encodeTransactionRaw(txn)).map((bytes) => algosdk.decodeUnsignedTransaction(bytes)),
-        txIds: txIDs,
-        returns: [],
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      // TODO: the error message can be different
-
-      // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const err = new Error(typeof e === 'object' ? e?.message : 'Received error executing Atomic Transaction Composer') as any as any
-      err.cause = e
-      if (typeof e === 'object') {
-        // Remove headers as it doesn't have anything useful.
-        delete e.response?.headers
-        err.response = e.response
-        // body property very noisy
-        if (e.response && 'body' in e.response) delete err.response.body
-        err.name = e.name
-      }
-
-      if (Config.debug && typeof e === 'object') {
-        err.traces = []
-        Config.getLogger(params.suppressLog).error(
-          'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
-          err,
-        )
-        const simulate = await performAtomicTransactionComposerSimulateFoo(transactionsToSend, this.algod)
-        if (Config.debug && !Config.traceAll) {
-          // Emit the event only if traceAll: false, as it should have already been emitted above
-          await Config.events.emitAsync(EventType.TxnGroupSimulated, {
-            simulateResponse: simulate,
-          })
-        }
-
-        if (simulate && simulate.txnGroups[0].failedAt) {
-          for (const txn of simulate.txnGroups[0].txnResults) {
-            err.traces.push({
-              trace: txn.execTrace?.toEncodingData(),
-              appBudget: txn.appBudgetConsumed,
-              logicSigBudget: txn.logicSigBudgetConsumed,
-              logs: txn.txnResult.logs,
-              message: simulate.txnGroups[0].failureMessage,
-            })
-          }
-        }
-      } else {
-        Config.getLogger(params.suppressLog).error(
-          'Received error executing Atomic Transaction Composer, for more information enable the debug flag',
-          err,
-        )
-      }
-
-      // Attach the sent transactions so we can use them in error transformers
-      err.sentTransactions = transactionsToSend
-        .map((txn) => encodeTransactionRaw(txn))
-        .map((bytes) => algosdk.decodeUnsignedTransaction(bytes))
-      throw err
-    }
-  }
-
   /**
    * Compose the atomic transaction group and send it to the network.
    * @param params The parameters to control execution with
@@ -2216,33 +2036,22 @@ export class TransactionComposer {
     }
 
     try {
-      if (this.algoKitCoreAlgod && group.every((txnWithSigner) => txnWithSigner.txn.type === TransactionType.pay)) {
-        const algoKitCoreTransactionsWithSigner = group.map(({ txn, signer }) => ({
-          txn: decodeTransaction(algosdk.encodeUnsignedTransaction(txn)),
-          signer: signer,
-        }))
-        return await this.foo(algoKitCoreTransactionsWithSigner, {
-          maxRoundsToWaitForConfirmation: waitRounds,
+      return await sendAtomicTransactionComposer(
+        {
+          atc: this.atc,
           suppressLog: params?.suppressLog,
-        })
-      } else {
-        return await sendAtomicTransactionComposer(
-          {
-            atc: this.atc,
-            suppressLog: params?.suppressLog,
-            maxRoundsToWaitForConfirmation: waitRounds,
-            populateAppCallResources: params?.populateAppCallResources,
-            coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
-            additionalAtcContext: params?.coverAppCallInnerTransactionFees
-              ? {
-                  maxFees: this.txnMaxFees,
-                  suggestedParams: suggestedParams!,
-                }
-              : undefined,
-          },
-          this.algod,
-        )
-      }
+          maxRoundsToWaitForConfirmation: waitRounds,
+          populateAppCallResources: params?.populateAppCallResources,
+          coverAppCallInnerTransactionFees: params?.coverAppCallInnerTransactionFees,
+          additionalAtcContext: params?.coverAppCallInnerTransactionFees
+            ? {
+                maxFees: this.txnMaxFees,
+                suggestedParams: suggestedParams!,
+              }
+            : undefined,
+        },
+        this.algod,
+      )
     } catch (originalError: unknown) {
       throw await this.transformError(originalError)
     }
