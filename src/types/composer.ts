@@ -1,7 +1,9 @@
-import { PromiseAlgodApi as AlgodApi } from '@algorandfoundation/algokit-algod-api/types/PromiseAPI'
+import { Address as AlgoKitCoreAdderss, decodeTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
 import algosdk, { Address } from 'algosdk'
 import { isAlgoKitCoreBridgeAlgodClient } from '../algokit-core-bridge/algod-client'
-import { buildPayment as buildPaymentWithAlgoKitCore } from '../algokit-core-bridge/transaction-builders'
+import { TransactionComposer as AlgoKitCoreTransactionComposer } from '../algokit-core-bridge/atomic-transaction-composer'
+import { mapFromAlgosdkAddressToAlgoKitCoreAddress } from '../algokit-core-bridge/mappers'
+import { getSignerFromAlgosdkSinger } from '../algokit-core-bridge/transaction-signer'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
@@ -565,8 +567,6 @@ export class TransactionComposer {
   /** The algod client used by the composer. */
   private algod: algosdk.Algodv2
 
-  private algoKitCoreAlgod: AlgodApi | undefined
-
   /** An async function that will return suggested params for the transaction. */
   private getSuggestedParams: () => Promise<algosdk.SuggestedParams>
 
@@ -582,6 +582,8 @@ export class TransactionComposer {
   private appManager: AppManager
 
   private errorTransformers: ErrorTransformer[]
+
+  private algoKitCoreTransactionComposer?: AlgoKitCoreTransactionComposer
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
@@ -612,10 +614,6 @@ export class TransactionComposer {
    */
   constructor(params: TransactionComposerParams) {
     this.algod = params.algod
-    if (isAlgoKitCoreBridgeAlgodClient(this.algod)) {
-      this.algoKitCoreAlgod = this.algod.algoKitCoreAlgod
-    }
-
     const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
@@ -623,6 +621,30 @@ export class TransactionComposer {
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
     this.errorTransformers = params.errorTransformers ?? []
+
+    if (isAlgoKitCoreBridgeAlgodClient(this.algod)) {
+      this.algoKitCoreTransactionComposer = new AlgoKitCoreTransactionComposer({
+        algodClient: this.algod,
+        getSigner: (address: string | AlgoKitCoreAdderss) => {
+          const algosdkAddess = typeof address === 'string' ? address : address.address
+          return getSignerFromAlgosdkSinger(this.getSigner(algosdkAddess))
+        },
+        defaultValidityWindow: this.defaultValidityWindow,
+        defaultValidityWindowIsExplicit: this.defaultValidityWindowIsExplicit,
+        errorTransformers: this.errorTransformers,
+        getTransactionParams: async () => {
+          const suggestedParams = await this.getSuggestedParams()
+          return {
+            consensusVersion: '', // This value is ignored by algosdk
+            fee: BigInt(suggestedParams.fee),
+            lastRound: BigInt(suggestedParams.firstValid),
+            genesisHash: suggestedParams.genesisHash ? Buffer.from(suggestedParams.genesisHash).toString('base64') : 'unknown',
+            genesisId: suggestedParams.genesisID ?? 'unknown',
+            minFee: BigInt(suggestedParams.minFee),
+          }
+        },
+      })
+    }
   }
 
   /**
@@ -1707,7 +1729,52 @@ export class TransactionComposer {
   }
 
   private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
-    return this.commonTxnBuildStepCore(buildPaymentWithAlgoKitCore, params, {
+    if (this.algoKitCoreTransactionComposer) {
+      const encoder = new TextEncoder()
+
+      const firstValid = params.firstValidRound ? params.firstValidRound : BigInt(suggestedParams.firstValid)
+      let lastValid = BigInt(suggestedParams.lastValid)
+      if (params.lastValidRound) {
+        lastValid = params.lastValidRound
+      } else {
+        // If the validity window isn't set in this transaction or by default and we are pointing at
+        //  LocalNet set a bigger window to avoid dead transactions
+        const window = params.validityWindow
+          ? BigInt(params.validityWindow)
+          : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(suggestedParams.genesisID ?? 'unknown')
+            ? 1000n
+            : this.defaultValidityWindow
+        lastValid = BigInt(firstValid) + window
+      }
+
+      const transactionWithContext = this.algoKitCoreTransactionComposer.buildPayment({
+        sender: mapFromAlgosdkAddressToAlgoKitCoreAddress(params.sender),
+        receiver: mapFromAlgosdkAddressToAlgoKitCoreAddress(params.receiver),
+        amount: params.amount,
+        closeRemainderTo: params.closeRemainderTo ? mapFromAlgosdkAddressToAlgoKitCoreAddress(params.closeRemainderTo) : undefined,
+        rekeyTo: params.rekeyTo ? mapFromAlgosdkAddressToAlgoKitCoreAddress(params.rekeyTo) : undefined,
+        note: params.note ? (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) : undefined,
+        extraFee: params.extraFee,
+        maxFee: params.maxFee,
+        lease: encodeLease(params.lease),
+        staticFee: params.staticFee,
+        suggestedParams: {
+          feePerByte: BigInt(suggestedParams.fee),
+          firstValid: params.firstValidRound ? params.firstValidRound : BigInt(suggestedParams.firstValid),
+          genesisHash: suggestedParams.genesisHash,
+          genesisId: suggestedParams.genesisID,
+          lastValid: lastValid,
+          minFee: BigInt(suggestedParams.minFee),
+        },
+      })
+
+      return {
+        txn: algosdk.decodeUnsignedTransaction(encodeTransactionRaw(transactionWithContext.txn)),
+        context: transactionWithContext.context,
+      }
+    }
+
+    return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
       amount: params.amount.microAlgo,
@@ -2023,6 +2090,23 @@ export class TransactionComposer {
    */
   async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
     const group = (await this.build()).transactions
+    if (this.algoKitCoreTransactionComposer && group.every((txn) => txn.txn.type === algosdk.TransactionType.pay)) {
+      const algoKitTxnWithSigner = group.map((txnWithSigner) => ({
+        txn: decodeTransaction(algosdk.encodeUnsignedTransaction(txnWithSigner.txn)),
+        signer: getSignerFromAlgosdkSinger(txnWithSigner.signer),
+      }))
+      const sendWithAlgoKitCoreResult = await this.algoKitCoreTransactionComposer.send(algoKitTxnWithSigner, {
+        maxRoundsToWaitForConfirmation: params?.maxRoundsToWaitForConfirmation,
+        suppressLog: params?.suppressLog,
+      })
+      return {
+        groupId: sendWithAlgoKitCoreResult.groupId,
+        txIds: sendWithAlgoKitCoreResult.txIds,
+        transactions: sendWithAlgoKitCoreResult.transactions.map((txn) => algosdk.decodeUnsignedTransaction(encodeTransactionRaw(txn))),
+        confirmations: sendWithAlgoKitCoreResult.confirmations,
+        returns: [],
+      }
+    }
 
     let waitRounds = params?.maxRoundsToWaitForConfirmation
 

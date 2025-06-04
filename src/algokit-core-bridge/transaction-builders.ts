@@ -7,6 +7,7 @@ import {
 import algosdk, { Address } from 'algosdk'
 import { CommonTransactionParams } from '../types/composer'
 
+// TODO: may not need this file
 export function getAlgoKitCoreAddress(address: string | Address) {
   return addressFromString(typeof address === 'string' ? address : address.toString())
 }

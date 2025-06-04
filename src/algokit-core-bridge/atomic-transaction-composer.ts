@@ -1,12 +1,5 @@
-import { AlgodApi, PendingTransactionResponse, TransactionParams200Response } from '@algorandfoundation/algokit-algod-api'
-import {
-  Address,
-  addressFromString,
-  assignFee,
-  getTransactionId,
-  groupTransactions,
-  Transaction,
-} from '@algorandfoundation/algokit-transact'
+import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
+import { Address, assignFee, getTransactionId, groupTransactions, Transaction } from '@algorandfoundation/algokit-transact'
 import algosdk from 'algosdk'
 import { Config } from '../config'
 import { performAtomicTransactionComposerSimulateFoo } from '../transaction'
@@ -42,18 +35,27 @@ class ErrorTransformerError extends Error {
   }
 }
 
+// Copied from TransactionParams200Response, removed consensusVersion and fix number types
+export type TransactionParams = {
+  fee: bigint
+  genesisHash: string
+  genesisId: string
+  lastRound: bigint
+  minFee: bigint
+}
+
 export type SuggestedParams = {
   firstValid: bigint
   lastValid: bigint
-  genesisHash: Uint8Array
-  genesisId: string
+  genesisHash?: Uint8Array
+  genesisId?: string
   feePerByte: bigint
   minFee: bigint
 }
 
 export type CommonTransactionParams = {
   /** Algorand address of sender */
-  sender: string | Address
+  sender: Address
   /** Suggested parameters relevant to the network that will accept this transaction */
   suggestedParams: SuggestedParams
   /** Optional, arbitrary data to be stored in the transaction's note field */
@@ -66,7 +68,7 @@ export type CommonTransactionParams = {
    */
   lease?: Uint8Array
   /** The Algorand address that will be used to authorize all future transactions from the sender, if provided. */
-  rekeyTo?: string | Address
+  rekeyTo?: Address
   staticFee?: AlgoAmount
   maxFee?: AlgoAmount
   extraFee?: AlgoAmount
@@ -76,7 +78,7 @@ export type PaymentTransactionParams = CommonTransactionParams & {
   /**
    * Algorand address of recipient
    */
-  receiver: string | Address
+  receiver: Address
   /**
    * Integer amount to send, in microAlgos. Must be nonnegative.
    */
@@ -85,7 +87,7 @@ export type PaymentTransactionParams = CommonTransactionParams & {
    * Optional, indicates the sender will close their account and the remaining balance will transfer
    * to this account
    */
-  closeRemainderTo?: string | Address
+  closeRemainderTo?: Address
 }
 
 export type TransactionWithContext = {
@@ -108,7 +110,7 @@ export type SendAtomicTransactionComposerResults = {
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations: PendingTransactionResponse[]
+  confirmations: algosdk.modelsv2.PendingTransactionResponse[] // TODO: can we convert this yet?
 }
 
 /** Parameters to create an `TransactionComposer`. */
@@ -118,7 +120,7 @@ export type TransactionComposerParams = {
   /** The function used to get the TransactionSigner for a given address */
   getSigner: (address: string | Address) => TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
-  getTransactionParams?: () => Promise<TransactionParams200Response>
+  getTransactionParams?: () => Promise<TransactionParams>
   /** How many rounds a transaction should be valid for by default; if not specified
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
@@ -128,12 +130,13 @@ export type TransactionComposerParams = {
    * callbacks can later be registered with `registerErrorTransformer`
    */
   errorTransformers?: ErrorTransformer[]
+  defaultValidityWindowIsExplicit?: boolean
 }
 
 export class TransactionComposer {
   private algosdkAlgod: algosdk.Algodv2
   private algod: AlgodApi
-  private getTransactionParams: () => Promise<TransactionParams200Response>
+  private getTransactionParams: () => Promise<TransactionParams>
   private getSigner: (address: string | Address) => TransactionSigner
   /** The default transaction validity window */
   private defaultValidityWindow = 10n
@@ -150,11 +153,20 @@ export class TransactionComposer {
     this.algod = params.algodClient.algoKitCoreAlgod
     this.algosdkAlgod = params.algodClient
 
-    const defaultgetTransactionParams = () => this.algod.transactionParams()
+    const defaultgetTransactionParams = async (): Promise<TransactionParams> => {
+      const response = await this.algod.transactionParams()
+      return {
+        fee: BigInt(response.fee),
+        lastRound: BigInt(response.lastRound),
+        minFee: BigInt(response.minFee),
+        genesisId: response.genesisId,
+        genesisHash: response.genesisHash,
+      }
+    }
     this.getTransactionParams = params.getTransactionParams ?? defaultgetTransactionParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
-    this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
+    this.defaultValidityWindowIsExplicit = params.defaultValidityWindowIsExplicit !== undefined
     this.errorTransformers = params.errorTransformers ?? []
   }
 
@@ -180,7 +192,7 @@ export class TransactionComposer {
     return transformedError
   }
 
-  private commonTxnBuildStepCore<TParams extends CommonTransactionParams>(
+  private commonTxnBuildStep<TParams extends CommonTransactionParams>(
     buildTxn: (txnParams: TParams) => Transaction,
     params: TParams,
   ): TransactionWithContext {
@@ -210,20 +222,20 @@ export class TransactionComposer {
     extraFee,
   }: PaymentTransactionParams) {
     const baseTxn: Transaction = {
-      sender: getAlgoKitCoreAddress(sender),
+      sender: sender,
       transactionType: 'Payment',
       fee: staticFee?.microAlgo,
       firstValid: suggestedParams.firstValid,
       lastValid: suggestedParams.lastValid,
       genesisHash: suggestedParams.genesisHash,
       genesisId: suggestedParams.genesisId,
-      rekeyTo: rekeyTo ? getAlgoKitCoreAddress(rekeyTo) : undefined,
+      rekeyTo: rekeyTo,
       note: note,
       lease: lease,
       payment: {
         amount: amount.microAlgo,
-        receiver: getAlgoKitCoreAddress(receiver),
-        closeRemainderTo: closeRemainderTo ? getAlgoKitCoreAddress(closeRemainderTo) : undefined,
+        receiver: receiver,
+        closeRemainderTo: closeRemainderTo,
       },
     }
 
@@ -240,8 +252,8 @@ export class TransactionComposer {
     }
   }
 
-  private buildPayment(params: PaymentTransactionParams) {
-    return this.commonTxnBuildStepCore(this.buildPaymentStep, params)
+  public buildPayment(params: PaymentTransactionParams) {
+    return this.commonTxnBuildStep(this.buildPaymentStep, params)
   }
 
   // Inspired by algosdk AtomicTransactionComposer.gatherSignatures
@@ -335,9 +347,9 @@ export class TransactionComposer {
         )
       }
 
-      let confirmations: PendingTransactionResponse[] | undefined = undefined
+      let confirmations: algosdk.modelsv2.PendingTransactionResponse[] | undefined = undefined
       if (!params.skipWaiting) {
-        confirmations = await Promise.all(txIDs.map(async (txID) => await this.algod.pendingTransactionInformation(txID)))
+        confirmations = await Promise.all(txIDs.map(async (txID) => await this.algosdkAlgod.pendingTransactionInformation(txID).do()))
       }
 
       return {
@@ -400,8 +412,4 @@ export class TransactionComposer {
       throw err
     }
   }
-}
-
-export function getAlgoKitCoreAddress(address: string | Address) {
-  return addressFromString(typeof address === 'string' ? address : address.toString())
 }
