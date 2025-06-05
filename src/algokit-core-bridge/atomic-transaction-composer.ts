@@ -327,7 +327,7 @@ export class TransactionComposer {
     const txns = txnWithSigners.map((txnWithSigner) => txnWithSigner.txn)
     if (txns.length > 1) {
       const txnsWithGroup = groupTransactions(txns)
-      txnWithSigners.forEach((txnWithSigner, index) => (txnWithSigner.txn = txnsWithGroup[index]))
+      txnWithSigners.forEach((txnWithSigner, index) => (txnWithSigner.txn.group = txnsWithGroup[index].group))
     }
 
     return {
