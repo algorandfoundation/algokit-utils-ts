@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@algorandfoundation/algokit-algod-api": "^1.0.0-alpha.3",
-    "@algorandfoundation/algokit-transact": "1.0.0-alpha.12",
+    "@algorandfoundation/algokit-transact": "file:../algokit-core/algorandfoundation-algokit-transact-0.1.0.tgz",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
@@ -90,6 +90,7 @@
     "better-npm-audit": "^3.11.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "^5.0.0",
+    "cross-env": "^7.0.3",
     "dotenv-cli": "^7.4.2",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
