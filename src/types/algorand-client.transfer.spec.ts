@@ -1,7 +1,7 @@
 import algosdk, { TransactionType } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
-import { algorandFixture } from '../testing'
+import { algorandFixture } from '../algokit-core-bridge/algorand-fixture'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'
 import { TestNetDispenserApiClient } from './dispenser-client'

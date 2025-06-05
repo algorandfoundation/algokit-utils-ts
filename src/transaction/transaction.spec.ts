@@ -7,9 +7,10 @@ import externalARC32 from '../../tests/example-contracts/resource-packer/artifac
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
 import { AlgodClient } from '../algokit-core-bridge/algod-client'
+import { algorandFixture } from '../algokit-core-bridge/algorand-fixture'
 import { algo, algos, microAlgo } from '../amount'
 import { Config } from '../config'
-import { algorandFixture, getTestAccount } from '../testing'
+import { getTestAccount } from '../testing'
 import { AlgoHttpClientWithRetry } from '../types/algo-http-client-with-retry'
 import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
@@ -19,7 +20,8 @@ import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { getABIReturnValue, waitForConfirmation } from './transaction'
 
-const transactionTests = (localnet: ReturnType<typeof algorandFixture>) => () => {
+describe('transaction', () => {
+  const localnet = algorandFixture()
   beforeEach(localnet.newScope, 10_000)
 
   const getTestTransaction = (amount?: AlgoAmount, sender?: string) => {
@@ -787,22 +789,6 @@ const transactionTests = (localnet: ReturnType<typeof algorandFixture>) => () =>
       ),
     )
   })
-}
-
-describe('transaction: bridge', transactionTests(algorandFixture()))
-
-describe('transaction: old', () => {
-  const algoConfig = ClientManager.getConfigFromEnvironmentOrLocalNet()
-  const { token, server, port } = algoConfig.algodConfig
-  const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
-  const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
-  const algosdkAlgod = new algosdk.Algodv2(httpClientWithRetry, server)
-
-  transactionTests(
-    algorandFixture({
-      algod: algosdkAlgod,
-    }),
-  )()
 })
 
 describe('arc2 transaction note', () => {

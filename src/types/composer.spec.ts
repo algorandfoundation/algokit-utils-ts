@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest'
-import { algorandFixture } from '../testing'
+import { algorandFixture } from '../algokit-core-bridge/algorand-fixture'
 
 describe('TransactionComposer', () => {
   const fixture = algorandFixture()

@@ -46,6 +46,7 @@
     "build:4-copy-readme": "cpy README.md LICENSE dist",
     "build:5-fix-readme-links": "replace-in-files --string '(./' --replacement '(https://github.com/algorandfoundation/algokit-utils-ts/blob/main/' dist/README.md",
     "test": "vitest run --coverage --passWithNoTests",
+    "test-algosdk": "cross-env USE_ALGOSDK=true vitest run --coverage --passWithNoTests",
     "test:watch": "vitest watch --coverage --passWithNoTests",
     "lint": "eslint ./src/",
     "lint:fix": "eslint ./src/ --fix",
