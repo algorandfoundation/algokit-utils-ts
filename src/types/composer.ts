@@ -1499,32 +1499,6 @@ export class TransactionComposer {
     params: CommonTransactionParams,
     txnParams: TParams,
   ): TransactionWithContext {
-    return this.commonTxnBuildStepCore(
-      (params: CommonTransactionParams, txnParams: TParams) => {
-        if (params.staticFee !== undefined) {
-          txnParams.suggestedParams.fee = params.staticFee.microAlgo
-          txnParams.suggestedParams.flatFee = true
-        }
-
-        const txn = buildTxn(txnParams)
-
-        if (params.extraFee) txn.fee += params.extraFee.microAlgo
-        if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
-          throw Error(`Transaction fee ${txn.fee} µALGO is greater than max fee ${params.maxFee}`)
-        }
-
-        return txn
-      },
-      params,
-      txnParams,
-    )
-  }
-
-  private commonTxnBuildStepCore<TParams extends algosdk.CommonTransactionParams>(
-    buildTxn: (params: CommonTransactionParams, txnParams: TParams) => Transaction,
-    params: CommonTransactionParams,
-    txnParams: TParams,
-  ): TransactionWithContext {
     // We are going to mutate suggested params, let's create a clone first
     txnParams.suggestedParams = { ...txnParams.suggestedParams }
 
@@ -1555,7 +1529,17 @@ export class TransactionComposer {
       throw Error('Cannot set both staticFee and extraFee')
     }
 
-    const txn = buildTxn(params, txnParams)
+    if (params.staticFee !== undefined) {
+      txnParams.suggestedParams.fee = params.staticFee.microAlgo
+      txnParams.suggestedParams.flatFee = true
+    }
+
+    const txn = buildTxn(txnParams)
+
+    if (params.extraFee) txn.fee += params.extraFee.microAlgo
+    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
+      throw Error(`Transaction fee ${txn.fee} µALGO is greater than max fee ${params.maxFee}`)
+    }
 
     const logicalMaxFee =
       params.maxFee !== undefined && params.maxFee.microAlgo > (params.staticFee?.microAlgo ?? 0n) ? params.maxFee : params.staticFee
