@@ -1510,7 +1510,7 @@ export class TransactionComposer {
 
         if (params.extraFee) txn.fee += params.extraFee.microAlgo
         if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
-          throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
+          throw Error(`Transaction fee ${txn.fee} µALGO is greater than max fee ${params.maxFee}`)
         }
 
         return txn

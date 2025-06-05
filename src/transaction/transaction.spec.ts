@@ -19,8 +19,7 @@ import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
 import { getABIReturnValue, waitForConfirmation } from './transaction'
 
-describe('transaction', () => {
-  const localnet = algorandFixture()
+const transactionTests = (localnet: ReturnType<typeof algorandFixture>) => () => {
   beforeEach(localnet.newScope, 10_000)
 
   const getTestTransaction = (amount?: AlgoAmount, sender?: string) => {
@@ -788,6 +787,22 @@ describe('transaction', () => {
       ),
     )
   })
+}
+
+describe('transaction: bridge', transactionTests(algorandFixture()))
+
+describe('transaction: old', () => {
+  const algoConfig = ClientManager.getConfigFromEnvironmentOrLocalNet()
+  const { token, server, port } = algoConfig.algodConfig
+  const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
+  const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
+  const algosdkAlgod = new algosdk.Algodv2(httpClientWithRetry, server)
+
+  transactionTests(
+    algorandFixture({
+      algod: algosdkAlgod,
+    }),
+  )()
 })
 
 describe('arc2 transaction note', () => {
