@@ -800,8 +800,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     }
 
     // atc.buildGroup() is needed to ensure that any changes made by prepareGroupForSending are reflected and the group id is set
-    const transactionsWithSignerToSend = atc.buildGroup()
-    const transactionsToSend = transactionsWithSignerToSend.map((t) => {
+    const transactionsToSend = atc.buildGroup().map((t) => {
       return t.txn
     })
     let groupId: string | undefined = undefined
@@ -827,10 +826,10 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
         simulateResponse,
       })
     }
-
-    const maxRoundsToWait = executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5
-    const result = await atc.execute(algod, maxRoundsToWait)
-
+    const result = await atc.execute(
+      algod,
+      executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5,
+    )
     if (transactionsToSend.length > 1) {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
         `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,

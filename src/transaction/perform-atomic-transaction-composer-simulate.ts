@@ -19,7 +19,7 @@ export async function performAtomicTransactionComposerSimulate(
   options?: Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>,
 ) {
   const unsignedTransactionsSigners = atc.buildGroup()
-  const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
+  const encodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
 
   const simulateRequest = new modelsv2.SimulateRequest({
     ...(options ?? {
@@ -35,7 +35,7 @@ export async function performAtomicTransactionComposerSimulate(
     }),
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({
-        txns: decodedSignedTransactions.map((txn) => decodeMsgpack(txn, SignedTransaction)),
+        txns: encodedSignedTransactions.map((txn) => decodeMsgpack(txn, SignedTransaction)),
       }),
     ],
   })
@@ -43,7 +43,7 @@ export async function performAtomicTransactionComposerSimulate(
   return simulateResult
 }
 
-export async function performAtomicTransactionComposerSimulateFoo(
+export async function performAlgoKitCoreAtomicTransactionComposerSimulate(
   transactions: AlgoKitCoreTransaction[],
   algod: Algodv2,
   options?: Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>,

@@ -2,7 +2,7 @@ import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
 import { Address, assignFee, getTransactionId, groupTransactions, Transaction } from '@algorandfoundation/algokit-transact'
 import algosdk from 'algosdk'
 import { Config } from '../config'
-import { performAtomicTransactionComposerSimulateFoo } from '../transaction'
+import { performAlgoKitCoreAtomicTransactionComposerSimulate } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 import { callWithRetry } from '../types/call-http-with-retry'
 import { EventType } from '../types/lifecycle-events'
@@ -389,7 +389,7 @@ export class TransactionComposer {
 
       if (Config.debug && Config.traceAll) {
         // Emit the simulate response for use with AlgoKit AVM debugger
-        const simulateResponse = await performAtomicTransactionComposerSimulateFoo(transactionsToSend, this.algosdkAlgod)
+        const simulateResponse = await performAlgoKitCoreAtomicTransactionComposerSimulate(transactionsToSend, this.algosdkAlgod)
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
           simulateResponse,
         })
@@ -450,7 +450,7 @@ export class TransactionComposer {
           'Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information',
           err,
         )
-        const simulate = await performAtomicTransactionComposerSimulateFoo(transactionsToSend, this.algosdkAlgod)
+        const simulate = await performAlgoKitCoreAtomicTransactionComposerSimulate(transactionsToSend, this.algosdkAlgod)
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
           await Config.events.emitAsync(EventType.TxnGroupSimulated, {
