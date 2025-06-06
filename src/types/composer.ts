@@ -1769,8 +1769,8 @@ export class TransactionComposer {
         {
           feePerByte: BigInt(suggestedParams.fee),
           firstValid: params.firstValidRound ? params.firstValidRound : BigInt(suggestedParams.firstValid),
-          genesisHash: suggestedParams.genesisHash,
-          genesisId: suggestedParams.genesisID,
+          genesisHash: suggestedParams.genesisHash!,
+          genesisId: suggestedParams.genesisID!,
           lastValid: lastValid,
           minFee: BigInt(suggestedParams.minFee),
         },

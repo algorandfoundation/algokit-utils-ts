@@ -9,7 +9,6 @@ export type SuggestedParamsRequest = ReturnType<algosdk.Algodv2['getTransactionP
  * This is a copy of the type `SuggestedParamsFromAlgod` from algosdk
  */
 export type SuggestedParams = {
-  // TODO: reconsider the locantion of this type
   flatFee: boolean
   fee: bigint
   minFee: bigint
@@ -33,6 +32,7 @@ export class SuggestedParamsProxy implements ProxyHandler<SuggestedParamsRequest
       const responseContext = await callWithRetry(() => this.algodApi.transactionParamsResponse())
       const rawParams = await handleJSONResponse(responseContext, algosdk.modelsv2.TransactionParametersResponse)
 
+      // This mapping logic was lifted from algosdk to ensure that we keep the same behaviour
       return {
         flatFee: false,
         fee: rawParams.fee,

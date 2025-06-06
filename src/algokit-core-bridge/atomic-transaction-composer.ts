@@ -47,8 +47,8 @@ export type TransactionParams = {
 export type SuggestedParams = {
   firstValid: bigint
   lastValid: bigint
-  genesisHash?: Uint8Array
-  genesisId?: string
+  genesisHash: Uint8Array
+  genesisId: string
   feePerByte: bigint
   minFee: bigint
 }
@@ -157,7 +157,7 @@ export class TransactionComposer {
     this.algod = params.algodClient.algoKitCoreAlgod
     this.algosdkAlgod = params.algodClient
 
-    const defaultgetTransactionParams = async (): Promise<TransactionParams> => {
+    const defaultGetTransactionParams = async (): Promise<TransactionParams> => {
       const response = await this.algod.transactionParams()
       return {
         fee: BigInt(response.fee),
@@ -167,7 +167,7 @@ export class TransactionComposer {
         genesisHash: response.genesisHash,
       }
     }
-    this.getTransactionParams = params.getTransactionParams ?? defaultgetTransactionParams
+    this.getTransactionParams = params.getTransactionParams ?? defaultGetTransactionParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindowIsExplicit !== undefined
@@ -301,7 +301,7 @@ export class TransactionComposer {
       throw new Error(`Missing signatures. Got ${signedTxns}`)
     }
 
-    return signedTxns
+    return signedTxns as Uint8Array[]
   }
 
   private async buildTxn(txn: Txn, suggestedParams: SuggestedParams) {
