@@ -36,6 +36,7 @@ class ErrorTransformerError extends Error {
 }
 
 // Copied from TransactionParams200Response, removed consensusVersion and fix number types
+// TODO: we can remove this after the type in TransactionParams200Response is fixed
 export type TransactionParams = {
   fee: bigint
   genesisHash: string
@@ -44,6 +45,7 @@ export type TransactionParams = {
   minFee: bigint
 }
 
+// SuggestedParams for creating a transaction
 export type SuggestedParams = {
   firstValid: bigint
   lastValid: bigint
