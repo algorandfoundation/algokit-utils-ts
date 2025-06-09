@@ -1,4 +1,5 @@
 import algosdk from 'algosdk'
+import { Config } from '../config'
 import { runWhenIndexerCaughtUp } from './indexer'
 import Algodv2 = algosdk.Algodv2
 import decodeSignedTransaction = algosdk.decodeSignedTransaction
@@ -66,7 +67,7 @@ export class TransactionLogger {
         // If that round exists, then we know indexer is caught up
         if (this._latestLastValidRound) {
           await indexer.lookupBlock(this._latestLastValidRound).do()
-          console.debug(
+          Config.getLogger().debug(
             `waitForIndexer has waited until the last valid round ${this._latestLastValidRound} was indexed, but did not find transaction ${lastTxId} in the indexer.`,
           )
         } else {
