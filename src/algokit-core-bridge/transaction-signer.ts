@@ -3,7 +3,7 @@ import algosdk from 'algosdk'
 
 export type TransactionSigner = (txnGroup: Transaction[], indexesToSign: number[]) => Promise<Uint8Array[]>
 
-export const getSignerFromAlgosdkSinger = (algosdkSigner: algosdk.TransactionSigner) => {
+export const getSignerFromAlgosdkSigner = (algosdkSigner: algosdk.TransactionSigner) => {
   return (txnGroup: Transaction[], indexesToSign: number[]) => {
     const unsignedAlgosdkTxns = txnGroup.map((txn) => encodeTransactionRaw(txn)).map((bytes) => algosdk.decodeUnsignedTransaction(bytes))
 

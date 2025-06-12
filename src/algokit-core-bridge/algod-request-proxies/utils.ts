@@ -3,7 +3,7 @@ import algosdk, { BaseHTTPClientError, BaseHTTPClientResponse, decodeJSON, decod
 
 export async function handleJSONResponse<T extends algosdk.Encodable>(
   responseContext: ResponseContext,
-  encodeableClass: algosdk.EncodableClass<T>,
+  encodable: algosdk.EncodableClass<T>,
 ) {
   if (responseContext.httpStatusCode !== 200) {
     await handleErrorResponse(responseContext)
@@ -11,19 +11,19 @@ export async function handleJSONResponse<T extends algosdk.Encodable>(
 
   const uint8Array = await getResponseBytes(responseContext)
   const text = new TextDecoder().decode(uint8Array)
-  return decodeJSON(text, encodeableClass)
+  return decodeJSON(text, encodable)
 }
 
 export async function handleMsgPackResponse<T extends algosdk.Encodable>(
   responseContext: ResponseContext,
-  encodeableClass: algosdk.EncodableClass<T>,
+  encodable: algosdk.EncodableClass<T>,
 ) {
   if (responseContext.httpStatusCode !== 200) {
     await handleErrorResponse(responseContext)
   }
 
   const uint8Array = await getResponseBytes(responseContext)
-  return decodeMsgpack(uint8Array, encodeableClass)
+  return decodeMsgpack(uint8Array, encodable)
 }
 
 export async function getResponseBytes(responseContext: ResponseContext) {

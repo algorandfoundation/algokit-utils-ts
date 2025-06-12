@@ -4,20 +4,7 @@ import { callWithRetry } from '../../types/call-http-with-retry'
 import { handleJSONResponse } from './utils'
 
 export type SuggestedParamsRequest = ReturnType<algosdk.Algodv2['getTransactionParams']>
-
-/**
- * This is a copy of the type `SuggestedParamsFromAlgod` from algosdk
- */
-export type SuggestedParams = {
-  flatFee: boolean
-  fee: bigint
-  minFee: bigint
-  firstValid: bigint
-  lastValid: bigint
-  genesisID: string
-  genesisHash: Uint8Array
-  consensusVersion: string
-}
+type SuggestedParamsFromAlgod = ReturnType<SuggestedParamsRequest['prepare']>
 
 export class SuggestedParamsProxy implements ProxyHandler<SuggestedParamsRequest> {
   constructor(private algodApi: AlgodApi) {}
@@ -42,7 +29,7 @@ export class SuggestedParamsProxy implements ProxyHandler<SuggestedParamsRequest
         genesisHash: rawParams.genesisHash,
         minFee: rawParams.minFee,
         consensusVersion: rawParams.consensusVersion,
-      } satisfies SuggestedParams
+      } satisfies SuggestedParamsFromAlgod
     }
   }
 }

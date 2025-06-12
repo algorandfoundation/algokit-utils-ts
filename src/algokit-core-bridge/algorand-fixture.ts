@@ -5,7 +5,7 @@ import { ClientManager } from '../types/client-manager'
 
 export const algorandFixture = () => {
   // If the flag USE_ALGOSDK_CLIENTS is not set
-  // the test fixture is created with clients from env or local net
+  // the test fixture is created with clients from env or LocalNet
   // in this case, the tests will try to use AlgoKit core clients
   const useAlgoSdkClients = process.env.USE_ALGOSDK_CLIENTS === 'true'
 

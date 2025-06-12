@@ -1,4 +1,4 @@
-import { Transaction as AlgoKitCoreTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
+import { Transaction as AlgoKitCoreTransaction, encodeSignedTransaction } from '@algorandfoundation/algokit-transact'
 import algosdk, { SignedTransaction, decodeMsgpack } from 'algosdk'
 
 import Algodv2 = algosdk.Algodv2
@@ -48,11 +48,7 @@ export async function performAlgoKitCoreAtomicTransactionComposerSimulate(
   algod: Algodv2,
   options?: Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>,
 ) {
-  const transactionsForSimulate = transactions
-    .map((txn) => encodeTransactionRaw(txn))
-    .map((bytes) => algosdk.decodeUnsignedTransaction(bytes))
-    .map((txn) => algosdk.encodeUnsignedSimulateTransaction(txn))
-
+  const transactionsForSimulate = transactions.map((txn) => encodeSignedTransaction({ transaction: txn }))
   const simulateRequest = new modelsv2.SimulateRequest({
     ...(options ?? {
       allowEmptySignatures: true,

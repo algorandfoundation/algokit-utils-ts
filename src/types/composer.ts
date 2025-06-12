@@ -1,9 +1,9 @@
-import { Address as AlgoKitCoreAdderss, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
+import { Address as AlgoKitCoreAddress, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
 import algosdk, { Address } from 'algosdk'
 import { isAlgoKitCoreBridgeAlgodClient } from '../algokit-core-bridge/algod-client'
 import { TransactionComposer as AlgoKitCoreTransactionComposer } from '../algokit-core-bridge/atomic-transaction-composer'
 import { mapFromAlgosdkAddressToAlgoKitCoreAddress } from '../algokit-core-bridge/mappers'
-import { getSignerFromAlgosdkSinger } from '../algokit-core-bridge/transaction-signer'
+import { getSignerFromAlgosdkSigner } from '../algokit-core-bridge/transaction-signer'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
@@ -625,9 +625,9 @@ export class TransactionComposer {
     if (isAlgoKitCoreBridgeAlgodClient(this.algod)) {
       this.algoKitCoreTransactionComposer = new AlgoKitCoreTransactionComposer({
         algodClient: this.algod,
-        getSigner: (address: string | AlgoKitCoreAdderss) => {
-          const algosdkAddess = typeof address === 'string' ? address : address.address
-          return getSignerFromAlgosdkSinger(this.getSigner(algosdkAddess))
+        getSigner: (address: string | AlgoKitCoreAddress) => {
+          const algosdkAddress = typeof address === 'string' ? address : address.address
+          return getSignerFromAlgosdkSigner(this.getSigner(algosdkAddress))
         },
         defaultValidityWindow: this.defaultValidityWindow,
         defaultValidityWindowIsExplicit: this.defaultValidityWindowIsExplicit,
@@ -729,8 +729,8 @@ export class TransactionComposer {
         staticFee: params.staticFee,
         signer: params.signer
           ? 'signer' in params.signer
-            ? getSignerFromAlgosdkSinger(params.signer.signer)
-            : getSignerFromAlgosdkSinger(params.signer)
+            ? getSignerFromAlgosdkSigner(params.signer.signer)
+            : getSignerFromAlgosdkSigner(params.signer)
           : undefined,
       })
     }
@@ -1768,10 +1768,10 @@ export class TransactionComposer {
         },
         {
           feePerByte: BigInt(suggestedParams.fee),
-          firstValid: params.firstValidRound ? params.firstValidRound : BigInt(suggestedParams.firstValid),
+          firstValid,
           genesisHash: suggestedParams.genesisHash!,
           genesisId: suggestedParams.genesisID!,
-          lastValid: lastValid,
+          lastValid,
           minFee: BigInt(suggestedParams.minFee),
         },
       )

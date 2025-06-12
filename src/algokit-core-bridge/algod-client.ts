@@ -60,7 +60,7 @@ class TokenHeaderAuthenticationMethod implements algodApi.SecurityAuthentication
   }
 
   public getName(): string {
-    return 'custom_header'
+    return 'token_header'
   }
 
   public applySecurityAuthentication(context: algodApi.RequestContext) {
