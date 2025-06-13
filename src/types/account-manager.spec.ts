@@ -1,8 +1,8 @@
 import algosdk from 'algosdk'
 import { v4 as uuid } from 'uuid'
 import { beforeEach, describe, expect, test } from 'vitest'
+import { algorandFixture } from '../algokit-core-bridge/algorand-fixture'
 import { algo } from '../amount'
-import { algorandFixture } from '../testing'
 
 describe('AccountManager', () => {
   const localnet = algorandFixture()

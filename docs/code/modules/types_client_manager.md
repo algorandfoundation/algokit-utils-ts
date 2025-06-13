@@ -35,7 +35,7 @@ Params to get an app client by network from `ClientManager`.
 
 #### Defined in
 
-[src/types/client-manager.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L33)
+[src/types/client-manager.ts:34](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L34)
 
 ___
 
@@ -47,7 +47,7 @@ Params to get an app client by ID from `ClientManager`.
 
 #### Defined in
 
-[src/types/client-manager.ts:30](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L30)
+[src/types/client-manager.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L31)
 
 ___
 
@@ -59,7 +59,7 @@ Params to get an app factory from `ClientManager`.
 
 #### Defined in
 
-[src/types/client-manager.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L24)
+[src/types/client-manager.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L25)
 
 ___
 
@@ -71,7 +71,7 @@ Params to get an app client by creator address and name from `ClientManager`.
 
 #### Defined in
 
-[src/types/client-manager.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L27)
+[src/types/client-manager.ts:28](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L28)
 
 ___
 
@@ -83,7 +83,7 @@ Params to get a typed app client by creator address and name from `ClientManager
 
 #### Defined in
 
-[src/types/client-manager.ts:36](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L36)
+[src/types/client-manager.ts:37](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L37)
 
 ___
 
@@ -95,7 +95,7 @@ Params to get a typed app client by network from `ClientManager`.
 
 #### Defined in
 
-[src/types/client-manager.ts:42](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L42)
+[src/types/client-manager.ts:43](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L43)
 
 ___
 
@@ -107,7 +107,7 @@ Params to get a typed app client by ID from `ClientManager`.
 
 #### Defined in
 
-[src/types/client-manager.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L39)
+[src/types/client-manager.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L40)
 
 ___
 
@@ -119,4 +119,4 @@ Params to get a typed app factory from `ClientManager`.
 
 #### Defined in
 
-[src/types/client-manager.ts:45](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L45)
+[src/types/client-manager.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/client-manager.ts#L46)

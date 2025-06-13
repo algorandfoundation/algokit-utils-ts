@@ -116,7 +116,7 @@ test('My test', async () => {
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:60](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L60)
+[src/testing/fixtures/algorand-fixture.ts:61](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L61)
 
 ▸ **algorandFixture**(`fixtureConfig`, `config`): [`AlgorandFixture`](../interfaces/types_testing.AlgorandFixture.md)
 
@@ -145,7 +145,7 @@ By default it tests against an environment variable specified client
 
 #### Defined in
 
-[src/testing/fixtures/algorand-fixture.ts:75](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L75)
+[src/testing/fixtures/algorand-fixture.ts:76](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/testing/fixtures/algorand-fixture.ts#L76)
 
 ___
 

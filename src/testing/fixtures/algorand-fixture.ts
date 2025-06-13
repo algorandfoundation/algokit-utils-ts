@@ -1,4 +1,5 @@
 import { algos, Config } from '../../'
+import { isAlgoKitCoreBridgeAlgodClient } from '../../algokit-core-bridge/algod-client'
 import { AlgorandClient } from '../../types/algorand-client'
 import { ClientManager } from '../../types/client-manager'
 import { AlgoConfig } from '../../types/network-client'
@@ -90,6 +91,10 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
     const transactionLoggerAlgod = transactionLogger.capture(algod)
+
+    if (isAlgoKitCoreBridgeAlgodClient(algod)) {
+      algod.algoKitCoreAlgod = transactionLogger.captureAlgoKitCoreAlgod(algod.algoKitCoreAlgod)
+    }
 
     algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd }).setSuggestedParamsCacheTimeout(0)
 
