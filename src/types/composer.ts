@@ -1,9 +1,9 @@
 import { Address as AlgoKitCoreAddress, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
 import algosdk, { Address } from 'algosdk'
 import { isAlgoKitCoreBridgeAlgodClient } from '../algokit-core-bridge/algod-client'
-import { TransactionComposer as AlgoKitCoreTransactionComposer } from '../algokit-core-bridge/atomic-transaction-composer'
-import { mapFromAlgosdkAddressToAlgoKitCoreAddress } from '../algokit-core-bridge/mappers'
-import { getSignerFromAlgosdkSigner } from '../algokit-core-bridge/transaction-signer'
+import { mapAlgosdkAddressToAlgoKitCoreAddress } from '../algokit-core-bridge/mappers'
+import { TransactionComposer as AlgoKitCoreTransactionComposer } from '../algokit-core-bridge/transaction-composer'
+import { mapAlgosdkSignerToAlgoKitCoreSigner } from '../algokit-core-bridge/transaction-signer'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
@@ -627,7 +627,7 @@ export class TransactionComposer {
         algodClient: this.algod,
         getSigner: (address: string | AlgoKitCoreAddress) => {
           const algosdkAddress = typeof address === 'string' ? address : address.address
-          return getSignerFromAlgosdkSigner(this.getSigner(algosdkAddress))
+          return mapAlgosdkSignerToAlgoKitCoreSigner(this.getSigner(algosdkAddress))
         },
         defaultValidityWindow: this.defaultValidityWindow,
         defaultValidityWindowIsExplicit: this.defaultValidityWindowIsExplicit,
@@ -717,11 +717,11 @@ export class TransactionComposer {
       const encoder = new TextEncoder()
 
       this.algoKitCoreTransactionComposer = this.algoKitCoreTransactionComposer.addPayment({
-        sender: mapFromAlgosdkAddressToAlgoKitCoreAddress(params.sender),
-        receiver: mapFromAlgosdkAddressToAlgoKitCoreAddress(params.receiver),
+        sender: mapAlgosdkAddressToAlgoKitCoreAddress(params.sender),
+        receiver: mapAlgosdkAddressToAlgoKitCoreAddress(params.receiver),
         amount: params.amount,
-        closeRemainderTo: params.closeRemainderTo ? mapFromAlgosdkAddressToAlgoKitCoreAddress(params.closeRemainderTo) : undefined,
-        rekeyTo: params.rekeyTo ? mapFromAlgosdkAddressToAlgoKitCoreAddress(params.rekeyTo) : undefined,
+        closeRemainderTo: params.closeRemainderTo ? mapAlgosdkAddressToAlgoKitCoreAddress(params.closeRemainderTo) : undefined,
+        rekeyTo: params.rekeyTo ? mapAlgosdkAddressToAlgoKitCoreAddress(params.rekeyTo) : undefined,
         note: params.note ? (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) : undefined,
         extraFee: params.extraFee,
         maxFee: params.maxFee,
@@ -729,8 +729,8 @@ export class TransactionComposer {
         staticFee: params.staticFee,
         signer: params.signer
           ? 'signer' in params.signer
-            ? getSignerFromAlgosdkSigner(params.signer.signer)
-            : getSignerFromAlgosdkSigner(params.signer)
+            ? mapAlgosdkSignerToAlgoKitCoreSigner(params.signer.signer)
+            : mapAlgosdkSignerToAlgoKitCoreSigner(params.signer)
           : undefined,
       })
     }
@@ -1755,11 +1755,11 @@ export class TransactionComposer {
 
       const transactionWithContext = this.algoKitCoreTransactionComposer.buildPayment(
         {
-          sender: mapFromAlgosdkAddressToAlgoKitCoreAddress(params.sender),
-          receiver: mapFromAlgosdkAddressToAlgoKitCoreAddress(params.receiver),
+          sender: mapAlgosdkAddressToAlgoKitCoreAddress(params.sender),
+          receiver: mapAlgosdkAddressToAlgoKitCoreAddress(params.receiver),
           amount: params.amount,
-          closeRemainderTo: params.closeRemainderTo ? mapFromAlgosdkAddressToAlgoKitCoreAddress(params.closeRemainderTo) : undefined,
-          rekeyTo: params.rekeyTo ? mapFromAlgosdkAddressToAlgoKitCoreAddress(params.rekeyTo) : undefined,
+          closeRemainderTo: params.closeRemainderTo ? mapAlgosdkAddressToAlgoKitCoreAddress(params.closeRemainderTo) : undefined,
+          rekeyTo: params.rekeyTo ? mapAlgosdkAddressToAlgoKitCoreAddress(params.rekeyTo) : undefined,
           note: params.note ? (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) : undefined,
           extraFee: params.extraFee,
           maxFee: params.maxFee,

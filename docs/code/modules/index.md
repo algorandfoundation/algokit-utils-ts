@@ -114,7 +114,6 @@
 - [mnemonicAccount](index.md#mnemonicaccount)
 - [mnemonicAccountFromEnvironment](index.md#mnemonicaccountfromenvironment)
 - [multisigAccount](index.md#multisigaccount)
-- [performAlgoKitCoreAtomicTransactionComposerSimulate](index.md#performalgokitcoreatomictransactioncomposersimulate)
 - [performAtomicTransactionComposerSimulate](index.md#performatomictransactioncomposersimulate)
 - [performTemplateSubstitution](index.md#performtemplatesubstitution)
 - [performTemplateSubstitutionAndCompile](index.md#performtemplatesubstitutionandcompile)
@@ -2621,28 +2620,6 @@ Returns an account wrapper that supports partial or full multisig signing.
 
 ___
 
-### performAlgoKitCoreAtomicTransactionComposerSimulate
-
-▸ **performAlgoKitCoreAtomicTransactionComposerSimulate**(`transactions`, `algod`, `options?`): `Promise`\<`SimulateResponse`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `transactions` | `Transaction`[] |
-| `algod` | `AlgodClient` |
-| `options?` | `Omit`\<\{ `allowEmptySignatures?`: `boolean` ; `allowMoreLogging?`: `boolean` ; `allowUnnamedResources?`: `boolean` ; `execTraceConfig?`: `SimulateTraceConfig` ; `extraOpcodeBudget?`: `number` \| `bigint` ; `fixSigners?`: `boolean` ; `round?`: `number` \| `bigint` ; `txnGroups`: `SimulateRequestTransactionGroup`[]  }, ``"txnGroups"``\> |
-
-#### Returns
-
-`Promise`\<`SimulateResponse`\>
-
-#### Defined in
-
-[src/transaction/perform-atomic-transaction-composer-simulate.ts:46](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/perform-atomic-transaction-composer-simulate.ts#L46)
-
-___
-
 ### performAtomicTransactionComposerSimulate
 
 ▸ **performAtomicTransactionComposerSimulate**(`atc`, `algod`, `options?`): `Promise`\<`SimulateResponse`\>
@@ -2666,7 +2643,7 @@ The simulation result, which includes various details about how the transactions
 
 #### Defined in
 
-[src/transaction/perform-atomic-transaction-composer-simulate.ts:16](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/perform-atomic-transaction-composer-simulate.ts#L16)
+[src/transaction/perform-atomic-transaction-composer-simulate.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/perform-atomic-transaction-composer-simulate.ts#L15)
 
 ___
 

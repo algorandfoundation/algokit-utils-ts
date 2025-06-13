@@ -66,14 +66,16 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
-    "@algorandfoundation/algokit-algod-api": "^1.0.0-alpha.14",
-    "@algorandfoundation/algokit-transact": "^1.0.0-alpha.17",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
+    "@algorandfoundation/algokit-transact": "^1.0.0-alpha.18",
+    "@algorandfoundation/algokit-algod-api": "^1.0.0-alpha.15",
     "algosdk": "^3.0.0"
   },
   "devDependencies": {
+    "@algorandfoundation/algokit-transact": "^1.0.0-alpha.18",
+    "@algorandfoundation/algokit-algod-api": "^1.0.0-alpha.15",
     "@algorandfoundation/tealscript": "^0.106.3",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",

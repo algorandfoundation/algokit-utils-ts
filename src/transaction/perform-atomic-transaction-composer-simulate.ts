@@ -1,4 +1,3 @@
-import { Transaction as AlgoKitCoreTransaction, encodeSignedTransaction } from '@algorandfoundation/algokit-transact'
 import algosdk, { SignedTransaction, decodeMsgpack } from 'algosdk'
 
 import Algodv2 = algosdk.Algodv2
@@ -36,34 +35,6 @@ export async function performAtomicTransactionComposerSimulate(
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({
         txns: encodedSignedTransactions.map((txn) => decodeMsgpack(txn, SignedTransaction)),
-      }),
-    ],
-  })
-  const simulateResult = await algod.simulateTransactions(simulateRequest).do()
-  return simulateResult
-}
-
-export async function performAlgoKitCoreAtomicTransactionComposerSimulate(
-  transactions: AlgoKitCoreTransaction[],
-  algod: Algodv2,
-  options?: Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>,
-) {
-  const transactionsForSimulate = transactions.map((txn) => encodeSignedTransaction({ transaction: txn }))
-  const simulateRequest = new modelsv2.SimulateRequest({
-    ...(options ?? {
-      allowEmptySignatures: true,
-      fixSigners: true,
-      allowMoreLogging: true,
-      execTraceConfig: new modelsv2.SimulateTraceConfig({
-        enable: true,
-        scratchChange: true,
-        stackChange: true,
-        stateChange: true,
-      }),
-    }),
-    txnGroups: [
-      new modelsv2.SimulateRequestTransactionGroup({
-        txns: transactionsForSimulate.map((txn) => decodeMsgpack(txn, SignedTransaction)),
       }),
     ],
   })
