@@ -2191,48 +2191,58 @@ export class TransactionComposer {
    */
   async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
-    const { skipSignatures = false, ...rawOptions } = options ?? {}
-    const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
+    let methodResults: algosdk.ABIResult[] = []
+    let simulateResponse: SimulateResponse | undefined = undefined
 
-    // Build the transactions
-    if (skipSignatures) {
-      rawOptions.allowEmptySignatures = true
-      rawOptions.fixSigners = true
-      // Build transactions uses empty signers
-      const transactions = await this.buildTransactions()
-      for (const txn of transactions.transactions) {
-        atc.addTransaction({ txn, signer: TransactionComposer.NULL_SIGNER })
-      }
-      atc['methodCalls'] = transactions.methodCalls
+    if (this.algoKitCoreTransactionComposer && this.txns.every((txn) => txn.type === 'pay')) {
+      // TODO: Add support for ABI methods calls in the future
+      simulateResponse = await this.algoKitCoreTransactionComposer.simulate(options)
     } else {
-      // Build creates real signatures
-      await this.build()
+      const { skipSignatures = false, ...rawOptions } = options ?? {}
+      const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
+
+      // Build the transactions
+      if (skipSignatures) {
+        rawOptions.allowEmptySignatures = true
+        rawOptions.fixSigners = true
+        // Build transactions uses empty signers
+        const transactions = await this.buildTransactions()
+        for (const txn of transactions.transactions) {
+          atc.addTransaction({ txn, signer: TransactionComposer.NULL_SIGNER })
+        }
+        atc['methodCalls'] = transactions.methodCalls
+      } else {
+        // Build creates real signatures
+        await this.build()
+      }
+
+      const result = await atc.simulate(
+        this.algod,
+        new modelsv2.SimulateRequest({
+          txnGroups: [],
+          ...rawOptions,
+          ...(Config.debug
+            ? {
+                allowEmptySignatures: true,
+                fixSigners: true,
+                allowMoreLogging: true,
+                execTraceConfig: new modelsv2.SimulateTraceConfig({
+                  enable: true,
+                  scratchChange: true,
+                  stackChange: true,
+                  stateChange: true,
+                }),
+              }
+            : undefined),
+        }),
+      )
+      methodResults = result.methodResults
+      simulateResponse = result.simulateResponse
     }
 
-    const { methodResults, simulateResponse } = await atc.simulate(
-      this.algod,
-      new modelsv2.SimulateRequest({
-        txnGroups: [],
-        ...rawOptions,
-        ...(Config.debug
-          ? {
-              allowEmptySignatures: true,
-              fixSigners: true,
-              allowMoreLogging: true,
-              execTraceConfig: new modelsv2.SimulateTraceConfig({
-                enable: true,
-                scratchChange: true,
-                stackChange: true,
-                stateChange: true,
-              }),
-            }
-          : undefined),
-      }),
-    )
-
-    const failedGroup = simulateResponse?.txnGroups[0]
-    if (failedGroup?.failureMessage) {
-      const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
+    const simulatedGroup = simulateResponse?.txnGroups[0]
+    if (simulatedGroup?.failureMessage) {
+      const errorMessage = `Transaction failed at transaction(s) ${simulatedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${simulatedGroup.failureMessage}`
       const error = new Error(errorMessage)
 
       if (Config.debug) {
@@ -2246,7 +2256,7 @@ export class TransactionComposer {
       await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
     }
 
-    const transactions = atc.buildGroup().map((t) => t.txn)
+    const transactions = simulatedGroup.txnResults.map((r) => r.txnResult.txn.txn)
     return {
       confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
       transactions: transactions,

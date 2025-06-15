@@ -1,5 +1,5 @@
 import { AlgodApi, SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '@algorandfoundation/algokit-algod-api'
-import { Transaction as AlgoKitCoreTransaction, encodeSignedTransaction } from '@algorandfoundation/algokit-transact'
+import { Transaction as AlgoKitCoreTransaction, encodeSignedTransactions } from '@algorandfoundation/algokit-transact'
 import algosdk from 'algosdk'
 import { handleMsgPackResponse } from '../algokit-core-bridge/algod-request-proxies/utils'
 
@@ -15,7 +15,8 @@ export async function performAlgoKitCoreAtomicTransactionComposerSimulate(
   transactions: AlgoKitCoreTransaction[],
   algod: AlgodApi,
 ): Promise<algosdk.modelsv2.SimulateResponse> {
-  const encodedSignedTransactions = transactions.map((txn) => encodeSignedTransaction({ transaction: txn }))
+  // Encoded with an empty signer, as we have allowEmptySignatures enabled
+  const encodedSignedTransactions = encodeSignedTransactions(transactions.map((txn) => ({ transaction: txn })))
 
   const simulateRequest = {
     allowEmptySignatures: true,
