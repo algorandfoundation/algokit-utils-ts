@@ -2,6 +2,7 @@ import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
 import { Address, assignFee, getTransactionId, groupTransactions, Transaction } from '@algorandfoundation/algokit-transact'
 import algosdk from 'algosdk'
 import { Config } from '../config'
+import { waitForConfirmation } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 import { callWithRetry } from '../types/call-http-with-retry'
 import { EventType } from '../types/lifecycle-events'
@@ -113,7 +114,7 @@ export type SendAtomicTransactionComposerResults = {
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations: algosdk.modelsv2.PendingTransactionResponse[] // TODO: can we convert this yet?
+  confirmations: algosdk.modelsv2.PendingTransactionResponse[]
 }
 
 /** Parameters to create an `TransactionComposer`. */
@@ -339,7 +340,6 @@ export class TransactionComposer {
   public async send(params: {
     suppressLog?: boolean
     maxRoundsToWaitForConfirmation?: number
-    skipWaiting?: boolean // TODO: confirm, this doesn't seem to be used
   }): Promise<SendAtomicTransactionComposerResults> {
     const { transactions: transactionsWithSigner } = await this.build()
 
@@ -368,7 +368,6 @@ export class TransactionComposer {
     params: {
       suppressLog?: boolean
       maxRoundsToWaitForConfirmation?: number
-      skipWaiting?: boolean // TODO: confirm, this doesn't seem to be used
     },
   ) {
     const transactionsToSend = transactionsWithSigner.map((txnWithSigner) => txnWithSigner.txn)
@@ -403,9 +402,7 @@ export class TransactionComposer {
       // TODO: when app call is supported, this should be the txId of the first app call txn
       const txIDToWaitFor = txIDs[0]
 
-      // TODO: can we use utils waitForConfirmation here?
-      // use core for waitForConfirmation?
-      await algosdk.waitForConfirmation(this.algosdkAlgod, txIDToWaitFor, params.maxRoundsToWaitForConfirmation ?? 5)
+      await waitForConfirmation(txIDToWaitFor, params.maxRoundsToWaitForConfirmation ?? 5, this.algosdkAlgod)
 
       if (transactionsToSend.length > 1) {
         Config.getLogger(params.suppressLog).verbose(`Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`)
@@ -415,10 +412,7 @@ export class TransactionComposer {
         )
       }
 
-      let confirmations: algosdk.modelsv2.PendingTransactionResponse[] | undefined = undefined
-      if (!params.skipWaiting) {
-        confirmations = await Promise.all(txIDs.map(async (txID) => await this.algosdkAlgod.pendingTransactionInformation(txID).do()))
-      }
+      const confirmations = await Promise.all(txIDs.map(async (txID) => await this.algosdkAlgod.pendingTransactionInformation(txID).do()))
 
       return {
         groupId: groupId ?? '',
