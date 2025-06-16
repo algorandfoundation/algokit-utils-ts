@@ -422,8 +422,6 @@ export class TransactionComposer {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      // TODO: the error message can be different
-
       // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const err = new Error(typeof e === 'object' ? e?.message : 'Received error executing Atomic Transaction Composer') as any as any
