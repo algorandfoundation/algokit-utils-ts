@@ -1,3 +1,4 @@
+import { AlgodApi, HttpFile } from '@algorandfoundation/algokit-algod-api'
 import algosdk from 'algosdk'
 import { runWhenIndexerCaughtUp } from './indexer'
 import Algodv2 = algosdk.Algodv2
@@ -49,6 +50,10 @@ export class TransactionLogger {
     return new Proxy<Algodv2>(algod, new TransactionLoggingAlgodv2ProxyHandler(this))
   }
 
+  captureAlgoKitCoreAlgod(algod: AlgodApi): AlgodApi {
+    return new Proxy<AlgodApi>(algod, new TransactionLoggingAlgoKitCoreAlgodApiProxyHandler(this))
+  }
+
   /** Wait until all logged transactions IDs appear in the given `Indexer`. */
   async waitForIndexer(indexer: Indexer) {
     if (this._sentTransactionIds.length === 0) return
@@ -72,6 +77,68 @@ class TransactionLoggingAlgodv2ProxyHandler implements ProxyHandler<Algodv2> {
         return target[property].call(receiver, stxOrStxs)
       }
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (target as any)[property]
+  }
+}
+
+class TransactionLoggingAlgoKitCoreAlgodApiProxyHandler implements ProxyHandler<AlgodApi> {
+  private transactionLogger: TransactionLogger
+
+  constructor(transactionLogger: TransactionLogger) {
+    this.transactionLogger = transactionLogger
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get(target: AlgodApi, property: string | symbol, receiver: any) {
+    if (property === 'rawTransactionResponse') {
+      return async (file: HttpFile) => {
+        const buffer = await file.arrayBuffer()
+
+        // Determine if this is a single transaction or multiple transactions
+        // If the file was created with File(signedTxns, '') where signedTxns is an array of Uint8Array
+        const fileBytes = new Uint8Array(buffer)
+
+        // Look for transaction boundaries to determine if this is multiple transactions
+        try {
+          // First try to decode as a single transaction
+          algosdk.decodeSignedTransaction(fileBytes)
+          // If successful, it's a single transaction
+          this.transactionLogger.logRawTransaction(fileBytes)
+        } catch {
+          // If it fails, it might be multiple concatenated transactions
+          // We'll need to extract them from the file
+          const txns: Uint8Array[] = []
+          let fromIndex = 0
+          let toIndex = 1
+
+          while (fromIndex < fileBytes.length && toIndex < fileBytes.length) {
+            try {
+              // Try to find the next transaction boundary
+              // This is a simplified approach - in a real implementation you might need
+              // more sophisticated logic to identify transaction boundaries
+              const bytesInRange = fileBytes.slice(fromIndex, toIndex)
+              algosdk.decodeSignedTransaction(bytesInRange)
+              txns.push(bytesInRange)
+              fromIndex = toIndex + 1
+            } catch {
+              toIndex++
+            }
+          }
+
+          // If we successfully extracted transactions, log them
+          if (txns.length > 0) {
+            this.transactionLogger.logRawTransaction(txns)
+          } else {
+            throw new Error('Failed to extract transactions from request')
+          }
+        }
+
+        return target[property].call(receiver, file)
+      }
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target as any)[property]
   }
