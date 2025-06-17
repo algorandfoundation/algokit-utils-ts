@@ -1,4 +1,5 @@
 import algosdk, { SuggestedParams } from 'algosdk'
+import { AlgodClient } from '../algokit-core-bridge/algod-client'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
@@ -588,10 +589,7 @@ export class ClientManager {
    * ```
    */
   public static getAlgodClient(config: AlgoClientConfig): Algodv2 {
-    const { token, server, port } = config
-    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
-    const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
-    return new algosdk.Algodv2(httpClientWithRetry, server)
+    return new AlgodClient(config)
   }
 
   /**

@@ -830,7 +830,6 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       algod,
       executeParams?.maxRoundsToWaitForConfirmation ?? sendParams?.maxRoundsToWaitForConfirmation ?? 5,
     )
-
     if (transactionsToSend.length > 1) {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
         `Group transaction (${groupId}) sent with ${transactionsToSend.length} transactions`,

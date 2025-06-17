@@ -20,6 +20,9 @@ jobs:
         pipx install algokit
         algokit localnet start
         npx --yes wait-on tcp:4001 -t 30000
+      test-script: |
+        npm run test
+        npm run test:algosdk-clients
       audit-script: |
         npm run audit
 

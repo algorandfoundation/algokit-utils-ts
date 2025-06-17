@@ -575,7 +575,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:1060](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1060)
+[src/transaction/transaction.ts:1059](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1059)
 
 ___
 
@@ -639,7 +639,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:1087](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1087)
+[src/transaction/transaction.ts:1086](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1086)
 
 ___
 
@@ -966,7 +966,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:930](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L930)
+[src/transaction/transaction.ts:929](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L929)
 
 ___
 
@@ -1942,7 +1942,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:1136](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1136)
+[src/transaction/transaction.ts:1135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1135)
 
 ___
 
@@ -2329,7 +2329,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:1114](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1114)
+[src/transaction/transaction.ts:1113](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1113)
 
 ___
 
@@ -2643,7 +2643,7 @@ The simulation result, which includes various details about how the transactions
 
 #### Defined in
 
-[src/transaction/perform-atomic-transaction-composer-simulate.ts:14](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/perform-atomic-transaction-composer-simulate.ts#L14)
+[src/transaction/perform-atomic-transaction-composer-simulate.ts:15](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/perform-atomic-transaction-composer-simulate.ts#L15)
 
 ___
 
@@ -2969,7 +2969,7 @@ Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transacti
 
 #### Defined in
 
-[src/transaction/transaction.ts:959](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L959)
+[src/transaction/transaction.ts:958](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L958)
 
 ___
 
@@ -3242,4 +3242,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:1003](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1003)
+[src/transaction/transaction.ts:1002](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1002)
