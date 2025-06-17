@@ -1,13 +1,27 @@
-import { AlgodApi, TransactionParams200Response } from '@algorandfoundation/algokit-algod-api'
-import { Address, assignFee, getTransactionId, groupTransactions, Transaction } from '@algorandfoundation/algokit-transact'
+import {
+  AlgodApi,
+  SimulateRequest,
+  SimulateRequestTransactionGroup,
+  TransactionParams200Response,
+} from '@algorandfoundation/algokit-algod-api'
+import {
+  Address,
+  assignFee,
+  encodeSignedTransactions,
+  getTransactionId,
+  groupTransactions,
+  SignedTransaction,
+  Transaction,
+} from '@algorandfoundation/algokit-transact'
 import algosdk from 'algosdk'
 import { Config } from '../config'
 import { waitForConfirmation } from '../transaction'
 import { AlgoAmount } from '../types/amount'
 import { callWithRetry } from '../types/call-http-with-retry'
+import { SimulateOptions } from '../types/composer'
 import { EventType } from '../types/lifecycle-events'
 import { AlgodClient } from './algod-client'
-import { handleJSONResponse } from './algod-request-proxies/utils'
+import { handleJSONResponse, handleMsgPackResponse } from './algod-request-proxies/utils'
 import { performAlgoKitCoreAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
 import { TransactionSigner } from './transaction-signer'
 
@@ -322,6 +336,46 @@ export class TransactionComposer {
     return {
       transactions: txnWithSigners,
     }
+  }
+
+  /**
+   * Simulate the transaction group and return the result without submitting to the network.
+   * @param params Optional parameters to control the simulation
+   * @returns The simulation result
+   * @example
+   * ```typescript
+   * const result = await composer.simulate()
+   * ```
+   */
+  // This currently returns algosdk types, which makes life easier at this point, however will need to change in the future
+  public async simulate(options?: SimulateOptions): Promise<algosdk.modelsv2.SimulateResponse> {
+    const { skipSignatures = false, ...rawOptions } = options ?? {}
+
+    const { transactions: transactionsWithSigner } = await this.build()
+
+    const encodedSignedTransactions = skipSignatures
+      ? encodeSignedTransactions(transactionsWithSigner.map((txn) => ({ transaction: txn.txn }) satisfies SignedTransaction))
+      : await this.signTransactions(transactionsWithSigner)
+
+    const simulateRequest = {
+      ...{
+        ...rawOptions,
+        extraOpcodeBudget: rawOptions.extraOpcodeBudget ? Number(rawOptions.extraOpcodeBudget) : undefined,
+        ...(skipSignatures ? { allowEmptySignatures: true, fixSigners: true } : undefined),
+      },
+      txnGroups: [
+        {
+          txns: encodedSignedTransactions.map((txn) => Buffer.from(txn).toString('base64')),
+        } satisfies SimulateRequestTransactionGroup,
+      ],
+    } satisfies SimulateRequest
+
+    const simulateResponseContext = await this.algod.simulateTransactionResponse(simulateRequest, 'msgpack', {
+      headers: { 'Content-Type': `application/msgpack` },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any)
+
+    return await handleMsgPackResponse(simulateResponseContext, algosdk.modelsv2.SimulateResponse)
   }
 
   public async send(params: {
