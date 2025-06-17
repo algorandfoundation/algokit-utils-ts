@@ -1,4 +1,4 @@
-import { AlgodApi } from '@algorandfoundation/algokit-algod-api'
+import { AlgodApi, TransactionParams200Response } from '@algorandfoundation/algokit-algod-api'
 import { Address, assignFee, getTransactionId, groupTransactions, Transaction } from '@algorandfoundation/algokit-transact'
 import algosdk from 'algosdk'
 import { Config } from '../config'
@@ -34,16 +34,6 @@ class ErrorTransformerError extends Error {
   constructor(originalError: Error, cause: unknown) {
     super(`An error transformer threw an error: ${cause}. The original error before any transformation: ${originalError} `, { cause })
   }
-}
-
-// Copied from TransactionParams200Response, removed consensusVersion and fix number types
-// TODO: we can remove this after the type in TransactionParams200Response is fixed
-export type TransactionParams = {
-  fee: bigint
-  genesisHash: string
-  genesisId: string
-  lastRound: bigint
-  minFee: bigint
 }
 
 // SuggestedParams for creating a transaction
@@ -124,7 +114,7 @@ export type TransactionComposerParams = {
   /** The function used to get the TransactionSigner for a given address */
   getSigner: (address: string | Address) => TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
-  getTransactionParams?: () => Promise<TransactionParams>
+  getTransactionParams?: () => Promise<TransactionParams200Response>
   /** How many rounds a transaction should be valid for by default; if not specified
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
@@ -134,7 +124,6 @@ export type TransactionComposerParams = {
    * callbacks can later be registered with `registerErrorTransformer`
    */
   errorTransformers?: ErrorTransformer[]
-  defaultValidityWindowIsExplicit?: boolean
 }
 
 export type Txn = PaymentTransactionParams & { type: 'pay' }
@@ -142,12 +131,10 @@ export type Txn = PaymentTransactionParams & { type: 'pay' }
 export class TransactionComposer {
   private algosdkAlgod: algosdk.Algodv2
   private algod: AlgodApi
-  private getTransactionParams: () => Promise<TransactionParams>
+  private getTransactionParams: () => Promise<TransactionParams200Response>
   private getSigner: (address: string | Address) => TransactionSigner
   /** The default transaction validity window */
   private defaultValidityWindow = 10n
-  /** Whether the validity window was explicitly set on construction */
-  private defaultValidityWindowIsExplicit = false
   errorTransformers: ErrorTransformer[]
   private txns: Txn[] = []
 
@@ -160,9 +147,10 @@ export class TransactionComposer {
     this.algod = params.algodClient.algoKitCoreAlgod
     this.algosdkAlgod = params.algodClient
 
-    const defaultGetTransactionParams = async (): Promise<TransactionParams> => {
+    const defaultGetTransactionParams = async (): Promise<TransactionParams200Response> => {
       const response = await this.algod.transactionParams()
       return {
+        consensusVersion: '', // This field isn't used
         fee: BigInt(response.fee),
         lastRound: BigInt(response.lastRound),
         minFee: BigInt(response.minFee),
@@ -173,7 +161,6 @@ export class TransactionComposer {
     this.getTransactionParams = params.getTransactionParams ?? defaultGetTransactionParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
-    this.defaultValidityWindowIsExplicit = params.defaultValidityWindowIsExplicit !== undefined
     this.errorTransformers = params.errorTransformers ?? []
   }
 
@@ -224,10 +211,10 @@ export class TransactionComposer {
   private async getSuggestedParams(): Promise<SuggestedParams> {
     const transactionParams = await this.getTransactionParams()
     return {
-      feePerByte: transactionParams.fee,
-      firstValid: transactionParams.lastRound,
-      lastValid: transactionParams.lastRound + BigInt(1000),
-      minFee: transactionParams.minFee,
+      feePerByte: BigInt(transactionParams.fee),
+      firstValid: BigInt(transactionParams.lastRound),
+      lastValid: BigInt(transactionParams.lastRound) + BigInt(1000),
+      minFee: BigInt(transactionParams.minFee),
       genesisHash: new Uint8Array(Buffer.from(transactionParams.genesisHash, 'base64')),
       genesisId: transactionParams.genesisId,
     }

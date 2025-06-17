@@ -630,7 +630,6 @@ export class TransactionComposer {
           return mapAlgosdkSignerToAlgoKitCoreSigner(this.getSigner(algosdkAddress))
         },
         defaultValidityWindow: this.defaultValidityWindow,
-        defaultValidityWindowIsExplicit: this.defaultValidityWindowIsExplicit,
         errorTransformers: this.errorTransformers,
         getTransactionParams: async () => {
           const suggestedParams = await this.getSuggestedParams()
