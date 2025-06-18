@@ -87,6 +87,9 @@ import SourceMap = algosdk.ProgramSourceMap
 import SuggestedParams = algosdk.SuggestedParams
 import TransactionSigner = algosdk.TransactionSigner
 
+/** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
+const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
+
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
   /** The address of the app creator account to resolve the app by */
@@ -1432,6 +1435,8 @@ export class AppClient {
                 allowUnnamedResources: params.populateAppCallResources ?? true,
                 // Simulate calls for a readonly method shouldn't invoke signing
                 skipSignatures: true,
+                // Enforce max opcode budget for read-only simulate calls
+                extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
             return this.processMethodCallReturn(
               {
