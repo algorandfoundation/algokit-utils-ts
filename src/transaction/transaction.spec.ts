@@ -672,15 +672,15 @@ describe('transaction', () => {
         expect(result.txIds.length).toBeGreaterThan(0)
       })
 
-      test('throws when no max fee is supplied', async () => {
+      test('readonly works without maxFee', async () => {
         const params = {
           method: 'burn_ops_readonly',
+          args: [6200],
           coverAppCallInnerTransactionFees: true,
         } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-        await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
-          'Please provide a maxFee for the transaction when coverAppCallInnerTransactionFees is enabled.',
-        )
+        const result = await appClient1.send.call(params)
+        expect(result.transactions).toBeDefined() // Default fee for readonly calls
       })
 
       test('works without fee coverage due to fixed budget', async () => {

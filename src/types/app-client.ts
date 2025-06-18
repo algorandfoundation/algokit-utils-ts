@@ -1416,13 +1416,10 @@ export class AppClient {
           }
 
           // Read-only calls do not require fees to be paid, as they are only simulated on the network.
-          // Therefore there is no value in calculating the minimum fee needed for a successful app call with inner transactions.
-          // As a a result we only need to send a single simulate call,
-          // however to do this successfully we need to ensure fees for the transaction are fully covered using maxFee.
+          // With maximum opcode budget provided, ensure_budget won't create inner transactions,
+          // so fee coverage is no longer a concern for read-only calls.
+          // If max_fee is provided, use it as static_fee for potential benefits.
           if (params.coverAppCallInnerTransactionFees) {
-            if (params.maxFee === undefined) {
-              throw Error(`Please provide a maxFee for the transaction when coverAppCallInnerTransactionFees is enabled.`)
-            }
             readonlyParams.staticFee = params.maxFee
             readonlyParams.extraFee = undefined
           }
@@ -1450,6 +1447,8 @@ export class AppClient {
             )
           } catch (e) {
             const error = e as Error
+            // For read-only calls with max opcode budget, fee issues should be rare
+            // but we can still provide helpful error message if they occur
             if (params.coverAppCallInnerTransactionFees && error && error.message && error.message.match(/fee too small/)) {
               throw Error(`Fees were too small. You may need to increase the transaction maxFee.`)
             }
