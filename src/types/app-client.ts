@@ -1416,10 +1416,11 @@ export class AppClient {
           }
 
           // Read-only calls do not require fees to be paid, as they are only simulated on the network.
-          // With maximum opcode budget provided, ensure_budget won't create inner transactions,
-          // so fee coverage is no longer a concern for read-only calls.
-          // If max_fee is provided, use it as static_fee for potential benefits.
-          if (params.coverAppCallInnerTransactionFees) {
+          // With maximum opcode budget provided, ensure_budget (and similar op-up utilities) won't need to create inner transactions,
+          // so fee coverage for op-up inner transactions does not need to be accounted for in readonly calls.
+          // If max_fee is provided, use it as static_fee, as there may still be inner transactions sent which need to be covered by the outermost transaction,
+          // even though ARC-22 specifies that readonly methods should not send inner transactions.
+          if (params.coverAppCallInnerTransactionFees && params.maxFee) {
             readonlyParams.staticFee = params.maxFee
             readonlyParams.extraFee = undefined
           }
@@ -1432,7 +1433,7 @@ export class AppClient {
                 allowUnnamedResources: params.populateAppCallResources ?? true,
                 // Simulate calls for a readonly method shouldn't invoke signing
                 skipSignatures: true,
-                // Enforce max opcode budget for read-only simulate calls
+                // Simulate calls for a readonly method can use the max opcode budget
                 extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
             return this.processMethodCallReturn(
