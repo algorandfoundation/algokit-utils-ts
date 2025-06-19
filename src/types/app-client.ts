@@ -87,6 +87,9 @@ import SourceMap = algosdk.ProgramSourceMap
 import SuggestedParams = algosdk.SuggestedParams
 import TransactionSigner = algosdk.TransactionSigner
 
+/** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
+const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
+
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
   /** The address of the app creator account to resolve the app by */
@@ -1413,13 +1416,11 @@ export class AppClient {
           }
 
           // Read-only calls do not require fees to be paid, as they are only simulated on the network.
-          // Therefore there is no value in calculating the minimum fee needed for a successful app call with inner transactions.
-          // As a a result we only need to send a single simulate call,
-          // however to do this successfully we need to ensure fees for the transaction are fully covered using maxFee.
-          if (params.coverAppCallInnerTransactionFees) {
-            if (params.maxFee === undefined) {
-              throw Error(`Please provide a maxFee for the transaction when coverAppCallInnerTransactionFees is enabled.`)
-            }
+          // With maximum opcode budget provided, ensure_budget (and similar op-up utilities) won't need to create inner transactions,
+          // so fee coverage for op-up inner transactions does not need to be accounted for in readonly calls.
+          // If max_fee is provided, use it as static_fee, as there may still be inner transactions sent which need to be covered by the outermost transaction,
+          // even though ARC-22 specifies that readonly methods should not send inner transactions.
+          if (params.coverAppCallInnerTransactionFees && params.maxFee) {
             readonlyParams.staticFee = params.maxFee
             readonlyParams.extraFee = undefined
           }
@@ -1432,6 +1433,8 @@ export class AppClient {
                 allowUnnamedResources: params.populateAppCallResources ?? true,
                 // Simulate calls for a readonly method shouldn't invoke signing
                 skipSignatures: true,
+                // Simulate calls for a readonly method can use the max opcode budget
+                extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
             return this.processMethodCallReturn(
               {
@@ -1445,6 +1448,8 @@ export class AppClient {
             )
           } catch (e) {
             const error = e as Error
+            // For read-only calls with max opcode budget, fee issues should be rare
+            // but we can still provide helpful error message if they occur
             if (params.coverAppCallInnerTransactionFees && error && error.message && error.message.match(/fee too small/)) {
               throw Error(`Fees were too small. You may need to increase the transaction maxFee.`)
             }
