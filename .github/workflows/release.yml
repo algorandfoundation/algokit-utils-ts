@@ -60,10 +60,21 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
+      - name: Generate bot token
+        uses: actions/create-github-app-token@v1
+        id: app_token
         with:
+          app-id: ${{ secrets.BOT_ID }}
+          private-key: ${{ secrets.BOT_SK }}
+
+      - uses: actions/checkout@v4
+        with:
+          # Fetch entire repository history so we can determine version number from it
           fetch-depth: 0
+          token: ${{ steps.app_token.outputs.token }}
+
+      - name: Set Git user as GitHub actions
+        run: git config --global user.email "179917785+engineering-ci[bot]@users.noreply.github.com" && git config --global user.name "engineering-ci[bot]"
 
       # semantic-release needs node 20
       - name: Use Node.js 20.x
@@ -89,5 +100,5 @@ jobs:
       - name: 'Semantic release'
         run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
