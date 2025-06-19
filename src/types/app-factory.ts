@@ -373,7 +373,12 @@ export class AppFactory {
     const updatable = params.updatable ?? this._updatable ?? this.getDeployTimeControl('updatable')
     const deletable = params.deletable ?? this._deletable ?? this.getDeployTimeControl('deletable')
     const deployTimeParams = params.deployTimeParams ?? this._deployTimeParams
-    const compiled = await this.compile({ deployTimeParams, updatable, deletable })
+
+    // Compile using a appID 0 AppClient so we can register the error handler and use the programs
+    // to identify the app within the error handler (because we can't use app ID 0)
+    const tempAppClient = this.getAppClientById({ appId: 0n })
+    const compiled = await tempAppClient.compile({ deployTimeParams, updatable, deletable })
+
     const deployResult = await this._algorand.appDeployer.deploy({
       ...params,
       createParams: await (params.createParams && 'method' in params.createParams

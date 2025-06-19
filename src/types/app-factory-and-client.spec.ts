@@ -1,13 +1,15 @@
-import algosdk, { ABIUintType, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from 'algosdk'
+import algosdk, { ABIUintType, Address, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
 import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
+import byteArraysAr56Json from '../../tests/example-contracts/byte_arrays/artifacts/ByteArrays.arc56.json'
 import largeAppArc56Json from '../../tests/example-contracts/extra-pages/large.arc56.json'
 import smallAppArc56Json from '../../tests/example-contracts/extra-pages/small.arc56.json'
 import errorInnerAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/InnerApp.arc56.json'
 import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/MiddleApp.arc56.json'
 import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
+import deployErrorAppArc56Json from '../../tests/example-contracts/deploy_error/artifacts/DeployError.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
@@ -790,6 +792,16 @@ describe('ARC56: app-factory-and-app-client', () => {
     ).rejects.toThrow('custom error message')
   })
 
+  test('ARC56 error message on deploy', async () => {
+    const deployErrorFactory = localnet.algorand.client.getAppFactory({
+      // @ts-expect-error TODO: Fix this
+      appSpec: deployErrorAppArc56Json,
+      defaultSender: localnet.context.testAccount.addr,
+    })
+
+    await expect(deployErrorFactory.deploy({ createParams: { method: 'createApplication' } })).rejects.toThrow('custom error message')
+  })
+
   test('ARC56 error messages with dynamic template vars (cblock offset)', async () => {
     const { appClient } = await factory.deploy({
       createParams: {
@@ -869,6 +881,146 @@ retsub
 
 // specificLengthTemplateVar()void
 *abi_route_specificLengthTemplateVar:`)
+    }
+  })
+
+  describe('Decoding bytes', async () => {
+    let appClient: AppClient
+    let algorand: algokit.AlgorandClient
+    let sender: Address
+
+    beforeAll(async () => {
+      await localnet.newScope()
+      ;({ algorand } = localnet)
+      const { testAccount } = localnet.context
+      sender = testAccount.addr
+      const factory = new AppFactory({
+        algorand,
+        appSpec: JSON.stringify(byteArraysAr56Json),
+        defaultSender: testAccount,
+      })
+
+      ;({ appClient } = await factory.send.create({
+        extraFee: algokit.microAlgos(1000),
+        method: 'createApplication',
+        onComplete: OnApplicationComplete.OptInOC,
+      }))
+
+      await algorand.account.ensureFunded(appClient.appAddress, testAccount, algokit.microAlgos(251200))
+
+      const methodCall = await appClient.params.call({ method: 'setBoxValues' })
+      // Random extra call to get more txns for resources
+      const extraMethodCall = await appClient.params.call({ method: 'dynamicByteArray' })
+      await algorand.newGroup().addAppCallMethodCall(methodCall).addAppCallMethodCall(extraMethodCall).send()
+    })
+
+    type ByteArraysInStruct = {
+      arr1: Uint8Array
+      arr2: Uint8Array
+      nestedStruct: {
+        arr3: Uint8Array
+        nonBytes: bigint
+      }
+    }
+
+    const valueTests = {
+      dynamicByteArray: (value: Uint8Array) => {
+        expect(value).toBeInstanceOf(Uint8Array)
+      },
+      staticByteArray: (value: Uint8Array) => {
+        expect(value).toBeInstanceOf(Uint8Array)
+      },
+      nestedByteArrays: (value: Uint8Array[]) => {
+        expect(value).toHaveLength(2)
+        expect(value[0]).toBeInstanceOf(Uint8Array)
+        expect(value[1]).toBeInstanceOf(Uint8Array)
+      },
+      byteArraysInStruct: (value: ByteArraysInStruct) => {
+        expect(value).not.toBeInstanceOf(Array)
+        expect(value.arr1).toBeInstanceOf(Uint8Array)
+        expect(value.arr2).toBeInstanceOf(Uint8Array)
+        expect(value.nestedStruct.arr3).toBeInstanceOf(Uint8Array)
+      },
+    }
+
+    const valueAccessMethods = {
+      'send method call and get return value': async (appClient: AppClient, method: string) => {
+        const result = await appClient.send.call({ method })
+        return result.return!
+      },
+      'simulate method call and get return value': async (appClient: AppClient, method: string) => {
+        const params = await appClient.params.call({ method })
+        const result = await algorand.newGroup().addAppCallMethodCall(params).simulate()
+        return result.returns![0].returnValue!
+      },
+      'global getValue': async (appClient: AppClient, name: string) => {
+        return await appClient.state.global.getValue(`${name}Global`)!
+      },
+      'local getValue': async (appClient: AppClient, name: string) => {
+        return await appClient.state.local(sender).getValue(`${name}Local`)!
+      },
+      'box getValue': async (appClient: AppClient, name: string) => {
+        return await appClient.state.box.getValue(`${name}Box`)!
+      },
+      'global getAll': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.global.getAll()
+        return result[`${name}Global`]
+      },
+      'local getAll': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.local(sender).getAll()
+        return result[`${name}Local`]
+      },
+      'box getAll': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.box.getAll()
+        return result[`${name}Box`]
+      },
+      'global getMapValue': async (appClient: AppClient, name: string) => {
+        return await appClient.state.global.getMapValue(`${name}GlobalMap`, 0)!
+      },
+      'local getMapValue': async (appClient: AppClient, name: string) => {
+        return await appClient.state.local(sender).getMapValue(`${name}LocalMap`, 0)!
+      },
+      'box getMapValue': async (appClient: AppClient, name: string) => {
+        return await appClient.state.box.getMapValue(`${name}BoxMap`, 0)!
+      },
+      'global getMap': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.global.getMap(`${name}GlobalMap`)!
+        return [...result.values()][0]
+      },
+      'local getMap': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.local(sender).getMap(`${name}LocalMap`)!
+        return [...result.values()][0]
+      },
+      'box getMap': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.box.getMap(`${name}BoxMap`)!
+        return [...result.values()][0]
+      },
+      'global getMap key': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.global.getMap(`${name}GlobalMapKey`)!
+        return [...result.keys()][0]
+      },
+      'local getMap key': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.local(sender).getMap(`${name}LocalMapKey`)!
+        return [...result.keys()][0]
+      },
+      'box getMap key': async (appClient: AppClient, name: string) => {
+        const result = await appClient.state.box.getMap(`${name}BoxMapKey`)!
+        return [...result.keys()][0]
+      },
+    }
+
+    for (const [desc, getter] of Object.entries(valueAccessMethods)) {
+      describe(desc, () => {
+        for (const [valueType, tests] of Object.entries(valueTests)) {
+          // Simulate is called from a generic composer, not the AppClient, so it doesn't have ARC56 struct data
+          // State methods don't attempt to decode as a struct and just give
+          if (!desc.startsWith('send') && valueType === 'byteArraysInStruct') continue
+
+          test(valueType, async () => {
+            tests(await getter(appClient, valueType))
+          })
+        }
+      })
     }
   })
 })

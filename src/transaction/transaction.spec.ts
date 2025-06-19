@@ -652,52 +652,55 @@ describe('transaction', () => {
     })
 
     describe('readonly', () => {
-      test('alters fee, handling expensive abi method calls that use ensure_budget to op-up', async () => {
-        // The expectedFee differs to non readonly method call, as we don't want to run simulate twice (once for resolving the minimum fee and once for the actual transaction result).
-        // Because no fees are actually paid with readonly calls, we simply use the maxFee value and skip any minimum fee calculations.
-        const expectedFee = 12_000n
+      test.each([
+        { coverAppCallInnerTransactionFees: true, description: 'with coverAppCallInnerTransactionFees enabled' },
+        { coverAppCallInnerTransactionFees: false, description: 'with coverAppCallInnerTransactionFees disabled' },
+      ])('uses fixed opcode budget without op-up inner transactions $description', async ({ coverAppCallInnerTransactionFees }) => {
+        // This test verifies that readonly calls use the fixed MAX_SIMULATE_OPCODE_BUDGET
+        // and don't require inner transactions for op-ups, regardless of coverAppCallInnerTransactionFees setting.
         const params = {
           method: 'burn_ops_readonly',
-          args: [6200],
-          coverAppCallInnerTransactionFees: true,
-          maxFee: microAlgo(expectedFee),
+          args: [6200], // This would normally require op-ups via inner transactions
+          coverAppCallInnerTransactionFees,
         } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
         const result = await appClient1.send.call(params)
 
-        expect(result.transaction.fee).toBe(expectedFee)
-        expect(result.confirmation.innerTxns?.length).toBe(9) // Op up transactions sent by ensure_budget
+        expect(result.transaction.fee).toBe(1_000n)
+        expect(result.confirmation.innerTxns).toBeUndefined() // No op-up inner transactions needed
+        expect(result.txIds.length).toBe(1)
       })
 
-      test('throws when no max fee is supplied', async () => {
+      test('alters fee, handling inner transactions', async () => {
+        // Force `send_inners_with_fees` to be marked as readonly
+        appClient1['_appSpec'].methods.find((m) => m.name === 'send_inners_with_fees')!.readonly = true
+
+        // The expectedFee differs to non readonly method call, as we don't want to run simulate twice (once for resolving the minimum fee and once for the actual transaction result).
+        // Because no fees are actually paid with readonly calls, we simply use the maxFee value (if set) and skip any minimum fee calculations.
+        // If this method is running in a non readonly context, the minimum fee would be calculated as 5300n.
+        const expectedFee = 12_000n
         const params = {
-          method: 'burn_ops_readonly',
+          method: 'send_inners_with_fees',
+          args: [appClient2.appId, appClient3.appId, [1000n, 0n, 200n, 0n, [500n, 0n]]],
           coverAppCallInnerTransactionFees: true,
-        } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
-
-        await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
-          'Please provide a maxFee for the transaction when coverAppCallInnerTransactionFees is enabled.',
-        )
-      })
-
-      test('throws when inner transaction fees are not covered and coverAppCallInnerTransactionFees is disabled', async () => {
-        const expectedFee = 7000n
-        const params = {
-          method: 'burn_ops_readonly',
-          args: [6200],
           maxFee: microAlgo(expectedFee),
-          coverAppCallInnerTransactionFees: false,
         } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-        await expect(async () => await appClient1.send.call(params)).rejects.toThrow(/fee too small/)
+        const result = await appClient1.send.call(params)
+
+        expect(result.transaction.fee).toBe(expectedFee)
+        expect(result.confirmation.innerTxns?.length).toBe(4)
+        expect(result.txIds.length).toBe(1)
       })
 
       test('throws when max fee is too small to cover inner transaction fees', async () => {
-        const expectedFee = 7000n
+        // Force `send_inners_with_fees` to be marked as readonly
+        appClient1['_appSpec'].methods.find((m) => m.name === 'send_inners_with_fees')!.readonly = true
+
         const params = {
-          method: 'burn_ops_readonly',
-          args: [6200],
+          method: 'send_inners_with_fees',
+          args: [appClient2.appId, appClient3.appId, [1000n, 0n, 200n, 0n, [500n, 0n]]],
           coverAppCallInnerTransactionFees: true,
-          maxFee: microAlgo(expectedFee),
+          maxFee: microAlgo(2000n),
         } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
         await expect(async () => await appClient1.send.call(params)).rejects.toThrow(
@@ -1081,7 +1084,7 @@ describe('abi return', () => {
       returnValue: abiType.decode(abiType.encode(value)),
       txID: '',
     } as algosdk.ABIResult
-    return getABIReturnValue(result)
+    return getABIReturnValue(result, abiType)
   }
 
   test('uint32', () => {

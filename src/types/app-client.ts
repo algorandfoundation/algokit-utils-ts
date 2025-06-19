@@ -87,6 +87,9 @@ import SourceMap = algosdk.ProgramSourceMap
 import SuggestedParams = algosdk.SuggestedParams
 import TransactionSigner = algosdk.TransactionSigner
 
+/** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
+const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
+
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
   /** The address of the app creator account to resolve the app by */
@@ -497,6 +500,7 @@ export class AppClient {
   private _sendMethods: ReturnType<AppClient['getMethodCallSendMethods']> & {
     /** Interact with bare (raw) calls */ bare: ReturnType<AppClient['getBareSendMethods']>
   }
+  private _lastCompiled: { clear?: Uint8Array; approval?: Uint8Array }
 
   /**
    * Create a new app client.
@@ -519,6 +523,7 @@ export class AppClient {
     this._algorand.registerErrorTransformer!(this.handleCallErrors)
     this._defaultSender = typeof params.defaultSender === 'string' ? Address.fromString(params.defaultSender) : params.defaultSender
     this._defaultSigner = params.defaultSigner
+    this._lastCompiled = {}
 
     this._approvalSourceMap = params.approvalSourceMap
     this._clearSourceMap = params.clearSourceMap
@@ -946,9 +951,12 @@ export class AppClient {
 
     if (result.compiledApproval) {
       this._approvalSourceMap = result.compiledApproval.sourceMap
+
+      this._lastCompiled.approval = result.compiledApproval.compiledBase64ToBytes
     }
     if (result.compiledClear) {
       this._clearSourceMap = result.compiledClear.sourceMap
+      this._lastCompiled.clear = result.compiledClear.compiledBase64ToBytes
     }
 
     return result
@@ -1408,13 +1416,11 @@ export class AppClient {
           }
 
           // Read-only calls do not require fees to be paid, as they are only simulated on the network.
-          // Therefore there is no value in calculating the minimum fee needed for a successful app call with inner transactions.
-          // As a a result we only need to send a single simulate call,
-          // however to do this successfully we need to ensure fees for the transaction are fully covered using maxFee.
-          if (params.coverAppCallInnerTransactionFees) {
-            if (params.maxFee === undefined) {
-              throw Error(`Please provide a maxFee for the transaction when coverAppCallInnerTransactionFees is enabled.`)
-            }
+          // With maximum opcode budget provided, ensure_budget (and similar op-up utilities) won't need to create inner transactions,
+          // so fee coverage for op-up inner transactions does not need to be accounted for in readonly calls.
+          // If max_fee is provided, use it as static_fee, as there may still be inner transactions sent which need to be covered by the outermost transaction,
+          // even though ARC-22 specifies that readonly methods should not send inner transactions.
+          if (params.coverAppCallInnerTransactionFees && params.maxFee) {
             readonlyParams.staticFee = params.maxFee
             readonlyParams.extraFee = undefined
           }
@@ -1427,6 +1433,8 @@ export class AppClient {
                 allowUnnamedResources: params.populateAppCallResources ?? true,
                 // Simulate calls for a readonly method shouldn't invoke signing
                 skipSignatures: true,
+                // Simulate calls for a readonly method can use the max opcode budget
+                extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
             return this.processMethodCallReturn(
               {
@@ -1440,6 +1448,8 @@ export class AppClient {
             )
           } catch (e) {
             const error = e as Error
+            // For read-only calls with max opcode budget, fee issues should be rare
+            // but we can still provide helpful error message if they occur
             if (params.coverAppCallInnerTransactionFees && error && error.message && error.message.match(/fee too small/)) {
               throw Error(`Fees were too small. You may need to increase the transaction maxFee.`)
             }
@@ -1563,10 +1573,38 @@ export class AppClient {
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
-  private handleCallErrors = async (e: Error) => {
-    // Only handle errors for this app.
-    const appIdString = `app=${this._appId.toString()}`
-    if (!e.message.includes(appIdString)) return e
+  private handleCallErrors = async (e: Error & { sentTransactions?: algosdk.Transaction[] }) => {
+    // We can't use the app ID in an error to identify new apps, so instead we check the programs
+    // to identify if this is the correct app
+    if (this.appId === 0n) {
+      if (e.sentTransactions === undefined) return e
+
+      const txns = e.sentTransactions
+
+      const txn = txns.find((t) => e.message.includes(t.txID()))
+
+      const programsDefinedAndEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
+        if (a === undefined || b === undefined) return false
+        if (a.length !== b.length) return false
+
+        for (let i = 0; i < a.length; i++) {
+          if (a[i] !== b[i]) return false
+        }
+
+        return true
+      }
+
+      if (
+        !programsDefinedAndEqual(txn?.applicationCall?.clearProgram, this._lastCompiled.clear) ||
+        !programsDefinedAndEqual(txn?.applicationCall?.approvalProgram, this._lastCompiled?.approval)
+      ) {
+        return e
+      }
+    } else {
+      // Only handle errors for this app.
+      const appIdString = `app=${this._appId.toString()}`
+      if (!e.message.includes(appIdString)) return e
+    }
 
     const logicError = await this.exposeLogicError(e)
     if (logicError instanceof LogicError) {
@@ -1682,6 +1720,8 @@ export class AppClient {
       getValue: async (name: string, appState?: AppState) => {
         const state = Object.values(appState ?? (await stateGetter()))
         const metadata = keyGetter()[name]
+
+        if (metadata === undefined) throw new Error(`Attempted to get state value ${name}, but it does not exist`)
         const value = state.find((s) => s.keyBase64 === metadata.key)
 
         if (value && 'valueRaw' in value) {

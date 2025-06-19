@@ -1,6 +1,7 @@
 import algosdk from 'algosdk'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
+import { convertAbiByteArrays } from '../util'
 
 /** Type to describe an argument within an `Arc56Method`. */
 export type Arc56MethodArg = Expand<
@@ -74,7 +75,15 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
 ): TReturn {
   return Object.fromEntries(
     structFields.map(({ name: key, type }, i) => {
-      const abiValue = decodedABITuple[i]
+      let abiType: algosdk.ABIType
+
+      if (typeof type === 'string') {
+        abiType = algosdk.ABIType.from(type)
+      } else {
+        abiType = getABITupleTypeFromABIStructDefinition(type, structs)
+      }
+
+      const abiValue = convertAbiByteArrays(decodedABITuple[i], abiType)
       return [
         key,
         (typeof type === 'string' && !structs[type]) || !Array.isArray(abiValue)
@@ -129,7 +138,9 @@ export function getABIDecodedValue(
     const tupleValue = getABITupleTypeFromABIStructDefinition(structs[type], structs).decode(value)
     return getABIStructFromABITuple(tupleValue, structs[type], structs)
   }
-  return algosdk.ABIType.from(type).decode(value)
+
+  const abiType = algosdk.ABIType.from(type)
+  return convertAbiByteArrays(abiType.decode(value), abiType)
 }
 
 /**
@@ -220,7 +231,7 @@ export function getArc56ReturnValue<TReturn extends Uint8Array | algosdk.ABIValu
     return getABIStructFromABITuple(returnValue.returnValue as algosdk.ABIValue[], structs[type], structs) as TReturn
   }
 
-  return returnValue.returnValue as TReturn
+  return convertAbiByteArrays(returnValue.returnValue, algosdk.ABIType.from(type)) as TReturn
 }
 
 /****************/

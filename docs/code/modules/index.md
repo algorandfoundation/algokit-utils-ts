@@ -304,7 +304,7 @@ ___
 
 #### Defined in
 
-[src/transaction/transaction.ts:33](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L33)
+[src/transaction/transaction.ts:41](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L41)
 
 ___
 
@@ -314,7 +314,7 @@ ___
 
 #### Defined in
 
-[src/transaction/transaction.ts:32](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L32)
+[src/transaction/transaction.ts:40](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L40)
 
 ___
 
@@ -324,7 +324,7 @@ ___
 
 #### Defined in
 
-[src/transaction/transaction.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L31)
+[src/transaction/transaction.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L39)
 
 ## Functions
 
@@ -575,7 +575,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:1057](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1057)
+[src/transaction/transaction.ts:1074](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1074)
 
 ___
 
@@ -639,7 +639,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:1084](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1084)
+[src/transaction/transaction.ts:1101](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1101)
 
 ___
 
@@ -811,7 +811,7 @@ algokit.encodeLease(new Uint8Array([1, 2, 3]))
 
 #### Defined in
 
-[src/transaction/transaction.ts:74](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L74)
+[src/transaction/transaction.ts:82](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L82)
 
 ___
 
@@ -846,7 +846,7 @@ Encodes a transaction note into a byte array ready to be included in an Algorand
 
 #### Defined in
 
-[src/transaction/transaction.ts:50](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L50)
+[src/transaction/transaction.ts:58](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L58)
 
 ___
 
@@ -949,7 +949,7 @@ ___
 
 ### getABIReturnValue
 
-▸ **getABIReturnValue**(`result`): [`ABIReturn`](types_app.md#abireturn)
+▸ **getABIReturnValue**(`result`, `type`): [`ABIReturn`](types_app.md#abireturn)
 
 Takes an algosdk `ABIResult` and converts it to an `ABIReturn`.
 Converts `bigint`'s for Uint's < 64 to `number` for easier use.
@@ -959,6 +959,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `result` | `ABIResult` | The `ABIReturn` |
+| `type` | `ABIReturnType` | - |
 
 #### Returns
 
@@ -966,7 +967,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:927](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L927)
+[src/transaction/transaction.ts:940](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L940)
 
 ___
 
@@ -1942,7 +1943,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:1133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1133)
+[src/transaction/transaction.ts:1150](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1150)
 
 ___
 
@@ -2230,7 +2231,7 @@ Returns the public address of the given transaction sender.
 
 #### Defined in
 
-[src/transaction/transaction.ts:110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L110)
+[src/transaction/transaction.ts:118](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L118)
 
 ___
 
@@ -2260,7 +2261,7 @@ This function has memoization, so will return the same transaction signer for a 
 
 #### Defined in
 
-[src/transaction/transaction.ts:168](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L168)
+[src/transaction/transaction.ts:176](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L176)
 
 ___
 
@@ -2329,7 +2330,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:1111](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1111)
+[src/transaction/transaction.ts:1128](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1128)
 
 ___
 
@@ -2360,7 +2361,7 @@ AtomicTransactionComposer's addTransaction method.
 
 #### Defined in
 
-[src/transaction/transaction.ts:127](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L127)
+[src/transaction/transaction.ts:135](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L135)
 
 ___
 
@@ -2761,7 +2762,7 @@ A new ATC with the resources populated into the transactions
 
 #### Defined in
 
-[src/transaction/transaction.ts:382](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L382)
+[src/transaction/transaction.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L390)
 
 ___
 
@@ -2790,7 +2791,7 @@ A new ATC with the changes applied
 
 #### Defined in
 
-[src/transaction/transaction.ts:401](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L401)
+[src/transaction/transaction.ts:409](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L409)
 
 ___
 
@@ -2940,7 +2941,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:776](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L776)
+[src/transaction/transaction.ts:784](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L784)
 
 ___
 
@@ -2969,7 +2970,7 @@ Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transacti
 
 #### Defined in
 
-[src/transaction/transaction.ts:956](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L956)
+[src/transaction/transaction.ts:973](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L973)
 
 ___
 
@@ -3001,7 +3002,7 @@ Prepares a transaction for sending and then (if instructed) signs and sends the 
 
 #### Defined in
 
-[src/transaction/transaction.ts:209](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L209)
+[src/transaction/transaction.ts:217](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L217)
 
 ___
 
@@ -3032,7 +3033,7 @@ Signs a single transaction by the given signer.
 
 #### Defined in
 
-[src/transaction/transaction.ts:186](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L186)
+[src/transaction/transaction.ts:194](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L194)
 
 ___
 
@@ -3242,4 +3243,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:1000](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1000)
+[src/transaction/transaction.ts:1017](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1017)

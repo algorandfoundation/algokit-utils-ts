@@ -58,7 +58,7 @@ algosdk.ABIMethod.constructor
 
 #### Defined in
 
-[src/types/app-arc56.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L26)
+[src/types/app-arc56.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L27)
 
 ## Properties
 
@@ -72,7 +72,7 @@ algosdk.ABIMethod.args
 
 #### Defined in
 
-[src/types/app-arc56.ts:23](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L23)
+[src/types/app-arc56.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L24)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[src/types/app-arc56.ts:26](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L26)
+[src/types/app-arc56.ts:27](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L27)
 
 ___
 
@@ -160,7 +160,7 @@ algosdk.ABIMethod.returns
 
 #### Defined in
 
-[src/types/app-arc56.ts:24](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L24)
+[src/types/app-arc56.ts:25](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L25)
 
 ## Methods
 
@@ -214,7 +214,7 @@ algosdk.ABIMethod.toJSON
 
 #### Defined in
 
-[src/types/app-arc56.ts:38](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L38)
+[src/types/app-arc56.ts:39](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L39)
 
 ___
 
