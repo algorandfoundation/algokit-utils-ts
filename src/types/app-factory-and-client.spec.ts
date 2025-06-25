@@ -15,7 +15,7 @@ import { getTestingAppContract } from '../../tests/example-contracts/testing-app
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
 import { OnSchemaBreak, OnUpdate } from './app'
-import { Arc56Contract, getArc56Method, StructField } from './app-arc56'
+import { Arc56Contract, getArc56Method } from './app-arc56'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
