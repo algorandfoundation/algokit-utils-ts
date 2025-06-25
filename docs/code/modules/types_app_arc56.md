@@ -54,7 +54,7 @@ Decoded ARC-56 struct as a struct rather than a tuple.
 
 #### Defined in
 
-[src/types/app-arc56.ts:117](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L117)
+[src/types/app-arc56.ts:121](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L121)
 
 ___
 
@@ -66,7 +66,7 @@ An ABI-encoded type
 
 #### Defined in
 
-[src/types/app-arc56.ts:447](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L447)
+[src/types/app-arc56.ts:451](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L451)
 
 ___
 
@@ -78,7 +78,7 @@ Raw byteslice without the length prefixed that is specified in ARC-4
 
 #### Defined in
 
-[src/types/app-arc56.ts:453](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L453)
+[src/types/app-arc56.ts:457](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L457)
 
 ___
 
@@ -90,7 +90,7 @@ A utf-8 string without the length prefix that is specified in ARC-4
 
 #### Defined in
 
-[src/types/app-arc56.ts:456](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L456)
+[src/types/app-arc56.ts:460](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L460)
 
 ___
 
@@ -102,7 +102,7 @@ A native AVM type
 
 #### Defined in
 
-[src/types/app-arc56.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L462)
+[src/types/app-arc56.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L466)
 
 ___
 
@@ -114,7 +114,7 @@ A 64-bit unsigned integer
 
 #### Defined in
 
-[src/types/app-arc56.ts:459](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L459)
+[src/types/app-arc56.ts:463](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L463)
 
 ___
 
@@ -150,7 +150,7 @@ The name of a defined struct
 
 #### Defined in
 
-[src/types/app-arc56.ts:450](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L450)
+[src/types/app-arc56.ts:454](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L454)
 
 ## Functions
 
@@ -177,7 +177,7 @@ The decoded ABI value or struct
 
 #### Defined in
 
-[src/types/app-arc56.ts:129](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L129)
+[src/types/app-arc56.ts:133](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L133)
 
 ___
 
@@ -203,7 +203,7 @@ The binary ABI-encoded value
 
 #### Defined in
 
-[src/types/app-arc56.ts:153](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L153)
+[src/types/app-arc56.ts:157](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L157)
 
 ___
 
@@ -261,7 +261,7 @@ The struct as a decoded ABI tuple
 
 #### Defined in
 
-[src/types/app-arc56.ts:103](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L103)
+[src/types/app-arc56.ts:107](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L107)
 
 ___
 
@@ -311,7 +311,7 @@ The `Arc56Method`
 
 #### Defined in
 
-[src/types/app-arc56.ts:183](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L183)
+[src/types/app-arc56.ts:187](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L187)
 
 ___
 
@@ -343,4 +343,4 @@ The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-arc56.ts:214](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L214)
+[src/types/app-arc56.ts:218](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L218)
