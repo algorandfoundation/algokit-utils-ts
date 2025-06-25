@@ -1,6 +1,6 @@
 import algosdk, { ABIUintType, Address, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
-import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
+import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
 import * as algokit from '..'
 import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
 import byteArraysAr56Json from '../../tests/example-contracts/byte_arrays/artifacts/ByteArrays.arc56.json'
@@ -10,11 +10,12 @@ import errorInnerAppArc56Json from '../../tests/example-contracts/inner_error/ar
 import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/MiddleApp.arc56.json'
 import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
 import deployErrorAppArc56Json from '../../tests/example-contracts/deploy_error/artifacts/DeployError.arc56.json'
+import nestedStruct from '../../tests/example-contracts/nested_struct/artifacts/NestedStruct.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
 import { OnSchemaBreak, OnUpdate } from './app'
-import { getArc56Method } from './app-arc56'
+import { Arc56Contract, getArc56Method, StructField } from './app-arc56'
 import { AppClient } from './app-client'
 import { AppFactory } from './app-factory'
 import { AppManager } from './app-manager'
@@ -1022,5 +1023,62 @@ retsub
         }
       })
     }
+  })
+
+  describe('Nested structs', async () => {
+    const appSpec = nestedStruct as Arc56Contract
+    describe('when the nested struct is described by structure', async () => {
+      await localnet.newScope()
+      const factory = new AppFactory({
+        algorand: localnet.algorand,
+        appSpec,
+        defaultSender: localnet.context.testAccount,
+      })
+
+      const { appClient } = await factory.deploy({ createParams: { method: 'createApplication' } })
+
+      it('correctly decodes the nested struct', async () => {
+        await appClient.send.call({ method: 'setValue', args: [1, 'hello'] })
+
+        const result = await appClient.send.call({ method: 'getValue', args: [1] })
+
+        expect(result.return).toStrictEqual({ x: { a: 'hello' } })
+      })
+    })
+    describe('when the nested struct is referenced by name', async () => {
+      const editedSpec: Arc56Contract = {
+        ...appSpec,
+        structs: {
+          Struct1: [
+            {
+              name: 'a',
+              type: 'string',
+            },
+          ],
+          Struct2: [
+            {
+              name: 'x',
+              type: 'Struct1',
+            },
+          ],
+        },
+      }
+      await localnet.newScope()
+      const factory = new AppFactory({
+        algorand: localnet.algorand,
+        appSpec: editedSpec,
+        defaultSender: localnet.context.testAccount,
+      })
+
+      const { appClient } = await factory.deploy({ createParams: { method: 'createApplication' } })
+
+      it('correctly decodes the nested struct', async () => {
+        await appClient.send.call({ method: 'setValue', args: [1, 'hello'] })
+
+        const result = await appClient.send.call({ method: 'getValue', args: [1] })
+
+        expect(result.return).toStrictEqual({ x: { a: 'hello' } })
+      })
+    })
   })
 })

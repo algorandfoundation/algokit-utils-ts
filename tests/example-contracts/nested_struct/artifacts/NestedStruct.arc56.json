@@ -1,0 +1,887 @@
+{
+  "name": "NestedStruct",
+  "desc": "",
+  "methods": [
+    {
+      "name": "createApplication",
+      "args": [],
+      "returns": {
+        "type": "void"
+      },
+      "actions": {
+        "create": [
+          "NoOp"
+        ],
+        "call": []
+      }
+    },
+    {
+      "name": "setValue",
+      "args": [
+        {
+          "name": "key",
+          "type": "uint64"
+        },
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      },
+      "actions": {
+        "create": [],
+        "call": [
+          "NoOp"
+        ]
+      }
+    },
+    {
+      "name": "getValue",
+      "args": [
+        {
+          "name": "key",
+          "type": "uint64"
+        }
+      ],
+      "returns": {
+        "type": "((string))",
+        "struct": "Struct2"
+      },
+      "actions": {
+        "create": [],
+        "call": [
+          "NoOp"
+        ]
+      }
+    }
+  ],
+  "arcs": [
+    4,
+    56
+  ],
+  "structs": {
+    "Struct2": [
+      {
+        "name": "x",
+        "type": [
+          {
+            "name": "a",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  "state": {
+    "schema": {
+      "global": {
+        "bytes": 10,
+        "ints": 0
+      },
+      "local": {
+        "bytes": 0,
+        "ints": 0
+      }
+    },
+    "keys": {
+      "global": {},
+      "local": {},
+      "box": {}
+    },
+    "maps": {
+      "global": {
+        "state": {
+          "keyType": "uint64",
+          "valueType": "Struct2"
+        }
+      },
+      "local": {},
+      "box": {}
+    }
+  },
+  "bareActions": {
+    "create": [],
+    "call": []
+  },
+  "sourceInfo": {
+    "approval": {
+      "sourceInfo": [
+        {
+          "teal": 1,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            0
+          ]
+        },
+        {
+          "teal": 2,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "teal": 3,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "teal": 15,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            10,
+            11
+          ]
+        },
+        {
+          "teal": 16,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            12
+          ]
+        },
+        {
+          "teal": 17,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            13,
+            14
+          ]
+        },
+        {
+          "teal": 18,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            15
+          ]
+        },
+        {
+          "teal": 19,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            16,
+            17
+          ]
+        },
+        {
+          "teal": 20,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            18
+          ]
+        },
+        {
+          "teal": 21,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44
+          ]
+        },
+        {
+          "teal": 25,
+          "source": "nested_struct.algo.ts:6",
+          "errorMessage": "The requested action is not implemented in this contract. Are you using the correct OnComplete? Did you set your app ID?",
+          "pc": [
+            45
+          ]
+        },
+        {
+          "teal": 30,
+          "source": "nested_struct.algo.ts:7",
+          "pc": [
+            46,
+            47,
+            48
+          ]
+        },
+        {
+          "teal": 31,
+          "source": "nested_struct.algo.ts:7",
+          "pc": [
+            49
+          ]
+        },
+        {
+          "teal": 32,
+          "source": "nested_struct.algo.ts:7",
+          "pc": [
+            50
+          ]
+        },
+        {
+          "teal": 36,
+          "source": "nested_struct.algo.ts:7",
+          "pc": [
+            51,
+            52,
+            53
+          ]
+        },
+        {
+          "teal": 37,
+          "source": "nested_struct.algo.ts:7",
+          "pc": [
+            54
+          ]
+        },
+        {
+          "teal": 42,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            55,
+            56,
+            57
+          ]
+        },
+        {
+          "teal": 43,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            58,
+            59,
+            60
+          ]
+        },
+        {
+          "teal": 46,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            61,
+            62,
+            63
+          ]
+        },
+        {
+          "teal": 47,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            64
+          ]
+        },
+        {
+          "teal": 50,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            65,
+            66,
+            67
+          ]
+        },
+        {
+          "teal": 51,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            68
+          ]
+        },
+        {
+          "teal": 52,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            69
+          ]
+        },
+        {
+          "teal": 56,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            70,
+            71,
+            72
+          ]
+        },
+        {
+          "teal": 60,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            73,
+            74
+          ]
+        },
+        {
+          "teal": 61,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            75
+          ]
+        },
+        {
+          "teal": 62,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            76
+          ]
+        },
+        {
+          "teal": 63,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            77
+          ]
+        },
+        {
+          "teal": 64,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            78
+          ]
+        },
+        {
+          "teal": 65,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            79
+          ]
+        },
+        {
+          "teal": 66,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            80
+          ]
+        },
+        {
+          "teal": 67,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            81
+          ]
+        },
+        {
+          "teal": 68,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            82,
+            83
+          ]
+        },
+        {
+          "teal": 69,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            84
+          ]
+        },
+        {
+          "teal": 70,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            85
+          ]
+        },
+        {
+          "teal": 71,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            86
+          ]
+        },
+        {
+          "teal": 72,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            87,
+            88,
+            89
+          ]
+        },
+        {
+          "teal": 73,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            90
+          ]
+        },
+        {
+          "teal": 74,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            91
+          ]
+        },
+        {
+          "teal": 75,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            92,
+            93,
+            94
+          ]
+        },
+        {
+          "teal": 76,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            95
+          ]
+        },
+        {
+          "teal": 77,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            96
+          ]
+        },
+        {
+          "teal": 78,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            97,
+            98,
+            99
+          ]
+        },
+        {
+          "teal": 79,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            100
+          ]
+        },
+        {
+          "teal": 80,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            101
+          ]
+        },
+        {
+          "teal": 81,
+          "source": "nested_struct.algo.ts:12",
+          "pc": [
+            102
+          ]
+        },
+        {
+          "teal": 82,
+          "source": "nested_struct.algo.ts:11",
+          "pc": [
+            103
+          ]
+        },
+        {
+          "teal": 87,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            104,
+            105,
+            106,
+            107,
+            108,
+            109
+          ]
+        },
+        {
+          "teal": 90,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            110,
+            111,
+            112
+          ]
+        },
+        {
+          "teal": 91,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            113
+          ]
+        },
+        {
+          "teal": 94,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            114,
+            115,
+            116
+          ]
+        },
+        {
+          "teal": 95,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            117
+          ]
+        },
+        {
+          "teal": 96,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            118
+          ]
+        },
+        {
+          "teal": 97,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            119
+          ]
+        },
+        {
+          "teal": 98,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            120
+          ]
+        },
+        {
+          "teal": 102,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            121,
+            122,
+            123
+          ]
+        },
+        {
+          "teal": 106,
+          "source": "nested_struct.algo.ts:16",
+          "pc": [
+            124,
+            125
+          ]
+        },
+        {
+          "teal": 107,
+          "source": "nested_struct.algo.ts:16",
+          "pc": [
+            126
+          ]
+        },
+        {
+          "teal": 108,
+          "source": "nested_struct.algo.ts:16",
+          "pc": [
+            127
+          ]
+        },
+        {
+          "teal": 109,
+          "source": "nested_struct.algo.ts:15",
+          "pc": [
+            128
+          ]
+        },
+        {
+          "teal": 112,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            129,
+            130,
+            131,
+            132,
+            133,
+            134
+          ]
+        },
+        {
+          "teal": 113,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            135,
+            136,
+            137
+          ]
+        },
+        {
+          "teal": 114,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            138,
+            139,
+            140,
+            141
+          ]
+        },
+        {
+          "teal": 117,
+          "source": "nested_struct.algo.ts:6",
+          "errorMessage": "this contract does not implement the given ABI method for create NoOp",
+          "pc": [
+            142
+          ]
+        },
+        {
+          "teal": 120,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            143,
+            144,
+            145,
+            146,
+            147,
+            148
+          ]
+        },
+        {
+          "teal": 121,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            149,
+            150,
+            151,
+            152,
+            153,
+            154
+          ]
+        },
+        {
+          "teal": 122,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            155,
+            156,
+            157
+          ]
+        },
+        {
+          "teal": 123,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            158,
+            159,
+            160,
+            161,
+            162,
+            163
+          ]
+        },
+        {
+          "teal": 126,
+          "source": "nested_struct.algo.ts:6",
+          "errorMessage": "this contract does not implement the given ABI method for call NoOp",
+          "pc": [
+            164
+          ]
+        },
+        {
+          "teal": 129,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            165,
+            166,
+            167
+          ]
+        },
+        {
+          "teal": 130,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            168,
+            169
+          ]
+        },
+        {
+          "teal": 131,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            170,
+            171
+          ]
+        },
+        {
+          "teal": 132,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            172
+          ]
+        },
+        {
+          "teal": 133,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            173,
+            174
+          ]
+        },
+        {
+          "teal": 134,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            175,
+            176
+          ]
+        },
+        {
+          "teal": 135,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            177
+          ]
+        },
+        {
+          "teal": 136,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            178
+          ]
+        },
+        {
+          "teal": 137,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            179,
+            180
+          ]
+        },
+        {
+          "teal": 138,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            181
+          ]
+        },
+        {
+          "teal": 139,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            182
+          ]
+        },
+        {
+          "teal": 140,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            183
+          ]
+        },
+        {
+          "teal": 141,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            184,
+            185,
+            186
+          ]
+        },
+        {
+          "teal": 142,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            187,
+            188
+          ]
+        },
+        {
+          "teal": 143,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            189,
+            190
+          ]
+        },
+        {
+          "teal": 144,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            191
+          ]
+        },
+        {
+          "teal": 145,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            192
+          ]
+        },
+        {
+          "teal": 146,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            193,
+            194
+          ]
+        },
+        {
+          "teal": 147,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            195,
+            196
+          ]
+        },
+        {
+          "teal": 148,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            197,
+            198
+          ]
+        },
+        {
+          "teal": 149,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            199,
+            200
+          ]
+        },
+        {
+          "teal": 150,
+          "source": "nested_struct.algo.ts:6",
+          "pc": [
+            201
+          ]
+        }
+      ],
+      "pcOffsetMethod": "none"
+    },
+    "clear": {
+      "sourceInfo": [],
+      "pcOffsetMethod": "none"
+    }
+  },
+  "source": {
+    "approval": "I3ByYWdtYSB2ZXJzaW9uIDEwCmludGNibG9jayAxCmJ5dGVjYmxvY2sgMHggMHgwMDAyCgovLyBUaGlzIFRFQUwgd2FzIGdlbmVyYXRlZCBieSBURUFMU2NyaXB0IHYwLjEwNi4zCi8vIGh0dHBzOi8vZ2l0aHViLmNvbS9hbGdvcmFuZGZvdW5kYXRpb24vVEVBTFNjcmlwdAoKLy8gVGhpcyBjb250cmFjdCBpcyBjb21wbGlhbnQgd2l0aCBhbmQvb3IgaW1wbGVtZW50cyB0aGUgZm9sbG93aW5nIEFSQ3M6IFsgQVJDNCBdCgovLyBUaGUgZm9sbG93aW5nIHRlbiBsaW5lcyBvZiBURUFMIGhhbmRsZSBpbml0aWFsIHByb2dyYW0gZmxvdwovLyBUaGlzIHBhdHRlcm4gaXMgdXNlZCB0byBtYWtlIGl0IGVhc3kgZm9yIGFueW9uZSB0byBwYXJzZSB0aGUgc3RhcnQgb2YgdGhlIHByb2dyYW0gYW5kIGRldGVybWluZSBpZiBhIHNwZWNpZmljIGFjdGlvbiBpcyBhbGxvd2VkCi8vIEhlcmUsIGFjdGlvbiByZWZlcnMgdG8gdGhlIE9uQ29tcGxldGUgaW4gY29tYmluYXRpb24gd2l0aCB3aGV0aGVyIHRoZSBhcHAgaXMgYmVpbmcgY3JlYXRlZCBvciBjYWxsZWQKLy8gRXZlcnkgcG9zc2libGUgYWN0aW9uIGZvciB0aGlzIGNvbnRyYWN0IGlzIHJlcHJlc2VudGVkIGluIHRoZSBzd2l0Y2ggc3RhdGVtZW50Ci8vIElmIHRoZSBhY3Rpb24gaXMgbm90IGltcGxlbWVudGVkIGluIHRoZSBjb250cmFjdCwgaXRzIHJlc3BlY3RpdmUgYnJhbmNoIHdpbGwgYmUgIipOT1RfSU1QTEVNRU5URUQiIHdoaWNoIGp1c3QgY29udGFpbnMgImVyciIKdHhuIEFwcGxpY2F0aW9uSUQKIQpwdXNoaW50IDYKKgp0eG4gT25Db21wbGV0aW9uCisKc3dpdGNoICpjYWxsX05vT3AgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVEICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVEICpjcmVhdGVfTm9PcCAqTk9UX0lNUExFTUVOVEVEICpOT1RfSU1QTEVNRU5URUQgKk5PVF9JTVBMRU1FTlRFRCAqTk9UX0lNUExFTUVOVEVEICpOT1RfSU1QTEVNRU5URUQKCipOT1RfSU1QTEVNRU5URUQ6CgkvLyBUaGUgcmVxdWVzdGVkIGFjdGlvbiBpcyBub3QgaW1wbGVtZW50ZWQgaW4gdGhpcyBjb250cmFjdC4gQXJlIHlvdSB1c2luZyB0aGUgY29ycmVjdCBPbkNvbXBsZXRlPyBEaWQgeW91IHNldCB5b3VyIGFwcCBJRD8KCWVycgoKLy8gY3JlYXRlQXBwbGljYXRpb24oKXZvaWQKKmFiaV9yb3V0ZV9jcmVhdGVBcHBsaWNhdGlvbjoKCS8vIGV4ZWN1dGUgY3JlYXRlQXBwbGljYXRpb24oKXZvaWQKCWNhbGxzdWIgY3JlYXRlQXBwbGljYXRpb24KCWludGMgMCAvLyAxCglyZXR1cm4KCi8vIGNyZWF0ZUFwcGxpY2F0aW9uKCk6IHZvaWQKY3JlYXRlQXBwbGljYXRpb246Cglwcm90byAwIDAKCXJldHN1YgoKLy8gc2V0VmFsdWUodWludDY0LHN0cmluZyl2b2lkCiphYmlfcm91dGVfc2V0VmFsdWU6CgkvLyB2YWx1ZTogc3RyaW5nCgl0eG5hIEFwcGxpY2F0aW9uQXJncyAyCglleHRyYWN0IDIgMAoKCS8vIGtleTogdWludDY0Cgl0eG5hIEFwcGxpY2F0aW9uQXJncyAxCglidG9pCgoJLy8gZXhlY3V0ZSBzZXRWYWx1ZSh1aW50NjQsc3RyaW5nKXZvaWQKCWNhbGxzdWIgc2V0VmFsdWUKCWludGMgMCAvLyAxCglyZXR1cm4KCi8vIHNldFZhbHVlKGtleTogdWludDY0LCB2YWx1ZTogc3RyaW5nKTogdm9pZApzZXRWYWx1ZToKCXByb3RvIDIgMAoKCS8vIG5lc3RlZF9zdHJ1Y3QuYWxnby50czoxMgoJLy8gdGhpcy5zdGF0ZShrZXkpLnZhbHVlID0geyB4OiB7IGE6IHZhbHVlIH0gfQoJZnJhbWVfZGlnIC0xIC8vIGtleTogdWludDY0CglpdG9iCglieXRlYyAwIC8vICBpbml0aWFsIGhlYWQKCWJ5dGVjIDAgLy8gIGluaXRpYWwgdGFpbAoJYnl0ZWMgMSAvLyAgaW5pdGlhbCBoZWFkIG9mZnNldAoJYnl0ZWMgMCAvLyAgaW5pdGlhbCBoZWFkCglieXRlYyAwIC8vICBpbml0aWFsIHRhaWwKCWJ5dGVjIDEgLy8gIGluaXRpYWwgaGVhZCBvZmZzZXQKCWZyYW1lX2RpZyAtMiAvLyB2YWx1ZTogc3RyaW5nCglkdXAKCWxlbgoJaXRvYgoJZXh0cmFjdCA2IDIKCXN3YXAKCWNvbmNhdAoJY2FsbHN1YiAqcHJvY2Vzc19keW5hbWljX3R1cGxlX2VsZW1lbnQKCXBvcCAvLyBwb3AgaGVhZCBvZmZzZXQKCWNvbmNhdCAvLyBjb25jYXQgaGVhZCBhbmQgdGFpbAoJY2FsbHN1YiAqcHJvY2Vzc19keW5hbWljX3R1cGxlX2VsZW1lbnQKCXBvcCAvLyBwb3AgaGVhZCBvZmZzZXQKCWNvbmNhdCAvLyBjb25jYXQgaGVhZCBhbmQgdGFpbAoJYXBwX2dsb2JhbF9wdXQKCXJldHN1YgoKLy8gZ2V0VmFsdWUodWludDY0KSgoc3RyaW5nKSkKKmFiaV9yb3V0ZV9nZXRWYWx1ZToKCS8vIFRoZSBBQkkgcmV0dXJuIHByZWZpeAoJcHVzaGJ5dGVzIDB4MTUxZjdjNzUKCgkvLyBrZXk6IHVpbnQ2NAoJdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQoJYnRvaQoKCS8vIGV4ZWN1dGUgZ2V0VmFsdWUodWludDY0KSgoc3RyaW5nKSkKCWNhbGxzdWIgZ2V0VmFsdWUKCWNvbmNhdAoJbG9nCglpbnRjIDAgLy8gMQoJcmV0dXJuCgovLyBnZXRWYWx1ZShrZXk6IHVpbnQ2NCk6IFN0cnVjdDIKZ2V0VmFsdWU6Cglwcm90byAxIDEKCgkvLyBuZXN0ZWRfc3RydWN0LmFsZ28udHM6MTYKCS8vIHJldHVybiB0aGlzLnN0YXRlKGtleSkudmFsdWUKCWZyYW1lX2RpZyAtMSAvLyBrZXk6IHVpbnQ2NAoJaXRvYgoJYXBwX2dsb2JhbF9nZXQKCXJldHN1YgoKKmNyZWF0ZV9Ob09wOgoJcHVzaGJ5dGVzIDB4Yjg0NDdiMzYgLy8gbWV0aG9kICJjcmVhdGVBcHBsaWNhdGlvbigpdm9pZCIKCXR4bmEgQXBwbGljYXRpb25BcmdzIDAKCW1hdGNoICphYmlfcm91dGVfY3JlYXRlQXBwbGljYXRpb24KCgkvLyB0aGlzIGNvbnRyYWN0IGRvZXMgbm90IGltcGxlbWVudCB0aGUgZ2l2ZW4gQUJJIG1ldGhvZCBmb3IgY3JlYXRlIE5vT3AKCWVycgoKKmNhbGxfTm9PcDoKCXB1c2hieXRlcyAweGUwNjVjNDcwIC8vIG1ldGhvZCAic2V0VmFsdWUodWludDY0LHN0cmluZyl2b2lkIgoJcHVzaGJ5dGVzIDB4ZjQ3MGZkYjYgLy8gbWV0aG9kICJnZXRWYWx1ZSh1aW50NjQpKChzdHJpbmcpKSIKCXR4bmEgQXBwbGljYXRpb25BcmdzIDAKCW1hdGNoICphYmlfcm91dGVfc2V0VmFsdWUgKmFiaV9yb3V0ZV9nZXRWYWx1ZQoKCS8vIHRoaXMgY29udHJhY3QgZG9lcyBub3QgaW1wbGVtZW50IHRoZSBnaXZlbiBBQkkgbWV0aG9kIGZvciBjYWxsIE5vT3AKCWVycgoKKnByb2Nlc3NfZHluYW1pY190dXBsZV9lbGVtZW50OgoJcHJvdG8gNCAzCglmcmFtZV9kaWcgLTQgLy8gdHVwbGUgaGVhZAoJZnJhbWVfZGlnIC0yIC8vIGhlYWQgb2Zmc2V0Cgljb25jYXQKCWZyYW1lX2J1cnkgLTQgLy8gdHVwbGUgaGVhZAoJZnJhbWVfZGlnIC0xIC8vIGVsZW1lbnQKCWR1cAoJbGVuCglmcmFtZV9kaWcgLTIgLy8gaGVhZCBvZmZzZXQKCWJ0b2kKCSsKCWl0b2IKCWV4dHJhY3QgNiAyCglmcmFtZV9idXJ5IC0yIC8vIGhlYWQgb2Zmc2V0CglmcmFtZV9kaWcgLTMgLy8gdHVwbGUgdGFpbAoJc3dhcAoJY29uY2F0CglmcmFtZV9idXJ5IC0zIC8vIHR1cGxlIHRhaWwKCWZyYW1lX2RpZyAtNCAvLyB0dXBsZSBoZWFkCglmcmFtZV9kaWcgLTMgLy8gdHVwbGUgdGFpbAoJZnJhbWVfZGlnIC0yIC8vIGhlYWQgb2Zmc2V0CglyZXRzdWI=",
+    "clear": "I3ByYWdtYSB2ZXJzaW9uIDEw"
+  },
+  "byteCode": {
+    "approval": "CiABASYCAAIAAjEYFIEGCzEZCI0MAGIAAAAAAAAAAAAAAFQAAAAAAAAAAAAAAIgAAiJDigAAiTYaAlcCADYaAReIAAIiQ4oCAIv/FigoKSgoKYv+SRUWVwYCTFCIAEZIUIgAQUhQZ4mABBUffHU2GgEXiAAEULAiQ4oBAYv/FmSJgAS4RHs2NhoAjgH/oACABOBlxHCABPRw/bY2GgCOAv+T/8QAigQDi/yL/lCM/Iv/SRWL/hcIFlcGAoz+i/1MUIz9i/yL/Yv+iQ==",
+    "clear": "Cg=="
+  },
+  "compilerInfo": {
+    "compiler": "algod",
+    "compilerVersion": {
+      "major": 4,
+      "minor": 1,
+      "patch": 2,
+      "commitHash": "088f89dd"
+    }
+  }
+}
