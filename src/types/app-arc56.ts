@@ -78,7 +78,11 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
       let abiType: algosdk.ABIType
 
       if (typeof type === 'string') {
-        abiType = algosdk.ABIType.from(type)
+        if (type in structs) {
+          abiType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
+        } else {
+          abiType = algosdk.ABIType.from(type)
+        }
       } else {
         abiType = getABITupleTypeFromABIStructDefinition(type, structs)
       }
