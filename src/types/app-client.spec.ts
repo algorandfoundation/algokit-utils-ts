@@ -13,14 +13,15 @@ import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
 import { algo } from '..'
-import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import boxMapAppSpec from '../../tests/example-contracts/box_map/artifacts/BoxMapTest.arc56.json'
+import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
+import { AlgoAmount } from './amount'
 import { ABIAppCallArg } from './app'
+import { getABIDecodedValue } from './app-arc56'
 import { AppClient, ApplicationClient } from './app-client'
 import { AppManager } from './app-manager'
 import { AppSpec } from './app-spec'
-import { AlgoAmount } from './amount'
 
 describe('application-client', () => {
   const localnet = algorandFixture()
@@ -976,29 +977,67 @@ describe('app-client', () => {
     expect(simulateResult.returns![1]).toEqual(sendResult.returns![1])
   })
 
-  describe('ARC56 BoxMap', () => {
-    let appClient: AppClient
-
+  describe('ARC56', () => {
     beforeEach(async () => {
       localnet.newScope()
-      const { testAccount, algorand } = localnet.context
-      const factory = algorand.client.getAppFactory({
-        appSpec: JSON.stringify(boxMapAppSpec),
-        defaultSender: testAccount,
+    })
+
+    describe('BoxMap', () => {
+      let appClient: AppClient
+
+      beforeEach(async () => {
+        const { testAccount, algorand } = localnet.context
+        const factory = algorand.client.getAppFactory({
+          appSpec: JSON.stringify(boxMapAppSpec),
+          defaultSender: testAccount,
+        })
+
+        appClient = (await factory.send.create({ method: 'createApplication' })).appClient
+
+        await algorand.account.ensureFunded(appClient.appAddress, testAccount, AlgoAmount.Algo(1))
+
+        await appClient.send.call({ method: 'setValue', args: [1n, 'foo'] })
       })
 
-      appClient = (await factory.send.create({ method: 'createApplication' })).appClient
+      test('getMap with prefix', async () => {
+        expect(await appClient.state.box.getMap('bMap')).toEqual(new Map().set(1n, 'foo'))
+      })
 
-      await algorand.account.ensureFunded(appClient.appAddress, testAccount, AlgoAmount.Algo(1))
-
-      await appClient.send.call({ method: 'setValue', args: [1n, 'foo'] })
+      test('getMapValue with prefix', async () => {
+        expect(await appClient.state.box.getMapValue('bMap', 1n)).toEqual('foo')
+      })
     })
 
-    test('getMap with prefix', async () => {
-      expect(await appClient.state.box.getMap('bMap')).toEqual(new Map().set(1n, 'foo'))
-    })
-    test('getMapValue with prefix', async () => {
-      expect(await appClient.state.box.getMapValue('bMap', 1n)).toEqual('foo')
+    describe('getABIDecodedValue', () => {
+      test('correctly decodes a struct containing a uint16', () => {
+        const decoded = getABIDecodedValue(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100]), 'User', {
+          User: [
+            { name: 'userId', type: 'uint16' },
+            { name: 'name', type: 'string' },
+          ],
+        }) as { userId: number; name: string }
+
+        expect(typeof decoded.userId).toBe('number')
+        expect(decoded.userId).toBe(1)
+        expect(typeof decoded.name).toBe('string')
+        expect(decoded.name).toBe('world')
+      })
+
+      test.each(
+        // Generate all valid ABI uint bit lengths
+        Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
+      )('correctly decodes a uint%i', (bitLength) => {
+        const encoded = new ABIUintType(bitLength).encode(1)
+        const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
+
+        if (bitLength < 53) {
+          expect(typeof decoded).toBe('number')
+          expect(decoded).toBe(1)
+        } else {
+          expect(typeof decoded).toBe('bigint')
+          expect(decoded).toBe(1n)
+        }
+      })
     })
   })
 })
