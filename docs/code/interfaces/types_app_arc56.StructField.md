@@ -23,7 +23,7 @@ The name of the struct field
 
 #### Defined in
 
-[src/types/app-arc56.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L471)
+[src/types/app-arc56.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L473)
 
 ___
 
@@ -35,4 +35,4 @@ The type of the struct field's value
 
 #### Defined in
 
-[src/types/app-arc56.ts:473](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L473)
+[src/types/app-arc56.ts:475](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L475)

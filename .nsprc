@@ -1,6 +1,1 @@
-{
-  "1105444": {
-      "reason": "Vulnerability is in npm's bundled dependencies (brace-expansion) and cannot be fixed automatically. This is a low severity RegEx DoS vulnerability in npm's internal tools. npm team needs to update their bundled dependencies.",
-      "expiry": "2025-12-31"
-    }
-}
+{}

@@ -1,7 +1,7 @@
 import algosdk from 'algosdk'
+import { convertAbiByteArrays, convertABIDecodedBigIntToNumber } from '../util'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
-import { convertAbiByteArrays } from '../util'
 
 /** Type to describe an argument within an `Arc56Method`. */
 export type Arc56MethodArg = Expand<
@@ -88,11 +88,12 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
       }
 
       const abiValue = convertAbiByteArrays(decodedABITuple[i], abiType)
+      const convertedValue = convertABIDecodedBigIntToNumber(abiValue, abiType)
       return [
         key,
-        (typeof type === 'string' && !structs[type]) || !Array.isArray(abiValue)
-          ? decodedABITuple[i]
-          : getABIStructFromABITuple(abiValue, typeof type === 'string' ? structs[type] : type, structs),
+        (typeof type === 'string' && !structs[type]) || !Array.isArray(convertedValue)
+          ? convertedValue
+          : getABIStructFromABITuple(convertedValue, typeof type === 'string' ? structs[type] : type, structs),
       ]
     }),
   ) as TReturn
@@ -144,7 +145,8 @@ export function getABIDecodedValue(
   }
 
   const abiType = algosdk.ABIType.from(type)
-  return convertAbiByteArrays(abiType.decode(value), abiType)
+  const decodedValue = convertAbiByteArrays(abiType.decode(value), abiType)
+  return convertABIDecodedBigIntToNumber(decodedValue, abiType)
 }
 
 /**
