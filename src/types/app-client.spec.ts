@@ -1023,11 +1023,14 @@ describe('app-client', () => {
         expect(decoded.name).toBe('world')
       })
 
-      test.each([8, 16, 32, 64, 128, 256, 512])('correctly decodes a uint%i', (bitLength) => {
+      test.each(
+        // Generate all valid ABI uint bit lengths
+        Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
+      )('correctly decodes a uint%i', (bitLength) => {
         const encoded = new ABIUintType(bitLength).encode(1)
         const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
 
-        if (bitLength < 64) {
+        if (bitLength < 53) {
           expect(typeof decoded).toBe('number')
           expect(decoded).toBe(1)
         } else {

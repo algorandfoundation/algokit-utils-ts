@@ -24,7 +24,7 @@ The arguments of the event, in order
 
 #### Defined in
 
-[src/types/app-arc56.ts:438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L438)
+[src/types/app-arc56.ts:440](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L440)
 
 ___
 
@@ -36,7 +36,7 @@ Optional, user-friendly description for the event
 
 #### Defined in
 
-[src/types/app-arc56.ts:436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L436)
+[src/types/app-arc56.ts:438](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L438)
 
 ___
 
@@ -48,4 +48,4 @@ The name of the event
 
 #### Defined in
 
-[src/types/app-arc56.ts:434](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L434)
+[src/types/app-arc56.ts:436](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-arc56.ts#L436)
