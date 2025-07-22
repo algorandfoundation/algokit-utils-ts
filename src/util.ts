@@ -1,5 +1,5 @@
+import { ABIArrayDynamicType, ABIArrayStaticType, ABIByteType, ABIReturnType, ABITupleType, ABIType, ABIUintType, ABIValue } from 'algosdk'
 import { APP_PAGE_MAX_SIZE } from './types/app'
-import { ABIArrayDynamicType, ABIArrayStaticType, ABIByteType, ABIReturnType, ABITupleType, ABIValue } from 'algosdk'
 
 /**
  * Converts a value which might be a number or a bigint into a number to be used with apis that don't support bigint.
@@ -144,4 +144,23 @@ export function convertAbiByteArrays(value: ABIValue, type: ABIReturnType): ABIV
 
   // For other types, return the value as is
   return value
+}
+
+/**
+ * Convert bigint values to numbers for uint types with bit size < 53
+ */
+export const convertABIDecodedBigIntToNumber = (value: ABIValue, type: ABIType): ABIValue => {
+  if (typeof value === 'bigint') {
+    if (type instanceof ABIUintType) {
+      return type.bitSize < 53 ? Number(value) : value
+    } else {
+      return value
+    }
+  } else if (Array.isArray(value) && (type instanceof ABIArrayStaticType || type instanceof ABIArrayDynamicType)) {
+    return value.map((v) => convertABIDecodedBigIntToNumber(v, type.childType))
+  } else if (Array.isArray(value) && type instanceof ABITupleType) {
+    return value.map((v, i) => convertABIDecodedBigIntToNumber(v, type.childTypes[i]))
+  } else {
+    return value
+  }
 }

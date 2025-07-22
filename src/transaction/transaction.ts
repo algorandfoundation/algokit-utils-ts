@@ -3,9 +3,9 @@ import algosdk, {
   ABIReturnType,
   Address,
   ApplicationTransactionFields,
+  stringifyJSON,
   TransactionBoxReference,
   TransactionType,
-  stringifyJSON,
 } from 'algosdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
@@ -24,7 +24,7 @@ import {
   TransactionNote,
   TransactionToSign,
 } from '../types/transaction'
-import { asJson, convertAbiByteArrays, toNumber } from '../util'
+import { asJson, convertAbiByteArrays, convertABIDecodedBigIntToNumber, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
@@ -913,22 +913,6 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     // Attach the sent transactions so we can use them in error transformers
     err.sentTransactions = atc.buildGroup().map((t) => t.txn)
     throw err
-  }
-}
-
-const convertABIDecodedBigIntToNumber = (value: ABIValue, type: ABIType): ABIValue => {
-  if (typeof value === 'bigint') {
-    if (type instanceof algosdk.ABIUintType) {
-      return type.bitSize < 53 ? Number(value) : value
-    } else {
-      return value
-    }
-  } else if (Array.isArray(value) && (type instanceof algosdk.ABIArrayStaticType || type instanceof algosdk.ABIArrayDynamicType)) {
-    return value.map((v) => convertABIDecodedBigIntToNumber(v, type.childType))
-  } else if (Array.isArray(value) && type instanceof algosdk.ABITupleType) {
-    return value.map((v, i) => convertABIDecodedBigIntToNumber(v, type.childTypes[i]))
-  } else {
-    return value
   }
 }
 
