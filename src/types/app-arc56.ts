@@ -2,7 +2,6 @@ import algosdk from 'algosdk'
 import { convertAbiByteArrays, convertABIDecodedBigIntToNumber } from '../util'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
-import ABIValue = algosdk.ABIValue
 
 /** Type to describe an argument within an `Arc56Method`. */
 export type Arc56MethodArg = Expand<

@@ -33,8 +33,6 @@ import SuggestedParams = algosdk.SuggestedParams
 import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
-import ABIValue = algosdk.ABIValue
-import ABIType = algosdk.ABIType
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
