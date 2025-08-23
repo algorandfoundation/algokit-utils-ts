@@ -13,7 +13,7 @@ import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
 import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
-import { getABIReturnValue, waitForConfirmation } from './transaction'
+import { getABIReturnValue, populateAppCallResources, waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
@@ -787,12 +787,12 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
   let alice: Address & Account
 
   describe('accounts', () => {
-    test('addressBalance: invalid Account reference', async () => {
+    test('addressBalance: unavailable Account', async () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
         appClient.send.call({ method: 'addressBalance', args: [testAccount.toString()], populateAppCallResources: false }),
-      ).rejects.toThrow('invalid Account reference')
+      ).rejects.toThrow('unavailable Account')
     })
 
     test('addressBalance', async () => {
@@ -846,7 +846,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
   })
 
   describe('cross-product references', () => {
-    const hasAssetErrorMsg = version === 8 ? 'invalid Account reference' : 'unavailable Account'
+    const hasAssetErrorMsg = version === 8 ? 'unavailable Account' : 'unavailable Account'
 
     test(`hasAsset: ${hasAssetErrorMsg}`, async () => {
       const { testAccount } = fixture.context
@@ -885,14 +885,14 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
   })
 
   describe('sendTransaction', () => {
-    test('addressBalance: invalid Account reference', async () => {
+    test('addressBalance: unavailable Account', async () => {
       await expect(
         appClient.send.call({
           method: 'addressBalance',
           args: [algosdk.generateAccount().addr.toString()],
           populateAppCallResources: false,
         }),
-      ).rejects.toThrow('invalid Account reference')
+      ).rejects.toThrow('unavailable Account')
     })
 
     test('addressBalance', async () => {
@@ -996,11 +996,15 @@ describe('Resource population: meta', () => {
 
   let externalClient: AppClient
 
+  let testAccount: algosdk.Address & algosdk.Account
+
   beforeEach(fixture.newScope)
 
   beforeAll(async () => {
     await fixture.newScope()
-    const { algorand, testAccount } = fixture.context
+    const { algorand, testAccount: ta } = fixture.context
+    testAccount = ta
+
     Config.configure({ populateAppCallResources: true })
 
     const factory = algorand.client.getAppFactory({
@@ -1071,6 +1075,41 @@ describe('Resource population: meta', () => {
     })
 
     expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+  })
+
+  test('create box in new app', async () => {
+    const { algorand } = fixture
+
+    await externalClient.fundAppAccount({ amount: (200_000).microAlgo() })
+
+    await externalClient.send.call({
+      method: 'createBoxInNewApp',
+      args: [algorand.createTransaction.payment({ sender: testAccount, receiver: externalClient.appAddress, amount: (1).algo() })],
+      staticFee: (4_000).microAlgo(),
+    })
+  })
+
+  test('box ref for create box in new app', async () => {
+    const { algorand } = fixture
+
+    await externalClient.fundAppAccount({ amount: (200_000).microAlgo() })
+
+    const txn = await externalClient.createTransaction.call({
+      method: 'createBoxInNewApp',
+      args: [algorand.createTransaction.payment({ sender: testAccount, receiver: externalClient.appAddress, amount: (1).algo() })],
+      staticFee: (4_000).microAlgo(),
+    })
+
+    const atc = new algosdk.AtomicTransactionComposer()
+
+    for (const tx of txn.transactions) {
+      atc.addTransaction({ txn: tx, signer: algosdk.makeBasicAccountTransactionSigner(testAccount) })
+    }
+
+    const populatedAtc = await populateAppCallResources(atc, algorand.client.algod)
+    const boxRef = populatedAtc.buildGroup()[1].txn.applicationCall?.boxes?.[0]
+    expect(boxRef).toBeDefined()
+    expect(boxRef?.appIndex).toBe(0n)
   })
 })
 

@@ -15,7 +15,7 @@ class ExternalApp extends Contract {
   dummy(): void {}
 
   error(): void {
-    throw Error()
+    throw Error('Some error')
   }
 
   boxWithPayment(_payment: PayTxn): void {
@@ -30,6 +30,35 @@ class ExternalApp extends Contract {
 
   senderAssetBalance(): void {
     assert(!this.txn.sender.isOptedInToAsset(this.asa.value))
+  }
+
+  createBoxInNewApp(mbrPayment: PayTxn): void {
+    verifyPayTxn(mbrPayment, {
+      receiver: this.app.address,
+    })
+
+    sendMethodCall<[], void>({
+      name: 'createApplication',
+      approvalProgram: InnerBoxApp.approvalProgram(),
+      clearStateProgram: InnerBoxApp.clearProgram(),
+    })
+
+    const appId = this.itxn.createdApplicationID
+    const appAddr = appId.address
+
+    sendPayment({ receiver: appAddr, amount: mbrPayment.amount })
+
+    sendMethodCall<typeof InnerBoxApp.prototype.createEmptyBox>({
+      applicationID: appId,
+    })
+  }
+}
+
+class InnerBoxApp extends Contract {
+  emptyBox = BoxKey<StaticBytes<0>>()
+
+  createEmptyBox(): void {
+    this.emptyBox.create()
   }
 }
 
