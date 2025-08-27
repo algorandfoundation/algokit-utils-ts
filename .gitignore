@@ -57,5 +57,3 @@ out/
 .env
 .env.*
 !.env.template
-
-references
