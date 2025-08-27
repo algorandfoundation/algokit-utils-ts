@@ -1,35 +1,36 @@
+import { ABIType } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { DecodingError, EncodingError } from '../../helpers'
+import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
 
 export type ABIStaticArrayType = {
   kind: 'static-array'
-  elementType: any // Will be ABIType after index.ts is created
+  childType: ABIType
   length: number
 }
 
-export function createStaticArrayType(elementType: any, length: number): ABIStaticArrayType {
-  if (length < 0 || !Number.isInteger(length)) {
-    throw new Error(`Array length must be a non-negative integer, got ${length}`)
+export function encodeStaticArray(type: ABIStaticArrayType, value: ABIValue): Uint8Array {
+  if (!Array.isArray(value) && !(value instanceof Uint8Array)) {
+    throw new Error(`Cannot encode value as ${staticArrayToString(type)}: ${value}`)
   }
-
-  return {
-    kind: 'static-array',
-    elementType,
-    length,
+  if (value.length !== type.length) {
+    throw new Error(`Value array does not match static array length. Expected ${type.length}, got ${value.length}`)
   }
+  const convertedTuple = toABITupleType(type)
+  return encodeTuple(convertedTuple, value)
 }
 
-export function encodeStaticArray(_type: ABIStaticArrayType, _value: ABIValue): Uint8Array {
-  // TODO: Implement static array encoding with bool packing optimization
-  throw new EncodingError('Static array encoding not yet implemented')
-}
-
-export function decodeStaticArray(_type: ABIStaticArrayType, _bytes: Uint8Array): ABIValue {
-  // TODO: Implement static array decoding with bool unpacking optimization
-  throw new DecodingError('Static array decoding not yet implemented')
+export function decodeStaticArray(type: ABIStaticArrayType, bytes: Uint8Array): ABIValue {
+  const convertedTuple = toABITupleType(type)
+  return decodeTuple(convertedTuple, bytes)
 }
 
 export function staticArrayToString(type: ABIStaticArrayType): string {
-  // TODO: Implement after we have toString for element types
-  return `elementType[${type.length}]`
+  return `${type.childType}[${type.length}]`
+}
+
+function toABITupleType(type: ABIStaticArrayType) {
+  return {
+    childTypes: Array(type.length).fill(type.childType),
+    kind: 'tuple',
+  } satisfies ABITupleType
 }

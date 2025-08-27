@@ -1,16 +1,10 @@
+import { ABIType } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { DecodingError, EncodingError } from '../../helpers'
 
 export type ABITupleType = {
   kind: 'tuple'
-  childTypes: any[] // Will be ABIType[] after index.ts is created
-}
-
-export function createTupleType(childTypes: any[]): ABITupleType {
-  return {
-    kind: 'tuple',
-    childTypes,
-  }
+  childTypes: ABIType[]
 }
 
 export function encodeTuple(_type: ABITupleType, _value: ABIValue): Uint8Array {
@@ -24,6 +18,5 @@ export function decodeTuple(_type: ABITupleType, _bytes: Uint8Array): ABIValue {
 }
 
 export function tupleToString(type: ABITupleType): string {
-  // TODO: Implement after we have toString for child types
   return `(${type.childTypes.length} types)`
 }

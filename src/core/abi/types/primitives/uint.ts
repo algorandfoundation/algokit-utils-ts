@@ -38,3 +38,7 @@ export function decodeUint(type: ABIUintType, bytes: Uint8Array): ABIValue {
   }
   return bytesToBigInt(bytes)
 }
+
+export function uintToString(type: ABIUintType): string {
+  return `uint${type.bitSize}`
+}
