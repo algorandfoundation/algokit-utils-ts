@@ -219,3 +219,73 @@ function parseTupleContent(content: string): string[] {
 
   return tupleStrings
 }
+
+export function isDynamic(type: ABIType): boolean {
+  switch (type.kind) {
+    case 'static-array':
+      return isDynamic(type.childType)
+    case 'tuple':
+      return type.childTypes.some((c) => isDynamic(c))
+    case 'dynamic-array':
+    case 'string':
+      return true
+    default:
+      return false
+  }
+}
+
+export function findBoolSequenceEnd(abiTypes: ABIType[], currentIndex: number): number {
+  let cursor = currentIndex
+  while (cursor < abiTypes.length) {
+    if (abiTypes[cursor].kind === 'bool') {
+      if (cursor - currentIndex + 1 === 8 || cursor === abiTypes.length - 1) {
+        return cursor
+      }
+      cursor++
+    } else {
+      return cursor - 1
+    }
+  }
+  return cursor - 1
+}
+
+export function getSize(abiType: ABIType): number {
+  switch (abiType.kind) {
+    case 'uint':
+      return Math.floor(abiType.bitSize / 8)
+    case 'ufixed':
+      return Math.floor(abiType.bitSize / 8)
+    case 'address':
+      return 32
+    case 'bool':
+      return 1
+    case 'byte':
+      return 1
+    case 'static-array':
+      if (abiType.childType.kind === 'bool') {
+        return Math.ceil(abiType.length / 8)
+      }
+      return getSize(abiType.childType) * abiType.length
+    case 'tuple': {
+      let size = 0
+      let i = 0
+      while (i < abiType.childTypes.length) {
+        const childType = abiType.childTypes[i]
+        if (childType.kind === 'bool') {
+          const sequenceEndIndex = findBoolSequenceEnd(abiType.childTypes, i)
+          const boolCount = sequenceEndIndex - i + 1
+          size += Math.ceil(boolCount / 8)
+          i = sequenceEndIndex + 1
+        } else {
+          size += getSize(childType)
+          i++
+        }
+      }
+      return size
+    }
+    case 'string':
+      throw new ValidationError(`Failed to get size, string is a dynamic type`)
+    case 'dynamic-array':
+      throw new ValidationError(`Failed to get size, dynamic array is a dynamic type`)
+  }
+}

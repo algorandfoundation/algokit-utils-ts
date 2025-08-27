@@ -84,6 +84,8 @@ export const ALGORAND_ADDRESS_LENGTH = 58
 export const ALGORAND_ADDRESS_BYTE_LENGTH = 36
 export const ALGORAND_CHECKSUM_BYTE_LENGTH = 4
 export const LENGTH_ENCODE_BYTE_SIZE = 2
+export const BOOL_TRUE_BYTE = 0x80
+export const BOOL_FALSE_BYTE = 0x00
 
 // TODO: this will be replaced by the real logic when this branch is merged
 export function convertAddressToBytes(address: string): Uint8Array {
