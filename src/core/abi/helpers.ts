@@ -115,7 +115,7 @@ function checksumFromPublicKey(pk: Uint8Array): Uint8Array {
 
 export function convertBytesToAddress(bytes: Uint8Array): string {
   if (bytes.byteLength !== 32) {
-    throw new Error(`byte string must be 32 bytes long for an address`)
+    throw new Error(`bytes must be 32 bytes long for an address`)
   }
   const checksumBytes = checksumFromPublicKey(bytes)
   const addr = base32.encode(concatArrays(bytes, checksumBytes))
