@@ -1,14 +1,39 @@
 import { ABIValue } from './abi-value'
 import { ValidationError } from './helpers'
-import { ABIDynamicArrayType, decodeDynamicArray, dynamicArrayToString, encodeDynamicArray } from './types/collections/dynamic-array'
-import { ABIStaticArrayType, decodeStaticArray, encodeStaticArray, staticArrayToString } from './types/collections/static-array'
-import { ABITupleType, decodeTuple, encodeTuple, tupleToString } from './types/collections/tuple'
-import { ABIAddressType, decodeAddress, encodeAddress } from './types/primitives/address'
-import { ABIBoolType, decodeBool, encodeBool } from './types/primitives/bool'
-import { ABIByteType, decodeByte, encodeByte } from './types/primitives/byte'
-import { ABIStringType, decodeString, encodeString } from './types/primitives/string'
-import { ABIUFixedType, decodeUFixed, encodeUFixed, ufixedToString } from './types/primitives/ufixed'
-import { ABIUintType, decodeUint, encodeUint, uintToString } from './types/primitives/uint'
+import {
+  ABIAddressType,
+  ABIBoolType,
+  ABIByteType,
+  ABIDynamicArrayType,
+  ABIStaticArrayType,
+  ABIStringType,
+  ABITupleType,
+  ABIUFixedType,
+  ABIUintType,
+  decodeAddress,
+  decodeBool,
+  decodeByte,
+  decodeDynamicArray,
+  decodeStaticArray,
+  decodeString,
+  decodeTuple,
+  decodeUFixed,
+  decodeUint,
+  dynamicArrayToString,
+  encodeAddress,
+  encodeBool,
+  encodeByte,
+  encodeDynamicArray,
+  encodeStaticArray,
+  encodeString,
+  encodeTuple,
+  encodeUFixed,
+  encodeUint,
+  staticArrayToString,
+  tupleToString,
+  ufixedToString,
+  uintToString,
+} from './types/'
 
 export type ABIType =
   | ABIUintType
