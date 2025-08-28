@@ -1,9 +1,8 @@
 import { addressFromPublicKey, publicKeyFromAddress } from '../../../address'
-import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
 export type ABIAddressType = {
-  name: ABITypeName.Address
+  name: 'Address'
 }
 
 export function encodeAddress(value: ABIValue): Uint8Array {

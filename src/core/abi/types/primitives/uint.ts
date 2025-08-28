@@ -1,9 +1,8 @@
-import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { bigIntToBytes, bytesToBigInt } from '../../bigint'
 
 export type ABIUintType = {
-  name: ABITypeName.Uint
+  name: 'Uint'
   bitSize: number
 }
 

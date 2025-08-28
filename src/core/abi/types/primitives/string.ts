@@ -1,10 +1,9 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
-import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { bigIntToBytes } from '../../bigint'
 
 export type ABIStringType = {
-  name: ABITypeName.String
+  name: 'String'
 }
 
 export function encodeString(value: ABIValue): Uint8Array {

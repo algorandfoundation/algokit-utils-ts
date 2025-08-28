@@ -1,10 +1,10 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
 import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, PUBLIC_KEY_BYTE_LENGTH } from '../../../constants'
-import { ABIType, ABITypeName, aBITypeToString, decodeABIValue, encodeABIValue } from '../../abi-type'
+import { ABIType, aBITypeToString, decodeABIValue, encodeABIValue } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
 export type ABITupleType = {
-  name: ABITypeName.Tuple
+  name: 'Tuple'
   childTypes: ABIType[]
 }
 
@@ -59,7 +59,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
       valuePartitions.push(null)
       bytesCursor += LENGTH_ENCODE_BYTE_SIZE
     } else {
-      if (childType.name === ABITypeName.Bool) {
+      if (childType.name === 'Bool') {
         const boolSequenceEndIndex = findBoolSequenceEnd(abiTypes, abiTypesCursor)
         for (let j = 0; j <= boolSequenceEndIndex - abiTypesCursor; j++) {
           const boolMask = BOOL_TRUE_BYTE >> j
@@ -152,7 +152,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
       heads.push(new Uint8Array(2)) // Placeholder for dynamic offset
       tails.push(encodeABIValue(childType, values[abiTypesCursor]))
     } else {
-      if (childType.name === ABITypeName.Bool) {
+      if (childType.name === 'Bool') {
         const boolSequenceEndIndex = findBoolSequenceEnd(childTypes, abiTypesCursor)
         const boolValues = values.slice(abiTypesCursor, boolSequenceEndIndex + 1)
         const compressedBool = compressBools(boolValues)
@@ -223,12 +223,12 @@ export function tupleToString(type: ABITupleType): string {
 
 function isDynamic(type: ABIType): boolean {
   switch (type.name) {
-    case ABITypeName.StaticArray:
+    case 'StaticArray':
       return isDynamic(type.childType)
-    case ABITypeName.Tuple:
+    case 'Tuple':
       return type.childTypes.some((c) => isDynamic(c))
-    case ABITypeName.DynamicArray:
-    case ABITypeName.String:
+    case 'DynamicArray':
+    case 'String':
       return true
     default:
       return false
@@ -238,7 +238,7 @@ function isDynamic(type: ABIType): boolean {
 function findBoolSequenceEnd(abiTypes: ABIType[], currentIndex: number): number {
   let cursor = currentIndex
   while (cursor < abiTypes.length) {
-    if (abiTypes[cursor].name === ABITypeName.Bool) {
+    if (abiTypes[cursor].name === 'Bool') {
       if (cursor - currentIndex + 1 === 8 || cursor === abiTypes.length - 1) {
         return cursor
       }
@@ -252,27 +252,27 @@ function findBoolSequenceEnd(abiTypes: ABIType[], currentIndex: number): number 
 
 function getSize(abiType: ABIType): number {
   switch (abiType.name) {
-    case ABITypeName.Uint:
+    case 'Uint':
       return Math.floor(abiType.bitSize / 8)
-    case ABITypeName.Ufixed:
+    case 'Ufixed':
       return Math.floor(abiType.bitSize / 8)
-    case ABITypeName.Address:
+    case 'Address':
       return PUBLIC_KEY_BYTE_LENGTH
-    case ABITypeName.Bool:
+    case 'Bool':
       return 1
-    case ABITypeName.Byte:
+    case 'Byte':
       return 1
-    case ABITypeName.StaticArray:
-      if (abiType.childType.name === ABITypeName.Bool) {
+    case 'StaticArray':
+      if (abiType.childType.name === 'Bool') {
         return Math.ceil(abiType.length / 8)
       }
       return getSize(abiType.childType) * abiType.length
-    case ABITypeName.Tuple: {
+    case 'Tuple': {
       let size = 0
       let i = 0
       while (i < abiType.childTypes.length) {
         const childType = abiType.childTypes[i]
-        if (childType.name === ABITypeName.Bool) {
+        if (childType.name === 'Bool') {
           const sequenceEndIndex = findBoolSequenceEnd(abiType.childTypes, i)
           const boolCount = sequenceEndIndex - i + 1
           size += Math.ceil(boolCount / 8)
@@ -284,9 +284,9 @@ function getSize(abiType: ABIType): number {
       }
       return size
     }
-    case ABITypeName.String:
+    case 'String':
       throw new Error(`Validation Error: Failed to get size, string is a dynamic type`)
-    case ABITypeName.DynamicArray:
+    case 'DynamicArray':
       throw new Error(`Validation Error: Failed to get size, dynamic array is a dynamic type`)
   }
 }

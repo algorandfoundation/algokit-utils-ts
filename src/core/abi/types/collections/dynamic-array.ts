@@ -1,12 +1,12 @@
 import { concatArrays } from '../../../array'
 import { LENGTH_ENCODE_BYTE_SIZE } from '../../../constants'
-import { ABIType, ABITypeName } from '../../abi-type'
+import { ABIType } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { bigIntToBytes } from '../../bigint'
 import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
 
 export type ABIDynamicArrayType = {
-  name: ABITypeName.DynamicArray
+  name: 'DynamicArray'
   childType: ABIType
 }
 
@@ -30,7 +30,7 @@ export function decodeDynamicArray(type: ABIDynamicArrayType, bytes: Uint8Array)
 function toABITupleType(type: ABIDynamicArrayType, length: number) {
   return {
     childTypes: Array(length).fill(type.childType),
-    name: ABITypeName.Tuple,
+    name: 'Tuple',
   } satisfies ABITupleType
 }
 

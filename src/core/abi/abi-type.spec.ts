@@ -1,24 +1,24 @@
 import { describe, expect, test } from 'vitest'
-import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, stringToABIType } from './abi-type'
+import { ABIType, decodeABIValue, encodeABIValue, stringToABIType } from './abi-type'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
     // Uint tests
     {
       description: 'uint8 with value 0',
-      abiType: { name: ABITypeName.Uint, bitSize: 8 } as ABIType,
+      abiType: { name: 'Uint', bitSize: 8 } as ABIType,
       abiValue: 0n,
       expectedBytes: [0],
     },
     {
       description: 'uint16 with value 3',
-      abiType: { name: ABITypeName.Uint, bitSize: 16 } as ABIType,
+      abiType: { name: 'Uint', bitSize: 16 } as ABIType,
       abiValue: 3n,
       expectedBytes: [0, 3],
     },
     {
       description: 'uint64 with value 256',
-      abiType: { name: ABITypeName.Uint, bitSize: 64 } as ABIType,
+      abiType: { name: 'Uint', bitSize: 64 } as ABIType,
       abiValue: 256n,
       expectedBytes: [0, 0, 0, 0, 0, 0, 1, 0],
     },
@@ -26,13 +26,13 @@ describe('ABIType encode decode', () => {
     // Ufixed tests
     {
       description: 'ufixed8x30 with value 255',
-      abiType: { name: ABITypeName.Ufixed, bitSize: 8, precision: 30 } as ABIType,
+      abiType: { name: 'Ufixed', bitSize: 8, precision: 30 } as ABIType,
       abiValue: 255n,
       expectedBytes: [255],
     },
     {
       description: 'ufixed32x10 with value 33',
-      abiType: { name: ABITypeName.Ufixed, bitSize: 32, precision: 10 } as ABIType,
+      abiType: { name: 'Ufixed', bitSize: 32, precision: 10 } as ABIType,
       abiValue: 33n,
       expectedBytes: [0, 0, 0, 33],
     },
@@ -40,7 +40,7 @@ describe('ABIType encode decode', () => {
     // Address tests
     {
       description: 'address',
-      abiType: { name: ABITypeName.Address } as ABIType,
+      abiType: { name: 'Address' } as ABIType,
       abiValue: 'MO2H6ZU47Q36GJ6GVHUKGEBEQINN7ZWVACMWZQGIYUOE3RBSRVYHV4ACJI',
       expectedBytes: [
         99, 180, 127, 102, 156, 252, 55, 227, 39, 198, 169, 232, 163, 16, 36, 130, 26, 223, 230, 213, 0, 153, 108, 192, 200, 197, 28, 77,
@@ -51,19 +51,19 @@ describe('ABIType encode decode', () => {
     // String tests
     {
       description: 'string with unicode',
-      abiType: { name: ABITypeName.String } as ABIType,
+      abiType: { name: 'String' } as ABIType,
       abiValue: 'What’s new',
       expectedBytes: [0, 12, 87, 104, 97, 116, 226, 128, 153, 115, 32, 110, 101, 119],
     },
     {
       description: 'string with emoji',
-      abiType: { name: ABITypeName.String } as ABIType,
+      abiType: { name: 'String' } as ABIType,
       abiValue: '😅🔨',
       expectedBytes: [0, 8, 240, 159, 152, 133, 240, 159, 148, 168],
     },
     {
       description: 'simple string',
-      abiType: { name: ABITypeName.String } as ABIType,
+      abiType: { name: 'String' } as ABIType,
       abiValue: 'asdf',
       expectedBytes: [0, 4, 97, 115, 100, 102],
     },
@@ -71,13 +71,13 @@ describe('ABIType encode decode', () => {
     // Byte tests
     {
       description: 'byte with value 10',
-      abiType: { name: ABITypeName.Byte } as ABIType,
+      abiType: { name: 'Byte' } as ABIType,
       abiValue: 10,
       expectedBytes: [10],
     },
     {
       description: 'byte with value 255',
-      abiType: { name: ABITypeName.Byte } as ABIType,
+      abiType: { name: 'Byte' } as ABIType,
       abiValue: 255,
       expectedBytes: [255],
     },
@@ -85,13 +85,13 @@ describe('ABIType encode decode', () => {
     // Bool tests
     {
       description: 'bool true',
-      abiType: { name: ABITypeName.Bool } as ABIType,
+      abiType: { name: 'Bool' } as ABIType,
       abiValue: true,
       expectedBytes: [128],
     },
     {
       description: 'bool false',
-      abiType: { name: ABITypeName.Bool } as ABIType,
+      abiType: { name: 'Bool' } as ABIType,
       abiValue: false,
       expectedBytes: [0],
     },
@@ -99,31 +99,31 @@ describe('ABIType encode decode', () => {
     // Static array tests
     {
       description: 'bool[3] array',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 3 } as ABIType,
+      abiType: { name: 'StaticArray', childType: { name: 'Bool' }, length: 3 } as ABIType,
       abiValue: [true, true, false],
       expectedBytes: [192],
     },
     {
       description: 'bool[8] array with 01000000',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 8 } as ABIType,
+      abiType: { name: 'StaticArray', childType: { name: 'Bool' }, length: 8 } as ABIType,
       abiValue: [false, true, false, false, false, false, false, false],
       expectedBytes: [64],
     },
     {
       description: 'bool[8] array with all true',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 8 } as ABIType,
+      abiType: { name: 'StaticArray', childType: { name: 'Bool' }, length: 8 } as ABIType,
       abiValue: [true, true, true, true, true, true, true, true],
       expectedBytes: [255],
     },
     {
       description: 'bool[9] array',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Bool }, length: 9 } as ABIType,
+      abiType: { name: 'StaticArray', childType: { name: 'Bool' }, length: 9 } as ABIType,
       abiValue: [true, false, false, true, false, false, true, false, true],
       expectedBytes: [146, 128],
     },
     {
       description: 'uint64[3] array',
-      abiType: { name: ABITypeName.StaticArray, childType: { name: ABITypeName.Uint, bitSize: 64 }, length: 3 } as ABIType,
+      abiType: { name: 'StaticArray', childType: { name: 'Uint', bitSize: 64 }, length: 3 } as ABIType,
       abiValue: [1n, 2n, 3n],
       expectedBytes: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3],
     },
@@ -131,25 +131,25 @@ describe('ABIType encode decode', () => {
     // Dynamic array tests
     {
       description: 'empty bool[] array',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: { name: 'DynamicArray', childType: { name: 'Bool' } } as ABIType,
       abiValue: [],
       expectedBytes: [0, 0],
     },
     {
       description: 'bool[] array with 3 elements',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: { name: 'DynamicArray', childType: { name: 'Bool' } } as ABIType,
       abiValue: [true, true, false],
       expectedBytes: [0, 3, 192],
     },
     {
       description: 'bool[] array with 8 elements',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: { name: 'DynamicArray', childType: { name: 'Bool' } } as ABIType,
       abiValue: [false, true, false, false, false, false, false, false],
       expectedBytes: [0, 8, 64],
     },
     {
       description: 'bool[] array with 9 elements',
-      abiType: { name: ABITypeName.DynamicArray, childType: { name: ABITypeName.Bool } } as ABIType,
+      abiType: { name: 'DynamicArray', childType: { name: 'Bool' } } as ABIType,
       abiValue: [true, false, false, true, false, false, true, false, true],
       expectedBytes: [0, 9, 146, 128],
     },
@@ -159,10 +159,10 @@ describe('ABIType encode decode', () => {
     {
       description: 'tuple (uint8, uint16)',
       abiType: {
-        name: ABITypeName.Tuple,
+        name: 'Tuple',
         childTypes: [
-          { name: ABITypeName.Uint, bitSize: 8 },
-          { name: ABITypeName.Uint, bitSize: 16 },
+          { name: 'Uint', bitSize: 8 },
+          { name: 'Uint', bitSize: 16 },
         ],
       } as ABIType,
       abiValue: [1n, 2n],
@@ -171,10 +171,10 @@ describe('ABIType encode decode', () => {
     {
       description: 'tuple (uint32, uint32)',
       abiType: {
-        name: ABITypeName.Tuple,
+        name: 'Tuple',
         childTypes: [
-          { name: ABITypeName.Uint, bitSize: 32 },
-          { name: ABITypeName.Uint, bitSize: 32 },
+          { name: 'Uint', bitSize: 32 },
+          { name: 'Uint', bitSize: 32 },
         ],
       } as ABIType,
       abiValue: [1n, 2n],
@@ -182,21 +182,21 @@ describe('ABIType encode decode', () => {
     },
     {
       description: 'tuple (uint32, string)',
-      abiType: { name: ABITypeName.Tuple, childTypes: [{ name: ABITypeName.Uint, bitSize: 32 }, { name: ABITypeName.String }] } as ABIType,
+      abiType: { name: 'Tuple', childTypes: [{ name: 'Uint', bitSize: 32 }, { name: 'String' }] } as ABIType,
       abiValue: [42n, 'hello'],
       expectedBytes: [0, 0, 0, 42, 0, 6, 0, 5, 104, 101, 108, 108, 111],
     },
     {
       description: 'tuple (uint16, bool)',
-      abiType: { name: ABITypeName.Tuple, childTypes: [{ name: ABITypeName.Uint, bitSize: 16 }, { name: ABITypeName.Bool }] } as ABIType,
+      abiType: { name: 'Tuple', childTypes: [{ name: 'Uint', bitSize: 16 }, { name: 'Bool' }] } as ABIType,
       abiValue: [1234n, false],
       expectedBytes: [4, 210, 0],
     },
     {
       description: 'tuple (uint32, string, bool)',
       abiType: {
-        name: ABITypeName.Tuple,
-        childTypes: [{ name: ABITypeName.Uint, bitSize: 32 }, { name: ABITypeName.String }, { name: ABITypeName.Bool }],
+        name: 'Tuple',
+        childTypes: [{ name: 'Uint', bitSize: 32 }, { name: 'String' }, { name: 'Bool' }],
       } as ABIType,
       abiValue: [42n, 'test', false],
       expectedBytes: [0, 0, 0, 42, 0, 7, 0, 0, 4, 116, 101, 115, 116],
