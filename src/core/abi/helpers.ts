@@ -2,34 +2,6 @@ import base32 from 'hi-base32'
 import * as nacl from '../nacl/naclWrappers'
 import { arrayEqual, concatArrays } from '../utils'
 
-export class ABIError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'ABIError'
-  }
-}
-
-export class ValidationError extends ABIError {
-  constructor(message: string) {
-    super(`Validation Error: ${message}`)
-    this.name = 'ValidationError'
-  }
-}
-
-export class EncodingError extends ABIError {
-  constructor(message: string) {
-    super(`Encoding Error: ${message}`)
-    this.name = 'EncodingError'
-  }
-}
-
-export class DecodingError extends ABIError {
-  constructor(message: string) {
-    super(`Decoding Error: ${message}`)
-    this.name = 'DecodingError'
-  }
-}
-
 // TODO: check for duplicates
 const BITS_PER_BYTE = 8
 const MAX_BIT_SIZE = 512

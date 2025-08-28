@@ -1,9 +1,10 @@
 import { bigIntToBytes } from '../../../utils'
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { EncodingError, LENGTH_ENCODE_BYTE_SIZE } from '../../helpers'
 
 export type ABIStringType = {
-  kind: 'string'
+  name: ABITypeName.String
 }
 
 export function encodeString(value: ABIValue): Uint8Array {

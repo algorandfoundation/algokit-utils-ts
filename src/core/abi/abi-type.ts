@@ -35,6 +35,18 @@ import {
   uintToString,
 } from './types/'
 
+export enum ABITypeName {
+  Uint = 'Uint',
+  Ufixed = 'Ufixed',
+  Address = 'Address',
+  Bool = 'Bool',
+  Byte = 'Byte',
+  String = 'String',
+  Tuple = 'Tuple',
+  StaticArray = 'StaticArray',
+  DynamicArray = 'DynamicArray',
+}
+
 export type ABIType =
   | ABIUintType
   | ABIUFixedType
@@ -47,70 +59,70 @@ export type ABIType =
   | ABIDynamicArrayType
 
 export function encode(abiType: ABIType, value: ABIValue): Uint8Array {
-  switch (abiType.kind) {
-    case 'uint':
+  switch (abiType.name) {
+    case ABITypeName.Uint:
       return encodeUint(abiType, value)
-    case 'ufixed':
+    case ABITypeName.Ufixed:
       return encodeUFixed(abiType, value)
-    case 'address':
+    case ABITypeName.Address:
       return encodeAddress(value)
-    case 'bool':
+    case ABITypeName.Bool:
       return encodeBool(value)
-    case 'byte':
+    case ABITypeName.Byte:
       return encodeByte(value)
-    case 'string':
+    case ABITypeName.String:
       return encodeString(value)
-    case 'tuple':
+    case ABITypeName.Tuple:
       return encodeTuple(abiType, value)
-    case 'static-array':
+    case ABITypeName.StaticArray:
       return encodeStaticArray(abiType, value)
-    case 'dynamic-array':
+    case ABITypeName.DynamicArray:
       return encodeDynamicArray(abiType, value)
   }
 }
 
 export function decode(abiType: ABIType, bytes: Uint8Array): ABIValue {
-  switch (abiType.kind) {
-    case 'uint':
+  switch (abiType.name) {
+    case ABITypeName.Uint:
       return decodeUint(abiType, bytes)
-    case 'ufixed':
+    case ABITypeName.Ufixed:
       return decodeUFixed(abiType, bytes)
-    case 'address':
+    case ABITypeName.Address:
       return decodeAddress(bytes)
-    case 'bool':
+    case ABITypeName.Bool:
       return decodeBool(bytes)
-    case 'byte':
+    case ABITypeName.Byte:
       return decodeByte(bytes)
-    case 'string':
+    case ABITypeName.String:
       return decodeString(abiType, bytes)
-    case 'tuple':
+    case ABITypeName.Tuple:
       return decodeTuple(abiType, bytes)
-    case 'static-array':
+    case ABITypeName.StaticArray:
       return decodeStaticArray(abiType, bytes)
-    case 'dynamic-array':
+    case ABITypeName.DynamicArray:
       return decodeDynamicArray(abiType, bytes)
   }
 }
 
 export function toString(abiType: ABIType): string {
-  switch (abiType.kind) {
-    case 'uint':
+  switch (abiType.name) {
+    case ABITypeName.Uint:
       return uintToString(abiType)
-    case 'ufixed':
+    case ABITypeName.Ufixed:
       return ufixedToString(abiType)
-    case 'address':
+    case ABITypeName.Address:
       return 'adress'
-    case 'bool':
+    case ABITypeName.Bool:
       return 'bool'
-    case 'byte':
+    case ABITypeName.Byte:
       return 'byte'
-    case 'string':
+    case ABITypeName.String:
       return 'string'
-    case 'tuple':
+    case ABITypeName.Tuple:
       return tupleToString(abiType)
-    case 'static-array':
+    case ABITypeName.StaticArray:
       return staticArrayToString(abiType)
-    case 'dynamic-array':
+    case ABITypeName.DynamicArray:
       return dynamicArrayToString(abiType)
   }
 }
@@ -124,7 +136,7 @@ export function asABIType(str: string): ABIType {
   if (str.endsWith('[]')) {
     const childType = asABIType(str.slice(0, str.length - 2))
     return {
-      kind: 'dynamic-array',
+      name: ABITypeName.DynamicArray,
       childType: childType,
     }
   }
@@ -144,7 +156,7 @@ export function asABIType(str: string): ABIType {
     const childType = asABIType(stringMatches[1])
 
     return {
-      kind: 'static-array',
+      name: ABITypeName.StaticArray,
       childType: childType,
       length: arrayLength,
     }
@@ -161,12 +173,12 @@ export function asABIType(str: string): ABIType {
       throw new ValidationError(`malformed uint string: ${bitSize}`)
     }
     return {
-      kind: 'uint',
+      name: ABITypeName.Uint,
       bitSize: bitSize,
     }
   }
   if (str === 'byte') {
-    return { kind: 'byte' }
+    return { name: ABITypeName.Byte }
   }
   if (str.startsWith('ufixed')) {
     const stringMatches = str.match(ufixedRegexp)
@@ -175,16 +187,16 @@ export function asABIType(str: string): ABIType {
     }
     const bitSize = parseInt(stringMatches[1], 10)
     const precision = parseInt(stringMatches[2], 10)
-    return { kind: 'ufixed', bitSize: bitSize, precision: precision }
+    return { name: ABITypeName.Ufixed, bitSize: bitSize, precision: precision }
   }
   if (str === 'bool') {
-    return { kind: 'bool' }
+    return { name: ABITypeName.Bool }
   }
   if (str === 'address') {
-    return { kind: 'address' }
+    return { name: ABITypeName.Address }
   }
   if (str === 'string') {
-    return { kind: 'string' }
+    return { name: ABITypeName.String }
   }
   if (str.length >= 2 && str[0] === '(' && str[str.length - 1] === ')') {
     const tupleContent = parseTupleContent(str.slice(1, str.length - 1))
@@ -195,7 +207,7 @@ export function asABIType(str: string): ABIType {
     }
 
     return {
-      kind: 'tuple',
+      name: ABITypeName.Tuple,
       childTypes: childTypes,
     }
   }
@@ -246,13 +258,13 @@ function parseTupleContent(content: string): string[] {
 }
 
 export function isDynamic(type: ABIType): boolean {
-  switch (type.kind) {
-    case 'static-array':
+  switch (type.name) {
+    case ABITypeName.StaticArray:
       return isDynamic(type.childType)
-    case 'tuple':
+    case ABITypeName.Tuple:
       return type.childTypes.some((c) => isDynamic(c))
-    case 'dynamic-array':
-    case 'string':
+    case ABITypeName.DynamicArray:
+    case ABITypeName.String:
       return true
     default:
       return false
@@ -262,7 +274,7 @@ export function isDynamic(type: ABIType): boolean {
 export function findBoolSequenceEnd(abiTypes: ABIType[], currentIndex: number): number {
   let cursor = currentIndex
   while (cursor < abiTypes.length) {
-    if (abiTypes[cursor].kind === 'bool') {
+    if (abiTypes[cursor].name === ABITypeName.Bool) {
       if (cursor - currentIndex + 1 === 8 || cursor === abiTypes.length - 1) {
         return cursor
       }
@@ -275,28 +287,28 @@ export function findBoolSequenceEnd(abiTypes: ABIType[], currentIndex: number): 
 }
 
 export function getSize(abiType: ABIType): number {
-  switch (abiType.kind) {
-    case 'uint':
+  switch (abiType.name) {
+    case ABITypeName.Uint:
       return Math.floor(abiType.bitSize / 8)
-    case 'ufixed':
+    case ABITypeName.Ufixed:
       return Math.floor(abiType.bitSize / 8)
-    case 'address':
+    case ABITypeName.Address:
       return 32
-    case 'bool':
+    case ABITypeName.Bool:
       return 1
-    case 'byte':
+    case ABITypeName.Byte:
       return 1
-    case 'static-array':
-      if (abiType.childType.kind === 'bool') {
+    case ABITypeName.StaticArray:
+      if (abiType.childType.name === ABITypeName.Bool) {
         return Math.ceil(abiType.length / 8)
       }
       return getSize(abiType.childType) * abiType.length
-    case 'tuple': {
+    case ABITypeName.Tuple: {
       let size = 0
       let i = 0
       while (i < abiType.childTypes.length) {
         const childType = abiType.childTypes[i]
-        if (childType.kind === 'bool') {
+        if (childType.name === ABITypeName.Bool) {
           const sequenceEndIndex = findBoolSequenceEnd(abiType.childTypes, i)
           const boolCount = sequenceEndIndex - i + 1
           size += Math.ceil(boolCount / 8)
@@ -308,9 +320,9 @@ export function getSize(abiType: ABIType): number {
       }
       return size
     }
-    case 'string':
+    case ABITypeName.String:
       throw new ValidationError(`Failed to get size, string is a dynamic type`)
-    case 'dynamic-array':
+    case ABITypeName.DynamicArray:
       throw new ValidationError(`Failed to get size, dynamic array is a dynamic type`)
   }
 }

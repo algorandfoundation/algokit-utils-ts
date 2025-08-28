@@ -1,8 +1,9 @@
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { convertAddressToBytes, convertBytesToAddress, EncodingError } from '../../helpers'
 
 export type ABIAddressType = {
-  kind: 'address'
+  name: ABITypeName.Address
 }
 
 export function encodeAddress(value: ABIValue): Uint8Array {

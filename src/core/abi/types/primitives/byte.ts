@@ -1,13 +1,14 @@
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { DecodingError, EncodingError } from '../../helpers'
+import { DecodingError, EncodingError, ValidationError } from '../../helpers'
 
 export type ABIByteType = {
-  kind: 'byte'
+  name: ABITypeName.Byte
 }
 
 export function encodeByte(value: ABIValue): Uint8Array {
   if (typeof value !== 'number' && typeof value !== 'bigint') {
-    throw new Error(`Cannot encode value as byte: ${value}`)
+    throw new ValidationError(`Cannot encode value as byte: ${value}`)
   }
   const numberValue = typeof value === 'bigint' ? Number(value) : value
   if (value < 0 || value > 255) {

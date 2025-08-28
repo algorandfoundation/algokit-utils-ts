@@ -1,9 +1,10 @@
 import { bigIntToBytes, bytesToBigInt } from '../../../utils'
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { ValidationError } from '../../helpers'
 
 export type ABIUintType = {
-  kind: 'uint'
+  name: ABITypeName.Uint
   bitSize: number
 }
 

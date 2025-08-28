@@ -1,9 +1,9 @@
-import { ABIType, decode, encode, findBoolSequenceEnd, getSize, isDynamic, toString } from '../../abi-type'
+import { ABIType, ABITypeName, decode, encode, findBoolSequenceEnd, getSize, isDynamic, toString } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, DecodingError, EncodingError, LENGTH_ENCODE_BYTE_SIZE } from '../../helpers'
 
 export type ABITupleType = {
-  kind: 'tuple' // TODO: convert to enum
+  name: ABITypeName.Tuple
   childTypes: ABIType[]
 }
 
@@ -58,7 +58,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
       valuePartitions.push(null)
       bytesCursor += LENGTH_ENCODE_BYTE_SIZE
     } else {
-      if (childType.kind === 'bool') {
+      if (childType.name === ABITypeName.Bool) {
         const boolSequenceEndIndex = findBoolSequenceEnd(abiTypes, abiTypesCursor)
         for (let j = 0; j <= boolSequenceEndIndex - abiTypesCursor; j++) {
           const boolMask = BOOL_TRUE_BYTE >> j
@@ -151,7 +151,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
       heads.push(new Uint8Array(2)) // Placeholder for dynamic offset
       tails.push(encode(childType, values[abiTypesCursor]))
     } else {
-      if (childType.kind === 'bool') {
+      if (childType.name === ABITypeName.Bool) {
         const boolSequenceEndIndex = findBoolSequenceEnd(childTypes, abiTypesCursor)
         const boolValues = values.slice(abiTypesCursor, boolSequenceEndIndex + 1)
         const compressedBool = compressBools(boolValues)

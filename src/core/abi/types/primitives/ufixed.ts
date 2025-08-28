@@ -1,10 +1,11 @@
 import { bigIntToBytes } from 'algosdk'
 import { bytesToBigInt } from '../../../utils'
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { ValidationError } from '../../helpers'
 
 export type ABIUFixedType = {
-  kind: 'ufixed'
+  name: ABITypeName.Ufixed
   bitSize: number
   precision: number
 }

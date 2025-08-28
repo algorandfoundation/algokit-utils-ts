@@ -1,8 +1,9 @@
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { DecodingError } from '../../helpers'
 
 export type ABIBoolType = {
-  kind: 'bool'
+  name: ABITypeName.Bool
 }
 
 export function encodeBool(value: ABIValue): Uint8Array {
@@ -18,6 +19,5 @@ export function decodeBool(bytes: Uint8Array): ABIValue {
     throw new DecodingError(`Expected 1 byte for bool, got ${bytes.length}`)
   }
 
-  // Check if the most significant bit is set
   return (bytes[0] & 0x80) !== 0
 }
