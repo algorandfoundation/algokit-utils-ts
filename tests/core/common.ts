@@ -24,11 +24,10 @@ const defaultReviver = (key: string, value: unknown) => {
   // The Rust side uses #[serde(default)] on the frozen field, which means:
   // 1. When serializing, false values may be omitted from JSON
   // 2. When deserializing, missing values default to false
-  // The TypeScript WASM bindings expect the field to always be present as a boolean
   if (key === 'assetFreeze' && typeof value === 'object' && value !== null) {
     const assetFreeze = value as any
     if (assetFreeze.frozen === undefined) {
-      assetFreeze.frozen = false // Match WASM bindings' expectations
+      assetFreeze.frozen = false
     }
     return assetFreeze
   }
