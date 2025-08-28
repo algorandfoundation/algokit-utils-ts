@@ -104,12 +104,12 @@ export interface LogicSignature {
  *
  * This method performs canonical encoding. No domain separation prefix is applicable.
  *
- * @param signedTx - The signed transaction to encode
+ * @param signedTransaction - The signed transaction to encode
  * @returns The MsgPack encoded bytes or an error if encoding fails.
  */
-export function encodeSignedTransaction(signedTx: SignedTransaction): Uint8Array {
-  validateSignedTransaction(signedTx)
-  const encodingData = toSignedTransactionDto(signedTx)
+export function encodeSignedTransaction(signedTransaction: SignedTransaction): Uint8Array {
+  validateSignedTransaction(signedTransaction)
+  const encodingData = toSignedTransactionDto(signedTransaction)
   return encodeMsgpack(encodingData)
 }
 
@@ -118,42 +118,42 @@ export function encodeSignedTransaction(signedTx: SignedTransaction): Uint8Array
  *
  *  This method performs canonical encoding. No domain separation prefix is applicable.
  *
- * @param signedTxs - A collection of signed transactions to encode
+ * @param signedTransactions - A collection of signed transactions to encode
  * @returns A collection of MsgPack encoded bytes or an error if encoding fails.
  */
-export function encodeSignedTransactions(signedTxs: SignedTransaction[]): Uint8Array[] {
-  return signedTxs.map((st) => encodeSignedTransaction(st))
+export function encodeSignedTransactions(signedTransactions: SignedTransaction[]): Uint8Array[] {
+  return signedTransactions.map((st) => encodeSignedTransaction(st))
 }
 
 /**
  * Decodes MsgPack bytes into a signed transaction.
  *
- * @param encodedSignedTx - The MsgPack encoded signed transaction bytes
+ * @param encodedSignedTransaction - The MsgPack encoded signed transaction bytes
  * @returns The decoded SignedTransaction or an error if decoding fails.
  */
-export function decodeSignedTransaction(encodedSignedTx: Uint8Array): SignedTransaction {
-  const decodedData = decodeMsgpack<SignedTransactionDto>(encodedSignedTx)
+export function decodeSignedTransaction(encodedSignedTransaction: Uint8Array): SignedTransaction {
+  const decodedData = decodeMsgpack<SignedTransactionDto>(encodedSignedTransaction)
   return fromSignedTransactionDto(decodedData)
 }
 
 /**
  * Decodes a collection of MsgPack bytes into a signed transaction collection.
  *
- * @param encodedSignedTxs - A collection of MsgPack encoded bytes, each representing a signed transaction.
+ * @param encodedSignedTransactions - A collection of MsgPack encoded bytes, each representing a signed transaction.
  * @returns A collection of decoded signed transactions or an error if decoding fails.
  */
-export function decodeSignedTransactions(encodedSignedTxs: Uint8Array[]): SignedTransaction[] {
-  return encodedSignedTxs.map((est) => decodeSignedTransaction(est))
+export function decodeSignedTransactions(encodedSignedTransactions: Uint8Array[]): SignedTransaction[] {
+  return encodedSignedTransactions.map((est) => decodeSignedTransaction(est))
 }
 
 /**
  * Validate a signed transaction structure
  */
-function validateSignedTransaction(signedTx: SignedTransaction): void {
-  validateTransaction(signedTx.transaction)
+function validateSignedTransaction(signedTransaction: SignedTransaction): void {
+  validateTransaction(signedTransaction.transaction)
 
   // Validate that only one signature type is set
-  const sigTypes = [signedTx.signature, signedTx.multiSignature, signedTx.logicSignature]
+  const sigTypes = [signedTransaction.signature, signedTransaction.multiSignature, signedTransaction.logicSignature]
   const setSigCount = sigTypes.filter((sig) => sig !== undefined).length
 
   if (setSigCount === 0) {
@@ -164,7 +164,7 @@ function validateSignedTransaction(signedTx: SignedTransaction): void {
   }
 
   // Validate signature lengths
-  if (signedTx.signature && signedTx.signature.length !== 64) {
+  if (signedTransaction.signature && signedTransaction.signature.length !== 64) {
     throw new Error('Signature must be 64 bytes')
   }
 }
@@ -185,20 +185,20 @@ function toMultisigSignatureDto(multisigSignature: MultisigSignature): MultisigS
 }
 
 function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTransactionDto {
-  const data: SignedTransactionDto = {
+  const stx_dto: SignedTransactionDto = {
     txn: toTransactionDto(signedTransaction.transaction),
   }
 
   if (signedTransaction.signature) {
-    data.sig = bytesCodec.encode(signedTransaction.signature)
+    stx_dto.sig = bytesCodec.encode(signedTransaction.signature)
   }
 
   if (signedTransaction.multiSignature) {
-    data.msig = toMultisigSignatureDto(signedTransaction.multiSignature)
+    stx_dto.msig = toMultisigSignatureDto(signedTransaction.multiSignature)
   }
 
   if (signedTransaction.logicSignature) {
-    data.lsig = logicSignatureDtoCodec.encode({
+    stx_dto.lsig = logicSignatureDtoCodec.encode({
       l: bytesCodec.encode(signedTransaction.logicSignature.logic),
       arg: signedTransaction.logicSignature.args?.map((arg) => bytesCodec.encode(arg) ?? bytesCodec.defaultValue()),
       sig: bytesCodec.encode(signedTransaction.logicSignature.signature),
@@ -209,18 +209,18 @@ function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTra
   }
 
   if (signedTransaction.authAddress) {
-    data.sgnr = addressCodec.encode(signedTransaction.authAddress)
+    stx_dto.sgnr = addressCodec.encode(signedTransaction.authAddress)
   }
 
-  return data
+  return stx_dto
 }
 
-function fromMultisigSignatureDto(msigData: MultisigSignatureDto): MultisigSignature | undefined {
+function fromMultisigSignatureDto(msigDto: MultisigSignatureDto): MultisigSignature | undefined {
   return multisigSignatureCodec.decodeOptional({
-    version: numberCodec.decode(msigData.v),
-    threshold: numberCodec.decode(msigData.thr),
+    version: numberCodec.decode(msigDto.v),
+    threshold: numberCodec.decode(msigDto.thr),
     subsignatures:
-      msigData.subsig?.map((subsigData) => {
+      msigDto.subsig?.map((subsigData) => {
         return {
           address: addressCodec.decode(subsigData.pk),
           signature: bytesCodec.decodeOptional(subsigData.s),
@@ -229,31 +229,31 @@ function fromMultisigSignatureDto(msigData: MultisigSignatureDto): MultisigSigna
   })
 }
 
-function fromSignedTransactionDto(data: SignedTransactionDto): SignedTransaction {
-  const signedTransaction: SignedTransaction = {
-    transaction: fromTransactionDto(data.txn),
+function fromSignedTransactionDto(signedTransactionDto: SignedTransactionDto): SignedTransaction {
+  const stx: SignedTransaction = {
+    transaction: fromTransactionDto(signedTransactionDto.txn),
   }
 
-  if (data.sig) {
-    signedTransaction.signature = bytesCodec.decodeOptional(data.sig)
+  if (signedTransactionDto.sig) {
+    stx.signature = bytesCodec.decodeOptional(signedTransactionDto.sig)
   }
 
-  if (data.msig) {
-    signedTransaction.multiSignature = fromMultisigSignatureDto(data.msig)
+  if (signedTransactionDto.msig) {
+    stx.multiSignature = fromMultisigSignatureDto(signedTransactionDto.msig)
   }
 
-  if (data.lsig) {
-    signedTransaction.logicSignature = logicSignatureCodec.decodeOptional({
-      logic: bytesCodec.decode(data.lsig.l),
-      args: data.lsig.arg?.map((arg) => bytesCodec.decode(arg)),
-      signature: bytesCodec.decodeOptional(data.lsig.sig),
-      ...(data.lsig.msig ? { multiSignature: fromMultisigSignatureDto(data.lsig.msig) } : undefined),
+  if (signedTransactionDto.lsig) {
+    stx.logicSignature = logicSignatureCodec.decodeOptional({
+      logic: bytesCodec.decode(signedTransactionDto.lsig.l),
+      args: signedTransactionDto.lsig.arg?.map((arg) => bytesCodec.decode(arg)),
+      signature: bytesCodec.decodeOptional(signedTransactionDto.lsig.sig),
+      ...(signedTransactionDto.lsig.msig ? { multiSignature: fromMultisigSignatureDto(signedTransactionDto.lsig.msig) } : undefined),
     })
   }
 
-  if (data.sgnr) {
-    signedTransaction.authAddress = addressCodec.decodeOptional(data.sgnr)
+  if (signedTransactionDto.sgnr) {
+    stx.authAddress = addressCodec.decodeOptional(signedTransactionDto.sgnr)
   }
 
-  return signedTransaction
+  return stx
 }

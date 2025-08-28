@@ -7,10 +7,8 @@ export const PUBLIC_KEY_BYTE_LENGTH = 32
 export const MAX_TX_GROUP_SIZE = 16
 export const CHECKSUM_BYTE_LENGTH = 4
 export const ADDRESS_LENGTH = 58
-export const ALGORAND_TRANSACTION_LENGTH = 52
+export const TRANSACTION_ID_LENGTH = 52
 export const ZERO_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ'
-export const STATIC_ARRAY_REGEX = /^(.+)\[(\d+)\]$/
-export const UFIXED_REGEX = /^ufixed(\d+)x(\d+)$/
 
 export const MALFORMED_ADDRESS_ERROR_MSG = 'address seems to be malformed'
 export const CHECKSUM_ADDRESS_ERROR_MSG = 'wrong checksum for address'
