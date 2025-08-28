@@ -198,7 +198,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
   return result
 }
 
-export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue {
+export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue[] {
   const childTypes = type.childTypes
   const valuePartitions = extractValues(childTypes, bytes)
   const values: ABIValue[] = []
