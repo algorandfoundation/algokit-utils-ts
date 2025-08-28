@@ -1,10 +1,10 @@
 import base32 from 'hi-base32'
 import {
-  ALGORAND_TRANSACTION_LENGTH,
   MAX_TX_GROUP_SIZE,
   SIGNATURE_ENCODING_INCR,
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
+  TRANSACTION_ID_LENGTH,
 } from '../../constants'
 import { hash } from '../../crypto'
 import { addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec, stringCodec } from '../encoding/codecs'
@@ -149,20 +149,20 @@ export interface FeeParams {
  * Get the transaction type from the encoded transaction.
  * This is particularly useful when decoding a transaction that has an unknown type
  */
-export function getEncodedTransactionType(encoded_tx: Uint8Array): TransactionType {
-  const decoded = decodeTransaction(encoded_tx)
+export function getEncodedTransactionType(encoded_transaction: Uint8Array): TransactionType {
+  const decoded = decodeTransaction(encoded_transaction)
   return decoded.transactionType
 }
 
 /**
  * Encode the transaction with the domain separation (e.g. "TX") prefix
  *
- * @param tx - The transaction to encode
+ * @param transaction - The transaction to encode
  * @returns The MsgPack encoded bytes or an error if encoding fails.
  */
-export function encodeTransaction(tx: Transaction): Uint8Array {
-  validateTransaction(tx)
-  const rawBytes = encodeTransactionRaw(tx)
+export function encodeTransaction(transaction: Transaction): Uint8Array {
+  validateTransaction(transaction)
+  const rawBytes = encodeTransactionRaw(transaction)
   const prefixedBytes = new Uint8Array(TRANSACTION_DOMAIN_SEPARATOR.length + rawBytes.length)
 
   // Add domain separation prefix
@@ -176,23 +176,30 @@ export function encodeTransaction(tx: Transaction): Uint8Array {
 /**
  * Encode transactions with the domain separation (e.g. "TX") prefix
  *
- * @param txs - A collection of transactions to encode
+ * @param transactions - A collection of transactions to encode
  * @returns A collection of MsgPack encoded bytes or an error if encoding fails.
  */
-export function encodeTransactions(txs: Transaction[]): Uint8Array[] {
-  return txs.map((tx) => encodeTransaction(tx))
+export function encodeTransactions(transactions: Transaction[]): Uint8Array[] {
+  return transactions.map((tx) => encodeTransaction(tx))
 }
 
 /**
  * Validate a transaction structure
  */
-export function validateTransaction(tx: Transaction): void {
-  if (!tx.sender) {
+export function validateTransaction(transaction: Transaction): void {
+  if (!transaction.sender) {
     throw new Error('Transaction sender is required')
   }
 
   // Validate that only one transaction type specific field is set
-  const typeFields = [tx.payment, tx.assetTransfer, tx.assetConfig, tx.appCall, tx.keyRegistration, tx.assetFreeze]
+  const typeFields = [
+    transaction.payment,
+    transaction.assetTransfer,
+    transaction.assetConfig,
+    transaction.appCall,
+    transaction.keyRegistration,
+    transaction.assetFreeze,
+  ]
 
   const setFieldsCount = typeFields.filter((field) => field !== undefined).length
 
@@ -209,9 +216,9 @@ export function validateTransaction(tx: Transaction): void {
  * Encode the transaction without the domain separation (e.g. "TX") prefix
  * This is useful for encoding the transaction for signing with tools that automatically add "TX" prefix to the transaction bytes.
  */
-export function encodeTransactionRaw(tx: Transaction): Uint8Array {
-  validateTransaction(tx)
-  const encodingData = toTransactionDto(tx)
+export function encodeTransactionRaw(transaction: Transaction): Uint8Array {
+  validateTransaction(transaction)
+  const encodingData = toTransactionDto(transaction)
   return encodeMsgpack(encodingData)
 }
 
@@ -219,31 +226,31 @@ export function encodeTransactionRaw(tx: Transaction): Uint8Array {
  * Decodes MsgPack bytes into a transaction.
  *
  * # Parameters
- * * `encoded_tx` - MsgPack encoded bytes representing a transaction.
+ * * `encoded_transaction` - MsgPack encoded bytes representing a transaction.
  *
  * # Returns
  * A decoded transaction or an error if decoding fails.
  */
-export function decodeTransaction(encoded_tx: Uint8Array): Transaction {
-  if (encoded_tx.length === 0) {
+export function decodeTransaction(encoded_transaction: Uint8Array): Transaction {
+  if (encoded_transaction.length === 0) {
     throw new Error('attempted to decode 0 bytes')
   }
 
   const prefixBytes = new TextEncoder().encode(TRANSACTION_DOMAIN_SEPARATOR)
   // Check if the transaction has the domain separation prefix
   let hasPrefix = true
-  if (encoded_tx.length < prefixBytes.length) {
+  if (encoded_transaction.length < prefixBytes.length) {
     hasPrefix = false
   } else {
     for (let i = 0; i < prefixBytes.length; i++) {
-      if (encoded_tx[i] !== prefixBytes[i]) {
+      if (encoded_transaction[i] !== prefixBytes[i]) {
         hasPrefix = false
         break
       }
     }
   }
 
-  const decodedData = decodeMsgpack<TransactionDto>(hasPrefix ? encoded_tx.slice(prefixBytes.length) : encoded_tx)
+  const decodedData = decodeMsgpack<TransactionDto>(hasPrefix ? encoded_transaction.slice(prefixBytes.length) : encoded_transaction)
   return fromTransactionDto(decodedData)
 }
 
@@ -251,69 +258,69 @@ export function decodeTransaction(encoded_tx: Uint8Array): Transaction {
  * Decodes a collection of MsgPack bytes into a transaction collection.
  *
  * # Parameters
- * * `encoded_txs` - A collection of MsgPack encoded bytes, each representing a transaction.
+ * * `encoded_transaction` - A collection of MsgPack encoded bytes, each representing a transaction.
  *
  * # Returns
  * A collection of decoded transactions or an error if decoding fails.
  */
-export function decodeTransactions(encoded_txs: Uint8Array[]): Transaction[] {
-  return encoded_txs.map((et) => decodeTransaction(et))
+export function decodeTransactions(encoded_transactions: Uint8Array[]): Transaction[] {
+  return encoded_transactions.map((et) => decodeTransaction(et))
 }
 
 /**
  * Return the size of the transaction in bytes as if it was already signed and encoded.
  * This is useful for estimating the fee for the transaction.
  */
-export function estimateTransactionSize(tx: Transaction): bigint {
-  const encoded = encodeTransactionRaw(tx)
+export function estimateTransactionSize(transaction: Transaction): bigint {
+  const encoded = encodeTransactionRaw(transaction)
   return BigInt(encoded.length + SIGNATURE_ENCODING_INCR)
 }
 
 /**
  * Get the raw 32-byte transaction ID for a transaction.
  */
-export function getTransactionIdRaw(tx: Transaction): Uint8Array {
-  const encodedBytes = encodeTransaction(tx)
+export function getTransactionIdRaw(transaction: Transaction): Uint8Array {
+  const encodedBytes = encodeTransaction(transaction)
   return hash(encodedBytes)
 }
 
 /**
  * Get the base32 transaction ID string for a transaction.
  */
-export function getTransactionId(tx: Transaction): string {
-  const hash = getTransactionIdRaw(tx)
-  return base32.encode(hash).slice(0, ALGORAND_TRANSACTION_LENGTH)
+export function getTransactionId(transaction: Transaction): string {
+  const hash = getTransactionIdRaw(transaction)
+  return base32.encode(hash).slice(0, TRANSACTION_ID_LENGTH)
 }
 
 /**
  * Groups a collection of transactions by calculating and assigning the group to each transaction.
  */
-export function groupTransactions(txs: Transaction[]): Transaction[] {
-  const groupId = computeGroupId(txs)
-  return txs.map((tx) => ({
+export function groupTransactions(transactions: Transaction[]): Transaction[] {
+  const groupId = computeGroupId(transactions)
+  return transactions.map((tx) => ({
     ...tx,
     group: groupId,
   }))
 }
 
-export function assignFee(tx: Transaction, feeParams: FeeParams): Transaction {
-  const fee = calculateFee(tx, feeParams)
+export function assignFee(transaction: Transaction, feeParams: FeeParams): Transaction {
+  const fee = calculateFee(transaction, feeParams)
   return {
-    ...tx,
+    ...transaction,
     fee,
   }
 }
 
-function computeGroupId(txs: Transaction[]): Uint8Array {
-  if (txs.length === 0) {
+function computeGroupId(transactions: Transaction[]): Uint8Array {
+  if (transactions.length === 0) {
     throw new Error('Transaction group size cannot be 0')
   }
 
-  if (txs.length > MAX_TX_GROUP_SIZE) {
+  if (transactions.length > MAX_TX_GROUP_SIZE) {
     throw new Error(`Transaction group size exceeds the max limit of ${MAX_TX_GROUP_SIZE}`)
   }
 
-  const txHashes = txs.map((tx) => {
+  const txHashes = transactions.map((tx) => {
     if (tx.group) {
       throw new Error('Transactions must not already be grouped')
     }
@@ -332,11 +339,11 @@ function computeGroupId(txs: Transaction[]): Uint8Array {
   return hash(prefixedBytes)
 }
 
-function calculateFee(tx: Transaction, feeParams: FeeParams): bigint {
+function calculateFee(transaction: Transaction, feeParams: FeeParams): bigint {
   let calculatedFee = 0n
 
   if (feeParams.feePerByte > 0n) {
-    const estimatedSize = estimateTransactionSize(tx)
+    const estimatedSize = estimateTransactionSize(transaction)
     calculatedFee = feeParams.feePerByte * BigInt(estimatedSize)
   }
 
@@ -447,183 +454,183 @@ const stateSchemaCodec = new OmitEmptyObjectCodec<StateSchema>()
 const stateSchemaDtoCodec = new OmitEmptyObjectCodec<StateSchemaDto>()
 const assetParamsDtoCodec = new OmitEmptyObjectCodec<AssetParamsDto>()
 
-export function toTransactionDto(tx: Transaction): TransactionDto {
-  const encodeable_tx: TransactionDto = {
-    type: toTransactionTypeDto(tx.transactionType),
-    fv: bigIntCodec.encode(tx.firstValid),
-    lv: bigIntCodec.encode(tx.lastValid),
-    snd: addressCodec.encode(tx.sender),
-    gen: stringCodec.encode(tx.genesisId),
-    gh: bytesCodec.encode(tx.genesisHash),
-    fee: bigIntCodec.encode(tx.fee),
-    note: bytesCodec.encode(tx.note),
-    lx: bytesCodec.encode(tx.lease),
-    rekey: addressCodec.encode(tx.rekeyTo),
-    grp: bytesCodec.encode(tx.group),
+export function toTransactionDto(transaction: Transaction): TransactionDto {
+  const tx_dto: TransactionDto = {
+    type: toTransactionTypeDto(transaction.transactionType),
+    fv: bigIntCodec.encode(transaction.firstValid),
+    lv: bigIntCodec.encode(transaction.lastValid),
+    snd: addressCodec.encode(transaction.sender),
+    gen: stringCodec.encode(transaction.genesisId),
+    gh: bytesCodec.encode(transaction.genesisHash),
+    fee: bigIntCodec.encode(transaction.fee),
+    note: bytesCodec.encode(transaction.note),
+    lx: bytesCodec.encode(transaction.lease),
+    rekey: addressCodec.encode(transaction.rekeyTo),
+    grp: bytesCodec.encode(transaction.group),
   }
 
   // Add transaction type specific fields
-  if (tx.payment) {
-    encodeable_tx.amt = bigIntCodec.encode(tx.payment.amount)
-    encodeable_tx.rcv = addressCodec.encode(tx.payment.receiver)
-    encodeable_tx.close = addressCodec.encode(tx.payment.closeRemainderTo)
+  if (transaction.payment) {
+    tx_dto.amt = bigIntCodec.encode(transaction.payment.amount)
+    tx_dto.rcv = addressCodec.encode(transaction.payment.receiver)
+    tx_dto.close = addressCodec.encode(transaction.payment.closeRemainderTo)
   }
 
-  if (tx.assetTransfer) {
-    encodeable_tx.xaid = bigIntCodec.encode(tx.assetTransfer.assetId)
-    encodeable_tx.aamt = bigIntCodec.encode(tx.assetTransfer.amount)
-    encodeable_tx.arcv = addressCodec.encode(tx.assetTransfer.receiver)
-    encodeable_tx.aclose = addressCodec.encode(tx.assetTransfer.closeRemainderTo)
-    encodeable_tx.asnd = addressCodec.encode(tx.assetTransfer.assetSender)
+  if (transaction.assetTransfer) {
+    tx_dto.xaid = bigIntCodec.encode(transaction.assetTransfer.assetId)
+    tx_dto.aamt = bigIntCodec.encode(transaction.assetTransfer.amount)
+    tx_dto.arcv = addressCodec.encode(transaction.assetTransfer.receiver)
+    tx_dto.aclose = addressCodec.encode(transaction.assetTransfer.closeRemainderTo)
+    tx_dto.asnd = addressCodec.encode(transaction.assetTransfer.assetSender)
   }
 
-  if (tx.assetConfig) {
-    encodeable_tx.caid = bigIntCodec.encode(tx.assetConfig.assetId)
+  if (transaction.assetConfig) {
+    tx_dto.caid = bigIntCodec.encode(transaction.assetConfig.assetId)
     // Asset config field
-    encodeable_tx.apar = assetParamsDtoCodec.encode({
-      t: bigIntCodec.encode(tx.assetConfig.total),
-      dc: numberCodec.encode(tx.assetConfig.decimals),
-      df: booleanCodec.encode(tx.assetConfig.defaultFrozen),
-      un: stringCodec.encode(tx.assetConfig.unitName),
-      an: stringCodec.encode(tx.assetConfig.assetName),
-      au: stringCodec.encode(tx.assetConfig.url),
-      am: bytesCodec.encode(tx.assetConfig.metadataHash),
-      m: addressCodec.encode(tx.assetConfig.manager),
-      f: addressCodec.encode(tx.assetConfig.freeze),
-      c: addressCodec.encode(tx.assetConfig.clawback),
-      r: addressCodec.encode(tx.assetConfig.reserve),
+    tx_dto.apar = assetParamsDtoCodec.encode({
+      t: bigIntCodec.encode(transaction.assetConfig.total),
+      dc: numberCodec.encode(transaction.assetConfig.decimals),
+      df: booleanCodec.encode(transaction.assetConfig.defaultFrozen),
+      un: stringCodec.encode(transaction.assetConfig.unitName),
+      an: stringCodec.encode(transaction.assetConfig.assetName),
+      au: stringCodec.encode(transaction.assetConfig.url),
+      am: bytesCodec.encode(transaction.assetConfig.metadataHash),
+      m: addressCodec.encode(transaction.assetConfig.manager),
+      f: addressCodec.encode(transaction.assetConfig.freeze),
+      c: addressCodec.encode(transaction.assetConfig.clawback),
+      r: addressCodec.encode(transaction.assetConfig.reserve),
     })
   }
 
-  if (tx.assetFreeze) {
-    encodeable_tx.faid = bigIntCodec.encode(tx.assetFreeze.assetId)
-    encodeable_tx.fadd = addressCodec.encode(tx.assetFreeze.freezeTarget)
-    encodeable_tx.afrz = booleanCodec.encode(tx.assetFreeze.frozen)
+  if (transaction.assetFreeze) {
+    tx_dto.faid = bigIntCodec.encode(transaction.assetFreeze.assetId)
+    tx_dto.fadd = addressCodec.encode(transaction.assetFreeze.freezeTarget)
+    tx_dto.afrz = booleanCodec.encode(transaction.assetFreeze.frozen)
   }
 
-  if (tx.appCall) {
-    encodeable_tx.apid = bigIntCodec.encode(tx.appCall.appId)
-    encodeable_tx.apan = numberCodec.encode(toOnApplicationCompleteDto(tx.appCall.onComplete))
-    encodeable_tx.apap = bytesCodec.encode(tx.appCall.approvalProgram)
-    encodeable_tx.apsu = bytesCodec.encode(tx.appCall.clearStateProgram)
-    if (tx.appCall.globalStateSchema) {
-      encodeable_tx.apgs = stateSchemaDtoCodec.encode({
-        nui: numberCodec.encode(tx.appCall.globalStateSchema.numUints),
-        nbs: numberCodec.encode(tx.appCall.globalStateSchema.numByteSlices),
+  if (transaction.appCall) {
+    tx_dto.apid = bigIntCodec.encode(transaction.appCall.appId)
+    tx_dto.apan = numberCodec.encode(toOnApplicationCompleteDto(transaction.appCall.onComplete))
+    tx_dto.apap = bytesCodec.encode(transaction.appCall.approvalProgram)
+    tx_dto.apsu = bytesCodec.encode(transaction.appCall.clearStateProgram)
+    if (transaction.appCall.globalStateSchema) {
+      tx_dto.apgs = stateSchemaDtoCodec.encode({
+        nui: numberCodec.encode(transaction.appCall.globalStateSchema.numUints),
+        nbs: numberCodec.encode(transaction.appCall.globalStateSchema.numByteSlices),
       })
     }
-    if (tx.appCall.localStateSchema) {
-      encodeable_tx.apls = stateSchemaDtoCodec.encode({
-        nui: numberCodec.encode(tx.appCall.localStateSchema.numUints),
-        nbs: numberCodec.encode(tx.appCall.localStateSchema.numByteSlices),
+    if (transaction.appCall.localStateSchema) {
+      tx_dto.apls = stateSchemaDtoCodec.encode({
+        nui: numberCodec.encode(transaction.appCall.localStateSchema.numUints),
+        nbs: numberCodec.encode(transaction.appCall.localStateSchema.numByteSlices),
       })
     }
-    encodeable_tx.apaa = tx.appCall.args?.map((arg) => bytesCodec.encode(arg) ?? bytesCodec.defaultValue())
-    encodeable_tx.apat = tx.appCall.accountReferences?.map((a) => addressCodec.encode(a) ?? addressCodec.defaultValue())
-    encodeable_tx.apfa = tx.appCall.appReferences?.map((a) => bigIntCodec.encode(a) ?? bigIntCodec.defaultValue())
-    encodeable_tx.apas = tx.appCall.assetReferences?.map((a) => bigIntCodec.encode(a) ?? bigIntCodec.defaultValue())
-    encodeable_tx.apep = numberCodec.encode(tx.appCall.extraProgramPages)
+    tx_dto.apaa = transaction.appCall.args?.map((arg) => bytesCodec.encode(arg) ?? bytesCodec.defaultValue())
+    tx_dto.apat = transaction.appCall.accountReferences?.map((a) => addressCodec.encode(a) ?? addressCodec.defaultValue())
+    tx_dto.apfa = transaction.appCall.appReferences?.map((a) => bigIntCodec.encode(a) ?? bigIntCodec.defaultValue())
+    tx_dto.apas = transaction.appCall.assetReferences?.map((a) => bigIntCodec.encode(a) ?? bigIntCodec.defaultValue())
+    tx_dto.apep = numberCodec.encode(transaction.appCall.extraProgramPages)
   }
 
-  if (tx.keyRegistration) {
-    encodeable_tx.votekey = bytesCodec.encode(tx.keyRegistration.voteKey)
-    encodeable_tx.selkey = bytesCodec.encode(tx.keyRegistration.selectionKey)
-    encodeable_tx.votefst = bigIntCodec.encode(tx.keyRegistration.voteFirst)
-    encodeable_tx.votelst = bigIntCodec.encode(tx.keyRegistration.voteLast)
-    encodeable_tx.votekd = bigIntCodec.encode(tx.keyRegistration.voteKeyDilution)
-    encodeable_tx.sprfkey = bytesCodec.encode(tx.keyRegistration.stateProofKey)
-    encodeable_tx.nonpart = booleanCodec.encode(tx.keyRegistration.nonParticipation)
+  if (transaction.keyRegistration) {
+    tx_dto.votekey = bytesCodec.encode(transaction.keyRegistration.voteKey)
+    tx_dto.selkey = bytesCodec.encode(transaction.keyRegistration.selectionKey)
+    tx_dto.votefst = bigIntCodec.encode(transaction.keyRegistration.voteFirst)
+    tx_dto.votelst = bigIntCodec.encode(transaction.keyRegistration.voteLast)
+    tx_dto.votekd = bigIntCodec.encode(transaction.keyRegistration.voteKeyDilution)
+    tx_dto.sprfkey = bytesCodec.encode(transaction.keyRegistration.stateProofKey)
+    tx_dto.nonpart = booleanCodec.encode(transaction.keyRegistration.nonParticipation)
   }
 
-  return encodeable_tx
+  return tx_dto
 }
 
-export function fromTransactionDto(encodeable_tx: TransactionDto): Transaction {
-  const transactionType = fromTransactionTypeDto(encodeable_tx.type)
+export function fromTransactionDto(transaction_dto: TransactionDto): Transaction {
+  const transactionType = fromTransactionTypeDto(transaction_dto.type)
 
   const tx: Transaction = {
     transactionType,
-    sender: addressCodec.decode(encodeable_tx.snd),
-    firstValid: bigIntCodec.decode(encodeable_tx.fv),
-    lastValid: bigIntCodec.decode(encodeable_tx.lv),
-    fee: bigIntCodec.decodeOptional(encodeable_tx.fee),
-    genesisId: stringCodec.decodeOptional(encodeable_tx.gen),
-    genesisHash: bytesCodec.decodeOptional(encodeable_tx.gh),
-    note: bytesCodec.decodeOptional(encodeable_tx.note),
-    lease: bytesCodec.decodeOptional(encodeable_tx.lx),
-    rekeyTo: addressCodec.decodeOptional(encodeable_tx.rekey),
-    group: bytesCodec.decodeOptional(encodeable_tx.grp),
+    sender: addressCodec.decode(transaction_dto.snd),
+    firstValid: bigIntCodec.decode(transaction_dto.fv),
+    lastValid: bigIntCodec.decode(transaction_dto.lv),
+    fee: bigIntCodec.decodeOptional(transaction_dto.fee),
+    genesisId: stringCodec.decodeOptional(transaction_dto.gen),
+    genesisHash: bytesCodec.decodeOptional(transaction_dto.gh),
+    note: bytesCodec.decodeOptional(transaction_dto.note),
+    lease: bytesCodec.decodeOptional(transaction_dto.lx),
+    rekeyTo: addressCodec.decodeOptional(transaction_dto.rekey),
+    group: bytesCodec.decodeOptional(transaction_dto.grp),
   }
 
   // Add transaction type specific fields
   switch (transactionType) {
     case 'Payment':
       tx.payment = {
-        amount: bigIntCodec.decode(encodeable_tx.amt),
-        receiver: addressCodec.decode(encodeable_tx.rcv),
-        closeRemainderTo: addressCodec.decodeOptional(encodeable_tx.close),
+        amount: bigIntCodec.decode(transaction_dto.amt),
+        receiver: addressCodec.decode(transaction_dto.rcv),
+        closeRemainderTo: addressCodec.decodeOptional(transaction_dto.close),
       }
       break
     case 'AssetTransfer':
       tx.assetTransfer = {
-        assetId: bigIntCodec.decode(encodeable_tx.xaid),
-        amount: bigIntCodec.decode(encodeable_tx.aamt),
-        receiver: addressCodec.decode(encodeable_tx.arcv),
-        closeRemainderTo: addressCodec.decodeOptional(encodeable_tx.aclose),
-        assetSender: addressCodec.decodeOptional(encodeable_tx.asnd),
+        assetId: bigIntCodec.decode(transaction_dto.xaid),
+        amount: bigIntCodec.decode(transaction_dto.aamt),
+        receiver: addressCodec.decode(transaction_dto.arcv),
+        closeRemainderTo: addressCodec.decodeOptional(transaction_dto.aclose),
+        assetSender: addressCodec.decodeOptional(transaction_dto.asnd),
       }
       break
     case 'AssetConfig':
       tx.assetConfig = {
-        assetId: bigIntCodec.decode(encodeable_tx.caid),
-        ...(encodeable_tx.apar !== undefined
+        assetId: bigIntCodec.decode(transaction_dto.caid),
+        ...(transaction_dto.apar !== undefined
           ? {
-              total: bigIntCodec.decodeOptional(encodeable_tx.apar.t),
-              decimals: numberCodec.decodeOptional(encodeable_tx.apar.dc),
-              defaultFrozen: booleanCodec.decodeOptional(encodeable_tx.apar.df),
-              unitName: stringCodec.decodeOptional(encodeable_tx.apar.un),
-              assetName: stringCodec.decodeOptional(encodeable_tx.apar.an),
-              url: stringCodec.decodeOptional(encodeable_tx.apar.au),
-              metadataHash: bytesCodec.decodeOptional(encodeable_tx.apar.am),
-              manager: addressCodec.decodeOptional(encodeable_tx.apar.m),
-              reserve: addressCodec.decodeOptional(encodeable_tx.apar.r),
-              freeze: addressCodec.decodeOptional(encodeable_tx.apar.f),
-              clawback: addressCodec.decodeOptional(encodeable_tx.apar.c),
+              total: bigIntCodec.decodeOptional(transaction_dto.apar.t),
+              decimals: numberCodec.decodeOptional(transaction_dto.apar.dc),
+              defaultFrozen: booleanCodec.decodeOptional(transaction_dto.apar.df),
+              unitName: stringCodec.decodeOptional(transaction_dto.apar.un),
+              assetName: stringCodec.decodeOptional(transaction_dto.apar.an),
+              url: stringCodec.decodeOptional(transaction_dto.apar.au),
+              metadataHash: bytesCodec.decodeOptional(transaction_dto.apar.am),
+              manager: addressCodec.decodeOptional(transaction_dto.apar.m),
+              reserve: addressCodec.decodeOptional(transaction_dto.apar.r),
+              freeze: addressCodec.decodeOptional(transaction_dto.apar.f),
+              clawback: addressCodec.decodeOptional(transaction_dto.apar.c),
             }
           : undefined),
       }
       break
     case 'AssetFreeze':
       tx.assetFreeze = {
-        assetId: bigIntCodec.decode(encodeable_tx.faid),
-        freezeTarget: addressCodec.decode(encodeable_tx.fadd),
-        frozen: booleanCodec.decode(encodeable_tx.afrz),
+        assetId: bigIntCodec.decode(transaction_dto.faid),
+        freezeTarget: addressCodec.decode(transaction_dto.fadd),
+        frozen: booleanCodec.decode(transaction_dto.afrz),
       }
       break
     case 'AppCall':
       tx.appCall = {
-        appId: bigIntCodec.decode(encodeable_tx.apid),
-        onComplete: fromOnApplicationCompleteDto(encodeable_tx.apan),
-        approvalProgram: bytesCodec.decodeOptional(encodeable_tx.apap),
-        clearStateProgram: bytesCodec.decodeOptional(encodeable_tx.apsu),
-        args: encodeable_tx.apaa?.map((arg) => bytesCodec.decode(arg)),
-        accountReferences: encodeable_tx.apat?.map((addr) => addressCodec.decode(addr)),
-        appReferences: encodeable_tx.apfa?.map((id) => bigIntCodec.decode(id)),
-        assetReferences: encodeable_tx.apas?.map((id) => bigIntCodec.decode(id)),
-        extraProgramPages: numberCodec.decodeOptional(encodeable_tx.apep),
-        ...(encodeable_tx.apgs !== undefined
+        appId: bigIntCodec.decode(transaction_dto.apid),
+        onComplete: fromOnApplicationCompleteDto(transaction_dto.apan),
+        approvalProgram: bytesCodec.decodeOptional(transaction_dto.apap),
+        clearStateProgram: bytesCodec.decodeOptional(transaction_dto.apsu),
+        args: transaction_dto.apaa?.map((arg) => bytesCodec.decode(arg)),
+        accountReferences: transaction_dto.apat?.map((addr) => addressCodec.decode(addr)),
+        appReferences: transaction_dto.apfa?.map((id) => bigIntCodec.decode(id)),
+        assetReferences: transaction_dto.apas?.map((id) => bigIntCodec.decode(id)),
+        extraProgramPages: numberCodec.decodeOptional(transaction_dto.apep),
+        ...(transaction_dto.apgs !== undefined
           ? {
               globalStateSchema: stateSchemaCodec.decodeOptional({
-                numUints: numberCodec.decode(encodeable_tx.apgs.nui),
-                numByteSlices: numberCodec.decode(encodeable_tx.apgs.nbs),
+                numUints: numberCodec.decode(transaction_dto.apgs.nui),
+                numByteSlices: numberCodec.decode(transaction_dto.apgs.nbs),
               }),
             }
           : undefined),
-        ...(encodeable_tx.apls !== undefined
+        ...(transaction_dto.apls !== undefined
           ? {
               localStateSchema: stateSchemaCodec.decodeOptional({
-                numUints: numberCodec.decode(encodeable_tx.apls.nui),
-                numByteSlices: numberCodec.decode(encodeable_tx.apls.nbs),
+                numUints: numberCodec.decode(transaction_dto.apls.nui),
+                numByteSlices: numberCodec.decode(transaction_dto.apls.nbs),
               }),
             }
           : undefined),
@@ -631,13 +638,13 @@ export function fromTransactionDto(encodeable_tx: TransactionDto): Transaction {
       break
     case 'KeyRegistration':
       tx.keyRegistration = {
-        voteKey: bytesCodec.decodeOptional(encodeable_tx.votekey),
-        selectionKey: bytesCodec.decodeOptional(encodeable_tx.selkey),
-        voteFirst: bigIntCodec.decodeOptional(encodeable_tx.votefst),
-        voteLast: bigIntCodec.decodeOptional(encodeable_tx.votelst),
-        voteKeyDilution: bigIntCodec.decodeOptional(encodeable_tx.votekd),
-        stateProofKey: bytesCodec.decodeOptional(encodeable_tx.sprfkey),
-        nonParticipation: booleanCodec.decodeOptional(encodeable_tx.nonpart),
+        voteKey: bytesCodec.decodeOptional(transaction_dto.votekey),
+        selectionKey: bytesCodec.decodeOptional(transaction_dto.selkey),
+        voteFirst: bigIntCodec.decodeOptional(transaction_dto.votefst),
+        voteLast: bigIntCodec.decodeOptional(transaction_dto.votelst),
+        voteKeyDilution: bigIntCodec.decodeOptional(transaction_dto.votekd),
+        stateProofKey: bytesCodec.decodeOptional(transaction_dto.sprfkey),
+        nonParticipation: booleanCodec.decodeOptional(transaction_dto.nonpart),
       }
       break
   }
