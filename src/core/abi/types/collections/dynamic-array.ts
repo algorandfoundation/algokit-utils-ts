@@ -1,7 +1,8 @@
+import { concatArrays } from '../../../array'
 import { LENGTH_ENCODE_BYTE_SIZE } from '../../../constants'
-import { bigIntToBytes, concatArrays } from '../../../utils'
 import { ABIType, ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
+import { bigIntToBytes } from '../../bigint'
 import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
 
 export type ABIDynamicArrayType = {

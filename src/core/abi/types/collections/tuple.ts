@@ -1,8 +1,7 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
-import { ALGORAND_PUBLIC_KEY_BYTE_LENGTH, BOOL_FALSE_BYTE, BOOL_TRUE_BYTE } from '../../../constants'
+import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, PUBLIC_KEY_BYTE_LENGTH } from '../../../constants'
 import { ABIType, ABITypeName, aBITypeToString, decode, encode } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { DecodingError, EncodingError, ValidationError } from '../../errors'
 
 export type ABITupleType = {
   name: ABITypeName.Tuple
@@ -16,13 +15,13 @@ interface Segment {
 
 function compressBools(values: ABIValue[]): number {
   if (values.length > 8) {
-    throw new EncodingError(`Expected no more than 8 bool values, received ${values.length}`)
+    throw new Error(`Encoding Error: Expected no more than 8 bool values, received ${values.length}`)
   }
 
   let result = 0
   for (let i = 0; i < values.length; i++) {
     if (typeof values[i] !== 'boolean') {
-      throw new EncodingError('Expected all values to be boolean')
+      throw new Error('Encoding Error: Expected all values to be boolean')
     }
     if (values[i]) {
       result |= 1 << (7 - i)
@@ -43,7 +42,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
 
     if (isDynamic(childType)) {
       if (bytes.length - bytesCursor < LENGTH_ENCODE_BYTE_SIZE) {
-        throw new DecodingError('Byte array is too short to be decoded')
+        throw new Error('DecodingError: Byte array is too short to be decoded')
       }
 
       const dynamicIndex = (bytes[bytesCursor] << 8) | bytes[bytesCursor + 1]
@@ -51,7 +50,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
       if (dynamicSegments.length > 0) {
         const lastSegment = dynamicSegments[dynamicSegments.length - 1]
         if (dynamicIndex < lastSegment.left) {
-          throw new DecodingError('Dynamic index segment miscalculation: left is greater than right index')
+          throw new Error('DecodingError: Dynamic index segment miscalculation: left is greater than right index')
         }
         lastSegment.right = dynamicIndex
       }
@@ -75,8 +74,8 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
       } else {
         const childTypeSize = getSize(childType)
         if (bytesCursor + childTypeSize > bytes.length) {
-          throw new DecodingError(
-            `Index out of bounds: trying to access bytes[${bytesCursor}..${bytesCursor + childTypeSize}] but slice has length ${bytes.length}`,
+          throw new Error(
+            `DecodingError: Index out of bounds, trying to access bytes[${bytesCursor}..${bytesCursor + childTypeSize}] but slice has length ${bytes.length}`,
           )
         }
         valuePartitions.push(bytes.slice(bytesCursor, bytesCursor + childTypeSize))
@@ -85,7 +84,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
     }
 
     if (abiTypesCursor !== abiTypes.length - 1 && bytesCursor >= bytes.length) {
-      throw new DecodingError('Input bytes not enough to decode')
+      throw new Error('DecodingError: Input bytes not enough to decode')
     }
     abiTypesCursor += 1
   }
@@ -94,16 +93,16 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
     const lastSegment = dynamicSegments[dynamicSegments.length - 1]
     lastSegment.right = bytes.length
   } else if (bytesCursor < bytes.length) {
-    throw new DecodingError('Input bytes not fully consumed')
+    throw new Error('DecodingError: Input bytes not fully consumed')
   }
 
   for (let i = 0; i < dynamicSegments.length; i++) {
     const segment = dynamicSegments[i]
     if (segment.left > segment.right) {
-      throw new DecodingError('Dynamic segment should display a [l, r] space with l <= r')
+      throw new Error('DecodingError: Dynamic segment should display a [l, r] space with l <= r')
     }
     if (i !== dynamicSegments.length - 1 && segment.right !== dynamicSegments[i + 1].left) {
-      throw new DecodingError('Dynamic segments should be consecutive')
+      throw new Error('DecodingError: Dynamic segments should be consecutive')
     }
   }
 
@@ -120,7 +119,7 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
   for (let i = 0; i < valuePartitions.length; i++) {
     const partition = valuePartitions[i]
     if (partition === null) {
-      throw new DecodingError(`Value partition at index ${i} is None`)
+      throw new Error(`DecodingError: Value partition at index ${i} is None`)
     }
     result.push(partition)
   }
@@ -137,7 +136,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
   const values = Array.from(value)
 
   if (childTypes.length !== values.length) {
-    throw new EncodingError('Mismatch lengths between the values and types')
+    throw new Error('Encoding Error: Mismatch lengths between the values and types')
   }
 
   const heads: Uint8Array[] = []
@@ -175,7 +174,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
     if (isDynamicIndex.get(i)) {
       const headValue = headLength + tailLength
       if (headValue > 0xffff) {
-        throw new EncodingError(`Value ${headValue} cannot fit in u16`)
+        throw new Error(`Encoding Error: Value ${headValue} cannot fit in u16`)
       }
       heads[i] = new Uint8Array([(headValue >> 8) & 0xff, headValue & 0xff])
     }
@@ -258,7 +257,7 @@ function getSize(abiType: ABIType): number {
     case ABITypeName.Ufixed:
       return Math.floor(abiType.bitSize / 8)
     case ABITypeName.Address:
-      return ALGORAND_PUBLIC_KEY_BYTE_LENGTH
+      return PUBLIC_KEY_BYTE_LENGTH
     case ABITypeName.Bool:
       return 1
     case ABITypeName.Byte:
@@ -286,8 +285,8 @@ function getSize(abiType: ABIType): number {
       return size
     }
     case ABITypeName.String:
-      throw new ValidationError(`Failed to get size, string is a dynamic type`)
+      throw new Error(`Validation Error: Failed to get size, string is a dynamic type`)
     case ABITypeName.DynamicArray:
-      throw new ValidationError(`Failed to get size, dynamic array is a dynamic type`)
+      throw new Error(`Validation Error: Failed to get size, dynamic array is a dynamic type`)
   }
 }

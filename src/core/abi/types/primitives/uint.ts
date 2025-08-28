@@ -1,7 +1,6 @@
-import { bigIntToBytes, bytesToBigInt } from '../../../utils'
 import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { ValidationError } from '../../errors'
+import { bigIntToBytes, bytesToBigInt } from '../../bigint'
 
 export type ABIUintType = {
   name: ABITypeName.Uint
@@ -11,7 +10,7 @@ export type ABIUintType = {
 function validate(type: ABIUintType) {
   const size = type.bitSize
   if (size % 8 !== 0 || size < 8 || size > 512) {
-    throw new ValidationError(`unsupported uint type bitSize: ${size}`)
+    throw new Error(`Validation Error: unsupported uint type bitSize: ${size}`)
   }
 }
 

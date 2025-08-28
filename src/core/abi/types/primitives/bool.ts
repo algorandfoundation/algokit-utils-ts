@@ -1,6 +1,5 @@
 import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { DecodingError } from '../../errors'
 
 export type ABIBoolType = {
   name: ABITypeName.Bool
@@ -16,7 +15,7 @@ export function encodeBool(value: ABIValue): Uint8Array {
 
 export function decodeBool(bytes: Uint8Array): ABIValue {
   if (bytes.length !== 1) {
-    throw new DecodingError(`Expected 1 byte for bool, got ${bytes.length}`)
+    throw new Error(`DecodingError: Expected 1 byte for bool, got ${bytes.length}`)
   }
 
   return (bytes[0] & 0x80) !== 0

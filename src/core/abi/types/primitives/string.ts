@@ -1,8 +1,7 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
-import { bigIntToBytes } from '../../../utils'
 import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { EncodingError } from '../../errors'
+import { bigIntToBytes } from '../../bigint'
 
 export type ABIStringType = {
   name: ABITypeName.String
@@ -10,7 +9,7 @@ export type ABIStringType = {
 
 export function encodeString(value: ABIValue): Uint8Array {
   if (typeof value !== 'string') {
-    throw new EncodingError(`Cannot encode value as string: ${value}`)
+    throw new Error(`Encoding Error: Cannot encode value as string: ${value}`)
   }
 
   let encodedBytes: Uint8Array

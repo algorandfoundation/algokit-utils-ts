@@ -1,8 +1,7 @@
 import { bigIntToBytes } from 'algosdk'
-import { bytesToBigInt } from '../../../utils'
 import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { ValidationError } from '../../errors'
+import { bytesToBigInt } from '../../bigint'
 
 export type ABIUfixedType = {
   name: ABITypeName.Ufixed
@@ -14,10 +13,10 @@ function validate(type: ABIUfixedType) {
   const size = type.bitSize
   const precision = type.precision
   if (size % 8 !== 0 || size < 8 || size > 512) {
-    throw new ValidationError(`unsupported ufixed type bitSize: ${size}`)
+    throw new Error(`Validation Error: unsupported ufixed type bitSize: ${size}`)
   }
   if (precision > 160 || precision < 1) {
-    throw new ValidationError(`unsupported ufixed type precision: ${precision}`)
+    throw new Error(`Validation Error: unsupported ufixed type precision: ${precision}`)
   }
 }
 

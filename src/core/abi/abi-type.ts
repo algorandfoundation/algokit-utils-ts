@@ -1,5 +1,4 @@
 import { ABIValue } from './abi-value'
-import { ValidationError } from './errors'
 import {
   ABIAddressType,
   ABIBoolType,
@@ -143,13 +142,13 @@ export function stringToABIType(str: string): ABIType {
     const stringMatches = str.match(STATIC_ARRAY_REGEX)
     // Match the string itself, array element type, then array length
     if (!stringMatches || stringMatches.length !== 3) {
-      throw new ValidationError(`malformed static array string: ${str}`)
+      throw new Error(`Validation Error: malformed static array string: ${str}`)
     }
     // Parse static array using regex
     const arrayLengthStr = stringMatches[2]
     const arrayLength = parseInt(arrayLengthStr, 10)
     if (arrayLength > MAX_LEN) {
-      throw new ValidationError(`array length exceeds limit ${MAX_LEN}`)
+      throw new Error(`Validation Error: array length exceeds limit ${MAX_LEN}`)
     }
     // Parse the array element type
     const childType = stringToABIType(stringMatches[1])
@@ -165,11 +164,11 @@ export function stringToABIType(str: string): ABIType {
     const digitsOnly = (s: string) => [...s].every((c) => '0123456789'.includes(c))
     const typeSizeStr = str.slice(4, str.length)
     if (!digitsOnly(typeSizeStr)) {
-      throw new ValidationError(`malformed uint string: ${typeSizeStr}`)
+      throw new Error(`Validation Error: malformed uint string: ${typeSizeStr}`)
     }
     const bitSize = parseInt(typeSizeStr, 10)
     if (bitSize > MAX_LEN) {
-      throw new ValidationError(`malformed uint string: ${bitSize}`)
+      throw new Error(`Validation Error: malformed uint string: ${bitSize}`)
     }
     return {
       name: ABITypeName.Uint,
@@ -219,13 +218,13 @@ function parseTupleContent(content: string): string[] {
   }
 
   if (content.startsWith(',')) {
-    throw new ValidationError('Tuple name should not start with comma')
+    throw new Error('Validation Error: Tuple name should not start with comma')
   }
   if (content.endsWith(',')) {
-    throw new ValidationError('Tuple name should not end with comma')
+    throw new Error('Validation Error: Tuple name should not end with comma')
   }
   if (content.includes(',,')) {
-    throw new ValidationError('Tuple string should not have consecutive commas')
+    throw new Error('Validation Error: Tuple string should not have consecutive commas')
   }
 
   const tupleStrings: string[] = []
@@ -250,7 +249,7 @@ function parseTupleContent(content: string): string[] {
   }
 
   if (depth !== 0) {
-    throw new ValidationError('Tuple string has mismatched parentheses')
+    throw new Error('Validation Error: Tuple string has mismatched parentheses')
   }
 
   return tupleStrings
