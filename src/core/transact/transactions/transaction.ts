@@ -6,7 +6,7 @@ import {
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
 } from '../../constants'
-import { hash } from '../crypto'
+import { hash } from '../../crypto'
 import { addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec, stringCodec } from '../encoding/codecs'
 import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
 import { AssetParamsDto, StateSchemaDto, TransactionDto } from '../encoding/transaction-dto'

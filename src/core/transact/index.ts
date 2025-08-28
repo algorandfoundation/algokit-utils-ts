@@ -19,7 +19,7 @@ export {
   encodeSignedTransactions,
 } from './transactions/signed-transaction'
 
-export { addressFromPublicKey, publicKeyFromAddress } from './address'
+export { addressFromPublicKey, publicKeyFromAddress } from '../address'
 
 export {
   addressFromMultisigSignature,

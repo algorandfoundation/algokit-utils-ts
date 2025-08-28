@@ -1,6 +1,6 @@
+import { addressFromPublicKey, publicKeyFromAddress } from '../address'
 import { MULTISIG_DOMAIN_SEPARATOR, PUBLIC_KEY_BYTE_LENGTH } from '../constants'
-import { addressFromPublicKey, publicKeyFromAddress } from './address'
-import { hash } from './crypto'
+import { hash } from '../crypto'
 import { MultisigSignature, MultisigSubsignature } from './transactions/signed-transaction'
 
 /**

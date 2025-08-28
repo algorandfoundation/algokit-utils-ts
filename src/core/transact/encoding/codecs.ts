@@ -1,5 +1,5 @@
+import { addressFromPublicKey, publicKeyFromAddress } from '../../address'
 import { PUBLIC_KEY_BYTE_LENGTH } from '../../constants'
-import { addressFromPublicKey, publicKeyFromAddress } from '../address'
 
 abstract class Codec<T, TEncoded = T> {
   public abstract defaultValue(): TEncoded

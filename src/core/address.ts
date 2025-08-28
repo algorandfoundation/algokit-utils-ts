@@ -1,6 +1,6 @@
 import base32 from 'hi-base32'
 import sha512 from 'js-sha512'
-import { ADDRESS_LENGTH, CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH, PUBLIC_KEY_BYTE_LENGTH } from '../constants'
+import { ADDRESS_LENGTH, CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH, PUBLIC_KEY_BYTE_LENGTH } from './constants'
 
 export function checksumFromPublicKey(publicKey: Uint8Array): Uint8Array {
   return Uint8Array.from(sha512.sha512_256.array(publicKey).slice(HASH_BYTES_LENGTH - CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH))
