@@ -1,3 +1,14 @@
+export const TRANSACTION_DOMAIN_SEPARATOR = 'TX'
+export const TRANSACTION_GROUP_DOMAIN_SEPARATOR = 'TG'
+export const MULTISIG_DOMAIN_SEPARATOR = 'MultisigAddr'
+export const SIGNATURE_ENCODING_INCR = 75
+export const HASH_BYTES_LENGTH = 32
+export const PUBLIC_KEY_BYTE_LENGTH = 32
+export const MAX_TX_GROUP_SIZE = 16
+export const CHECKSUM_BYTE_LENGTH = 4
+export const ADDRESS_LENGTH = 58
+export const ALGORAND_TRANSACTION_LENGTH = 52
+export const ZERO_ADDRESS = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HFKQ'
 export const STATIC_ARRAY_REGEX = /^(.+)\[(\d+)\]$/
 export const UFIXED_REGEX = /^ufixed(\d+)x(\d+)$/
 
