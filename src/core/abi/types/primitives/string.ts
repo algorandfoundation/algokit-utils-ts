@@ -1,7 +1,8 @@
+import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
 import { bigIntToBytes } from '../../../utils'
 import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { EncodingError, LENGTH_ENCODE_BYTE_SIZE } from '../../helpers'
+import { EncodingError } from '../../errors'
 
 export type ABIStringType = {
   name: ABITypeName.String

@@ -2,15 +2,15 @@ import { bigIntToBytes } from 'algosdk'
 import { bytesToBigInt } from '../../../utils'
 import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { ValidationError } from '../../helpers'
+import { ValidationError } from '../../errors'
 
-export type ABIUFixedType = {
+export type ABIUfixedType = {
   name: ABITypeName.Ufixed
   bitSize: number
   precision: number
 }
 
-function validate(type: ABIUFixedType) {
+function validate(type: ABIUfixedType) {
   const size = type.bitSize
   const precision = type.precision
   if (size % 8 !== 0 || size < 8 || size > 512) {
@@ -21,7 +21,7 @@ function validate(type: ABIUFixedType) {
   }
 }
 
-export function encodeUFixed(type: ABIUFixedType, value: ABIValue): Uint8Array {
+export function encodeUfixed(type: ABIUfixedType, value: ABIValue): Uint8Array {
   validate(type)
 
   if (typeof value !== 'bigint' && typeof value !== 'number') {
@@ -36,7 +36,7 @@ export function encodeUFixed(type: ABIUFixedType, value: ABIValue): Uint8Array {
   return bigIntToBytes(value, type.bitSize / 8)
 }
 
-export function decodeUFixed(type: ABIUFixedType, bytes: Uint8Array): ABIValue {
+export function decodeUfixed(type: ABIUfixedType, bytes: Uint8Array): ABIValue {
   validate(type)
 
   if (bytes.length !== type.bitSize / 8) {
@@ -45,6 +45,6 @@ export function decodeUFixed(type: ABIUFixedType, bytes: Uint8Array): ABIValue {
   return bytesToBigInt(bytes)
 }
 
-export function ufixedToString(type: ABIUFixedType): string {
+export function ufixedToString(type: ABIUfixedType): string {
   return `ufixed${type.bitSize}x${type.precision}`
 }

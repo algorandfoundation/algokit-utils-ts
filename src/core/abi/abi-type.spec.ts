@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ABIType, ABITypeName, asABIType, decode, encode } from './abi-type'
+import { ABIType, ABITypeName, decode, encode, stringToABIType } from './abi-type'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
@@ -23,7 +23,7 @@ describe('ABIType encode decode', () => {
       expectedBytes: [0, 0, 0, 0, 0, 0, 1, 0],
     },
 
-    // UFixed tests
+    // Ufixed tests
     {
       description: 'ufixed8x30 with value 255',
       abiType: { name: ABITypeName.Ufixed, bitSize: 8, precision: 30 } as ABIType,
@@ -284,7 +284,7 @@ describe('ABIType encode decode', () => {
   })
 
   test.each(complexTupleCases)('should encode and decode $description using type string', ({ typeString, abiValue, expectedBytes }) => {
-    const abiType = asABIType(typeString)
+    const abiType = stringToABIType(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
     const encoded = encode(abiType, abiValue)
@@ -295,7 +295,7 @@ describe('ABIType encode decode', () => {
   })
 
   test.each(nestedTupleCases)('should encode and decode $description using type string', ({ typeString, abiValue, expectedBytes }) => {
-    const abiType = asABIType(typeString)
+    const abiType = stringToABIType(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
     const encoded = encode(abiType, abiValue)

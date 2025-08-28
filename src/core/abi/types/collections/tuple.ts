@@ -1,6 +1,8 @@
-import { ABIType, ABITypeName, decode, encode, findBoolSequenceEnd, getSize, isDynamic, toString } from '../../abi-type'
+import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
+import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE } from '../../../constants'
+import { ABIType, ABITypeName, aBITypeToString, decode, encode } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, DecodingError, EncodingError, LENGTH_ENCODE_BYTE_SIZE } from '../../helpers'
+import { DecodingError, EncodingError, ValidationError } from '../../errors'
 
 export type ABITupleType = {
   name: ABITypeName.Tuple
@@ -215,7 +217,77 @@ export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue {
 export function tupleToString(type: ABITupleType): string {
   const typeStrings: string[] = []
   for (let i = 0; i < type.childTypes.length; i++) {
-    typeStrings[i] = toString(type.childTypes[i])
+    typeStrings[i] = aBITypeToString(type.childTypes[i])
   }
   return `(${typeStrings.join(',')})`
+}
+
+function isDynamic(type: ABIType): boolean {
+  switch (type.name) {
+    case ABITypeName.StaticArray:
+      return isDynamic(type.childType)
+    case ABITypeName.Tuple:
+      return type.childTypes.some((c) => isDynamic(c))
+    case ABITypeName.DynamicArray:
+    case ABITypeName.String:
+      return true
+    default:
+      return false
+  }
+}
+
+function findBoolSequenceEnd(abiTypes: ABIType[], currentIndex: number): number {
+  let cursor = currentIndex
+  while (cursor < abiTypes.length) {
+    if (abiTypes[cursor].name === ABITypeName.Bool) {
+      if (cursor - currentIndex + 1 === 8 || cursor === abiTypes.length - 1) {
+        return cursor
+      }
+      cursor++
+    } else {
+      return cursor - 1
+    }
+  }
+  return cursor - 1
+}
+
+function getSize(abiType: ABIType): number {
+  switch (abiType.name) {
+    case ABITypeName.Uint:
+      return Math.floor(abiType.bitSize / 8)
+    case ABITypeName.Ufixed:
+      return Math.floor(abiType.bitSize / 8)
+    case ABITypeName.Address:
+      return 32
+    case ABITypeName.Bool:
+      return 1
+    case ABITypeName.Byte:
+      return 1
+    case ABITypeName.StaticArray:
+      if (abiType.childType.name === ABITypeName.Bool) {
+        return Math.ceil(abiType.length / 8)
+      }
+      return getSize(abiType.childType) * abiType.length
+    case ABITypeName.Tuple: {
+      let size = 0
+      let i = 0
+      while (i < abiType.childTypes.length) {
+        const childType = abiType.childTypes[i]
+        if (childType.name === ABITypeName.Bool) {
+          const sequenceEndIndex = findBoolSequenceEnd(abiType.childTypes, i)
+          const boolCount = sequenceEndIndex - i + 1
+          size += Math.ceil(boolCount / 8)
+          i = sequenceEndIndex + 1
+        } else {
+          size += getSize(childType)
+          i++
+        }
+      }
+      return size
+    }
+    case ABITypeName.String:
+      throw new ValidationError(`Failed to get size, string is a dynamic type`)
+    case ABITypeName.DynamicArray:
+      throw new ValidationError(`Failed to get size, dynamic array is a dynamic type`)
+  }
 }

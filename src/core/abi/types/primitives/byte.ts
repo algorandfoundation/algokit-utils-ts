@@ -1,6 +1,6 @@
 import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
-import { DecodingError, EncodingError, ValidationError } from '../../helpers'
+import { DecodingError, EncodingError, ValidationError } from '../../errors'
 
 export type ABIByteType = {
   name: ABITypeName.Byte
