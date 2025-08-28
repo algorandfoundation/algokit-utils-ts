@@ -127,9 +127,9 @@ export function aBITypeToString(abiType: ABIType): string {
   }
 }
 
-const staticArrayRegexp = /^([a-z\d[\](),]+)\[(0|[1-9][\d]*)]$/
-const ufixedRegexp = /^ufixed([1-9][\d]*)x([1-9][\d]*)$/
-export const MAX_LEN = 2 ** 16 - 1
+const STATIC_ARRAY_REGEX = /^([a-z\d[\](),]+)\[(0|[1-9][\d]*)]$/
+const UFIXED_REGEX = /^ufixed([1-9][\d]*)x([1-9][\d]*)$/
+const MAX_LEN = 2 ** 16 - 1
 
 export function stringToABIType(str: string): ABIType {
   if (str.endsWith('[]')) {
@@ -140,7 +140,7 @@ export function stringToABIType(str: string): ABIType {
     }
   }
   if (str.endsWith(']')) {
-    const stringMatches = str.match(staticArrayRegexp)
+    const stringMatches = str.match(STATIC_ARRAY_REGEX)
     // Match the string itself, array element type, then array length
     if (!stringMatches || stringMatches.length !== 3) {
       throw new ValidationError(`malformed static array string: ${str}`)
@@ -180,7 +180,7 @@ export function stringToABIType(str: string): ABIType {
     return { name: ABITypeName.Byte }
   }
   if (str.startsWith('ufixed')) {
-    const stringMatches = str.match(ufixedRegexp)
+    const stringMatches = str.match(UFIXED_REGEX)
     if (!stringMatches || stringMatches.length !== 3) {
       throw new Error(`malformed ufixed type: ${str}`)
     }

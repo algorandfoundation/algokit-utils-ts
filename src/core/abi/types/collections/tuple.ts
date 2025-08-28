@@ -1,5 +1,5 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
-import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE } from '../../../constants'
+import { ALGORAND_PUBLIC_KEY_BYTE_LENGTH, BOOL_FALSE_BYTE, BOOL_TRUE_BYTE } from '../../../constants'
 import { ABIType, ABITypeName, aBITypeToString, decode, encode } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { DecodingError, EncodingError, ValidationError } from '../../errors'
@@ -258,7 +258,7 @@ function getSize(abiType: ABIType): number {
     case ABITypeName.Ufixed:
       return Math.floor(abiType.bitSize / 8)
     case ABITypeName.Address:
-      return 32
+      return ALGORAND_PUBLIC_KEY_BYTE_LENGTH
     case ABITypeName.Bool:
       return 1
     case ABITypeName.Byte:

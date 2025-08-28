@@ -16,8 +16,7 @@ export function encodeDynamicArray(type: ABIDynamicArrayType, value: ABIValue): 
   const convertedTuple = toABITupleType(type, value.length)
   const encodedTuple = encodeTuple(convertedTuple, value)
   const encodedLength = bigIntToBytes(convertedTuple.childTypes.length, LENGTH_ENCODE_BYTE_SIZE)
-  const mergedBytes = concatArrays(encodedLength, encodedTuple)
-  return mergedBytes
+  return concatArrays(encodedLength, encodedTuple)
 }
 
 export function decodeDynamicArray(type: ABIDynamicArrayType, bytes: Uint8Array): ABIValue {

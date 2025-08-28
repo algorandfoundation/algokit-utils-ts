@@ -9,3 +9,4 @@ export const ALGORAND_CHECKSUM_BYTE_LENGTH = 4
 export const LENGTH_ENCODE_BYTE_SIZE = 2
 export const BOOL_TRUE_BYTE = 0x80
 export const BOOL_FALSE_BYTE = 0x00
+export const ALGORAND_PUBLIC_KEY_BYTE_LENGTH = 32
