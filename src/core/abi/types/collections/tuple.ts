@@ -1,6 +1,6 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
 import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, PUBLIC_KEY_BYTE_LENGTH } from '../../../constants'
-import { ABIType, ABITypeName, aBITypeToString, decode, encode } from '../../abi-type'
+import { ABIType, ABITypeName, aBITypeToString, decodeABIValue, encodeABIValue } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
 export type ABITupleType = {
@@ -150,7 +150,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
     if (isDynamic(childType)) {
       isDynamicIndex.set(heads.length, true)
       heads.push(new Uint8Array(2)) // Placeholder for dynamic offset
-      tails.push(encode(childType, values[abiTypesCursor]))
+      tails.push(encodeABIValue(childType, values[abiTypesCursor]))
     } else {
       if (childType.name === ABITypeName.Bool) {
         const boolSequenceEndIndex = findBoolSequenceEnd(childTypes, abiTypesCursor)
@@ -159,7 +159,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
         heads.push(new Uint8Array([compressedBool]))
         abiTypesCursor = boolSequenceEndIndex
       } else {
-        heads.push(encode(childType, values[abiTypesCursor]))
+        heads.push(encodeABIValue(childType, values[abiTypesCursor]))
       }
       isDynamicIndex.set(abiTypesCursor, false)
       tails.push(new Uint8Array(0))
@@ -206,7 +206,7 @@ export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue {
   for (let i = 0; i < childTypes.length; i++) {
     const childType = childTypes[i]
     const valuePartition = valuePartitions[i]
-    const childValue = decode(childType, valuePartition)
+    const childValue = decodeABIValue(childType, valuePartition)
     values.push(childValue)
   }
 

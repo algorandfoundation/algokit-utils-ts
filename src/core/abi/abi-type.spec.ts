@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ABIType, ABITypeName, decode, encode, stringToABIType } from './abi-type'
+import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, stringToABIType } from './abi-type'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
@@ -266,20 +266,20 @@ describe('ABIType encode decode', () => {
   test.each(basicTypeCases)('should encode and decode $description', ({ abiType, abiValue, expectedBytes }) => {
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encode(abiType, abiValue)
+    const encoded = encodeABIValue(abiType, abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decode(abiType, encoded)
+    const decoded = decodeABIValue(abiType, encoded)
     expect(decoded).toEqual(abiValue)
   })
 
   test.each(simpleTupleCases)('should encode and decode $description', ({ abiType, abiValue, expectedBytes }) => {
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encode(abiType, abiValue)
+    const encoded = encodeABIValue(abiType, abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decode(abiType, encoded)
+    const decoded = decodeABIValue(abiType, encoded)
     expect(decoded).toEqual(abiValue)
   })
 
@@ -287,10 +287,10 @@ describe('ABIType encode decode', () => {
     const abiType = stringToABIType(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encode(abiType, abiValue)
+    const encoded = encodeABIValue(abiType, abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decode(abiType, encoded)
+    const decoded = decodeABIValue(abiType, encoded)
     expect(decoded).toEqual(abiValue)
   })
 
@@ -298,10 +298,10 @@ describe('ABIType encode decode', () => {
     const abiType = stringToABIType(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
-    const encoded = encode(abiType, abiValue)
+    const encoded = encodeABIValue(abiType, abiValue)
     expect(encoded).toEqual(expectedUint8Array)
 
-    const decoded = decode(abiType, encoded)
+    const decoded = decodeABIValue(abiType, encoded)
     expect(decoded).toEqual(abiValue)
   })
 })

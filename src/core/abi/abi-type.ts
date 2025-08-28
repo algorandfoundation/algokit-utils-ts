@@ -57,7 +57,7 @@ export type ABIType =
   | ABIStaticArrayType
   | ABIDynamicArrayType
 
-export function encode(abiType: ABIType, value: ABIValue): Uint8Array {
+export function encodeABIValue(abiType: ABIType, value: ABIValue): Uint8Array {
   switch (abiType.name) {
     case ABITypeName.Uint:
       return encodeUint(abiType, value)
@@ -80,26 +80,26 @@ export function encode(abiType: ABIType, value: ABIValue): Uint8Array {
   }
 }
 
-export function decode(abiType: ABIType, bytes: Uint8Array): ABIValue {
+export function decodeABIValue(abiType: ABIType, encodedValue: Uint8Array): ABIValue {
   switch (abiType.name) {
     case ABITypeName.Uint:
-      return decodeUint(abiType, bytes)
+      return decodeUint(abiType, encodedValue)
     case ABITypeName.Ufixed:
-      return decodeUfixed(abiType, bytes)
+      return decodeUfixed(abiType, encodedValue)
     case ABITypeName.Address:
-      return decodeAddress(bytes)
+      return decodeAddress(encodedValue)
     case ABITypeName.Bool:
-      return decodeBool(bytes)
+      return decodeBool(encodedValue)
     case ABITypeName.Byte:
-      return decodeByte(bytes)
+      return decodeByte(encodedValue)
     case ABITypeName.String:
-      return decodeString(abiType, bytes)
+      return decodeString(abiType, encodedValue)
     case ABITypeName.Tuple:
-      return decodeTuple(abiType, bytes)
+      return decodeTuple(abiType, encodedValue)
     case ABITypeName.StaticArray:
-      return decodeStaticArray(abiType, bytes)
+      return decodeStaticArray(abiType, encodedValue)
     case ABITypeName.DynamicArray:
-      return decodeDynamicArray(abiType, bytes)
+      return decodeDynamicArray(abiType, encodedValue)
   }
 }
 
