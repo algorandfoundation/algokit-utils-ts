@@ -1,4 +1,3 @@
-// TODO: check for duplicates
 export const STATIC_ARRAY_REGEX = /^(.+)\[(\d+)\]$/
 export const UFIXED_REGEX = /^ufixed(\d+)x(\d+)$/
 
