@@ -227,19 +227,19 @@ export function getABIType(str: string): ABIType {
   throw new Error(`cannot convert a string ${str} to an ABI type`)
 }
 
-function parseTupleContent(content: string): string[] {
+export function parseTupleContent(content: string): string[] {
   if (content === '') {
     return []
   }
 
   if (content.startsWith(',')) {
-    throw new Error('Validation Error: Tuple name should not start with comma')
+    throw new Error('Validation Error: the content should not start with comma')
   }
   if (content.endsWith(',')) {
-    throw new Error('Validation Error: Tuple name should not end with comma')
+    throw new Error('Validation Error: the content should not end with comma')
   }
   if (content.includes(',,')) {
-    throw new Error('Validation Error: Tuple string should not have consecutive commas')
+    throw new Error('Validation Error: the content should not have consecutive commas')
   }
 
   const tupleStrings: string[] = []
@@ -264,7 +264,7 @@ function parseTupleContent(content: string): string[] {
   }
 
   if (depth !== 0) {
-    throw new Error('Validation Error: Tuple string has mismatched parentheses')
+    throw new Error('Validation Error: the content has mismatched parentheses')
   }
 
   return tupleStrings
