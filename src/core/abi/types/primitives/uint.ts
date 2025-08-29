@@ -1,6 +1,9 @@
 import { ABIValue } from '../../abi-value'
 import { bigIntToBytes, bytesToBigInt } from '../../bigint'
 
+/**
+ * An unsigned integer of a specific bit size.
+ */
 export type ABIUintType = {
   name: 'Uint'
   bitSize: number
@@ -35,7 +38,8 @@ export function decodeUint(type: ABIUintType, bytes: Uint8Array): ABIValue {
   if (bytes.length !== type.bitSize / 8) {
     throw new Error(`byte string must correspond to a uint${type.bitSize}`)
   }
-  return bytesToBigInt(bytes)
+  const value = bytesToBigInt(bytes)
+  return type.bitSize < 53 ? Number(value) : value
 }
 
 export function uintToString(type: ABIUintType): string {

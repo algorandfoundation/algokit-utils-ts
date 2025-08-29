@@ -2,6 +2,9 @@ import { bigIntToBytes } from 'algosdk'
 import { ABIValue } from '../../abi-value'
 import { bytesToBigInt } from '../../bigint'
 
+/**
+ * A fixed-point number of a specific bit size and precision.
+ */
 export type ABIUfixedType = {
   name: 'Ufixed'
   bitSize: number
@@ -40,7 +43,9 @@ export function decodeUfixed(type: ABIUfixedType, bytes: Uint8Array): ABIValue {
   if (bytes.length !== type.bitSize / 8) {
     throw new Error(`byte string must correspond to a ${ufixedToString(type)}`)
   }
-  return bytesToBigInt(bytes)
+
+  const value = bytesToBigInt(bytes)
+  return type.bitSize < 53 ? Number(value) : value
 }
 
 export function ufixedToString(type: ABIUfixedType): string {

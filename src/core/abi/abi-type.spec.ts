@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ABIType, decodeABIValue, encodeABIValue, stringToABIType } from './abi-type'
+import { ABIType, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
@@ -284,7 +284,7 @@ describe('ABIType encode decode', () => {
   })
 
   test.each(complexTupleCases)('should encode and decode $description using type string', ({ typeString, abiValue, expectedBytes }) => {
-    const abiType = stringToABIType(typeString)
+    const abiType = getABIType(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
     const encoded = encodeABIValue(abiType, abiValue)
@@ -295,7 +295,7 @@ describe('ABIType encode decode', () => {
   })
 
   test.each(nestedTupleCases)('should encode and decode $description using type string', ({ typeString, abiValue, expectedBytes }) => {
-    const abiType = stringToABIType(typeString)
+    const abiType = getABIType(typeString)
     const expectedUint8Array = new Uint8Array(expectedBytes)
 
     const encoded = encodeABIValue(abiType, abiValue)

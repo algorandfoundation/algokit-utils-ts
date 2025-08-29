@@ -2,6 +2,9 @@ import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
 import { ABIValue } from '../../abi-value'
 import { bigIntToBytes } from '../../bigint'
 
+/**
+ * A dynamic-length string.
+ */
 export type ABIStringType = {
   name: 'String'
 }

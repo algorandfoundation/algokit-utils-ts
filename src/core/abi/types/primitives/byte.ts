@@ -1,5 +1,8 @@
 import { ABIValue } from '../../abi-value'
 
+/**
+ * A single byte.
+ */
 export type ABIByteType = {
   name: 'Byte'
 }

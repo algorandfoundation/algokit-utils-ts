@@ -5,6 +5,9 @@ import { ABIValue } from '../../abi-value'
 import { bigIntToBytes } from '../../bigint'
 import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
 
+/**
+ *  A dynamic-length array of another ABI type.
+ */
 export type ABIDynamicArrayType = {
   name: 'DynamicArray'
   childType: ABIType

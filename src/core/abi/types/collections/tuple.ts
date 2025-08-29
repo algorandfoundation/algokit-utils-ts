@@ -1,8 +1,11 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
 import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, PUBLIC_KEY_BYTE_LENGTH } from '../../../constants'
-import { ABIType, aBITypeToString, decodeABIValue, encodeABIValue } from '../../abi-type'
+import { ABIType, decodeABIValue, encodeABIValue, getABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
+/**
+ * A tuple of other ABI types.
+ */
 export type ABITupleType = {
   name: 'Tuple'
   childTypes: ABIType[]
@@ -198,7 +201,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
   return result
 }
 
-export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue {
+export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue[] {
   const childTypes = type.childTypes
   const valuePartitions = extractValues(childTypes, bytes)
   const values: ABIValue[] = []
@@ -216,7 +219,7 @@ export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue {
 export function tupleToString(type: ABITupleType): string {
   const typeStrings: string[] = []
   for (let i = 0; i < type.childTypes.length; i++) {
-    typeStrings[i] = aBITypeToString(type.childTypes[i])
+    typeStrings[i] = getABITypeName(type.childTypes[i])
   }
   return `(${typeStrings.join(',')})`
 }
