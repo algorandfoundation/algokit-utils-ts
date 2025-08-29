@@ -2,13 +2,13 @@
 /** ARC-56 spec */
 /****************/
 
-/** Describes the entire contract. This interface is an extension of the interface described in ARC-4 */
-export interface Arc56Contract {
+/** Describes the entire contract. This type is an extension of the type described in ARC-4 */
+export type Arc56Contract = {
   /** The ARCs used and/or supported by this contract. All contracts implicitly support ARC4 and ARC56 */
   arcs: number[]
   /** A user-friendly name for the contract */
   name: string
-  /** Optional, user-friendly description for the interface */
+  /** Optional, user-friendly description for the type */
   desc?: string
   /**
    * Optional object listing the contract instances across different networks.
@@ -112,8 +112,8 @@ export interface Arc56Contract {
   }
 }
 
-/** Describes a method in the contract. This interface is an extension of the interface described in ARC-4 */
-export interface Arc56Method {
+/** Describes a method in the contract. This type is an extension of the type described in ARC-4 */
+export type Arc56Method = {
   /** The name of the method */
   name: string
   /** Optional, user-friendly description for the method */
@@ -189,7 +189,7 @@ export interface Arc56Method {
 }
 
 /** ARC-28 event */
-export interface Event {
+export type Event = {
   /** The name of the event */
   name: string
   /** Optional, user-friendly description for the event */
@@ -226,7 +226,7 @@ export type AVMUint64 = 'AVMUint64'
 export type AVMType = AVMBytes | AVMString | AVMUint64
 
 /** Information about a single field in a struct */
-export interface StructField {
+export type StructField = {
   /** The name of the struct field */
   name: string
   /** The type of the struct field's value */
@@ -234,7 +234,7 @@ export interface StructField {
 }
 
 /** Describes a single key in app storage */
-export interface StorageKey {
+export type StorageKey = {
   /** Description of what this storage key holds */
   desc?: string
   /** The type of the key */
@@ -247,7 +247,7 @@ export interface StorageKey {
 }
 
 /** Describes a mapping of key-value pairs in storage */
-export interface StorageMap {
+export type StorageMap = {
   /** Description of what the key-value pairs in this mapping hold */
   desc?: string
   /** The type of the keys in the map */
@@ -258,7 +258,7 @@ export interface StorageMap {
   prefix?: string
 }
 
-interface SourceInfo {
+type SourceInfo = {
   /** The program counter value(s). Could be offset if pcOffsetMethod is not "none" */
   pc: Array<number>
   /** A human-readable string that describes the error when the program fails at the given PC */
@@ -269,7 +269,7 @@ interface SourceInfo {
   source?: string
 }
 
-export interface ProgramSourceInfo {
+export type ProgramSourceInfo = {
   /** The source information for the program */
   sourceInfo: SourceInfo[]
   /** How the program counter offset is calculated
