@@ -43,7 +43,9 @@ export function decodeUfixed(type: ABIUfixedType, bytes: Uint8Array): ABIValue {
   if (bytes.length !== type.bitSize / 8) {
     throw new Error(`byte string must correspond to a ${ufixedToString(type)}`)
   }
-  return bytesToBigInt(bytes)
+
+  const value = bytesToBigInt(bytes)
+  return type.bitSize < 53 ? Number(value) : value
 }
 
 export function ufixedToString(type: ABIUfixedType): string {

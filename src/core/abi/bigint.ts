@@ -1,11 +1,11 @@
 /**
- * bigIntToBytes converts a BigInt to a big-endian Uint8Array for encoding.
- * @param bi - The bigint to convert.
+ * Converts a BigInt or number to a big-endian Uint8Array for encoding.
+ * @param value - The bigint or number to convert.
  * @param size - The size of the resulting byte array.
  * @returns A byte array containing the big-endian encoding of the input bigint
  */
-export function bigIntToBytes(bi: bigint | number, size: number) {
-  let hex = bi.toString(16)
+export function bigIntToBytes(value: bigint | number, size: number) {
+  let hex = value.toString(16)
   // Pad the hex with zeros so it matches the size in bytes
   if (hex.length !== size * 2) {
     hex = hex.padStart(size * 2, '0')
@@ -18,10 +18,10 @@ export function bigIntToBytes(bi: bigint | number, size: number) {
 }
 
 /**
- * bytesToBigInt produces a bigint from a binary representation.
+ * Converts a big-endian Uint8Array to bigint.
  *
  * @param bytes - The Uint8Array to convert.
- * @returns The bigint that was encoded in the input data.
+ * @returns The decoded bigint
  */
 export function bytesToBigInt(bytes: Uint8Array) {
   let res = BigInt(0)

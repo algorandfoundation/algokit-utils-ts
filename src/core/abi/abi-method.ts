@@ -1,5 +1,4 @@
 import sha512 from 'js-sha512'
-import { Expand } from '../expand'
 import { ABIType, decodeABIValue, encodeABIValue, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
@@ -8,20 +7,19 @@ import { ABITupleType, decodeTuple, encodeTuple } from './types'
 
 export type ABITransactionType = 'txn' | 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl'
 export type ABIReferenceType = 'account' | 'application' | 'asset'
-export type ABIArgumentType = ABIType | ABITransactionType | ABIReferenceType
+export type ABIMethodArgType = ABIType | ABITransactionType | ABIReferenceType
 export type ABIReturnType = ABIType | 'void'
 
-export type ABIMethodArg = Expand<
-  Omit<Arc56Method['args'][number], 'type'> & {
-    type: ABIArgumentType
-  }
->
+export type ABIMethodArg = {
+  arg_type: ABIMethodArgType
+  name?: string
+  desciption?: string
+}
 
-export type ABIMethodReturn = Expand<
-  Omit<Arc56Method['returns'], 'type'> & {
-    type: ABIReturnType
-  }
->
+export type ABIMethodReturn = {
+  type: ABIReturnType
+  description?: string
+}
 
 /** Decoded ARC-56 struct as a struct rather than a tuple. */
 export type ABIStruct = {
@@ -227,10 +225,10 @@ export function getABIMethod(signature: string): ABIMethod {
   const name = signature.slice(0, argsStart)
   const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)) // hmmm the error is bad
     .map((n: string) => {
-      if (abiTypeIsTransaction(n as ABIArgumentType) || abiTypeIsReference(n as ABIArgumentType)) {
-        return { type: n as ABIArgumentType } satisfies ABIMethodArg
+      if (abiTypeIsTransaction(n as ABIMethodArgType) || abiTypeIsReference(n as ABIMethodArgType)) {
+        return { arg_type: n as ABIMethodArgType } satisfies ABIMethodArg
       }
-      return { type: getABIType(n) } satisfies ABIMethodArg
+      return { arg_type: getABIType(n) } satisfies ABIMethodArg
     })
   const returnType = signature.slice(argsEnd + 1)
   const returns = { type: returnType === 'void' ? ('void' as const) : getABIType(returnType) } satisfies ABIMethodReturn
@@ -250,8 +248,8 @@ export function getABIMethod(signature: string): ABIMethod {
 export function getABIMethodSignature(abiMethod: ABIMethod): string {
   const args = abiMethod.args
     .map((arg) => {
-      if (abiTypeIsTransaction(arg.type) || abiTypeIsReference(arg.type)) return arg.type
-      return getABITypeName(arg.type)
+      if (abiTypeIsTransaction(arg.arg_type) || abiTypeIsReference(arg.arg_type)) return arg.arg_type
+      return getABITypeName(arg.arg_type)
     })
     .join(',')
   const returns = abiMethod.returns.type === 'void' ? 'void' : getABITypeName(abiMethod.returns.type)
@@ -273,22 +271,20 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
     throw new Error('Invalid ABIMethod parameters')
   }
 
-  const args = method.args.map(({ type, name, desc, defaultValue, struct }) => {
-    if (abiTypeIsTransaction(type as ABIArgumentType) || abiTypeIsReference(type as ABIArgumentType)) {
+  const args = method.args.map(({ type, name, desc }) => {
+    if (abiTypeIsTransaction(type as ABIMethodArgType) || abiTypeIsReference(type as ABIMethodArgType)) {
       return {
-        type: type as ABIArgumentType,
+        arg_type: type as ABIMethodArgType,
         name,
-        desc,
-        defaultValue,
-        struct,
+        desciption: desc,
       } satisfies ABIMethodArg
     }
 
     return {
-      type: getABIType(type),
+      arg_type: getABIType(type),
       name,
-      desc,
-    }
+      desciption: desc,
+    } satisfies ABIMethodArg
   })
   const returns = {
     type: method.returns.type === ('void' as const) ? method.returns.type : getABIType(method.returns.type),
@@ -305,13 +301,13 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
   } satisfies ABIMethod
 }
 
-export function abiTypeIsTransaction(type: ABIArgumentType): type is ABITransactionType {
+export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
   return (
     typeof type === 'string' &&
     (type === 'txn' || type === 'pay' || type === 'keyreg' || type === 'acfg' || type === 'axfer' || type === 'afrz' || type === 'appl')
   )
 }
 
-export function abiTypeIsReference(type: ABIArgumentType): type is ABIReferenceType {
+export function abiTypeIsReference(type: ABIMethodArgType): type is ABIReferenceType {
   return typeof type === 'string' && (type === 'account' || type === 'application' || type === 'asset')
 }
