@@ -2,6 +2,9 @@ import { ABIType } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
 
+/**
+ * A static-length array of another ABI type.
+ */
 export type ABIStaticArrayType = {
   name: 'StaticArray'
   childType: ABIType

@@ -2,6 +2,9 @@ import { bigIntToBytes } from 'algosdk'
 import { ABIValue } from '../../abi-value'
 import { bytesToBigInt } from '../../bigint'
 
+/**
+ * A fixed-point number of a specific bit size and precision.
+ */
 export type ABIUfixedType = {
   name: 'Ufixed'
   bitSize: number

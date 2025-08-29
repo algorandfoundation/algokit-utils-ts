@@ -1,1 +1,1 @@
-export { aBITypeToString, decodeABIValue, encodeABIValue, stringToABIType } from './abi-type'
+export { decodeABIValue, encodeABIValue, getABIType, getABITypeName } from './abi-type'

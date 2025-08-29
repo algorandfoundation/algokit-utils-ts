@@ -1,5 +1,8 @@
 import { ABIValue } from '../../abi-value'
 
+/**
+ * A boolean value.
+ */
 export type ABIBoolType = {
   name: 'Bool'
 }

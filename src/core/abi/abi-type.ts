@@ -36,6 +36,9 @@ import {
 
 export type ABITypeName = 'Uint' | 'Ufixed' | 'Address' | 'Bool' | 'Byte' | 'String' | 'Tuple' | 'StaticArray' | 'DynamicArray'
 
+/**
+ *   Represents an Algorand ABI type for encoding and decoding values as defined in [ARC-0004](https://arc.algorand.foundation/ARCs/arc-0004#types).
+ */
 export type ABIType =
   | ABIUintType
   | ABIUfixedType
@@ -47,29 +50,41 @@ export type ABIType =
   | ABIStaticArrayType
   | ABIDynamicArrayType
 
-export function encodeABIValue(abiType: ABIType, value: ABIValue): Uint8Array {
+/**
+ * Encodes an ABI value according to ARC-4 specification.
+ * @param abiType The ABI type
+ * @param abiValue The value to encode, must match the ABI type
+ * @returns The encoded bytes
+ */
+export function encodeABIValue(abiType: ABIType, abiValue: ABIValue): Uint8Array {
   switch (abiType.name) {
     case 'Uint':
-      return encodeUint(abiType, value)
+      return encodeUint(abiType, abiValue)
     case 'Ufixed':
-      return encodeUfixed(abiType, value)
+      return encodeUfixed(abiType, abiValue)
     case 'Address':
-      return encodeAddress(value)
+      return encodeAddress(abiValue)
     case 'Bool':
-      return encodeBool(value)
+      return encodeBool(abiValue)
     case 'Byte':
-      return encodeByte(value)
+      return encodeByte(abiValue)
     case 'String':
-      return encodeString(value)
+      return encodeString(abiValue)
     case 'Tuple':
-      return encodeTuple(abiType, value)
+      return encodeTuple(abiType, abiValue)
     case 'StaticArray':
-      return encodeStaticArray(abiType, value)
+      return encodeStaticArray(abiType, abiValue)
     case 'DynamicArray':
-      return encodeDynamicArray(abiType, value)
+      return encodeDynamicArray(abiType, abiValue)
   }
 }
 
+/**
+ * Decodes an ABI value according to ARC-4 specification.
+ * @param abiType The ABI type
+ * @param abiValue The encoded bytes to decode
+ * @returns The decoded ABI value
+ */
 export function decodeABIValue(abiType: ABIType, encodedValue: Uint8Array): ABIValue {
   switch (abiType.name) {
     case 'Uint':
@@ -93,7 +108,12 @@ export function decodeABIValue(abiType: ABIType, encodedValue: Uint8Array): ABIV
   }
 }
 
-export function aBITypeToString(abiType: ABIType): string {
+/**
+ * Gets the ARC-4 type name of an ABI type.
+ * @param abiType The ABI type
+ * @returns The ARC-4 name
+ */
+export function getABITypeName(abiType: ABIType): string {
   switch (abiType.name) {
     case 'Uint':
       return uintToString(abiType)
@@ -120,9 +140,14 @@ const STATIC_ARRAY_REGEX = /^([a-z\d[\](),]+)\[(0|[1-9][\d]*)]$/
 const UFIXED_REGEX = /^ufixed([1-9][\d]*)x([1-9][\d]*)$/
 const MAX_LEN = 2 ** 16 - 1
 
-export function stringToABIType(str: string): ABIType {
+/**
+ * Gets the ABI type from an ARC-4 type name
+ * @param str the ARC-4 type name
+ * @returns the ABI type
+ */
+export function getABIType(str: string): ABIType {
   if (str.endsWith('[]')) {
-    const childType = stringToABIType(str.slice(0, str.length - 2))
+    const childType = getABIType(str.slice(0, str.length - 2))
     return {
       name: 'DynamicArray',
       childType: childType,
@@ -141,7 +166,7 @@ export function stringToABIType(str: string): ABIType {
       throw new Error(`Validation Error: array length exceeds limit ${MAX_LEN}`)
     }
     // Parse the array element type
-    const childType = stringToABIType(stringMatches[1])
+    const childType = getABIType(stringMatches[1])
 
     return {
       name: 'StaticArray',
@@ -190,7 +215,7 @@ export function stringToABIType(str: string): ABIType {
     const tupleContent = parseTupleContent(str.slice(1, str.length - 1))
     const childTypes: ABIType[] = []
     for (let i = 0; i < tupleContent.length; i++) {
-      const ti = stringToABIType(tupleContent[i])
+      const ti = getABIType(tupleContent[i])
       childTypes.push(ti)
     }
 

@@ -1,5 +1,5 @@
 import { Expand } from '../expand'
-import { ABIType, decodeABIValue, encodeABIValue, stringToABIType } from './abi-type'
+import { ABIType, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
 import { ABIValue } from './abi-value'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
 import { ARC28Event } from './event'
@@ -46,7 +46,7 @@ export function getABITupleTypeFromABIStructDefinition(struct: StructField[], st
     typeof v.type === 'string'
       ? structs[v.type]
         ? getABITupleTypeFromABIStructDefinition(structs[v.type], structs)
-        : stringToABIType(v.type)
+        : getABIType(v.type)
       : getABITupleTypeFromABIStructDefinition(v.type, structs),
   )
   return {
@@ -128,7 +128,7 @@ export function getABIDecodedValue(
 ): ABIValue | ABIStruct {
   if (type === 'AVMBytes' || typeof value !== 'object') return value
   if (type === 'AVMString') return Buffer.from(value).toString('utf-8')
-  if (type === 'AVMUint64') return decodeABIValue(stringToABIType('uint64'), value)
+  if (type === 'AVMUint64') return decodeABIValue(getABIType('uint64'), value)
   if (structs[type]) {
     const tupleValue = decodeTuple(getABITupleTypeFromABIStructDefinition(structs[type], structs), value)
     return getABIStructFromABITuple(tupleValue, structs[type], structs)
@@ -139,7 +139,7 @@ export function getABIDecodedValue(
   // const decodedValue = convertAbiByteArrays(abiType.decode(value), abiType)
   // return convertABIDecodedBigIntToNumber(decodedValue, abiType)
 
-  const abiType = stringToABIType(type)
+  const abiType = getABIType(type)
   return decodeABIValue(abiType, value)
 }
 
@@ -156,7 +156,7 @@ export function getABIEncodedValue(
   structs: Record<string, StructField[]>,
 ): Uint8Array {
   if (typeof value === 'object' && value instanceof Uint8Array) return value
-  if (type === 'AVMUint64') return encodeABIValue(stringToABIType('uint64'), value as bigint | number)
+  if (type === 'AVMUint64') return encodeABIValue(getABIType('uint64'), value as bigint | number)
   if (type === 'AVMBytes' || type === 'AVMString') {
     if (typeof value === 'string') return Buffer.from(value, 'utf-8')
     if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
@@ -172,7 +172,7 @@ export function getABIEncodedValue(
     }
   }
 
-  const abiType = stringToABIType(type)
+  const abiType = getABIType(type)
   return encodeABIValue(abiType, value as ABIValue)
 }
 
@@ -227,13 +227,13 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
     }
 
     return {
-      type: stringToABIType(type),
+      type: getABIType(type),
       name,
       desc,
     }
   })
   const returns = {
-    type: method.returns.type === ('void' as const) ? method.returns.type : stringToABIType(method.returns.type),
+    type: method.returns.type === ('void' as const) ? method.returns.type : getABIType(method.returns.type),
     desc: method.returns.desc,
   }
 

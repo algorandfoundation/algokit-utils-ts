@@ -1,6 +1,9 @@
 import { addressFromPublicKey, publicKeyFromAddress } from '../../../address'
 import { ABIValue } from '../../abi-value'
 
+/**
+ * An Algorand address.
+ */
 export type ABIAddressType = {
   name: 'Address'
 }
