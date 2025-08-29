@@ -1,8 +1,8 @@
 import sha512 from 'js-sha512'
 import { ABIType, decodeABIValue, encodeABIValue, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
+import { ARC28Event } from './arc28-event'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
-import { ARC28Event } from './event'
 import { ABITupleType, decodeTuple, encodeTuple } from './types'
 
 export type ABITransactionType = 'txn' | 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl'
