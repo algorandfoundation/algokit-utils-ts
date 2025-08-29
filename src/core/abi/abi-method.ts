@@ -226,7 +226,12 @@ export function getABIMethod(signature: string): ABIMethod {
 
   const name = signature.slice(0, argsStart)
   const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)) // hmmm the error is bad
-    .map((n) => ({ type: getABIType(n) }) satisfies ABIMethodArg)
+    .map((n: string) => {
+      if (abiTypeIsTransaction(n as ABIArgumentType) || abiTypeIsReference(n as ABIArgumentType)) {
+        return { type: n as ABIArgumentType } satisfies ABIMethodArg
+      }
+      return { type: getABIType(n) } satisfies ABIMethodArg
+    })
   const returnType = signature.slice(argsEnd + 1)
   const returns = { type: returnType === 'void' ? ('void' as const) : getABIType(returnType) } satisfies ABIMethodReturn
 
