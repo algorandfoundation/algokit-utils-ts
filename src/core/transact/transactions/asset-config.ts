@@ -1,7 +1,7 @@
 /**
  * Represents an asset configuration transaction that creates, reconfigures, or destroys assets.
  */
-export interface AssetConfigTransactionFields {
+export type AssetConfigTransactionFields = {
   /**
    * ID of the asset to operate on.
    *

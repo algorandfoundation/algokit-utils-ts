@@ -6,7 +6,7 @@ import { fromTransactionDto, toTransactionDto, Transaction, validateTransaction 
 /**
  * Represents a signed Algorand transaction
  */
-export interface SignedTransaction {
+export type SignedTransaction = {
   /**
    * The transaction that has been signed.
    */
@@ -38,7 +38,7 @@ export interface SignedTransaction {
  *
  * Each subsignature contains the address of a participant and an optional signature.
  */
-export interface MultisigSubsignature {
+export type MultisigSubsignature = {
   /**
    * Address of a keypair account participant that is sub-signing a multisignature transaction.
    */
@@ -57,7 +57,7 @@ export interface MultisigSubsignature {
  * The version indicates the multisig protocol version, while the threshold specifies the minimum number of signatures required to authorize a transaction.
  * While technically this accepts `Address` types, it is expected that these will be the addresses of Ed25519 public keys.
  */
-export interface MultisigSignature {
+export type MultisigSignature = {
   /**
    * Multisig version.
    */
@@ -77,7 +77,7 @@ export interface MultisigSignature {
 /**
  * Logic signature structure
  */
-export interface LogicSignature {
+export type LogicSignature = {
   /**
    * Logic signature program
    */

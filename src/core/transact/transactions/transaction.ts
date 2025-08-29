@@ -23,7 +23,7 @@ import { PaymentTransactionFields } from './payment'
  * This structure contains the fields that are present in every transaction,
  * regardless of transaction type, plus transaction-type-specific fields.
  */
-export interface Transaction {
+export type Transaction = {
   /**
    * The type of transaction
    */
@@ -136,9 +136,42 @@ export interface Transaction {
 /**
  * Supported transaction types
  */
-export type TransactionType = 'Payment' | 'AssetTransfer' | 'AssetFreeze' | 'AssetConfig' | 'KeyRegistration' | 'AppCall'
+export enum TransactionType {
+  /**
+   * Payment transaction
+   */
+  Payment,
+  /**
+   * Key registration transaction
+   */
+  KeyRegistration,
+  /**
+   * Asset configuration transaction
+   */
+  AssetConfig,
+  /**
+   * Asset transfer transaction
+   */
+  AssetTransfer,
+  /**
+   * Asset freeze transaction
+   */
+  AssetFreeze,
+  /**
+   * Application transaction
+   */
+  AppCall,
+  /**
+   * State proof transaction
+   */
+  StateProof,
+  /**
+   * Heartbeat transaction
+   */
+  Heartbeat,
+}
 
-export interface FeeParams {
+export type FeeParams = {
   feePerByte: bigint
   minFee: bigint
   extraFee?: bigint
@@ -367,18 +400,22 @@ function calculateFee(transaction: Transaction, feeParams: FeeParams): bigint {
  */
 function toTransactionTypeDto(type: TransactionType): TransactionDto['type'] {
   switch (type) {
-    case 'Payment':
+    case TransactionType.Payment:
       return 'pay'
-    case 'AssetTransfer':
+    case TransactionType.AssetTransfer:
       return 'axfer'
-    case 'AssetFreeze':
+    case TransactionType.AssetFreeze:
       return 'afrz'
-    case 'AssetConfig':
+    case TransactionType.AssetConfig:
       return 'acfg'
-    case 'KeyRegistration':
+    case TransactionType.KeyRegistration:
       return 'keyreg'
-    case 'AppCall':
+    case TransactionType.AppCall:
       return 'appl'
+    case TransactionType.StateProof:
+      return 'stpf'
+    case TransactionType.Heartbeat:
+      return 'hb'
     default:
       throw new Error(`Unknown transaction type: ${type}`)
   }
@@ -390,17 +427,21 @@ function toTransactionTypeDto(type: TransactionType): TransactionDto['type'] {
 function fromTransactionTypeDto(type: TransactionDto['type']): TransactionType {
   switch (type) {
     case 'pay':
-      return 'Payment'
+      return TransactionType.Payment
     case 'axfer':
-      return 'AssetTransfer'
+      return TransactionType.AssetTransfer
     case 'afrz':
-      return 'AssetFreeze'
+      return TransactionType.AssetFreeze
     case 'acfg':
-      return 'AssetConfig'
+      return TransactionType.AssetConfig
     case 'keyreg':
-      return 'KeyRegistration'
+      return TransactionType.KeyRegistration
     case 'appl':
-      return 'AppCall'
+      return TransactionType.AppCall
+    case 'stpf':
+      return TransactionType.StateProof
+    case 'hb':
+      return TransactionType.Heartbeat
     default:
       throw new Error(`Unknown transaction type string: ${type}`)
   }
@@ -411,17 +452,17 @@ function fromTransactionTypeDto(type: TransactionDto['type']): TransactionType {
  */
 function toOnApplicationCompleteDto(onComplete: OnApplicationComplete): Exclude<TransactionDto['apan'], undefined> {
   switch (onComplete) {
-    case 'NoOp':
+    case OnApplicationComplete.NoOp:
       return 0
-    case 'OptIn':
+    case OnApplicationComplete.OptIn:
       return 1
-    case 'CloseOut':
+    case OnApplicationComplete.CloseOut:
       return 2
-    case 'ClearState':
+    case OnApplicationComplete.ClearState:
       return 3
-    case 'UpdateApplication':
+    case OnApplicationComplete.UpdateApplication:
       return 4
-    case 'DeleteApplication':
+    case OnApplicationComplete.DeleteApplication:
       return 5
     default:
       throw new Error(`Unknown OnApplicationComplete: ${onComplete}`)
@@ -434,17 +475,17 @@ function toOnApplicationCompleteDto(onComplete: OnApplicationComplete): Exclude<
 function fromOnApplicationCompleteDto(onComplete: TransactionDto['apan']): OnApplicationComplete {
   switch (onComplete ?? 0) {
     case 0:
-      return 'NoOp'
+      return OnApplicationComplete.NoOp
     case 1:
-      return 'OptIn'
+      return OnApplicationComplete.OptIn
     case 2:
-      return 'CloseOut'
+      return OnApplicationComplete.CloseOut
     case 3:
-      return 'ClearState'
+      return OnApplicationComplete.ClearState
     case 4:
-      return 'UpdateApplication'
+      return OnApplicationComplete.UpdateApplication
     case 5:
-      return 'DeleteApplication'
+      return OnApplicationComplete.DeleteApplication
     default:
       throw new Error(`Unknown OnApplicationComplete number: ${onComplete}`)
   }
@@ -564,14 +605,14 @@ export function fromTransactionDto(transaction_dto: TransactionDto): Transaction
 
   // Add transaction type specific fields
   switch (transactionType) {
-    case 'Payment':
+    case TransactionType.Payment:
       tx.payment = {
         amount: bigIntCodec.decode(transaction_dto.amt),
         receiver: addressCodec.decode(transaction_dto.rcv),
         closeRemainderTo: addressCodec.decodeOptional(transaction_dto.close),
       }
       break
-    case 'AssetTransfer':
+    case TransactionType.AssetTransfer:
       tx.assetTransfer = {
         assetId: bigIntCodec.decode(transaction_dto.xaid),
         amount: bigIntCodec.decode(transaction_dto.aamt),
@@ -580,7 +621,7 @@ export function fromTransactionDto(transaction_dto: TransactionDto): Transaction
         assetSender: addressCodec.decodeOptional(transaction_dto.asnd),
       }
       break
-    case 'AssetConfig':
+    case TransactionType.AssetConfig:
       tx.assetConfig = {
         assetId: bigIntCodec.decode(transaction_dto.caid),
         ...(transaction_dto.apar !== undefined
@@ -600,14 +641,14 @@ export function fromTransactionDto(transaction_dto: TransactionDto): Transaction
           : undefined),
       }
       break
-    case 'AssetFreeze':
+    case TransactionType.AssetFreeze:
       tx.assetFreeze = {
         assetId: bigIntCodec.decode(transaction_dto.faid),
         freezeTarget: addressCodec.decode(transaction_dto.fadd),
         frozen: booleanCodec.decode(transaction_dto.afrz),
       }
       break
-    case 'AppCall':
+    case TransactionType.AppCall:
       tx.appCall = {
         appId: bigIntCodec.decode(transaction_dto.apid),
         onComplete: fromOnApplicationCompleteDto(transaction_dto.apan),
@@ -636,7 +677,7 @@ export function fromTransactionDto(transaction_dto: TransactionDto): Transaction
           : undefined),
       }
       break
-    case 'KeyRegistration':
+    case TransactionType.KeyRegistration:
       tx.keyRegistration = {
         voteKey: bytesCodec.decodeOptional(transaction_dto.votekey),
         selectionKey: bytesCodec.decodeOptional(transaction_dto.selkey),

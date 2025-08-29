@@ -4,7 +4,7 @@
  * Asset freeze transactions are used by the asset freeze account to control
  * whether a specific account can transfer a particular asset.
  */
-export interface AssetFreezeTransactionFields {
+export type AssetFreezeTransactionFields = {
   /**
    * The ID of the asset being frozen/unfrozen.
    */

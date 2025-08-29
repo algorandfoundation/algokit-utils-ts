@@ -4,7 +4,7 @@
  * Asset transfer transactions are used to transfer Algorand Standard Assets (ASAs)
  * from one account to another.
  */
-export interface AssetTransferTransactionFields {
+export type AssetTransferTransactionFields = {
   /**
    * The ID of the asset being transferred.
    */

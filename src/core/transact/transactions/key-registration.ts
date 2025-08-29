@@ -2,7 +2,7 @@
  * Represents a key registration transaction that registers an account online or offline
  * for participation in Algorand consensus.
  */
-export interface KeyRegistrationTransactionFields {
+export type KeyRegistrationTransactionFields = {
   /**
    * Root participation public key (32 bytes).
    */
