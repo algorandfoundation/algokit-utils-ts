@@ -1,5 +1,6 @@
+import sha512 from 'js-sha512'
 import { Expand } from '../expand'
-import { ABIType, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
+import { ABIType, decodeABIValue, encodeABIValue, getABIType, getABITypeName } from './abi-type'
 import { ABIValue } from './abi-value'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
 import { ARC28Event } from './event'
@@ -69,21 +70,6 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
 ): TReturn {
   return Object.fromEntries(
     structFields.map(({ name: key, type }, i) => {
-      // TODO: confirm if we need this logic
-      // let abiType: ABIType
-
-      // if (typeof type === 'string') {
-      //   if (type in structs) {
-      //     abiType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
-      //   } else {
-      //     abiType = stringToABIType(type)
-      //   }
-      // } else {
-      //   abiType = getABITupleTypeFromABIStructDefinition(type, structs)
-      // }
-
-      // const abiValue = convertAbiByteArrays(decodedABITuple[i], abiType)
-      // const convertedValue = convertABIDecodedBigIntToNumber(abiValue, abiType)
       return [
         key,
         (typeof type === 'string' && !structs[type]) || !Array.isArray(decodedABITuple[i])
@@ -133,11 +119,6 @@ export function getABIDecodedValue(
     const tupleValue = decodeTuple(getABITupleTypeFromABIStructDefinition(structs[type], structs), value)
     return getABIStructFromABITuple(tupleValue, structs[type], structs)
   }
-
-  // TODO: do we need this logic?
-  // const abiType = stringToABIType(type)
-  // const decodedValue = convertAbiByteArrays(abiType.decode(value), abiType)
-  // return convertABIDecodedBigIntToNumber(decodedValue, abiType)
 
   const abiType = getABIType(type)
   return decodeABIValue(abiType, value)
@@ -206,10 +187,20 @@ export function getABIMethod(methodNameOrSignature: string, appSpec: Arc56Contra
   return arc56MethodToABIMethod(method)
 }
 
-function getABIMethodSignature(abiMethod: ABIMethod): string {
-  const args = abiMethod.args.map((arg) => arg.type.toString()).join(',')
-  const returns = abiMethod.returns.type.toString()
+export function getABIMethodSignature(abiMethod: ABIMethod): string {
+  const args = abiMethod.args
+    .map((arg) => {
+      if (abiTypeIsTransaction(arg.type) || abiTypeIsReference(arg.type)) return arg.type
+      return getABITypeName(arg.type)
+    })
+    .join(',')
+  const returns = abiMethod.returns.type === 'void' ? 'void' : getABITypeName(abiMethod.returns.type)
   return `${abiMethod.name}(${args})${returns}`
+}
+
+export function getABIMethodSelector(abiMethod: ABIMethod): Uint8Array {
+  const hash = sha512.sha512_256.array(getABIMethodSignature(abiMethod))
+  return new Uint8Array(hash.slice(0, 4))
 }
 
 function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
@@ -217,13 +208,15 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
     throw new Error('Invalid ABIMethod parameters')
   }
 
-  const args = method.args.map(({ type, name, desc }) => {
+  const args = method.args.map(({ type, name, desc, defaultValue, struct }) => {
     if (abiTypeIsTransaction(type) || abiTypeIsReference(type)) {
       return {
         type,
         name,
         desc,
-      }
+        defaultValue,
+        struct,
+      } satisfies ABIMethodArg
     }
 
     return {
@@ -247,42 +240,13 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
   } satisfies ABIMethod
 }
 
-export function abiTypeIsTransaction(type: string): type is ABITransactionType {
-  return type === 'any' || type === 'pay' || type === 'keyreg' || type === 'acfg' || type === 'axfer' || type === 'afrz' || type === 'appl'
+export function abiTypeIsTransaction(type: ABIArgumentType | string): type is ABITransactionType {
+  return (
+    typeof type === 'string' &&
+    (type === 'txn' || type === 'pay' || type === 'keyreg' || type === 'acfg' || type === 'axfer' || type === 'afrz' || type === 'appl')
+  )
 }
 
-export function abiTypeIsReference(type: string): type is ABIReferenceType {
-  return type === 'account' || type === 'application' || type === 'asset'
+export function abiTypeIsReference(type: ABIArgumentType | string): type is ABIReferenceType {
+  return typeof type === 'string' && (type === 'account' || type === 'application' || type === 'asset')
 }
-
-// TODO: I think we still need some form of this
-/**
- * Checks for decode errors on the AppCallTransactionResult and maps the return value to the specified generic type
- *
- * @param returnValue The smart contract response
- * @param method The method that was called
- * @param structs The struct fields from the app spec
- * @returns The smart contract response with an updated return value
- */
-// export function getArc56ReturnValue<TReturn extends Uint8Array | ABIValue | Arc56ABIStruct | undefined>(
-//   returnValue: ABIReturn | undefined,
-//   method: Arc56Method | Arc56Method,
-//   structs: Record<string, StructField[]>,
-// ): TReturn {
-//   const m = 'method' in method ? method.method : method
-//   const type = m.returns.struct ?? m.returns.type
-//   if (returnValue?.decodeError) {
-//     throw returnValue.decodeError
-//   }
-//   if (type === undefined || type === 'void' || returnValue?.returnValue === undefined) return undefined as TReturn
-
-//   if (type === 'AVMBytes') return returnValue.rawReturnValue as TReturn
-//   if (type === 'AVMString') return Buffer.from(returnValue.rawReturnValue).toString('utf-8') as TReturn
-//   if (type === 'AVMUint64') return ABIType.from('uint64').decode(returnValue.rawReturnValue) as TReturn
-
-//   if (structs[type]) {
-//     return getABIStructFromABITuple(returnValue.returnValue as ABIValue[], structs[type], structs) as TReturn
-//   }
-
-//   return convertAbiByteArrays(returnValue.returnValue, ABIType.from(type)) as TReturn
-// }
