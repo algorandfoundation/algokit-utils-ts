@@ -1,10 +1,11 @@
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
 /**
  * A boolean value.
  */
 export type ABIBoolType = {
-  name: 'Bool'
+  name: ABITypeName.Bool
 }
 
 export function encodeBool(value: ABIValue): Uint8Array {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { getABIDecodedValue, getABIMethod, getABIMethodSelector, getABIMethodSignature } from './abi-method'
-import { encodeABIValue, parseTupleContent } from './abi-type'
+import { ABITypeName, encodeABIValue, parseTupleContent } from './abi-type'
 
 describe('getABIMethod', () => {
   test.each([
@@ -79,7 +79,7 @@ describe('getABIDecodedValue', () => {
     // Generate all valid ABI uint bit lengths
     Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
   )('correctly decodes a uint%i', (bitLength) => {
-    const encoded = encodeABIValue({ name: 'Uint', bitSize: bitLength }, 1)
+    const encoded = encodeABIValue({ name: ABITypeName.Uint, bitSize: bitLength }, 1)
     const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
 
     if (bitLength < 53) {

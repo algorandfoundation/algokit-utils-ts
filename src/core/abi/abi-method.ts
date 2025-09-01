@@ -1,12 +1,24 @@
 import sha512 from 'js-sha512'
-import { ABIType, decodeABIValue, encodeABIValue, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
 import { ABITupleType, decodeTuple, encodeTuple } from './types'
 
-export type ABITransactionType = 'txn' | 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl'
-export type ABIReferenceType = 'account' | 'application' | 'asset'
+export enum ABITransactionType {
+  Txn = 'txn',
+  Payment = 'pay',
+  KeyRegistration = 'keyreg',
+  AssetConfig = 'acfg',
+  AssetTransfer = 'axfer',
+  AssetFreeze = 'afrz',
+  AppCall = 'appl',
+}
+export enum ABIReferenceType {
+  Account = 'account',
+  Application = 'application',
+  Asset = 'asset',
+}
 export type ABIMethodArgType = ABIType | ABITransactionType | ABIReferenceType
 export type ABIReturnType = ABIType | 'void'
 
@@ -49,7 +61,7 @@ export function getABITupleTypeFromABIStructDefinition(struct: StructField[], st
       : getABITupleTypeFromABIStructDefinition(v.type, structs),
   )
   return {
-    name: 'Tuple',
+    name: ABITypeName.Tuple,
     childTypes: childTypes,
   } satisfies ABITupleType
 }
@@ -68,11 +80,12 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
 ): TReturn {
   return Object.fromEntries(
     structFields.map(({ name: key, type }, i) => {
+      const value = decodedABITuple[i]
       return [
         key,
-        (typeof type === 'string' && !structs[type]) || !Array.isArray(decodedABITuple[i])
-          ? decodedABITuple[i]
-          : getABIStructFromABITuple(decodedABITuple[i], typeof type === 'string' ? structs[type] : type, structs),
+        (typeof type === 'string' && !structs[type]) || !Array.isArray(value)
+          ? value
+          : getABIStructFromABITuple(value, typeof type === 'string' ? structs[type] : type, structs),
       ]
     }),
   ) as TReturn
@@ -304,10 +317,19 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
 export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
   return (
     typeof type === 'string' &&
-    (type === 'txn' || type === 'pay' || type === 'keyreg' || type === 'acfg' || type === 'axfer' || type === 'afrz' || type === 'appl')
+    (type === ABITransactionType.Txn ||
+      type === ABITransactionType.Payment ||
+      type === ABITransactionType.KeyRegistration ||
+      type === ABITransactionType.AssetConfig ||
+      type === ABITransactionType.AssetTransfer ||
+      type === ABITransactionType.AssetFreeze ||
+      type === ABITransactionType.AppCall)
   )
 }
 
 export function abiTypeIsReference(type: ABIMethodArgType): type is ABIReferenceType {
-  return typeof type === 'string' && (type === 'account' || type === 'application' || type === 'asset')
+  return (
+    typeof type === 'string' &&
+    (type === ABIReferenceType.Account || type === ABIReferenceType.Application || type === ABIReferenceType.Asset)
+  )
 }

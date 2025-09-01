@@ -1,4 +1,4 @@
-import { ABIType } from '../../abi-type'
+import { ABIType, ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
 
@@ -6,7 +6,7 @@ import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
  * A static-length array of another ABI type.
  */
 export type ABIStaticArrayType = {
-  name: 'StaticArray'
+  name: ABITypeName.StaticArray
   childType: ABIType
   length: number
 }
@@ -34,6 +34,6 @@ export function staticArrayToString(type: ABIStaticArrayType): string {
 function toABITupleType(type: ABIStaticArrayType) {
   return {
     childTypes: Array(type.length).fill(type.childType),
-    name: 'Tuple',
+    name: ABITypeName.Tuple,
   } satisfies ABITupleType
 }

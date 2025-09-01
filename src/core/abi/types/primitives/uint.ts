@@ -1,3 +1,4 @@
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { bigIntToBytes, bytesToBigInt } from '../../bigint'
 
@@ -5,7 +6,7 @@ import { bigIntToBytes, bytesToBigInt } from '../../bigint'
  * An unsigned integer of a specific bit size.
  */
 export type ABIUintType = {
-  name: 'Uint'
+  name: ABITypeName.Uint
   bitSize: number
 }
 
