@@ -6,7 +6,7 @@ import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
 import { ABITupleType, decodeTuple, encodeTuple } from './types'
 
 export enum ABITransactionType {
-  Any = 'txn',
+  Txn = 'txn',
   Payment = 'pay',
   KeyRegistration = 'keyreg',
   AssetConfig = 'acfg',
@@ -317,7 +317,7 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
 export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
   return (
     typeof type === 'string' &&
-    (type === ABITransactionType.Any ||
+    (type === ABITransactionType.Txn ||
       type === ABITransactionType.Payment ||
       type === ABITransactionType.KeyRegistration ||
       type === ABITransactionType.AssetConfig ||
