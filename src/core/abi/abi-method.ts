@@ -5,8 +5,20 @@ import { ARC28Event } from './arc28-event'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
 import { ABITupleType, decodeTuple, encodeTuple } from './types'
 
-export type ABITransactionType = 'txn' | 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl'
-export type ABIReferenceType = 'account' | 'application' | 'asset'
+export enum ABITransactionType {
+  Any = 'txn',
+  Pay = 'pay',
+  Keyreg = 'keyreg',
+  Acfg = 'acfg',
+  Axfer = 'axfer',
+  Afrz = 'afrz',
+  Appl = 'appl',
+}
+export enum ABIReferenceType {
+  Account = 'account',
+  Application = 'application',
+  Asset = 'asset',
+}
 export type ABIMethodArgType = ABIType | ABITransactionType | ABIReferenceType
 export type ABIReturnType = ABIType | 'void'
 
@@ -302,13 +314,22 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
   } satisfies ABIMethod
 }
 
-export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
+export function abiTypeIsTransaction(type: unknown): type is ABITransactionType {
   return (
     typeof type === 'string' &&
-    (type === 'txn' || type === 'pay' || type === 'keyreg' || type === 'acfg' || type === 'axfer' || type === 'afrz' || type === 'appl')
+    (type === ABITransactionType.Any ||
+      type === ABITransactionType.Pay ||
+      type === ABITransactionType.Keyreg ||
+      type === ABITransactionType.Acfg ||
+      type === ABITransactionType.Axfer ||
+      type === ABITransactionType.Afrz ||
+      type === ABITransactionType.Appl)
   )
 }
 
-export function abiTypeIsReference(type: ABIMethodArgType): type is ABIReferenceType {
-  return typeof type === 'string' && (type === 'account' || type === 'application' || type === 'asset')
+export function abiTypeIsReference(type: unknown): type is ABIReferenceType {
+  return (
+    typeof type === 'string' &&
+    (type === ABIReferenceType.Account || type === ABIReferenceType.Application || type === ABIReferenceType.Asset)
+  )
 }
