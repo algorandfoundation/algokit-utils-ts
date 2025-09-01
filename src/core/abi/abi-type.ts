@@ -33,6 +33,7 @@ import {
   ufixedToString,
   uintToString,
 } from './types/'
+import { ABIStructType } from './types/collections/struct'
 
 export enum ABITypeName {
   Uint = 'Uint',
@@ -44,6 +45,7 @@ export enum ABITypeName {
   Tuple = 'Tuple',
   StaticArray = 'StaticArray',
   DynamicArray = 'DynamicArray',
+  Struct = 'Struct',
 }
 
 /**
@@ -59,6 +61,7 @@ export type ABIType =
   | ABITupleType
   | ABIStaticArrayType
   | ABIDynamicArrayType
+  | ABIStructType
 
 /**
  * Encodes an ABI value according to ARC-4 specification.
