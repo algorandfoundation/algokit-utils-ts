@@ -177,7 +177,6 @@ export function getABIEncodedValue(
  * @returns The `ABIMethod`
  */
 export function findABIMethod(methodNameOrSignature: string, appSpec: Arc56Contract): ABIMethod {
-  let method: Arc56Method
   if (!methodNameOrSignature.includes('(')) {
     const methods = appSpec.methods.filter((m) => m.name === methodNameOrSignature)
     if (methods.length === 0) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
@@ -186,17 +185,16 @@ export function findABIMethod(methodNameOrSignature: string, appSpec: Arc56Contr
         `Received a call to method ${methodNameOrSignature} in contract ${
           appSpec.name
         }, but this resolved to multiple methods; please pass in an ABI signature instead: ${appSpec.methods
-          .map((m) => getABIMethodSignature(arc56MethodToABIMethod(m)))
+          .map((m) => getArc56MethodSignature(m))
           .join(', ')}`,
       )
     }
-    method = methods[0]
+    return arc56MethodToABIMethod(methods[0], appSpec)
   } else {
-    const m = appSpec.methods.find((m) => getABIMethodSignature(arc56MethodToABIMethod(m)) === methodNameOrSignature)
-    if (!m) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
-    method = m
+    const method = appSpec.methods.find((m) => getArc56MethodSignature(m) === methodNameOrSignature)
+    if (!method) throw new Error(`Unable to find method ${methodNameOrSignature} in ${appSpec.name} app.`)
+    return arc56MethodToABIMethod(method, appSpec)
   }
-  return arc56MethodToABIMethod(method)
 }
 
 /**
@@ -280,7 +278,7 @@ export function getABIMethodSelector(abiMethod: ABIMethod): Uint8Array {
   return new Uint8Array(hash.slice(0, 4))
 }
 
-function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
+function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): ABIMethod {
   if (typeof method.name !== 'string' || typeof method.returns !== 'object' || !Array.isArray(method.args)) {
     throw new Error('Invalid ABIMethod parameters')
   }
@@ -295,7 +293,11 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
     }
 
     if (struct) {
-      return getABIStructType(struct)
+      return {
+        arg_type: getABIStructType(struct, appSpec.structs),
+        name,
+        desciption: desc,
+      } satisfies ABIMethodArg
     }
 
     return {
@@ -304,8 +306,14 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
       desciption: desc,
     } satisfies ABIMethodArg
   })
+
   const returns = {
-    type: method.returns.type === ('void' as const) ? method.returns.type : getABIType(method.returns.type),
+    type:
+      method.returns.type === ('void' as const)
+        ? ('void' as const)
+        : method.returns.struct
+          ? getABIStructType(method.returns.struct, appSpec.structs)
+          : getABIType(method.returns.type),
     desc: method.returns.desc,
   }
 
@@ -337,4 +345,10 @@ export function abiTypeIsReference(type: ABIMethodArgType): type is ABIReference
     typeof type === 'string' &&
     (type === ABIReferenceType.Account || type === ABIReferenceType.Application || type === ABIReferenceType.Asset)
   )
+}
+
+function getArc56MethodSignature(method: Arc56Method): string {
+  const args = method.args.map((arg) => arg.type).join(',')
+  const returns = method.returns.type
+  return `${method.name}(${args})${returns}`
 }
