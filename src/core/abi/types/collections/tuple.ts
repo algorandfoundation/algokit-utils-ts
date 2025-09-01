@@ -2,6 +2,7 @@ import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
 import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, PUBLIC_KEY_BYTE_LENGTH } from '../../../constants'
 import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
+import { getABITupleTypeFromABIStructType } from './struct'
 
 /**
  * A tuple of other ABI types.
@@ -286,6 +287,10 @@ function getSize(abiType: ABIType): number {
         }
       }
       return size
+    }
+    case ABITypeName.Struct: {
+      const tupleType = getABITupleTypeFromABIStructType(abiType)
+      return getSize(tupleType)
     }
     case ABITypeName.String:
       throw new Error(`Validation Error: Failed to get size, string is a dynamic type`)

@@ -4,6 +4,7 @@ import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
 import { ABITupleType, decodeTuple, encodeTuple } from './types'
+import { getABIStructType } from './types/collections/struct'
 
 export enum ABITransactionType {
   Txn = 'txn',
@@ -284,13 +285,17 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
     throw new Error('Invalid ABIMethod parameters')
   }
 
-  const args = method.args.map(({ type, name, desc }) => {
+  const args = method.args.map(({ type, name, desc, struct }) => {
     if (abiTypeIsTransaction(type as ABIMethodArgType) || abiTypeIsReference(type as ABIMethodArgType)) {
       return {
         arg_type: type as ABIMethodArgType,
         name,
         desciption: desc,
       } satisfies ABIMethodArg
+    }
+
+    if (struct) {
+      return getABIStructType(struct)
     }
 
     return {

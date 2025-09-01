@@ -1,7 +1,7 @@
 import { ABIType, ABITypeName, getABIType } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 import { StructField } from '../../arc56-contract'
-import { ABITupleType, decodeTuple, encodeTuple } from './tuple'
+import { ABITupleType, decodeTuple, encodeTuple, tupleToString } from './tuple'
 
 export type ABIStructType = {
   name: ABITypeName.Struct
@@ -58,7 +58,13 @@ export function getABIStructType(structName: string, structs: Record<string, Str
 
 export function getABITupleTypeFromABIStructType(struct: ABIStructType): ABITupleType {
   const getABITupleTypeFromABIStructFields = (fields: ABIStructField[]): ABITupleType => {
-    const childTypes = fields.map((field) => (Array.isArray(field.type) ? getABITupleTypeFromABIStructFields(field.type) : field.type))
+    const childTypes = fields.map((field) =>
+      Array.isArray(field.type)
+        ? getABITupleTypeFromABIStructFields(field.type)
+        : field.type.name === ABITypeName.Struct
+          ? getABITupleTypeFromABIStructType(field.type)
+          : field.type,
+    )
     return {
       name: ABITypeName.Tuple,
       childTypes,
@@ -66,4 +72,9 @@ export function getABITupleTypeFromABIStructType(struct: ABIStructType): ABITupl
   }
 
   return getABITupleTypeFromABIStructFields(struct.structFields)
+}
+
+export function structToString(type: ABIStructType): string {
+  const tupleType = getABITupleTypeFromABIStructType(type)
+  return tupleToString(tupleType)
 }
