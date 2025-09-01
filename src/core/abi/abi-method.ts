@@ -1,5 +1,5 @@
 import sha512 from 'js-sha512'
-import { ABIType, decodeABIValue, encodeABIValue, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
 import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
@@ -49,7 +49,7 @@ export function getABITupleTypeFromABIStructDefinition(struct: StructField[], st
       : getABITupleTypeFromABIStructDefinition(v.type, structs),
   )
   return {
-    name: 'Tuple',
+    name: ABITypeName.Tuple,
     childTypes: childTypes,
   } satisfies ABITupleType
 }

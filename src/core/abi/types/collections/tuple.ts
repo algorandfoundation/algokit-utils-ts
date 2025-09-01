@@ -1,13 +1,13 @@
 import { LENGTH_ENCODE_BYTE_SIZE } from 'algosdk'
 import { BOOL_FALSE_BYTE, BOOL_TRUE_BYTE, PUBLIC_KEY_BYTE_LENGTH } from '../../../constants'
-import { ABIType, decodeABIValue, encodeABIValue, getABITypeName } from '../../abi-type'
+import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
 /**
  * A tuple of other ABI types.
  */
 export type ABITupleType = {
-  name: 'Tuple'
+  name: ABITypeName.Tuple
   childTypes: ABIType[]
 }
 
@@ -255,22 +255,22 @@ function findBoolSequenceEnd(abiTypes: ABIType[], currentIndex: number): number 
 
 function getSize(abiType: ABIType): number {
   switch (abiType.name) {
-    case 'Uint':
+    case ABITypeName.Uint:
       return Math.floor(abiType.bitSize / 8)
-    case 'Ufixed':
+    case ABITypeName.Ufixed:
       return Math.floor(abiType.bitSize / 8)
-    case 'Address':
+    case ABITypeName.Address:
       return PUBLIC_KEY_BYTE_LENGTH
-    case 'Bool':
+    case ABITypeName.Bool:
       return 1
-    case 'Byte':
+    case ABITypeName.Byte:
       return 1
-    case 'StaticArray':
+    case ABITypeName.StaticArray:
       if (abiType.childType.name === 'Bool') {
         return Math.ceil(abiType.length / 8)
       }
       return getSize(abiType.childType) * abiType.length
-    case 'Tuple': {
+    case ABITypeName.Tuple: {
       let size = 0
       let i = 0
       while (i < abiType.childTypes.length) {
@@ -287,9 +287,9 @@ function getSize(abiType: ABIType): number {
       }
       return size
     }
-    case 'String':
+    case ABITypeName.String:
       throw new Error(`Validation Error: Failed to get size, string is a dynamic type`)
-    case 'DynamicArray':
+    case ABITypeName.DynamicArray:
       throw new Error(`Validation Error: Failed to get size, dynamic array is a dynamic type`)
   }
 }

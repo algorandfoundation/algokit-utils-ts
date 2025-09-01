@@ -1,11 +1,12 @@
 import { addressFromPublicKey, publicKeyFromAddress } from '../../../address'
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
 /**
  * An Algorand address.
  */
 export type ABIAddressType = {
-  name: 'Address'
+  name: ABITypeName.Address
 }
 
 export function encodeAddress(value: ABIValue): Uint8Array {

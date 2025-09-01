@@ -1,10 +1,11 @@
+import { ABITypeName } from '../../abi-type'
 import { ABIValue } from '../../abi-value'
 
 /**
  * A single byte.
  */
 export type ABIByteType = {
-  name: 'Byte'
+  name: ABITypeName.Byte
 }
 
 export function encodeByte(value: ABIValue): Uint8Array {

@@ -34,7 +34,17 @@ import {
   uintToString,
 } from './types/'
 
-export type ABITypeName = 'Uint' | 'Ufixed' | 'Address' | 'Bool' | 'Byte' | 'String' | 'Tuple' | 'StaticArray' | 'DynamicArray'
+export enum ABITypeName {
+  Uint = 'Uint',
+  Ufixed = 'Ufixed',
+  Address = 'Address',
+  Bool = 'Bool',
+  Byte = 'Byte',
+  String = 'String',
+  Tuple = 'Tuple',
+  StaticArray = 'StaticArray',
+  DynamicArray = 'DynamicArray',
+}
 
 /**
  *   Represents an Algorand ABI type for encoding and decoding values as defined in [ARC-0004](https://arc.algorand.foundation/ARCs/arc-0004#types).
@@ -58,23 +68,23 @@ export type ABIType =
  */
 export function encodeABIValue(abiType: ABIType, abiValue: ABIValue): Uint8Array {
   switch (abiType.name) {
-    case 'Uint':
+    case ABITypeName.Uint:
       return encodeUint(abiType, abiValue)
-    case 'Ufixed':
+    case ABITypeName.Ufixed:
       return encodeUfixed(abiType, abiValue)
-    case 'Address':
+    case ABITypeName.Address:
       return encodeAddress(abiValue)
-    case 'Bool':
+    case ABITypeName.Bool:
       return encodeBool(abiValue)
-    case 'Byte':
+    case ABITypeName.Byte:
       return encodeByte(abiValue)
-    case 'String':
+    case ABITypeName.String:
       return encodeString(abiValue)
-    case 'Tuple':
+    case ABITypeName.Tuple:
       return encodeTuple(abiType, abiValue)
-    case 'StaticArray':
+    case ABITypeName.StaticArray:
       return encodeStaticArray(abiType, abiValue)
-    case 'DynamicArray':
+    case ABITypeName.DynamicArray:
       return encodeDynamicArray(abiType, abiValue)
   }
 }
@@ -87,23 +97,23 @@ export function encodeABIValue(abiType: ABIType, abiValue: ABIValue): Uint8Array
  */
 export function decodeABIValue(abiType: ABIType, encodedValue: Uint8Array): ABIValue {
   switch (abiType.name) {
-    case 'Uint':
+    case ABITypeName.Uint:
       return decodeUint(abiType, encodedValue)
-    case 'Ufixed':
+    case ABITypeName.Ufixed:
       return decodeUfixed(abiType, encodedValue)
-    case 'Address':
+    case ABITypeName.Address:
       return decodeAddress(encodedValue)
-    case 'Bool':
+    case ABITypeName.Bool:
       return decodeBool(encodedValue)
-    case 'Byte':
+    case ABITypeName.Byte:
       return decodeByte(encodedValue)
-    case 'String':
+    case ABITypeName.String:
       return decodeString(abiType, encodedValue)
-    case 'Tuple':
+    case ABITypeName.Tuple:
       return decodeTuple(abiType, encodedValue)
-    case 'StaticArray':
+    case ABITypeName.StaticArray:
       return decodeStaticArray(abiType, encodedValue)
-    case 'DynamicArray':
+    case ABITypeName.DynamicArray:
       return decodeDynamicArray(abiType, encodedValue)
   }
 }
@@ -115,23 +125,23 @@ export function decodeABIValue(abiType: ABIType, encodedValue: Uint8Array): ABIV
  */
 export function getABITypeName(abiType: ABIType): string {
   switch (abiType.name) {
-    case 'Uint':
+    case ABITypeName.Uint:
       return uintToString(abiType)
-    case 'Ufixed':
+    case ABITypeName.Ufixed:
       return ufixedToString(abiType)
-    case 'Address':
+    case ABITypeName.Address:
       return 'adress'
-    case 'Bool':
+    case ABITypeName.Bool:
       return 'bool'
-    case 'Byte':
+    case ABITypeName.Byte:
       return 'byte'
-    case 'String':
+    case ABITypeName.String:
       return 'string'
-    case 'Tuple':
+    case ABITypeName.Tuple:
       return tupleToString(abiType)
-    case 'StaticArray':
+    case ABITypeName.StaticArray:
       return staticArrayToString(abiType)
-    case 'DynamicArray':
+    case ABITypeName.DynamicArray:
       return dynamicArrayToString(abiType)
   }
 }
@@ -149,7 +159,7 @@ export function getABIType(str: string): ABIType {
   if (str.endsWith('[]')) {
     const childType = getABIType(str.slice(0, str.length - 2))
     return {
-      name: 'DynamicArray',
+      name: ABITypeName.DynamicArray,
       childType: childType,
     }
   }
@@ -169,7 +179,7 @@ export function getABIType(str: string): ABIType {
     const childType = getABIType(stringMatches[1])
 
     return {
-      name: 'StaticArray',
+      name: ABITypeName.StaticArray,
       childType: childType,
       length: arrayLength,
     }
@@ -186,12 +196,12 @@ export function getABIType(str: string): ABIType {
       throw new Error(`Validation Error: malformed uint string: ${bitSize}`)
     }
     return {
-      name: 'Uint',
+      name: ABITypeName.Uint,
       bitSize: bitSize,
     }
   }
   if (str === 'byte') {
-    return { name: 'Byte' }
+    return { name: ABITypeName.Byte }
   }
   if (str.startsWith('ufixed')) {
     const stringMatches = str.match(UFIXED_REGEX)
@@ -200,16 +210,16 @@ export function getABIType(str: string): ABIType {
     }
     const bitSize = parseInt(stringMatches[1], 10)
     const precision = parseInt(stringMatches[2], 10)
-    return { name: 'Ufixed', bitSize: bitSize, precision: precision }
+    return { name: ABITypeName.Ufixed, bitSize: bitSize, precision: precision }
   }
   if (str === 'bool') {
-    return { name: 'Bool' }
+    return { name: ABITypeName.Bool }
   }
   if (str === 'address') {
-    return { name: 'Address' }
+    return { name: ABITypeName.Address }
   }
   if (str === 'string') {
-    return { name: 'String' }
+    return { name: ABITypeName.String }
   }
   if (str.length >= 2 && str[0] === '(' && str[str.length - 1] === ')') {
     const tupleContent = parseTupleContent(str.slice(1, str.length - 1))
@@ -220,7 +230,7 @@ export function getABIType(str: string): ABIType {
     }
 
     return {
-      name: 'Tuple',
+      name: ABITypeName.Tuple,
       childTypes: childTypes,
     }
   }
