@@ -68,11 +68,12 @@ export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<stri
 ): TReturn {
   return Object.fromEntries(
     structFields.map(({ name: key, type }, i) => {
+      const value = decodedABITuple[i]
       return [
         key,
-        (typeof type === 'string' && !structs[type]) || !Array.isArray(decodedABITuple[i])
-          ? decodedABITuple[i]
-          : getABIStructFromABITuple(decodedABITuple[i], typeof type === 'string' ? structs[type] : type, structs),
+        (typeof type === 'string' && !structs[type]) || !Array.isArray(value)
+          ? value
+          : getABIStructFromABITuple(value, typeof type === 'string' ? structs[type] : type, structs),
       ]
     }),
   ) as TReturn
