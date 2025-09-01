@@ -7,7 +7,7 @@ import {
   TRANSACTION_ID_LENGTH,
 } from '../../constants'
 import { hash } from '../../crypto'
-import { addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec, stringCodec } from '../encoding/codecs'
+import { OmitEmptyObjectCodec, addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, stringCodec } from '../encoding/codecs'
 import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
 import { AssetParamsDto, StateSchemaDto, TransactionDto } from '../encoding/transaction-dto'
 import { AppCallTransactionFields, OnApplicationComplete, StateSchema } from './app-call'

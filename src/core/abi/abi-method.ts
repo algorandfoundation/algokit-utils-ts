@@ -7,12 +7,12 @@ import { ABITupleType, decodeTuple, encodeTuple } from './types'
 
 export enum ABITransactionType {
   Any = 'txn',
-  Pay = 'pay',
-  Keyreg = 'keyreg',
-  Acfg = 'acfg',
-  Axfer = 'axfer',
-  Afrz = 'afrz',
-  Appl = 'appl',
+  Payment = 'pay',
+  KeyRegistration = 'keyreg',
+  AssetConfig = 'acfg',
+  AssetTransfer = 'axfer',
+  AssetFreeze = 'afrz',
+  AppCall = 'appl',
 }
 export enum ABIReferenceType {
   Account = 'account',
@@ -314,20 +314,20 @@ function arc56MethodToABIMethod(method: Arc56Method): ABIMethod {
   } satisfies ABIMethod
 }
 
-export function abiTypeIsTransaction(type: unknown): type is ABITransactionType {
+export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
   return (
     typeof type === 'string' &&
     (type === ABITransactionType.Any ||
-      type === ABITransactionType.Pay ||
-      type === ABITransactionType.Keyreg ||
-      type === ABITransactionType.Acfg ||
-      type === ABITransactionType.Axfer ||
-      type === ABITransactionType.Afrz ||
-      type === ABITransactionType.Appl)
+      type === ABITransactionType.Payment ||
+      type === ABITransactionType.KeyRegistration ||
+      type === ABITransactionType.AssetConfig ||
+      type === ABITransactionType.AssetTransfer ||
+      type === ABITransactionType.AssetFreeze ||
+      type === ABITransactionType.AppCall)
   )
 }
 
-export function abiTypeIsReference(type: unknown): type is ABIReferenceType {
+export function abiTypeIsReference(type: ABIMethodArgType): type is ABIReferenceType {
   return (
     typeof type === 'string' &&
     (type === ABIReferenceType.Account || type === ABIReferenceType.Application || type === ABIReferenceType.Asset)
