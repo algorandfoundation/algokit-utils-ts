@@ -1,5 +1,5 @@
 import { ABIType, ABITypeName, getABIType } from '../../abi-type'
-import { ABIValue } from '../../abi-value'
+import { ABIStructValue, ABIValue } from '../../abi-value'
 import { StructField } from '../../arc56-contract'
 import { ABITupleType, decodeTuple, encodeTuple, tupleToString } from './tuple'
 
@@ -19,9 +19,27 @@ export function encodeStruct(type: ABIStructType, value: ABIValue): Uint8Array {
   return encodeTuple(tupleType, value)
 }
 
-export function decodeStruct(type: ABIStructType, bytes: Uint8Array): ABIValue {
+export function decodeStruct(type: ABIStructType, bytes: Uint8Array): ABIStructValue {
   const tupleType = getABITupleTypeFromABIStructType(type)
-  return decodeTuple(tupleType, bytes)
+  const tupleValue = decodeTuple(tupleType, bytes)
+
+  function getStructFieldValues(structFields: ABIStructField[], values: ABIValue[]): Record<string, ABIValue> {
+    return Object.fromEntries(
+      structFields.map(({ name, type }, index) => {
+        if (Array.isArray(type)) {
+          const valuesAtIndex = values[index] as ABIValue[]
+          return [name, getStructFieldValues(type, valuesAtIndex)]
+        }
+        if (type.name === ABITypeName.Struct) {
+          const valuesAtIndex = values[index] as ABIValue[]
+          return [name, getStructFieldValues(type.structFields, valuesAtIndex)]
+        }
+        return [name, values[index]]
+      }),
+    )
+  }
+
+  return getStructFieldValues(type.structFields, tupleValue)
 }
 
 export function getABIStructType(structName: string, structs: Record<string, StructField[]>): ABIStructType {
