@@ -137,7 +137,7 @@ export function getABITypeName(abiType: ABIType): string {
     case ABITypeName.Ufixed:
       return ufixedToString(abiType)
     case ABITypeName.Address:
-      return 'adress'
+      return 'address'
     case ABITypeName.Bool:
       return 'bool'
     case ABITypeName.Byte:
