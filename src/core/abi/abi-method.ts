@@ -1,9 +1,8 @@
 import sha512 from 'js-sha512'
-import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+import { ABIType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
-import { Arc56Contract, Arc56Method, StructField } from './arc56-contract'
-import { ABITupleType, decodeTuple, encodeTuple } from './types'
+import { Arc56Contract, Arc56Method } from './arc56-contract'
 import { getABIStructType } from './types/collections/struct'
 
 export enum ABITransactionType {
@@ -46,127 +45,6 @@ export type ABIMethod = {
   returns: ABIMethodReturn
   events?: ARC28Event[]
   readonly?: boolean
-}
-
-/**
- * Returns the `ABITupleType` for the given ARC-56 struct definition
- * @param struct The ARC-56 struct definition
- * @returns The `ABITupleType`
- */
-export function getABITupleTypeFromABIStructDefinition(struct: StructField[], structs: Record<string, StructField[]>): ABITupleType {
-  const childTypes = struct.map((v) =>
-    typeof v.type === 'string'
-      ? structs[v.type]
-        ? getABITupleTypeFromABIStructDefinition(structs[v.type], structs)
-        : getABIType(v.type)
-      : getABITupleTypeFromABIStructDefinition(v.type, structs),
-  )
-  return {
-    name: ABITypeName.Tuple,
-    childTypes: childTypes,
-  } satisfies ABITupleType
-}
-
-/**
- * Converts a decoded ABI tuple as a struct.
- * @param decodedABITuple The decoded ABI tuple value
- * @param structFields The struct fields from an ARC-56 app spec
- * @returns The struct as a Record<string, any>
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getABIStructFromABITuple<TReturn extends ABIStruct = Record<string, any>>(
-  decodedABITuple: ABIValue[],
-  structFields: StructField[],
-  structs: Record<string, StructField[]>,
-): TReturn {
-  return Object.fromEntries(
-    structFields.map(({ name: key, type }, i) => {
-      const value = decodedABITuple[i]
-      return [
-        key,
-        (typeof type === 'string' && !structs[type]) || !Array.isArray(value)
-          ? value
-          : getABIStructFromABITuple(value, typeof type === 'string' ? structs[type] : type, structs),
-      ]
-    }),
-  ) as TReturn
-}
-
-/**
- * Converts an ARC-56 struct as an ABI tuple.
- * @param struct The struct to convert
- * @param structFields The struct fields from an ARC-56 app spec
- * @returns The struct as a decoded ABI tuple
- */
-export function getABITupleFromABIStruct(
-  struct: ABIStruct,
-  structFields: StructField[],
-  structs: Record<string, StructField[]>,
-): ABIValue[] {
-  return structFields.map(({ name: key, type }) => {
-    const value = struct[key]
-    return typeof type === 'string' && !structs[type]
-      ? (value as ABIValue)
-      : getABITupleFromABIStruct(value as ABIStruct, typeof type === 'string' ? structs[type] : type, structs)
-  })
-}
-
-/**
- * Returns the decoded ABI value (or struct for a struct type)
- * for the given raw Algorand value given an ARC-56 type and defined ARC-56 structs.
- * @param value The raw Algorand value (bytes or uint64)
- * @param type The ARC-56 type - either an ABI Type string or a struct name
- * @param structs The defined ARC-56 structs
- * @returns The decoded ABI value or struct
- */
-export function getABIDecodedValue(
-  value: Uint8Array | number | bigint,
-  type: string,
-  structs: Record<string, StructField[]>,
-): ABIValue | ABIStruct {
-  if (type === 'AVMBytes' || typeof value !== 'object') return value
-  if (type === 'AVMString') return Buffer.from(value).toString('utf-8')
-  if (type === 'AVMUint64') return decodeABIValue(getABIType('uint64'), value)
-  if (structs[type]) {
-    const tupleValue = decodeTuple(getABITupleTypeFromABIStructDefinition(structs[type], structs), value)
-    return getABIStructFromABITuple(tupleValue, structs[type], structs)
-  }
-
-  const abiType = getABIType(type)
-  return decodeABIValue(abiType, value)
-}
-
-/**
- * Returns the ABI-encoded value for the given value.
- * @param value The value to encode either already in encoded binary form (`Uint8Array`), a decoded ABI value or an ARC-56 struct
- * @param type The ARC-56 type - either an ABI Type string or a struct name
- * @param structs The defined ARC-56 structs
- * @returns The binary ABI-encoded value
- */
-export function getABIEncodedValue(
-  value: Uint8Array | ABIValue | ABIStruct,
-  type: string,
-  structs: Record<string, StructField[]>,
-): Uint8Array {
-  if (typeof value === 'object' && value instanceof Uint8Array) return value
-  if (type === 'AVMUint64') return encodeABIValue(getABIType('uint64'), value as bigint | number)
-  if (type === 'AVMBytes' || type === 'AVMString') {
-    if (typeof value === 'string') return Buffer.from(value, 'utf-8')
-    if (typeof value !== 'object' || !(value instanceof Uint8Array)) throw new Error(`Expected bytes value for ${type}, but got ${value}`)
-    return value
-  }
-  if (structs[type]) {
-    const tupleType = getABITupleTypeFromABIStructDefinition(structs[type], structs)
-    if (Array.isArray(value)) {
-      encodeTuple(tupleType, value)
-    } else {
-      const values = getABITupleFromABIStruct(value as ABIStruct, structs[type], structs)
-      return encodeTuple(tupleType, values)
-    }
-  }
-
-  const abiType = getABIType(type)
-  return encodeABIValue(abiType, value as ABIValue)
 }
 
 /**

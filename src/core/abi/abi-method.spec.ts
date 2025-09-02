@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { getABIDecodedValue, getABIMethod, getABIMethodSelector, getABIMethodSignature } from './abi-method'
-import { ABITypeName, encodeABIValue, parseTupleContent } from './abi-type'
+import { getABIMethod, getABIMethodSelector, getABIMethodSignature } from './abi-method'
+import { parseTupleContent } from './abi-type'
 
 describe('getABIMethod', () => {
   test.each([
@@ -60,34 +60,34 @@ describe('getABIMethodSignature round trip', () => {
   })
 })
 
-describe('getABIDecodedValue', () => {
-  test('correctly decodes a struct containing a uint16', () => {
-    const decoded = getABIDecodedValue(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100]), 'User', {
-      User: [
-        { name: 'userId', type: 'uint16' },
-        { name: 'name', type: 'string' },
-      ],
-    }) as { userId: number; name: string }
+// describe('getABIDecodedValue', () => {
+//   test('correctly decodes a struct containing a uint16', () => {
+//     const decoded = getABIDecodedValue(new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100]), 'User', {
+//       User: [
+//         { name: 'userId', type: 'uint16' },
+//         { name: 'name', type: 'string' },
+//       ],
+//     }) as { userId: number; name: string }
 
-    expect(typeof decoded.userId).toBe('number')
-    expect(decoded.userId).toBe(1)
-    expect(typeof decoded.name).toBe('string')
-    expect(decoded.name).toBe('world')
-  })
+//     expect(typeof decoded.userId).toBe('number')
+//     expect(decoded.userId).toBe(1)
+//     expect(typeof decoded.name).toBe('string')
+//     expect(decoded.name).toBe('world')
+//   })
 
-  test.each(
-    // Generate all valid ABI uint bit lengths
-    Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
-  )('correctly decodes a uint%i', (bitLength) => {
-    const encoded = encodeABIValue({ name: ABITypeName.Uint, bitSize: bitLength }, 1)
-    const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
+//   test.each(
+//     // Generate all valid ABI uint bit lengths
+//     Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
+//   )('correctly decodes a uint%i', (bitLength) => {
+//     const encoded = encodeABIValue({ name: ABITypeName.Uint, bitSize: bitLength }, 1)
+//     const decoded = getABIDecodedValue(encoded, `uint${bitLength}`, {})
 
-    if (bitLength < 53) {
-      expect(typeof decoded).toBe('number')
-      expect(decoded).toBe(1)
-    } else {
-      expect(typeof decoded).toBe('bigint')
-      expect(decoded).toBe(1n)
-    }
-  })
-})
+//     if (bitLength < 53) {
+//       expect(typeof decoded).toBe('number')
+//       expect(decoded).toBe(1)
+//     } else {
+//       expect(typeof decoded).toBe('bigint')
+//       expect(decoded).toBe(1n)
+//     }
+//   })
+// })
