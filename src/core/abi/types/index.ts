@@ -1,5 +1,6 @@
 export * from './collections/dynamic-array'
 export * from './collections/static-array'
+export * from './collections/struct'
 export * from './collections/tuple'
 export * from './primitives/address'
 export * from './primitives/bool'

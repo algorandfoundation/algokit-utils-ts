@@ -11,20 +11,27 @@ export type ABIStaticArrayType = {
   length: number
 }
 
-export function encodeStaticArray(type: ABIStaticArrayType, value: ABIValue): Uint8Array {
-  if (value.type !== 'Array') {
-    throw new Error(`Cannot encode value as ${staticArrayToString(type)}, expect an array`)
-  }
-  if (value.data.length !== type.length) {
-    throw new Error(`Value array does not match static array length. Expected ${type.length}, got ${value.data.length}`)
-  }
-  const convertedTuple = toABITupleType(type)
-  return encodeTuple(convertedTuple, value)
+export type ABIStaticArrayValue = {
+  type: ABITypeName.StaticArray
+  data: ABIValue[]
 }
 
-export function decodeStaticArray(type: ABIStaticArrayType, bytes: Uint8Array): ABIValue {
-  const convertedTuple = toABITupleType(type)
-  return { type: 'Array', data: decodeTuple(convertedTuple, bytes) }
+export function encodeStaticArray(type: ABIStaticArrayType, value: ABIValue): Uint8Array {
+  if (value.type !== ABITypeName.StaticArray) {
+    throw new Error(`Encoding Error: value type must be StaticArray`)
+  }
+
+  if (value.data.length !== type.length) {
+    throw new Error(`Encoding Error: Value array does not match static array length. Expected ${type.length}, got ${value.data.length}`)
+  }
+  const tupleType = toABITupleType(type)
+  return encodeTuple(tupleType, { type: ABITypeName.Tuple, data: value.data })
+}
+
+export function decodeStaticArray(type: ABIStaticArrayType, bytes: Uint8Array): ABIStaticArrayValue {
+  const tupleType = toABITupleType(type)
+  const decodedTuple = decodeTuple(tupleType, bytes)
+  return { type: ABITypeName.StaticArray, data: decodedTuple.data }
 }
 
 export function staticArrayToString(type: ABIStaticArrayType): string {

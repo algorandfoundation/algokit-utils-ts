@@ -1,7 +1,7 @@
 import { ABIType, ABITypeName, getABIType } from '../../abi-type'
 import { ABIStructValue, ABIValue } from '../../abi-value'
 import { StructField } from '../../arc56-contract'
-import { ABITupleType, decodeTuple, encodeTuple, tupleToString } from './tuple'
+import { ABITupleType, ABITupleValue, decodeTuple, encodeTuple, tupleToString } from './tuple'
 
 export type ABIStructType = {
   name: ABITypeName.Struct
@@ -14,13 +14,20 @@ export type ABIStructField = {
   type: ABIType | ABIStructField[]
 }
 
+export type ABIStructValue = {
+  type: ABITypeName.Struct
+  data: {
+    [key: string]: ABIValue
+  }
+}
+
 export function encodeStruct(type: ABIStructType, value: ABIValue): Uint8Array {
-  if (value.type !== 'Struct') {
-    throw new Error(`Cannot encode value as ${structToString(type)}, expect a struct`)
+  if (value.type !== ABITypeName.Struct) {
+    throw new Error(`Encoding Error: value type must be Struct`)
   }
 
   const tupleType = getABITupleTypeFromABIStructType(type)
-  const tupleValue = getABITupleFromABIStruct(type, value.data)
+  const tupleValue = getABITupleValueFromABIStructValue(type, value.data)
   return encodeTuple(tupleType, tupleValue)
 }
 
@@ -28,7 +35,7 @@ export function decodeStruct(type: ABIStructType, bytes: Uint8Array): ABIStructV
   const tupleType = getABITupleTypeFromABIStructType(type)
   const tupleValue = decodeTuple(tupleType, bytes)
 
-  return getStructFieldValues(type.structFields, tupleValue)
+  return getABIStructValueFromABITupleValue(type.structFields, tupleValue)
 }
 
 export function getABIStructType(structName: string, structs: Record<string, StructField[]>): ABIStructType {
@@ -86,34 +93,38 @@ export function structToString(type: ABIStructType): string {
   return tupleToString(tupleType)
 }
 
-function getABITupleFromABIStruct(structType: ABIStructType, structValue: ABIStructValue): ABIValue[] {
-  function getABITupleFromABIStructFields(structFields: ABIStructField[], values: ABIValue[]): ABIValue[] {
-    return structFields.map(({ type }, index) => {
+function getABITupleValueFromABIStructValue(structType: ABIStructType, structValue: ABIStructValue): ABITupleValue {
+  function getABITupleValueFromABIStructFields(structFields: ABIStructField[], values: ABIValue[]): ABITupleValue {
+    const tupleValues = structFields.map(({ type }, index) => {
+      // if type is an array of field, this is a tuple
       if (Array.isArray(type)) {
-        const valuesAtIndex = values[index] as ABIValue[]
-        return getABITupleFromABIStructFields(type, valuesAtIndex)
+        const valuesAtIndex = values[index] as ABITupleValue
+        return getABITupleValueFromABIStructFields(type, valuesAtIndex.data)
       }
+      // if type is struct, this is a struct
       if (type.name === ABITypeName.Struct) {
         const valuesAtIndex = values[index] as ABIStructValue
-        return getABITupleFromABIStruct(type, valuesAtIndex)
+        return getABITupleValueFromABIStructValue(type, valuesAtIndex)
       }
       return values[index]
     })
+
+    return { type: ABITypeName.Tuple, data: tupleValues }
   }
 
-  return getABITupleFromABIStructFields(structType.structFields, Object.values(structValue))
+  return getABITupleValueFromABIStructFields(structType.structFields, Object.values(structValue.data))
 }
 
-function getStructFieldValues(structFields: ABIStructField[], values: ABIValue[]): Record<string, ABIValue> {
+function getABIStructValueFromABITupleValue(structFields: ABIStructField[], values: ABIValue[]): Record<string, ABIValue> {
   return Object.fromEntries(
     structFields.map(({ name, type }, index) => {
       if (Array.isArray(type)) {
         const valuesAtIndex = values[index] as ABIValue[]
-        return [name, getStructFieldValues(type, valuesAtIndex)]
+        return [name, getABIStructValueFromABITupleValue(type, valuesAtIndex)]
       }
       if (type.name === ABITypeName.Struct) {
         const valuesAtIndex = values[index] as ABIValue[]
-        return [name, getStructFieldValues(type.structFields, valuesAtIndex)]
+        return [name, getABIStructValueFromABITupleValue(type.structFields, valuesAtIndex)]
       }
       return [name, values[index]]
     }),

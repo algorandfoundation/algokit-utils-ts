@@ -12,6 +12,11 @@ export type ABIUfixedType = {
   precision: number
 }
 
+export type ABIUfixedValue = {
+  type: ABITypeName.Ufixed
+  data: number | bigint
+}
+
 function validate(type: ABIUfixedType) {
   const size = type.bitSize
   const precision = type.precision
@@ -24,21 +29,23 @@ function validate(type: ABIUfixedType) {
 }
 
 export function encodeUfixed(type: ABIUfixedType, value: ABIValue): Uint8Array {
+  if (value.type !== ABITypeName.Ufixed) {
+    throw new Error(`Encoding Error: value type must be Ufixed`)
+  }
+
   validate(type)
 
-  if (typeof value !== 'bigint' && typeof value !== 'number') {
-    throw new Error(`Cannot encode value as ${ufixedToString(type)}: ${value}`)
-  }
-  if (value >= BigInt(2 ** type.bitSize) || value < BigInt(0)) {
+  const data = value.data
+  if (data >= BigInt(2 ** type.bitSize) || data < BigInt(0)) {
     throw new Error(`${value} is not a non-negative int or too big to fit in size ${type.toString()}`)
   }
-  if (typeof value === 'number' && !Number.isSafeInteger(value)) {
+  if (typeof data === 'number' && !Number.isSafeInteger(data)) {
     throw new Error(`${value} should be converted into a BigInt before it is encoded`)
   }
-  return bigIntToBytes(value, type.bitSize / 8)
+  return bigIntToBytes(data, type.bitSize / 8)
 }
 
-export function decodeUfixed(type: ABIUfixedType, bytes: Uint8Array): ABIValue {
+export function decodeUfixed(type: ABIUfixedType, bytes: Uint8Array): ABIUfixedValue {
   validate(type)
 
   if (bytes.length !== type.bitSize / 8) {
@@ -46,7 +53,10 @@ export function decodeUfixed(type: ABIUfixedType, bytes: Uint8Array): ABIValue {
   }
 
   const value = bytesToBigInt(bytes)
-  return type.bitSize < 53 ? Number(value) : value
+  return {
+    type: ABITypeName.Ufixed,
+    data: type.bitSize < 53 ? Number(value) : value,
+  }
 }
 
 export function ufixedToString(type: ABIUfixedType): string {
