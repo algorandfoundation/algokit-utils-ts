@@ -14,10 +14,11 @@ export type ABIDynamicArrayType = {
 }
 
 export function encodeDynamicArray(type: ABIDynamicArrayType, value: ABIValue): Uint8Array {
-  if (!Array.isArray(value) && !(value instanceof Uint8Array)) {
-    throw new Error(`Cannot encode value as ${dynamicArrayToString(type)}: ${value}`)
+  if (value.type !== 'Array') {
+    throw new Error(`Cannot encode value as ${dynamicArrayToString(type)}, expect an array`)
   }
-  const convertedTuple = toABITupleType(type, value.length)
+  const data = value.data
+  const convertedTuple = toABITupleType(type, data.length)
   const encodedTuple = encodeTuple(convertedTuple, value)
   const encodedLength = bigIntToBytes(convertedTuple.childTypes.length, LENGTH_ENCODE_BYTE_SIZE)
   return concatArrays(encodedLength, encodedTuple)
@@ -27,7 +28,10 @@ export function decodeDynamicArray(type: ABIDynamicArrayType, bytes: Uint8Array)
   const view = new DataView(bytes.buffer, 0, LENGTH_ENCODE_BYTE_SIZE)
   const byteLength = view.getUint16(0)
   const convertedTuple = toABITupleType(type, byteLength)
-  return decodeTuple(convertedTuple, bytes.slice(LENGTH_ENCODE_BYTE_SIZE, bytes.length))
+  return {
+    type: 'Array',
+    data: decodeTuple(convertedTuple, bytes.slice(LENGTH_ENCODE_BYTE_SIZE, bytes.length)),
+  }
 }
 
 function toABITupleType(type: ABIDynamicArrayType, length: number) {

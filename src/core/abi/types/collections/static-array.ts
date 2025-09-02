@@ -12,11 +12,11 @@ export type ABIStaticArrayType = {
 }
 
 export function encodeStaticArray(type: ABIStaticArrayType, value: ABIValue): Uint8Array {
-  if (!Array.isArray(value) && !(value instanceof Uint8Array)) {
-    throw new Error(`Cannot encode value as ${staticArrayToString(type)}: ${value}`)
+  if (value.type !== 'Array') {
+    throw new Error(`Cannot encode value as ${staticArrayToString(type)}, expect an array`)
   }
-  if (value.length !== type.length) {
-    throw new Error(`Value array does not match static array length. Expected ${type.length}, got ${value.length}`)
+  if (value.data.length !== type.length) {
+    throw new Error(`Value array does not match static array length. Expected ${type.length}, got ${value.data.length}`)
   }
   const convertedTuple = toABITupleType(type)
   return encodeTuple(convertedTuple, value)
@@ -24,7 +24,7 @@ export function encodeStaticArray(type: ABIStaticArrayType, value: ABIValue): Ui
 
 export function decodeStaticArray(type: ABIStaticArrayType, bytes: Uint8Array): ABIValue {
   const convertedTuple = toABITupleType(type)
-  return decodeTuple(convertedTuple, bytes)
+  return { type: 'Array', data: decodeTuple(convertedTuple, bytes) }
 }
 
 export function staticArrayToString(type: ABIStaticArrayType): string {
