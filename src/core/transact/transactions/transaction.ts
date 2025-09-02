@@ -1,4 +1,5 @@
 import base32 from 'hi-base32'
+import { concatArrays } from '../../array'
 import {
   MAX_TX_GROUP_SIZE,
   SIGNATURE_ENCODING_INCR,
@@ -196,14 +197,10 @@ export function getEncodedTransactionType(encoded_transaction: Uint8Array): Tran
 export function encodeTransaction(transaction: Transaction): Uint8Array {
   validateTransaction(transaction)
   const rawBytes = encodeTransactionRaw(transaction)
-  const prefixedBytes = new Uint8Array(TRANSACTION_DOMAIN_SEPARATOR.length + rawBytes.length)
 
   // Add domain separation prefix
   const prefixBytes = new TextEncoder().encode(TRANSACTION_DOMAIN_SEPARATOR)
-  prefixedBytes.set(prefixBytes, 0)
-  prefixedBytes.set(rawBytes, prefixBytes.length)
-
-  return prefixedBytes
+  return concatArrays(prefixBytes, rawBytes)
 }
 
 /**
@@ -329,10 +326,10 @@ export function getTransactionId(transaction: Transaction): string {
  * Groups a collection of transactions by calculating and assigning the group to each transaction.
  */
 export function groupTransactions(transactions: Transaction[]): Transaction[] {
-  const groupId = computeGroupId(transactions)
+  const group = computeGroup(transactions)
   return transactions.map((tx) => ({
     ...tx,
-    group: groupId,
+    group,
   }))
 }
 
@@ -344,7 +341,7 @@ export function assignFee(transaction: Transaction, feeParams: FeeParams): Trans
   }
 }
 
-function computeGroupId(transactions: Transaction[]): Uint8Array {
+function computeGroup(transactions: Transaction[]): Uint8Array {
   if (transactions.length === 0) {
     throw new Error('Transaction group size cannot be 0')
   }
@@ -365,14 +362,11 @@ function computeGroupId(transactions: Transaction[]): Uint8Array {
     txlist: txHashes,
   })
 
-  const prefixedBytes = new Uint8Array(prefixBytes.length + encodedBytes.length)
-  prefixedBytes.set(prefixBytes, 0)
-  prefixedBytes.set(encodedBytes, prefixBytes.length)
-
+  const prefixedBytes = concatArrays(prefixBytes, encodedBytes)
   return hash(prefixedBytes)
 }
 
-function calculateFee(transaction: Transaction, feeParams: FeeParams): bigint {
+export function calculateFee(transaction: Transaction, feeParams: FeeParams): bigint {
   let calculatedFee = 0n
 
   if (feeParams.feePerByte > 0n) {
