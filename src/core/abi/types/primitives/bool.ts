@@ -18,7 +18,7 @@ export function encodeBool(value: ABIValue): Uint8Array {
     throw new Error(`Encoding Error: value type must be Bool`)
   }
 
-  return value ? new Uint8Array([0x80]) : new Uint8Array([0x00])
+  return value.data ? new Uint8Array([0x80]) : new Uint8Array([0x00])
 }
 
 export function decodeBool(bytes: Uint8Array): ABIBoolValue {

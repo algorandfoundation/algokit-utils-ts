@@ -29,10 +29,10 @@ function compressBools(values: ABIValue[]): number {
 
   let result = 0
   for (let i = 0; i < values.length; i++) {
-    if (typeof values[i] !== 'boolean') {
+    if (values[i].type !== ABITypeName.Bool) {
       throw new Error('Encoding Error: Expected all values to be boolean')
     }
-    if (values[i]) {
+    if (values[i].data) {
       result |= 1 << (7 - i)
     }
   }
