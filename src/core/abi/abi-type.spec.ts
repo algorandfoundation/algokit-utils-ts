@@ -1,8 +1,11 @@
+import algosdk from 'algosdk'
 import { describe, expect, test } from 'vitest'
+import { getABIStructFromABITuple } from '../../types/app-arc56'
 import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
 import { ABIValue } from './abi-value'
-import { ABITupleValue } from './types'
+import { ABIStructType, ABIStructValue, ABITupleValue } from './types'
 
+// TODO: discuss this
 type TestCaseWithABIType = {
   description: string
   abiType: ABIType
@@ -16,6 +19,19 @@ type TestCaseWithTypeString = {
   abiValue: ABIValue
   expectedBytes: number[]
 }
+
+// .addMethodCall({
+//   method: ...,
+//   args: [
+//     { type: ABITypeName.Uint, data: 0 },
+//     { type: ABITypeName.Ufixed, data: 33 }
+//   ]
+// })
+
+// .addMethodCall({
+//   method: ...,
+//   args: [ 0, 33 ]
+// })
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
@@ -524,3 +540,295 @@ describe('ABIType encode decode', () => {
     },
   )
 })
+
+describe('Struct encode decode', () => {
+  test('foo', () => {
+    const tupleType = getABIType('(uint8,(uint16,string,string[]),bool,(byte,address))')
+    const structType = {
+      name: ABITypeName.Struct,
+      structName: 'Struct 1',
+      structFields: [
+        {
+          name: 'field 1',
+          type: {
+            name: ABITypeName.Uint,
+            bitSize: 8,
+          },
+        },
+        {
+          name: 'field 2',
+          type: {
+            name: ABITypeName.Struct,
+            structName: 'Struct 2',
+            structFields: [
+              {
+                name: 'Struct 2 field 1',
+                type: {
+                  name: ABITypeName.Uint,
+                  bitSize: 16,
+                },
+              },
+              {
+                name: 'Struct 2 field 2',
+                type: {
+                  name: ABITypeName.String,
+                },
+              },
+              {
+                name: 'Struct 2 field 3',
+                type: {
+                  name: ABITypeName.DynamicArray,
+                  childType: {
+                    name: ABITypeName.String,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        {
+          name: 'field 3',
+          type: [
+            // Hmm?
+            {
+              name: 'field 3 child 1',
+              type: {
+                name: ABITypeName.Bool,
+              },
+            },
+          ],
+        },
+        {
+          name: 'field 4',
+          type: {
+            name: ABITypeName.Tuple,
+            childTypes: [{ name: ABITypeName.Byte }, { name: ABITypeName.Address }],
+          },
+        },
+      ],
+    } satisfies ABIStructType
+
+    const tupleValue = {
+      type: ABITypeName.Tuple,
+      data: [
+        {
+          type: ABITypeName.Uint,
+          data: 123,
+        },
+        {
+          type: ABITypeName.Tuple,
+          data: [
+            {
+              type: ABITypeName.Uint,
+              data: 65432,
+            },
+            {
+              type: ABITypeName.String,
+              data: 'hello',
+            },
+            {
+              type: ABITypeName.DynamicArray,
+              data: [
+                {
+                  type: ABITypeName.String,
+                  data: 'world 1',
+                },
+                {
+                  type: ABITypeName.String,
+                  data: 'world 2',
+                },
+                {
+                  type: ABITypeName.String,
+                  data: 'world 3',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: ABITypeName.Bool,
+          data: false,
+        },
+        {
+          type: ABITypeName.Tuple,
+          data: [
+            {
+              type: ABITypeName.Byte,
+              data: 222,
+            },
+            {
+              type: ABITypeName.Address,
+              data: 'BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE',
+            },
+          ],
+        },
+      ],
+    } satisfies ABITupleValue
+    const structValue = {
+      type: ABITypeName.Struct,
+      data: {
+        'field 1': {
+          type: ABITypeName.Uint,
+          data: 123,
+        },
+        'field 2': {
+          type: ABITypeName.Struct,
+          data: {
+            'Struct 2 field 1': {
+              type: ABITypeName.Uint,
+              data: 65432,
+            },
+            'Struct 2 field 2': {
+              type: ABITypeName.String,
+              data: 'hello',
+            },
+            'Struct 2 field 3': {
+              type: ABITypeName.DynamicArray,
+              data: [
+                {
+                  type: ABITypeName.String,
+                  data: 'world 1',
+                },
+                {
+                  type: ABITypeName.String,
+                  data: 'world 2',
+                },
+                {
+                  type: ABITypeName.String,
+                  data: 'world 3',
+                },
+              ],
+            },
+          },
+        },
+        'field 3': {
+          type: ABITypeName.Struct,
+          data: {
+            'field 3 child 1': {
+              data: false,
+              type: ABITypeName.Bool,
+            },
+          },
+        },
+        'field 4': {
+          type: ABITypeName.Tuple,
+          data: [
+            {
+              type: ABITypeName.Byte,
+              data: 222,
+            },
+            {
+              type: ABITypeName.Address,
+              data: 'BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE',
+            },
+          ],
+        },
+      },
+    } satisfies ABIStructValue
+
+    const encodedTuple = encodeABIValue(tupleType, tupleValue)
+    const encodedStruct = encodeABIValue(structType, structValue)
+
+    expect(encodedTuple).toEqual([1])
+    expect(encodedTuple).toEqual(encodedStruct)
+
+    const decodedTuple = decodeABIValue(tupleType, encodedTuple)
+    expect(decodedTuple).toEqual(tupleValue)
+
+    const decodedStruct = decodeABIValue(structType, encodedStruct)
+    expect(decodedStruct).toEqual(structValue)
+  })
+
+  test('compare with old', () => {
+    const structs = {
+      'Struct 1': [
+        {
+          name: 'field 1',
+          type: 'uint8',
+        },
+        {
+          name: 'field 2',
+          type: 'Struct 2',
+        },
+        {
+          name: 'field 3',
+          type: [
+            {
+              name: 'field 3 child 1',
+              type: 'bool',
+            },
+            {
+              name: 'field 3 child 2',
+              type: 'byte',
+            },
+          ],
+        },
+        {
+          name: 'field 4',
+          type: '(byte,address)',
+        },
+      ],
+      'Struct 2': [
+        {
+          name: 'Struct 2 field 1',
+          type: 'uint16',
+        },
+        {
+          name: 'Struct 2 field 2',
+          type: 'string',
+        },
+        {
+          name: 'Struct 2 field 3',
+          type: 'string[]',
+        },
+      ],
+    }
+
+    const tupleType = algosdk.ABIType.from('(uint8,(uint16,string,string[]),(bool,byte),(byte,address))')
+
+    const encodedTuple = Uint8Array.from([
+      123, 0, 37, 0, 222, 9, 20, 169, 49, 225, 155, 208, 96, 225, 38, 80, 249, 117, 124, 159, 204, 18, 220, 160, 233, 174, 11, 11, 91, 103,
+      106, 55, 164, 158, 71, 218, 220, 255, 152, 0, 6, 0, 13, 0, 5, 104, 101, 108, 108, 111, 0, 3, 0, 6, 0, 15, 0, 24, 0, 7, 119, 111, 114,
+      108, 100, 32, 49, 0, 7, 119, 111, 114, 108, 100, 32, 50, 0, 7, 119, 111, 114, 108, 100, 32, 51,
+    ])
+
+    const tupleValue = tupleType.decode(encodedTuple)
+    const structValue = getABIStructFromABITuple(tupleValue as algosdk.ABIValue[], structs['Struct 1'], structs)
+
+    //     Object {
+    //   "field 1": 123,
+    //   "field 2": Object {
+    //     "Struct 2 field 1": 65432,
+    //     "Struct 2 field 2": "hello",
+    //     "Struct 2 field 3": Array [
+    //       "world 1",
+    //       "world 2",
+    //       "world 3",
+    //     ],
+    //   },
+    //   "field 3": false,
+    //   "field 4": Array [
+    //     222,
+    //     "BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE",
+    //   ],
+    // }
+    expect(structValue).toBe({})
+  })
+})
+
+// TODO: plan for consistency across language, mention FFI custom types
+
+// addMethodCall({}) => [txns]
+// gatherSigns()
+// sign([txns]) => [signed_txns]
+
+// FFIComposer {
+//   add_method_call(txn: FFITxn)
+// }
+
+// PythonComposer {
+//   add_method_call(txn: PythonTxn) {
+//     ffi_txn = mapPythonTxnToFFI()
+//     _composer.add_method_call(ffi_txn)
+//   }
+// }

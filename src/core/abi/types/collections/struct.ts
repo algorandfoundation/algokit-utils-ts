@@ -97,15 +97,15 @@ export function structToString(type: ABIStructType): string {
 function getTupleValueFromStructValue(structType: ABIStructType, structValue: ABIStructValue): ABITupleValue {
   function getTupleValueFromStructFields(structFields: ABIStructField[], values: ABIValue[]): ABITupleValue {
     const tupleValues = structFields.map(({ type }, index) => {
-      // if type is an array of fields, the value must be tuple
+      // if type is an array of fields, treat as unnamed struct
       if (Array.isArray(type)) {
         const value = values[index]
-        if (value.type !== ABITypeName.Tuple) {
-          throw new Error(`Encoding Error: value type must be Tuple, received ${value.type}`)
+        if (value.type !== ABITypeName.Struct) {
+          throw new Error(`Encoding Error: value type must be Struct, received ${value.type}`)
         }
-        return getTupleValueFromStructFields(type, value.data)
+        return getTupleValueFromStructFields(type, Object.values(value.data))
       }
-      // if type is struct, , the value must be struct
+      // if type is struct, treat as struct
       if (type.name === ABITypeName.Struct) {
         const value = values[index]
         if (value.type !== ABITypeName.Struct) {
@@ -132,7 +132,7 @@ function getStructValueFromTupleValue(structType: ABIStructType, tupleValue: ABI
           if (value.type !== ABITypeName.Tuple) {
             throw new Error(`Decoding Error: value type must be Tuple, received ${value.type}`)
           }
-          return [name, getStructFieldValues(type, value.data)]
+          return [name, { type: ABITypeName.Struct, data: getStructFieldValues(type, value.data) }]
         }
         // When the type is a struct, the value must be tuple
         if (type.name === ABITypeName.Struct) {
@@ -140,7 +140,7 @@ function getStructValueFromTupleValue(structType: ABIStructType, tupleValue: ABI
           if (value.type !== ABITypeName.Tuple) {
             throw new Error(`Decoding Error: value type must be Tuple, received ${value.type}`)
           }
-          return [name, getStructFieldValues(type.structFields, value.data)]
+          return [name, { type: ABITypeName.Struct, data: getStructFieldValues(type.structFields, value.data) }]
         }
         return [name, values[index]]
       }),
