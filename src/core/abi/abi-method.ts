@@ -205,7 +205,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
   } satisfies ABIMethod
 }
 
-export function abiTypeIsTransaction(type: unknown): type is ABITransactionType {
+export function abiTypeIsTransaction(type: ABIMethodArgType): type is ABITransactionType {
   return (
     typeof type === 'string' &&
     (type === ABITransactionType.Txn ||
