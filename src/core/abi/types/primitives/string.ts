@@ -10,17 +10,17 @@ export type ABIStringType = {
   name: ABITypeName.String
 }
 
-export type ABIStringValue = {
-  type: ABITypeName.String
-  data: string
-}
-
 export function encodeString(value: ABIValue): Uint8Array {
-  if (value.type !== ABITypeName.String) {
-    throw new Error(`Encoding Error: value type must be String`)
+  if (typeof value !== 'string') {
+    throw new Error(`Encoding Error: Cannot encode value as string: ${value}`)
   }
 
-  const encodedBytes = new TextEncoder().encode(value.data)
+  let encodedBytes: Uint8Array
+  if (typeof value === 'string') {
+    encodedBytes = new TextEncoder().encode(value)
+  } else {
+    encodedBytes = value
+  }
   const encodedLength = bigIntToBytes(encodedBytes.length, LENGTH_ENCODE_BYTE_SIZE)
   const mergedBytes = new Uint8Array(encodedBytes.length + LENGTH_ENCODE_BYTE_SIZE)
   mergedBytes.set(encodedLength)
@@ -28,7 +28,7 @@ export function encodeString(value: ABIValue): Uint8Array {
   return mergedBytes
 }
 
-export function decodeString(_type: ABIStringType, bytes: Uint8Array): ABIStringValue {
+export function decodeString(_type: ABIStringType, bytes: Uint8Array): ABIValue {
   if (bytes.length < LENGTH_ENCODE_BYTE_SIZE) {
     throw new Error(
       `byte string is too short to be decoded. Actual length is ${bytes.length}, but expected at least ${LENGTH_ENCODE_BYTE_SIZE}`,
@@ -40,5 +40,5 @@ export function decodeString(_type: ABIStringType, bytes: Uint8Array): ABIString
   if (byteLength !== byteValue.length) {
     throw new Error(`string length bytes do not match the actual length of string. Expected ${byteLength}, got ${byteValue.length}`)
   }
-  return { type: ABITypeName.String, data: new TextDecoder('utf-8').decode(byteValue) }
+  return new TextDecoder('utf-8').decode(byteValue)
 }

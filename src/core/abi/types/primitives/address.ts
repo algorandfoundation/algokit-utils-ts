@@ -9,19 +9,13 @@ export type ABIAddressType = {
   name: ABITypeName.Address
 }
 
-export type ABIAddressValue = {
-  type: ABITypeName.Address
-  data: string
-}
-
 export function encodeAddress(value: ABIValue): Uint8Array {
-  if (value.type !== ABITypeName.Address) {
-    throw new Error(`Encoding Error: value type must be Address`)
+  if (typeof value === 'string') {
+    return publicKeyFromAddress(value)
   }
-
-  return publicKeyFromAddress(value.data)
+  throw new Error(`Encoding Error: Cannot encode value as address: ${value}`)
 }
 
-export function decodeAddress(bytes: Uint8Array): ABIAddressValue {
-  return { type: ABITypeName.Address, data: addressFromPublicKey(bytes) }
+export function decodeAddress(bytes: Uint8Array): ABIValue {
+  return addressFromPublicKey(bytes)
 }

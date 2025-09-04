@@ -12,11 +12,6 @@ export type ABITupleType = {
   childTypes: ABIType[]
 }
 
-export type ABITupleValue = {
-  type: ABITypeName.Tuple
-  data: ABIValue[]
-}
-
 interface Segment {
   left: number
   right: number
@@ -29,10 +24,10 @@ function compressBools(values: ABIValue[]): number {
 
   let result = 0
   for (let i = 0; i < values.length; i++) {
-    if (values[i].type !== ABITypeName.Bool) {
+    if (typeof values[i] !== 'boolean') {
       throw new Error('Encoding Error: Expected all values to be boolean')
     }
-    if (values[i].data) {
+    if (values[i]) {
       result |= 1 << (7 - i)
     }
   }
@@ -137,12 +132,12 @@ function extractValues(abiTypes: ABIType[], bytes: Uint8Array): Uint8Array[] {
 }
 
 export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
-  if (value.type !== ABITypeName.Tuple) {
-    throw new Error(`Encoding Error: value type must be Tuple`)
+  if (!Array.isArray(value) && !(value instanceof Uint8Array)) {
+    throw new Error(`Cannot encode value as ${tupleToString(type)}: ${value}`)
   }
 
   const childTypes = type.childTypes
-  const values = value.data
+  const values = Array.from(value)
 
   if (childTypes.length !== values.length) {
     throw new Error('Encoding Error: Mismatch lengths between the values and types')
@@ -207,7 +202,7 @@ export function encodeTuple(type: ABITupleType, value: ABIValue): Uint8Array {
   return result
 }
 
-export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABITupleValue {
+export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABIValue[] {
   const childTypes = type.childTypes
   const valuePartitions = extractValues(childTypes, bytes)
   const values: ABIValue[] = []
@@ -219,10 +214,7 @@ export function decodeTuple(type: ABITupleType, bytes: Uint8Array): ABITupleValu
     values.push(childValue)
   }
 
-  return {
-    type: ABITypeName.Tuple,
-    data: values,
-  }
+  return values
 }
 
 export function tupleToString(type: ABITupleType): string {
