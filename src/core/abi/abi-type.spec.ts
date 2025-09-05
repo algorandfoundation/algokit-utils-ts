@@ -1,5 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
+import { ABIStructValue, ABIValue } from './abi-value'
+import { ABIStructType } from './types'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
@@ -303,5 +305,149 @@ describe('ABIType encode decode', () => {
 
     const decoded = decodeABIValue(abiType, encoded)
     expect(decoded).toEqual(abiValue)
+  })
+
+  test.each(
+    // Generate all valid ABI uint bit lengths
+    Array.from({ length: 64 }, (_, i) => (i + 1) * 8),
+  )('correctly decodes a uint%i', (bitLength) => {
+    const encoded = encodeABIValue({ name: ABITypeName.Uint, bitSize: bitLength }, 1)
+    const decoded = decodeABIValue(getABIType(`uint${bitLength}`), encoded)
+
+    if (bitLength < 53) {
+      expect(typeof decoded).toBe('number')
+      expect(decoded).toBe(1)
+    } else {
+      expect(typeof decoded).toBe('bigint')
+      expect(decoded).toBe(1n)
+    }
+  })
+
+  test('Struct and tuple encode decode should match', () => {
+    const tupleType = getABIType('(uint8,(uint16,string,string[]),(bool,byte),(byte,address))')
+    const structType = {
+      name: ABITypeName.Struct,
+      structName: 'Struct 1',
+      structFields: [
+        {
+          name: 'field 1',
+          type: {
+            name: ABITypeName.Uint,
+            bitSize: 8,
+          },
+        },
+        {
+          name: 'field 2',
+          type: {
+            name: ABITypeName.Struct,
+            structName: 'Struct 2',
+            structFields: [
+              {
+                name: 'Struct 2 field 1',
+                type: {
+                  name: ABITypeName.Uint,
+                  bitSize: 16,
+                },
+              },
+              {
+                name: 'Struct 2 field 2',
+                type: {
+                  name: ABITypeName.String,
+                },
+              },
+              {
+                name: 'Struct 2 field 3',
+                type: {
+                  name: ABITypeName.DynamicArray,
+                  childType: {
+                    name: ABITypeName.String,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        {
+          name: 'field 3',
+          type: [
+            {
+              name: 'field 3 child 1',
+              type: {
+                name: ABITypeName.Bool,
+              },
+            },
+            {
+              name: 'field 3 child 2',
+              type: {
+                name: ABITypeName.Byte,
+              },
+            },
+          ],
+        },
+        {
+          name: 'field 4',
+          type: {
+            name: ABITypeName.Tuple,
+            childTypes: [{ name: ABITypeName.Byte }, { name: ABITypeName.Address }],
+          },
+        },
+      ],
+    } satisfies ABIStructType
+
+    const tupleValue = [
+      123,
+      [65432, 'hello', ['world 1', 'world 2', 'world 3']],
+      [false, 88],
+      [222, 'BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE'],
+    ] satisfies ABIValue[]
+
+    const structValue = {
+      'field 1': 123,
+      'field 2': {
+        'Struct 2 field 1': 65432,
+        'Struct 2 field 2': 'hello',
+        'Struct 2 field 3': ['world 1', 'world 2', 'world 3'],
+      },
+      'field 3': {
+        'field 3 child 1': false,
+        'field 3 child 2': 88,
+      },
+      'field 4': [222, 'BEKKSMPBTPIGBYJGKD4XK7E7ZQJNZIHJVYFQWW3HNI32JHSH3LOGBRY3LE'],
+    } satisfies ABIStructValue
+
+    const encodedTuple = encodeABIValue(tupleType, tupleValue)
+    const encodedStruct = encodeABIValue(structType, structValue)
+
+    expect(encodedTuple).toEqual(encodedStruct)
+
+    const decodedTuple = decodeABIValue(tupleType, encodedTuple)
+    expect(decodedTuple).toEqual(tupleValue)
+
+    const decodedStruct = decodeABIValue(structType, encodedTuple)
+    expect(decodedStruct).toEqual(structValue)
+  })
+
+  test('correctly decodes a struct containing a uint16', () => {
+    const userStruct = {
+      name: ABITypeName.Struct,
+      structName: 'User',
+      structFields: [
+        {
+          name: 'userId',
+          type: getABIType('uint16'),
+        },
+        { name: 'name', type: getABIType('string') },
+      ],
+    } satisfies ABIStructType
+
+    const decoded = decodeABIValue(userStruct, new Uint8Array([0, 1, 0, 4, 0, 5, 119, 111, 114, 108, 100])) as {
+      userId: number
+      name: string
+    }
+
+    expect(typeof decoded.userId).toBe('number')
+    expect(decoded.userId).toBe(1)
+    expect(typeof decoded.name).toBe('string')
+    expect(decoded.name).toBe('world')
   })
 })

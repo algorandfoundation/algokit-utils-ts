@@ -1,1 +1,5 @@
-export type ABIValue = string | bigint | boolean | number | ABIValue[] | Uint8Array
+export type ABIValue = boolean | number | bigint | string | Uint8Array | ABIValue[] | ABIStructValue
+
+export type ABIStructValue = {
+  [key: string]: ABIValue
+}

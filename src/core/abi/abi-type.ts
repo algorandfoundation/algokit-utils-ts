@@ -33,6 +33,7 @@ import {
   ufixedToString,
   uintToString,
 } from './types/'
+import { ABIStructType, decodeStruct, encodeStruct, structToString } from './types/collections/struct'
 
 export enum ABITypeName {
   Uint = 'Uint',
@@ -44,6 +45,7 @@ export enum ABITypeName {
   Tuple = 'Tuple',
   StaticArray = 'StaticArray',
   DynamicArray = 'DynamicArray',
+  Struct = 'Struct',
 }
 
 /**
@@ -59,6 +61,7 @@ export type ABIType =
   | ABITupleType
   | ABIStaticArrayType
   | ABIDynamicArrayType
+  | ABIStructType
 
 /**
  * Encodes an ABI value according to ARC-4 specification.
@@ -86,6 +89,8 @@ export function encodeABIValue(abiType: ABIType, abiValue: ABIValue): Uint8Array
       return encodeStaticArray(abiType, abiValue)
     case ABITypeName.DynamicArray:
       return encodeDynamicArray(abiType, abiValue)
+    case ABITypeName.Struct:
+      return encodeStruct(abiType, abiValue)
   }
 }
 
@@ -115,6 +120,8 @@ export function decodeABIValue(abiType: ABIType, encodedValue: Uint8Array): ABIV
       return decodeStaticArray(abiType, encodedValue)
     case ABITypeName.DynamicArray:
       return decodeDynamicArray(abiType, encodedValue)
+    case ABITypeName.Struct:
+      return decodeStruct(abiType, encodedValue)
   }
 }
 
@@ -130,7 +137,7 @@ export function getABITypeName(abiType: ABIType): string {
     case ABITypeName.Ufixed:
       return ufixedToString(abiType)
     case ABITypeName.Address:
-      return 'adress'
+      return 'address'
     case ABITypeName.Bool:
       return 'bool'
     case ABITypeName.Byte:
@@ -143,6 +150,8 @@ export function getABITypeName(abiType: ABIType): string {
       return staticArrayToString(abiType)
     case ABITypeName.DynamicArray:
       return dynamicArrayToString(abiType)
+    case ABITypeName.Struct:
+      return structToString(abiType)
   }
 }
 
