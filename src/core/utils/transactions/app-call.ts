@@ -8,10 +8,10 @@ import { BoxReference, OnApplicationComplete, StateSchema } from '../../transact
 import { TransactionType } from '../../transact/transactions/transaction'
 import {
   AbstractedComposerTransaction,
-  AbstractedMethodCallComposerTransaction,
   CommonTransactionParams,
   ComposerTransactionType,
-  ProcessedAbstractedMethodCallComposerTransaction,
+  MethodCallComposerTransaction,
+  ProcessedMethodCallComposerTransaction,
   TransactionHeader,
   TransactionWithSigner,
 } from './common'
@@ -670,9 +670,7 @@ const methodCallAbstractedComposerTransactionTypes = [
   ComposerTransactionType.AppDeleteMethodCall,
 ]
 
-export function isMethodCallComposerTransactionParamsArg(
-  arg: AbstractedComposerTransaction,
-): arg is AbstractedMethodCallComposerTransaction {
+export function isMethodCallComposerTransactionParamsArg(arg: AbstractedComposerTransaction): arg is MethodCallComposerTransaction {
   return methodCallAbstractedComposerTransactionTypes.includes(arg.type)
 }
 
@@ -698,8 +696,8 @@ export function processAppMethodCallArgs(args: AppMethodCallArg[]): ProcessedApp
 }
 
 export function asProcessedAppCallMethodCallParams(
-  composerTransaction: AbstractedMethodCallComposerTransaction,
-): ProcessedAbstractedMethodCallComposerTransaction {
+  composerTransaction: MethodCallComposerTransaction,
+): ProcessedMethodCallComposerTransaction {
   if (composerTransaction.type === ComposerTransactionType.AppCallMethodCall) {
     return {
       ...composerTransaction,

@@ -174,19 +174,19 @@ export enum ComposerTransactionType {
   NonParticipationKeyRegistration,
 }
 
-export type AbstractedMethodCallComposerTransaction =
+export type MethodCallComposerTransaction =
   | AppCallMethodCallComposerTransaction
   | AppCreateMethodCallComposerTransaction
   | AppUpdateMethodCallComposerTransaction
   | AppDeleteMethodCallComposerTransaction
 
-export type ProcessedAbstractedMethodCallComposerTransaction =
+export type ProcessedMethodCallComposerTransaction =
   | ProcessedAppCallMethodCallComposerTransaction
   | ProcessedAppCreateMethodCallComposerTransaction
   | ProcessedAppUpdateMethodCallComposerTransaction
   | ProcessedAppDeleteMethodCallComposerTransaction
 
-export type CommonAbstractedComposerTransaction =
+type CommonAbstractedComposerTransaction =
   | PaymentComposerTransaction
   | AccountCloseComposerTransaction
   | AssetTransferComposerTransaction
@@ -206,9 +206,9 @@ export type CommonAbstractedComposerTransaction =
   | OfflineKeyRegistrationComposerTransaction
   | NonParticipationKeyRegistrationComposerTransaction
 
-export type AbstractedComposerTransaction = CommonAbstractedComposerTransaction | AbstractedMethodCallComposerTransaction
+export type AbstractedComposerTransaction = CommonAbstractedComposerTransaction | MethodCallComposerTransaction
 
-export type ProcessedAbstractedComposerTransaction = CommonAbstractedComposerTransaction | ProcessedAbstractedMethodCallComposerTransaction
+export type ProcessedAbstractedComposerTransaction = CommonAbstractedComposerTransaction | ProcessedMethodCallComposerTransaction
 
 export interface TransactionWithSigner {
   transaction: Transaction
