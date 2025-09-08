@@ -23,7 +23,7 @@ export type ABIMethodArgType = ABIType | ABITransactionType | ABIReferenceType
 export type ABIReturnType = ABIType | 'void'
 
 export type ABIMethodArg = {
-  arg_type: ABIMethodArgType
+  argType: ABIMethodArgType
   name?: string
   desciption?: string
 }
@@ -31,6 +31,24 @@ export type ABIMethodArg = {
 export type ABIMethodReturn = {
   type: ABIReturnType
   description?: string
+}
+
+/** Represents an ABI method return value with parsed data. */
+export type ABIReturn = {
+  /** The method that was called. */
+  method: ABIMethod
+  /** The raw return value as bytes.
+   *
+   * This value will be empty if the method does not return a value (return type "void")
+   */
+  rawReturnValue: Uint8Array
+  /** The parsed ABI return value.
+   *
+   * This value will be undefined if decoding failed or the method does not return a value (return type "void")
+   */
+  returnValue?: ABIValue
+  /** Any error that occurred during decoding, or undefined if decoding was successful */
+  decodeError?: Error
 }
 
 /** Decoded ARC-56 struct as a struct rather than a tuple. */
@@ -116,9 +134,9 @@ export function getABIMethod(signature: string): ABIMethod {
   const args = parseTupleContent(signature.slice(argsStart + 1, argsEnd)) // hmmm the error is bad
     .map((n: string) => {
       if (abiTypeIsTransaction(n as ABIMethodArgType) || abiTypeIsReference(n as ABIMethodArgType)) {
-        return { arg_type: n as ABIMethodArgType } satisfies ABIMethodArg
+        return { argType: n as ABIMethodArgType } satisfies ABIMethodArg
       }
-      return { arg_type: getABIType(n) } satisfies ABIMethodArg
+      return { argType: getABIType(n) } satisfies ABIMethodArg
     })
   const returnType = signature.slice(argsEnd + 1)
   const returns = { type: returnType === 'void' ? ('void' as const) : getABIType(returnType) } satisfies ABIMethodReturn
@@ -138,8 +156,8 @@ export function getABIMethod(signature: string): ABIMethod {
 export function getABIMethodSignature(abiMethod: ABIMethod): string {
   const args = abiMethod.args
     .map((arg) => {
-      if (abiTypeIsTransaction(arg.arg_type) || abiTypeIsReference(arg.arg_type)) return arg.arg_type
-      return getABITypeName(arg.arg_type)
+      if (abiTypeIsTransaction(arg.argType) || abiTypeIsReference(arg.argType)) return arg.argType
+      return getABITypeName(arg.argType)
     })
     .join(',')
   const returns = abiMethod.returns.type === 'void' ? 'void' : getABITypeName(abiMethod.returns.type)
@@ -164,7 +182,7 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
   const args = method.args.map(({ type, name, desc, struct }) => {
     if (abiTypeIsTransaction(type as ABIMethodArgType) || abiTypeIsReference(type as ABIMethodArgType)) {
       return {
-        arg_type: type as ABIMethodArgType,
+        argType: type as ABIMethodArgType,
         name,
         desciption: desc,
       } satisfies ABIMethodArg
@@ -172,14 +190,14 @@ function arc56MethodToABIMethod(method: Arc56Method, appSpec: Arc56Contract): AB
 
     if (struct) {
       return {
-        arg_type: getABIStructType(struct, appSpec.structs),
+        argType: getABIStructType(struct, appSpec.structs),
         name,
         desciption: desc,
       } satisfies ABIMethodArg
     }
 
     return {
-      arg_type: getABIType(type),
+      argType: getABIType(type),
       name,
       desciption: desc,
     } satisfies ABIMethodArg

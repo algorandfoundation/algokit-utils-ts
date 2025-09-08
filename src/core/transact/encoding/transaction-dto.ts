@@ -4,10 +4,10 @@
  *
  * All fields are optional (except type), as default values should be ommitted when encoding.
  */
-export interface TransactionDto {
+export type TransactionDto = {
   // Common transaction fields
   /** Transaction type */
-  type: 'pay' | 'axfer' | 'afrz' | 'acfg' | 'keyreg' | 'appl'
+  type: 'pay' | 'axfer' | 'afrz' | 'acfg' | 'keyreg' | 'appl' | 'stpf' | 'hb'
 
   /** Sender address */
   snd?: Uint8Array
@@ -142,7 +142,7 @@ export interface TransactionDto {
 /**
  * Encodeable asset parameters structure
  */
-export interface AssetParamsDto {
+export type AssetParamsDto = {
   /** Total number of units */
   t?: bigint
 
@@ -180,7 +180,7 @@ export interface AssetParamsDto {
 /**
  * Encodeable state schema structure
  */
-export interface StateSchemaDto {
+export type StateSchemaDto = {
   /** Number of uints */
   nui?: number
 

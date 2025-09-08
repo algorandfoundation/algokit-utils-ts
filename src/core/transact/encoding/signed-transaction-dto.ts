@@ -4,7 +4,7 @@ import { TransactionDto } from './transaction-dto'
  * Represents the encodeable data structure for an Algorand signed transaction
  * that can be msgpack encoded and decoded.
  */
-export interface SignedTransactionDto {
+export type SignedTransactionDto = {
   /** The transaction */
   txn: TransactionDto
 
@@ -24,7 +24,7 @@ export interface SignedTransactionDto {
 /**
  * Encodeable multisignature structure
  */
-export interface MultisigSignatureDto {
+export type MultisigSignatureDto = {
   /** Version */
   v?: number
 
@@ -32,13 +32,13 @@ export interface MultisigSignatureDto {
   thr?: number
 
   /** Subsignatures */
-  subsig?: MultisigSubsignatureSto[]
+  subsig?: MultisigSubsignatureDto[]
 }
 
 /**
  * Encodeable multisig subsignature structure
  */
-export interface MultisigSubsignatureSto {
+export type MultisigSubsignatureDto = {
   /** Public key */
   pk?: Uint8Array
 
@@ -49,7 +49,7 @@ export interface MultisigSubsignatureSto {
 /**
  * Encodeable logic signature structure
  */
-export interface LogicSignatureDto {
+export type LogicSignatureDto = {
   /** Logic signature program */
   l?: Uint8Array
 

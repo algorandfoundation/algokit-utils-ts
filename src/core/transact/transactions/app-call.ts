@@ -4,7 +4,7 @@
  * App call transactions are used to create, update, delete, opt-in to,
  * close out of, or clear state from Algorand apps (smart contracts).
  */
-export interface AppCallTransactionFields {
+export type AppCallTransactionFields = {
   /**
    * ID of the app being called.
    *
@@ -94,11 +94,44 @@ export interface AppCallTransactionFields {
 }
 
 /**
- * On-completion actions for app transactions.
+ * On-completion actions for application transactions.
  *
  * These values define what additional actions occur with the transaction.
  */
-export type OnApplicationComplete = 'NoOp' | 'OptIn' | 'CloseOut' | 'ClearState' | 'UpdateApplication' | 'DeleteApplication'
+export enum OnApplicationComplete {
+  /**
+   * NoOp indicates that an app transaction will simply call its
+   * approval program without any additional action.
+   */
+  NoOp,
+  /**
+   * OptIn indicates that an app transaction will allocate some
+   * local state for the app in the sender's account.
+   */
+  OptIn,
+  /**
+   * CloseOut indicates that an app transaction will deallocate
+   * some local state for the app from the user's account.
+   */
+  CloseOut,
+  /**
+   * ClearState is similar to CloseOut, but may never fail. This
+   * allows users to reclaim their minimum balance from an app
+   * they no longer wish to opt in to.
+   */
+  ClearState,
+  /**
+   * UpdateApplication indicates that an app transaction will
+   * update the approval program and clear state program for the app.
+   */
+  UpdateApplication,
+  /**
+   * DeleteApplication indicates that an app transaction will
+   * delete the app parameters for the app from the creator's
+   * balance record.
+   */
+  DeleteApplication,
+}
 
 /**
  * Schema for app state storage.
@@ -106,7 +139,7 @@ export type OnApplicationComplete = 'NoOp' | 'OptIn' | 'CloseOut' | 'ClearState'
  * Defines the maximum number of values that may be stored in app
  * key/value storage for both global and local state.
  */
-export interface StateSchema {
+export type StateSchema = {
   /**
    * Maximum number of integer values that may be stored.
    */
@@ -124,7 +157,7 @@ export interface StateSchema {
  * References a specific box that should be made available for the runtime
  * of the program.
  */
-export interface BoxReference {
+export type BoxReference = {
   /**
    * App ID that owns the box.
    * A value of 0 indicates the current app.

@@ -3,7 +3,7 @@
  *
  * Payment transactions are used to transfer ALGO between accounts.
  */
-export interface PaymentTransactionFields {
+export type PaymentTransactionFields = {
   /**
    * The address of the account receiving the ALGO payment.
    */

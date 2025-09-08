@@ -1,6 +1,10 @@
 import base32 from 'hi-base32'
 import sha512 from 'js-sha512'
+import { concatArrays } from './array'
 import { ADDRESS_LENGTH, CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH, PUBLIC_KEY_BYTE_LENGTH } from './constants'
+import { hash } from './crypto'
+
+const APP_ID_PREFIX = new TextEncoder().encode('appID')
 
 export function checksumFromPublicKey(publicKey: Uint8Array): Uint8Array {
   return Uint8Array.from(sha512.sha512_256.array(publicKey).slice(HASH_BYTES_LENGTH - CHECKSUM_BYTE_LENGTH, HASH_BYTES_LENGTH))
@@ -61,4 +65,27 @@ export function publicKeyFromAddress(address: string): Uint8Array {
   }
 
   return publicKey
+}
+
+/**
+ *  Computes the escrow address from an application ID.
+ * @param appID - The ID of the application.
+ * @returns The address corresponding to that application's escrow account.
+ */
+export function getAppAddress(appId: bigint): string {
+  const to_hash = concatArrays(APP_ID_PREFIX, encodeUint64(appId))
+  const publicKey = hash(to_hash)
+  const checksum = checksumFromPublicKey(publicKey)
+  return base32.encode(concatArrays(publicKey, checksum)).slice(0, ADDRESS_LENGTH)
+}
+
+function encodeUint64(num: bigint) {
+  if (num < 0n || num > BigInt('0xffffffffffffffff')) {
+    throw new Error('Input is not a 64-bit unsigned integer')
+  }
+
+  const encoded = new Uint8Array(8)
+  const view = new DataView(encoded.buffer)
+  view.setBigUint64(0, num)
+  return encoded
 }

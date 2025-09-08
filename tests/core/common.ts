@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from 'fs'
 import * as path from 'path'
-import { Transaction } from '../../src/core/transact/transactions/transaction'
+import { OnApplicationComplete } from '../../src/core/transact'
+import { Transaction, TransactionType } from '../../src/core/transact/transactions/transaction'
 
 const jsonString = fs.readFileSync(path.join(__dirname, 'test_data.json'), 'utf-8')
 
 const NUMERIC_FIELDS = ['fee', 'amount', 'firstValid', 'lastValid', 'assetId', 'total', 'appId', 'voteFirst', 'voteLast', 'voteKeyDilution']
+
+const transactionTypes = Object.fromEntries(Object.entries(TransactionType).map(([key, value]) => [key, value]))
+const onApplicationCompleteTypes = Object.fromEntries(Object.entries(OnApplicationComplete).map(([key, value]) => [key, value]))
 
 const defaultReviver = (key: string, value: unknown) => {
   if (Array.isArray(value) && value.every((n) => typeof n === 'number')) {
@@ -13,6 +17,7 @@ const defaultReviver = (key: string, value: unknown) => {
     if (key === 'assetReferences' || key === 'appReferences') {
       return value.map((n) => BigInt(n))
     }
+
     return new Uint8Array(value)
   }
 
@@ -30,6 +35,14 @@ const defaultReviver = (key: string, value: unknown) => {
       assetFreeze.frozen = false
     }
     return assetFreeze
+  }
+
+  if (key === 'transactionType') {
+    return transactionTypes[value as keyof typeof transactionTypes] as TransactionType
+  }
+
+  if (key === 'onComplete') {
+    return onApplicationCompleteTypes[value as keyof typeof onApplicationCompleteTypes] as OnApplicationComplete
   }
 
   return value
