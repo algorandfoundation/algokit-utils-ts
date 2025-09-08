@@ -8,8 +8,10 @@ import { BoxReference, OnApplicationComplete, StateSchema } from '../../transact
 import { TransactionType } from '../../transact/transactions/transaction'
 import {
   AbstractedComposerTransaction,
+  AbstractedMethodCallComposerTransaction,
   CommonTransactionParams,
   ComposerTransactionType,
+  ProcessedAbstractedMethodCallComposerTransaction,
   TransactionHeader,
   TransactionWithSigner,
 } from './common'
@@ -18,35 +20,53 @@ export type AppCallComposerTransaction = { type: ComposerTransactionType.AppCall
 export type AppCreateCallComposerTransaction = { type: ComposerTransactionType.AppCreateCall; data: AppCreateParams }
 export type AppUpdateCallComposerTransaction = { type: ComposerTransactionType.AppUpdateCall; data: AppUpdateParams }
 export type AppDeleteCallComposerTransaction = { type: ComposerTransactionType.AppDeleteCall; data: AppDeleteParams }
+
 export type AppCallMethodCallComposerTransaction = {
   type: ComposerTransactionType.AppCallMethodCall
   data: AppCallMethodCallParams
 }
+export type ProcessedAppCallMethodCallComposerTransaction = {
+  type: ComposerTransactionType.AppCallMethodCall
+  data: ProcessedAppCallMethodCallParams
+}
+
 export type AppCreateMethodCallComposerTransaction = {
   type: ComposerTransactionType.AppCreateMethodCall
   data: AppCreateMethodCallParams
 }
+export type ProcessedAppCreateMethodCallComposerTransaction = {
+  type: ComposerTransactionType.AppCreateMethodCall
+  data: ProcessedAppCreateMethodCallParams
+}
+
 export type AppUpdateMethodCallComposerTransaction = {
   type: ComposerTransactionType.AppUpdateMethodCall
   data: AppUpdateMethodCallParams
 }
+export type ProcessedAppUpdateMethodCallComposerTransaction = {
+  type: ComposerTransactionType.AppUpdateMethodCall
+  data: ProcessedAppUpdateMethodCallParams
+}
+
 export type AppDeleteMethodCallComposerTransaction = {
   type: ComposerTransactionType.AppDeleteMethodCall
   data: AppDeleteMethodCallParams
 }
+export type ProcessedAppDeleteMethodCallComposerTransaction = {
+  type: ComposerTransactionType.AppDeleteMethodCall
+  data: ProcessedAppDeleteMethodCallParams
+}
 
-export type ProcessedAppMethodCallArg = ABIValue | ABIReferenceValue | TransactionPlaceholder | DefaultValuePlaceholder
+export type ProcessedAppMethodCallArg = ABIValue | ABIReferenceValue | TransactionOrDefaultValuePlaceholder
 
 const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 
-type TransactionPlaceholder = undefined
-type DefaultValuePlaceholder = undefined
+type TransactionOrDefaultValuePlaceholder = undefined
 
 export type AppMethodCallArg =
   | ABIValue
   | ABIReferenceValue
-  | TransactionPlaceholder
-  | DefaultValuePlaceholder
+  | TransactionOrDefaultValuePlaceholder
   | Transaction
   | TransactionWithSigner
   | AbstractedComposerTransaction
@@ -79,6 +99,9 @@ export type AppCallMethodCallParams = CommonTransactionParams & {
   boxReferences?: BoxReference[]
   /** Defines what additional actions occur with the transaction. */
   onComplete?: OnApplicationComplete
+}
+export type ProcessedAppCallMethodCallParams = Omit<AppCallMethodCallParams, 'args'> & {
+  args: ProcessedAppMethodCallArg[]
 }
 
 /** Parameters for creating an app create method call transaction. */
@@ -138,6 +161,9 @@ export type AppCreateMethodCallParams = CommonTransactionParams & {
   /** The boxes that should be made available for the runtime of the program. */
   boxReferences?: BoxReference[]
 }
+export type ProcessedAppCreateMethodCallParams = Omit<AppCreateMethodCallParams, 'args'> & {
+  args: ProcessedAppMethodCallArg[]
+}
 
 /** Parameters for creating an app update method call transaction. */
 export type AppUpdateMethodCallParams = CommonTransactionParams & {
@@ -177,6 +203,9 @@ export type AppUpdateMethodCallParams = CommonTransactionParams & {
   /** The boxes that should be made available for the runtime of the program. */
   boxReferences?: BoxReference[]
 }
+export type ProcessedAppUpdateMethodCallParams = Omit<AppUpdateMethodCallParams, 'args'> & {
+  args: ProcessedAppMethodCallArg[]
+}
 
 /** Parameters for creating an app delete method call transaction. */
 export type AppDeleteMethodCallParams = CommonTransactionParams & {
@@ -204,6 +233,9 @@ export type AppDeleteMethodCallParams = CommonTransactionParams & {
   assetReferences?: bigint[]
   /** The boxes that should be made available for the runtime of the program. */
   boxReferences?: BoxReference[]
+}
+export type ProcessedAppDeleteMethodCallParams = Omit<AppDeleteMethodCallParams, 'args'> & {
+  args: ProcessedAppMethodCallArg[]
 }
 
 /** Parameters for creating an app call transaction. */
@@ -628,28 +660,89 @@ function encodeMethodArguments(
 }
 
 export function isComposerTransactionParamsArg(arg: AppMethodCallArg): arg is AbstractedComposerTransaction {
-  return typeof arg === 'object' && arg !== null && 'transactionType' in arg && 'data' in arg
+  return typeof arg === 'object' && arg !== undefined && 'type' in arg && 'data' in arg
+}
+
+const methodCallAbstractedComposerTransactionTypes = [
+  ComposerTransactionType.AppCallMethodCall,
+  ComposerTransactionType.AppCreateMethodCall,
+  ComposerTransactionType.AppUpdateMethodCall,
+  ComposerTransactionType.AppDeleteMethodCall,
+]
+
+export function isMethodCallComposerTransactionParamsArg(
+  arg: AbstractedComposerTransaction,
+): arg is AbstractedMethodCallComposerTransaction {
+  return methodCallAbstractedComposerTransactionTypes.includes(arg.type)
 }
 
 export function isTransactionArg(arg: AppMethodCallArg): arg is Transaction {
-  return typeof arg === 'object' && arg !== null && 'transactionType' in arg && 'sender' in arg && !('data' in arg)
+  return typeof arg === 'object' && arg !== undefined && 'transactionType' in arg && 'sender' in arg && !('data' in arg)
 }
 
 export function isTransactionWithSignerArg(arg: AppMethodCallArg): arg is TransactionWithSigner {
-  return typeof arg === 'object' && arg !== null && 'transaction' in arg && 'signer' in arg
+  return typeof arg === 'object' && arg !== undefined && 'transaction' in arg && 'signer' in arg
 }
 
-function processAppMethodCallArgs(args: AppMethodCallArg[]): ProcessedAppMethodCallArg[] {
+export function processAppMethodCallArgs(args: AppMethodCallArg[]): ProcessedAppMethodCallArg[] {
   return args.map((arg) => {
     if (arg === undefined) {
       // Handle explicit placeholders (either transaction or default value)
       return undefined
     } else if (isComposerTransactionParamsArg(arg) || isTransactionArg(arg) || isTransactionWithSignerArg(arg)) {
-      // Handle Transactions
+      // Handle Transactions by replacing with the transaction placeholder
       return undefined
     }
     return arg
   })
+}
+
+export function asProcessedAppCallMethodCallParams(
+  composerTransaction: AbstractedMethodCallComposerTransaction,
+): ProcessedAbstractedMethodCallComposerTransaction {
+  if (composerTransaction.type === ComposerTransactionType.AppCallMethodCall) {
+    return {
+      ...composerTransaction,
+      data: {
+        ...composerTransaction.data,
+        args: processAppMethodCallArgs(composerTransaction.data.args),
+      },
+    } satisfies ProcessedAppCallMethodCallComposerTransaction
+  }
+
+  if (composerTransaction.type === ComposerTransactionType.AppCreateMethodCall) {
+    return {
+      ...composerTransaction,
+      data: {
+        ...composerTransaction.data,
+        args: processAppMethodCallArgs(composerTransaction.data.args),
+      },
+    } satisfies ProcessedAppCreateMethodCallComposerTransaction
+  }
+
+  if (composerTransaction.type === ComposerTransactionType.AppUpdateMethodCall) {
+    return {
+      ...composerTransaction,
+      data: {
+        ...composerTransaction.data,
+        args: processAppMethodCallArgs(composerTransaction.data.args),
+      },
+    } satisfies ProcessedAppUpdateMethodCallComposerTransaction
+  }
+
+  if (composerTransaction.type === ComposerTransactionType.AppDeleteMethodCall) {
+    return {
+      ...composerTransaction,
+      data: {
+        ...composerTransaction.data,
+        args: processAppMethodCallArgs(composerTransaction.data.args),
+      },
+    } satisfies ProcessedAppDeleteMethodCallComposerTransaction
+  }
+
+  // This should never happen if all cases are covered
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  throw new Error(`Unsupported method call transaction type: ${(composerTransaction as any).type}`)
 }
 
 /**
@@ -659,20 +752,18 @@ function buildMethodCallCommon(
   params: {
     appId: bigint
     method: ABIMethod
-    args: AppMethodCallArg[]
+    args: ProcessedAppMethodCallArg[]
     accountReferences?: string[]
     appReferences?: bigint[]
     assetReferences?: bigint[]
   },
   header: TransactionHeader,
 ): { args: Uint8Array[]; accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
-  const processedArgs = processAppMethodCallArgs(params.args)
-
   const { accountReferences, appReferences, assetReferences } = populateMethodArgsIntoReferenceArrays(
     header.sender,
     params.appId,
     params.method,
-    processedArgs,
+    params.args,
     params.accountReferences,
     params.appReferences,
     params.assetReferences,
@@ -680,7 +771,7 @@ function buildMethodCallCommon(
 
   const encodedArgs = encodeMethodArguments(
     params.method,
-    processedArgs,
+    params.args,
     header.sender,
     params.appId,
     accountReferences,
@@ -696,7 +787,7 @@ function buildMethodCallCommon(
   }
 }
 
-export const buildAppCallMethodCall = (params: AppCallMethodCallParams, header: TransactionHeader): Transaction => {
+export const buildAppCallMethodCall = (params: ProcessedAppCallMethodCallParams, header: TransactionHeader): Transaction => {
   const common = buildMethodCallCommon(params, header)
 
   return {
@@ -714,7 +805,7 @@ export const buildAppCallMethodCall = (params: AppCallMethodCallParams, header: 
   }
 }
 
-export const buildAppCreateMethodCall = (params: AppCreateMethodCallParams, header: TransactionHeader): Transaction => {
+export const buildAppCreateMethodCall = (params: ProcessedAppCreateMethodCallParams, header: TransactionHeader): Transaction => {
   const common = buildMethodCallCommon({ ...params, appId: 0n }, header)
 
   return {
@@ -737,7 +828,7 @@ export const buildAppCreateMethodCall = (params: AppCreateMethodCallParams, head
   }
 }
 
-export const buildAppUpdateMethodCall = (params: AppUpdateMethodCallParams, header: TransactionHeader): Transaction => {
+export const buildAppUpdateMethodCall = (params: ProcessedAppUpdateMethodCallParams, header: TransactionHeader): Transaction => {
   const common = buildMethodCallCommon(params, header)
 
   return {
@@ -757,7 +848,7 @@ export const buildAppUpdateMethodCall = (params: AppUpdateMethodCallParams, head
   }
 }
 
-export const buildAppDeleteMethodCall = (params: AppDeleteMethodCallParams, header: TransactionHeader): Transaction => {
+export const buildAppDeleteMethodCall = (params: ProcessedAppDeleteMethodCallParams, header: TransactionHeader): Transaction => {
   const common = buildMethodCallCommon(params, header)
 
   return {

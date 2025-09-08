@@ -8,6 +8,10 @@ import {
   AppDeleteMethodCallComposerTransaction,
   AppUpdateCallComposerTransaction,
   AppUpdateMethodCallComposerTransaction,
+  ProcessedAppCallMethodCallComposerTransaction,
+  ProcessedAppCreateMethodCallComposerTransaction,
+  ProcessedAppDeleteMethodCallComposerTransaction,
+  ProcessedAppUpdateMethodCallComposerTransaction,
 } from './app-call'
 import { AssetConfigComposerTransaction, AssetCreateComposerTransaction, AssetDestroyComposerTransaction } from './asset-config'
 import { AssetFreezeComposerTransaction, AssetUnfreezeComposerTransaction } from './asset-freeze'
@@ -170,7 +174,19 @@ export enum ComposerTransactionType {
   NonParticipationKeyRegistration,
 }
 
-export type AbstractedComposerTransaction =
+export type AbstractedMethodCallComposerTransaction =
+  | AppCallMethodCallComposerTransaction
+  | AppCreateMethodCallComposerTransaction
+  | AppUpdateMethodCallComposerTransaction
+  | AppDeleteMethodCallComposerTransaction
+
+export type ProcessedAbstractedMethodCallComposerTransaction =
+  | ProcessedAppCallMethodCallComposerTransaction
+  | ProcessedAppCreateMethodCallComposerTransaction
+  | ProcessedAppUpdateMethodCallComposerTransaction
+  | ProcessedAppDeleteMethodCallComposerTransaction
+
+export type CommonAbstractedComposerTransaction =
   | PaymentComposerTransaction
   | AccountCloseComposerTransaction
   | AssetTransferComposerTransaction
@@ -186,13 +202,13 @@ export type AbstractedComposerTransaction =
   | AppCreateCallComposerTransaction
   | AppUpdateCallComposerTransaction
   | AppDeleteCallComposerTransaction
-  | AppCallMethodCallComposerTransaction
-  | AppCreateMethodCallComposerTransaction
-  | AppUpdateMethodCallComposerTransaction
-  | AppDeleteMethodCallComposerTransaction
   | OnlineKeyRegistrationComposerTransaction
   | OfflineKeyRegistrationComposerTransaction
   | NonParticipationKeyRegistrationComposerTransaction
+
+export type AbstractedComposerTransaction = CommonAbstractedComposerTransaction | AbstractedMethodCallComposerTransaction
+
+export type ProcessedAbstractedComposerTransaction = CommonAbstractedComposerTransaction | ProcessedAbstractedMethodCallComposerTransaction
 
 export interface TransactionWithSigner {
   transaction: Transaction

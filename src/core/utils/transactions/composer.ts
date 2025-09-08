@@ -41,6 +41,7 @@ import {
   AppMethodCallArg,
   AppUpdateMethodCallParams,
   AppUpdateParams,
+  asProcessedAppCallMethodCallParams,
   buildAppCall,
   buildAppCallMethodCall,
   buildAppCreate,
@@ -50,8 +51,14 @@ import {
   buildAppUpdate,
   buildAppUpdateMethodCall,
   isComposerTransactionParamsArg,
+  isMethodCallComposerTransactionParamsArg,
   isTransactionArg,
   isTransactionWithSignerArg,
+  processAppMethodCallArgs,
+  ProcessedAppCallMethodCallComposerTransaction,
+  ProcessedAppCreateMethodCallComposerTransaction,
+  ProcessedAppDeleteMethodCallComposerTransaction,
+  ProcessedAppUpdateMethodCallComposerTransaction,
 } from './app-call'
 import {
   AssetConfigParams,
@@ -74,9 +81,9 @@ import {
   buildAssetTransfer,
 } from './asset-transfer'
 import {
-  AbstractedComposerTransaction,
   CommonTransactionParams,
   ComposerTransactionType,
+  ProcessedAbstractedComposerTransaction,
   TransactionComposerTransaction,
   TransactionHeader,
   TransactionSigner,
@@ -111,7 +118,10 @@ export interface ResourcePopulation {
   useAccessList: boolean
 }
 
-export type ComposerTransaction = TransactionComposerTransaction | TransactionWithSignerComposerTransaction | AbstractedComposerTransaction
+export type ComposerTransaction =
+  | TransactionComposerTransaction
+  | TransactionWithSignerComposerTransaction
+  | ProcessedAbstractedComposerTransaction
 
 type TransactionAnalysis = {
   /** The fee difference required for this transaction */
@@ -193,7 +203,7 @@ export class Composer {
     this.transactions.push(...txns)
   }
 
-  private addAppMethodCallInternal(args: AppMethodCallArg[], transaction: ComposerTransaction): void {
+  private addAppMethodCallInternal(args: AppMethodCallArg[], transaction: ProcessedAbstractedComposerTransaction): void {
     const composerTransactions = extractComposerTransactionsFromAppMethodCallParams(args)
     composerTransactions.push(transaction)
     this.push(...composerTransactions)
@@ -272,19 +282,43 @@ export class Composer {
   }
 
   public addAppCallMethodCall(params: AppCallMethodCallParams) {
-    this.addAppMethodCallInternal(params.args, { type: ComposerTransactionType.AppCallMethodCall, data: params })
+    this.addAppMethodCallInternal(params.args, {
+      type: ComposerTransactionType.AppCallMethodCall,
+      data: {
+        ...params,
+        args: processAppMethodCallArgs(params.args),
+      },
+    } satisfies ProcessedAppCallMethodCallComposerTransaction)
   }
 
   public addAppCreateMethodCall(params: AppCreateMethodCallParams) {
-    this.addAppMethodCallInternal(params.args, { type: ComposerTransactionType.AppCreateMethodCall, data: params })
+    this.addAppMethodCallInternal(params.args, {
+      type: ComposerTransactionType.AppCreateMethodCall,
+      data: {
+        ...params,
+        args: processAppMethodCallArgs(params.args),
+      },
+    } satisfies ProcessedAppCreateMethodCallComposerTransaction)
   }
 
   public addAppUpdateMethodCall(params: AppUpdateMethodCallParams) {
-    this.addAppMethodCallInternal(params.args, { type: ComposerTransactionType.AppUpdateMethodCall, data: params })
+    this.addAppMethodCallInternal(params.args, {
+      type: ComposerTransactionType.AppUpdateMethodCall,
+      data: {
+        ...params,
+        args: processAppMethodCallArgs(params.args),
+      },
+    } satisfies ProcessedAppUpdateMethodCallComposerTransaction)
   }
 
   public addAppDeleteMethodCall(params: AppDeleteMethodCallParams) {
-    this.addAppMethodCallInternal(params.args, { type: ComposerTransactionType.AppDeleteMethodCall, data: params })
+    this.addAppMethodCallInternal(params.args, {
+      type: ComposerTransactionType.AppDeleteMethodCall,
+      data: {
+        ...params,
+        args: processAppMethodCallArgs(params.args),
+      },
+    } satisfies ProcessedAppDeleteMethodCallComposerTransaction)
   }
 
   public addTransaction(transaction: Transaction, signer?: TransactionSigner) {
@@ -422,6 +456,7 @@ export class Composer {
           break
         default:
           // This should never happen if all cases are covered
+
           throw new Error(`Unsupported transaction type: ${(ctxn as any).type}`)
       }
 
@@ -842,7 +877,7 @@ function extractComposerTransactionsFromAppMethodCallParams(methodCallArgs: AppM
 
   for (const arg of methodCallArgs) {
     if (arg === undefined) {
-      // TransactionPlaceholder or DefaultValuePlaceholder
+      // is a TransactionOrDefaultValuePlaceholder
       continue
     } else if (isTransactionArg(arg)) {
       composerTransactions.push({ type: ComposerTransactionType.Transaction, data: arg })
@@ -851,7 +886,13 @@ function extractComposerTransactionsFromAppMethodCallParams(methodCallArgs: AppM
       composerTransactions.push({ type: ComposerTransactionType.TransactionWithSigner, data: arg })
       continue
     } else if (isComposerTransactionParamsArg(arg)) {
-      composerTransactions.push(arg)
+      if (isMethodCallComposerTransactionParamsArg(arg)) {
+        const nestedComposerTransactions = extractComposerTransactionsFromAppMethodCallParams(arg.data.args)
+        composerTransactions.push(...nestedComposerTransactions)
+        composerTransactions.push(asProcessedAppCallMethodCallParams(arg))
+      } else {
+        composerTransactions.push(arg)
+      }
     }
   }
 
