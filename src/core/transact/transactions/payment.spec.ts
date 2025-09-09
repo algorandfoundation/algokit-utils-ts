@@ -1,4 +1,4 @@
-import { describe, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { testData } from '../../../../tests/core/common'
 import {
   assertAssignFee,
@@ -12,6 +12,7 @@ import {
   assertMultisigExample,
   assertTransactionId,
 } from '../../../../tests/core/transaction_asserts'
+import { Transaction, TransactionType, validateTransaction } from './transaction'
 
 const txnTestData = Object.entries({
   ['payment']: testData.simplePayment,
@@ -64,5 +65,69 @@ describe('Payment', () => {
         assertEncode(label, testData)
       })
     }
+  })
+
+  describe('Payment Transaction Validation', () => {
+    test('should validate valid payment transaction', () => {
+      const transaction: Transaction = {
+        transactionType: TransactionType.Payment,
+        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        firstValid: 1000n,
+        lastValid: 2000n,
+        payment: {
+          amount: 1000000n, // 1 ALGO
+          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+        },
+      }
+
+      expect(() => validateTransaction(transaction)).not.toThrow()
+    })
+
+    test('should validate payment transaction with zero amount', () => {
+      const transaction: Transaction = {
+        transactionType: TransactionType.Payment,
+        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        firstValid: 1000n,
+        lastValid: 2000n,
+        payment: {
+          amount: 0n, // Zero payment is allowed
+          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+        },
+      }
+
+      expect(() => validateTransaction(transaction)).not.toThrow()
+    })
+
+    test('should validate payment transaction with close remainder', () => {
+      const transaction: Transaction = {
+        transactionType: TransactionType.Payment,
+        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        firstValid: 1000n,
+        lastValid: 2000n,
+        payment: {
+          amount: 500000n, // 0.5 ALGO
+          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          closeRemainderTo: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Close account
+        },
+      }
+
+      expect(() => validateTransaction(transaction)).not.toThrow()
+    })
+
+    test('should validate self-payment transaction', () => {
+      const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
+      const transaction: Transaction = {
+        transactionType: TransactionType.Payment,
+        sender: senderAddress,
+        firstValid: 1000n,
+        lastValid: 2000n,
+        payment: {
+          amount: 1000000n,
+          receiver: senderAddress, // Self-payment
+        },
+      }
+
+      expect(() => validateTransaction(transaction)).not.toThrow()
+    })
   })
 })

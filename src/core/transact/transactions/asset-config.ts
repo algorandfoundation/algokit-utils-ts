@@ -1,3 +1,6 @@
+import { MAX_ASSET_DECIMALS, MAX_ASSET_NAME_LENGTH, MAX_ASSET_UNIT_NAME_LENGTH, MAX_ASSET_URL_LENGTH } from '../../constants'
+import { TransactionValidationError, TransactionValidationErrorType } from './common'
+
 /**
  * Represents an asset configuration transaction that creates, reconfigures, or destroys assets.
  */
@@ -127,4 +130,153 @@ export type AssetConfigTransactionFields = {
    * If not set or set to the Zero address the field is permanently empty.
    */
   clawback?: string
+}
+
+/**
+ * Validate asset configuration transaction fields
+ */
+export function validateAssetConfigTransaction(assetConfig: AssetConfigTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (assetConfig.assetId === 0n) {
+    // Asset creation
+    errors.push(...validateAssetCreation(assetConfig))
+  } else {
+    // Asset configuration or destruction
+    errors.push(...validateAssetConfiguration(assetConfig))
+  }
+
+  return errors
+}
+
+/**
+ * Validate asset creation fields
+ */
+function validateAssetCreation(assetConfig: AssetConfigTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (assetConfig.total === undefined) {
+    errors.push({
+      type: TransactionValidationErrorType.RequiredField,
+      data: 'Total',
+    })
+  }
+
+  if (assetConfig.decimals !== undefined && assetConfig.decimals > MAX_ASSET_DECIMALS) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Decimals',
+        actual: assetConfig.decimals,
+        max: MAX_ASSET_DECIMALS,
+        unit: 'decimal places',
+      },
+    })
+  }
+
+  if (assetConfig.unitName && assetConfig.unitName.length > MAX_ASSET_UNIT_NAME_LENGTH) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Unit name',
+        actual: assetConfig.unitName.length,
+        max: MAX_ASSET_UNIT_NAME_LENGTH,
+        unit: 'bytes',
+      },
+    })
+  }
+
+  if (assetConfig.assetName && assetConfig.assetName.length > MAX_ASSET_NAME_LENGTH) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Asset name',
+        actual: assetConfig.assetName.length,
+        max: MAX_ASSET_NAME_LENGTH,
+        unit: 'bytes',
+      },
+    })
+  }
+
+  if (assetConfig.url && assetConfig.url.length > MAX_ASSET_URL_LENGTH) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Url',
+        actual: assetConfig.url.length,
+        max: MAX_ASSET_URL_LENGTH,
+        unit: 'bytes',
+      },
+    })
+  }
+
+  return errors
+}
+
+/**
+ * Validate asset configuration fields
+ */
+function validateAssetConfiguration(assetConfig: AssetConfigTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  const hasAssetParams =
+    assetConfig.total !== undefined ||
+    assetConfig.decimals !== undefined ||
+    assetConfig.defaultFrozen !== undefined ||
+    assetConfig.assetName !== undefined ||
+    assetConfig.unitName !== undefined ||
+    assetConfig.url !== undefined ||
+    assetConfig.metadataHash !== undefined ||
+    assetConfig.manager !== undefined ||
+    assetConfig.reserve !== undefined ||
+    assetConfig.freeze !== undefined ||
+    assetConfig.clawback !== undefined
+
+  if (hasAssetParams) {
+    // These fields are immutable after creation
+    if (assetConfig.total !== undefined) {
+      errors.push({
+        type: TransactionValidationErrorType.ImmutableField,
+        data: 'Total',
+      })
+    }
+    if (assetConfig.decimals !== undefined) {
+      errors.push({
+        type: TransactionValidationErrorType.ImmutableField,
+        data: 'Decimals',
+      })
+    }
+    if (assetConfig.defaultFrozen !== undefined) {
+      errors.push({
+        type: TransactionValidationErrorType.ImmutableField,
+        data: 'Default frozen',
+      })
+    }
+    if (assetConfig.assetName !== undefined) {
+      errors.push({
+        type: TransactionValidationErrorType.ImmutableField,
+        data: 'Asset name',
+      })
+    }
+    if (assetConfig.unitName !== undefined) {
+      errors.push({
+        type: TransactionValidationErrorType.ImmutableField,
+        data: 'Unit name',
+      })
+    }
+    if (assetConfig.url !== undefined) {
+      errors.push({
+        type: TransactionValidationErrorType.ImmutableField,
+        data: 'Url',
+      })
+    }
+    if (assetConfig.metadataHash !== undefined) {
+      errors.push({
+        type: TransactionValidationErrorType.ImmutableField,
+        data: 'Metadata hash',
+      })
+    }
+  }
+
+  return errors
 }

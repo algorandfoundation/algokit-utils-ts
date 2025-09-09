@@ -8,14 +8,15 @@ import {
   TRANSACTION_ID_LENGTH,
 } from '../../constants'
 import { hash } from '../../crypto'
-import { OmitEmptyObjectCodec, addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, stringCodec } from '../encoding/codecs'
+import { addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec, stringCodec } from '../encoding/codecs'
 import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
 import { AssetParamsDto, StateSchemaDto, TransactionDto } from '../encoding/transaction-dto'
-import { AppCallTransactionFields, OnApplicationComplete, StateSchema } from './app-call'
-import { AssetConfigTransactionFields } from './asset-config'
-import { AssetFreezeTransactionFields } from './asset-freeze'
-import { AssetTransferTransactionFields } from './asset-transfer'
-import { KeyRegistrationTransactionFields } from './key-registration'
+import { AppCallTransactionFields, OnApplicationComplete, StateSchema, validateAppCallTransaction } from './app-call'
+import { AssetConfigTransactionFields, validateAssetConfigTransaction } from './asset-config'
+import { AssetFreezeTransactionFields, validateAssetFreezeTransaction } from './asset-freeze'
+import { AssetTransferTransactionFields, validateAssetTransferTransaction } from './asset-transfer'
+import { getValidationErrorMessage, TransactionValidationError } from './common'
+import { KeyRegistrationTransactionFields, validateKeyRegistrationTransaction } from './key-registration'
 import { PaymentTransactionFields } from './payment'
 
 /**
@@ -195,7 +196,6 @@ export function getEncodedTransactionType(encoded_transaction: Uint8Array): Tran
  * @returns The MsgPack encoded bytes or an error if encoding fails.
  */
 export function encodeTransaction(transaction: Transaction): Uint8Array {
-  validateTransaction(transaction)
   const rawBytes = encodeTransactionRaw(transaction)
 
   // Add domain separation prefix
@@ -214,7 +214,7 @@ export function encodeTransactions(transactions: Transaction[]): Uint8Array[] {
 }
 
 /**
- * Validate a transaction structure
+ * Validate a transaction
  */
 export function validateTransaction(transaction: Transaction): void {
   if (!transaction.sender) {
@@ -239,6 +239,31 @@ export function validateTransaction(transaction: Transaction): void {
 
   if (setFieldsCount > 1) {
     throw new Error('Multiple transaction type specific fields set')
+  }
+
+  // Perform type-specific validation where applicable
+  let typeName = 'Transaction'
+  const errors = new Array<TransactionValidationError>()
+  if (transaction.assetTransfer) {
+    typeName = 'Asset transfer'
+    errors.push(...validateAssetTransferTransaction(transaction.assetTransfer))
+  } else if (transaction.assetConfig) {
+    typeName = 'Asset config'
+    errors.push(...validateAssetConfigTransaction(transaction.assetConfig))
+  } else if (transaction.appCall) {
+    typeName = 'App call'
+    errors.push(...validateAppCallTransaction(transaction.appCall))
+  } else if (transaction.keyRegistration) {
+    typeName = 'Key registration'
+    errors.push(...validateKeyRegistrationTransaction(transaction.keyRegistration))
+  } else if (transaction.assetFreeze) {
+    typeName = 'Asset freeze'
+    errors.push(...validateAssetFreezeTransaction(transaction.assetFreeze))
+  }
+
+  if (errors.length > 0) {
+    const errorMessages = errors.map((e) => getValidationErrorMessage(e))
+    throw new Error(`${typeName} validation failed: ${errorMessages.join('\n')}`)
   }
 }
 
