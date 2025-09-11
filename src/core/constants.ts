@@ -14,5 +14,26 @@ export const BOOL_TRUE_BYTE = 0x80
 export const BOOL_FALSE_BYTE = 0x00
 export const SIGNATURE_BYTE_LENGTH = 64
 export const EMPTY_SIGNATURE = new Uint8Array(SIGNATURE_BYTE_LENGTH)
-export const MAX_ACCOUNT_REFERENCES = 4
+
+// Application program size constraints
+export const MAX_EXTRA_PROGRAM_PAGES = 3
+export const PROGRAM_PAGE_SIZE = 2048 // In bytes
+
+// Application reference limits
+export const MAX_APP_ARGS = 16
+export const MAX_ARGS_SIZE = 2048 // Maximum size in bytes of all args combined
 export const MAX_OVERALL_REFERENCES = 8
+export const MAX_ACCOUNT_REFERENCES = 4
+export const MAX_APP_REFERENCES = 8
+export const MAX_ASSET_REFERENCES = 8
+export const MAX_BOX_REFERENCES = 8
+
+// Application state schema limits
+export const MAX_GLOBAL_STATE_KEYS = 64
+export const MAX_LOCAL_STATE_KEYS = 16
+
+// Asset configuration limits
+export const MAX_ASSET_NAME_LENGTH = 32 // In bytes
+export const MAX_ASSET_UNIT_NAME_LENGTH = 8 // In bytes
+export const MAX_ASSET_URL_LENGTH = 96 // In bytes
+export const MAX_ASSET_DECIMALS = 19

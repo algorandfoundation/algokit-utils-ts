@@ -1,3 +1,18 @@
+import {
+  MAX_ACCOUNT_REFERENCES,
+  MAX_APP_ARGS,
+  MAX_APP_REFERENCES,
+  MAX_ARGS_SIZE,
+  MAX_ASSET_REFERENCES,
+  MAX_BOX_REFERENCES,
+  MAX_EXTRA_PROGRAM_PAGES,
+  MAX_GLOBAL_STATE_KEYS,
+  MAX_LOCAL_STATE_KEYS,
+  MAX_OVERALL_REFERENCES,
+  PROGRAM_PAGE_SIZE,
+} from '../../constants'
+import { TransactionValidationError, TransactionValidationErrorType } from './common'
+
 /**
  * Represents an app call transaction that interacts with Algorand Smart Contracts.
  *
@@ -168,4 +183,297 @@ export type BoxReference = {
    * Name of the box.
    */
   name: Uint8Array
+}
+
+const FIELD_ARGS = 'Args'
+const FIELD_APPROVAL_PROGRAM = 'Approval program'
+const FIELD_CLEAR_STATE_PROGRAM = 'Clear state program'
+const FIELD_GLOBAL_STATE_SCHEMA = 'Global state schema'
+const FIELD_LOCAL_STATE_SCHEMA = 'Local state schema'
+const FIELD_EXTRA_PROGRAM_PAGES = 'Extra program pages'
+
+/**
+ * Validate app call transaction fields
+ */
+export function validateAppCallTransaction(appCall: AppCallTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (appCall.appId === 0n) {
+    // App creation
+    errors.push(...validateAppCreation(appCall))
+  } else {
+    // App call, update, or delete
+    errors.push(...validateAppOperation(appCall))
+  }
+
+  // Common validations for all app operations
+  errors.push(...validateAppCommonFields(appCall))
+
+  return errors
+}
+
+/**
+ * Validate app creation fields
+ */
+function validateAppCreation(appCall: AppCallTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (!appCall.approvalProgram || appCall.approvalProgram.length === 0) {
+    errors.push({
+      type: TransactionValidationErrorType.RequiredField,
+      data: FIELD_APPROVAL_PROGRAM,
+    })
+  }
+
+  if (!appCall.clearStateProgram || appCall.clearStateProgram.length === 0) {
+    errors.push({
+      type: TransactionValidationErrorType.RequiredField,
+      data: FIELD_CLEAR_STATE_PROGRAM,
+    })
+  }
+
+  const extraPages = appCall.extraProgramPages ?? 0
+  if (extraPages > MAX_EXTRA_PROGRAM_PAGES) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: FIELD_EXTRA_PROGRAM_PAGES,
+        actual: extraPages,
+        max: MAX_EXTRA_PROGRAM_PAGES,
+        unit: 'pages',
+      },
+    })
+  }
+
+  const maxProgramSize = PROGRAM_PAGE_SIZE + extraPages * PROGRAM_PAGE_SIZE
+
+  if (appCall.approvalProgram && appCall.approvalProgram.length > maxProgramSize) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: FIELD_APPROVAL_PROGRAM,
+        actual: appCall.approvalProgram.length,
+        max: maxProgramSize,
+        unit: 'bytes',
+      },
+    })
+  }
+
+  if (appCall.clearStateProgram && appCall.clearStateProgram.length > maxProgramSize) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: FIELD_CLEAR_STATE_PROGRAM,
+        actual: appCall.clearStateProgram.length,
+        max: maxProgramSize,
+        unit: 'bytes',
+      },
+    })
+  }
+
+  const totalProgramSize = (appCall.approvalProgram?.length ?? 0) + (appCall.clearStateProgram?.length ?? 0)
+  if (totalProgramSize > maxProgramSize) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Combined approval and clear state programs',
+        actual: totalProgramSize,
+        max: maxProgramSize,
+        unit: 'bytes',
+      },
+    })
+  }
+
+  if (appCall.globalStateSchema) {
+    const totalKeys = appCall.globalStateSchema.numUints + appCall.globalStateSchema.numByteSlices
+    if (totalKeys > MAX_GLOBAL_STATE_KEYS) {
+      errors.push({
+        type: TransactionValidationErrorType.FieldTooLong,
+        data: {
+          field: FIELD_GLOBAL_STATE_SCHEMA,
+          actual: appCall.globalStateSchema.numUints + appCall.globalStateSchema.numByteSlices,
+          max: MAX_GLOBAL_STATE_KEYS,
+          unit: 'keys',
+        },
+      })
+    }
+  }
+
+  if (appCall.localStateSchema) {
+    const totalKeys = appCall.localStateSchema.numUints + appCall.localStateSchema.numByteSlices
+    if (totalKeys > MAX_LOCAL_STATE_KEYS) {
+      errors.push({
+        type: TransactionValidationErrorType.FieldTooLong,
+        data: {
+          field: FIELD_LOCAL_STATE_SCHEMA,
+          actual: appCall.localStateSchema.numUints + appCall.localStateSchema.numByteSlices,
+          max: MAX_LOCAL_STATE_KEYS,
+          unit: 'keys',
+        },
+      })
+    }
+  }
+
+  return errors
+}
+
+/**
+ * Validate app operation (update, delete, call) fields
+ */
+function validateAppOperation(appCall: AppCallTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (appCall.onComplete === OnApplicationComplete.UpdateApplication) {
+    if (!appCall.approvalProgram || appCall.approvalProgram.length === 0) {
+      errors.push({
+        type: TransactionValidationErrorType.RequiredField,
+        data: FIELD_APPROVAL_PROGRAM,
+      })
+    }
+    if (!appCall.clearStateProgram || appCall.clearStateProgram.length === 0) {
+      errors.push({
+        type: TransactionValidationErrorType.RequiredField,
+        data: FIELD_CLEAR_STATE_PROGRAM,
+      })
+    }
+  }
+
+  // These fields are immutable and cannot be set for existing apps
+  if (appCall.globalStateSchema !== undefined) {
+    errors.push({
+      type: TransactionValidationErrorType.ImmutableField,
+      data: FIELD_GLOBAL_STATE_SCHEMA,
+    })
+  }
+  if (appCall.localStateSchema !== undefined) {
+    errors.push({
+      type: TransactionValidationErrorType.ImmutableField,
+      data: FIELD_LOCAL_STATE_SCHEMA,
+    })
+  }
+  if (appCall.extraProgramPages !== undefined) {
+    errors.push({
+      type: TransactionValidationErrorType.ImmutableField,
+      data: FIELD_EXTRA_PROGRAM_PAGES,
+    })
+  }
+
+  return errors
+}
+
+/**
+ * Validate common app call fields
+ */
+function validateAppCommonFields(appCall: AppCallTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (appCall.args) {
+    if (appCall.args.length > MAX_APP_ARGS) {
+      errors.push({
+        type: TransactionValidationErrorType.FieldTooLong,
+        data: {
+          field: FIELD_ARGS,
+          actual: appCall.args.length,
+          max: MAX_APP_ARGS,
+          unit: 'arguments',
+        },
+      })
+    }
+
+    const totalArgsSize = appCall.args.reduce((sum, arg) => sum + arg.length, 0)
+    if (totalArgsSize > MAX_ARGS_SIZE) {
+      errors.push({
+        type: TransactionValidationErrorType.FieldTooLong,
+        data: {
+          field: 'Args total size',
+          actual: totalArgsSize,
+          max: MAX_ARGS_SIZE,
+          unit: 'bytes',
+        },
+      })
+    }
+  }
+
+  if (appCall.accountReferences && appCall.accountReferences.length > MAX_ACCOUNT_REFERENCES) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Account references',
+        actual: appCall.accountReferences.length,
+        max: MAX_ACCOUNT_REFERENCES,
+        unit: 'refs',
+      },
+    })
+  }
+
+  if (appCall.appReferences && appCall.appReferences.length > MAX_APP_REFERENCES) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'App references',
+        actual: appCall.appReferences.length,
+        max: MAX_APP_REFERENCES,
+        unit: 'refs',
+      },
+    })
+  }
+
+  if (appCall.assetReferences && appCall.assetReferences.length > MAX_ASSET_REFERENCES) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Asset references',
+        actual: appCall.assetReferences.length,
+        max: MAX_ASSET_REFERENCES,
+        unit: 'refs',
+      },
+    })
+  }
+
+  // Validate box references
+  if (appCall.boxReferences) {
+    if (appCall.boxReferences.length > MAX_BOX_REFERENCES) {
+      errors.push({
+        type: TransactionValidationErrorType.FieldTooLong,
+        data: {
+          field: 'Box references',
+          actual: appCall.boxReferences.length,
+          max: MAX_BOX_REFERENCES,
+          unit: 'refs',
+        },
+      })
+    }
+
+    // Validate that box reference app IDs are in app references
+    const appRefs = appCall.appReferences || []
+    for (const boxRef of appCall.boxReferences) {
+      if (boxRef.appId !== 0n && boxRef.appId !== appCall.appId && !appRefs.includes(boxRef.appId)) {
+        errors.push({
+          type: TransactionValidationErrorType.ArbitraryConstraint,
+          data: `Box reference for app ID ${boxRef.appId} must be in app references`,
+        })
+      }
+    }
+  }
+
+  // Validate overall reference count
+  const totalReferences =
+    (appCall.accountReferences?.length || 0) +
+    (appCall.appReferences?.length || 0) +
+    (appCall.assetReferences?.length || 0) +
+    (appCall.boxReferences?.length || 0)
+
+  if (totalReferences > MAX_OVERALL_REFERENCES) {
+    errors.push({
+      type: TransactionValidationErrorType.FieldTooLong,
+      data: {
+        field: 'Total references',
+        actual: totalReferences,
+        max: MAX_OVERALL_REFERENCES,
+        unit: 'refs',
+      },
+    })
+  }
+
+  return errors
 }

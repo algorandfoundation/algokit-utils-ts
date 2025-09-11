@@ -1,3 +1,5 @@
+import { TransactionValidationError, TransactionValidationErrorType } from './common'
+
 /**
  * Represents an asset freeze transaction that freezes or unfreezes asset holdings.
  *
@@ -22,4 +24,20 @@ export type AssetFreezeTransactionFields = {
    * `false` to unfreeze the asset holdings (allow transfers).
    */
   frozen: boolean
+}
+
+/**
+ * Validate asset freeze transaction fields
+ */
+export function validateAssetFreezeTransaction(assetFreeze: AssetFreezeTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (assetFreeze.assetId === 0n) {
+    errors.push({
+      type: TransactionValidationErrorType.ZeroValueField,
+      data: 'Asset ID',
+    })
+  }
+
+  return errors
 }

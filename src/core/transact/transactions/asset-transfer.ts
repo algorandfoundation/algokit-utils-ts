@@ -1,3 +1,5 @@
+import { TransactionValidationError, TransactionValidationErrorType } from './common'
+
 /**
  * Represents an asset transfer transaction that moves ASAs between accounts.
  *
@@ -45,4 +47,20 @@ export type AssetTransferTransactionFields = {
    * This effectively removes the asset from the sender's account.
    */
   closeRemainderTo?: string
+}
+
+/**
+ * Validate asset transfer transaction fields
+ */
+export function validateAssetTransferTransaction(assetTransfer: AssetTransferTransactionFields): TransactionValidationError[] {
+  const errors = new Array<TransactionValidationError>()
+
+  if (assetTransfer.assetId === 0n) {
+    errors.push({
+      type: TransactionValidationErrorType.ZeroValueField,
+      data: 'Asset ID',
+    })
+  }
+
+  return errors
 }
