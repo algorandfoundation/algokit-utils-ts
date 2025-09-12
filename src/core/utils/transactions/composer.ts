@@ -12,14 +12,14 @@ import { getAppAddress } from '../../address'
 import { concatArrays } from '../../array'
 import { EMPTY_SIGNATURE, MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, MAX_TX_GROUP_SIZE } from '../../constants'
 import {
+  SignedTransaction,
+  Transaction,
+  TransactionType,
   assignFee,
   calculateFee,
   encodeSignedTransactions,
   getTransactionId,
   groupTransactions,
-  SignedTransaction,
-  Transaction,
-  TransactionType,
 } from '../../transact'
 import { genesisIdIsLocalNet } from '../clients/network-client'
 import {
@@ -41,6 +41,10 @@ import {
   AppMethodCallArg,
   AppUpdateMethodCallParams,
   AppUpdateParams,
+  ProcessedAppCallMethodCallComposerTransaction,
+  ProcessedAppCreateMethodCallComposerTransaction,
+  ProcessedAppDeleteMethodCallComposerTransaction,
+  ProcessedAppUpdateMethodCallComposerTransaction,
   asProcessedAppCallMethodCallParams,
   buildAppCall,
   buildAppCallMethodCall,
@@ -55,10 +59,6 @@ import {
   isTransactionArg,
   isTransactionWithSignerArg,
   processAppMethodCallArgs,
-  ProcessedAppCallMethodCallComposerTransaction,
-  ProcessedAppCreateMethodCallComposerTransaction,
-  ProcessedAppDeleteMethodCallComposerTransaction,
-  ProcessedAppUpdateMethodCallComposerTransaction,
 } from './app-call'
 import {
   AssetConfigParams,
@@ -81,33 +81,29 @@ import {
   buildAssetTransfer,
 } from './asset-transfer'
 import {
-  CommonTransactionParams,
   ComposerTransactionType,
+  CommonTransactionParams,
   ProcessedAbstractedComposerTransaction,
   TransactionComposerTransaction,
   TransactionHeader,
   TransactionSigner,
+  SignerGetter,
   TransactionWithSigner,
   TransactionWithSignerComposerTransaction,
 } from './common'
 import { FeeDelta, FeePriority } from './fee-coverage'
 import {
-  buildNonParticipationKeyRegistration,
-  buildOfflineKeyRegistration,
-  buildOnlineKeyRegistration,
   NonParticipationKeyRegistrationParams,
   OfflineKeyRegistrationParams,
   OnlineKeyRegistrationParams,
+  buildNonParticipationKeyRegistration,
+  buildOfflineKeyRegistration,
+  buildOnlineKeyRegistration,
 } from './key-registration'
-import { AccountCloseParams, buildAccountClose, buildPayment, PaymentParams } from './payment'
+import { AccountCloseParams, PaymentParams, buildAccountClose, buildPayment } from './payment'
 
 // ABI return values are stored in logs with the prefix 0x151f7c75
 const ABI_RETURN_PREFIX = new Uint8Array([0x15, 0x1f, 0x7c, 0x75])
-
-// Simple signer getter interface
-interface SignerGetter {
-  getSigner(address: string): TransactionSigner
-}
 
 export interface SendParams {
   maxRoundsToWaitForConfirmation?: number
@@ -156,7 +152,7 @@ type GroupResourceToPopulate =
   | { type: GroupResourceType.AssetHolding; data: AssetHoldingReference }
   | { type: GroupResourceType.AppLocal; data: ApplicationLocalReference }
 
-type SendTransactionComposerResults = {
+export type SendTransactionComposerResults = {
   group?: Uint8Array
   transactionIds: string[]
   confirmations: PendingTransactionResponse[]
