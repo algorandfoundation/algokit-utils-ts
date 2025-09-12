@@ -1,7 +1,16 @@
 import { ABIReturn } from '../../abi/abi-method'
 import { Transaction } from '../../transact'
 import { PendingTransactionResponse } from '../temp'
-import type { AppCallParams, AppCreateParams, AppDeleteParams, AppUpdateParams } from './app-call'
+import type {
+  AppCallMethodCallParams,
+  AppCallParams,
+  AppCreateMethodCallParams,
+  AppCreateParams,
+  AppDeleteMethodCallParams,
+  AppDeleteParams,
+  AppUpdateMethodCallParams,
+  AppUpdateParams,
+} from './app-call'
 import type { AssetConfigParams, AssetCreateParams, AssetDestroyParams } from './asset-config'
 import type { AssetFreezeParams } from './asset-freeze'
 import type { AssetOptInParams, AssetOptOutParams, AssetTransferParams } from './asset-transfer'
@@ -40,6 +49,7 @@ export type SendAppCallResult = SendTransactionResult & {
 
 export type SendAppCreateResult = SendTransactionResult & {
   appId: bigint
+  abiReturn?: ABIReturn
   compiledApproval?: Uint8Array
   compiledClear?: Uint8Array
 }
@@ -168,18 +178,12 @@ export class TransactionSender {
     return await this.buildSendTransactionResult(result, composer)
   }
 
-  async appCall(params: AppCallParams): Promise<SendAppCallResult> {
+  async appCall(params: AppCallParams): Promise<SendTransactionResult> {
     const composer = this.createComposer()
     composer.addAppCall(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
-    const abiReturn = result.abiReturns && result.abiReturns.length > 0 ? result.abiReturns[0] : undefined
-
-    return {
-      ...baseResult,
-      abiReturn,
-    }
+    return await this.buildSendTransactionResult(result, composer)
   }
 
   async appCreate(params: AppCreateParams): Promise<SendAppCreateResult> {
@@ -196,6 +200,7 @@ export class TransactionSender {
     return {
       ...baseResult,
       appId: applicationIndex,
+      abiReturn: undefined,
       compiledApproval: undefined,
       compiledClear: undefined,
     }
@@ -204,6 +209,65 @@ export class TransactionSender {
   async appUpdate(params: AppUpdateParams): Promise<SendAppUpdateResult> {
     const composer = this.createComposer()
     composer.addAppUpdate(params)
+    const result = await composer.send()
+
+    const baseResult = await this.buildSendTransactionResult(result, composer)
+
+    return {
+      ...baseResult,
+      abiReturn: undefined,
+      compiledApproval: undefined,
+      compiledClear: undefined,
+    }
+  }
+
+  async appDelete(params: AppDeleteParams): Promise<SendTransactionResult> {
+    const composer = this.createComposer()
+    composer.addAppDelete(params)
+    const result = await composer.send()
+
+    return await this.buildSendTransactionResult(result, composer)
+  }
+
+  async appCallMethodCall(params: AppCallMethodCallParams): Promise<SendAppCallResult> {
+    const composer = this.createComposer()
+    composer.addAppCallMethodCall(params)
+    const result = await composer.send()
+
+    const baseResult = await this.buildSendTransactionResult(result, composer)
+    const abiReturn = result.abiReturns && result.abiReturns.length > 0 ? result.abiReturns[0] : undefined
+
+    return {
+      ...baseResult,
+      abiReturn,
+    }
+  }
+
+  async appCreateMethodCall(params: AppCreateMethodCallParams): Promise<SendAppCreateResult> {
+    const composer = this.createComposer()
+    composer.addAppCreateMethodCall(params)
+    const result = await composer.send()
+
+    const baseResult = await this.buildSendTransactionResult(result, composer)
+    const applicationIndex = baseResult.confirmation.applicationIndex
+    if (applicationIndex === undefined) {
+      throw new Error('App creation failed: applicationIndex not found in confirmation')
+    }
+
+    const abiReturn = result.abiReturns && result.abiReturns.length > 0 ? result.abiReturns[0] : undefined
+
+    return {
+      ...baseResult,
+      appId: applicationIndex,
+      abiReturn,
+      compiledApproval: undefined,
+      compiledClear: undefined,
+    }
+  }
+
+  async appUpdateMethodCall(params: AppUpdateMethodCallParams): Promise<SendAppUpdateResult> {
+    const composer = this.createComposer()
+    composer.addAppUpdateMethodCall(params)
     const result = await composer.send()
 
     const baseResult = await this.buildSendTransactionResult(result, composer)
@@ -217,9 +281,9 @@ export class TransactionSender {
     }
   }
 
-  async appDelete(params: AppDeleteParams): Promise<SendAppDeleteResult> {
+  async appDeleteMethodCall(params: AppDeleteMethodCallParams): Promise<SendAppCallResult> {
     const composer = this.createComposer()
-    composer.addAppDelete(params)
+    composer.addAppDeleteMethodCall(params)
     const result = await composer.send()
 
     const baseResult = await this.buildSendTransactionResult(result, composer)
