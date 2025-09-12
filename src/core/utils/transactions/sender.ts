@@ -108,13 +108,15 @@ export class TransactionSender {
     composer.addAssetCreate(params)
     const result = await composer.send()
 
-    // For now, return a mock asset ID since the confirmation structure doesn't include it
-    // In a real implementation, this would extract the asset ID from the confirmation
-    const assetId = BigInt(Math.floor(Math.random() * 1000000))
+    const baseResult = await this.buildSendTransactionResult(result, composer)
+    const assetIndex = baseResult.confirmation.assetIndex
+    if (assetIndex === undefined) {
+      throw new Error('Asset creation confirmation missing assetIndex')
+    }
 
     return {
-      ...(await this.buildSendTransactionResult(result, composer)),
-      assetId,
+      ...baseResult,
+      assetId: assetIndex,
     }
   }
 
@@ -185,13 +187,15 @@ export class TransactionSender {
     composer.addAppCreate(params)
     const result = await composer.send()
 
-    // For now, return a mock app ID since the confirmation structure doesn't include it
-    // In a real implementation, this would extract the app ID from the confirmation
-    const appId = BigInt(Math.floor(Math.random() * 1000000))
+    const baseResult = await this.buildSendTransactionResult(result, composer)
+    const applicationIndex = baseResult.confirmation.applicationIndex
+    if (applicationIndex === undefined) {
+      throw new Error('App creation confirmation missing applicationIndex')
+    }
 
     return {
-      ...(await this.buildSendTransactionResult(result, composer)),
-      appId,
+      ...baseResult,
+      appId: applicationIndex,
       compiledApproval: undefined,
       compiledClear: undefined,
     }
