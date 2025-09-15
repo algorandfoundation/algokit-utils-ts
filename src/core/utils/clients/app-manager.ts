@@ -1,9 +1,6 @@
 import * as crypto from 'crypto'
-import type { ABIValue } from '../../abi'
-import { ABIMethod, decodeABIValue } from '../../abi'
-import type { ABIReturn } from '../../abi/abi-method'
-import type { ABIType } from '../../abi/abi-type'
 import { getAppAddress } from '../../address'
+import { AlgodClient, TealKeyValueStore } from '../../algod_client'
 
 export enum TealTemplateValueType {
   Int = 'int',
@@ -28,7 +25,7 @@ export type CompiledTeal = {
   compiled: string
   compiledHash: string
   compiledBase64ToBytes: Uint8Array
-  sourceMap?: any
+  sourceMap?: Record<string, unknown>
 }
 
 export enum AppStateType {
@@ -72,16 +69,14 @@ export type BoxName = {
   name: string
 }
 
-export type BoxIdentifier = Uint8Array
-
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
 export const DELETABLE_TEMPLATE_NAME = 'TMPL_DELETABLE'
 
 export class AppManager {
-  private algodClient: any
+  private algodClient: AlgodClient
   private compilationResults: Map<string, CompiledTeal>
 
-  constructor(algodClient: any) {
+  constructor(algodClient: AlgodClient) {
     this.algodClient = algodClient
     this.compilationResults = new Map()
   }
@@ -97,14 +92,17 @@ export class AppManager {
       return this.compilationResults.get(cacheKey)!
     }
 
-    const compileResponse = await this.algodClient.compile(tealCode).do()
+    const compileResponse = await this.algodClient.tealCompile({
+      sourcemap: true,
+      body: tealCode,
+    })
 
     const result: CompiledTeal = {
       teal: tealCode,
       compiled: compileResponse.result,
       compiledHash: compileResponse.hash,
       compiledBase64ToBytes: Buffer.from(compileResponse.result, 'base64'),
-      sourceMap: compileResponse.sourcemap, // TODO: type for source map
+      sourceMap: compileResponse.sourcemap,
     }
 
     this.compilationResults.set(cacheKey, result)
@@ -118,6 +116,7 @@ export class AppManager {
   ): Promise<CompiledTeal> {
     let tealCode = AppManager.stripTealComments(tealTemplateCode)
 
+    // TODO: test strategy for template variables as the Rust code seems to be different to the TS code
     if (templateParams) {
       tealCode = AppManager.replaceTemplateVariables(tealCode, templateParams)
     }
@@ -135,13 +134,14 @@ export class AppManager {
   }
 
   async getById(appId: bigint): Promise<AppInformation> {
-    const app = await this.algodClient.getApplicationByID(Number(appId)).do()
+    const app = await this.algodClient.getApplicationById(appId)
 
     return {
       appId,
       appAddress: getAppAddress(appId),
-      approvalProgram: app.params.approvalProgram,
-      clearStateProgram: app.params.clearStateProgram,
+      // TODO: double check this conversion
+      approvalProgram: new Uint8Array(Buffer.from(app.params.approvalProgram, 'base64')),
+      clearStateProgram: new Uint8Array(Buffer.from(app.params.clearStateProgram, 'base64')),
       creator: app.params.creator,
       localInts: Number(app.params.localStateSchema?.numUint ?? 0),
       localByteSlices: Number(app.params.localStateSchema?.numByteSlice ?? 0),
@@ -158,7 +158,7 @@ export class AppManager {
   }
 
   async getLocalState(appId: bigint, address: string): Promise<Record<string, AppState>> {
-    const appInfo = await this.algodClient.accountApplicationInformation(address, appId).do()
+    const appInfo = await this.algodClient.accountApplicationInformation(address, appId)
 
     if (!appInfo.appLocalState?.keyValue) {
       throw new Error("Couldn't find local state")
@@ -168,22 +168,25 @@ export class AppManager {
   }
 
   async getBoxNames(appId: bigint): Promise<BoxName[]> {
-    const boxResult = await this.algodClient.getApplicationBoxes(appId).do()
+    const boxResult = await this.algodClient.getApplicationBoxes(appId)
     return boxResult.boxes.map((b) => {
       return {
-        nameRaw: b.name,
-        nameBase64: Buffer.from(b.name).toString('base64'),
+        nameRaw: new Uint8Array(Buffer.from(b.name)),
+        nameBase64: b.name,
         name: Buffer.from(b.name).toString('utf-8'),
       }
     })
   }
 
-  async getBoxValue(appId: bigint, boxName: BoxIdentifier): Promise<Uint8Array> {
-    const boxResult = await this.algodClient.getApplicationBoxByName(Number(appId), boxName).do()
-    return boxResult.value
+  // TODO: double check whether boxName should be base64
+  async getBoxValue(appId: bigint, boxName: string): Promise<Uint8Array> {
+    const boxResult = await this.algodClient.getApplicationBoxByName(appId, {
+      name: boxName,
+    })
+    return new Uint8Array(Buffer.from(boxResult.value))
   }
 
-  async getBoxValues(appId: bigint, boxNames: BoxIdentifier[]): Promise<Uint8Array[]> {
+  async getBoxValues(appId: bigint, boxNames: string[]): Promise<Uint8Array[]> {
     const values: Uint8Array[] = []
     for (const boxName of boxNames) {
       values.push(await this.getBoxValue(appId, boxName))
@@ -191,44 +194,9 @@ export class AppManager {
     return values
   }
 
-  // TODO: do we need this?
-  async getBoxValueFromAbiType(appId: bigint, boxName: BoxIdentifier, abiType: ABIType): Promise<ABIValue> {
-    const rawValue = await this.getBoxValue(appId, boxName)
-    return decodeABIValue(abiType, rawValue)
-  }
-
-  // TODO: do we need this?
-  async getBoxValuesFromAbiType(appId: bigint, boxNames: BoxIdentifier[], abiType: ABIType): Promise<ABIValue[]> {
-    const values: ABIValue[] = []
-    for (const boxName of boxNames) {
-      values.push(await this.getBoxValueFromAbiType(appId, boxName, abiType))
-    }
-    return values
-  }
-
-  // TODO: do we need this?
-  static getAbiReturn(confirmationData: Uint8Array, method: ABIMethod): ABIReturn | undefined {
-    if (!method.returns || method.returns.type === 'void') {
-      return undefined
-    }
-
-    try {
-      const returnValue = decodeABIValue(method.returns.type as ABIType, confirmationData)
-      return {
-        method,
-        rawReturnValue: confirmationData,
-        returnValue,
-        decodeError: undefined,
-      }
-    } catch (error) {
-      return {
-        method,
-        rawReturnValue: confirmationData,
-        returnValue: undefined,
-        decodeError: error as Error,
-      }
-    }
-  }
+  // TODO: do we need getBoxValueFromAbiType
+  // TODO: do we need getBoxValuesFromAbiType
+  // TODO: do we need getAbiReturn
 
   private static ensureDecodedBytes(bytes: Uint8Array): Uint8Array {
     try {
@@ -249,45 +217,42 @@ export class AppManager {
     return bytes
   }
 
-  static decodeAppState(state: any[]): Record<string, AppState> {
+  static decodeAppState(state: TealKeyValueStore): Record<string, AppState> {
     const stateValues: Record<string, AppState> = {}
 
     for (const stateVal of state) {
-      try {
-        const keyRaw = new Uint8Array(Buffer.from(stateVal.key, 'base64'))
-        const keyBase64 = stateVal.key
-        const keyString = Buffer.from(keyRaw).toString('base64')
+      const keyRaw = new Uint8Array(Buffer.from(stateVal.key, 'base64'))
+      const keyBase64 = stateVal.key
+      const keyString = Buffer.from(keyRaw).toString('base64')
 
-        if (stateVal.value.type === 1) {
-          const valueRaw = AppManager.ensureDecodedBytes(new Uint8Array(Buffer.from(stateVal.value.bytes, 'base64')))
-          const valueBase64 = Buffer.from(valueRaw).toString('base64')
-          let valueStr: string
-          try {
-            valueStr = Buffer.from(valueRaw).toString('utf8')
-          } catch {
-            valueStr = Buffer.from(valueRaw).toString('hex')
-          }
-
-          const bytesState: BytesAppState = {
-            keyRaw,
-            keyBase64,
-            valueRaw,
-            valueBase64,
-            value: valueStr,
-          }
-          stateValues[keyString] = bytesState
-        } else if (stateVal.value.type === 2) {
-          const uintState: UintAppState = {
-            keyRaw,
-            keyBase64,
-            value: BigInt(stateVal.value.uint),
-          }
-          stateValues[keyString] = uintState
-        } else {
-          throw new AppManagerError(`Unknown state data type: ${stateVal.value.type}`)
+      // TODO: check `type` being bigint?
+      if (stateVal.value.type === 1n) {
+        const valueRaw = AppManager.ensureDecodedBytes(new Uint8Array(Buffer.from(stateVal.value.bytes, 'base64')))
+        const valueBase64 = Buffer.from(valueRaw).toString('base64')
+        let valueStr: string
+        try {
+          valueStr = Buffer.from(valueRaw).toString('utf8')
+        } catch {
+          valueStr = Buffer.from(valueRaw).toString('hex')
         }
-      } catch (error) {
-        throw new AppManagerError(`Failed to decode app state: ${error}`, error as Error)
+
+        const bytesState: BytesAppState = {
+          keyRaw,
+          keyBase64,
+          valueRaw,
+          valueBase64,
+          value: valueStr,
+        }
+        stateValues[keyString] = bytesState
+      } else if (stateVal.value.type === 2n) {
+        const uintState: UintAppState = {
+          keyRaw,
+          keyBase64,
+          value: BigInt(stateVal.value.uint),
+        }
+        stateValues[keyString] = uintState
+      } else {
+        throw new Error(`Unknown state data type: ${stateVal.value.type}`)
       }
     }
 
@@ -302,10 +267,11 @@ export class AppManager {
 
       let value: string
       switch (templateValue.type) {
-        case TealTemplateValueType.Int:
+        case TealTemplateValueType.Int: {
           value = templateValue.value.toString()
           break
-        case TealTemplateValueType.String:
+        }
+        case TealTemplateValueType.String: {
           const strValue = templateValue.value as string
           if (/^\d+$/.test(strValue)) {
             value = strValue
@@ -313,11 +279,11 @@ export class AppManager {
             value = `0x${Buffer.from(strValue, 'utf8').toString('hex')}`
           }
           break
-        case TealTemplateValueType.Bytes:
+        }
+        case TealTemplateValueType.Bytes: {
           value = `0x${Buffer.from(templateValue.value as Uint8Array).toString('hex')}`
           break
-        default:
-          throw new AppManagerError(`Unknown template value type: ${templateValue.type}`)
+        }
       }
 
       programLines = AppManager.replaceTemplateVariable(programLines, token, value)
@@ -384,14 +350,14 @@ export class AppManager {
 
     if (params.updatable !== undefined) {
       if (!tealTemplateCode.includes(UPDATABLE_TEMPLATE_NAME)) {
-        throw new AppManagerError(`Deploy-time updatability control requested, but ${UPDATABLE_TEMPLATE_NAME} not present in TEAL code`)
+        throw new Error(`Deploy-time updatability control requested, but ${UPDATABLE_TEMPLATE_NAME} not present in TEAL code`)
       }
       result = result.replace(new RegExp(UPDATABLE_TEMPLATE_NAME, 'g'), params.updatable ? '1' : '0')
     }
 
     if (params.deletable !== undefined) {
       if (!tealTemplateCode.includes(DELETABLE_TEMPLATE_NAME)) {
-        throw new AppManagerError(`Deploy-time deletability control requested, but ${DELETABLE_TEMPLATE_NAME} not present in TEAL code`)
+        throw new Error(`Deploy-time deletability control requested, but ${DELETABLE_TEMPLATE_NAME} not present in TEAL code`)
       }
       result = result.replace(new RegExp(DELETABLE_TEMPLATE_NAME, 'g'), params.deletable ? '1' : '0')
     }
