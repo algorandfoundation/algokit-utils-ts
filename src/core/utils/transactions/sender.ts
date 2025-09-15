@@ -1,5 +1,7 @@
 import { ABIReturn } from '../../abi/abi-method'
+import { AlgodClient } from '../../algod_client'
 import { Transaction } from '../../transact'
+import { AppManager } from '../clients/app-manager'
 import { PendingTransactionResponse } from '../temp'
 import type {
   AppCallMethodCallParams,
@@ -73,8 +75,9 @@ export type SendAppUpdateMethodCallResult = SendTransactionResult & {
 
 export class TransactionSender {
   constructor(
-    private algodClient: any,
+    private algodClient: AlgodClient,
     private signerGetter: SignerGetter,
+    private appManager: AppManager,
   ) {}
 
   private createComposer(): Composer {
@@ -204,12 +207,15 @@ export class TransactionSender {
       throw new Error('App creation confirmation missing applicationIndex')
     }
 
-    // TODO: need to implement app manager to get the teal code
+    // TODO: confirm where the teal compilation happens
+    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
+    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
+
     return {
       ...baseResult,
       appId: applicationIndex,
-      compiledApproval: undefined,
-      compiledClear: undefined,
+      compiledApproval: compiledApproval?.compiledBase64ToBytes,
+      compiledClear: compiledClear?.compiledBase64ToBytes,
     }
   }
 
@@ -219,11 +225,13 @@ export class TransactionSender {
     const result = await composer.send()
 
     const baseResult = await this.buildSendTransactionResult(result, composer)
+    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
+    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
 
     return {
       ...baseResult,
-      compiledApproval: undefined,
-      compiledClear: undefined,
+      compiledApproval: compiledApproval?.compiledBase64ToBytes,
+      compiledClear: compiledClear?.compiledBase64ToBytes,
     }
   }
 
@@ -261,13 +269,15 @@ export class TransactionSender {
     }
 
     const abiReturn = result.abiReturns.at(-1)
+    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
+    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
 
     return {
       ...baseResult,
       appId: applicationIndex,
       abiReturn,
-      compiledApproval: undefined,
-      compiledClear: undefined,
+      compiledApproval: compiledApproval?.compiledBase64ToBytes,
+      compiledClear: compiledClear?.compiledBase64ToBytes,
     }
   }
 
@@ -278,12 +288,14 @@ export class TransactionSender {
 
     const baseResult = await this.buildSendTransactionResult(result, composer)
     const abiReturn = result.abiReturns.at(-1)
+    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
+    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
 
     return {
       ...baseResult,
       abiReturn,
-      compiledApproval: undefined,
-      compiledClear: undefined,
+      compiledApproval: compiledApproval?.compiledBase64ToBytes,
+      compiledClear: compiledClear?.compiledBase64ToBytes,
     }
   }
 
