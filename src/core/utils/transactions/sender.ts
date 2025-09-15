@@ -43,25 +43,32 @@ export type SendAssetCreateResult = SendTransactionResult & {
   assetId: bigint
 }
 
-export type SendAppCallResult = SendTransactionResult & {
+export type SendAppCreateResult = SendTransactionResult & {
+  appId: bigint
+  compiledApproval?: Uint8Array
+  compiledClear?: Uint8Array
+}
+
+export type SendAppUpdateResult = SendTransactionResult & {
+  compiledApproval?: Uint8Array
+  compiledClear?: Uint8Array
+}
+
+export type SendAppCallMethodCallResult = SendTransactionResult & {
   abiReturn?: ABIReturn
 }
 
-export type SendAppCreateResult = SendTransactionResult & {
+export type SendAppCreateMethodCallResult = SendTransactionResult & {
   appId: bigint
   abiReturn?: ABIReturn
   compiledApproval?: Uint8Array
   compiledClear?: Uint8Array
 }
 
-export type SendAppUpdateResult = SendTransactionResult & {
+export type SendAppUpdateMethodCallResult = SendTransactionResult & {
   abiReturn?: ABIReturn
   compiledApproval?: Uint8Array
   compiledClear?: Uint8Array
-}
-
-export type SendAppDeleteResult = SendTransactionResult & {
-  abiReturn?: ABIReturn
 }
 
 export class TransactionSender {
@@ -197,10 +204,10 @@ export class TransactionSender {
       throw new Error('App creation confirmation missing applicationIndex')
     }
 
+    // TODO: need to implement app manager to get the teal code
     return {
       ...baseResult,
       appId: applicationIndex,
-      abiReturn: undefined,
       compiledApproval: undefined,
       compiledClear: undefined,
     }
@@ -215,7 +222,6 @@ export class TransactionSender {
 
     return {
       ...baseResult,
-      abiReturn: undefined,
       compiledApproval: undefined,
       compiledClear: undefined,
     }
@@ -229,13 +235,13 @@ export class TransactionSender {
     return await this.buildSendTransactionResult(result, composer)
   }
 
-  async appCallMethodCall(params: AppCallMethodCallParams): Promise<SendAppCallResult> {
+  async appCallMethodCall(params: AppCallMethodCallParams): Promise<SendAppCallMethodCallResult> {
     const composer = this.createComposer()
     composer.addAppCallMethodCall(params)
     const result = await composer.send()
 
     const baseResult = await this.buildSendTransactionResult(result, composer)
-    const abiReturn = result.abiReturns && result.abiReturns.length > 0 ? result.abiReturns[0] : undefined
+    const abiReturn = result.abiReturns.at(-1)
 
     return {
       ...baseResult,
@@ -243,7 +249,7 @@ export class TransactionSender {
     }
   }
 
-  async appCreateMethodCall(params: AppCreateMethodCallParams): Promise<SendAppCreateResult> {
+  async appCreateMethodCall(params: AppCreateMethodCallParams): Promise<SendAppCreateMethodCallResult> {
     const composer = this.createComposer()
     composer.addAppCreateMethodCall(params)
     const result = await composer.send()
@@ -254,7 +260,7 @@ export class TransactionSender {
       throw new Error('App creation failed: applicationIndex not found in confirmation')
     }
 
-    const abiReturn = result.abiReturns && result.abiReturns.length > 0 ? result.abiReturns[0] : undefined
+    const abiReturn = result.abiReturns.at(-1)
 
     return {
       ...baseResult,
@@ -265,13 +271,13 @@ export class TransactionSender {
     }
   }
 
-  async appUpdateMethodCall(params: AppUpdateMethodCallParams): Promise<SendAppUpdateResult> {
+  async appUpdateMethodCall(params: AppUpdateMethodCallParams): Promise<SendAppUpdateMethodCallResult> {
     const composer = this.createComposer()
     composer.addAppUpdateMethodCall(params)
     const result = await composer.send()
 
     const baseResult = await this.buildSendTransactionResult(result, composer)
-    const abiReturn = result.abiReturns && result.abiReturns.length > 0 ? result.abiReturns[0] : undefined
+    const abiReturn = result.abiReturns.at(-1)
 
     return {
       ...baseResult,
@@ -281,13 +287,13 @@ export class TransactionSender {
     }
   }
 
-  async appDeleteMethodCall(params: AppDeleteMethodCallParams): Promise<SendAppCallResult> {
+  async appDeleteMethodCall(params: AppDeleteMethodCallParams): Promise<SendAppCallMethodCallResult> {
     const composer = this.createComposer()
     composer.addAppDeleteMethodCall(params)
     const result = await composer.send()
 
     const baseResult = await this.buildSendTransactionResult(result, composer)
-    const abiReturn = result.abiReturns && result.abiReturns.length > 0 ? result.abiReturns[0] : undefined
+    const abiReturn = result.abiReturns.at(-1)
 
     return {
       ...baseResult,
