@@ -1,7 +1,6 @@
 import { ABIReturn } from '../../abi/abi-method'
 import { AlgodClient } from '../../algod_client'
 import { Transaction } from '../../transact'
-import { AppManager } from '../clients/app-manager'
 import { PendingTransactionResponse } from '../temp'
 import type {
   AppCallMethodCallParams,
@@ -25,112 +24,74 @@ export interface SendParams {
   maxRoundsToWaitForConfirmation?: number
 }
 
-export type SendTransactionResult = {
-  // Primary transaction info
+export type SendResult = {
   transaction: Transaction
   confirmation: PendingTransactionResponse
-  txId: string
-
-  // Group context
-  groupId: Uint8Array | undefined
-  txIds: string[]
-  transactions: Transaction[]
-  confirmations: PendingTransactionResponse[]
-
-  // ABI support
-  abiReturns: ABIReturn[]
+  transactionId: string
 }
 
-export type SendAssetCreateResult = SendTransactionResult & {
+export type SendAssetCreateResult = SendResult & {
   assetId: bigint
 }
 
-export type SendAppCreateResult = SendTransactionResult & {
+export type SendAppCallResult = SendResult & {
+  group: Uint8Array | undefined
+  transactionIds: string[]
+  transactions: Transaction[]
+  confirmations: PendingTransactionResponse[]
+}
+
+export type SendAppCallMethodCallResult = SendAppCallResult & {
+  abiReturns: ABIReturn[]
+  abiReturn?: ABIReturn
+}
+
+export type SendAppCreateResult = SendAppCallResult & {
   appId: bigint
-  compiledApproval?: Uint8Array
-  compiledClear?: Uint8Array
 }
 
-export type SendAppUpdateResult = SendTransactionResult & {
-  compiledApproval?: Uint8Array
-  compiledClear?: Uint8Array
-}
-
-export type SendAppCallMethodCallResult = SendTransactionResult & {
-  abiReturn?: ABIReturn
-}
-
-export type SendAppCreateMethodCallResult = SendTransactionResult & {
+export type SendAppCreateMethodCallResult = SendAppCallMethodCallResult & {
   appId: bigint
-  abiReturn?: ABIReturn
-  compiledApproval?: Uint8Array
-  compiledClear?: Uint8Array
-}
-
-export type SendAppUpdateMethodCallResult = SendTransactionResult & {
-  abiReturn?: ABIReturn
-  compiledApproval?: Uint8Array
-  compiledClear?: Uint8Array
 }
 
 export class TransactionSender {
   constructor(
     private algodClient: AlgodClient,
     private signerGetter: SignerGetter,
-    private appManager: AppManager,
   ) {}
 
-  private createComposer(): Composer {
+  private newGroup(): Composer {
     return new Composer({
       algodClient: this.algodClient,
       signerGetter: this.signerGetter,
     })
   }
 
-  private async buildSendTransactionResult(
-    composerResult: SendTransactionComposerResults,
-    composer: Composer,
-  ): Promise<SendTransactionResult> {
-    // Access transactions from composer's build method
-    const transactionsWithSigners = await composer.build()
-    const transactions = transactionsWithSigners.map((t) => t.transaction)
-
-    // Primary transaction is the last one added (most recent)
-    const primaryIndex = transactions.length - 1
-
+  private buildSendResult(composerResult: SendTransactionComposerResults): SendResult {
     return {
-      // Primary transaction info
-      transaction: transactions[primaryIndex] || ({} as Transaction),
-      confirmation: composerResult.confirmations[primaryIndex],
-      txId: composerResult.transactionIds[primaryIndex],
-
-      // Group context
-      groupId: composerResult.group,
-      txIds: composerResult.transactionIds,
-      transactions: transactions,
-      confirmations: composerResult.confirmations,
-
-      // ABI support
-      abiReturns: composerResult.abiReturns,
+      transaction: composerResult.transactions.at(-1)!,
+      confirmation: composerResult.confirmations.at(-1)!,
+      transactionId: composerResult.transactionIds.at(-1)!,
     }
   }
 
-  async payment(params: PaymentParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async payment(params: PaymentParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addPayment(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
   async assetCreate(params: AssetCreateParams): Promise<SendAssetCreateResult> {
-    const composer = this.createComposer()
+    const composer = this.newGroup()
     composer.addAssetCreate(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
+    const baseResult = this.buildSendResult(result)
+
     const assetIndex = baseResult.confirmation.assetIndex
-    if (assetIndex === undefined) {
+    if (assetIndex === undefined || assetIndex <= 0) {
       throw new Error('Asset creation confirmation missing assetIndex')
     }
 
@@ -140,192 +101,175 @@ export class TransactionSender {
     }
   }
 
-  async assetConfig(params: AssetConfigParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async assetConfig(params: AssetConfigParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addAssetConfig(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
-  async assetFreeze(params: AssetFreezeParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async assetFreeze(params: AssetFreezeParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addAssetFreeze(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
-  async assetDestroy(params: AssetDestroyParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async assetDestroy(params: AssetDestroyParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addAssetDestroy(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
-  async assetTransfer(params: AssetTransferParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async assetTransfer(params: AssetTransferParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addAssetTransfer(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
-  async assetOptIn(params: AssetOptInParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async assetOptIn(params: AssetOptInParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addAssetOptIn(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
-  async assetOptOut(params: AssetOptOutParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async assetOptOut(params: AssetOptOutParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addAssetOptOut(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
-  async appCall(params: AppCallParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  private buildSendAppCallResult(composerResult: SendTransactionComposerResults): SendAppCallResult {
+    return {
+      transaction: composerResult.transactions.at(-1)!,
+      confirmation: composerResult.confirmations.at(-1)!,
+      transactionId: composerResult.transactionIds.at(-1)!,
+      group: composerResult.group,
+      confirmations: composerResult.confirmations,
+      transactionIds: composerResult.transactionIds,
+      transactions: composerResult.transactions,
+    }
+  }
+
+  async appCall(params: AppCallParams): Promise<SendAppCallResult> {
+    const composer = this.newGroup()
     composer.addAppCall(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendAppCallResult(result)
   }
 
   async appCreate(params: AppCreateParams): Promise<SendAppCreateResult> {
-    const composer = this.createComposer()
+    const composer = this.newGroup()
     composer.addAppCreate(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
+    const baseResult = this.buildSendAppCallResult(result)
     const applicationIndex = baseResult.confirmation.applicationIndex
-    if (applicationIndex === undefined) {
+    if (applicationIndex === undefined || applicationIndex <= 0) {
       throw new Error('App creation confirmation missing applicationIndex')
     }
 
-    // TODO: confirm where the teal compilation happens
-    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
-    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
-
     return {
       ...baseResult,
       appId: applicationIndex,
-      compiledApproval: compiledApproval?.compiledBase64ToBytes,
-      compiledClear: compiledClear?.compiledBase64ToBytes,
     }
   }
 
-  async appUpdate(params: AppUpdateParams): Promise<SendAppUpdateResult> {
-    const composer = this.createComposer()
+  async appUpdate(params: AppUpdateParams): Promise<SendAppCallResult> {
+    const composer = this.newGroup()
     composer.addAppUpdate(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
-    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
-    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
-
-    return {
-      ...baseResult,
-      compiledApproval: compiledApproval?.compiledBase64ToBytes,
-      compiledClear: compiledClear?.compiledBase64ToBytes,
-    }
+    return this.buildSendAppCallResult(result)
   }
 
-  async appDelete(params: AppDeleteParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async appDelete(params: AppDeleteParams): Promise<SendAppCallResult> {
+    const composer = this.newGroup()
     composer.addAppDelete(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendAppCallResult(result)
+  }
+
+  private buildSendAppCallMethodCallResult(composerResult: SendTransactionComposerResults): SendAppCallMethodCallResult {
+    return {
+      transaction: composerResult.transactions.at(-1)!,
+      confirmation: composerResult.confirmations.at(-1)!,
+      transactionId: composerResult.transactionIds.at(-1)!,
+      group: composerResult.group,
+      confirmations: composerResult.confirmations,
+      transactionIds: composerResult.transactionIds,
+      transactions: composerResult.transactions,
+      abiReturns: composerResult.abiReturns,
+      abiReturn: composerResult.abiReturns.at(-1),
+    }
   }
 
   async appCallMethodCall(params: AppCallMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    const composer = this.createComposer()
+    const composer = this.newGroup()
     composer.addAppCallMethodCall(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
-    const abiReturn = result.abiReturns.at(-1)
-
-    return {
-      ...baseResult,
-      abiReturn,
-    }
+    return this.buildSendAppCallMethodCallResult(result)
   }
 
   async appCreateMethodCall(params: AppCreateMethodCallParams): Promise<SendAppCreateMethodCallResult> {
-    const composer = this.createComposer()
+    const composer = this.newGroup()
     composer.addAppCreateMethodCall(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
+    const baseResult = this.buildSendAppCallMethodCallResult(result)
     const applicationIndex = baseResult.confirmation.applicationIndex
-    if (applicationIndex === undefined) {
-      throw new Error('App creation failed: applicationIndex not found in confirmation')
+    if (applicationIndex === undefined || applicationIndex <= 0) {
+      throw new Error('App creation confirmation missing applicationIndex')
     }
-
-    const abiReturn = result.abiReturns.at(-1)
-    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
-    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
 
     return {
       ...baseResult,
       appId: applicationIndex,
-      abiReturn,
-      compiledApproval: compiledApproval?.compiledBase64ToBytes,
-      compiledClear: compiledClear?.compiledBase64ToBytes,
     }
   }
 
-  async appUpdateMethodCall(params: AppUpdateMethodCallParams): Promise<SendAppUpdateMethodCallResult> {
-    const composer = this.createComposer()
+  async appUpdateMethodCall(params: AppUpdateMethodCallParams): Promise<SendAppCallMethodCallResult> {
+    const composer = this.newGroup()
     composer.addAppUpdateMethodCall(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
-    const abiReturn = result.abiReturns.at(-1)
-    const compiledApproval = this.appManager.getCompilationResult(Buffer.from(params.approvalProgram).toString('utf-8'))
-    const compiledClear = this.appManager.getCompilationResult(Buffer.from(params.clearStateProgram).toString('utf-8'))
-
-    return {
-      ...baseResult,
-      abiReturn,
-      compiledApproval: compiledApproval?.compiledBase64ToBytes,
-      compiledClear: compiledClear?.compiledBase64ToBytes,
-    }
+    return this.buildSendAppCallMethodCallResult(result)
   }
 
   async appDeleteMethodCall(params: AppDeleteMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    const composer = this.createComposer()
+    const composer = this.newGroup()
     composer.addAppDeleteMethodCall(params)
     const result = await composer.send()
 
-    const baseResult = await this.buildSendTransactionResult(result, composer)
-    const abiReturn = result.abiReturns.at(-1)
-
-    return {
-      ...baseResult,
-      abiReturn,
-    }
+    return this.buildSendAppCallMethodCallResult(result)
   }
 
-  async onlineKeyRegistration(params: OnlineKeyRegistrationParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async onlineKeyRegistration(params: OnlineKeyRegistrationParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addOnlineKeyRegistration(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 
-  async offlineKeyRegistration(params: OfflineKeyRegistrationParams): Promise<SendTransactionResult> {
-    const composer = this.createComposer()
+  async offlineKeyRegistration(params: OfflineKeyRegistrationParams): Promise<SendResult> {
+    const composer = this.newGroup()
     composer.addOfflineKeyRegistration(params)
     const result = await composer.send()
 
-    return await this.buildSendTransactionResult(result, composer)
+    return this.buildSendResult(result)
   }
 }

@@ -81,13 +81,13 @@ import {
   buildAssetTransfer,
 } from './asset-transfer'
 import {
-  ComposerTransactionType,
   CommonTransactionParams,
+  ComposerTransactionType,
   ProcessedAbstractedComposerTransaction,
+  SignerGetter,
   TransactionComposerTransaction,
   TransactionHeader,
   TransactionSigner,
-  SignerGetter,
   TransactionWithSigner,
   TransactionWithSignerComposerTransaction,
 } from './common'
@@ -155,6 +155,7 @@ type GroupResourceToPopulate =
 export type SendTransactionComposerResults = {
   group?: Uint8Array
   transactionIds: string[]
+  transactions: Transaction[]
   confirmations: PendingTransactionResponse[]
   abiReturns: ABIReturn[]
 }
@@ -791,6 +792,7 @@ export class Composer {
     await this.algodClient.rawTransaction(encodedBytes)
 
     const transactionIds = this.signedGroup.map((stxn) => getTransactionId(stxn.transaction))
+    const transactions = this.signedGroup.map((stxn) => stxn.transaction)
 
     const confirmations = new Array<PendingTransactionResponse>()
     if (params?.maxRoundsToWaitForConfirmation) {
@@ -803,6 +805,7 @@ export class Composer {
     return {
       group,
       transactionIds,
+      transactions,
       confirmations,
       abiReturns: this.parseAbiReturnValues(confirmations),
     }
