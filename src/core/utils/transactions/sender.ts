@@ -1,5 +1,6 @@
 import { ABIReturn } from '../../abi/abi-method'
 import { AlgodClient } from '../../algod_client'
+import { Expand } from '../../expand'
 import { Transaction } from '../../transact'
 import { PendingTransactionResponse } from '../temp'
 import type {
@@ -13,14 +14,14 @@ import type {
   AppUpdateParams,
 } from './app-call'
 import type { AssetConfigParams, AssetCreateParams, AssetDestroyParams } from './asset-config'
-import type { AssetFreezeParams } from './asset-freeze'
-import type { AssetOptInParams, AssetOptOutParams, AssetTransferParams } from './asset-transfer'
+import type { AssetFreezeParams, AssetUnfreezeParams } from './asset-freeze'
+import type { AssetClawbackParams, AssetOptInParams, AssetOptOutParams, AssetTransferParams } from './asset-transfer'
 import type { SignerGetter } from './common'
 import { Composer, type SendTransactionComposerResults } from './composer'
-import type { OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from './key-registration'
-import type { PaymentParams } from './payment'
+import type { NonParticipationKeyRegistrationParams, OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from './key-registration'
+import type { AccountCloseParams, PaymentParams } from './payment'
 
-export interface SendParams {
+export type SendParams = {
   maxRoundsToWaitForConfirmation?: number
 }
 
@@ -30,29 +31,34 @@ export type SendResult = {
   transactionId: string
 }
 
-export type SendAssetCreateResult = SendResult & {
-  assetId: bigint
-}
+export type SendAssetCreateResult = Expand<
+  SendResult & {
+    assetId: bigint
+  }
+>
 
-export type SendAppCallResult = SendResult & {
-  group: Uint8Array | undefined
-  transactionIds: string[]
-  transactions: Transaction[]
-  confirmations: PendingTransactionResponse[]
-}
+export type SendAppCallMethodCallResult = Expand<
+  SendResult & {
+    group?: Uint8Array
+    transactionIds: string[]
+    transactions: Transaction[]
+    confirmations: PendingTransactionResponse[]
+    abiReturns: ABIReturn[]
+    abiReturn?: ABIReturn
+  }
+>
 
-export type SendAppCallMethodCallResult = SendAppCallResult & {
-  abiReturns: ABIReturn[]
-  abiReturn?: ABIReturn
-}
+export type SendAppCreateResult = Expand<
+  SendResult & {
+    appId: bigint
+  }
+>
 
-export type SendAppCreateResult = SendAppCallResult & {
-  appId: bigint
-}
-
-export type SendAppCreateMethodCallResult = SendAppCallMethodCallResult & {
-  appId: bigint
-}
+export type SendAppCreateMethodCallResult = Expand<
+  SendAppCallMethodCallResult & {
+    appId: bigint
+  }
+>
 
 export class TransactionSender {
   constructor(
@@ -75,7 +81,7 @@ export class TransactionSender {
     }
   }
 
-  async payment(params: PaymentParams): Promise<SendResult> {
+  public async payment(params: PaymentParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addPayment(params)
     const result = await composer.send()
@@ -83,7 +89,7 @@ export class TransactionSender {
     return this.buildSendResult(result)
   }
 
-  async assetCreate(params: AssetCreateParams): Promise<SendAssetCreateResult> {
+  public async assetCreate(params: AssetCreateParams): Promise<SendAssetCreateResult> {
     const composer = this.newGroup()
     composer.addAssetCreate(params)
     const result = await composer.send()
@@ -101,7 +107,7 @@ export class TransactionSender {
     }
   }
 
-  async assetConfig(params: AssetConfigParams): Promise<SendResult> {
+  public async assetConfig(params: AssetConfigParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAssetConfig(params)
     const result = await composer.send()
@@ -109,7 +115,7 @@ export class TransactionSender {
     return this.buildSendResult(result)
   }
 
-  async assetFreeze(params: AssetFreezeParams): Promise<SendResult> {
+  public async assetFreeze(params: AssetFreezeParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAssetFreeze(params)
     const result = await composer.send()
@@ -117,7 +123,7 @@ export class TransactionSender {
     return this.buildSendResult(result)
   }
 
-  async assetDestroy(params: AssetDestroyParams): Promise<SendResult> {
+  public async assetDestroy(params: AssetDestroyParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAssetDestroy(params)
     const result = await composer.send()
@@ -125,7 +131,7 @@ export class TransactionSender {
     return this.buildSendResult(result)
   }
 
-  async assetTransfer(params: AssetTransferParams): Promise<SendResult> {
+  public async assetTransfer(params: AssetTransferParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAssetTransfer(params)
     const result = await composer.send()
@@ -133,7 +139,7 @@ export class TransactionSender {
     return this.buildSendResult(result)
   }
 
-  async assetOptIn(params: AssetOptInParams): Promise<SendResult> {
+  public async assetOptIn(params: AssetOptInParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAssetOptIn(params)
     const result = await composer.send()
@@ -141,7 +147,7 @@ export class TransactionSender {
     return this.buildSendResult(result)
   }
 
-  async assetOptOut(params: AssetOptOutParams): Promise<SendResult> {
+  public async assetOptOut(params: AssetOptOutParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAssetOptOut(params)
     const result = await composer.send()
@@ -149,24 +155,36 @@ export class TransactionSender {
     return this.buildSendResult(result)
   }
 
-  private buildSendAppCallResult(composerResult: SendTransactionComposerResults): SendAppCallResult {
-    return {
-      transaction: composerResult.transactions.at(-1)!,
-      confirmation: composerResult.confirmations.at(-1)!,
-      transactionId: composerResult.transactionIds.at(-1)!,
-      group: composerResult.group,
-      confirmations: composerResult.confirmations,
-      transactionIds: composerResult.transactionIds,
-      transactions: composerResult.transactions,
-    }
+  public async accountClose(params: AccountCloseParams): Promise<SendResult> {
+    const composer = this.newGroup()
+    composer.addAccountClose(params)
+    const result = await composer.send()
+
+    return this.buildSendResult(result)
   }
 
-  async appCall(params: AppCallParams): Promise<SendAppCallResult> {
+  public async assetClawback(params: AssetClawbackParams): Promise<SendResult> {
+    const composer = this.newGroup()
+    composer.addAssetClawback(params)
+    const result = await composer.send()
+
+    return this.buildSendResult(result)
+  }
+
+  public async assetUnfreeze(params: AssetUnfreezeParams): Promise<SendResult> {
+    const composer = this.newGroup()
+    composer.addAssetUnfreeze(params)
+    const result = await composer.send()
+
+    return this.buildSendResult(result)
+  }
+
+  async appCall(params: AppCallParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAppCall(params)
     const result = await composer.send()
 
-    return this.buildSendAppCallResult(result)
+    return this.buildSendResult(result)
   }
 
   async appCreate(params: AppCreateParams): Promise<SendAppCreateResult> {
@@ -174,7 +192,7 @@ export class TransactionSender {
     composer.addAppCreate(params)
     const result = await composer.send()
 
-    const baseResult = this.buildSendAppCallResult(result)
+    const baseResult = this.buildSendResult(result)
     const applicationIndex = baseResult.confirmation.applicationIndex
     if (applicationIndex === undefined || applicationIndex <= 0) {
       throw new Error('App creation confirmation missing applicationIndex')
@@ -186,20 +204,20 @@ export class TransactionSender {
     }
   }
 
-  async appUpdate(params: AppUpdateParams): Promise<SendAppCallResult> {
+  async appUpdate(params: AppUpdateParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAppUpdate(params)
     const result = await composer.send()
 
-    return this.buildSendAppCallResult(result)
+    return this.buildSendResult(result)
   }
 
-  async appDelete(params: AppDeleteParams): Promise<SendAppCallResult> {
+  async appDelete(params: AppDeleteParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addAppDelete(params)
     const result = await composer.send()
 
-    return this.buildSendAppCallResult(result)
+    return this.buildSendResult(result)
   }
 
   private buildSendAppCallMethodCallResult(composerResult: SendTransactionComposerResults): SendAppCallMethodCallResult {
@@ -268,6 +286,14 @@ export class TransactionSender {
   async offlineKeyRegistration(params: OfflineKeyRegistrationParams): Promise<SendResult> {
     const composer = this.newGroup()
     composer.addOfflineKeyRegistration(params)
+    const result = await composer.send()
+
+    return this.buildSendResult(result)
+  }
+
+  async nonParticipationKeyRegistration(params: NonParticipationKeyRegistrationParams): Promise<SendResult> {
+    const composer = this.newGroup()
+    composer.addNonParticipationKeyRegistration(params)
     const result = await composer.send()
 
     return this.buildSendResult(result)
