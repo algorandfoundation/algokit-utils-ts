@@ -116,7 +116,6 @@ export class AppManager {
   ): Promise<CompiledTeal> {
     let tealCode = AppManager.stripTealComments(tealTemplateCode)
 
-    // TODO: test strategy for template variables as the Rust code seems to be different to the TS code
     if (templateParams) {
       tealCode = AppManager.replaceTemplateVariables(tealCode, templateParams)
     }
@@ -139,7 +138,7 @@ export class AppManager {
     return {
       appId,
       appAddress: getAppAddress(appId),
-      // TODO: double check this conversion
+      // TODO: this conversion from base64 encoded string to uint8array may happen inside the algod client
       approvalProgram: new Uint8Array(Buffer.from(app.params.approvalProgram, 'base64')),
       clearStateProgram: new Uint8Array(Buffer.from(app.params.clearStateProgram, 'base64')),
       creator: app.params.creator,
@@ -178,25 +177,25 @@ export class AppManager {
     })
   }
 
-  // TODO: double check whether boxName should be base64
-  async getBoxValue(appId: bigint, boxName: string): Promise<Uint8Array> {
+  async getBoxValue(appId: bigint, boxName: Uint8Array): Promise<Uint8Array> {
+    // Algod expects goal-arg style encoding for box name query param in 'encoding:value'.
+    // However our HTTP client decodes base64 automatically into bytes for the Box model fields.
+    // The API still requires 'b64:<base64>' for the query parameter value.
+    const processedBoxName = `b64:${Buffer.from(boxName).toString('base64')}`
+
     const boxResult = await this.algodClient.getApplicationBoxByName(appId, {
-      name: boxName,
+      name: processedBoxName,
     })
     return new Uint8Array(Buffer.from(boxResult.value))
   }
 
-  async getBoxValues(appId: bigint, boxNames: string[]): Promise<Uint8Array[]> {
+  async getBoxValues(appId: bigint, boxNames: Uint8Array[]): Promise<Uint8Array[]> {
     const values: Uint8Array[] = []
     for (const boxName of boxNames) {
       values.push(await this.getBoxValue(appId, boxName))
     }
     return values
   }
-
-  // TODO: do we need getBoxValueFromAbiType
-  // TODO: do we need getBoxValuesFromAbiType
-  // TODO: do we need getAbiReturn
 
   private static ensureDecodedBytes(bytes: Uint8Array): Uint8Array {
     try {
@@ -225,7 +224,7 @@ export class AppManager {
       const keyBase64 = stateVal.key
       const keyString = Buffer.from(keyRaw).toString('base64')
 
-      // TODO: check `type` being bigint?
+      // TODO: we will need to update the algod client to return int here
       if (stateVal.value.type === 1n) {
         const valueRaw = AppManager.ensureDecodedBytes(new Uint8Array(Buffer.from(stateVal.value.bytes, 'base64')))
         const valueBase64 = Buffer.from(valueRaw).toString('base64')
