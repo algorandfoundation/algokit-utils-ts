@@ -1,5 +1,4 @@
 import { ABIReturn } from '../../abi/abi-method'
-import { AlgodClient } from '../../algod_client'
 import { Expand } from '../../expand'
 import { Transaction } from '../../transact'
 import { AssetManager } from '../clients/asset-manager'
@@ -17,8 +16,7 @@ import type {
 import type { AssetConfigParams, AssetCreateParams, AssetDestroyParams } from './asset-config'
 import type { AssetFreezeParams, AssetUnfreezeParams } from './asset-freeze'
 import type { AssetClawbackParams, AssetOptInParams, AssetOptOutParams, AssetTransferParams } from './asset-transfer'
-import type { SignerGetter } from './common'
-import { Composer, type SendParams, type SendTransactionComposerResults } from './composer'
+import { Composer, TransactionComposerConfig, type SendParams, type SendTransactionComposerResults } from './composer'
 import type { NonParticipationKeyRegistrationParams, OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from './key-registration'
 import type { AccountCloseParams, PaymentParams } from './payment'
 
@@ -58,21 +56,10 @@ export type SendAppCreateMethodCallResult = Expand<
 >
 
 export class TransactionSender {
-  private assetManager: AssetManager
-
   constructor(
-    private algodClient: AlgodClient,
-    private signerGetter: SignerGetter,
-  ) {
-    this.assetManager = new AssetManager(algodClient, () => this.newGroup())
-  }
-
-  private newGroup(): Composer {
-    return new Composer({
-      algodClient: this.algodClient,
-      signerGetter: this.signerGetter,
-    })
-  }
+    private assetManager: AssetManager,
+    private newGroup: (composerConfig?: TransactionComposerConfig) => Composer,
+  ) {}
 
   private async sendSingleTransaction<T>(
     params: T,
