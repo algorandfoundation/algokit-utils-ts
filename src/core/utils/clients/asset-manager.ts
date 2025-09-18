@@ -147,30 +147,26 @@ export class AssetManager {
    * Returns a convenient, flattened view of the asset information.
    */
   async getById(assetId: bigint): Promise<AssetInformation> {
-    try {
-      const asset = await this.algodClient.getAssetById(Number(assetId))
+    const asset = await this.algodClient.getAssetById(Number(assetId))
 
-      return {
-        assetId: asset.index,
-        creator: asset.params.creator,
-        total: asset.params.total,
-        decimals: Number(asset.params.decimals), // TODO: this should be number in algod client
-        defaultFrozen: asset.params.defaultFrozen,
-        manager: asset.params.manager,
-        reserve: asset.params.reserve,
-        freeze: asset.params.freeze,
-        clawback: asset.params.clawback,
-        unitName: asset.params.unitName,
-        // TODO: update algod client to make base64 string uint8array
-        unitNameB64: asset.params.unitNameB64 ? new Uint8Array(Buffer.from(asset.params.unitNameB64, 'base64')) : undefined,
-        assetName: asset.params.name,
-        assetNameB64: asset.params.nameB64 ? new Uint8Array(Buffer.from(asset.params.nameB64, 'base64')) : undefined,
-        url: asset.params.url,
-        urlB64: asset.params.urlB64 ? new Uint8Array(Buffer.from(asset.params.urlB64, 'base64')) : undefined,
-        metadataHash: asset.params.metadataHash ? new Uint8Array(Buffer.from(asset.params.metadataHash, 'base64')) : undefined,
-      }
-    } catch (error) {
-      throw new Error(`Failed to get asset information for asset ${assetId}: ${error}`)
+    return {
+      assetId: asset.index,
+      creator: asset.params.creator,
+      total: asset.params.total,
+      decimals: Number(asset.params.decimals), // TODO: this should be number in algod client
+      defaultFrozen: asset.params.defaultFrozen,
+      manager: asset.params.manager,
+      reserve: asset.params.reserve,
+      freeze: asset.params.freeze,
+      clawback: asset.params.clawback,
+      unitName: asset.params.unitName,
+      // TODO: update algod client to make base64 string uint8array
+      unitNameB64: asset.params.unitNameB64 ? new Uint8Array(Buffer.from(asset.params.unitNameB64, 'base64')) : undefined,
+      assetName: asset.params.name,
+      assetNameB64: asset.params.nameB64 ? new Uint8Array(Buffer.from(asset.params.nameB64, 'base64')) : undefined,
+      url: asset.params.url,
+      urlB64: asset.params.urlB64 ? new Uint8Array(Buffer.from(asset.params.urlB64, 'base64')) : undefined,
+      metadataHash: asset.params.metadataHash ? new Uint8Array(Buffer.from(asset.params.metadataHash, 'base64')) : undefined,
     }
   }
 
@@ -179,11 +175,7 @@ export class AssetManager {
    * Access asset holding via `account_info.asset_holding` and asset params via `account_info.asset_params`.
    */
   async getAccountInformation(sender: string, assetId: bigint): Promise<AccountAssetInformation> {
-    try {
-      return await this.algodClient.accountAssetInformation(sender, Number(assetId))
-    } catch (error) {
-      throw new Error(`Failed to get account asset information for account ${sender} and asset ${assetId}: ${error}`)
-    }
+    return await this.algodClient.accountAssetInformation(sender, Number(assetId))
   }
 
   async bulkOptIn(account: string, assetIds: bigint[]): Promise<BulkAssetOptInOutResult[]> {
