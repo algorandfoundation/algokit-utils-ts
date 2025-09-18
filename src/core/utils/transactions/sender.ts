@@ -2,6 +2,7 @@ import { ABIReturn } from '../../abi/abi-method'
 import { AlgodClient } from '../../algod_client'
 import { Expand } from '../../expand'
 import { Transaction } from '../../transact'
+import { AssetManager } from '../clients/asset-manager'
 import { PendingTransactionResponse } from '../temp'
 import type {
   AppCallMethodCallParams,
@@ -57,10 +58,14 @@ export type SendAppCreateMethodCallResult = Expand<
 >
 
 export class TransactionSender {
+  private assetManager: AssetManager
+
   constructor(
     private algodClient: AlgodClient,
     private signerGetter: SignerGetter,
-  ) {}
+  ) {
+    this.assetManager = new AssetManager(algodClient, () => this.newGroup())
+  }
 
   private newGroup(): Composer {
     return new Composer({
@@ -181,9 +186,31 @@ export class TransactionSender {
     return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptIn(p), sendParams)
   }
 
-  // TODO: this logic is wrong, check with Rust core
-  public async assetOptOut(params: AssetOptOutParams, sendParams?: SendParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptOut(p), sendParams)
+  public async assetOptOut(params: AssetOptOutParams & { ensureZeroBalance?: boolean }, sendParams?: SendParams): Promise<SendResult> {
+    const shouldCheckBalance = params.ensureZeroBalance ?? false
+
+    // If we need to check balances, verify the balance is zero
+    if (shouldCheckBalance) {
+      const accountInfo = await this.assetManager.getAccountInformation(params.sender, params.assetId)
+      const balance = accountInfo.assetHolding?.amount ?? 0
+      if (balance > 0) {
+        throw new Error(`Account ${params.sender} has non-zero balance ${balance} for asset ${params.assetId}`)
+      }
+    }
+
+    // Resolve closeRemainderTo to asset creator if not specified
+    let closeRemainderTo = params.closeRemainderTo
+    if (!closeRemainderTo) {
+      const assetInfo = await this.assetManager.getById(params.assetId)
+      closeRemainderTo = assetInfo.creator
+    }
+
+    const updatedParams: AssetOptOutParams = {
+      ...params,
+      closeRemainderTo,
+    }
+
+    return this.sendSingleTransaction(updatedParams, (composer, p) => composer.addAssetOptOut(p), sendParams)
   }
 
   public async accountClose(params: AccountCloseParams, sendParams?: SendParams): Promise<SendResult> {
