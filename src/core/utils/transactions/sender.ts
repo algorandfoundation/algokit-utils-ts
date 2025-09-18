@@ -17,13 +17,9 @@ import type { AssetConfigParams, AssetCreateParams, AssetDestroyParams } from '.
 import type { AssetFreezeParams, AssetUnfreezeParams } from './asset-freeze'
 import type { AssetClawbackParams, AssetOptInParams, AssetOptOutParams, AssetTransferParams } from './asset-transfer'
 import type { SignerGetter } from './common'
-import { Composer, type SendTransactionComposerResults } from './composer'
+import { Composer, type SendParams, type SendTransactionComposerResults } from './composer'
 import type { NonParticipationKeyRegistrationParams, OfflineKeyRegistrationParams, OnlineKeyRegistrationParams } from './key-registration'
 import type { AccountCloseParams, PaymentParams } from './payment'
-
-export type SendParams = {
-  maxRoundsToWaitForConfirmation?: number
-}
 
 export type SendResult = {
   transaction: Transaction
@@ -73,10 +69,14 @@ export class TransactionSender {
     })
   }
 
-  private async sendSingleTransaction<T>(params: T, addMethod: (composer: Composer, params: T) => void): Promise<SendResult> {
+  private async sendSingleTransaction<T>(
+    params: T,
+    addMethod: (composer: Composer, params: T) => void,
+    sendParams?: SendParams,
+  ): Promise<SendResult> {
     const composer = this.newGroup()
     addMethod(composer, params)
-    const result = await composer.send()
+    const result = await composer.send(sendParams)
 
     return {
       transaction: result.transactions.at(-1)!,
@@ -89,19 +89,24 @@ export class TransactionSender {
     params: T,
     addMethod: (composer: Composer, params: T) => void,
     transformResult: (baseResult: SendResult) => R,
+    sendParams?: SendParams,
   ): Promise<R> {
     const composer = this.newGroup()
     addMethod(composer, params)
-    const result = await composer.send()
+    const result = await composer.send(sendParams)
 
     const baseResult = this.buildSendResult(result)
     return transformResult(baseResult)
   }
 
-  private async sendMethodCall<T>(params: T, addMethod: (composer: Composer, params: T) => void): Promise<SendAppCallMethodCallResult> {
+  private async sendMethodCall<T>(
+    params: T,
+    addMethod: (composer: Composer, params: T) => void,
+    sendParams?: SendParams,
+  ): Promise<SendAppCallMethodCallResult> {
     const composer = this.newGroup()
     addMethod(composer, params)
-    const result = await composer.send()
+    const result = await composer.send(sendParams)
 
     return {
       transaction: result.transactions.at(-1)!,
@@ -120,8 +125,9 @@ export class TransactionSender {
     params: T,
     addMethod: (composer: Composer, params: T) => void,
     transformResult: (baseResult: SendAppCallMethodCallResult) => R,
+    sendParams?: SendParams,
   ): Promise<R> {
-    const baseResult = await this.sendMethodCall(params, addMethod)
+    const baseResult = await this.sendMethodCall(params, addMethod, sendParams)
     return transformResult(baseResult)
   }
 
@@ -133,11 +139,11 @@ export class TransactionSender {
     }
   }
 
-  public async payment(params: PaymentParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addPayment(p))
+  public async payment(params: PaymentParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addPayment(p), sendParams)
   }
 
-  public async assetCreate(params: AssetCreateParams): Promise<SendAssetCreateResult> {
+  public async assetCreate(params: AssetCreateParams, sendParams?: SendParams): Promise<SendAssetCreateResult> {
     return this.sendSingleTransactionWithResult(
       params,
       (composer, p) => composer.addAssetCreate(p),
@@ -151,51 +157,52 @@ export class TransactionSender {
           assetId: assetIndex,
         }
       },
+      sendParams,
     )
   }
 
-  public async assetConfig(params: AssetConfigParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetConfig(p))
+  public async assetConfig(params: AssetConfigParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetConfig(p), sendParams)
   }
 
-  public async assetFreeze(params: AssetFreezeParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetFreeze(p))
+  public async assetFreeze(params: AssetFreezeParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetFreeze(p), sendParams)
   }
 
-  public async assetDestroy(params: AssetDestroyParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetDestroy(p))
+  public async assetDestroy(params: AssetDestroyParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetDestroy(p), sendParams)
   }
 
-  public async assetTransfer(params: AssetTransferParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetTransfer(p))
+  public async assetTransfer(params: AssetTransferParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetTransfer(p), sendParams)
   }
 
-  public async assetOptIn(params: AssetOptInParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptIn(p))
+  public async assetOptIn(params: AssetOptInParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptIn(p), sendParams)
   }
 
   // TODO: this logic is wrong, check with Rust core
-  public async assetOptOut(params: AssetOptOutParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptOut(p))
+  public async assetOptOut(params: AssetOptOutParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptOut(p), sendParams)
   }
 
-  public async accountClose(params: AccountCloseParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAccountClose(p))
+  public async accountClose(params: AccountCloseParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAccountClose(p), sendParams)
   }
 
-  public async assetClawback(params: AssetClawbackParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetClawback(p))
+  public async assetClawback(params: AssetClawbackParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetClawback(p), sendParams)
   }
 
-  public async assetUnfreeze(params: AssetUnfreezeParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetUnfreeze(p))
+  public async assetUnfreeze(params: AssetUnfreezeParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetUnfreeze(p), sendParams)
   }
 
-  async appCall(params: AppCallParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAppCall(p))
+  async appCall(params: AppCallParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAppCall(p), sendParams)
   }
 
-  async appCreate(params: AppCreateParams): Promise<SendAppCreateResult> {
+  async appCreate(params: AppCreateParams, sendParams?: SendParams): Promise<SendAppCreateResult> {
     return this.sendSingleTransactionWithResult(
       params,
       (composer, p) => composer.addAppCreate(p),
@@ -209,22 +216,23 @@ export class TransactionSender {
           appId: applicationIndex,
         }
       },
+      sendParams,
     )
   }
 
-  async appUpdate(params: AppUpdateParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAppUpdate(p))
+  async appUpdate(params: AppUpdateParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAppUpdate(p), sendParams)
   }
 
-  async appDelete(params: AppDeleteParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addAppDelete(p))
+  async appDelete(params: AppDeleteParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAppDelete(p), sendParams)
   }
 
-  async appCallMethodCall(params: AppCallMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    return this.sendMethodCall(params, (composer, p) => composer.addAppCallMethodCall(p))
+  async appCallMethodCall(params: AppCallMethodCallParams, sendParams?: SendParams): Promise<SendAppCallMethodCallResult> {
+    return this.sendMethodCall(params, (composer, p) => composer.addAppCallMethodCall(p), sendParams)
   }
 
-  async appCreateMethodCall(params: AppCreateMethodCallParams): Promise<SendAppCreateMethodCallResult> {
+  async appCreateMethodCall(params: AppCreateMethodCallParams, sendParams?: SendParams): Promise<SendAppCreateMethodCallResult> {
     return this.sendMethodCallWithResult(
       params,
       (composer, p) => composer.addAppCreateMethodCall(p),
@@ -238,26 +246,27 @@ export class TransactionSender {
           appId: applicationIndex,
         }
       },
+      sendParams,
     )
   }
 
-  async appUpdateMethodCall(params: AppUpdateMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    return this.sendMethodCall(params, (composer, p) => composer.addAppUpdateMethodCall(p))
+  async appUpdateMethodCall(params: AppUpdateMethodCallParams, sendParams?: SendParams): Promise<SendAppCallMethodCallResult> {
+    return this.sendMethodCall(params, (composer, p) => composer.addAppUpdateMethodCall(p), sendParams)
   }
 
-  async appDeleteMethodCall(params: AppDeleteMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    return this.sendMethodCall(params, (composer, p) => composer.addAppDeleteMethodCall(p))
+  async appDeleteMethodCall(params: AppDeleteMethodCallParams, sendParams?: SendParams): Promise<SendAppCallMethodCallResult> {
+    return this.sendMethodCall(params, (composer, p) => composer.addAppDeleteMethodCall(p), sendParams)
   }
 
-  async onlineKeyRegistration(params: OnlineKeyRegistrationParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addOnlineKeyRegistration(p))
+  async onlineKeyRegistration(params: OnlineKeyRegistrationParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addOnlineKeyRegistration(p), sendParams)
   }
 
-  async offlineKeyRegistration(params: OfflineKeyRegistrationParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addOfflineKeyRegistration(p))
+  async offlineKeyRegistration(params: OfflineKeyRegistrationParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addOfflineKeyRegistration(p), sendParams)
   }
 
-  async nonParticipationKeyRegistration(params: NonParticipationKeyRegistrationParams): Promise<SendResult> {
-    return this.sendSingleTransaction(params, (composer, p) => composer.addNonParticipationKeyRegistration(p))
+  async nonParticipationKeyRegistration(params: NonParticipationKeyRegistrationParams, sendParams?: SendParams): Promise<SendResult> {
+    return this.sendSingleTransaction(params, (composer, p) => composer.addNonParticipationKeyRegistration(p), sendParams)
   }
 }
