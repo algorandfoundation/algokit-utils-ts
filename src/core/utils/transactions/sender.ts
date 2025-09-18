@@ -73,6 +73,58 @@ export class TransactionSender {
     })
   }
 
+  private async sendSingleTransaction<T>(params: T, addMethod: (composer: Composer, params: T) => void): Promise<SendResult> {
+    const composer = this.newGroup()
+    addMethod(composer, params)
+    const result = await composer.send()
+
+    return {
+      transaction: result.transactions.at(-1)!,
+      confirmation: result.confirmations.at(-1)!,
+      transactionId: result.transactionIds.at(-1)!,
+    }
+  }
+
+  private async sendSingleTransactionWithResult<T, R>(
+    params: T,
+    addMethod: (composer: Composer, params: T) => void,
+    transformResult: (baseResult: SendResult) => R,
+  ): Promise<R> {
+    const composer = this.newGroup()
+    addMethod(composer, params)
+    const result = await composer.send()
+
+    const baseResult = this.buildSendResult(result)
+    return transformResult(baseResult)
+  }
+
+  private async sendMethodCall<T>(params: T, addMethod: (composer: Composer, params: T) => void): Promise<SendAppCallMethodCallResult> {
+    const composer = this.newGroup()
+    addMethod(composer, params)
+    const result = await composer.send()
+
+    return {
+      transaction: result.transactions.at(-1)!,
+      confirmation: result.confirmations.at(-1)!,
+      transactionId: result.transactionIds.at(-1)!,
+      group: result.group,
+      confirmations: result.confirmations,
+      transactionIds: result.transactionIds,
+      transactions: result.transactions,
+      abiReturns: result.abiReturns,
+      abiReturn: result.abiReturns.at(-1),
+    }
+  }
+
+  private async sendMethodCallWithResult<T, R>(
+    params: T,
+    addMethod: (composer: Composer, params: T) => void,
+    transformResult: (baseResult: SendAppCallMethodCallResult) => R,
+  ): Promise<R> {
+    const baseResult = await this.sendMethodCall(params, addMethod)
+    return transformResult(baseResult)
+  }
+
   private buildSendResult(composerResult: SendTransactionComposerResults): SendResult {
     return {
       transaction: composerResult.transactions.at(-1)!,
@@ -82,220 +134,130 @@ export class TransactionSender {
   }
 
   public async payment(params: PaymentParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addPayment(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addPayment(p))
   }
 
   public async assetCreate(params: AssetCreateParams): Promise<SendAssetCreateResult> {
-    const composer = this.newGroup()
-    composer.addAssetCreate(params)
-    const result = await composer.send()
-
-    const baseResult = this.buildSendResult(result)
-
-    const assetIndex = baseResult.confirmation.assetIndex
-    if (assetIndex === undefined || assetIndex <= 0) {
-      throw new Error('Asset creation confirmation missing assetIndex')
-    }
-
-    return {
-      ...baseResult,
-      assetId: assetIndex,
-    }
+    return this.sendSingleTransactionWithResult(
+      params,
+      (composer, p) => composer.addAssetCreate(p),
+      (baseResult) => {
+        const assetIndex = baseResult.confirmation.assetIndex
+        if (assetIndex === undefined || assetIndex <= 0) {
+          throw new Error('Asset creation confirmation missing assetIndex')
+        }
+        return {
+          ...baseResult,
+          assetId: assetIndex,
+        }
+      },
+    )
   }
 
   public async assetConfig(params: AssetConfigParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetConfig(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetConfig(p))
   }
 
   public async assetFreeze(params: AssetFreezeParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetFreeze(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetFreeze(p))
   }
 
   public async assetDestroy(params: AssetDestroyParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetDestroy(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetDestroy(p))
   }
 
   public async assetTransfer(params: AssetTransferParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetTransfer(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetTransfer(p))
   }
 
   public async assetOptIn(params: AssetOptInParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetOptIn(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptIn(p))
   }
 
+  // TODO: this logic is wrong, check with Rust core
   public async assetOptOut(params: AssetOptOutParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetOptOut(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetOptOut(p))
   }
 
   public async accountClose(params: AccountCloseParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAccountClose(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAccountClose(p))
   }
 
   public async assetClawback(params: AssetClawbackParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetClawback(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetClawback(p))
   }
 
   public async assetUnfreeze(params: AssetUnfreezeParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAssetUnfreeze(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAssetUnfreeze(p))
   }
 
   async appCall(params: AppCallParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAppCall(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAppCall(p))
   }
 
   async appCreate(params: AppCreateParams): Promise<SendAppCreateResult> {
-    const composer = this.newGroup()
-    composer.addAppCreate(params)
-    const result = await composer.send()
-
-    const baseResult = this.buildSendResult(result)
-    const applicationIndex = baseResult.confirmation.applicationIndex
-    if (applicationIndex === undefined || applicationIndex <= 0) {
-      throw new Error('App creation confirmation missing applicationIndex')
-    }
-
-    return {
-      ...baseResult,
-      appId: applicationIndex,
-    }
+    return this.sendSingleTransactionWithResult(
+      params,
+      (composer, p) => composer.addAppCreate(p),
+      (baseResult) => {
+        const applicationIndex = baseResult.confirmation.applicationIndex
+        if (applicationIndex === undefined || applicationIndex <= 0) {
+          throw new Error('App creation confirmation missing applicationIndex')
+        }
+        return {
+          ...baseResult,
+          appId: applicationIndex,
+        }
+      },
+    )
   }
 
   async appUpdate(params: AppUpdateParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAppUpdate(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAppUpdate(p))
   }
 
   async appDelete(params: AppDeleteParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addAppDelete(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
-  }
-
-  private buildSendAppCallMethodCallResult(composerResult: SendTransactionComposerResults): SendAppCallMethodCallResult {
-    return {
-      transaction: composerResult.transactions.at(-1)!,
-      confirmation: composerResult.confirmations.at(-1)!,
-      transactionId: composerResult.transactionIds.at(-1)!,
-      group: composerResult.group,
-      confirmations: composerResult.confirmations,
-      transactionIds: composerResult.transactionIds,
-      transactions: composerResult.transactions,
-      abiReturns: composerResult.abiReturns,
-      abiReturn: composerResult.abiReturns.at(-1),
-    }
+    return this.sendSingleTransaction(params, (composer, p) => composer.addAppDelete(p))
   }
 
   async appCallMethodCall(params: AppCallMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    const composer = this.newGroup()
-    composer.addAppCallMethodCall(params)
-    const result = await composer.send()
-
-    return this.buildSendAppCallMethodCallResult(result)
+    return this.sendMethodCall(params, (composer, p) => composer.addAppCallMethodCall(p))
   }
 
   async appCreateMethodCall(params: AppCreateMethodCallParams): Promise<SendAppCreateMethodCallResult> {
-    const composer = this.newGroup()
-    composer.addAppCreateMethodCall(params)
-    const result = await composer.send()
-
-    const baseResult = this.buildSendAppCallMethodCallResult(result)
-    const applicationIndex = baseResult.confirmation.applicationIndex
-    if (applicationIndex === undefined || applicationIndex <= 0) {
-      throw new Error('App creation confirmation missing applicationIndex')
-    }
-
-    return {
-      ...baseResult,
-      appId: applicationIndex,
-    }
+    return this.sendMethodCallWithResult(
+      params,
+      (composer, p) => composer.addAppCreateMethodCall(p),
+      (baseResult) => {
+        const applicationIndex = baseResult.confirmation.applicationIndex
+        if (applicationIndex === undefined || applicationIndex <= 0) {
+          throw new Error('App creation confirmation missing applicationIndex')
+        }
+        return {
+          ...baseResult,
+          appId: applicationIndex,
+        }
+      },
+    )
   }
 
   async appUpdateMethodCall(params: AppUpdateMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    const composer = this.newGroup()
-    composer.addAppUpdateMethodCall(params)
-    const result = await composer.send()
-
-    return this.buildSendAppCallMethodCallResult(result)
+    return this.sendMethodCall(params, (composer, p) => composer.addAppUpdateMethodCall(p))
   }
 
   async appDeleteMethodCall(params: AppDeleteMethodCallParams): Promise<SendAppCallMethodCallResult> {
-    const composer = this.newGroup()
-    composer.addAppDeleteMethodCall(params)
-    const result = await composer.send()
-
-    return this.buildSendAppCallMethodCallResult(result)
+    return this.sendMethodCall(params, (composer, p) => composer.addAppDeleteMethodCall(p))
   }
 
   async onlineKeyRegistration(params: OnlineKeyRegistrationParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addOnlineKeyRegistration(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addOnlineKeyRegistration(p))
   }
 
   async offlineKeyRegistration(params: OfflineKeyRegistrationParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addOfflineKeyRegistration(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addOfflineKeyRegistration(p))
   }
 
   async nonParticipationKeyRegistration(params: NonParticipationKeyRegistrationParams): Promise<SendResult> {
-    const composer = this.newGroup()
-    composer.addNonParticipationKeyRegistration(params)
-    const result = await composer.send()
-
-    return this.buildSendResult(result)
+    return this.sendSingleTransaction(params, (composer, p) => composer.addNonParticipationKeyRegistration(p))
   }
 }
