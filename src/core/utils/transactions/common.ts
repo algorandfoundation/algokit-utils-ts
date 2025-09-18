@@ -219,3 +219,7 @@ export interface TransactionSigner {
   signTransactions(transactions: Transaction[], indices: number[]): Promise<SignedTransaction[]>
   signTransaction(transaction: Transaction): Promise<SignedTransaction>
 }
+
+export interface SignerGetter {
+  getSigner(address: string): TransactionSigner
+}

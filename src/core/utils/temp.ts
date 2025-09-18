@@ -67,6 +67,8 @@ export type PendingTransactionResponse = {
   logs?: Uint8Array[]
   poolError?: string
   confirmedRound?: bigint
+  assetIndex?: bigint
+  applicationIndex?: bigint
 }
 
 export type SimulateResponse = {
