@@ -2,7 +2,7 @@
 
 `AlgorandClient` is a client class that brokers easy access to Algorand functionality. It's the [default entrypoint](../README.md#usage) into AlgoKit Utils functionality.
 
-The main entrypoint to the bulk of the functionality in AlgoKit Utils is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./capabilities/algorand-client.md), e.g.:
+The main entrypoint to the bulk of the functionality in AlgoKit Utils is the `AlgorandClient` class, most of the time you can get started by typing `AlgorandClient.` and choosing one of the static initialisation methods to create an [Algorand client](./algorand-client.md), e.g.:
 
 ```typescript
 // Point to the network configured through environment variables or
