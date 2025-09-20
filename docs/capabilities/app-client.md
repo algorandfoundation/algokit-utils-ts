@@ -1,13 +1,14 @@
 # App client and App factory
 
-> [!NOTE]
-> This page covers the untyped app client, but we recommend using [typed clients](./typed-app-clients.md), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
+:::note
+This page covers the untyped app client, but we recommend using [typed clients](./typed-app-clients.md), which will give you a better developer experience with strong typing and intellisense specific to the app itself.
+:::
 
 App client and App factory are higher-order use case capabilities provided by AlgoKit Utils that builds on top of the core capabilities, particularly [App deployment](./app-deploy.md) and [App management](./app.md). They allow you to access high productivity application clients that work with [ARC-56](https://github.com/algorandfoundation/ARCs/pull/258) and [ARC-32](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0032.md) application spec defined smart contracts, which you can use to create, update, delete, deploy and call a smart contract and access state data for it.
 
-> ![NOTE]
->
-> If you are confused about when to use the factory vs client the mental model is: use the client if you know the app ID, use the factory if you don't know the app ID (deferred knowledge or the instance doesn't exist yet on the blockchain) or you have multiple app IDs
+:::note
+If you are confused about when to use the factory vs client the mental model is: use the client if you know the app ID, use the factory if you don't know the app ID (deferred knowledge or the instance doesn't exist yet on the blockchain) or you have multiple app IDs
+:::
 
 ## `AppFactory`
 
