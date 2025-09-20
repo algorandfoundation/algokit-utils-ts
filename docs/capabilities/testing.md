@@ -2,7 +2,7 @@
 
 Automated testing is a higher-order use case capability provided by AlgoKit Utils that builds on top of the core capabilities. It allows you to use terse, robust automated testing primitives that work across any testing framework (including jest and vitest) to facilitate fixture management, quickly generating isolated and funded test accounts, transaction logging, indexer wait management and log capture.
 
-To see some usage examples check out the all of the [automated tests](../../src/) and the various \*.spec.ts files (AlgoKit Utils [dogfoods](https://en.wikipedia.org/wiki/Eating_your_own_dog_food) it's own testing library). Alternatively, you can see an example of using this library to test a smart contract with [the tests](https://github.com/algorandfoundation/nft_voting_tool/blob/main/src/algorand/smart_contracts/tests/voting.spec.ts) for the [on-chain voting tool](https://github.com/algorandfoundation/nft_voting_tool#readme).
+To see some usage examples check out the all of the [automated tests](../../src/testing/) and the various \*.spec.ts files (AlgoKit Utils [dogfoods](https://en.wikipedia.org/wiki/Eating_your_own_dog_food) it's own testing library). Alternatively, you can see an example of using this library to test a smart contract with [the tests](https://github.com/algorandfoundation/nft_voting_tool/blob/main/src/algorand/smart_contracts/tests/voting.spec.ts) for the [on-chain voting tool](https://github.com/algorandfoundation/nft_voting_tool#readme).
 
 ## Module import
 
