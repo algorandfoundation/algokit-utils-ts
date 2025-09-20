@@ -106,7 +106,7 @@ The signature for the calls to send a single transaction usually look like:
 - `{ComposerTransactionTypeParams}` will be the parameters that are specific to that transaction type e.g. `PaymentParams`, [see the full list](../code/modules/types_composer.md#type-aliases)
 - [`CommonAppCallParams`](../code/modules/types_composer.md#commonappcallparams) are the [common app call transaction parameters](./app.md#common-app-parameters) that can be specified for every single app transaction
 - [`SendParams`](../code/interfaces/types_transaction.SendParams.md) are the [parameters](#transaction-parameters) that control execution semantics when sending transactions to the network
-- [`SendSingleTransactionResult`](../code/modules/types_algorand_client.md#sendsingletransactionresult) is all of the information that is relevant when [sending a single transaction to the network](./transaction.md#sending-a-transaction)
+- [`SendSingleTransactionResult`](../code/modules/types_algorand_client.md#sendsingletransactionresult) is all of the information that is relevant when sending a single transaction to the network.
 
 Generally, the functions to immediately send a single transaction will emit log messages before and/or after sending the transaction. You can opt-out of this by sending `suppressLog: true`.
 
