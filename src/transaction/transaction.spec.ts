@@ -315,7 +315,7 @@ describe('transaction', () => {
         note: 'txn2',
       } satisfies Parameters<(typeof appClient1)['send']['call']>[0]
 
-      const result = await appClient1.algorand
+      const result = await appClient1
         .newGroup()
         .addAppCallMethodCall(await appClient1.params.call(txn1Params))
         .addAppCallMethodCall(await appClient1.params.call(txn2Params))
@@ -406,7 +406,7 @@ describe('transaction', () => {
       const { testAccount } = localnet.context
       const expectedFee = 8000n
 
-      const result = await appClient1.algorand
+      const result = await appClient1
         .newGroup()
         .addPayment({
           sender: testAccount.addr,
@@ -432,7 +432,7 @@ describe('transaction', () => {
 
     test('alters fee, allocating surplus fees to the most fee constrained transaction first', async () => {
       const { testAccount } = localnet.context
-      const result = await appClient1.algorand
+      const result = await appClient1
         .newGroup()
         .addAppCallMethodCall(
           await appClient1.params.call({
@@ -520,7 +520,7 @@ describe('transaction', () => {
     test('throws when maxFee is below the calculated fee', async () => {
       await expect(
         async () =>
-          await appClient1.algorand
+          await appClient1
             .newGroup()
             .addAppCallMethodCall(
               await appClient1.params.call({
@@ -581,7 +581,7 @@ describe('transaction', () => {
     test('throws when staticFee is below the calculated fee', async () => {
       await expect(
         async () =>
-          await appClient1.algorand
+          await appClient1
             .newGroup()
             .addAppCallMethodCall(
               await appClient1.params.call({
@@ -607,7 +607,7 @@ describe('transaction', () => {
       const { testAccount } = localnet.context
       await expect(
         async () =>
-          await appClient1.algorand
+          await appClient1
             .newGroup()
             .addAppCallMethodCall(
               await appClient1.params.call({
@@ -787,12 +787,12 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
   let alice: Address & Account
 
   describe('accounts', () => {
-    test('addressBalance: invalid Account reference', async () => {
+    test('addressBalance: unavailable Account', async () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
         appClient.send.call({ method: 'addressBalance', args: [testAccount.toString()], populateAppCallResources: false }),
-      ).rejects.toThrow('invalid Account reference')
+      ).rejects.toThrow('unavailable Account')
     })
 
     test('addressBalance', async () => {
@@ -846,7 +846,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
   })
 
   describe('cross-product references', () => {
-    const hasAssetErrorMsg = version === 8 ? 'invalid Account reference' : 'unavailable Account'
+    const hasAssetErrorMsg = 'unavailable Account'
 
     test(`hasAsset: ${hasAssetErrorMsg}`, async () => {
       const { testAccount } = fixture.context
@@ -885,14 +885,14 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
   })
 
   describe('sendTransaction', () => {
-    test('addressBalance: invalid Account reference', async () => {
+    test('addressBalance: unavailable Account', async () => {
       await expect(
         appClient.send.call({
           method: 'addressBalance',
           args: [algosdk.generateAccount().addr.toString()],
           populateAppCallResources: false,
         }),
-      ).rejects.toThrow('invalid Account reference')
+      ).rejects.toThrow('unavailable Account')
     })
 
     test('addressBalance', async () => {

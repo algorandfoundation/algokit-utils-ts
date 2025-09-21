@@ -46,14 +46,14 @@ import {
   ABIStruct,
   Arc56Contract,
   Arc56Method,
+  ProgramSourceInfo,
+  StorageKey,
+  StorageMap,
   getABIDecodedValue,
   getABIEncodedValue,
   getABITupleFromABIStruct,
   getArc56Method,
   getArc56ReturnValue,
-  ProgramSourceInfo,
-  StorageKey,
-  StorageMap,
 } from './app-arc56'
 import { AppLookup } from './app-deployer'
 import { AppManager, BoxIdentifier } from './app-manager'
@@ -69,6 +69,7 @@ import {
   AppUpdateParams,
   CommonAppCallParams,
   PaymentParams,
+  TransactionComposer,
 } from './composer'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
@@ -343,6 +344,7 @@ export interface AppClientParams {
   approvalSourceMap?: SourceMap
   /** Optional source map for the clear state program */
   clearSourceMap?: SourceMap
+  newGroup: () => TransactionComposer
 }
 
 /** Parameters to clone an app client */
@@ -502,6 +504,7 @@ export class AppClient {
   }
   private _lastCompiled: { clear?: Uint8Array; approval?: Uint8Array }
 
+  private _newGroup: () => TransactionComposer
   /**
    * Create a new app client.
    * @param params The parameters to create the app client
@@ -557,6 +560,7 @@ export class AppClient {
       /** Send bare (raw) transactions to the current app */
       bare: this.getBareSendMethods(),
     }
+    this._newGroup = params.newGroup
   }
 
   /**
@@ -579,6 +583,7 @@ export class AppClient {
       defaultSigner: this._defaultSigner,
       approvalSourceMap: this._approvalSourceMap,
       clearSourceMap: this._clearSourceMap,
+      newGroup: this._newGroup,
       ...params,
     })
   }
@@ -680,11 +685,6 @@ export class AppClient {
     return this._appSpec
   }
 
-  /** A reference to the underlying `AlgorandClient` this app client is using. */
-  public get algorand(): AlgorandClient {
-    return this._algorand
-  }
-
   /** Get parameters to create transactions for the current app.
    *
    * A good mental model for this is that these parameters represent a deferred transaction creation.
@@ -712,6 +712,10 @@ export class AppClient {
   /** Send transactions to the current app */
   public get send() {
     return this._sendMethods
+  }
+
+  public get newGroup() {
+    return this._newGroup
   }
 
   /** Get state (local, global, box) from the current app */

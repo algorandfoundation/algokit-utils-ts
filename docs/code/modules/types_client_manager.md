@@ -41,7 +41,7 @@ ___
 
 ### ClientAppClientParams
 
-Ƭ **ClientAppClientParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"algorand"``\>\>
+Ƭ **ClientAppClientParams**: [`Expand`](types_expand.md#expand)\<`Omit`\<[`AppClientParams`](../interfaces/types_app_client.AppClientParams.md), ``"algorand"`` \| ``"newGroup"``\>\>
 
 Params to get an app client by ID from `ClientManager`.
 
