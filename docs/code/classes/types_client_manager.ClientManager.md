@@ -257,6 +257,7 @@ using AlgoKit app deployment semantics (i.e. looking for the app creation transa
 | `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.ignoreCache?` | `boolean` | Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value |
+| `params.newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | - |
 
 #### Returns
 
@@ -341,6 +342,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
+| `params.newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | - |
 
 #### Returns
 
@@ -516,6 +518,7 @@ Returns a new typed client, resolving the app by creator address and name.
 | `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.ignoreCache?` | `boolean` | Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value |
+| `params.newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | - |
 
 #### Returns
 
@@ -572,6 +575,7 @@ Returns a new typed client, resolving the app by app ID.
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
+| `params.newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | - |
 
 #### Returns
 
@@ -620,6 +624,7 @@ If no IDs are in the app spec or the network isn't recognised, an error is throw
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
+| `params.newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | - |
 
 #### Returns
 

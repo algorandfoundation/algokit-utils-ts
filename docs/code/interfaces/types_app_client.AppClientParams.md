@@ -18,6 +18,7 @@ Parameters to create an app client
 - [clearSourceMap](types_app_client.AppClientParams.md#clearsourcemap)
 - [defaultSender](types_app_client.AppClientParams.md#defaultsender)
 - [defaultSigner](types_app_client.AppClientParams.md#defaultsigner)
+- [newGroup](types_app_client.AppClientParams.md#newgroup)
 
 ## Properties
 
@@ -29,7 +30,7 @@ An `AlgorandClient` instance
 
 #### Defined in
 
-[src/types/app-client.ts:331](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L331)
+[src/types/app-client.ts:332](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L332)
 
 ___
 
@@ -41,7 +42,7 @@ The ID of the app instance this client should make calls against.
 
 #### Defined in
 
-[src/types/app-client.ts:321](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L321)
+[src/types/app-client.ts:322](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L322)
 
 ___
 
@@ -54,7 +55,7 @@ Defaults to the ARC-32/ARC-56 app spec name
 
 #### Defined in
 
-[src/types/app-client.ts:337](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L337)
+[src/types/app-client.ts:338](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L338)
 
 ___
 
@@ -69,7 +70,7 @@ The ARC-56 or ARC-32 application spec as either:
 
 #### Defined in
 
-[src/types/app-client.ts:328](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L328)
+[src/types/app-client.ts:329](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L329)
 
 ___
 
@@ -81,7 +82,7 @@ Optional source map for the approval program
 
 #### Defined in
 
-[src/types/app-client.ts:343](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L343)
+[src/types/app-client.ts:344](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L344)
 
 ___
 
@@ -93,7 +94,7 @@ Optional source map for the clear state program
 
 #### Defined in
 
-[src/types/app-client.ts:345](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L345)
+[src/types/app-client.ts:346](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L346)
 
 ___
 
@@ -105,7 +106,7 @@ Optional address to use for the account to use as the default sender for calls.
 
 #### Defined in
 
-[src/types/app-client.ts:339](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L339)
+[src/types/app-client.ts:340](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L340)
 
 ___
 
@@ -117,4 +118,22 @@ Optional signer to use as the default signer for default sender calls (if not sp
 
 #### Defined in
 
-[src/types/app-client.ts:341](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L341)
+[src/types/app-client.ts:342](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L342)
+
+___
+
+### newGroup
+
+• **newGroup**: () => [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
+
+#### Type declaration
+
+▸ (): [`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
+
+##### Returns
+
+[`TransactionComposer`](../classes/types_composer.TransactionComposer.md)
+
+#### Defined in
+
+[src/types/app-client.ts:347](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-client.ts#L347)

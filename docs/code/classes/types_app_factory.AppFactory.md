@@ -33,7 +33,6 @@ to interact with those (or other) app instances.
 
 ### Accessors
 
-- [algorand](types_app_factory.AppFactory.md#algorand)
 - [appName](types_app_factory.AppFactory.md#appname)
 - [appSpec](types_app_factory.AppFactory.md#appspec)
 - [params](types_app_factory.AppFactory.md#params)
@@ -239,7 +238,7 @@ Create transactions for the current app
 
 #### Defined in
 
-[src/types/app-factory.ts:245](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L245)
+[src/types/app-factory.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L240)
 
 ___
 
@@ -259,25 +258,9 @@ Send transactions to the current app
 
 #### Defined in
 
-[src/types/app-factory.ts:273](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L273)
+[src/types/app-factory.ts:268](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L268)
 
 ## Accessors
-
-### algorand
-
-• `get` **algorand**(): [`AlgorandClient`](types_algorand_client.AlgorandClient.md)
-
-Return the algorand client this factory is using.
-
-#### Returns
-
-[`AlgorandClient`](types_algorand_client.AlgorandClient.md)
-
-#### Defined in
-
-[src/types/app-factory.ts:221](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L221)
-
-___
 
 ### appName
 
@@ -350,7 +333,7 @@ await appClient.send.call({method: 'my_method', args: [createAppParams]})
 
 #### Defined in
 
-[src/types/app-factory.ts:240](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L240)
+[src/types/app-factory.ts:235](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L235)
 
 ## Methods
 
@@ -386,7 +369,7 @@ const result = await factory.compile()
 
 #### Defined in
 
-[src/types/app-factory.ts:620](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L620)
+[src/types/app-factory.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L621)
 
 ___
 
@@ -458,7 +441,7 @@ const { appClient, result } = await factory.deploy({
 
 #### Defined in
 
-[src/types/app-factory.ts:372](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L372)
+[src/types/app-factory.ts:369](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L369)
 
 ___
 
@@ -476,7 +459,7 @@ The source maps
 
 #### Defined in
 
-[src/types/app-factory.ts:501](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L501)
+[src/types/app-factory.ts:502](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L502)
 
 ___
 
@@ -502,7 +485,7 @@ The new error, or if there was no logic error or source map then the wrapped err
 
 #### Defined in
 
-[src/types/app-factory.ts:489](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L489)
+[src/types/app-factory.ts:490](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L490)
 
 ___
 
@@ -530,7 +513,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:645](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L645)
+[src/types/app-factory.ts:646](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L646)
 
 ___
 
@@ -557,6 +540,7 @@ if not specified in the params.
 | `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
 | `params.ignoreCache?` | `boolean` | Whether or not to ignore the `AppDeployer` lookup cache and force an on-chain lookup, default: use any cached value |
+| `params.newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | - |
 
 #### Returns
 
@@ -572,7 +556,7 @@ const appClient = factory.getAppClientByCreatorAndName({ creatorAddress: 'CREATO
 
 #### Defined in
 
-[src/types/app-factory.ts:470](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L470)
+[src/types/app-factory.ts:471](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L471)
 
 ___
 
@@ -596,6 +580,7 @@ if not specified in the params.
 | `params.clearSourceMap?` | `ProgramSourceMap` | Optional source map for the clear state program |
 | `params.defaultSender?` | `string` \| `Address` | Optional address to use for the account to use as the default sender for calls. |
 | `params.defaultSigner?` | `TransactionSigner` | Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). |
+| `params.newGroup` | () => [`TransactionComposer`](types_composer.TransactionComposer.md) | - |
 
 #### Returns
 
@@ -611,7 +596,7 @@ const appClient = factory.getAppClientById({ appId: 12345n })
 
 #### Defined in
 
-[src/types/app-factory.ts:444](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L444)
+[src/types/app-factory.ts:445](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L445)
 
 ___
 
@@ -639,7 +624,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:633](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L633)
+[src/types/app-factory.ts:634](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L634)
 
 ___
 
@@ -660,7 +645,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:664](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L664)
+[src/types/app-factory.ts:665](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L665)
 
 ___
 
@@ -680,7 +665,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:523](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L523)
+[src/types/app-factory.ts:524](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L524)
 
 ___
 
@@ -704,7 +689,7 @@ ___
 
 #### Defined in
 
-[src/types/app-factory.ts:537](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L537)
+[src/types/app-factory.ts:538](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L538)
 
 ___
 
@@ -727,7 +712,7 @@ if none provided and throws an error if neither provided
 
 #### Defined in
 
-[src/types/app-factory.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L692)
+[src/types/app-factory.ts:693](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L693)
 
 ___
 
@@ -752,7 +737,7 @@ or `undefined` otherwise (so the signer is resolved from `AlgorandClient`)
 
 #### Defined in
 
-[src/types/app-factory.ts:702](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L702)
+[src/types/app-factory.ts:703](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L703)
 
 ___
 
@@ -780,7 +765,7 @@ Make the given call and catch any errors, augmenting with debugging information 
 
 #### Defined in
 
-[src/types/app-factory.ts:597](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L597)
+[src/types/app-factory.ts:598](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L598)
 
 ___
 
@@ -802,7 +787,7 @@ Import source maps for the app.
 
 #### Defined in
 
-[src/types/app-factory.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L518)
+[src/types/app-factory.ts:519](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L519)
 
 ___
 
@@ -837,4 +822,4 @@ The smart contract response with an updated return value
 
 #### Defined in
 
-[src/types/app-factory.ts:719](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L719)
+[src/types/app-factory.ts:720](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-factory.ts#L720)
