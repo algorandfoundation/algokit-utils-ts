@@ -957,14 +957,14 @@ describe('app-client', () => {
       args: ['test'],
     }
 
-    const simulateResult = await appClient.algorand
+    const simulateResult = await appClient
       .newGroup()
       .addAppCallMethodCall(appCall1Params)
       .addPayment(paymentParams)
       .addAppCallMethodCall(appCall2Params)
       .simulate({ skipSignatures: true })
 
-    const sendResult = await appClient.algorand
+    const sendResult = await appClient
       .newGroup()
       .addAppCallMethodCall(appCall1Params)
       .addPayment(paymentParams)

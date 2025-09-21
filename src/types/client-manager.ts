@@ -27,7 +27,7 @@ export type ClientAppFactoryParams = Expand<Omit<AppFactoryParams, 'algorand'>>
 export type ClientResolveAppClientByCreatorAndNameParams = Expand<Omit<ResolveAppClientByCreatorAndName, 'algorand'>>
 
 /** Params to get an app client by ID from `ClientManager`. */
-export type ClientAppClientParams = Expand<Omit<AppClientParams, 'algorand'>>
+export type ClientAppClientParams = Expand<Omit<AppClientParams, 'algorand' | 'newGroup'>>
 
 /** Params to get an app client by network from `ClientManager`. */
 export type ClientAppClientByNetworkParams = Expand<Omit<AppClientParams, 'algorand' | 'appId'>>
@@ -308,7 +308,7 @@ export class ClientManager {
     if (!this._algorand) {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
-    return new AppClient({ ...params, algorand: this._algorand })
+    return new AppClient({ ...params, algorand: this._algorand, newGroup: () => this._algorand!.newGroup() })
   }
 
   /**
@@ -413,7 +413,7 @@ export class ClientManager {
       throw new Error('Attempt to get app client from a ClientManager without an Algorand client')
     }
 
-    return typedClient.fromNetwork({ ...params, algorand: this._algorand })
+    return typedClient.fromNetwork({ ...params, algorand: this._algorand, newGroup: () => this._algorand!.newGroup() })
   }
 
   /**

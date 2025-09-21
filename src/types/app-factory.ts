@@ -217,11 +217,6 @@ export class AppFactory {
     return this._appSpec
   }
 
-  /** Return the algorand client this factory is using. */
-  get algorand() {
-    return this._algorand
-  }
-
   /** Get parameters to create transactions (create and deploy related calls) for the current app.
    *
    * A good mental model for this is that these parameters represent a deferred transaction creation.
@@ -293,6 +288,7 @@ export class AppFactory {
         return {
           appClient: this.getAppClientById({
             appId: result.appId,
+            newGroup: () => this._algorand.newGroup(),
           }),
           result: {
             ...result,
@@ -324,6 +320,7 @@ export class AppFactory {
       return {
         appClient: this.getAppClientById({
           appId: result.appId,
+          newGroup: () => this._algorand.newGroup(),
         }),
         result: {
           ...result,
@@ -376,7 +373,10 @@ export class AppFactory {
 
     // Compile using a appID 0 AppClient so we can register the error handler and use the programs
     // to identify the app within the error handler (because we can't use app ID 0)
-    const tempAppClient = this.getAppClientById({ appId: 0n })
+    const tempAppClient = this.getAppClientById({
+      appId: 0n,
+      newGroup: this._algorand.newGroup,
+    })
     const compiled = await tempAppClient.compile({ deployTimeParams, updatable, deletable })
 
     const deployResult = await this._algorand.appDeployer.deploy({
@@ -402,6 +402,7 @@ export class AppFactory {
     const appClient = this.getAppClientById({
       appId: deployResult.appId,
       appName: params.appName,
+      newGroup: () => this._algorand.newGroup(),
     })
     const result = {
       ...deployResult,
