@@ -1,4 +1,4 @@
-import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
+import algosdk, { ABIAddressType, ABIMethod, ABIType, Account, Address } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -1178,5 +1178,185 @@ describe('abi return', () => {
       [1, 2, 3],
       [1n, 2n, 3n],
     ])
+  })
+})
+
+// TODO: NC - Switch these tests to not use bare.send(...) once algosdk supports access references
+describe('access references', () => {
+  const fixture = algorandFixture()
+  beforeEach(fixture.newScope)
+
+  let appClient: AppClient
+  let externalClient: AppClient
+
+  beforeEach(fixture.newScope)
+
+  beforeAll(async () => {
+    Config.configure({ populateAppCallResources: true })
+    await fixture.newScope()
+    const { algorand, testAccount } = fixture.context
+
+    const appFactory = algorand.client.getAppFactory({
+      appSpec: JSON.stringify(v9ARC32),
+      defaultSender: testAccount,
+    })
+
+    appClient = (await appFactory.send.create({ method: 'createApplication' })).appClient
+
+    await appClient.fundAppAccount({ amount: (2334300).microAlgo() })
+
+    await appClient.send.call({ method: 'bootstrap', staticFee: (3_000).microAlgo() })
+
+    externalClient = algorand.client.getAppClientById({
+      appSpec: JSON.stringify(externalARC32),
+      appId: (await appClient.getGlobalState()).externalAppID.value as bigint,
+      defaultSender: testAccount,
+    })
+  })
+
+  test('address reference enables access', async () => {
+    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+
+    const method = appClient.getABIMethod('addressBalance').getSelector()
+
+    const addressType = new ABIAddressType()
+    const aliceAddr = addressType.encode(alice)
+
+    await appClient.send.bare.call({ args: [method, aliceAddr], populateAppCallResources: false, accessReferences: [{ address: alice }] })
+  })
+
+  test('only 8 non access reference accounts can be supplied', async () => {
+    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const charlie = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const dan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const eve = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const frank = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const grace = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const heidi = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+
+    const method = appClient.getABIMethod('addressBalance').getSelector()
+
+    const addressType = new ABIAddressType()
+    const aliceAddr = addressType.encode(alice)
+
+    await appClient.send.bare.call({
+      args: [method, aliceAddr],
+      populateAppCallResources: false,
+      accountReferences: [alice, bob, charlie, dan, eve, frank, grace, heidi],
+    })
+  })
+
+  test('only 16 access addresses can be supplied', async () => {
+    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const charlie = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const dan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const eve = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const frank = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const grace = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const heidi = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const ivan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const judy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const mallory = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const niaj = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const oscar = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const peggy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const quentin = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const ruth = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+
+    const method = appClient.getABIMethod('addressBalance').getSelector()
+
+    const addressType = new ABIAddressType()
+    const aliceAddr = addressType.encode(alice)
+
+    await appClient.send.bare.call({
+      args: [method, aliceAddr],
+      populateAppCallResources: false,
+      accessReferences: [
+        { address: alice },
+        { address: bob },
+        { address: charlie },
+        { address: dan },
+        { address: eve },
+        { address: frank },
+        { address: grace },
+        { address: heidi },
+        { address: ivan },
+        { address: judy },
+        { address: mallory },
+        { address: niaj },
+        { address: oscar },
+        { address: peggy },
+        { address: quentin },
+        { address: ruth },
+      ],
+    })
+  })
+
+  test('app reference enables access', async () => {
+    const method = appClient.getABIMethod('externalAppCall').getSelector()
+
+    await appClient.send.bare.call({
+      args: [method],
+      populateAppCallResources: false,
+      accessReferences: [{ appId: externalClient.appId }],
+      staticFee: microAlgo(2000),
+    })
+  })
+
+  test('asset reference enables access', async () => {
+    const method = appClient.getABIMethod('assetTotal').getSelector()
+    const assetId = (await appClient.getGlobalState()).asa.value as bigint
+
+    await appClient.send.bare.call({
+      args: [method],
+      populateAppCallResources: false,
+      accessReferences: [{ assetId }],
+    })
+  })
+
+  test('box reference enables access', async () => {
+    const method = appClient.getABIMethod('smallBox').getSelector()
+
+    await appClient.send.bare.call({
+      args: [method],
+      populateAppCallResources: false,
+      accessReferences: [{ box: { appId: appClient.appId, name: new Uint8Array([115]) } }],
+    })
+  })
+
+  test('holding reference enables access', async () => {
+    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    const assetId = (await appClient.getGlobalState()).asa.value as bigint
+
+    const method = appClient.getABIMethod('hasAsset').getSelector()
+
+    const addressType = new ABIAddressType()
+    const aliceAddr = addressType.encode(alice)
+
+    await appClient.send.bare.call({
+      args: [method, aliceAddr],
+      populateAppCallResources: false,
+      accessReferences: [{ holding: { address: alice, assetId } }],
+    })
+  })
+
+  test('locals reference enables access', async () => {
+    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(1) })
+
+    // Opt alice into the external app
+    await fixture.algorand.send.appCallMethodCall(await externalClient.params.optIn({ method: 'optInToApplication', sender: alice }))
+
+    const method = appClient.getABIMethod('externalLocal').getSelector()
+
+    const addressType = new ABIAddressType()
+    const aliceAddr = addressType.encode(alice)
+
+    await appClient.send.bare.call({
+      args: [method, aliceAddr],
+      populateAppCallResources: false,
+      accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
+    })
   })
 })

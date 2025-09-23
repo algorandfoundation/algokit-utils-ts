@@ -4,7 +4,7 @@ import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '.
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
+import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
@@ -359,6 +359,8 @@ export type CommonAppCallParams = CommonTransactionParams & {
    *  the current app), or a box identifier with the name identifier and app ID.
    */
   boxReferences?: (BoxReference | BoxIdentifier)[]
+  /** Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. */
+  accessReferences?: AccessReference[]
 }
 
 /** Parameters to define an app create transaction */
@@ -963,6 +965,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1010,6 +1013,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1049,6 +1053,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1090,6 +1095,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1150,6 +1156,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1202,6 +1209,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1252,6 +1260,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1302,6 +1311,7 @@ export class TransactionComposer {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -1626,6 +1636,7 @@ export class TransactionComposer {
       appForeignApps: params.appReferences?.map((x) => Number(x)),
       appForeignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
+      access: params.accessReferences?.map(getAccessReference), // TODO: NC - This is currently not supported in algosdk
       approvalProgram,
       clearProgram: clearStateProgram,
       extraPages:
@@ -1783,6 +1794,7 @@ export class TransactionComposer {
       foreignApps: params.appReferences?.map((x) => Number(x)),
       foreignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
+      access: params.accessReferences?.map(getAccessReference),
       approvalProgram,
       clearProgram: clearStateProgram,
     }
