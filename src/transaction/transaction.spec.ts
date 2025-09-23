@@ -791,12 +791,12 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
-        appClient.send.call({ method: 'addressBalance', args: [testAccount.toString()], populateAppCallResources: false }),
+        appClient.send.call({ method: 'addressBalance', args: [testAccount.addr], populateAppCallResources: false }),
       ).rejects.toThrow('unavailable Account')
     })
 
     test('addressBalance', async () => {
-      await appClient.send.call({ method: 'addressBalance', args: [alice.toString()] })
+      await appClient.send.call({ method: 'addressBalance', args: [alice.addr] })
     })
   })
 

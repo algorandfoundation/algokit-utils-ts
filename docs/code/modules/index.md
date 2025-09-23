@@ -1422,7 +1422,7 @@ ___
 
 ### getAppArgsForABICall
 
-▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Address` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 #### Parameters
 
@@ -1433,7 +1433,7 @@ ___
 
 #### Returns
 
-`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Address` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
 

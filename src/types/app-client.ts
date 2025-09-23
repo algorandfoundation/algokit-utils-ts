@@ -1145,7 +1145,12 @@ export class AppClient {
               if (result.return === undefined) {
                 throw new Error('Default value method call did not return a value')
               }
-              if (typeof result.return === 'object' && !(result.return instanceof Uint8Array) && !Array.isArray(result.return)) {
+              if (
+                typeof result.return === 'object' &&
+                !(result.return instanceof Uint8Array) &&
+                !Array.isArray(result.return) &&
+                !(result.return instanceof Address)
+              ) {
                 return getABITupleFromABIStruct(result.return, this._appSpec.structs[method.returns.struct!], this._appSpec.structs)
               }
               return result.return

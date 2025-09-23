@@ -1510,7 +1510,14 @@ export class TransactionComposer {
     const isAbiValue = (x: unknown): x is algosdk.ABIValue => {
       if (Array.isArray(x)) return x.length == 0 || x.every(isAbiValue)
 
-      return typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number' || typeof x === 'string' || x instanceof Uint8Array
+      return (
+        typeof x === 'bigint' ||
+        typeof x === 'boolean' ||
+        typeof x === 'number' ||
+        typeof x === 'string' ||
+        x instanceof Uint8Array ||
+        x instanceof algosdk.Address
+      )
     }
 
     for (let i = (params.args ?? []).length - 1; i >= 0; i--) {
