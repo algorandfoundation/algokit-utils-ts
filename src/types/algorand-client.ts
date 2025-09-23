@@ -10,11 +10,11 @@ import { ErrorTransformer, TransactionComposer } from './composer'
 import { InterfaceOf } from './instance-of'
 
 type AlgorandClientConfig = Partial<AlgoSdkClients> & {
-  clientManager?: InterfaceOf<ClientManager>
-  accountManager?: InterfaceOf<AccountManager>
-  appManager?: InterfaceOf<AppManager>
-  assetManager?: InterfaceOf<AssetManager>
-  appDeployer?: InterfaceOf<AppDeployer>
+  clientManager?: Partial<InterfaceOf<ClientManager>>
+  accountManager?: Partial<InterfaceOf<AccountManager>>
+  appManager?: Partial<InterfaceOf<AppManager>>
+  assetManager?: Partial<InterfaceOf<AssetManager>>
+  appDeployer?: Partial<InterfaceOf<AppDeployer>>
 }
 
 class ErrorEverywhere {
