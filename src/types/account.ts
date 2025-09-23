@@ -23,6 +23,20 @@ export class MultisigAccount {
   _addr: Address
   _signer: TransactionSigner
 
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isMultisigAccount = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is a MultisigAccount, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: any): boolean {
+    return instance && instance._isMultisigAccount === true
+  }
+
   /** The parameters for the multisig account */
   get params(): Readonly<algosdk.MultisigMetadata> {
     return this._params
@@ -80,6 +94,20 @@ export class SigningAccount implements Account {
   private _account: Account
   private _signer: TransactionSigner
   private _sender: Address
+
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isSigningAccount = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is an ABIContract, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: any): boolean {
+    return instance && instance._isSigningAccount === true
+  }
 
   /**
    * Algorand address of the sender

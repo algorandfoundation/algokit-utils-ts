@@ -10,6 +10,21 @@ export class TestLogger implements Logger {
   private logs: string[]
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isTestLogger = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is a TestLogger, regardless of which module loaded it
+   */
+
+  static [Symbol.hasInstance](instance: any): boolean {
+    return instance && instance._isAlgosdkABIContract === true
+  }
+
+  /**
    * Create a new test logger that wraps the given logger if provided.
    * @param originalLogger The optional original logger to wrap.
    */

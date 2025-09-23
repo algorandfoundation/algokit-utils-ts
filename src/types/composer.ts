@@ -548,6 +548,20 @@ export class TransactionComposer {
   /** Signer used to represent a lack of signer */
   private static NULL_SIGNER: algosdk.TransactionSigner = algosdk.makeEmptyTransactionSigner()
 
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isTransactionComposer = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is an TransactionComposer, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: any): boolean {
+    return instance && instance._isTransactionComposer === true
+  }
+
   /** The ATC used to compose the group */
   private atc = new algosdk.AtomicTransactionComposer()
 
