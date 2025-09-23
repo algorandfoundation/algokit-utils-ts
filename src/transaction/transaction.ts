@@ -36,7 +36,7 @@ import TransactionWithSigner = algosdk.TransactionWithSigner
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
-export const MAX_APP_CALL_ACCOUNT_REFERENCES = 4
+export const MAX_APP_CALL_ACCOUNT_REFERENCES = 8
 
 /**
  * @deprecated Convert your data to a `string` or `Uint8Array`, if using ARC-2 use `TransactionComposer.arc2Note`.
