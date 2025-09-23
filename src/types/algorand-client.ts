@@ -1,26 +1,57 @@
-import algosdk, { Address } from 'algosdk'
-import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
-import { AccountManager } from './account-manager'
+import algosdk, { Address, Algodv2 } from 'algosdk'
+import type { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
-import { AppDeployer } from './app-deployer'
-import { AppManager } from './app-manager'
-import { AssetManager } from './asset-manager'
-import { AlgoSdkClients, ClientManager } from './client-manager'
+import type { AppDeployer } from './app-deployer'
+import type { AppManager } from './app-manager'
+import type { AssetManager } from './asset-manager'
+import type { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer } from './composer'
-import { AlgoConfig } from './network-client'
-import Account = algosdk.Account
-import LogicSigAccount = algosdk.LogicSigAccount
+import { InterfaceOf } from './instance-of'
+
+type AlgorandClientConfig = Partial<AlgoSdkClients> & {
+  clientManager?: ClientManager
+  accountManager?: AccountManager
+  appManager?: AppManager
+  assetManager?: AssetManager
+  appDeployer?: AppDeployer
+}
+
+class ErrorEverywhere {
+  constructor() {
+    throw new Error('All methods throw an error, including the constructor.')
+  }
+  static _throw() {
+    throw new Error('This method always throws an error.')
+  }
+}
+
+// Proxy to handle any method call
+const ErrorEverywhereProxy = new Proxy(ErrorEverywhere, {
+  construct() {
+    throw new Error('Cannot instantiate: all methods throw an error.')
+  },
+  get(target, prop) {
+    if (typeof prop === 'string') {
+      return () => {
+        throw new Error(`Method "${prop}" always throws an error.`)
+      }
+    }
+
+    // @ts-expect-error any
+    return target[prop]
+  },
+})
 
 /**
  * A client that brokers easy access to Algorand functionality.
  */
 export class AlgorandClient {
-  private _clientManager: ClientManager
-  private _accountManager: AccountManager
-  private _appManager: AppManager
-  private _appDeployer: AppDeployer
-  private _assetManager: AssetManager
+  private _clientManager: Partial<InterfaceOf<ClientManager>>
+  private _accountManager: Partial<InterfaceOf<AccountManager>>
+  private _appManager: Partial<InterfaceOf<AppManager>>
+  private _appDeployer: Partial<InterfaceOf<AppDeployer>>
+  private _assetManager: Partial<InterfaceOf<AssetManager>>
   private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
 
@@ -30,6 +61,8 @@ export class AlgorandClient {
 
   private _defaultValidityWindow: bigint | undefined = undefined
 
+  private _algod: Algodv2
+
   /**
    * A set of error transformers to use when an error is caught in simulate or execute
    * `registerErrorTransformer` and `unregisterErrorTransformer` can be used to add and remove
@@ -37,14 +70,21 @@ export class AlgorandClient {
    */
   private _errorTransformers: Set<ErrorTransformer> = new Set()
 
-  private constructor(config: AlgoConfig | AlgoSdkClients) {
-    this._clientManager = new ClientManager(config, this)
-    this._accountManager = new AccountManager(this._clientManager)
-    this._appManager = new AppManager(this._clientManager.algod)
-    this._assetManager = new AssetManager(this._clientManager.algod, () => this.newGroup())
-    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._assetManager, this._appManager)
+  private constructor(config: AlgorandClientConfig) {
+    const algod = config.algod ?? config.clientManager?.algod
+
+    if (algod === undefined) {
+      throw new Error('An algod client must be provided in the config or clientManager')
+    }
+
+    this._algod = algod
+    this._clientManager = config.clientManager ?? {}
+    this._accountManager = config.accountManager ?? {}
+    this._appManager = config.appManager ?? {}
+    this._assetManager = config.assetManager ?? {}
+    this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._algod)
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
-    this._appDeployer = new AppDeployer(this._appManager, this._transactionSender, this._clientManager.indexerIfPresent)
+    this._appDeployer = config.appDeployer ?? (ErrorEverywhereProxy as unknown as AppDeployer)
   }
 
   /**
@@ -58,57 +98,6 @@ export class AlgorandClient {
    */
   public setDefaultValidityWindow(validityWindow: number | bigint) {
     this._defaultValidityWindow = BigInt(validityWindow)
-    return this
-  }
-
-  /**
-   * Sets the default signer to use if no other signer is specified.
-   * @param signer The signer to use, either a `TransactionSigner` or a `TransactionSignerAccount`
-   * @returns The `AlgorandClient` so method calls can be chained
-   * @example
-   * ```typescript
-   * const signer = new SigningAccount(account, account.addr)
-   * const algorand = AlgorandClient.mainNet().setDefaultSigner(signer)
-   * ```
-   */
-  public setDefaultSigner(signer: algosdk.TransactionSigner | TransactionSignerAccount): AlgorandClient {
-    this._accountManager.setDefaultSigner(signer)
-    return this
-  }
-
-  /**
-   * Tracks the given account (object that encapsulates an address and a signer) for later signing.
-   * @param account The account to register, which can be a `TransactionSignerAccount` or
-   *  a `algosdk.Account`, `algosdk.LogicSigAccount`, `SigningAccount` or `MultisigAccount`
-   * @example
-   * ```typescript
-   * const accountManager = AlgorandClient.mainNet()
-   *  .setSignerFromAccount(algosdk.generateAccount())
-   *  .setSignerFromAccount(new algosdk.LogicSigAccount(program, args))
-   *  .setSignerFromAccount(new SigningAccount(account, sender))
-   *  .setSignerFromAccount(new MultisigAccount({version: 1, threshold: 1, addrs: ["ADDRESS1...", "ADDRESS2..."]}, [account1, account2]))
-   *  .setSignerFromAccount({addr: "SENDERADDRESS", signer: transactionSigner})
-   * ```
-   * @returns The `AlgorandClient` so method calls can be chained
-   */
-  public setSignerFromAccount(account: TransactionSignerAccount | Account | LogicSigAccount | SigningAccount | MultisigAccount) {
-    this._accountManager.setSignerFromAccount(account)
-    return this
-  }
-
-  /**
-   * Tracks the given signer against the given sender for later signing.
-   * @param sender The sender address to use this signer for
-   * @param signer The signer to sign transactions with for the given sender
-   * @returns The `AlgorandClient` so method calls can be chained
-   * @example
-   * ```typescript
-   * const signer = new SigningAccount(account, account.addr)
-   * const algorand = AlgorandClient.mainNet().setSigner(signer.addr, signer.signer)
-   * ```
-   */
-  public setSigner(sender: string | Address, signer: algosdk.TransactionSigner) {
-    this._accountManager.setSigner(sender, signer)
     return this
   }
 
@@ -155,7 +144,7 @@ export class AlgorandClient {
       }
     }
 
-    this._cachedSuggestedParams = await this._clientManager.algod.getTransactionParams().do()
+    this._cachedSuggestedParams = await this._algod.getTransactionParams().do()
     this._cachedSuggestedParamsExpiry = new Date(new Date().getTime() + this._cachedSuggestedParamsTimeout)
 
     return {
@@ -170,7 +159,7 @@ export class AlgorandClient {
    * const clientManager = AlgorandClient.mainNet().client;
    */
   public get client() {
-    return this._clientManager
+    return this._clientManager ?? { algod: this._algod }
   }
 
   /**
@@ -232,12 +221,16 @@ export class AlgorandClient {
    * const result = await composer.addTransaction(payment).send()
    */
   public newGroup() {
+    const errorGetSigner = (addr: string | Address) => {
+      throw new Error(`No signer available for address ${addr}`)
+    }
+    const getSigner = this.account.getSigner ?? errorGetSigner
+
     return new TransactionComposer({
-      algod: this.client.algod,
-      getSigner: (addr: string | Address) => this.account.getSigner(addr),
+      algod: this._algod,
+      getSigner,
       getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
-      appManager: this._appManager,
       errorTransformers: [...this._errorTransformers],
     })
   }
@@ -268,94 +261,5 @@ export class AlgorandClient {
    */
   public get createTransaction() {
     return this._transactionCreator
-  }
-
-  // Static methods to create an `AlgorandClient`
-
-  /**
-   * Creates an `AlgorandClient` pointing at default LocalNet ports and API token.
-   * @returns An instance of the `AlgorandClient`.
-   * @example
-   * const algorand = AlgorandClient.defaultLocalNet();
-   */
-  public static defaultLocalNet() {
-    return new AlgorandClient({
-      algodConfig: ClientManager.getDefaultLocalNetConfig('algod'),
-      indexerConfig: ClientManager.getDefaultLocalNetConfig('indexer'),
-      kmdConfig: ClientManager.getDefaultLocalNetConfig('kmd'),
-    })
-  }
-
-  /**
-   * Creates an `AlgorandClient` pointing at TestNet using AlgoNode.
-   * @returns An instance of the `AlgorandClient`.
-   * @example
-   * const algorand = AlgorandClient.testNet();
-   */
-  public static testNet() {
-    return new AlgorandClient({
-      algodConfig: ClientManager.getAlgoNodeConfig('testnet', 'algod'),
-      indexerConfig: ClientManager.getAlgoNodeConfig('testnet', 'indexer'),
-      kmdConfig: undefined,
-    })
-  }
-
-  /**
-   * Creates an `AlgorandClient` pointing at MainNet using AlgoNode.
-   * @returns An instance of the `AlgorandClient`.
-   * @example
-   * const algorand = AlgorandClient.mainNet();
-   */
-  public static mainNet() {
-    return new AlgorandClient({
-      algodConfig: ClientManager.getAlgoNodeConfig('mainnet', 'algod'),
-      indexerConfig: ClientManager.getAlgoNodeConfig('mainnet', 'indexer'),
-      kmdConfig: undefined,
-    })
-  }
-
-  /**
-   * Creates an `AlgorandClient` pointing to the given client(s).
-   * @param clients The clients to use.
-   * @returns An instance of the `AlgorandClient`.
-   * @example
-   * const algorand = AlgorandClient.fromClients({ algod, indexer, kmd });
-   */
-  public static fromClients(clients: AlgoSdkClients) {
-    return new AlgorandClient(clients)
-  }
-
-  /**
-   * Creates an `AlgorandClient` loading the configuration from environment variables.
-   *
-   * Retrieve configurations from environment variables when defined or get default LocalNet configuration if they aren't defined.
-   *
-   * Expects to be called from a Node.js environment.
-   *
-   * If `process.env.ALGOD_SERVER` is defined it will use that along with optional `process.env.ALGOD_PORT` and `process.env.ALGOD_TOKEN`.
-   *
-   * If `process.env.INDEXER_SERVER` is defined it will use that along with optional `process.env.INDEXER_PORT` and `process.env.INDEXER_TOKEN`.
-   *
-   * If either aren't defined it will use the default LocalNet config.
-   *
-   * It will return a KMD configuration that uses `process.env.KMD_PORT` (or port 4002) if `process.env.ALGOD_SERVER` is defined,
-   * otherwise it will use the default LocalNet config unless it detects testnet or mainnet.
-   * @returns An instance of the `AlgorandClient`.
-   * @example
-   * const client = AlgorandClient.fromEnvironment();
-   */
-  public static fromEnvironment() {
-    return new AlgorandClient(ClientManager.getConfigFromEnvironmentOrLocalNet())
-  }
-
-  /**
-   * Creates  an `AlgorandClient` from the given config.
-   * @param config The config to use.
-   * @returns An instance of the `AlgorandClient`.
-   * @example
-   * const client = AlgorandClient.fromConfig({ algodConfig, indexerConfig, kmdConfig });
-   */
-  public static fromConfig(config: AlgoConfig) {
-    return new AlgorandClient(config)
   }
 }
