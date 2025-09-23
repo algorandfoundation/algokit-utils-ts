@@ -17,32 +17,6 @@ type AlgorandClientConfig = Partial<AlgoSdkClients> & {
   appDeployer?: Partial<InterfaceOf<AppDeployer>>
 }
 
-class ErrorEverywhere {
-  constructor() {
-    throw new Error('All methods throw an error, including the constructor.')
-  }
-  static _throw() {
-    throw new Error('This method always throws an error.')
-  }
-}
-
-// Proxy to handle any method call
-const ErrorEverywhereProxy = new Proxy(ErrorEverywhere, {
-  construct() {
-    throw new Error('Cannot instantiate: all methods throw an error.')
-  },
-  get(target, prop) {
-    if (typeof prop === 'string') {
-      return () => {
-        throw new Error(`Method "${prop}" always throws an error.`)
-      }
-    }
-
-    // @ts-expect-error any
-    return target[prop]
-  },
-})
-
 /**
  * A client that brokers easy access to Algorand functionality.
  */
@@ -84,7 +58,7 @@ export class AlgorandClient {
     this._assetManager = config.assetManager ?? {}
     this._transactionSender = new AlgorandClientTransactionSender(() => this.newGroup(), this._algod)
     this._transactionCreator = new AlgorandClientTransactionCreator(() => this.newGroup())
-    this._appDeployer = config.appDeployer ?? (ErrorEverywhereProxy as unknown as AppDeployer)
+    this._appDeployer = config.appDeployer ?? {}
   }
 
   /**
