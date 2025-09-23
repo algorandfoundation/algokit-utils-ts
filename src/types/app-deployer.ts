@@ -116,6 +116,20 @@ export class AppDeployer {
   private _appLookups = new Map<string, AppLookup>()
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isAppDeployer = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is an ABIContract, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as AppDeployer)._isAppDeployer === true)
+  }
+
+  /**
    * Creates an `AppManager`
    * @param appManager An `AppManager` instance
    * @param transactionSender An `AlgorandClientTransactionSender` instance
