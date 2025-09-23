@@ -846,14 +846,14 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
   })
 
   describe('cross-product references', () => {
-    const hasAssetErrorMsg = version === 8 ? 'unavailable Account' : 'unavailable Account'
+    const expectedError = 'unavailable Account'
 
-    test(`hasAsset: ${hasAssetErrorMsg}`, async () => {
+    test(`hasAsset fails`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
         appClient.send.call({ method: 'hasAsset', args: [testAccount.toString()], populateAppCallResources: false }),
-      ).rejects.toThrow(hasAssetErrorMsg)
+      ).rejects.toThrow(expectedError)
     })
 
     test('hasAsset', async () => {
@@ -861,12 +861,12 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
       await appClient.send.call({ method: 'hasAsset', args: [testAccount.toString()] })
     })
 
-    test(`externalLocal: ${hasAssetErrorMsg}`, async () => {
+    test(`externalLocal`, async () => {
       const { testAccount } = fixture.context
       alice = testAccount
       await expect(
         appClient.send.call({ method: 'externalLocal', args: [testAccount.toString()], populateAppCallResources: false }),
-      ).rejects.toThrow(hasAssetErrorMsg)
+      ).rejects.toThrow(expectedError)
     })
 
     test('externalLocal', async () => {
