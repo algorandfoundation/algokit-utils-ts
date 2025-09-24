@@ -1636,7 +1636,7 @@ export class TransactionComposer {
       appForeignApps: params.appReferences?.map((x) => Number(x)),
       appForeignAssets: params.assetReferences?.map((x) => Number(x)),
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference), // TODO: NC - This is currently not supported in algosdk
+      access: params.accessReferences?.map(getAccessReference),
       approvalProgram,
       clearProgram: clearStateProgram,
       extraPages:

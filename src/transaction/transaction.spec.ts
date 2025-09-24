@@ -1,4 +1,4 @@
-import algosdk, { ABIAddressType, ABIMethod, ABIType, Account, Address } from 'algosdk'
+import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -1181,7 +1181,6 @@ describe('abi return', () => {
   })
 })
 
-// TODO: NC - Switch these tests to not use bare.send(...) once algosdk supports access references
 describe('access references', () => {
   const fixture = algorandFixture()
   beforeEach(fixture.newScope)
@@ -1251,38 +1250,28 @@ describe('access references', () => {
   }, 20_000) // Account generation and funding can be slow
 
   test('address reference enables access', async () => {
-    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-
-    const method = appClient.getABIMethod('addressBalance').getSelector()
-
-    const addressType = new ABIAddressType()
-    const aliceAddr = addressType.encode(alice)
-
-    await appClient.send.bare.call({ args: [method, aliceAddr], populateAppCallResources: false, accessReferences: [{ address: alice }] })
+    await appClient.send.call({
+      method: 'addressBalance',
+      args: [alice],
+      populateAppCallResources: false,
+      accessReferences: [{ address: alice }],
+    })
   })
 
   test('up to 8 non access reference accounts can be used', async () => {
-    const method = appClient.getABIMethod('addressBalance').getSelector()
-
-    const addressType = new ABIAddressType()
-    const aliceAddr = addressType.encode(alice)
-
-    await appClient.send.bare.call({
-      args: [method, aliceAddr],
+    await appClient.send.call({
+      method: 'addressBalance',
+      args: [alice],
       populateAppCallResources: false,
       accountReferences: [alice, bob, charlie, dan, eve, frank, grace, heidi],
     })
   })
 
   test('throws when more than 8 non access reference accounts are supplied', async () => {
-    const method = appClient.getABIMethod('addressBalance').getSelector()
-
-    const addressType = new ABIAddressType()
-    const aliceAddr = addressType.encode(alice)
-
     await expect(
-      appClient.send.bare.call({
-        args: [method, aliceAddr],
+      appClient.send.call({
+        method: 'addressBalance',
+        args: [alice],
         populateAppCallResources: false,
         accountReferences: [alice, bob, charlie, dan, eve, frank, grace, heidi, ivan],
       }),
@@ -1290,13 +1279,9 @@ describe('access references', () => {
   })
 
   test('up to 16 access addresses can be used', async () => {
-    const method = appClient.getABIMethod('addressBalance').getSelector()
-
-    const addressType = new ABIAddressType()
-    const aliceAddr = addressType.encode(alice)
-
-    await appClient.send.bare.call({
-      args: [method, aliceAddr],
+    await appClient.send.call({
+      method: 'addressBalance',
+      args: [alice],
       populateAppCallResources: false,
       accessReferences: [
         { address: alice },
@@ -1320,14 +1305,10 @@ describe('access references', () => {
   })
 
   test('throws when more than 16 access addresses are supplied', async () => {
-    const method = appClient.getABIMethod('addressBalance').getSelector()
-
-    const addressType = new ABIAddressType()
-    const aliceAddr = addressType.encode(alice)
-
     await expect(
-      appClient.send.bare.call({
-        args: [method, aliceAddr],
+      appClient.send.call({
+        method: 'addressBalance',
+        args: [alice],
         populateAppCallResources: false,
         accessReferences: [
           { address: alice },
@@ -1353,10 +1334,8 @@ describe('access references', () => {
   })
 
   test('app reference enables access', async () => {
-    const method = appClient.getABIMethod('externalAppCall').getSelector()
-
-    await appClient.send.bare.call({
-      args: [method],
+    await appClient.send.call({
+      method: 'externalAppCall',
       populateAppCallResources: false,
       accessReferences: [{ appId: externalClient.appId }],
       staticFee: microAlgo(2000),
@@ -1364,21 +1343,19 @@ describe('access references', () => {
   })
 
   test('asset reference enables access', async () => {
-    const method = appClient.getABIMethod('assetTotal').getSelector()
     const assetId = (await appClient.getGlobalState()).asa.value as bigint
 
-    await appClient.send.bare.call({
-      args: [method],
+    await appClient.send.call({
+      method: 'assetTotal',
       populateAppCallResources: false,
       accessReferences: [{ assetId }],
     })
   })
 
   test('box reference enables access', async () => {
-    const method = appClient.getABIMethod('smallBox').getSelector()
-
-    await appClient.send.bare.call({
-      args: [method],
+    await appClient.send.call({
+      method: 'smallBox',
+      args: [],
       populateAppCallResources: false,
       accessReferences: [{ box: { appId: appClient.appId, name: new Uint8Array([115]) } }],
     })
@@ -1388,13 +1365,9 @@ describe('access references', () => {
     const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
     const assetId = (await appClient.getGlobalState()).asa.value as bigint
 
-    const method = appClient.getABIMethod('hasAsset').getSelector()
-
-    const addressType = new ABIAddressType()
-    const aliceAddr = addressType.encode(alice)
-
-    await appClient.send.bare.call({
-      args: [method, aliceAddr],
+    await appClient.send.call({
+      method: 'hasAsset',
+      args: [alice],
       populateAppCallResources: false,
       accessReferences: [{ holding: { address: alice, assetId } }],
     })
@@ -1406,13 +1379,9 @@ describe('access references', () => {
     // Opt alice into the external app
     await fixture.algorand.send.appCallMethodCall(await externalClient.params.optIn({ method: 'optInToApplication', sender: alice }))
 
-    const method = appClient.getABIMethod('externalLocal').getSelector()
-
-    const addressType = new ABIAddressType()
-    const aliceAddr = addressType.encode(alice)
-
-    await appClient.send.bare.call({
-      args: [method, aliceAddr],
+    await appClient.send.call({
+      method: 'externalLocal',
+      args: [alice],
       populateAppCallResources: false,
       accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
     })
