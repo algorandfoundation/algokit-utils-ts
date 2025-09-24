@@ -23,7 +23,7 @@ Address in access list, or the sender of the transaction.
 
 #### Defined in
 
-[src/types/app-manager.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L104)
+[src/types/app-manager.ts:106](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L106)
 
 ___
 
@@ -35,4 +35,4 @@ Asset ID for asset in access list.
 
 #### Defined in
 
-[src/types/app-manager.ts:102](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L102)
+[src/types/app-manager.ts:104](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/app-manager.ts#L104)
