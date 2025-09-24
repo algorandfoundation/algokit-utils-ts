@@ -1189,6 +1189,24 @@ describe('access references', () => {
   let appClient: AppClient
   let externalClient: AppClient
 
+  let alice: algosdk.Address
+  let bob: algosdk.Address
+  let charlie: algosdk.Address
+  let dan: algosdk.Address
+  let eve: algosdk.Address
+  let frank: algosdk.Address
+  let grace: algosdk.Address
+  let heidi: algosdk.Address
+  let ivan: algosdk.Address
+  let judy: algosdk.Address
+  let mallory: algosdk.Address
+  let niaj: algosdk.Address
+  let oscar: algosdk.Address
+  let peggy: algosdk.Address
+  let quentin: algosdk.Address
+  let ruth: algosdk.Address
+  let dave: algosdk.Address
+
   beforeEach(fixture.newScope)
 
   beforeAll(async () => {
@@ -1212,7 +1230,25 @@ describe('access references', () => {
       appId: (await appClient.getGlobalState()).externalAppID.value as bigint,
       defaultSender: testAccount,
     })
-  })
+
+    alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    charlie = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    dan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    eve = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    frank = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    grace = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    heidi = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    ivan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    judy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    mallory = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    niaj = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    oscar = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    peggy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    quentin = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    ruth = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+    dave = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(1) })
+  }, 20_000) // Account generation and funding can be slow
 
   test('address reference enables access', async () => {
     const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
@@ -1225,16 +1261,7 @@ describe('access references', () => {
     await appClient.send.bare.call({ args: [method, aliceAddr], populateAppCallResources: false, accessReferences: [{ address: alice }] })
   })
 
-  test('only 8 non access reference accounts can be supplied', async () => {
-    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const charlie = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const dan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const eve = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const frank = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const grace = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const heidi = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-
+  test('up to 8 non access reference accounts can be used', async () => {
     const method = appClient.getABIMethod('addressBalance').getSelector()
 
     const addressType = new ABIAddressType()
@@ -1247,24 +1274,22 @@ describe('access references', () => {
     })
   })
 
-  test('only 16 access addresses can be supplied', async () => {
-    const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const charlie = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const dan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const eve = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const frank = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const grace = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const heidi = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const ivan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const judy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const mallory = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const niaj = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const oscar = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const peggy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const quentin = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    const ruth = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
+  test('throws when more than 8 non access reference accounts are supplied', async () => {
+    const method = appClient.getABIMethod('addressBalance').getSelector()
 
+    const addressType = new ABIAddressType()
+    const aliceAddr = addressType.encode(alice)
+
+    await expect(
+      appClient.send.bare.call({
+        args: [method, aliceAddr],
+        populateAppCallResources: false,
+        accountReferences: [alice, bob, charlie, dan, eve, frank, grace, heidi, ivan],
+      }),
+    ).rejects.toThrow(/max number of accounts is 8/)
+  })
+
+  test('up to 16 access addresses can be used', async () => {
     const method = appClient.getABIMethod('addressBalance').getSelector()
 
     const addressType = new ABIAddressType()
@@ -1292,6 +1317,39 @@ describe('access references', () => {
         { address: ruth },
       ],
     })
+  })
+
+  test('throws when more than 16 access addresses are supplied', async () => {
+    const method = appClient.getABIMethod('addressBalance').getSelector()
+
+    const addressType = new ABIAddressType()
+    const aliceAddr = addressType.encode(alice)
+
+    await expect(
+      appClient.send.bare.call({
+        args: [method, aliceAddr],
+        populateAppCallResources: false,
+        accessReferences: [
+          { address: alice },
+          { address: bob },
+          { address: charlie },
+          { address: dan },
+          { address: eve },
+          { address: frank },
+          { address: grace },
+          { address: heidi },
+          { address: ivan },
+          { address: judy },
+          { address: mallory },
+          { address: niaj },
+          { address: oscar },
+          { address: peggy },
+          { address: quentin },
+          { address: ruth },
+          { address: dave },
+        ],
+      }),
+    ).rejects.toThrow(/max number of references is 16/)
   })
 
   test('app reference enables access', async () => {
