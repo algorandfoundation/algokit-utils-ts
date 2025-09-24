@@ -217,7 +217,7 @@ It will automatically [add metadata to the transaction note of the create or upd
 
 ### Input parameters
 
-The first parameter `deployment` is an [`AppDeployParams`](../code/interfaces/types_app_deployer.AppDeployParams.md), which is an object with:
+The first parameter `deployment` is an [`AppDeployParams`](../code/modules/types_app_deployer.md#appdeployparams), which is an object with:
 
 - `metadata: AppDeployMetadata` - determines the [deployment metadata](#deployment-metadata) of the deployment
 - `createParams: AppCreateParams | AppCreateMethodCall` - the parameters for an [app creation call](./app.md#creation) (raw or ABI method call)

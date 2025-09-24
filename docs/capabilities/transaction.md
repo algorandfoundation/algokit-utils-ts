@@ -16,7 +16,7 @@ There are various variations of the `ConfirmedTransactionResult` that are expose
 - [`ConfirmedTransactionResults`](../code/interfaces/types_transaction.ConfirmedTransactionResults.md) - Where it's both guaranteed that a confirmation will be returned, there is a primary driving transaction, but multiple transactions may be sent (e.g. when making an ABI app call which has dependant transactions)
 - [`SendTransactionResults`](../code/interfaces/types_transaction.SendTransactionResults.md) - Where multiple transactions are being sent (`transactions` and `confirmations` are arrays that replace the singular `transaction` and `confirmation`)
 - [`SendAtomicTransactionComposerResults`](../code/interfaces/types_transaction.SendAtomicTransactionComposerResults.md) - The result from sending the transactions within an `AtomicTransactionComposer`, it extends `SendTransactionResults` and adds a few other useful properties
-- [`AppCallTransactionResult`](../code/interfaces/types_app.AppCallTransactionResult.md) - Result from calling a single app call (which potentially may result in multiple other transaction calls if it was an ABI method with dependant transactions)
+- [`AppCallTransactionResult`](../code/interfaces/types_app.AppCallTransactionResultOfType.md) - Result from calling a single app call (which potentially may result in multiple other transaction calls if it was an ABI method with dependant transactions)
 
 ## Further reading
 
