@@ -86,7 +86,7 @@ algosdk.ABIMethod.description
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:28
+node_modules/algosdk/types/abi/method.d.ts:28
 
 ___
 
@@ -100,7 +100,7 @@ algosdk.ABIMethod.events
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:38
+node_modules/algosdk/types/abi/method.d.ts:38
 
 ___
 
@@ -124,7 +124,7 @@ algosdk.ABIMethod.name
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:27
+node_modules/algosdk/types/abi/method.d.ts:27
 
 ___
 
@@ -138,7 +138,7 @@ algosdk.ABIMethod.readonly
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:39
+node_modules/algosdk/types/abi/method.d.ts:39
 
 ___
 
@@ -178,7 +178,7 @@ algosdk.ABIMethod.getSelector
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:42
+node_modules/algosdk/types/abi/method.d.ts:42
 
 ___
 
@@ -196,7 +196,7 @@ algosdk.ABIMethod.getSignature
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:41
+node_modules/algosdk/types/abi/method.d.ts:41
 
 ___
 
@@ -232,7 +232,7 @@ algosdk.ABIMethod.txnCount
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:43
+node_modules/algosdk/types/abi/method.d.ts:43
 
 ___
 
@@ -256,4 +256,4 @@ algosdk.ABIMethod.fromSignature
 
 #### Defined in
 
-node_modules/algosdk/dist/types/abi/method.d.ts:45
+node_modules/algosdk/types/abi/method.d.ts:45
