@@ -45,12 +45,6 @@ const result = algorand
   })
 ```
 
-## Ledger new field support
-
-When new transaction fields are added to the Algorand protocol, they are not immediately supported by Ledger signing devices. To help developers avoid unexpected behaviour, the transaction composer will throw an exception when it detects the use of a field that is not yet supported by Ledger devices.
-
-To acknowledge this limitation and disable the error checking, you can use `Config.configure({ disableLedgerUnsupportedErrors: true })`. As these fields gain Ledger support over time, the transaction composer will be updated accordingly. It's recommended to periodically re-enable this error checking by removing the configuration override to ensure you're aware of any newly supported fields.
-
 ## Sending a transaction
 
 Once you have constructed all the required transactions, they can be sent by calling `send()` on the `TransactionComposer`.

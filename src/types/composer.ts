@@ -547,33 +547,6 @@ export interface BuiltTransactions {
   signers: Map<number, algosdk.TransactionSigner>
 }
 
-function throwOnLedgerUnsupported(params: Transaction | Pick<CommonAppCallParams, 'accessReferences' | 'rejectVersion'>) {
-  if (Config.disableLedgerUnsupportedErrors) {
-    return
-  }
-
-  const unsupportedFields: string[] = []
-
-  if ('type' in params && params.type === algosdk.TransactionType.appl && params.applicationCall) {
-    if (params.applicationCall.access && params.applicationCall.access.length > 0) {
-      unsupportedFields.push('access')
-    }
-    if (params.applicationCall.rejectVersion && params.applicationCall.rejectVersion > 0) {
-      unsupportedFields.push('rejectVersion')
-    }
-  } else if ('accessReferences' in params && params.accessReferences && params.accessReferences.length > 0) {
-    unsupportedFields.push('accessReferences')
-  } else if ('rejectVersion' in params && params.rejectVersion !== undefined && params.rejectVersion > 0) {
-    unsupportedFields.push('rejectVersion')
-  }
-
-  if (unsupportedFields.length > 0) {
-    throw new Error(
-      `Transaction includes fields not supported by Ledger devices: ${unsupportedFields.join(', ')}. To acknowledge and disable this error, use 'Config.configure({ disableLedgerUnsupportedErrors: true })'.`,
-    )
-  }
-}
-
 /** TransactionComposer helps you compose and execute transactions as a transaction group. */
 export class TransactionComposer {
   /** Signer used to represent a lack of signer */
@@ -668,7 +641,6 @@ export class TransactionComposer {
    * ```
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
-    throwOnLedgerUnsupported(transaction)
     this.txns.push({
       txn: transaction,
       signer: signer ?? this.getSigner(transaction.sender),
@@ -1017,7 +989,6 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'appCall' })
 
     return this
@@ -1061,7 +1032,6 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
 
     return this
@@ -1103,7 +1073,6 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
 
     return this
@@ -1147,7 +1116,6 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'appCall' })
 
     return this
@@ -1210,7 +1178,6 @@ export class TransactionComposer {
    * ```
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'methodCall' })
     return this
   }
@@ -1265,7 +1232,6 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
     return this
   }
@@ -1318,7 +1284,6 @@ export class TransactionComposer {
    * ```
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
     return this
   }
@@ -1371,7 +1336,6 @@ export class TransactionComposer {
    * ```
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
-    throwOnLedgerUnsupported(params)
     this.txns.push({ ...params, type: 'methodCall' })
     return this
   }
@@ -1986,10 +1950,6 @@ export class TransactionComposer {
       }
     }
 
-    transactions.forEach((txn) => {
-      throwOnLedgerUnsupported(txn)
-    })
-
     return { transactions, methodCalls, signers }
   }
 
@@ -2042,10 +2002,6 @@ export class TransactionComposer {
     }
 
     const transactions = this.atc.buildGroup()
-    transactions.forEach((txn) => {
-      throwOnLedgerUnsupported(txn.txn)
-    })
-
     return { atc: this.atc, transactions, methodCalls: this.atc['methodCalls'] }
   }
 

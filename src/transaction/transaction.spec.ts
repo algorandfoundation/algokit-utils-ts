@@ -1,6 +1,6 @@
 import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
 import invariant from 'tiny-invariant'
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
 import innerFeeContract from '../../tests/example-contracts/inner-fee/application.json'
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
@@ -1241,9 +1241,6 @@ describe('access references', () => {
   let getTestAccounts: (count: number) => Promise<algosdk.Address[]>
 
   beforeEach(fixture.newScope)
-  afterEach(() => {
-    Config.configure({ disableLedgerUnsupportedErrors: false })
-  })
 
   beforeAll(async () => {
     Config.configure({ populateAppCallResources: true })
@@ -1274,8 +1271,6 @@ describe('access references', () => {
   }, 20_000) // Account generation and funding can be slow
 
   test('address reference enables access', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
-
     await appClient.send.call({
       method: 'addressBalance',
       args: [alice],
@@ -1305,8 +1300,6 @@ describe('access references', () => {
   })
 
   test('up to 16 access addresses can be used', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
-
     await appClient.send.call({
       method: 'addressBalance',
       args: [alice],
@@ -1316,8 +1309,6 @@ describe('access references', () => {
   })
 
   test('throws when more than 16 access addresses are supplied', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
-
     await expect(
       appClient.send.call({
         method: 'addressBalance',
@@ -1329,8 +1320,6 @@ describe('access references', () => {
   })
 
   test('app reference enables access', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
-
     await appClient.send.call({
       method: 'externalAppCall',
       populateAppCallResources: false,
@@ -1340,7 +1329,6 @@ describe('access references', () => {
   })
 
   test('asset reference enables access', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
     const assetId = (await appClient.getGlobalState()).asa.value as bigint
 
     await appClient.send.call({
@@ -1351,8 +1339,6 @@ describe('access references', () => {
   })
 
   test('box reference enables access', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
-
     await appClient.send.call({
       method: 'smallBox',
       args: [],
@@ -1362,7 +1348,6 @@ describe('access references', () => {
   })
 
   test('holding reference enables access', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
     const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
     const assetId = (await appClient.getGlobalState()).asa.value as bigint
 
@@ -1375,7 +1360,6 @@ describe('access references', () => {
   })
 
   test('locals reference enables access', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
     const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(1) })
 
     await fixture.algorand.send.appCallMethodCall(await externalClient.params.optIn({ method: 'optInToApplication', sender: alice }))
@@ -1396,9 +1380,6 @@ describe('version', () => {
   let appClient: AppClient
 
   beforeEach(fixture.newScope)
-  afterEach(() => {
-    Config.configure({ disableLedgerUnsupportedErrors: false })
-  })
 
   beforeAll(async () => {
     Config.configure({ populateAppCallResources: true })
@@ -1451,22 +1432,7 @@ describe('version', () => {
     })
   })
 
-  test('ledger not supported message is returned when using rejectVersion', async () => {
-    const appInfo = await appClient.algorand.app.getById(appClient.appId)
-    expect(appInfo.version).toBe(2)
-
-    await expect(
-      async () =>
-        await appClient.send.call({
-          method: 'call_abi',
-          args: ['hello'],
-          rejectVersion: 2,
-          populateAppCallResources: false,
-        }),
-    ).rejects.toThrow(/Transaction includes fields not supported by Ledger devices/)
-  })
-
-  test('no ledger not supported message is returned when not using rejectVersion', async () => {
+  test('transaction is accepted when no rejectVersion is supplied', async () => {
     expect(
       await appClient.send.call({
         method: 'call_abi',
@@ -1479,7 +1445,6 @@ describe('version', () => {
   test('transaction is rejected when app version is greater than or equal to rejectVersion', async () => {
     const appInfo = await appClient.algorand.app.getById(appClient.appId)
     expect(appInfo.version).toBe(2)
-    Config.configure({ disableLedgerUnsupportedErrors: true })
 
     await expect(
       async () =>
@@ -1503,8 +1468,6 @@ describe('version', () => {
   })
 
   test('transaction is accepted when app version is less than rejectVersion', async () => {
-    Config.configure({ disableLedgerUnsupportedErrors: true })
-
     const appInfo = await appClient.algorand.app.getById(appClient.appId)
     expect(appInfo.version).toBe(2)
 
