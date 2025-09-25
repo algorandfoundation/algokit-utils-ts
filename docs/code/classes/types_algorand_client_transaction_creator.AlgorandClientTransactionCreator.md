@@ -123,6 +123,7 @@ await algorand.createTransaction.appCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -142,7 +143,7 @@ await algorand.createTransaction.appCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L462)
+[src/types/algorand-client-transaction-creator.ts:466](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L466)
 
 ___
 
@@ -194,6 +195,7 @@ await algorand.createTransaction.appCallMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -213,7 +215,7 @@ await algorand.createTransaction.appCallMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:661](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L661)
+[src/types/algorand-client-transaction-creator.ts:669](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L669)
 
 ___
 
@@ -262,6 +264,7 @@ await algorand.createTransaction.appCreate({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -308,7 +311,7 @@ await algorand.createTransaction.appCreate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L355)
+[src/types/algorand-client-transaction-creator.ts:356](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L356)
 
 ___
 
@@ -369,6 +372,7 @@ await algorand.createTransaction.appCreateMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -388,7 +392,7 @@ await algorand.createTransaction.appCreateMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L518)
+[src/types/algorand-client-transaction-creator.ts:523](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L523)
 
 ___
 
@@ -428,6 +432,7 @@ await algorand.createTransaction.appDelete({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -447,7 +452,7 @@ await algorand.createTransaction.appDelete({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:427](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L427)
+[src/types/algorand-client-transaction-creator.ts:430](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L430)
 
 ___
 
@@ -499,6 +504,7 @@ await algorand.createTransaction.appDeleteMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -518,7 +524,7 @@ await algorand.createTransaction.appDeleteMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:614](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L614)
+[src/types/algorand-client-transaction-creator.ts:621](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L621)
 
 ___
 
@@ -560,6 +566,7 @@ await algorand.createTransaction.appUpdate({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -601,7 +608,7 @@ await algorand.createTransaction.appUpdate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L392)
+[src/types/algorand-client-transaction-creator.ts:394](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L394)
 
 ___
 
@@ -655,6 +662,7 @@ await algorand.createTransaction.appUpdateMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
 })
 ```
 
@@ -674,7 +682,7 @@ await algorand.createTransaction.appUpdateMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:567](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L567)
+[src/types/algorand-client-transaction-creator.ts:573](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L573)
 
 ___
 
@@ -1128,7 +1136,7 @@ await algorand.createTransaction.offlineKeyRegistration({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:733](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L733)
+[src/types/algorand-client-transaction-creator.ts:741](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L741)
 
 ___
 
@@ -1194,7 +1202,7 @@ await algorand.createTransaction.onlineKeyRegistration({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:703](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L703)
+[src/types/algorand-client-transaction-creator.ts:711](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L711)
 
 ___
 

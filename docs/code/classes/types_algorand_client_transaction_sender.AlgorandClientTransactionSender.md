@@ -150,6 +150,7 @@ await algorand.send.appCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -175,7 +176,7 @@ await algorand.send.appCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:735](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L735)
+[src/types/algorand-client-transaction-sender.ts:739](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L739)
 
 ___
 
@@ -227,6 +228,7 @@ await algorand.send.appCallMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -252,7 +254,7 @@ await algorand.send.appCallMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:979](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L979)
+[src/types/algorand-client-transaction-sender.ts:987](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L987)
 
 ___
 
@@ -302,6 +304,7 @@ await algorand.send.appCreate({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -327,7 +330,7 @@ await algorand.send.appCreate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:595](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L595)
+[src/types/algorand-client-transaction-sender.ts:596](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L596)
 
 ___
 
@@ -389,6 +392,7 @@ await algorand.send.appCreateMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -414,7 +418,7 @@ await algorand.send.appCreateMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:803](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L803)
+[src/types/algorand-client-transaction-sender.ts:808](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L808)
 
 ___
 
@@ -454,6 +458,7 @@ await algorand.send.appDelete({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -479,7 +484,7 @@ await algorand.send.appDelete({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:689](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L689)
+[src/types/algorand-client-transaction-sender.ts:692](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L692)
 
 ___
 
@@ -531,6 +536,7 @@ await algorand.send.appDeleteMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -556,7 +562,7 @@ await algorand.send.appDeleteMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:921](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L921)
+[src/types/algorand-client-transaction-sender.ts:928](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L928)
 
 ___
 
@@ -598,6 +604,7 @@ await algorand.send.appUpdate({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -623,7 +630,7 @@ await algorand.send.appUpdate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:643](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L643)
+[src/types/algorand-client-transaction-sender.ts:645](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L645)
 
 ___
 
@@ -677,6 +684,7 @@ await algorand.send.appUpdateMethodCall({
  // Max fee doesn't make sense with extraFee AND staticFee
  //  already specified, but here for completeness
  maxFee: (3000).microAlgo(),
+ rejectVersion: 1,
  // Signer only needed if you want to provide one,
  //  generally you'd register it with AlgorandClient
  //  against the sender and not need to pass it in
@@ -702,7 +710,7 @@ await algorand.send.appUpdateMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:863](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L863)
+[src/types/algorand-client-transaction-sender.ts:869](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L869)
 
 ___
 
@@ -1060,7 +1068,7 @@ const result = await algorand.send.offlineKeyRegistration({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:1058](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L1058)
+[src/types/algorand-client-transaction-sender.ts:1066](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L1066)
 
 ___
 
@@ -1126,7 +1134,7 @@ const result = await algorand.send.onlineKeyRegistration({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-sender.ts:1025](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L1025)
+[src/types/algorand-client-transaction-sender.ts:1033](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-sender.ts#L1033)
 
 ___
 
