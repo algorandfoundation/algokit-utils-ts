@@ -22,6 +22,13 @@ export interface Config {
   populateAppCallResources: boolean
 
   events: AsyncEventEmitter
+
+  /**
+   * An error will be thrown when using a field that does not currently have Ledger support.
+   * Use this field to explicitly disable the behaviour.
+   * Default value is false.
+   */
+  disableLedgerUnsupportedErrors: boolean
 }
 
 /** Updatable AlgoKit config */
@@ -58,6 +65,10 @@ export class UpdatableConfig implements Readonly<Config> {
 
   get events() {
     return this.config.events
+  }
+
+  get disableLedgerUnsupportedErrors() {
+    return this.config.disableLedgerUnsupportedErrors
   }
 
   /**
@@ -97,6 +108,7 @@ export class UpdatableConfig implements Readonly<Config> {
       maxSearchDepth: 10,
       populateAppCallResources: true,
       events: new AsyncEventEmitter(),
+      disableLedgerUnsupportedErrors: false,
     }
   }
 
