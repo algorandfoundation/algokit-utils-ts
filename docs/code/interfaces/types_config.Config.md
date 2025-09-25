@@ -11,7 +11,6 @@ The AlgoKit configuration type
 ### Properties
 
 - [debug](types_config.Config.md#debug)
-- [disableLedgerUnsupportedErrors](types_config.Config.md#disableledgerunsupportederrors)
 - [events](types_config.Config.md#events)
 - [logger](types_config.Config.md#logger)
 - [maxSearchDepth](types_config.Config.md#maxsearchdepth)
@@ -31,20 +30,6 @@ Whether or not debug mode is enabled
 #### Defined in
 
 [src/types/config.ts:9](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L9)
-
-___
-
-### disableLedgerUnsupportedErrors
-
-• **disableLedgerUnsupportedErrors**: `boolean`
-
-An error will be thrown when using a field that does not currently have Ledger support.
-Use this field to explicitly disable the behaviour.
-Default value is false.
-
-#### Defined in
-
-[src/types/config.ts:31](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/config.ts#L31)
 
 ___
 
