@@ -939,55 +939,101 @@ describe('Resource population: Mixed', () => {
     const v9Result = await v9AppFactory.send.create({ method: 'createApplication' })
     v8Client = v8Result.appClient
     v9Client = v9Result.appClient
+
+    await v8Client.fundAppAccount({ amount: (328500).microAlgo() })
+    await v8Client.send.call({ method: 'bootstrap', staticFee: (3_000).microAlgo() })
+
+    await v9Client.fundAppAccount({ amount: (2334300).microAlgo() })
+    await v9Client.send.call({ method: 'bootstrap', staticFee: (3_000).microAlgo() })
   })
 
   afterAll(() => {
     Config.configure({ populateAppCallResources: false })
   })
 
-  test('same account', async () => {
-    const { algorand, testAccount } = fixture.context
-    const acct = algosdk.generateAccount()
+  describe('mixed', () => {
+    test('same account', async () => {
+      const { algorand, testAccount } = fixture.context
+      const acct = algosdk.generateAccount()
 
-    const rekeyedTo = algorand.account.random()
-    await algorand.account.rekeyAccount(testAccount, rekeyedTo)
+      const rekeyedTo = algorand.account.random()
+      await algorand.account.rekeyAccount(testAccount, rekeyedTo)
 
-    const { transactions } = await algorand.send
-      .newGroup()
-      .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
-      .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
-      .send({ populateAppCallResources: true })
+      const { transactions } = await algorand.send
+        .newGroup()
+        .addAppCallMethodCall(await v8Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
+        .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
+        .send({ populateAppCallResources: true })
 
-    const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
-    const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
+      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
 
-    expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
+      expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
+    })
+
+    test('app account', async () => {
+      const { algorand, testAccount } = fixture.context
+      const externalAppID = (await v8Client.getGlobalState()).externalAppID!.value as bigint
+
+      const { transactions } = await algorand.send
+        .newGroup()
+        .addAppCallMethodCall(
+          await v8Client.params.call({ method: 'externalAppCall', staticFee: (2_000).microAlgo(), sender: testAccount }),
+        )
+        .addAppCallMethodCall(
+          await v9Client.params.call({
+            method: 'addressBalance',
+            args: [algosdk.getApplicationAddress(externalAppID).toString()],
+            sender: testAccount,
+          }),
+        )
+        .send({ populateAppCallResources: true })
+
+      const v8CallApps = transactions[0].applicationCall?.foreignApps ?? []
+      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+
+      expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
+    })
   })
 
-  test('app account', async () => {
-    const { algorand, testAccount } = fixture.context
+  describe('accessReferences', () => {
+    test('fails to populate a transaction with access references', async () => {
+      const { testAccount } = fixture.context
+      const assetId = (await v9Client.getGlobalState()).asa.value as bigint
 
-    await v8Client.fundAppAccount({ amount: (328500).microAlgo() })
-    await v8Client.send.call({ method: 'bootstrap', staticFee: (3_000).microAlgo() })
+      await expect(
+        async () =>
+          await v9Client.send.call({
+            method: 'hasAsset',
+            accessReferences: [{ assetId: assetId }],
+            args: [testAccount.toString()],
+          }),
+      ).rejects.toThrow('No more transactions below reference limit. Add another app call to the group.')
+    })
 
-    const externalAppID = (await v8Client.getGlobalState()).externalAppID!.value as bigint
+    test('successfully populates a transaction group including a transaction with access references', async () => {
+      const assetId = (await v9Client.getGlobalState()).asa.value as bigint
+      const { testAccount } = fixture.context
 
-    const { transactions } = await algorand.send
-      .newGroup()
-      .addAppCallMethodCall(await v8Client.params.call({ method: 'externalAppCall', staticFee: (2_000).microAlgo(), sender: testAccount }))
-      .addAppCallMethodCall(
-        await v9Client.params.call({
-          method: 'addressBalance',
-          args: [algosdk.getApplicationAddress(externalAppID).toString()],
-          sender: testAccount,
-        }),
-      )
-      .send({ populateAppCallResources: true })
-
-    const v8CallApps = transactions[0].applicationCall?.foreignApps ?? []
-    const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
-
-    expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
+      await v9Client.algorand
+        .newGroup()
+        .addAppCallMethodCall(
+          await v9Client.params.call({
+            method: 'hasAsset',
+            accessReferences: [{ assetId: assetId }],
+            args: [testAccount.toString()],
+            note: '1',
+          }),
+        )
+        .addAppCallMethodCall(
+          await v9Client.params.call({
+            method: 'hasAsset',
+            args: [testAccount.toString()],
+            note: '2',
+          }),
+        )
+        .send()
+    })
   })
 })
 
@@ -1189,22 +1235,7 @@ describe('access references', () => {
   let externalClient: AppClient
 
   let alice: algosdk.Address
-  let bob: algosdk.Address
-  let charlie: algosdk.Address
-  let dan: algosdk.Address
-  let eve: algosdk.Address
-  let frank: algosdk.Address
-  let grace: algosdk.Address
-  let heidi: algosdk.Address
-  let ivan: algosdk.Address
-  let judy: algosdk.Address
-  let mallory: algosdk.Address
-  let niaj: algosdk.Address
-  let oscar: algosdk.Address
-  let peggy: algosdk.Address
-  let quentin: algosdk.Address
-  let ruth: algosdk.Address
-  let dave: algosdk.Address
+  let getTestAccounts: (count: number) => Promise<algosdk.Address[]>
 
   beforeEach(fixture.newScope)
 
@@ -1231,22 +1262,9 @@ describe('access references', () => {
     })
 
     alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    bob = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    charlie = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    dan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    eve = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    frank = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    grace = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    heidi = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    ivan = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    judy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    mallory = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    niaj = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    oscar = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    peggy = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    quentin = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    ruth = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })
-    dave = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(1) })
+    getTestAccounts = async (count: number) => {
+      return await Promise.all(Array.from({ length: count }, () => fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(0.1) })))
+    }
   }, 20_000) // Account generation and funding can be slow
 
   test('address reference enables access', async () => {
@@ -1263,7 +1281,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accountReferences: [alice, bob, charlie, dan, eve, frank, grace, heidi],
+      accountReferences: [alice, ...(await getTestAccounts(7))],
     })
   })
 
@@ -1273,7 +1291,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accountReferences: [alice, bob, charlie, dan, eve, frank, grace, heidi, ivan],
+        accountReferences: [alice, ...(await getTestAccounts(8))],
       }),
     ).rejects.toThrow(/max number of accounts is 8/)
   })
@@ -1283,24 +1301,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [
-        { address: alice },
-        { address: bob },
-        { address: charlie },
-        { address: dan },
-        { address: eve },
-        { address: frank },
-        { address: grace },
-        { address: heidi },
-        { address: ivan },
-        { address: judy },
-        { address: mallory },
-        { address: niaj },
-        { address: oscar },
-        { address: peggy },
-        { address: quentin },
-        { address: ruth },
-      ],
+      accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
     })
   })
 
@@ -1310,25 +1311,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accessReferences: [
-          { address: alice },
-          { address: bob },
-          { address: charlie },
-          { address: dan },
-          { address: eve },
-          { address: frank },
-          { address: grace },
-          { address: heidi },
-          { address: ivan },
-          { address: judy },
-          { address: mallory },
-          { address: niaj },
-          { address: oscar },
-          { address: peggy },
-          { address: quentin },
-          { address: ruth },
-          { address: dave },
-        ],
+        accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
   })
@@ -1376,7 +1359,6 @@ describe('access references', () => {
   test('locals reference enables access', async () => {
     const alice = await fixture.context.generateAccount({ initialFunds: AlgoAmount.Algo(1) })
 
-    // Opt alice into the external app
     await fixture.algorand.send.appCallMethodCall(await externalClient.params.optIn({ method: 'optInToApplication', sender: alice }))
 
     await appClient.send.call({
