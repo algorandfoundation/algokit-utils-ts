@@ -575,7 +575,7 @@ the estimated rate.
 
 #### Defined in
 
-[src/transaction/transaction.ts:1056](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1056)
+[src/transaction/transaction.ts:1078](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1078)
 
 ___
 
@@ -639,7 +639,7 @@ Allows for control of fees on a `Transaction` or `SuggestedParams` object
 
 #### Defined in
 
-[src/transaction/transaction.ts:1083](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1083)
+[src/transaction/transaction.ts:1105](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1105)
 
 ___
 
@@ -967,7 +967,7 @@ Converts `bigint`'s for Uint's < 64 to `number` for easier use.
 
 #### Defined in
 
-[src/transaction/transaction.ts:922](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L922)
+[src/transaction/transaction.ts:944](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L944)
 
 ___
 
@@ -1422,7 +1422,7 @@ ___
 
 ### getAppArgsForABICall
 
-▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+▸ **getAppArgsForABICall**(`args`, `from`): `Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Address` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 #### Parameters
 
@@ -1433,7 +1433,7 @@ ___
 
 #### Returns
 
-`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
+`Promise`\<\{ `appAccounts`: `undefined` \| `string`[] ; `appForeignApps`: `undefined` \| `number`[] = args.apps; `appForeignAssets`: `undefined` \| `number`[] = args.assets; `boxes`: `undefined` \| `BoxReference`[] ; `lease`: `undefined` \| `Uint8Array` ; `method`: `ABIMethod` ; `methodArgs`: (`string` \| `number` \| `bigint` \| `boolean` \| `Address` \| `Uint8Array` \| `ABIValue`[] \| `TransactionWithSigner`)[] = methodArgs; `rekeyTo`: `undefined` \| `string` ; `sender`: `string` ; `signer`: `TransactionSigner` = signer }\>
 
 The parameters ready to pass into `addMethodCall` within AtomicTransactionComposer
 
@@ -1943,7 +1943,7 @@ Returns the array of transactions currently present in the given `AtomicTransact
 
 #### Defined in
 
-[src/transaction/transaction.ts:1132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1132)
+[src/transaction/transaction.ts:1154](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1154)
 
 ___
 
@@ -2330,7 +2330,7 @@ Returns suggested transaction parameters from algod unless some are already prov
 
 #### Defined in
 
-[src/transaction/transaction.ts:1110](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1110)
+[src/transaction/transaction.ts:1132](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1132)
 
 ___
 
@@ -2941,7 +2941,7 @@ An object with transaction IDs, transactions, group transaction ID (`groupTransa
 
 #### Defined in
 
-[src/transaction/transaction.ts:782](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L782)
+[src/transaction/transaction.ts:804](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L804)
 
 ___
 
@@ -2970,7 +2970,7 @@ Signs and sends a group of [up to 16](https://dev.algorand.co/concepts/transacti
 
 #### Defined in
 
-[src/transaction/transaction.ts:955](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L955)
+[src/transaction/transaction.ts:977](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L977)
 
 ___
 
@@ -3243,4 +3243,4 @@ Throws an error if the transaction is not confirmed or rejected in the next `tim
 
 #### Defined in
 
-[src/transaction/transaction.ts:999](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L999)
+[src/transaction/transaction.ts:1021](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/transaction/transaction.ts#L1021)

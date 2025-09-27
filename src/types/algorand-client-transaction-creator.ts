@@ -337,6 +337,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -373,6 +374,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -407,6 +409,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -441,6 +444,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -496,6 +500,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -544,6 +549,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -590,6 +596,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field
@@ -636,6 +643,7 @@ export class AlgorandClientTransactionCreator {
    *  appReferences: [123n, 1234n]
    *  assetReferences: [12345n]
    *  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+   *  accessReferences: [{ appId: 1234n }]
    *  lease: 'lease',
    *  note: 'note',
    *  // You wouldn't normally set this field

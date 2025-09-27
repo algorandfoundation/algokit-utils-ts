@@ -382,6 +382,7 @@ When interacting with apps (creating, updating, deleting, calling), there are so
 - `appReferences?: bigint[]` - The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 - `assetReferences?: bigint[]` - The ID of any assets to load to the [foreign assets array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays).
 - `boxReferences?: (BoxReference | BoxIdentifier)[]` - Any [boxes](#box-references) to load to the [boxes array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays)
+- `accessReference?: AccessReference[]` - Unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty.
 
 When making an ABI call, the `args` parameter is replaced with a different type and there is also a `method` parameter per the [`AppMethodCall`](../code/modules/types_composer.md#appmethodcall) type:
 
@@ -427,6 +428,15 @@ export interface BoxReference {
   name: BoxIdentifier
 }
 ```
+
+## Access References
+
+Access references provide a unified way to specify all types of resource references (accounts, apps, assets, boxes, asset holdings, and app locals) that need to be accessible during smart contract execution. They are an alternative to using the separate `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` parameters.
+
+In using this unified field, you are able to use a total of 16 individual references, however cross references which enable smart contract access to local state and account asset balance information must be explicitly defined using `locals` and `holdings` fields respectively.
+When using the seperate reference arrays, you are constraints to a collective total of 8.
+
+The separate reference arrays (`accountReferences`, `appReferences`, etc.) remain fully supported, however when using `accessReferences`, you cannot also use `accountReferences`, `appReferences`, `assetReferences` or `boxReferences`.
 
 ## Compilation
 

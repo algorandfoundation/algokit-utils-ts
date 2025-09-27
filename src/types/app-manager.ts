@@ -94,6 +94,44 @@ export interface BoxValuesRequestParams {
   type: algosdk.ABIType
 }
 
+/**
+ * Defines a holding by referring to an Address and Asset it belongs to.
+ */
+export interface HoldingReference {
+  /** Asset ID for asset in access list. */
+  assetId: bigint
+  /** Address in access list, or the sender of the transaction. */
+  address: string | Address
+}
+
+/**
+ * Defines a local state by referring to an Address and App it belongs to.
+ */
+export interface LocalsReference {
+  /** Application ID for app in access list, or zero if referring to the called application. */
+  appId: bigint
+  /** Address in access list, or the sender of the transaction. */
+  address: string | Address
+}
+
+/**
+ * Names a single resource reference. Only one of the fields should be set.
+ */
+export interface AccessReference {
+  /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
+  address?: string | Address
+  /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
+  appId?: bigint
+  /** Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram. */
+  assetId?: bigint
+  /** Defines a holding by referring to an Address and Asset it belongs to. */
+  holding?: HoldingReference
+  /** Defines a local state by referring to an Address and App it belongs to. */
+  locals?: LocalsReference
+  /** Defines a box by its name and the application ID it belongs to. */
+  box?: BoxReference
+}
+
 /** Allows management of application information. */
 export class AppManager {
   private _algod: algosdk.Algodv2
@@ -533,6 +571,34 @@ export class AppManager {
       .map((line) => stripCommentFromLine(line))
       .join('\n')
   }
+}
+
+function getHoldingReference(holdingReference: HoldingReference): algosdk.TransactionHoldingReference {
+  return {
+    assetIndex: holdingReference.assetId,
+    address: typeof holdingReference.address === 'string' ? Address.fromString(holdingReference.address) : holdingReference.address!,
+  } satisfies algosdk.TransactionHoldingReference
+}
+
+function getLocalsReference(localsReference: LocalsReference): algosdk.TransactionLocalsReference {
+  return {
+    appIndex: localsReference.appId,
+    address: typeof localsReference.address === 'string' ? Address.fromString(localsReference.address) : localsReference.address!,
+  } satisfies algosdk.TransactionLocalsReference
+}
+
+/**
+ * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
+ */
+export function getAccessReference(accessReference: AccessReference): algosdk.TransactionResourceReference {
+  return {
+    address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
+    appIndex: accessReference.appId,
+    assetIndex: accessReference.assetId,
+    holding: accessReference.holding ? getHoldingReference(accessReference.holding) : undefined,
+    locals: accessReference.locals ? getLocalsReference(accessReference.locals) : undefined,
+    box: accessReference.box ? AppManager.getBoxReference(accessReference.box) : undefined,
+  } as algosdk.TransactionResourceReference
 }
 
 /**
