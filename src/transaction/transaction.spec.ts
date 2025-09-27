@@ -13,7 +13,7 @@ import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
 import { PaymentParams, TransactionComposer } from '../types/composer'
 import { Arc2TransactionNote } from '../types/transaction'
-import { getABIReturnValue, populateAppCallResources, waitForConfirmation } from './transaction'
+import { getABIReturnValue, waitForConfirmation } from './transaction'
 
 describe('transaction', () => {
   const localnet = algorandFixture()
@@ -1082,32 +1082,13 @@ describe('Resource population: meta', () => {
 
     await externalClient.fundAppAccount({ amount: (200_000).microAlgo() })
 
-    await externalClient.send.call({
-      method: 'createBoxInNewApp',
-      args: [algorand.createTransaction.payment({ sender: testAccount, receiver: externalClient.appAddress, amount: (1).algo() })],
-      staticFee: (4_000).microAlgo(),
-    })
-  })
-
-  test('box ref for create box in new app', async () => {
-    const { algorand } = fixture
-
-    await externalClient.fundAppAccount({ amount: (200_000).microAlgo() })
-
-    const txn = await externalClient.createTransaction.call({
+    const result = await externalClient.send.call({
       method: 'createBoxInNewApp',
       args: [algorand.createTransaction.payment({ sender: testAccount, receiver: externalClient.appAddress, amount: (1).algo() })],
       staticFee: (4_000).microAlgo(),
     })
 
-    const atc = new algosdk.AtomicTransactionComposer()
-
-    for (const tx of txn.transactions) {
-      atc.addTransaction({ txn: tx, signer: algosdk.makeBasicAccountTransactionSigner(testAccount) })
-    }
-
-    const populatedAtc = await populateAppCallResources(atc, algorand.client.algod)
-    const boxRef = populatedAtc.buildGroup()[1].txn.applicationCall?.boxes?.[0]
+    const boxRef = result.transaction.applicationCall?.boxes?.[0]
     expect(boxRef).toBeDefined()
     expect(boxRef?.appIndex).toBe(0n)
   })
