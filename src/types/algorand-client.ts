@@ -37,6 +37,20 @@ export class AlgorandClient {
    */
   private _errorTransformers: Set<ErrorTransformer> = new Set()
 
+  /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isAlgorandClient = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as AlgorandClient)._isAlgorandClient === true)
+  }
+
   private constructor(config: AlgoConfig | AlgoSdkClients) {
     this._clientManager = new ClientManager(config, this)
     this._accountManager = new AccountManager(this._clientManager)

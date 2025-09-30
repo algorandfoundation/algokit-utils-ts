@@ -12,6 +12,20 @@ export class KmdAccountManager {
   private _kmd?: algosdk.Kmd | null
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isKmdAccountManager = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as KmdAccountManager)._isKmdAccountManager === true)
+  }
+
+  /**
    * Create a new KMD manager.
    * @param clientManager A ClientManager client to use for algod and kmd clients
    */
