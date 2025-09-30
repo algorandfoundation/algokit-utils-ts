@@ -100,6 +100,20 @@ export class AppManager {
   private _compilationResults: Record<string, CompiledTeal> = {}
 
   /**
+   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
+   */
+  private readonly _isAppManager = true
+
+  /**
+   * Custom Symbol.hasInstance to handle dual package hazard
+   * @param instance - The instance to check
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
+   */
+  static [Symbol.hasInstance](instance: unknown): boolean {
+    return !!(instance && (instance as AppManager)._isAppManager === true)
+  }
+
+  /**
    * Creates an `AppManager`
    * @param algod An algod instance
    */

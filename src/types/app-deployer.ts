@@ -123,7 +123,7 @@ export class AppDeployer {
   /**
    * Custom Symbol.hasInstance to handle dual package hazard
    * @param instance - The instance to check
-   * @returns true if the instance is an ABIContract, regardless of which module loaded it
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
    */
   static [Symbol.hasInstance](instance: unknown): boolean {
     return !!(instance && (instance as AppDeployer)._isAppDeployer === true)

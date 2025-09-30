@@ -548,20 +548,6 @@ export class TransactionComposer {
   /** Signer used to represent a lack of signer */
   private static NULL_SIGNER: algosdk.TransactionSigner = algosdk.makeEmptyTransactionSigner()
 
-  /**
-   * Unique property marker for Symbol.hasInstance compatibility across module boundaries
-   */
-  private readonly _isTransactionComposer = true
-
-  /**
-   * Custom Symbol.hasInstance to handle dual package hazard
-   * @param instance - The instance to check
-   * @returns true if the instance is an TransactionComposer, regardless of which module loaded it
-   */
-  static [Symbol.hasInstance](instance: any): boolean {
-    return instance && instance._isTransactionComposer === true
-  }
-
   /** The ATC used to compose the group */
   private atc = new algosdk.AtomicTransactionComposer()
 
@@ -600,7 +586,7 @@ export class TransactionComposer {
   /**
    * Custom Symbol.hasInstance to handle dual package hazard
    * @param instance - The instance to check
-   * @returns true if the instance is an ABIContract, regardless of which module loaded it
+   * @returns true if the instance is of the Type of the class, regardless of which module loaded it
    */
   static [Symbol.hasInstance](instance: unknown): boolean {
     return !!(instance && (instance as TransactionComposer)._isTransactionComposer === true)
