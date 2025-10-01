@@ -340,17 +340,17 @@ async function getGroupExecutionInfo(
     sortedResources.apps?.sort(compare)
     sortedResources.boxes?.sort((a, b) => {
       const aStr = `${a.app}-${a.name}`
-      const bStr = `${b.app}-${a.name}`
+      const bStr = `${b.app}-${b.name}`
       return compare(aStr, bStr)
     })
     sortedResources.appLocals?.sort((a, b) => {
       const aStr = `${a.app}-${a.account}`
-      const bStr = `${b.app}-${a.account}`
+      const bStr = `${b.app}-${b.account}`
       return compare(aStr, bStr)
     })
     sortedResources.assetHoldings?.sort((a, b) => {
-      const aStr = `${a.asset}-${a.account}`
-      const bStr = `${b.asset}-${a.account}`
+      const aStr = `${a.asset}-${b.account}`
+      const bStr = `${b.asset}-${b.account}`
       return compare(aStr, bStr)
     })
   }
