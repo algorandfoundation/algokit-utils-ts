@@ -4,6 +4,7 @@ import assert from 'assert'
 import { beforeEach, describe, it } from 'vitest'
 import { MultisigAccount } from './account'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
+import { TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 
 describe('Dual Package Hazard Solution', () => {
@@ -27,7 +28,7 @@ describe('Dual Package Hazard Solution', () => {
         _isTestNetDispenserApiClient: true,
         _authToken: 'other-token',
         _requestTimeout: 15,
-      } as any
+      }
 
       assert.strictEqual(TestNetDispenserApiClient[Symbol.hasInstance](mockClient), true)
     })
@@ -36,7 +37,7 @@ describe('Dual Package Hazard Solution', () => {
       const fakeClient = {
         _authToken: 'no-marker',
         _requestTimeout: 10,
-      } as any
+      }
 
       assert.strictEqual(TestNetDispenserApiClient[Symbol.hasInstance](fakeClient), false)
     })
@@ -46,7 +47,7 @@ describe('Dual Package Hazard Solution', () => {
     let creator: AlgorandClientTransactionCreator
 
     beforeEach(() => {
-      const newGroup = () => ({}) as any
+      const newGroup = () => ({}) as TransactionComposer
       creator = new AlgorandClientTransactionCreator(newGroup)
     })
 
@@ -61,14 +62,14 @@ describe('Dual Package Hazard Solution', () => {
     it('should work with cross-module simulation', () => {
       const mockCreator = {
         _isAlgorandClientTransactionCreator: true,
-        _newGroup: () => ({}) as any,
-      } as any
+        _newGroup: () => ({}),
+      }
 
       assert.strictEqual(AlgorandClientTransactionCreator[Symbol.hasInstance](mockCreator), true)
     })
 
     it('should reject objects without marker', () => {
-      const fakeCreator = { _newGroup: () => ({}) as any } as any
+      const fakeCreator = { _newGroup: () => ({}) }
       assert.strictEqual(AlgorandClientTransactionCreator[Symbol.hasInstance](fakeCreator), false)
     })
   })
@@ -77,7 +78,7 @@ describe('Dual Package Hazard Solution', () => {
     let creator: AlgorandClientTransactionCreator
 
     beforeEach(() => {
-      const newGroup = () => ({}) as any
+      const newGroup = () => ({}) as TransactionComposer
       creator = new AlgorandClientTransactionCreator(newGroup)
     })
 
@@ -92,14 +93,14 @@ describe('Dual Package Hazard Solution', () => {
     it('should work with cross-module simulation', () => {
       const mockCreator = {
         _isAlgorandClientTransactionCreator: true,
-        _newGroup: () => ({}) as any,
-      } as any
+        _newGroup: () => ({}),
+      }
 
       assert.strictEqual(AlgorandClientTransactionCreator[Symbol.hasInstance](mockCreator), true)
     })
 
     it('should reject objects without marker', () => {
-      const fakeCreator = { _newGroup: () => ({}) as any } as any
+      const fakeCreator = { _newGroup: () => ({}) }
       assert.strictEqual(AlgorandClientTransactionCreator[Symbol.hasInstance](fakeCreator), false)
     })
   })
@@ -137,7 +138,7 @@ describe('Dual Package Hazard Solution', () => {
         _params: { version: 1, threshold: 1, addrs: [] },
         _signingAccounts: [],
         _addr: 'FAKEADDR',
-      } as any
+      }
 
       assert.strictEqual(MultisigAccount[Symbol.hasInstance](mockMsig), true)
     })
@@ -145,7 +146,7 @@ describe('Dual Package Hazard Solution', () => {
     it('should reject objects without marker', () => {
       const fakeMsig = {
         _params: { version: 1, threshold: 1, addrs: [] },
-      } as any
+      }
 
       assert.strictEqual(MultisigAccount[Symbol.hasInstance](fakeMsig), false)
     })
