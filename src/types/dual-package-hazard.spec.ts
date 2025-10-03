@@ -4,6 +4,7 @@ import assert from 'assert'
 import { beforeEach, describe, it } from 'vitest'
 import { MultisigAccount } from './account'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
+import { AppManager } from './app-manager'
 import { TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 
@@ -149,6 +150,47 @@ describe('Dual Package Hazard Solution', () => {
       }
 
       assert.strictEqual(MultisigAccount[Symbol.hasInstance](fakeMsig), false)
+    })
+  })
+
+  describe('AppManager Symbol.hasInstance', () => {
+    let manager: AppManager
+
+    beforeEach(() => {
+      // Minimal fake that satisfies the constructor type; none of its methods are used here.
+      const fakeAlgod = {} as unknown as algosdk.Algodv2
+      manager = new AppManager(fakeAlgod)
+    })
+
+    it('should work with regular instanceof', () => {
+      assert.strictEqual(manager instanceof AppManager, true)
+    })
+
+    it('should work with custom Symbol.hasInstance', () => {
+      assert.strictEqual(AppManager[Symbol.hasInstance](manager), true)
+    })
+
+    it('should work with cross-module simulation', () => {
+      // Object coming from a “different module”, but carrying the private marker flag shape
+      const mockManager = {
+        _isAppManager: true,
+        _algod: {} as unknown as algosdk.Algodv2,
+      } as unknown as AppManager
+
+      assert.strictEqual(AppManager[Symbol.hasInstance](mockManager), true)
+    })
+
+    it('should reject objects without marker', () => {
+      const fakeManager = {
+        _algod: {} as unknown as algosdk.Algodv2,
+      } as unknown as AppManager
+
+      assert.strictEqual(AppManager[Symbol.hasInstance](fakeManager), false)
+    })
+
+    it('should reject null/undefined safely', () => {
+      assert.strictEqual(AppManager[Symbol.hasInstance](null as unknown), false)
+      assert.strictEqual(AppManager[Symbol.hasInstance](undefined as unknown), false)
     })
   })
 
