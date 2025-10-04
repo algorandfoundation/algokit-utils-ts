@@ -349,7 +349,7 @@ async function getGroupExecutionInfo(
       return compare(aStr, bStr)
     })
     sortedResources.assetHoldings?.sort((a, b) => {
-      const aStr = `${a.asset}-${b.account}`
+      const aStr = `${a.asset}-${a.account}`
       const bStr = `${b.asset}-${b.account}`
       return compare(aStr, bStr)
     })
