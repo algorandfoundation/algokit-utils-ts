@@ -136,6 +136,8 @@ class ResourcePackerv9 extends Contract {
 
   mediumBoxKey = BoxKey<bytes>({ key: 'm' })
 
+  byteBoxes = BoxMap<uint8, bytes>({ prefix: 'b' })
+
   bootstrap(): void {
     sendMethodCall<[], void>({
       name: 'createApplication',
@@ -183,5 +185,38 @@ class ResourcePackerv9 extends Contract {
 
   externalLocal(addr: Address): void {
     log(this.externalAppID.value.localState(addr, 'localKey') as bytes)
+  }
+
+  dummy(): void {}
+
+  manyResources(
+    accounts: StaticArray<Address, 4>,
+    asa: StaticArray<AssetID, 4>,
+    apps: StaticArray<AppID, 4>,
+    boxes: StaticArray<uint8, 4>,
+  ): void {
+    for (const addr of accounts) {
+      assert(!addr.isInLedger)
+
+      for (const asset of asa) {
+        assert(!addr.isOptedInToAsset(asset))
+      }
+
+      for (const app of apps) {
+        assert(!addr.isOptedInToApp(app))
+      }
+    }
+
+    for (const asset of asa) {
+      assert(asset.total)
+    }
+
+    for (const app of apps) {
+      log(app.creator)
+    }
+
+    for (const boxKey of boxes) {
+      this.byteBoxes(boxKey).value = 'foo'
+    }
   }
 }

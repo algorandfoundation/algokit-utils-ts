@@ -329,8 +329,34 @@ async function getGroupExecutionInfo(
     throw Error(`Error resolving execution info via simulate in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
   }
 
+  const sortedResources = groupResponse.unnamedResourcesAccessed
+
+  // NOTE: We explicitly want to avoid localeCompare as that can lead to different results in different environments
+  const compare = (a: string | bigint, b: string | bigint) => (a < b ? -1 : a > b ? 1 : 0)
+
+  if (sortedResources) {
+    sortedResources.accounts?.sort((a, b) => compare(a.toString(), b.toString()))
+    sortedResources.assets?.sort(compare)
+    sortedResources.apps?.sort(compare)
+    sortedResources.boxes?.sort((a, b) => {
+      const aStr = `${a.app}-${a.name}`
+      const bStr = `${b.app}-${b.name}`
+      return compare(aStr, bStr)
+    })
+    sortedResources.appLocals?.sort((a, b) => {
+      const aStr = `${a.app}-${a.account}`
+      const bStr = `${b.app}-${b.account}`
+      return compare(aStr, bStr)
+    })
+    sortedResources.assetHoldings?.sort((a, b) => {
+      const aStr = `${a.asset}-${a.account}`
+      const bStr = `${b.asset}-${b.account}`
+      return compare(aStr, bStr)
+    })
+  }
+
   return {
-    groupUnnamedResourcesAccessed: sendParams.populateAppCallResources ? groupResponse.unnamedResourcesAccessed : undefined,
+    groupUnnamedResourcesAccessed: sendParams.populateAppCallResources ? sortedResources : undefined,
     txns: groupResponse.txnResults.map((txn, i) => {
       const originalTxn = atc['transactions'][i].txn as algosdk.Transaction
 
