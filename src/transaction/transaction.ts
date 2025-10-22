@@ -329,8 +329,34 @@ async function getGroupExecutionInfo(
     throw Error(`Error resolving execution info via simulate in transaction ${groupResponse.failedAt}: ${groupResponse.failureMessage}`)
   }
 
+  const sortedResources = groupResponse.unnamedResourcesAccessed
+
+  // NOTE: We explicitly want to avoid localeCompare as that can lead to different results in different environments
+  const compare = (a: string | bigint, b: string | bigint) => (a < b ? -1 : a > b ? 1 : 0)
+
+  if (sortedResources) {
+    sortedResources.accounts?.sort((a, b) => compare(a.toString(), b.toString()))
+    sortedResources.assets?.sort(compare)
+    sortedResources.apps?.sort(compare)
+    sortedResources.boxes?.sort((a, b) => {
+      const aStr = `${a.app}-${a.name}`
+      const bStr = `${b.app}-${b.name}`
+      return compare(aStr, bStr)
+    })
+    sortedResources.appLocals?.sort((a, b) => {
+      const aStr = `${a.app}-${a.account}`
+      const bStr = `${b.app}-${b.account}`
+      return compare(aStr, bStr)
+    })
+    sortedResources.assetHoldings?.sort((a, b) => {
+      const aStr = `${a.asset}-${a.account}`
+      const bStr = `${b.asset}-${b.account}`
+      return compare(aStr, bStr)
+    })
+  }
+
   return {
-    groupUnnamedResourcesAccessed: sendParams.populateAppCallResources ? groupResponse.unnamedResourcesAccessed : undefined,
+    groupUnnamedResourcesAccessed: sendParams.populateAppCallResources ? sortedResources : undefined,
     txns: groupResponse.txnResults.map((txn, i) => {
       const originalTxn = atc['transactions'][i].txn as algosdk.Transaction
 
@@ -465,30 +491,44 @@ export async function prepareGroupForSending(
         )
     : [0n, new Map<number, bigint>()]
 
+  const appCallHasAccessReferences = (txn: algosdk.Transaction) => {
+    return txn.type === TransactionType.appl && txn.applicationCall?.access && txn.applicationCall?.access.length > 0
+  }
+
+  const indexesWithAccessReferences: number[] = []
+
   executionInfo.txns.forEach(({ unnamedResourcesAccessed: r }, i) => {
     // Populate Transaction App Call Resources
-    if (sendParams.populateAppCallResources && r !== undefined && group[i].txn.type === TransactionType.appl) {
-      if (r.boxes || r.extraBoxRefs) throw Error('Unexpected boxes at the transaction level')
-      if (r.appLocals) throw Error('Unexpected app local at the transaction level')
-      if (r.assetHoldings)
-        throw Error('Unexpected asset holding at the transaction level')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(group[i].txn as any)['applicationCall'] = {
-        ...group[i].txn.applicationCall,
-        accounts: [...(group[i].txn?.applicationCall?.accounts ?? []), ...(r.accounts ?? [])],
-        foreignApps: [...(group[i].txn?.applicationCall?.foreignApps ?? []), ...(r.apps ?? [])],
-        foreignAssets: [...(group[i].txn?.applicationCall?.foreignAssets ?? []), ...(r.assets ?? [])],
-        boxes: [...(group[i].txn?.applicationCall?.boxes ?? []), ...(r.boxes ?? [])],
-      } satisfies Partial<ApplicationTransactionFields>
+    if (sendParams.populateAppCallResources && group[i].txn.type === TransactionType.appl) {
+      const hasAccessReferences = appCallHasAccessReferences(group[i].txn)
 
-      const accounts = group[i].txn.applicationCall?.accounts?.length ?? 0
-      if (accounts > MAX_APP_CALL_ACCOUNT_REFERENCES)
-        throw Error(`Account reference limit of ${MAX_APP_CALL_ACCOUNT_REFERENCES} exceeded in transaction ${i}`)
-      const assets = group[i].txn.applicationCall?.foreignAssets?.length ?? 0
-      const apps = group[i].txn.applicationCall?.foreignApps?.length ?? 0
-      const boxes = group[i].txn.applicationCall?.boxes?.length ?? 0
-      if (accounts + assets + apps + boxes > MAX_APP_CALL_FOREIGN_REFERENCES) {
-        throw Error(`Resource reference limit of ${MAX_APP_CALL_FOREIGN_REFERENCES} exceeded in transaction ${i}`)
+      if (hasAccessReferences && (r || executionInfo.groupUnnamedResourcesAccessed)) {
+        indexesWithAccessReferences.push(i)
+      }
+
+      if (r && !hasAccessReferences) {
+        if (r.boxes || r.extraBoxRefs) throw Error('Unexpected boxes at the transaction level')
+        if (r.appLocals) throw Error('Unexpected app local at the transaction level')
+        if (r.assetHoldings)
+          throw Error('Unexpected asset holding at the transaction level')
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(group[i].txn as any)['applicationCall'] = {
+          ...group[i].txn.applicationCall,
+          accounts: [...(group[i].txn?.applicationCall?.accounts ?? []), ...(r.accounts ?? [])],
+          foreignApps: [...(group[i].txn?.applicationCall?.foreignApps ?? []), ...(r.apps ?? [])],
+          foreignAssets: [...(group[i].txn?.applicationCall?.foreignAssets ?? []), ...(r.assets ?? [])],
+          boxes: [...(group[i].txn?.applicationCall?.boxes ?? []), ...(r.boxes ?? [])],
+        } satisfies Partial<ApplicationTransactionFields>
+
+        const accounts = group[i].txn.applicationCall?.accounts?.length ?? 0
+        if (accounts > MAX_APP_CALL_ACCOUNT_REFERENCES)
+          throw Error(`Account reference limit of ${MAX_APP_CALL_ACCOUNT_REFERENCES} exceeded in transaction ${i}`)
+        const assets = group[i].txn.applicationCall?.foreignAssets?.length ?? 0
+        const apps = group[i].txn.applicationCall?.foreignApps?.length ?? 0
+        const boxes = group[i].txn.applicationCall?.boxes?.length ?? 0
+        if (accounts + assets + apps + boxes > MAX_APP_CALL_FOREIGN_REFERENCES) {
+          throw Error(`Resource reference limit of ${MAX_APP_CALL_FOREIGN_REFERENCES} exceeded in transaction ${i}`)
+        }
       }
     }
 
@@ -514,6 +554,12 @@ export async function prepareGroupForSending(
 
   // Populate Group App Call Resources
   if (sendParams.populateAppCallResources) {
+    if (indexesWithAccessReferences.length > 0) {
+      Config.logger.warn(
+        `Resource population will be skipped for transaction indexes ${indexesWithAccessReferences.join(', ')} as they use access references.`,
+      )
+    }
+
     const populateGroupResource = (
       txns: algosdk.TransactionWithSigner[],
       reference:
@@ -528,6 +574,7 @@ export async function prepareGroupForSending(
     ): void => {
       const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
         if (t.txn.type !== algosdk.TransactionType.appl) return false
+        if (appCallHasAccessReferences(t.txn)) return false
 
         const accounts = t.txn.applicationCall?.accounts?.length ?? 0
         const assets = t.txn.applicationCall?.foreignAssets?.length ?? 0
@@ -629,6 +676,7 @@ export async function prepareGroupForSending(
       // Find the txn index to put the reference(s)
       const txnIndex = txns.findIndex((t) => {
         if (t.txn.type !== algosdk.TransactionType.appl) return false
+        if (appCallHasAccessReferences(t.txn)) return false
 
         const accounts = t.txn.applicationCall?.accounts?.length ?? 0
         if (type === 'account') return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES

@@ -4,12 +4,12 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vi
 import * as algokit from '..'
 import arc56Json from '../../tests/example-contracts/arc56_templates/artifacts/Templates.arc56_draft.json'
 import byteArraysAr56Json from '../../tests/example-contracts/byte_arrays/artifacts/ByteArrays.arc56.json'
+import deployErrorAppArc56Json from '../../tests/example-contracts/deploy_error/artifacts/DeployError.arc56.json'
 import largeAppArc56Json from '../../tests/example-contracts/extra-pages/large.arc56.json'
 import smallAppArc56Json from '../../tests/example-contracts/extra-pages/small.arc56.json'
 import errorInnerAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/InnerApp.arc56.json'
 import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/MiddleApp.arc56.json'
 import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
-import deployErrorAppArc56Json from '../../tests/example-contracts/deploy_error/artifacts/DeployError.arc56.json'
 import nestedStruct from '../../tests/example-contracts/nested_struct/artifacts/NestedStruct.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
@@ -498,6 +498,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       appReferences: [345n],
       accountReferences: [testAccount],
       assetReferences: [567n],
+      populateAppCallResources: false,
     })
 
     invariant(result.confirmations)

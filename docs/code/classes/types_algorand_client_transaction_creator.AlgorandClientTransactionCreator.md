@@ -112,6 +112,7 @@ await algorand.createTransaction.appCall({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -141,7 +142,7 @@ await algorand.createTransaction.appCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:458](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L458)
+[src/types/algorand-client-transaction-creator.ts:462](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L462)
 
 ___
 
@@ -182,6 +183,7 @@ await algorand.createTransaction.appCallMethodCall({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -211,13 +213,13 @@ await algorand.createTransaction.appCallMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:653](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L653)
+[src/types/algorand-client-transaction-creator.ts:661](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L661)
 
 ___
 
 ### appCreate
 
-• **appCreate**: (`params`: \{ `accountReferences?`: (`string` \| `Address`)[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` \| `Address` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `string` \| `Address` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }) => `Promise`\<`Transaction`\>
+• **appCreate**: (`params`: \{ `accessReferences?`: [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] ; `accountReferences?`: (`string` \| `Address`)[] ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `extraProgramPages?`: `number` ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `NoOpOC` \| `OptInOC` \| `CloseOutOC` \| `UpdateApplicationOC` \| `DeleteApplicationOC` ; `rekeyTo?`: `string` \| `Address` ; `schema?`: \{ `globalByteSlices`: `number` ; `globalInts`: `number` ; `localByteSlices`: `number` ; `localInts`: `number`  } ; `sender`: `string` \| `Address` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }) => `Promise`\<`Transaction`\>
 
 Create an application create transaction.
 
@@ -249,6 +251,7 @@ await algorand.createTransaction.appCreate({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -271,6 +274,7 @@ await algorand.createTransaction.appCreate({
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters for the app creation transaction |
+| `params.accessReferences?` | [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] | Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. |
 | `params.accountReferences?` | (`string` \| `Address`)[] | Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
 | `params.appReferences?` | `bigint`[] | The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
 | `params.approvalProgram` | `string` \| `Uint8Array` | The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). |
@@ -303,7 +307,7 @@ await algorand.createTransaction.appCreate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:354](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L354)
+[src/types/algorand-client-transaction-creator.ts:355](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L355)
 
 ___
 
@@ -353,6 +357,7 @@ await algorand.createTransaction.appCreateMethodCall({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -382,7 +387,7 @@ await algorand.createTransaction.appCreateMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:513](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L513)
+[src/types/algorand-client-transaction-creator.ts:518](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L518)
 
 ___
 
@@ -411,6 +416,7 @@ await algorand.createTransaction.appDelete({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -440,7 +446,7 @@ await algorand.createTransaction.appDelete({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:424](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L424)
+[src/types/algorand-client-transaction-creator.ts:427](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L427)
 
 ___
 
@@ -481,6 +487,7 @@ await algorand.createTransaction.appDeleteMethodCall({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -510,13 +517,13 @@ await algorand.createTransaction.appDeleteMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:607](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L607)
+[src/types/algorand-client-transaction-creator.ts:614](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L614)
 
 ___
 
 ### appUpdate
 
-• **appUpdate**: (`params`: \{ `accountReferences?`: (`string` \| `Address`)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplicationOC` ; `rekeyTo?`: `string` \| `Address` ; `sender`: `string` \| `Address` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }) => `Promise`\<`Transaction`\>
+• **appUpdate**: (`params`: \{ `accessReferences?`: [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] ; `accountReferences?`: (`string` \| `Address`)[] ; `appId`: `bigint` ; `appReferences?`: `bigint`[] ; `approvalProgram`: `string` \| `Uint8Array` ; `args?`: `Uint8Array`[] ; `assetReferences?`: `bigint`[] ; `boxReferences?`: ([`BoxIdentifier`](../modules/types_app_manager.md#boxidentifier) \| [`BoxReference`](../interfaces/types_app_manager.BoxReference.md))[] ; `clearStateProgram`: `string` \| `Uint8Array` ; `extraFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `firstValidRound?`: `bigint` ; `lastValidRound?`: `bigint` ; `lease?`: `string` \| `Uint8Array` ; `maxFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `note?`: `string` \| `Uint8Array` ; `onComplete?`: `UpdateApplicationOC` ; `rekeyTo?`: `string` \| `Address` ; `sender`: `string` \| `Address` ; `signer?`: `TransactionSigner` \| [`TransactionSignerAccount`](../interfaces/types_account.TransactionSignerAccount.md) ; `staticFee?`: [`AlgoAmount`](types_amount.AlgoAmount.md) ; `validityWindow?`: `number` \| `bigint`  }) => `Promise`\<`Transaction`\>
 
 Create an application update transaction.
 
@@ -541,6 +548,7 @@ await algorand.createTransaction.appUpdate({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -563,6 +571,7 @@ await algorand.createTransaction.appUpdate({
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `params` | `Object` | The parameters for the app update transaction |
+| `params.accessReferences?` | [`AccessReference`](../interfaces/types_app_manager.AccessReference.md)[] | Access references unifies `accountReferences`, `appReferences`, `assetReferences`, and `boxReferences` under a single list. If non-empty, these other reference lists must be empty. If access is empty, those other reference lists may be non-empty. |
 | `params.accountReferences?` | (`string` \| `Address`)[] | Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
 | `params.appId` | `bigint` | ID of the application; 0 if the application is being created. |
 | `params.appReferences?` | `bigint`[] | The ID of any apps to load to the [foreign apps array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). |
@@ -590,7 +599,7 @@ await algorand.createTransaction.appUpdate({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:390](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L390)
+[src/types/algorand-client-transaction-creator.ts:392](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L392)
 
 ___
 
@@ -633,6 +642,7 @@ await algorand.createTransaction.appUpdateMethodCall({
  appReferences: [123n, 1234n]
  assetReferences: [12345n]
  boxReferences: ["box1", {appId: 1234n, name: "box2"}]
+ accessReferences: [{ appId: 1234n }]
  lease: 'lease',
  note: 'note',
  // You wouldn't normally set this field
@@ -662,7 +672,7 @@ await algorand.createTransaction.appUpdateMethodCall({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:561](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L561)
+[src/types/algorand-client-transaction-creator.ts:567](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L567)
 
 ___
 
@@ -1116,7 +1126,7 @@ await algorand.createTransaction.offlineKeyRegistration({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:725](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L725)
+[src/types/algorand-client-transaction-creator.ts:733](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L733)
 
 ___
 
@@ -1182,7 +1192,7 @@ await algorand.createTransaction.onlineKeyRegistration({
 
 #### Defined in
 
-[src/types/algorand-client-transaction-creator.ts:695](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L695)
+[src/types/algorand-client-transaction-creator.ts:703](https://github.com/algorandfoundation/algokit-utils-ts/blob/main/src/types/algorand-client-transaction-creator.ts#L703)
 
 ___
 

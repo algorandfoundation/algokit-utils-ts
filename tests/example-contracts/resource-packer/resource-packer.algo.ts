@@ -15,7 +15,7 @@ class ExternalApp extends Contract {
   dummy(): void {}
 
   error(): void {
-    throw Error()
+    throw Error('Some error')
   }
 
   boxWithPayment(_payment: PayTxn): void {
@@ -30,6 +30,35 @@ class ExternalApp extends Contract {
 
   senderAssetBalance(): void {
     assert(!this.txn.sender.isOptedInToAsset(this.asa.value))
+  }
+
+  createBoxInNewApp(mbrPayment: PayTxn): void {
+    verifyPayTxn(mbrPayment, {
+      receiver: this.app.address,
+    })
+
+    sendMethodCall<[], void>({
+      name: 'createApplication',
+      approvalProgram: InnerBoxApp.approvalProgram(),
+      clearStateProgram: InnerBoxApp.clearProgram(),
+    })
+
+    const appId = this.itxn.createdApplicationID
+    const appAddr = appId.address
+
+    sendPayment({ receiver: appAddr, amount: mbrPayment.amount })
+
+    sendMethodCall<typeof InnerBoxApp.prototype.createEmptyBox>({
+      applicationID: appId,
+    })
+  }
+}
+
+class InnerBoxApp extends Contract {
+  emptyBox = BoxKey<StaticBytes<0>>()
+
+  createEmptyBox(): void {
+    this.emptyBox.create()
   }
 }
 
@@ -107,6 +136,8 @@ class ResourcePackerv9 extends Contract {
 
   mediumBoxKey = BoxKey<bytes>({ key: 'm' })
 
+  byteBoxes = BoxMap<uint8, bytes>({ prefix: 'b' })
+
   bootstrap(): void {
     sendMethodCall<[], void>({
       name: 'createApplication',
@@ -154,5 +185,38 @@ class ResourcePackerv9 extends Contract {
 
   externalLocal(addr: Address): void {
     log(this.externalAppID.value.localState(addr, 'localKey') as bytes)
+  }
+
+  dummy(): void {}
+
+  manyResources(
+    accounts: StaticArray<Address, 4>,
+    asa: StaticArray<AssetID, 4>,
+    apps: StaticArray<AppID, 4>,
+    boxes: StaticArray<uint8, 4>,
+  ): void {
+    for (const addr of accounts) {
+      assert(!addr.isInLedger)
+
+      for (const asset of asa) {
+        assert(!addr.isOptedInToAsset(asset))
+      }
+
+      for (const app of apps) {
+        assert(!addr.isOptedInToApp(app))
+      }
+    }
+
+    for (const asset of asa) {
+      assert(asset.total)
+    }
+
+    for (const app of apps) {
+      log(app.creator)
+    }
+
+    for (const boxKey of boxes) {
+      this.byteBoxes(boxKey).value = 'foo'
+    }
   }
 }
