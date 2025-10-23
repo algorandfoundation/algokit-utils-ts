@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from './sdk'
+import { Address } from './sdk'
 import { LookupAssetHoldingsOptions } from './types/indexer'
 import Indexer = algosdk.Indexer
 export type SearchForTransactions = ReturnType<Indexer['searchForTransactions']>

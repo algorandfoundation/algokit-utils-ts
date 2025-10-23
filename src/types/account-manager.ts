@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
@@ -9,7 +10,7 @@ import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
 import LogicSigAccount = algosdk.LogicSigAccount
-import Account = algosdk.Account
+import type { Account } from '../sdk'
 import TransactionSigner = algosdk.TransactionSigner
 
 const address = (address: string | Address) => (typeof address === 'string' ? Address.fromString(address) : address)

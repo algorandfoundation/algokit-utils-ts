@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from './sdk'
 import { ClientManager } from './types/client-manager'
 import { AlgoClientConfig, AlgoConfig } from './types/network-client'
 import Algodv2 = algosdk.Algodv2

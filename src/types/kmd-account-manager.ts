@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'

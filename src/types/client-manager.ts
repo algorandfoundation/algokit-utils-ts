@@ -1,4 +1,5 @@
-import algosdk, { SuggestedParams } from 'algosdk'
+import * as algosdk from '../sdk'
+import { SuggestedParams } from '../sdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'

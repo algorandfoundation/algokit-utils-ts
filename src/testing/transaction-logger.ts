@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { Config } from '../config'
 import { runWhenIndexerCaughtUp } from './indexer'
 import Algodv2 = algosdk.Algodv2

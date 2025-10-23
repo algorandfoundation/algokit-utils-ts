@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { asJson, defaultJsonValueReplacer } from '../util'

@@ -4,8 +4,8 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
-import type { ABIResult, TransactionWithSigner } from 'algosdk'
-import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction, modelsv2 } from 'algosdk'
+import type { ABIResult, TransactionWithSigner } from '../../../src/sdk'
+import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction, modelsv2 } from '../../../src/sdk'
 import * as algokit from '../../../src/index'
 import type {
   ABIAppCallArg,

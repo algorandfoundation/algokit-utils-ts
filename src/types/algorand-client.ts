@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
@@ -9,7 +10,7 @@ import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
-import Account = algosdk.Account
+import type { Account } from '../sdk'
 import LogicSigAccount = algosdk.LogicSigAccount
 
 /**

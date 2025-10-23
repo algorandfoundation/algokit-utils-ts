@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { convertAbiByteArrays, convertABIDecodedBigIntToNumber } from '../util'
 import { ABIReturn } from './app'
 import { Expand } from './expand'

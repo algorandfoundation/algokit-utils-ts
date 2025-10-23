@@ -25,7 +25,7 @@ export function parseJSON(str: string, { intDecoding }: ParseJSONOptions) {
   ) {
     throw new Error(`Invalid intDecoding option: ${intDecoding}`);
   }
-  return JSONbig.parse(str, (_, value) => {
+  return JSONbig.parse(str, (_: string, value: any): any => {
     if (
       value != null &&
       typeof value === 'object' &&

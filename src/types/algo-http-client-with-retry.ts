@@ -1,5 +1,5 @@
-import { IntDecoding, parseJSON, stringifyJSON } from 'algosdk'
-import { BaseHTTPClientResponse, Query, URLTokenBaseHTTPClient } from 'algosdk/client'
+import { IntDecoding, parseJSON, stringifyJSON } from '../sdk'
+import { BaseHTTPClientResponse, Query, URLTokenBaseHTTPClient } from '../sdk/client'
 import { Config } from '../config'
 
 /** A HTTP Client that wraps the Algorand SDK HTTP Client with retries */

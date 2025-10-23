@@ -1,4 +1,5 @@
-import algosdk, { ABIMethod, Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { ABIMethod, Address } from '../sdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'

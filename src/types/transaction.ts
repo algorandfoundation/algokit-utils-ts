@@ -1,9 +1,9 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
-import Account = algosdk.Account
+import type { Account } from '../sdk'
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import LogicSigAccount = algosdk.LogicSigAccount
 import Transaction = algosdk.Transaction

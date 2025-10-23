@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { AlgoAmount } from './amount'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'

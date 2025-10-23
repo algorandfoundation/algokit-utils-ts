@@ -1,4 +1,5 @@
-import algosdk, { TransactionType } from 'algosdk'
+import * as algosdk from '../sdk'
+import { TransactionType } from '../sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
 import { algorandFixture } from '../testing'

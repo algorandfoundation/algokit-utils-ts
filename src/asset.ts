@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from './sdk'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
 import { AlgorandClient } from './types/algorand-client'

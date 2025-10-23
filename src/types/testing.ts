@@ -1,11 +1,12 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgorandClient } from './algorand-client'
 import { AlgoConfig } from './network-client'
-import Account = algosdk.Account
+import type { Account } from '../sdk'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd

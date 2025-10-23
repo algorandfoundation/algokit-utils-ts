@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from './sdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import { encodeLease, getSenderAddress } from './transaction/transaction'
 import {

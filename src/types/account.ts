@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { AlgoAmount } from './amount'
 import ApplicationLocalState = algosdk.modelsv2.ApplicationLocalState
 import ApplicationStateSchema = algosdk.modelsv2.ApplicationStateSchema
@@ -6,7 +7,7 @@ import AssetHolding = algosdk.modelsv2.AssetHolding
 import Application = algosdk.modelsv2.Application
 import Asset = algosdk.modelsv2.Asset
 import AccountParticipation = algosdk.modelsv2.AccountParticipation
-import Account = algosdk.Account
+import type { Account } from '../sdk'
 import MultisigMetadata = algosdk.MultisigMetadata
 import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner

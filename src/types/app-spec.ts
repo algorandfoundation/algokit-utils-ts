@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { Arc56Contract, Method as Arc56Method, StorageKey, StructField } from './app-arc56'
 import ABIContractParams = algosdk.ABIContractParams
 import ABIMethodParams = algosdk.ABIMethodParams

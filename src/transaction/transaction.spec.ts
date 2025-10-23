@@ -1,4 +1,5 @@
-import algosdk, { ABIMethod, ABIType, Account, Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { ABIMethod, ABIType, Account, Address } from '../sdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'

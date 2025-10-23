@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
 import { ABIAppCallArgs, BoxIdentifier as LegacyBoxIdentifier, BoxReference as LegacyBoxReference, RawAppCallArgs } from '../types/app'

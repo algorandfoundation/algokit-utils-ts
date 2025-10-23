@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,

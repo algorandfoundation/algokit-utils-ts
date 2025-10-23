@@ -1,4 +1,5 @@
-import algosdk, { Account, Address } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Account, Address } from '../sdk'
 import { beforeAll, describe, expect, test } from 'vitest'
 import { APP_SPEC, TestContractClient } from '../../tests/example-contracts/client/TestContractClient'
 import { algorandFixture } from '../testing'

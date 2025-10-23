@@ -1,4 +1,5 @@
-import algosdk, { SignedTransaction, decodeMsgpack } from 'algosdk'
+import * as algosdk from '../sdk'
+import { SignedTransaction, decodeMsgpack } from '../sdk'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import modelsv2 = algosdk.modelsv2

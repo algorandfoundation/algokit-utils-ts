@@ -1,4 +1,5 @@
-import algosdk, {
+import * as algosdk from '../sdk'
+import {
   ABIMethod,
   ABIReturnType,
   Address,
@@ -6,7 +7,7 @@ import algosdk, {
   stringifyJSON,
   TransactionBoxReference,
   TransactionType,
-} from 'algosdk'
+} from '../sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'

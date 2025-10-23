@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from '../../../src/sdk'
+import { Address } from '../../../src/sdk'
 import { readFile } from 'fs/promises'
 import path from 'path'
 import { encodeTransactionNote, replaceDeployTimeControlParams } from '../../../src'

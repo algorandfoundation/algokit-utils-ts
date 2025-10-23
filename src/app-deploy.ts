@@ -1,4 +1,5 @@
-import algosdk, { Address } from 'algosdk'
+import * as algosdk from './sdk'
+import { Address } from './sdk'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-bridge'
 import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'

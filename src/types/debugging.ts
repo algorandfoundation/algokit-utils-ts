@@ -2,7 +2,7 @@
  * An asynchronous event listener
  */
 
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { CompiledTeal } from './app'
 
 /** The directory name for AlgoKit project related files */

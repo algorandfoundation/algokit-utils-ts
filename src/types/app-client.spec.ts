@@ -1,4 +1,5 @@
-import algosdk, {
+import * as algosdk from '../sdk'
+import {
   ABIUintType,
   Account,
   Address,
@@ -8,7 +9,7 @@ import algosdk, {
   OnApplicationComplete,
   TransactionSigner,
   TransactionType,
-} from 'algosdk'
+} from '../sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'

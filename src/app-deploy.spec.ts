@@ -1,4 +1,4 @@
-import { getApplicationAddress } from 'algosdk'
+import { getApplicationAddress } from './sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'

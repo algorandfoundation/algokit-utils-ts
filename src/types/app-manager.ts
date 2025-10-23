@@ -1,4 +1,5 @@
-import algosdk, { Address, ProgramSourceMap } from 'algosdk'
+import * as algosdk from '../sdk'
+import { Address, ProgramSourceMap } from '../sdk'
 import { getABIReturnValue } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import {

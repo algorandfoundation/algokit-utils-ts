@@ -1,4 +1,4 @@
-import { Address } from 'algosdk'
+import { Address } from './sdk'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import * as indexer from './indexer-lookup'

@@ -57,10 +57,10 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
-    "buffer": "^6.0.3"
-  },
-  "peerDependencies": {
-    "algosdk": "^3.5.2"
+    "algorand-msgpack": "^1.1.0",
+    "buffer": "^6.0.3",
+    "json-bigint": "^1.0.0",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@algorandfoundation/tealscript": "^0.106.3",
@@ -72,10 +72,10 @@
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-typescript": "^12.1.2",
     "@tsconfig/node20": "^20.1.4",
+    "@types/json-bigint": "^1.0.4",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@vitest/coverage-v8": "^2.1.2",
-    "algosdk": "^3.5.2",
     "better-npm-audit": "^3.11.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "^5.0.0",

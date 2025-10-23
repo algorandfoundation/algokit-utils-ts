@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from './sdk'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'

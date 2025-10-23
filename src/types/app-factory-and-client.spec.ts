@@ -1,4 +1,3 @@
-import algosdk, { ABIUintType, Address, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from 'algosdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
 import * as algokit from '..'
@@ -12,6 +11,8 @@ import errorMiddleAppArc56Json from '../../tests/example-contracts/inner_error/a
 import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/artifacts/OuterApp.arc56.json'
 import nestedStruct from '../../tests/example-contracts/nested_struct/artifacts/NestedStruct.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
+import * as algosdk from '../sdk'
+import { ABIUintType, Address, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from '../sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
 import { OnSchemaBreak, OnUpdate } from './app'

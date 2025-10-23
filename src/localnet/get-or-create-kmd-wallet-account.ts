@@ -1,8 +1,8 @@
-import algosdk from 'algosdk'
+import * as algosdk from '../sdk'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { KmdAccountManager } from '../types/kmd-account-manager'
-import Account = algosdk.Account
+import type { Account } from '../sdk'
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 

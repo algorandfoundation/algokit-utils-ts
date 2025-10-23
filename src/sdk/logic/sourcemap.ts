@@ -1,3 +1,4 @@
+// @ts-ignore - vlq doesn't have proper type exports
 import * as vlq from 'vlq';
 
 /**
@@ -78,10 +79,11 @@ export class ProgramSourceMap {
       nameIndex: 0,
     } satisfies SourceLocation;
     for (const [pc, data] of pcList.entries()) {
-      if (data.length < 4) continue;
+      const dataArray = data as number[];
+      if (dataArray.length < 4) continue;
 
-      const nameDelta = data.length > 4 ? data[4] : undefined;
-      const [, sourceDelta, lineDelta, columnDelta] = data;
+      const nameDelta = dataArray.length > 4 ? dataArray[4] : undefined;
+      const [, sourceDelta, lineDelta, columnDelta] = dataArray;
 
       lastLocation.sourceIndex += sourceDelta;
       lastLocation.line += lineDelta;

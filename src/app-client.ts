@@ -1,4 +1,4 @@
-import algosdk from 'algosdk'
+import * as algosdk from './sdk'
 import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetailsById, ApplicationClient } from './types/app-client'
 import Algodv2 = algosdk.Algodv2
 
