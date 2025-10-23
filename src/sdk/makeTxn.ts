@@ -140,8 +140,8 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
       voteKey,
       selectionKey,
       stateProofKey,
-      voteFirstValid: ensureBigInt(voteFirst),
-      voteLastValid: ensureBigInt(voteLast),
+      voteFirst: ensureBigInt(voteFirst),
+      voteLast: ensureBigInt(voteLast),
       voteKeyDilution: ensureBigInt(voteKeyDilution),
       nonParticipation,
     },
@@ -188,7 +188,7 @@ export function makeBaseAssetConfigTxn({
     lease,
     rekeyTo: addressToString(rekeyTo),
     assetConfig: {
-      assetId: ensureBigInt(assetIndex),
+      assetId: ensureBigInt(assetIndex)!,
       total: ensureBigInt(total),
       decimals: typeof decimals === 'number' ? decimals : undefined,
       defaultFrozen,
@@ -398,7 +398,7 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
     rekeyTo: addressToString(rekeyTo),
     assetFreeze: {
       assetId: ensureBigInt(assetIndex)!,
-      address: addressToString(freezeTarget)!,
+      freezeTarget: addressToString(freezeTarget)!,
       frozen,
     },
   }
@@ -446,7 +446,7 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
       assetId: ensureBigInt(assetIndex)!,
       receiver: addressToString(receiver)!,
       amount: ensureBigInt(amount)!,
-      sender: addressToString(assetSender),
+      assetSender: addressToString(assetSender),
       closeRemainderTo: addressToString(closeRemainderTo),
     },
   }
@@ -482,7 +482,8 @@ export function makeApplicationCallTxnFromObject({
   numGlobalInts,
   numGlobalByteSlices,
   extraPages,
-  rejectVersion,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  rejectVersion, // TODO: handle reject version
   note,
   lease,
   rekeyTo,
@@ -538,18 +539,18 @@ export function makeApplicationCallTxnFromObject({
       globalStateSchema:
         numGlobalInts !== undefined || numGlobalByteSlices !== undefined
           ? {
-              numUint: numGlobalInts || 0,
-              numByteSlice: numGlobalByteSlices || 0,
+              numUints: Number(numGlobalInts) || 0,
+              numByteSlices: Number(numGlobalByteSlices) || 0,
             }
           : undefined,
       localStateSchema:
         numLocalInts !== undefined || numLocalByteSlices !== undefined
           ? {
-              numUint: numLocalInts || 0,
-              numByteSlice: numLocalByteSlices || 0,
+              numUints: Number(numLocalInts) || 0,
+              numByteSlices: Number(numLocalByteSlices) || 0,
             }
           : undefined,
-      extraProgramPages: extraPages,
+      extraProgramPages: Number(extraPages),
       args: appArgs,
       accountReferences,
       appReferences,

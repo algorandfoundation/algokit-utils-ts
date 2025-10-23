@@ -96,7 +96,10 @@ export function makeEmptyTransactionSigner(): TransactionSigner {
     const unsigned: Uint8Array[] = []
 
     for (const index of indexesToSign) {
-      unsigned.push(encodeUnsignedSimulateTransaction(txnGroup[index]))
+      const stxn: SignedTransaction = {
+        transaction: txnGroup[index],
+      }
+      unsigned.push(encodeSignedTransaction(stxn))
     }
 
     return Promise.resolve(unsigned)
@@ -116,6 +119,7 @@ export interface TransactionWithSigner {
  * @param value - The value to check.
  * @returns True if an only if the value has the structure of a TransactionWithSigner.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isTransactionWithSigner(value: any): value is TransactionWithSigner {
   return typeof value === 'object' && Object.keys(value).length === 2 && typeof value.txn === 'object' && typeof value.signer === 'function'
 }

@@ -6,7 +6,6 @@ import {
   getTransactionId,
 } from '@algorandfoundation/algokit-transact'
 import { Address } from './encoding/address.js'
-import * as encoding from './encoding/encoding.js'
 import { MultisigMetadata, addressFromMultisigPreImg, pksFromAddresses } from './multisig.js'
 import * as nacl from './nacl/naclWrappers.js'
 import * as utils from './utils/utils.js'
@@ -267,7 +266,7 @@ export function signMultisigTransaction(txn: Transaction, { version, threshold, 
   const pks = pksFromAddresses(addrs)
   const blob = partialSignTxn(txn, { version, threshold, pks }, sk)
   return {
-    txID: txn.txID(),
+    txID: getTransactionId(txn),
     blob,
   }
 }
@@ -290,10 +289,10 @@ export function appendSignMultisigTransaction(
 ) {
   const pks = pksFromAddresses(addrs)
   // obtain underlying txn, sign it, and merge it
-  const multisigTxObj = encoding.decodeMsgpack(multisigTxnBlob, SignedTransaction)
-  const partialSignedBlob = partialSignTxn(multisigTxObj.txn, { version, threshold, pks }, sk)
+  const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
+  const partialSignedBlob = partialSignTxn(multisigTxObj.transaction, { version, threshold, pks }, sk)
   return {
-    txID: multisigTxObj.txn.txID(),
+    txID: getTransactionId(multisigTxObj.transaction),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }
@@ -317,10 +316,10 @@ export function appendSignRawMultisigSignature(
 ) {
   const pks = pksFromAddresses(addrs)
   // obtain underlying txn, sign it, and merge it
-  const multisigTxObj = encoding.decodeMsgpack(multisigTxnBlob, SignedTransaction)
-  const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.txn, { version, threshold, pks }, signerAddr, signature)
+  const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
+  const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.transaction, { version, threshold, pks }, signerAddr, signature)
   return {
-    txID: multisigTxObj.txn.txID(),
+    txID: getTransactionId(multisigTxObj.transaction),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }
