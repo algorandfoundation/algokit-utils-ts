@@ -1,5 +1,5 @@
-import { AlgodClient } from './client/v2/algod/algod.js';
-import {
+import type { AlgodClient } from '@algorandfoundation/algod-client';
+import type {
   Account,
   Application,
   ApplicationParams,
@@ -9,7 +9,7 @@ import {
   DryrunTxnResult,
   DryrunState,
   TealValue,
-} from './client/v2/algod/models/types.js';
+} from '@algorandfoundation/algod-client';
 import { getApplicationAddress } from './encoding/address.js';
 import { bytesToHex } from './encoding/binarydata.js';
 import { SignedTransaction } from './signedTransaction.js';
@@ -69,24 +69,22 @@ export async function createDryrun({
 
       // Create application,
       if (t.txn.applicationCall!.appIndex === BigInt(0)) {
-        appInfos.push(
-          new Application({
-            id: defaultAppId,
-            params: new ApplicationParams({
+        appInfos.push({
+            id: BigInt(defaultAppId),
+            params: {
               creator: t.txn.sender.toString(),
               approvalProgram: t.txn.applicationCall!.approvalProgram,
               clearStateProgram: t.txn.applicationCall!.clearProgram,
-              localStateSchema: new ApplicationStateSchema({
+              localStateSchema: {
                 numUint: t.txn.applicationCall!.numLocalInts,
                 numByteSlice: t.txn.applicationCall!.numLocalByteSlices,
-              }),
-              globalStateSchema: new ApplicationStateSchema({
+              },
+              globalStateSchema: {
                 numUint: t.txn.applicationCall!.numGlobalInts,
                 numByteSlice: t.txn.applicationCall!.numGlobalByteSlices,
-              }),
-            }),
-          })
-        );
+              },
+            },
+          });
       } else {
         const { appIndex } = t.txn.applicationCall!;
         apps.push(appIndex);
@@ -100,9 +98,8 @@ export async function createDryrun({
   for (const assetId of new Set(assets)) {
     assetPromises.push(
       client
-        .getAssetByID(assetId)
-        .do()
-        .then((assetInfo) => {
+        .getAssetById(assetId)
+        .then((assetInfo: any) => {
           accts.push(assetInfo.params.creator);
         })
     );
@@ -115,9 +112,8 @@ export async function createDryrun({
   for (const appId of new Set(apps)) {
     appPromises.push(
       client
-        .getApplicationByID(appId)
-        .do()
-        .then((appInfo) => {
+        .getApplicationById(appId)
+        .then((appInfo: any) => {
           appInfos.push(appInfo);
           accts.push(appInfo.params.creator.toString());
         })
@@ -130,23 +126,22 @@ export async function createDryrun({
     acctPromises.push(
       client
         .accountInformation(acct)
-        .do()
-        .then((acctInfo) => {
+        .then((acctInfo: any) => {
           acctInfos.push(acctInfo);
         })
     );
   }
   await Promise.all(acctPromises);
 
-  return new DryrunRequest({
+  return {
     txns: txns.slice(),
     accounts: acctInfos,
     apps: appInfos,
-    latestTimestamp: latestTimestamp ?? 0,
-    round: round ?? 0,
+    latestTimestamp: latestTimestamp ?? BigInt(0),
+    round: round ?? BigInt(0),
     protocolVersion: protocolVersion ?? '',
     sources: sources ?? [],
-  });
+  };
 }
 
 export interface StackPrinterConfig {

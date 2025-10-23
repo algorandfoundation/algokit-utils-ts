@@ -1,5 +1,4 @@
-import { AlgodClient } from './client/v2/algod/algod.js';
-import { PendingTransactionResponse } from './client/v2/algod/models/types.js';
+import type { AlgodClient, PendingTransactionResponse } from '@algorandfoundation/algod-client';
 
 /**
  * Wait until a transaction has been confirmed or rejected by the network, or
@@ -18,7 +17,7 @@ export async function waitForConfirmation(
   // Wait until the transaction is confirmed or rejected, or until 'waitRounds'
   // number of rounds have passed.
 
-  const status = await client.status().do();
+  const status = await client.getStatus();
   if (typeof status === 'undefined') {
     throw new Error('Unable to get node status');
   }
@@ -30,7 +29,7 @@ export async function waitForConfirmation(
   while (currentRound < stopRound) {
     let poolError = false;
     try {
-      const pendingInfo = await client.pendingTransactionInformation(txid).do();
+      const pendingInfo = await client.pendingTransactionInformation(txid);
 
       if (pendingInfo.confirmedRound) {
         // Got the completed Transaction
@@ -52,7 +51,7 @@ export async function waitForConfirmation(
       }
     }
 
-    await client.statusAfterBlock(currentRound).do();
+    await client.waitForBlock(currentRound);
     currentRound += BigInt(1);
   }
   /* eslint-enable no-await-in-loop */

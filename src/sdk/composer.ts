@@ -10,13 +10,7 @@ import {
   ABIUintType,
   ABIValue,
 } from './abi/index.js'
-import { AlgodClient } from './client/v2/algod/algod.js'
-import {
-  PendingTransactionResponse,
-  SimulateRequest,
-  SimulateRequestTransactionGroup,
-  SimulateResponse,
-} from './client/v2/algod/models/types.js'
+import type { AlgodClient, PendingTransactionResponse, SimulateRequest, SimulateTransaction } from '@algorandfoundation/algod-client'
 import { Address } from './encoding/address.js'
 import * as encoding from './encoding/encoding.js'
 import { assignGroupID } from './group.js'
@@ -568,7 +562,7 @@ export class AtomicTransactionComposer {
 
     const stxns = await this.gatherSignatures()
 
-    await client.sendRawTransaction(stxns).do()
+    await client.rawTransaction({ body: stxns[0] })
 
     this.status = AtomicTransactionComposerStatus.SUBMITTED
 
@@ -589,14 +583,14 @@ export class AtomicTransactionComposer {
    *
    * @returns A promise that, upon success, resolves to an object containing an
    *   array of results containing one element for each method call transaction
-   *   in this group (ABIResult[]) and the SimulateResponse object.
+   *   in this group (ABIResult[]) and the SimulateTransaction object.
    */
   async simulate(
     client: AlgodClient,
     request?: SimulateRequest,
   ): Promise<{
     methodResults: ABIResult[]
-    simulateResponse: SimulateResponse
+    simulateResponse: SimulateTransaction
   }> {
     if (this.status > AtomicTransactionComposerStatus.SUBMITTED) {
       throw new Error('Simulated Transaction group has already been submitted to the network')
@@ -605,15 +599,15 @@ export class AtomicTransactionComposer {
     const stxns = await this.gatherSignatures()
     const txnObjects: SignedTransaction[] = stxns.map((stxn) => encoding.decodeMsgpack(stxn, SignedTransaction))
 
-    const currentRequest: SimulateRequest = request == null ? new SimulateRequest({ txnGroups: [] }) : request
+    const currentRequest: SimulateRequest = request ?? { txnGroups: [] }
 
     currentRequest.txnGroups = [
-      new SimulateRequestTransactionGroup({
+      {
         txns: txnObjects,
-      }),
+      },
     ]
 
-    const simulateResponse = await client.simulateTransactions(currentRequest).do()
+    const simulateResponse = await client.simulateTransaction({ body: currentRequest })
 
     // Parse method response
     const methodResults: ABIResult[] = []
@@ -684,7 +678,7 @@ export class AtomicTransactionComposer {
       }
 
       try {
-        const pendingInfo = txnIndex === firstMethodCallIndex ? confirmedTxnInfo : await client.pendingTransactionInformation(txID).do()
+        const pendingInfo = txnIndex === firstMethodCallIndex ? confirmedTxnInfo : await client.pendingTransactionInformation(txID)
 
         methodResult = AtomicTransactionComposer.parseMethodResponse(method, methodResult, pendingInfo)
       } catch (err) {
