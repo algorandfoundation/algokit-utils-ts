@@ -9,64 +9,55 @@ import {
   abiTypeIsTransaction,
   ABIUintType,
   ABIValue,
-} from './abi/index.js';
-import { AlgodClient } from './client/v2/algod/algod.js';
+} from './abi/index.js'
+import { AlgodClient } from './client/v2/algod/algod.js'
 import {
+  PendingTransactionResponse,
   SimulateRequest,
   SimulateRequestTransactionGroup,
-  PendingTransactionResponse,
   SimulateResponse,
-} from './client/v2/algod/models/types.js';
-import * as encoding from './encoding/encoding.js';
-import { Address } from './encoding/address.js';
-import { assignGroupID } from './group.js';
-import { makeApplicationCallTxnFromObject } from './makeTxn.js';
-import {
-  isTransactionWithSigner,
-  TransactionSigner,
-  TransactionWithSigner,
-} from './signer.js';
-import { Transaction } from './transaction.js';
-import { SignedTransaction } from './signedTransaction.js';
-import {
-  BoxReference,
-  OnApplicationComplete,
-  ResourceReference,
-  SuggestedParams,
-} from './types/transactions/base.js';
-import { arrayEqual, stringifyJSON, ensureUint64 } from './utils/utils.js';
-import { waitForConfirmation } from './wait.js';
+} from './client/v2/algod/models/types.js'
+import { Address } from './encoding/address.js'
+import * as encoding from './encoding/encoding.js'
+import { assignGroupID } from './group.js'
+import { makeApplicationCallTxnFromObject } from './makeTxn.js'
+import { SignedTransaction } from './signedTransaction.js'
+import { isTransactionWithSigner, TransactionSigner, TransactionWithSigner } from './signer.js'
+import { Transaction } from './transaction.js'
+import { BoxReference, OnApplicationComplete, ResourceReference, SuggestedParams } from './types/transactions/base.js'
+import { arrayEqual, ensureUint64, stringifyJSON } from './utils/utils.js'
+import { waitForConfirmation } from './wait.js'
 
 // First 4 bytes of SHA-512/256 hash of "return"
-const RETURN_PREFIX = new Uint8Array([21, 31, 124, 117]);
+const RETURN_PREFIX = new Uint8Array([21, 31, 124, 117])
 
 // The maximum number of arguments for an application call transaction
-const MAX_APP_ARGS = 16;
+const MAX_APP_ARGS = 16
 
-export type ABIArgument = ABIValue | TransactionWithSigner;
+export type ABIArgument = ABIValue | TransactionWithSigner
 
 /** Represents the output from a successful ABI method call. */
 export interface ABIResult {
   /** The TxID of the transaction that invoked the ABI method call. */
-  txID: string;
+  txID: string
   /**
    * The raw bytes of the return value from the ABI method call. This will be empty if the method
    * does not return a value (return type "void").
    */
-  rawReturnValue: Uint8Array;
+  rawReturnValue: Uint8Array
   /**
    * The method that was called for this result
    */
-  method: ABIMethod;
+  method: ABIMethod
   /**
    * The return value from the ABI method call. This will be undefined if the method does not return
    * a value (return type "void"), or if the SDK was unable to decode the returned value.
    */
-  returnValue?: ABIValue;
+  returnValue?: ABIValue
   /** If the SDK was unable to decode a return value, the error will be here. */
-  decodeError?: Error;
+  decodeError?: Error
   /** The pending transaction information from the method transaction */
-  txInfo?: PendingTransactionResponse;
+  txInfo?: PendingTransactionResponse
 }
 
 export enum AtomicTransactionComposerStatus {
@@ -99,50 +90,46 @@ export enum AtomicTransactionComposerStatus {
  *   be returned.
  * @returns An index that can be used to reference `valueToAdd` in `array`.
  */
-function populateForeignArray<Type>(
-  valueToAdd: Type,
-  array: Type[],
-  zeroValue?: Type
-): number {
+function populateForeignArray<Type>(valueToAdd: Type, array: Type[], zeroValue?: Type): number {
   if (zeroValue != null && valueToAdd === zeroValue) {
-    return 0;
+    return 0
   }
 
-  const offset = zeroValue == null ? 0 : 1;
+  const offset = zeroValue == null ? 0 : 1
 
   for (let i = 0; i < array.length; i++) {
     if (valueToAdd === array[i]) {
-      return i + offset;
+      return i + offset
     }
   }
 
-  array.push(valueToAdd);
-  return array.length - 1 + offset;
+  array.push(valueToAdd)
+  return array.length - 1 + offset
 }
 
 /** A class used to construct and execute atomic transaction groups */
 export class AtomicTransactionComposer {
   /** The maximum size of an atomic transaction group. */
-  static MAX_GROUP_SIZE: number = 16;
+  static MAX_GROUP_SIZE: number = 16
 
-  private status = AtomicTransactionComposerStatus.BUILDING;
-  private transactions: TransactionWithSigner[] = [];
-  private methodCalls: Map<number, ABIMethod> = new Map();
-  private signedTxns: Uint8Array[] = [];
-  private txIDs: string[] = [];
+  private status = AtomicTransactionComposerStatus.BUILDING
+  private transactions: TransactionWithSigner[] = []
+  private methodCalls: Map<number, ABIMethod> = new Map()
+  private signedTxns: Uint8Array[] = []
+  private txIDs: string[] = []
 
   /**
    * Get the status of this composer's transaction group.
    */
   getStatus(): AtomicTransactionComposerStatus {
-    return this.status;
+    return this.status
   }
 
   /**
    * Get the number of transactions currently in this atomic group.
    */
   count(): number {
-    return this.transactions.length;
+    return this.transactions.length
   }
 
   /**
@@ -150,21 +137,21 @@ export class AtomicTransactionComposer {
    * BUILDING, so additional transactions may be added to it.
    */
   clone(): AtomicTransactionComposer {
-    const theClone = new AtomicTransactionComposer();
+    const theClone = new AtomicTransactionComposer()
 
     theClone.transactions = this.transactions.map(({ txn, signer }) => {
-      const txnMap = txn.toEncodingData();
+      const txnMap = txn.toEncodingData()
       // erase the group ID
-      txnMap.delete('grp');
+      txnMap.delete('grp')
       return {
         // not quite a deep copy, but good enough for our purposes (modifying txn.group in buildGroup)
         txn: Transaction.fromEncodingData(txnMap),
         signer,
-      };
-    });
-    theClone.methodCalls = new Map(this.methodCalls);
+      }
+    })
+    theClone.methodCalls = new Map(this.methodCalls)
 
-    return theClone;
+    return theClone
   }
 
   /**
@@ -175,22 +162,20 @@ export class AtomicTransactionComposer {
    */
   addTransaction(txnAndSigner: TransactionWithSigner): void {
     if (this.status !== AtomicTransactionComposerStatus.BUILDING) {
-      throw new Error(
-        'Cannot add transactions when composer status is not BUILDING'
-      );
+      throw new Error('Cannot add transactions when composer status is not BUILDING')
     }
 
     if (this.transactions.length === AtomicTransactionComposer.MAX_GROUP_SIZE) {
       throw new Error(
-        `Adding an additional transaction exceeds the maximum atomic group size of ${AtomicTransactionComposer.MAX_GROUP_SIZE}`
-      );
+        `Adding an additional transaction exceeds the maximum atomic group size of ${AtomicTransactionComposer.MAX_GROUP_SIZE}`,
+      )
     }
 
     if (txnAndSigner.txn.group && txnAndSigner.txn.group.some((v) => v !== 0)) {
-      throw new Error('Cannot add a transaction with nonzero group ID');
+      throw new Error('Cannot add a transaction with nonzero group ID')
     }
 
-    this.transactions.push(txnAndSigner);
+    this.transactions.push(txnAndSigner)
   }
 
   /**
@@ -226,65 +211,58 @@ export class AtomicTransactionComposer {
     signer,
   }: {
     /** The ID of the smart contract to call. Set this to 0 to indicate an application creation call. */
-    appID: number | bigint;
+    appID: number | bigint
     /** The method to call on the smart contract */
-    method: ABIMethod;
+    method: ABIMethod
     /** The arguments to include in the method call. If omitted, no arguments will be passed to the method. */
-    methodArgs?: ABIArgument[];
+    methodArgs?: ABIArgument[]
     /** The address of the sender of this application call */
-    sender: string | Address;
+    sender: string | Address
     /** Transactions params to use for this application call */
-    suggestedParams: SuggestedParams;
+    suggestedParams: SuggestedParams
     /** The OnComplete action to take for this application call. If omitted, OnApplicationComplete.NoOpOC will be used. */
-    onComplete?: OnApplicationComplete;
+    onComplete?: OnApplicationComplete
     /** The approval program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplicationOC */
-    approvalProgram?: Uint8Array;
+    approvalProgram?: Uint8Array
     /** The clear program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplicationOC */
-    clearProgram?: Uint8Array;
+    clearProgram?: Uint8Array
     /** The global integer schema size. Only set this if this is an application creation call. */
-    numGlobalInts?: number;
+    numGlobalInts?: number
     /** The global byte slice schema size. Only set this if this is an application creation call. */
-    numGlobalByteSlices?: number;
+    numGlobalByteSlices?: number
     /** The local integer schema size. Only set this if this is an application creation call. */
-    numLocalInts?: number;
+    numLocalInts?: number
     /** The local byte slice schema size. Only set this if this is an application creation call. */
-    numLocalByteSlices?: number;
+    numLocalByteSlices?: number
     /** The number of extra pages to allocate for the application's programs. Only set this if this is an application creation call. If omitted, defaults to 0. */
-    extraPages?: number;
+    extraPages?: number
     /** Array of Address strings that represent external accounts supplied to this application. If accounts are provided here, the accounts specified in the method args will appear after these. */
-    appAccounts?: Array<string | Address>;
+    appAccounts?: Array<string | Address>
     /** Array of App ID numbers that represent external apps supplied to this application. If apps are provided here, the apps specified in the method args will appear after these. */
-    appForeignApps?: Array<number | bigint>;
+    appForeignApps?: Array<number | bigint>
     /** Array of Asset ID numbers that represent external assets supplied to this application. If assets are provided here, the assets specified in the method args will appear after these. */
-    appForeignAssets?: Array<number | bigint>;
+    appForeignAssets?: Array<number | bigint>
     /** The box references for this application call */
-    boxes?: BoxReference[];
+    boxes?: BoxReference[]
     /** The resource references for this application call */
-    access?: ResourceReference[];
+    access?: ResourceReference[]
     /** The note value for this application call */
-    note?: Uint8Array;
+    note?: Uint8Array
     /** The lease value for this application call */
-    lease?: Uint8Array;
+    lease?: Uint8Array
     /** If provided, the address that the sender will be rekeyed to at the conclusion of this application call */
-    rekeyTo?: string | Address;
+    rekeyTo?: string | Address
     /** The lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed. */
-    rejectVersion?: number | bigint;
+    rejectVersion?: number | bigint
     /** A transaction signer that can authorize this application call from sender */
-    signer: TransactionSigner;
+    signer: TransactionSigner
   }): void {
     if (this.status !== AtomicTransactionComposerStatus.BUILDING) {
-      throw new Error(
-        'Cannot add transactions when composer status is not BUILDING'
-      );
+      throw new Error('Cannot add transactions when composer status is not BUILDING')
     }
 
-    if (
-      this.transactions.length + method.txnCount() >
-      AtomicTransactionComposer.MAX_GROUP_SIZE
-    ) {
-      throw new Error(
-        `Adding additional transactions exceeds the maximum atomic group size of ${AtomicTransactionComposer.MAX_GROUP_SIZE}`
-      );
+    if (this.transactions.length + method.txnCount() > AtomicTransactionComposer.MAX_GROUP_SIZE) {
+      throw new Error(`Adding additional transactions exceeds the maximum atomic group size of ${AtomicTransactionComposer.MAX_GROUP_SIZE}`)
     }
 
     if (BigInt(appID) === BigInt(0)) {
@@ -297,14 +275,14 @@ export class AtomicTransactionComposer {
         numLocalByteSlices == null
       ) {
         throw new Error(
-          'One of the following required parameters for application creation is missing: approvalProgram, clearProgram, numGlobalInts, numGlobalByteSlices, numLocalInts, numLocalByteSlices'
-        );
+          'One of the following required parameters for application creation is missing: approvalProgram, clearProgram, numGlobalInts, numGlobalByteSlices, numLocalInts, numLocalByteSlices',
+        )
       }
     } else if (onComplete === OnApplicationComplete.UpdateApplicationOC) {
       if (approvalProgram == null || clearProgram == null) {
         throw new Error(
-          'One of the following required parameters for OnApplicationComplete.UpdateApplicationOC is missing: approvalProgram, clearProgram'
-        );
+          'One of the following required parameters for OnApplicationComplete.UpdateApplicationOC is missing: approvalProgram, clearProgram',
+        )
       }
       if (
         numGlobalInts != null ||
@@ -314,8 +292,8 @@ export class AtomicTransactionComposer {
         extraPages != null
       ) {
         throw new Error(
-          'One of the following application creation parameters were set on a non-creation call: numGlobalInts, numGlobalByteSlices, numLocalInts, numLocalByteSlices, extraPages'
-        );
+          'One of the following application creation parameters were set on a non-creation call: numGlobalInts, numGlobalByteSlices, numLocalInts, numLocalByteSlices, extraPages',
+        )
       }
     } else if (
       approvalProgram != null ||
@@ -327,161 +305,128 @@ export class AtomicTransactionComposer {
       extraPages != null
     ) {
       throw new Error(
-        'One of the following application creation parameters were set on a non-creation call: approvalProgram, clearProgram, numGlobalInts, numGlobalByteSlices, numLocalInts, numLocalByteSlices, extraPages'
-      );
+        'One of the following application creation parameters were set on a non-creation call: approvalProgram, clearProgram, numGlobalInts, numGlobalByteSlices, numLocalInts, numLocalByteSlices, extraPages',
+      )
     }
 
     // Validate that access and legacy foreign arrays are not both specified
-    if (
-      access &&
-      (appAccounts || appForeignApps || appForeignAssets || boxes)
-    ) {
-      throw new Error(
-        'Cannot specify both access and legacy foreign arrays (appAccounts, appForeignApps, appForeignAssets, boxes)'
-      );
+    if (access && (appAccounts || appForeignApps || appForeignAssets || boxes)) {
+      throw new Error('Cannot specify both access and legacy foreign arrays (appAccounts, appForeignApps, appForeignAssets, boxes)')
     }
 
     if (methodArgs == null) {
-      // eslint-disable-next-line no-param-reassign
-      methodArgs = [];
+      methodArgs = []
     }
 
     if (methodArgs.length !== method.args.length) {
-      throw new Error(
-        `Incorrect number of method arguments. Expected ${method.args.length}, got ${methodArgs.length}`
-      );
+      throw new Error(`Incorrect number of method arguments. Expected ${method.args.length}, got ${methodArgs.length}`)
     }
 
-    let basicArgTypes: ABIType[] = [];
-    let basicArgValues: ABIValue[] = [];
-    const txnArgs: TransactionWithSigner[] = [];
-    const refArgTypes: ABIReferenceType[] = [];
-    const refArgValues: ABIValue[] = [];
-    const refArgIndexToBasicArgIndex: Map<number, number> = new Map();
+    let basicArgTypes: ABIType[] = []
+    let basicArgValues: ABIValue[] = []
+    const txnArgs: TransactionWithSigner[] = []
+    const refArgTypes: ABIReferenceType[] = []
+    const refArgValues: ABIValue[] = []
+    const refArgIndexToBasicArgIndex: Map<number, number> = new Map()
     // TODO: Box encoding for ABI
-    const boxReferences: BoxReference[] = !boxes ? [] : boxes;
+    const boxReferences: BoxReference[] = !boxes ? [] : boxes
 
     for (let i = 0; i < methodArgs.length; i++) {
-      let argType = method.args[i].type;
-      const argValue = methodArgs[i];
+      let argType = method.args[i].type
+      const argValue = methodArgs[i]
 
       if (abiTypeIsTransaction(argType)) {
-        if (
-          !isTransactionWithSigner(argValue) ||
-          !abiCheckTransactionType(argType, argValue.txn)
-        ) {
-          throw new Error(
-            `Expected ${argType} TransactionWithSigner for argument at index ${i}`
-          );
+        if (!isTransactionWithSigner(argValue) || !abiCheckTransactionType(argType, argValue.txn)) {
+          throw new Error(`Expected ${argType} TransactionWithSigner for argument at index ${i}`)
         }
         if (argValue.txn.group && argValue.txn.group.some((v) => v !== 0)) {
-          throw new Error('Cannot add a transaction with nonzero group ID');
+          throw new Error('Cannot add a transaction with nonzero group ID')
         }
-        txnArgs.push(argValue);
-        continue;
+        txnArgs.push(argValue)
+        continue
       }
 
       if (isTransactionWithSigner(argValue)) {
-        throw new Error(
-          `Expected non-transaction value for argument at index ${i}`
-        );
+        throw new Error(`Expected non-transaction value for argument at index ${i}`)
       }
 
       if (abiTypeIsReference(argType)) {
-        refArgIndexToBasicArgIndex.set(
-          refArgTypes.length,
-          basicArgTypes.length
-        );
-        refArgTypes.push(argType);
-        refArgValues.push(argValue);
+        refArgIndexToBasicArgIndex.set(refArgTypes.length, basicArgTypes.length)
+        refArgTypes.push(argType)
+        refArgValues.push(argValue)
         // treat the reference as a uint8 for encoding purposes
-        argType = new ABIUintType(8);
+        argType = new ABIUintType(8)
       }
 
       if (typeof argType === 'string') {
-        throw new Error(`Unknown ABI type: ${argType}`);
+        throw new Error(`Unknown ABI type: ${argType}`)
       }
 
-      basicArgTypes.push(argType);
-      basicArgValues.push(argValue);
+      basicArgTypes.push(argType)
+      basicArgValues.push(argValue)
     }
 
-    const resolvedRefIndexes: number[] = [];
+    const resolvedRefIndexes: number[] = []
     // Converting addresses to string form for easier comparison
-    const foreignAccounts: string[] =
-      appAccounts == null ? [] : appAccounts.map((addr) => addr.toString());
-    const foreignApps: bigint[] =
-      appForeignApps == null ? [] : appForeignApps.map(ensureUint64);
-    const foreignAssets: bigint[] =
-      appForeignAssets == null ? [] : appForeignAssets.map(ensureUint64);
+    const foreignAccounts: string[] = appAccounts == null ? [] : appAccounts.map((addr) => addr.toString())
+    const foreignApps: bigint[] = appForeignApps == null ? [] : appForeignApps.map(ensureUint64)
+    const foreignAssets: bigint[] = appForeignAssets == null ? [] : appForeignAssets.map(ensureUint64)
     for (let i = 0; i < refArgTypes.length; i++) {
-      const refType = refArgTypes[i];
-      const refValue = refArgValues[i];
-      let resolved = 0;
+      const refType = refArgTypes[i]
+      const refValue = refArgValues[i]
+      let resolved = 0
 
       switch (refType) {
         case ABIReferenceType.account: {
-          const addressType = new ABIAddressType();
-          const address = addressType.decode(addressType.encode(refValue));
-          resolved = populateForeignArray(
-            address,
-            foreignAccounts,
-            sender.toString()
-          );
-          break;
+          const addressType = new ABIAddressType()
+          const address = addressType.decode(addressType.encode(refValue))
+          resolved = populateForeignArray(address, foreignAccounts, sender.toString())
+          break
         }
         case ABIReferenceType.application: {
-          const uint64Type = new ABIUintType(64);
-          const refAppID = uint64Type.decode(uint64Type.encode(refValue));
+          const uint64Type = new ABIUintType(64)
+          const refAppID = uint64Type.decode(uint64Type.encode(refValue))
           if (refAppID > Number.MAX_SAFE_INTEGER) {
-            throw new Error(
-              `Expected safe integer for application value, got ${refAppID}`
-            );
+            throw new Error(`Expected safe integer for application value, got ${refAppID}`)
           }
-          resolved = populateForeignArray(
-            refAppID,
-            foreignApps,
-            ensureUint64(appID)
-          );
-          break;
+          resolved = populateForeignArray(refAppID, foreignApps, ensureUint64(appID))
+          break
         }
         case ABIReferenceType.asset: {
-          const uint64Type = new ABIUintType(64);
-          const refAssetID = uint64Type.decode(uint64Type.encode(refValue));
+          const uint64Type = new ABIUintType(64)
+          const refAssetID = uint64Type.decode(uint64Type.encode(refValue))
           if (refAssetID > Number.MAX_SAFE_INTEGER) {
-            throw new Error(
-              `Expected safe integer for asset value, got ${refAssetID}`
-            );
+            throw new Error(`Expected safe integer for asset value, got ${refAssetID}`)
           }
-          resolved = populateForeignArray(refAssetID, foreignAssets);
-          break;
+          resolved = populateForeignArray(refAssetID, foreignAssets)
+          break
         }
         default:
-          throw new Error(`Unknown reference type: ${refType}`);
+          throw new Error(`Unknown reference type: ${refType}`)
       }
 
-      resolvedRefIndexes.push(resolved);
+      resolvedRefIndexes.push(resolved)
     }
 
     for (let i = 0; i < resolvedRefIndexes.length; i++) {
-      const basicArgIndex = refArgIndexToBasicArgIndex.get(i)!;
-      basicArgValues[basicArgIndex] = resolvedRefIndexes[i];
+      const basicArgIndex = refArgIndexToBasicArgIndex.get(i)!
+      basicArgValues[basicArgIndex] = resolvedRefIndexes[i]
     }
 
     if (basicArgTypes.length > MAX_APP_ARGS - 1) {
-      const lastArgTupleTypes = basicArgTypes.slice(MAX_APP_ARGS - 2);
-      const lastArgTupleValues = basicArgValues.slice(MAX_APP_ARGS - 2);
+      const lastArgTupleTypes = basicArgTypes.slice(MAX_APP_ARGS - 2)
+      const lastArgTupleValues = basicArgValues.slice(MAX_APP_ARGS - 2)
 
-      basicArgTypes = basicArgTypes.slice(0, MAX_APP_ARGS - 2);
-      basicArgValues = basicArgValues.slice(0, MAX_APP_ARGS - 2);
+      basicArgTypes = basicArgTypes.slice(0, MAX_APP_ARGS - 2)
+      basicArgValues = basicArgValues.slice(0, MAX_APP_ARGS - 2)
 
-      basicArgTypes.push(new ABITupleType(lastArgTupleTypes));
-      basicArgValues.push(lastArgTupleValues);
+      basicArgTypes.push(new ABITupleType(lastArgTupleTypes))
+      basicArgValues.push(lastArgTupleValues)
     }
 
-    const appArgsEncoded: Uint8Array[] = [method.getSelector()];
+    const appArgsEncoded: Uint8Array[] = [method.getSelector()]
     for (let i = 0; i < basicArgTypes.length; i++) {
-      appArgsEncoded.push(basicArgTypes[i].encode(basicArgValues[i]));
+      appArgsEncoded.push(basicArgTypes[i].encode(basicArgValues[i]))
     }
 
     const appCall = {
@@ -495,8 +440,7 @@ export class AtomicTransactionComposer {
         foreignAssets: access ? undefined : foreignAssets,
         boxes: access ? undefined : boxReferences,
         access,
-        onComplete:
-          onComplete == null ? OnApplicationComplete.NoOpOC : onComplete,
+        onComplete: onComplete == null ? OnApplicationComplete.NoOpOC : onComplete,
         approvalProgram,
         clearProgram,
         numGlobalInts,
@@ -511,10 +455,10 @@ export class AtomicTransactionComposer {
         suggestedParams,
       }),
       signer,
-    };
+    }
 
-    this.transactions.push(...txnArgs, appCall);
-    this.methodCalls.set(this.transactions.length - 1, method);
+    this.transactions.push(...txnArgs, appCall)
+    this.methodCalls.set(this.transactions.length - 1, method)
   }
 
   /**
@@ -525,16 +469,14 @@ export class AtomicTransactionComposer {
   buildGroup(): TransactionWithSigner[] {
     if (this.status === AtomicTransactionComposerStatus.BUILDING) {
       if (this.transactions.length === 0) {
-        throw new Error('Cannot build a group with 0 transactions');
+        throw new Error('Cannot build a group with 0 transactions')
       }
       if (this.transactions.length > 1) {
-        assignGroupID(
-          this.transactions.map((txnWithSigner) => txnWithSigner.txn)
-        );
+        assignGroupID(this.transactions.map((txnWithSigner) => txnWithSigner.txn))
       }
-      this.status = AtomicTransactionComposerStatus.BUILT;
+      this.status = AtomicTransactionComposerStatus.BUILT
     }
-    return this.transactions;
+    return this.transactions
   }
 
   /**
@@ -549,71 +491,61 @@ export class AtomicTransactionComposer {
    */
   async gatherSignatures(): Promise<Uint8Array[]> {
     if (this.status >= AtomicTransactionComposerStatus.SIGNED) {
-      return this.signedTxns;
+      return this.signedTxns
     }
 
     // retrieve built transactions and verify status is BUILT
-    const txnsWithSigners = this.buildGroup();
-    const txnGroup = txnsWithSigners.map((txnWithSigner) => txnWithSigner.txn);
+    const txnsWithSigners = this.buildGroup()
+    const txnGroup = txnsWithSigners.map((txnWithSigner) => txnWithSigner.txn)
 
-    const indexesPerSigner: Map<TransactionSigner, number[]> = new Map();
+    const indexesPerSigner: Map<TransactionSigner, number[]> = new Map()
 
     for (let i = 0; i < txnsWithSigners.length; i++) {
-      const { signer } = txnsWithSigners[i];
+      const { signer } = txnsWithSigners[i]
 
       if (!indexesPerSigner.has(signer)) {
-        indexesPerSigner.set(signer, []);
+        indexesPerSigner.set(signer, [])
       }
 
-      indexesPerSigner.get(signer)!.push(i);
+      indexesPerSigner.get(signer)!.push(i)
     }
 
-    const orderedSigners = Array.from(indexesPerSigner);
+    const orderedSigners = Array.from(indexesPerSigner)
 
-    const batchedSigs = await Promise.all(
-      orderedSigners.map(([signer, indexes]) => signer(txnGroup, indexes))
-    );
+    const batchedSigs = await Promise.all(orderedSigners.map(([signer, indexes]) => signer(txnGroup, indexes)))
 
-    const signedTxns: Array<Uint8Array | null> = txnsWithSigners.map(
-      () => null
-    );
+    const signedTxns: Array<Uint8Array | null> = txnsWithSigners.map(() => null)
 
-    for (
-      let signerIndex = 0;
-      signerIndex < orderedSigners.length;
-      signerIndex++
-    ) {
-      const indexes = orderedSigners[signerIndex][1];
-      const sigs = batchedSigs[signerIndex];
+    for (let signerIndex = 0; signerIndex < orderedSigners.length; signerIndex++) {
+      const indexes = orderedSigners[signerIndex][1]
+      const sigs = batchedSigs[signerIndex]
 
       for (let i = 0; i < indexes.length; i++) {
-        signedTxns[indexes[i]] = sigs[i];
+        signedTxns[indexes[i]] = sigs[i]
       }
     }
 
     function fullyPopulated(a: Array<Uint8Array | null>): a is Uint8Array[] {
-      return a.every((v) => v != null);
+      return a.every((v) => v != null)
     }
 
     if (!fullyPopulated(signedTxns)) {
-      throw new Error(`Missing signatures. Got ${signedTxns}`);
+      throw new Error(`Missing signatures. Got ${signedTxns}`)
     }
 
     const txIDs = signedTxns.map((stxn, index) => {
       try {
-        return encoding.decodeMsgpack(stxn, SignedTransaction).txn.txID();
+        return encoding.decodeMsgpack(stxn, SignedTransaction).txn.txID()
       } catch (err) {
-        throw new Error(
-          `Cannot decode signed transaction at index ${index}. ${err}`
-        );
+        throw new Error(`Cannot decode signed transaction at index ${index}. ${err}`)
       }
-    });
+    })
 
-    this.signedTxns = signedTxns;
-    this.txIDs = txIDs;
-    this.status = AtomicTransactionComposerStatus.SIGNED;
+    this.signedTxns = signedTxns
+    this.txIDs = txIDs
+    this.status = AtomicTransactionComposerStatus.SIGNED
 
-    return signedTxns;
+    return signedTxns
   }
 
   /**
@@ -631,16 +563,16 @@ export class AtomicTransactionComposer {
    */
   async submit(client: AlgodClient): Promise<string[]> {
     if (this.status > AtomicTransactionComposerStatus.SUBMITTED) {
-      throw new Error('Transaction group cannot be resubmitted');
+      throw new Error('Transaction group cannot be resubmitted')
     }
 
-    const stxns = await this.gatherSignatures();
+    const stxns = await this.gatherSignatures()
 
-    await client.sendRawTransaction(stxns).do();
+    await client.sendRawTransaction(stxns).do()
 
-    this.status = AtomicTransactionComposerStatus.SUBMITTED;
+    this.status = AtomicTransactionComposerStatus.SUBMITTED
 
-    return this.txIDs;
+    return this.txIDs
   }
 
   /**
@@ -661,58 +593,44 @@ export class AtomicTransactionComposer {
    */
   async simulate(
     client: AlgodClient,
-    request?: SimulateRequest
+    request?: SimulateRequest,
   ): Promise<{
-    methodResults: ABIResult[];
-    simulateResponse: SimulateResponse;
+    methodResults: ABIResult[]
+    simulateResponse: SimulateResponse
   }> {
     if (this.status > AtomicTransactionComposerStatus.SUBMITTED) {
-      throw new Error(
-        'Simulated Transaction group has already been submitted to the network'
-      );
+      throw new Error('Simulated Transaction group has already been submitted to the network')
     }
 
-    const stxns = await this.gatherSignatures();
-    const txnObjects: SignedTransaction[] = stxns.map((stxn) =>
-      encoding.decodeMsgpack(stxn, SignedTransaction)
-    );
+    const stxns = await this.gatherSignatures()
+    const txnObjects: SignedTransaction[] = stxns.map((stxn) => encoding.decodeMsgpack(stxn, SignedTransaction))
 
-    const currentRequest: SimulateRequest =
-      request == null ? new SimulateRequest({ txnGroups: [] }) : request;
+    const currentRequest: SimulateRequest = request == null ? new SimulateRequest({ txnGroups: [] }) : request
 
     currentRequest.txnGroups = [
       new SimulateRequestTransactionGroup({
         txns: txnObjects,
       }),
-    ];
+    ]
 
-    const simulateResponse = await client
-      .simulateTransactions(currentRequest)
-      .do();
+    const simulateResponse = await client.simulateTransactions(currentRequest).do()
 
     // Parse method response
-    const methodResults: ABIResult[] = [];
+    const methodResults: ABIResult[] = []
     for (const [txnIndex, method] of this.methodCalls) {
-      const txID = this.txIDs[txnIndex];
-      const pendingInfo =
-        simulateResponse.txnGroups[0].txnResults[txnIndex].txnResult;
+      const txID = this.txIDs[txnIndex]
+      const pendingInfo = simulateResponse.txnGroups[0].txnResults[txnIndex].txnResult
 
       const methodResult: ABIResult = {
         txID,
         rawReturnValue: new Uint8Array(),
         method,
-      };
+      }
 
-      methodResults.push(
-        AtomicTransactionComposer.parseMethodResponse(
-          method,
-          methodResult,
-          pendingInfo
-        )
-      );
+      methodResults.push(AtomicTransactionComposer.parseMethodResponse(method, methodResult, pendingInfo))
     }
 
-    return { methodResults, simulateResponse };
+    return { methodResults, simulateResponse }
   }
 
   /**
@@ -734,70 +652,53 @@ export class AtomicTransactionComposer {
    */
   async execute(
     client: AlgodClient,
-    waitRounds: number
+    waitRounds: number,
   ): Promise<{
-    confirmedRound: bigint;
-    txIDs: string[];
-    methodResults: ABIResult[];
+    confirmedRound: bigint
+    txIDs: string[]
+    methodResults: ABIResult[]
   }> {
     if (this.status === AtomicTransactionComposerStatus.COMMITTED) {
-      throw new Error(
-        'Transaction group has already been executed successfully'
-      );
+      throw new Error('Transaction group has already been executed successfully')
     }
 
-    const txIDs = await this.submit(client);
-    this.status = AtomicTransactionComposerStatus.SUBMITTED;
+    const txIDs = await this.submit(client)
+    this.status = AtomicTransactionComposerStatus.SUBMITTED
 
-    const firstMethodCallIndex = this.transactions.findIndex((_, index) =>
-      this.methodCalls.has(index)
-    );
-    const indexToWaitFor =
-      firstMethodCallIndex === -1 ? 0 : firstMethodCallIndex;
-    const confirmedTxnInfo = await waitForConfirmation(
-      client,
-      txIDs[indexToWaitFor],
-      waitRounds
-    );
-    this.status = AtomicTransactionComposerStatus.COMMITTED;
+    const firstMethodCallIndex = this.transactions.findIndex((_, index) => this.methodCalls.has(index))
+    const indexToWaitFor = firstMethodCallIndex === -1 ? 0 : firstMethodCallIndex
+    const confirmedTxnInfo = await waitForConfirmation(client, txIDs[indexToWaitFor], waitRounds)
+    this.status = AtomicTransactionComposerStatus.COMMITTED
 
-    const confirmedRound = confirmedTxnInfo.confirmedRound!;
+    const confirmedRound = confirmedTxnInfo.confirmedRound!
 
-    const methodResults: ABIResult[] = [];
+    const methodResults: ABIResult[] = []
 
     for (const [txnIndex, method] of this.methodCalls) {
-      const txID = txIDs[txnIndex];
+      const txID = txIDs[txnIndex]
 
       let methodResult: ABIResult = {
         txID,
         rawReturnValue: new Uint8Array(),
         method,
-      };
-
-      try {
-        const pendingInfo =
-          txnIndex === firstMethodCallIndex
-            ? confirmedTxnInfo
-            : // eslint-disable-next-line no-await-in-loop
-              await client.pendingTransactionInformation(txID).do();
-
-        methodResult = AtomicTransactionComposer.parseMethodResponse(
-          method,
-          methodResult,
-          pendingInfo
-        );
-      } catch (err) {
-        methodResult.decodeError = err as Error;
       }
 
-      methodResults.push(methodResult);
+      try {
+        const pendingInfo = txnIndex === firstMethodCallIndex ? confirmedTxnInfo : await client.pendingTransactionInformation(txID).do()
+
+        methodResult = AtomicTransactionComposer.parseMethodResponse(method, methodResult, pendingInfo)
+      } catch (err) {
+        methodResult.decodeError = err as Error
+      }
+
+      methodResults.push(methodResult)
     }
 
     return {
       confirmedRound,
       txIDs,
       methodResults,
-    };
+    }
   }
 
   /**
@@ -808,44 +709,27 @@ export class AtomicTransactionComposer {
    * @param pendingInfo
    * @returns An ABIResult object
    */
-  static parseMethodResponse(
-    method: ABIMethod,
-    methodResult: ABIResult,
-    pendingInfo: PendingTransactionResponse
-  ): ABIResult {
-    const returnedResult: ABIResult = methodResult;
+  static parseMethodResponse(method: ABIMethod, methodResult: ABIResult, pendingInfo: PendingTransactionResponse): ABIResult {
+    const returnedResult: ABIResult = methodResult
     try {
-      returnedResult.txInfo = pendingInfo;
+      returnedResult.txInfo = pendingInfo
       if (method.returns.type !== 'void') {
-        const logs = pendingInfo.logs || [];
+        const logs = pendingInfo.logs || []
         if (logs.length === 0) {
-          throw new Error(
-            `App call transaction did not log a return value ${stringifyJSON(
-              pendingInfo
-            )}`
-          );
+          throw new Error(`App call transaction did not log a return value ${stringifyJSON(pendingInfo)}`)
         }
-        const lastLog = logs[logs.length - 1];
-        if (
-          lastLog.byteLength < 4 ||
-          !arrayEqual(lastLog.slice(0, 4), RETURN_PREFIX)
-        ) {
-          throw new Error(
-            `App call transaction did not log a ABI return value ${stringifyJSON(
-              pendingInfo
-            )}`
-          );
+        const lastLog = logs[logs.length - 1]
+        if (lastLog.byteLength < 4 || !arrayEqual(lastLog.slice(0, 4), RETURN_PREFIX)) {
+          throw new Error(`App call transaction did not log a ABI return value ${stringifyJSON(pendingInfo)}`)
         }
 
-        returnedResult.rawReturnValue = new Uint8Array(lastLog.slice(4));
-        returnedResult.returnValue = method.returns.type.decode(
-          methodResult.rawReturnValue
-        );
+        returnedResult.rawReturnValue = new Uint8Array(lastLog.slice(4))
+        returnedResult.returnValue = method.returns.type.decode(methodResult.rawReturnValue)
       }
     } catch (err) {
-      returnedResult.decodeError = err as Error;
+      returnedResult.decodeError = err as Error
     }
 
-    return returnedResult;
+    return returnedResult
   }
 }
