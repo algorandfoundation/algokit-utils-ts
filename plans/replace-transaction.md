@@ -601,8 +601,13 @@ Files with Transaction/SignedTransaction type annotations only:
     - Updated `.sender.toString()` → `.sender`
     - Imported `TransactionType` and `BoxReference` from algokit_transact
     - Fixed property access: `TransactionType.appl` → `TransactionType.ApplicationCall`
-  - Zero TypeScript errors in all Phase 3 files
-  - Total project errors reduced from 209 to 3 (all in test files)
+  - **Phase 3.8:** Fixed TypeScript Project References Build ✅
+    - Updated `algokit_transact/tsconfig.json`: Added `rootDir: "src"`, removed tests from include
+    - Updated `rolldown.ts`: Removed `preserveModulesRoot: 'src'` to maintain src/ structure in output
+    - Fixed build output structure to match TypeScript project references expectations
+    - Rebuilt all workspaces with new configuration
+  - ✅ **ZERO TypeScript errors in ALL files** (SDK, utilities, and entire project)
+  - `npm run check-types` passes cleanly
 - [ ] **Phase 4:** Verify algokit_utils integration (4 hours)
 - [ ] **Phase 5:** Verify client models (2 hours)
 
