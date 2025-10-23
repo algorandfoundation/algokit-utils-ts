@@ -87,7 +87,7 @@ class TransactionLoggingAlgodv2ProxyHandler implements ProxyHandler<Algodv2> {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get(target: Algodv2, property: string | symbol, receiver: any) {
-    if (property === 'sendRawTransaction') {
+    if (property === 'rawTransaction') {
       return (stxOrStxs: Uint8Array | Uint8Array[]) => {
         this.transactionLogger.logRawTransaction(stxOrStxs)
         return target[property].call(receiver, stxOrStxs)

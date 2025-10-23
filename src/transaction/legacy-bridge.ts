@@ -47,7 +47,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     new TransactionComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(from),
-      getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.getTransactionParams().do()),
+      getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.transactionParams()),
       appManager,
     })
   const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager)

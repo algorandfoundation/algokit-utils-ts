@@ -21,7 +21,7 @@
       "@algorandfoundation/kmd-client": ["./kmd_client/dist"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "rollup-multi-plugin.ts", "rollup.config.ts", "package.json"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "tests/**/*.json", "rollup-multi-plugin.ts", "rollup.config.ts", "package.json"],
   "exclude": ["**/*.algo.ts"],
   "references": [
     { "path": "./algokit_common" },

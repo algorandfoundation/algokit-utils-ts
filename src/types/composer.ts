@@ -610,7 +610,7 @@ export class TransactionComposer {
    */
   constructor(params: TransactionComposerParams) {
     this.algod = params.algod
-    const defaultGetSuggestedParams = () => params.algod.getTransactionParams().do()
+    const defaultGetSuggestedParams = () => params.algod.transactionParams()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow

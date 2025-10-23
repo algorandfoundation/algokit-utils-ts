@@ -248,7 +248,7 @@ export const sendTransaction = async function (
 
   const signedTransaction = await signTransaction(txnToSend, from)
 
-  await algod.sendRawTransaction(signedTransaction).do()
+  await algod.rawTransaction(signedTransaction)
 
   Config.getLogger(suppressLog).verbose(`Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.transactionType} from ${getSenderAddress(from)}`)
 
@@ -1159,12 +1159,12 @@ export async function getTransactionParams(params: SuggestedParams | undefined, 
   if (params) {
     return { ...params }
   }
-  const p = await algod.getTransactionParams().do()
+  const p = await algod.transactionParams()
   return {
     fee: p.fee,
-    firstValid: p.firstValid,
-    lastValid: p.lastValid,
-    genesisID: p.genesisID,
+    firstValid: p.lastRound,
+    lastValid: p.lastRound + 1000n,
+    genesisID: p.genesisId,
     genesisHash: p.genesisHash,
     minFee: p.minFee,
   }

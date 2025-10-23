@@ -404,7 +404,7 @@ function _getAccountAddress(account: string | Address) {
  * @returns The data about the app
  */
 export async function getAppById(appId: number | bigint, algod: Algodv2) {
-  return await algod.getApplicationByID(toNumber(appId)).do()
+  return await algod.getApplicationById(toNumber(appId))
 }
 
 /**

@@ -239,7 +239,7 @@ export class AppManager {
    * @returns The app information
    */
   public async getById(appId: bigint): Promise<AppInformation> {
-    const app = await this._algod.getApplicationByID(Number(appId)).do()
+    const app = await this._algod.getApplicationById(Number(appId))
     return {
       appId: BigInt(app.id),
       appAddress: algosdk.getApplicationAddress(app.id),

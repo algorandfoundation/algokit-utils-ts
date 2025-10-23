@@ -156,7 +156,7 @@ export class AlgorandClient {
       }
     }
 
-    this._cachedSuggestedParams = await this._clientManager.algod.getTransactionParams().do()
+    this._cachedSuggestedParams = await this._clientManager.algod.transactionParams()
     this._cachedSuggestedParamsExpiry = new Date(new Date().getTime() + this._cachedSuggestedParamsTimeout)
 
     return {

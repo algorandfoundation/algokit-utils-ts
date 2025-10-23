@@ -164,7 +164,7 @@ export class KmdAccountManager {
     await new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: () => dispenser.signer,
-      getSuggestedParams: () => this._clientManager.algod.getTransactionParams().do(),
+      getSuggestedParams: () => this._clientManager.algod.transactionParams(),
     })
       .addPayment({
         amount: fundWith ?? AlgoAmount.Algo(1000),

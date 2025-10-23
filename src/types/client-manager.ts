@@ -135,7 +135,7 @@ export class ClientManager {
    */
   public async network(): Promise<NetworkDetails> {
     if (!this._getNetworkPromise) {
-      this._getNetworkPromise = this._algod.getTransactionParams().do()
+      this._getNetworkPromise = this._algod.transactionParams()
     }
 
     const params = await this._getNetworkPromise

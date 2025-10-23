@@ -1,3 +1,4 @@
+import type { Account } from '../sdk'
 import * as algosdk from '../sdk'
 import { Address } from '../sdk'
 import { getSenderAddress } from '../transaction/transaction'
@@ -7,7 +8,6 @@ import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
-import type { Account } from '../sdk'
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 import MultisigMetadata = algosdk.MultisigMetadata
@@ -155,7 +155,7 @@ export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 
  * @returns The account information
  */
 export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
-  const account = await algod.accountInformation(getSenderAddress(sender)).do()
+  const account = await algod.accountInformation(getSenderAddress(sender))
 
   return {
     ...account,

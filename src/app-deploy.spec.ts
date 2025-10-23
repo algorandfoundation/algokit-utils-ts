@@ -1,8 +1,8 @@
-import { getApplicationAddress } from './sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { Config } from './config'
+import { getApplicationAddress } from './sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './types/app'
 import { AppDeployParams } from './types/app-deployer'
@@ -106,7 +106,7 @@ describe('deploy-app', () => {
 
     invariant('transaction' in result)
     invariant(result.confirmation)
-    expect(result.appId).toBe(BigInt(result.confirmation.applicationIndex!))
+    expect(result.appId).toBe(BigInt(result.confirmation.appId!))
     expect(result.appAddress).toEqual(getApplicationAddress(result.appId))
     expect(result.createdMetadata).toEqual(deployment.metadata)
     expect(result.createdRound).toBe(BigInt(result.confirmation.confirmedRound!))

@@ -96,7 +96,7 @@ export async function assetOptIn(optIn: AssetOptInParams, algod: Algodv2): Promi
  * ```
  */
 export async function assetOptOut(optOut: AssetOptOutParams, algod: Algodv2): Promise<SendTransactionResult> {
-  const assetCreatorAddress = optOut.assetCreatorAddress ?? (await algod.getAssetByID(optOut.assetId).do()).params.creator
+  const assetCreatorAddress = optOut.assetCreatorAddress ?? (await algod.getAssetById(optOut.assetId)).params.creator
 
   const params: NewAssetOptOutParams = {
     assetId: BigInt(optOut.assetId),

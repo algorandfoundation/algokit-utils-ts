@@ -73,7 +73,7 @@ export async function deployApp(
       algod,
       getSigner: () => getSenderTransactionSigner(deployment.from),
       getSuggestedParams: async () =>
-        deployment.transactionParams ? { ...deployment.transactionParams } : await algod.getTransactionParams().do(),
+        deployment.transactionParams ? { ...deployment.transactionParams } : await algod.transactionParams(),
       appManager,
     })
   const deployer = new AppDeployer(
