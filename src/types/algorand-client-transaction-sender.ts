@@ -1,7 +1,8 @@
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { asJson, defaultJsonValueReplacer } from '../util'
 import { SendAppCreateTransactionResult, SendAppTransactionResult, SendAppUpdateTransactionResult } from './app'
 import { AppManager } from './app-manager'
@@ -20,7 +21,6 @@ import {
   TransactionComposer,
 } from './composer'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import Transaction = algosdk.Transaction
 
 const getMethodCallForLog = ({ method, args }: { method: algosdk.ABIMethod; args?: unknown[] }) => {
   return `${method.name}(${(args ?? []).map((a) =>
@@ -156,8 +156,8 @@ export class AlgorandClientTransactionSender {
 
       return {
         ...result,
-        appId: BigInt(result.confirmation.applicationIndex!),
-        appAddress: algosdk.getApplicationAddress(result.confirmation.applicationIndex!),
+        appId: BigInt(result.confirmation.appId!),
+        appAddress: algosdk.getApplicationAddress(result.confirmation.appId!),
       }
     }
   }
@@ -204,7 +204,7 @@ export class AlgorandClientTransactionSender {
    */
   payment = this._send((c) => c.addPayment, {
     preLog: (params, transaction) =>
-      `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+      `Sending ${params.amount.microAlgo} µALGO from ${params.sender} to ${params.receiver} via transaction ${getTransactionId(transaction)}`,
   })
   /**
    * Create a new Algorand Standard Asset.
@@ -256,9 +256,9 @@ export class AlgorandClientTransactionSender {
   assetCreate = async (params: AssetCreateParams & SendParams) => {
     const result = await this._send((c) => c.addAssetCreate, {
       postLog: (params, result) =>
-        `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
+        `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetId} via transaction ${result.txIds.at(-1)}`,
     })(params)
-    return { ...result, assetId: BigInt(result.confirmation.assetIndex ?? 0) }
+    return { ...result, assetId: BigInt(result.confirmation.assetId ?? 0) }
   }
   /**
    * Configure an existing Algorand Standard Asset.
@@ -303,7 +303,7 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the asset config transaction and the transaction that was sent
    */
   assetConfig = this._send((c) => c.addAssetConfig, {
-    preLog: (params, transaction) => `Configuring asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    preLog: (params, transaction) => `Configuring asset with ID ${params.assetId} via transaction ${getTransactionId(transaction)}`,
   })
   /**
    * Freeze or unfreeze an Algorand Standard Asset for an account.
@@ -342,7 +342,7 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the asset freeze transaction and the transaction that was sent
    */
   assetFreeze = this._send((c) => c.addAssetFreeze, {
-    preLog: (params, transaction) => `Freezing asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    preLog: (params, transaction) => `Freezing asset with ID ${params.assetId} via transaction ${getTransactionId(transaction)}`,
   })
   /**
    * Destroys an Algorand Standard Asset.
@@ -383,7 +383,7 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the asset destroy transaction and the transaction that was sent
    */
   assetDestroy = this._send((c) => c.addAssetDestroy, {
-    preLog: (params, transaction) => `Destroying asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    preLog: (params, transaction) => `Destroying asset with ID ${params.assetId} via transaction ${getTransactionId(transaction)}`,
   })
   /**
    * Transfer an Algorand Standard Asset.
@@ -426,7 +426,7 @@ export class AlgorandClientTransactionSender {
    */
   assetTransfer = this._send((c) => c.addAssetTransfer, {
     preLog: (params, transaction) =>
-      `Transferring ${params.amount} units of asset with ID ${params.assetId} from ${params.sender} to ${params.receiver} via transaction ${transaction.txID()}`,
+      `Transferring ${params.amount} units of asset with ID ${params.assetId} from ${params.sender} to ${params.receiver} via transaction ${getTransactionId(transaction)}`,
   })
   /**
    * Opt an account into an Algorand Standard Asset.
@@ -463,7 +463,7 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the asset opt-in transaction and the transaction that was sent
    */
   assetOptIn = this._send((c) => c.addAssetOptIn, {
-    preLog: (params, transaction) => `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${transaction.txID()}`,
+    preLog: (params, transaction) => `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${getTransactionId(transaction)}`,
   })
   /**
    * Opt an account out of an Algorand Standard Asset.
@@ -539,7 +539,7 @@ export class AlgorandClientTransactionSender {
 
     return await this._send((c) => c.addAssetOptOut, {
       preLog: (params, transaction) =>
-        `Opting ${params.sender} out of asset with ID ${params.assetId} to creator ${params.creator} via transaction ${transaction.txID()}`,
+        `Opting ${params.sender} out of asset with ID ${params.assetId} to creator ${params.creator} via transaction ${getTransactionId(transaction)}`,
     })(params as AssetOptOutParams & SendParams)
   }
   /**
@@ -595,7 +595,7 @@ export class AlgorandClientTransactionSender {
    */
   appCreate = this._sendAppCreateCall((c) => c.addAppCreate, {
     postLog: (params, result) =>
-      `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+      `App created by ${params.sender} with ID ${result.confirmation.appId} via transaction ${result.txIds.at(-1)}`,
   })
 
   /**
@@ -803,7 +803,7 @@ export class AlgorandClientTransactionSender {
    */
   appCreateMethodCall = this._sendAppCreateCall((c) => c.addAppCreateMethodCall, {
     postLog: (params, result) =>
-      `App created by ${params.sender} with ID ${result.confirmation.applicationIndex} via transaction ${result.txIds.at(-1)}`,
+      `App created by ${params.sender} with ID ${result.confirmation.appId} via transaction ${result.txIds.at(-1)}`,
   })
 
   /**
@@ -1024,7 +1024,7 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the online key registration transaction and the transaction that was sent
    */
   onlineKeyRegistration = this._send((c) => c.addOnlineKeyRegistration, {
-    preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${transaction.txID()}`,
+    preLog: (params, transaction) => `Registering online key for ${params.sender} via transaction ${getTransactionId(transaction)}`,
   })
 
   /**
@@ -1057,6 +1057,6 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the offline key registration transaction and the transaction that was sent
    */
   offlineKeyRegistration = this._send((c) => c.addOfflineKeyRegistration, {
-    preLog: (params, transaction) => `Registering offline key for ${params.sender} via transaction ${transaction.txID()}`,
+    preLog: (params, transaction) => `Registering offline key for ${params.sender} via transaction ${getTransactionId(transaction)}`,
   })
 }

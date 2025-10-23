@@ -1,14 +1,9 @@
-import * as algosdk from '../sdk'
-import {
-  ABIMethod,
-  ABIReturnType,
-  Address,
-  ApplicationTransactionFields,
-  stringifyJSON,
-} from '../sdk'
-import { getTransactionId, encodeTransaction, TransactionType, BoxReference } from '@algorandfoundation/algokit-transact'
+import { AlgodClient, PendingTransactionResponse } from '@algorandfoundation/algod-client'
+import { BoxReference, Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
+import * as algosdk from '../sdk'
+import { ABIMethod, ABIReturnType, Address, ApplicationTransactionFields, stringifyJSON } from '../sdk'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
 import { EventType } from '../types/lifecycle-events'
@@ -24,15 +19,15 @@ import {
   TransactionNote,
   TransactionToSign,
 } from '../types/transaction'
-import { asJson, convertAbiByteArrays, convertABIDecodedBigIntToNumber, toNumber } from '../util'
+import { asJson, convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
-import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import modelsv2 = algosdk.modelsv2
-import SuggestedParams = algosdk.SuggestedParams
-import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
-import TransactionWithSigner = algosdk.TransactionWithSigner
+
+export interface TransactionWithSigner {
+  txn: Transaction
+  signer: TransactionSigner
+}
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 export const MAX_APP_CALL_FOREIGN_REFERENCES = 8
@@ -191,7 +186,7 @@ export const getSenderTransactionSigner = memoize(function (sender: SendTransact
  */
 export const signTransaction = async (transaction: Transaction, signer: SendTransactionFrom) => {
   return 'sk' in signer
-    ? transaction.signTxn(signer.sk)
+    ? algosdk.signTransaction(transaction, signer.sk)
     : 'lsig' in signer
       ? algosdk.signLogicSigTransactionObject(transaction, signer).blob
       : 'sign' in signer
@@ -218,7 +213,7 @@ export const sendTransaction = async function (
     from: SendTransactionFrom
     sendParams?: SendTransactionParams
   },
-  algod: Algodv2,
+  algod: AlgodClient,
 ): Promise<SendTransactionResult> {
   const { transaction, from, sendParams } = send
   const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, atc } = sendParams ?? {}
@@ -239,7 +234,7 @@ export const sendTransaction = async function (
   const populateAppCallResources = sendParams?.populateAppCallResources ?? Config.populateAppCallResources
 
   // Populate resources if the transaction is an appcall and populateAppCallResources wasn't explicitly set to false
-  if (txnToSend.type === algosdk.TransactionType.appl && populateAppCallResources) {
+  if (txnToSend.transactionType === TransactionType.AppCall && populateAppCallResources) {
     const newAtc = new AtomicTransactionComposer()
     newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
     const atc = await prepareGroupForSending(newAtc, algod, { ...sendParams, populateAppCallResources })
@@ -250,9 +245,11 @@ export const sendTransaction = async function (
 
   await algod.rawTransaction(signedTransaction)
 
-  Config.getLogger(suppressLog).verbose(`Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.transactionType} from ${getSenderAddress(from)}`)
+  Config.getLogger(suppressLog).verbose(
+    `Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.transactionType} from ${getSenderAddress(from)}`,
+  )
 
-  let confirmation: modelsv2.PendingTransactionResponse | undefined = undefined
+  let confirmation: PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
     confirmation = await waitForConfirmation(getTransactionId(txnToSend), maxRoundsToWaitForConfirmation ?? 5, algod)
   }
@@ -1016,7 +1013,9 @@ export const sendGroupOfTransactions = async function (groupSend: TransactionGro
 
       const txn = 'then' in t ? (await t).transaction : t
       if (!signer) {
-        throw new Error(`Attempt to send transaction ${getTransactionId(txn)} as part of a group transaction, but no signer parameter was provided.`)
+        throw new Error(
+          `Attempt to send transaction ${getTransactionId(txn)} as part of a group transaction, but no signer parameter was provided.`,
+        )
       }
 
       return {

@@ -1,5 +1,6 @@
 import * as algosdk from '../sdk'
 import { Address } from '../sdk'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
 import { calculateExtraProgramPages } from '../util'
@@ -311,14 +312,14 @@ export class AppDeployer {
       const deleteTransaction = result.transactions.at(-1)!
 
       Config.getLogger(sendParams?.suppressLog).warn(
-        `Sent transactions ${transaction.txID()} to create app with id ${confirmation.applicationIndex} and ${deleteTransaction.txID()} to delete app with id ${
+        `Sent transactions ${getTransactionId(transaction)} to create app with id ${confirmation.appId} and ${getTransactionId(deleteTransaction)} to delete app with id ${
           existingApp.appId
         } from ${createParams.sender} account.`,
       )
 
       const appMetadata: AppMetadata = {
-        appId: BigInt(confirmation.applicationIndex!),
-        appAddress: algosdk.getApplicationAddress(confirmation.applicationIndex!),
+        appId: BigInt(confirmation.appId!),
+        appAddress: algosdk.getApplicationAddress(confirmation.appId!),
         ...metadata,
         createdMetadata: metadata,
         createdRound: BigInt(confirmation.confirmedRound!),

@@ -17,7 +17,6 @@
     "algokit_abi",
     "algokit_transact",
     "algod_client",
-    "algokit_utils",
     "indexer_client",
     "kmd_client"
   ],

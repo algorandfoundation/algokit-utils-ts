@@ -17,7 +17,6 @@
       "@algorandfoundation/algokit-abi": ["./algokit_abi/dist"],
       "@algorandfoundation/algokit-transact": ["./algokit_transact/dist"],
       "@algorandfoundation/algod-client": ["./algod_client/dist"],
-      "@algorandfoundation/algokit-utils": ["./algokit_utils/dist"],
       "@algorandfoundation/kmd-client": ["./kmd_client/dist"]
     }
   },
@@ -28,7 +27,6 @@
     { "path": "./algokit_abi" },
     { "path": "./algokit_transact" },
     { "path": "./algod_client" },
-    { "path": "./algokit_utils" },
     { "path": "./kmd_client" }
   ]
 }

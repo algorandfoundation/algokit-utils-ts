@@ -2089,7 +2089,7 @@ export class ApplicationClient {
       )
 
       if (result.confirmation) {
-        this._appId = result.confirmation.applicationIndex!
+        this._appId = result.confirmation.appId!
         this._appAddress = getApplicationAddress(this._appId).toString()
       }
 

@@ -48,7 +48,7 @@ export async function createAsset(
     params,
     (client) => client.assetCreate,
     (client) => client.assetCreate,
-  )) as SendTransactionResult & { confirmation: { assetIndex: number | bigint } }
+  )) as SendTransactionResult & { confirmation: { assetId: number | bigint } }
 }
 
 /**

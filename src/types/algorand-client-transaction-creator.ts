@@ -1,8 +1,6 @@
-import * as algosdk from '../sdk'
+import { Transaction } from '@algorandfoundation/algokit-transact'
 import { BuiltTransactions, TransactionComposer } from './composer'
 import { Expand } from './expand'
-
-import Transaction = algosdk.Transaction
 
 /** Orchestrates creating transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionCreator {
