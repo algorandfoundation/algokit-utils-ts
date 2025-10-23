@@ -1,7 +1,8 @@
-import { Transaction } from './transaction.js';
+import type { Transaction } from '../../algokit_transact/src/transactions/transaction.js';
+import { TransactionType as NewTransactionType, assignFee } from '../../algokit_transact/src/transactions/transaction.js';
 import {
   OnApplicationComplete,
-  TransactionType,
+  TransactionType as OldTransactionType,
   SuggestedParams,
   PaymentTransactionParams,
   KeyRegistrationTransactionParams,
@@ -13,6 +14,41 @@ import {
 } from './types/transactions/base.js';
 import { Address } from './encoding/address.js';
 import { foreignArraysToResourceReferences } from './appAccess.js';
+
+// Helper function to convert Address to string
+function addressToString(addr: string | Address | undefined): string | undefined {
+  if (!addr) return undefined;
+  return typeof addr === 'string' ? addr : addr.toString();
+}
+
+// Helper function to ensure bigint
+function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
+  if (value === undefined) return undefined;
+  return typeof value === 'bigint' ? value : BigInt(value);
+}
+
+// Import new OnApplicationComplete type
+import { OnApplicationComplete as NewOnApplicationComplete } from '../../algokit_transact/src/transactions/app-call.js';
+
+// Helper function to map old OnApplicationComplete to new
+function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplicationComplete {
+  switch (oldValue) {
+    case OnApplicationComplete.NoOpOC:
+      return NewOnApplicationComplete.NoOp;
+    case OnApplicationComplete.OptInOC:
+      return NewOnApplicationComplete.OptIn;
+    case OnApplicationComplete.CloseOutOC:
+      return NewOnApplicationComplete.CloseOut;
+    case OnApplicationComplete.ClearStateOC:
+      return NewOnApplicationComplete.ClearState;
+    case OnApplicationComplete.UpdateApplicationOC:
+      return NewOnApplicationComplete.UpdateApplication;
+    case OnApplicationComplete.DeleteApplicationOC:
+      return NewOnApplicationComplete.DeleteApplication;
+    default:
+      return NewOnApplicationComplete.NoOp;
+  }
+}
 
 /** Contains parameters common to every transaction type */
 export interface CommonTransactionParams {
@@ -48,18 +84,27 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
   lease,
   rekeyTo,
 }: PaymentTransactionParams & CommonTransactionParams): Transaction {
-  return new Transaction({
-    type: TransactionType.pay,
-    sender,
+  const txn: Transaction = {
+    transactionType: NewTransactionType.Payment,
+    sender: addressToString(sender)!,
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisID,
     note,
     lease,
-    rekeyTo,
-    suggestedParams,
-    paymentParams: {
-      receiver,
-      amount,
-      closeRemainderTo,
+    rekeyTo: addressToString(rekeyTo),
+    payment: {
+      receiver: addressToString(receiver)!,
+      amount: ensureBigInt(amount)!,
+      closeRemainderTo: addressToString(closeRemainderTo),
     },
+  };
+
+  // Assign fee using the fee from suggestedParams
+  return assignFee(txn, {
+    feePerByte: BigInt(0),
+    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
   });
 }
 
@@ -82,22 +127,30 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
   lease,
   rekeyTo,
 }: KeyRegistrationTransactionParams & CommonTransactionParams): Transaction {
-  return new Transaction({
-    type: TransactionType.keyreg,
-    sender,
+  const txn: Transaction = {
+    transactionType: NewTransactionType.KeyRegistration,
+    sender: addressToString(sender)!,
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisID,
     note,
     lease,
-    rekeyTo,
-    suggestedParams,
-    keyregParams: {
+    rekeyTo: addressToString(rekeyTo),
+    keyRegistration: {
       voteKey,
       selectionKey,
       stateProofKey,
-      voteFirst,
-      voteLast,
-      voteKeyDilution,
+      voteFirstValid: ensureBigInt(voteFirst),
+      voteLastValid: ensureBigInt(voteLast),
+      voteKeyDilution: ensureBigInt(voteKeyDilution),
       nonParticipation,
     },
+  };
+
+  return assignFee(txn, {
+    feePerByte: BigInt(0),
+    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
   });
 }
 
@@ -125,27 +178,35 @@ export function makeBaseAssetConfigTxn({
   rekeyTo,
   suggestedParams,
 }: AssetConfigurationTransactionParams & CommonTransactionParams): Transaction {
-  return new Transaction({
-    type: TransactionType.acfg,
-    sender,
+  const txn: Transaction = {
+    transactionType: NewTransactionType.AssetConfig,
+    sender: addressToString(sender)!,
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisID,
     note,
     lease,
-    rekeyTo,
-    suggestedParams,
-    assetConfigParams: {
-      assetIndex,
-      total,
-      decimals,
+    rekeyTo: addressToString(rekeyTo),
+    assetConfig: {
+      assetId: ensureBigInt(assetIndex),
+      total: ensureBigInt(total),
+      decimals: typeof decimals === 'number' ? decimals : undefined,
       defaultFrozen,
-      manager,
-      reserve,
-      freeze,
-      clawback,
+      manager: addressToString(manager),
+      reserve: addressToString(reserve),
+      freeze: addressToString(freeze),
+      clawback: addressToString(clawback),
       unitName,
       assetName,
-      assetURL,
-      assetMetadataHash,
+      url: assetURL,
+      metadataHash: assetMetadataHash,
     },
+  };
+
+  return assignFee(txn, {
+    feePerByte: BigInt(0),
+    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
   });
 }
 
@@ -331,18 +392,26 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
   lease,
   rekeyTo,
 }: AssetFreezeTransactionParams & CommonTransactionParams): Transaction {
-  return new Transaction({
-    type: TransactionType.afrz,
-    sender,
+  const txn: Transaction = {
+    transactionType: NewTransactionType.AssetFreeze,
+    sender: addressToString(sender)!,
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisID,
     note,
     lease,
-    rekeyTo,
-    suggestedParams,
-    assetFreezeParams: {
-      assetIndex,
-      freezeTarget,
+    rekeyTo: addressToString(rekeyTo),
+    assetFreeze: {
+      assetId: ensureBigInt(assetIndex)!,
+      address: addressToString(freezeTarget)!,
       frozen,
     },
+  };
+
+  return assignFee(txn, {
+    feePerByte: BigInt(0),
+    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
   });
 }
 
@@ -368,20 +437,29 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
   if (!assetIndex) {
     throw Error('assetIndex must be provided');
   }
-  return new Transaction({
-    type: TransactionType.axfer,
-    sender,
+
+  const txn: Transaction = {
+    transactionType: NewTransactionType.AssetTransfer,
+    sender: addressToString(sender)!,
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisID,
     note,
     lease,
-    rekeyTo,
-    suggestedParams,
-    assetTransferParams: {
-      assetIndex,
-      receiver,
-      amount,
-      assetSender,
-      closeRemainderTo,
+    rekeyTo: addressToString(rekeyTo),
+    assetTransfer: {
+      assetId: ensureBigInt(assetIndex)!,
+      receiver: addressToString(receiver)!,
+      amount: ensureBigInt(amount)!,
+      sender: addressToString(assetSender),
+      closeRemainderTo: addressToString(closeRemainderTo),
     },
+  };
+
+  return assignFee(txn, {
+    feePerByte: BigInt(0),
+    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
   });
 }
 
@@ -439,32 +517,53 @@ export function makeApplicationCallTxnFromObject({
       boxes,
     });
   }
-  return new Transaction({
-    type: TransactionType.appl,
-    sender,
+
+  // Convert legacy foreign arrays to new format if access is not provided
+  const accountReferences = access2 ? undefined : accounts?.map(a => addressToString(a)!);
+  const appReferences = access2 ? undefined : foreignApps?.map(a => ensureBigInt(a)!);
+  const assetReferences = access2 ? undefined : foreignAssets?.map(a => ensureBigInt(a)!);
+
+  // Convert boxes if present (boxes have app index and name)
+  const boxReferences = access2 ? undefined : boxes?.map(box => ({
+    appId: ensureBigInt(box.appIndex) || BigInt(0),
+    name: box.name,
+  }));
+
+  const txn: Transaction = {
+    transactionType: NewTransactionType.AppCall,
+    sender: addressToString(sender)!,
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
+    genesisHash: suggestedParams.genesisHash,
+    genesisId: suggestedParams.genesisID,
     note,
     lease,
-    rekeyTo,
-    suggestedParams,
-    appCallParams: {
-      appIndex,
-      onComplete,
-      appArgs,
-      // Only pass legacy foreign arrays if access is not provided
-      accounts: access2 ? undefined : accounts,
-      foreignAssets: access2 ? undefined : foreignAssets,
-      foreignApps: access2 ? undefined : foreignApps,
-      boxes: access2 ? undefined : boxes,
-      access: access2,
+    rekeyTo: addressToString(rekeyTo),
+    appCall: {
+      appId: ensureBigInt(appIndex) || BigInt(0),
+      onComplete: mapOnApplicationComplete(onComplete),
       approvalProgram,
-      clearProgram,
-      numLocalInts,
-      numLocalByteSlices,
-      numGlobalInts,
-      numGlobalByteSlices,
-      extraPages,
-      rejectVersion,
+      clearStateProgram: clearProgram,
+      globalStateSchema: (numGlobalInts !== undefined || numGlobalByteSlices !== undefined) ? {
+        numUint: numGlobalInts || 0,
+        numByteSlice: numGlobalByteSlices || 0,
+      } : undefined,
+      localStateSchema: (numLocalInts !== undefined || numLocalByteSlices !== undefined) ? {
+        numUint: numLocalInts || 0,
+        numByteSlice: numLocalByteSlices || 0,
+      } : undefined,
+      extraProgramPages: extraPages,
+      args: appArgs,
+      accountReferences,
+      appReferences,
+      assetReferences,
+      boxReferences,
     },
+  };
+
+  return assignFee(txn, {
+    feePerByte: BigInt(0),
+    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
   });
 }
 

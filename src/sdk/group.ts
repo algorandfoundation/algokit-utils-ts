@@ -1,4 +1,5 @@
-import { Transaction } from './transaction.js';
+import type { Transaction } from '../../algokit_transact/src/transactions/transaction.js';
+import { groupTransactions as groupTxns, getTransactionIdRaw } from '../../algokit_transact/src/transactions/transaction.js';
 import * as nacl from './nacl/naclWrappers.js';
 import { msgpackRawEncode } from './encoding/encoding.js';
 import * as utils from './utils/utils.js';
@@ -26,10 +27,10 @@ function txGroupPreimage(txnHashes: Uint8Array[]): Uint8Array {
  * @param txns - array of transactions
  * @returns Uint8Array
  */
-export function computeGroupID(txns: ReadonlyArray<Transaction>) {
+export function computeGroupID(txns: ReadonlyArray<Transaction>): Uint8Array {
   const hashes: Uint8Array[] = [];
   for (const txn of txns) {
-    hashes.push(txn.rawTxID());
+    hashes.push(getTransactionIdRaw(txn));
   }
 
   const toBeHashed = txGroupPreimage(hashes);
@@ -39,12 +40,10 @@ export function computeGroupID(txns: ReadonlyArray<Transaction>) {
 
 /**
  * assignGroupID assigns group id to a given list of unsigned transactions
- * @param txns - array of transactions. The array elements will be modified with the group id
+ * @param txns - array of transactions. Returns a new array with group IDs assigned (immutable)
+ * @returns Transaction[] - New array of transactions with group IDs assigned
  */
-export function assignGroupID(txns: Transaction[]) {
-  const gid = computeGroupID(txns);
-  for (const txn of txns) {
-    txn.group = gid;
-  }
-  return txns;
+export function assignGroupID(txns: Transaction[]): Transaction[] {
+  // Use the algokit_transact groupTransactions function which returns new transaction objects
+  return groupTxns(txns);
 }

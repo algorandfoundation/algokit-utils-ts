@@ -490,8 +490,19 @@ Files with Transaction/SignedTransaction type annotations only:
   - Updated `src/sdk/index.ts` to import from `algokit_transact`
   - Built algokit_transact package
   - Verified TypeScript compilation (down to 3 test-only errors)
-- [ ] **Phase 2.1:** Refactor `makeTxn.ts` (16 hours)
-- [ ] **Phase 2.2:** Refactor `group.ts` (2 hours)
+- [x] **Phase 2.1:** Refactor `makeTxn.ts` (16 hours) ✅ **COMPLETED**
+  - Refactored all 15+ transaction creation functions
+  - Converted from `new Transaction()` to plain object construction
+  - Mapped TransactionType enums (pay→Payment, keyreg→KeyRegistration, etc.)
+  - Added helper functions for Address→string and bigint conversions
+  - Mapped OnApplicationComplete enums with helper function
+  - All functions now use `assignFee()` from algokit_transact
+  - Zero TypeScript errors
+- [x] **Phase 2.2:** Refactor `group.ts` (2 hours) ✅ **COMPLETED**
+  - Replaced `txn.rawTxID()` with `getTransactionIdRaw(txn)`
+  - Updated `assignGroupID` to use immutable `groupTransactions()` function
+  - Removed mutation logic (no longer modifying txn.group directly)
+  - Zero TypeScript errors
 - [ ] **Phase 2.3:** Refactor `signing.ts` (4 hours)
 - [ ] **Phase 2.4:** Refactor `multisigSigning.ts` (8 hours)
 - [ ] **Phase 2.5:** Refactor `signer.ts` (4 hours)
