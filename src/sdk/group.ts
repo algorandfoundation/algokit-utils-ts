@@ -1,5 +1,5 @@
-import type { Transaction } from '../../algokit_transact/src/transactions/transaction.js';
-import { groupTransactions as groupTxns, getTransactionIdRaw } from '../../algokit_transact/src/transactions/transaction.js';
+import type { Transaction } from '@algorandfoundation/algokit-transact';
+import { groupTransactions as groupTxns, getTransactionIdRaw } from '@algorandfoundation/algokit-transact';
 import * as nacl from './nacl/naclWrappers.js';
 import { msgpackRawEncode } from './encoding/encoding.js';
 import * as utils from './utils/utils.js';

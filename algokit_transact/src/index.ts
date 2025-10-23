@@ -21,6 +21,9 @@ export {
   encodeSignedTransaction,
   encodeSignedTransactions,
   type SignedTransaction,
+  type MultisigSignature,
+  type MultisigSubsignature,
+  type LogicSignature,
 } from './transactions/signed-transaction'
 
 export * from './transactions/app-call'

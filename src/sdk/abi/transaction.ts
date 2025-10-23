@@ -64,7 +64,7 @@ export function abiCheckTransactionType(type: ABITransactionType, txn: Transacti
     [ABITransactionType.acfg]: TransactionType.AssetConfig,
     [ABITransactionType.axfer]: TransactionType.AssetTransfer,
     [ABITransactionType.afrz]: TransactionType.AssetFreeze,
-    [ABITransactionType.appl]: TransactionType.ApplicationCall,
+    [ABITransactionType.appl]: TransactionType.AppCall,
   }
 
   const expectedType = typeMap[type]

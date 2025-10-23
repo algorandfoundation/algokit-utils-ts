@@ -7,7 +7,7 @@ import type {
   Transaction,
   SignedTransaction,
   TransactionType,
-} from '../../algokit_transact/src/transactions/transaction.js'
+} from '@algorandfoundation/algokit-transact'
 import {
   encodeTransaction,
   decodeTransaction,
@@ -17,11 +17,11 @@ import {
   assignFee,
   calculateFee,
   encodeTransactionRaw,
-} from '../../algokit_transact/src/transactions/transaction.js'
+} from '@algorandfoundation/algokit-transact'
 import {
   encodeSignedTransaction,
   decodeSignedTransaction as decodeSignedTxn,
-} from '../../algokit_transact/src/transactions/signed-transaction.js'
+} from '@algorandfoundation/algokit-transact'
 
 const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 
@@ -100,7 +100,6 @@ export { IndexerClient as Indexer } from './client/v2/indexer/index'
 export * as indexerModels from './client/v2/indexer/models/types'
 export * from './composer'
 export * from './convert'
-export * from './dryrun'
 export { Address, decodeAddress, encodeAddress, getApplicationAddress, isValidAddress } from './encoding/address'
 export { bigIntToBytes, bytesToBigInt } from './encoding/bigint'
 export { base64ToBytes, bytesToBase64, bytesToHex, bytesToString, coerceToBytes, hexToBytes } from './encoding/binarydata'
@@ -152,12 +151,14 @@ export * from './signer'
 export { signLogicSigTransaction, signLogicSigTransactionObject } from './signing'
 export * from './stateproof'
 // Re-export transaction-related types from algokit_transact
-export type { PaymentTransactionFields } from '../../algokit_transact/src/transactions/payment.js'
-export type { KeyRegistrationTransactionFields } from '../../algokit_transact/src/transactions/key-registration.js'
-export type { AssetConfigTransactionFields } from '../../algokit_transact/src/transactions/asset-config.js'
-export type { AssetTransferTransactionFields } from '../../algokit_transact/src/transactions/asset-transfer.js'
-export type { AssetFreezeTransactionFields } from '../../algokit_transact/src/transactions/asset-freeze.js'
-export type { AppCallTransactionFields as ApplicationTransactionFields } from '../../algokit_transact/src/transactions/app-call.js'
+export type {
+  PaymentTransactionFields,
+  KeyRegistrationTransactionFields,
+  AssetConfigTransactionFields,
+  AssetTransferTransactionFields,
+  AssetFreezeTransactionFields,
+  AppCallTransactionFields as ApplicationTransactionFields
+} from '@algorandfoundation/algokit-transact'
 export * from './types/account'
 export type { default as Account } from './types/account'
 // Block types are now provided by @algorandfoundation/algod-client

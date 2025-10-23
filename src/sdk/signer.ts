@@ -1,16 +1,11 @@
-import Account from './types/account.js';
-import type { Transaction } from '../../algokit_transact/src/transactions/transaction.js';
-import { encodeTransaction, encodeTransactionRaw } from '../../algokit_transact/src/transactions/transaction.js';
-import { encodeSignedTransaction } from '../../algokit_transact/src/transactions/signed-transaction.js';
-import type { SignedTransaction } from '../../algokit_transact/src/transactions/signed-transaction.js';
-import { LogicSigAccount } from './logicsig.js';
-import { signLogicSigTransactionObject } from './signing.js';
-import { MultisigMetadata } from './multisig.js';
-import * as nacl from './nacl/naclWrappers.js';
-import {
-  signMultisigTransaction,
-  mergeMultisigTransactions,
-} from './multisigSigning.js';
+import type { SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
+import { encodeSignedTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
+import { LogicSigAccount } from './logicsig.js'
+import { MultisigMetadata } from './multisig.js'
+import { mergeMultisigTransactions, signMultisigTransaction } from './multisigSigning.js'
+import * as nacl from './nacl/naclWrappers.js'
+import { signLogicSigTransactionObject } from './signing.js'
+import Account from './types/account.js'
 
 /**
  * This type represents a function which can sign transactions from an atomic transaction group.
@@ -20,54 +15,47 @@ import {
  *   array will be the same as the length of indexesToSign, and each index i in the array
  *   corresponds to the signed transaction from txnGroup[indexesToSign[i]]
  */
-export type TransactionSigner = (
-  txnGroup: Transaction[],
-  indexesToSign: number[]
-) => Promise<Uint8Array[]>;
+export type TransactionSigner = (txnGroup: Transaction[], indexesToSign: number[]) => Promise<Uint8Array[]>
 
 /**
  * Create a TransactionSigner that can sign transactions for the provided basic Account.
  */
-export function makeBasicAccountTransactionSigner(
-  account: Account
-): TransactionSigner {
+export function makeBasicAccountTransactionSigner(account: Account): TransactionSigner {
   return (txnGroup: Transaction[], indexesToSign: number[]) => {
-    const signed: Uint8Array[] = [];
+    const signed: Uint8Array[] = []
 
     for (const index of indexesToSign) {
-      const txn = txnGroup[index];
+      const txn = txnGroup[index]
       // Sign transaction using nacl
-      const bytesToSign = encodeTransactionRaw(txn);
-      const signature = nacl.sign(bytesToSign, account.sk);
+      const bytesToSign = encodeTransactionRaw(txn)
+      const signature = nacl.sign(bytesToSign, account.sk)
 
       const signedTxn: SignedTransaction = {
         transaction: txn,
         signature,
-      };
+      }
 
-      signed.push(encodeSignedTransaction(signedTxn));
+      signed.push(encodeSignedTransaction(signedTxn))
     }
 
-    return Promise.resolve(signed);
-  };
+    return Promise.resolve(signed)
+  }
 }
 
 /**
  * Create a TransactionSigner that can sign transactions for the provided LogicSigAccount.
  */
-export function makeLogicSigAccountTransactionSigner(
-  account: LogicSigAccount
-): TransactionSigner {
+export function makeLogicSigAccountTransactionSigner(account: LogicSigAccount): TransactionSigner {
   return (txnGroup: Transaction[], indexesToSign: number[]) => {
-    const signed: Uint8Array[] = [];
+    const signed: Uint8Array[] = []
 
     for (const index of indexesToSign) {
-      const { blob } = signLogicSigTransactionObject(txnGroup[index], account);
-      signed.push(blob);
+      const { blob } = signLogicSigTransactionObject(txnGroup[index], account)
+      signed.push(blob)
     }
 
-    return Promise.resolve(signed);
-  };
+    return Promise.resolve(signed)
+  }
 }
 
 /**
@@ -75,31 +63,28 @@ export function makeLogicSigAccountTransactionSigner(
  * @param msig - The Multisig account metadata
  * @param sks - An array of private keys belonging to the msig which should sign the transactions.
  */
-export function makeMultiSigAccountTransactionSigner(
-  msig: MultisigMetadata,
-  sks: Uint8Array[]
-): TransactionSigner {
+export function makeMultiSigAccountTransactionSigner(msig: MultisigMetadata, sks: Uint8Array[]): TransactionSigner {
   return (txnGroup: Transaction[], indexesToSign: number[]) => {
-    const signed: Uint8Array[] = [];
+    const signed: Uint8Array[] = []
 
     for (const index of indexesToSign) {
-      const txn = txnGroup[index];
-      const partialSigs: Uint8Array[] = [];
+      const txn = txnGroup[index]
+      const partialSigs: Uint8Array[] = []
 
       for (const sk of sks) {
-        const { blob } = signMultisigTransaction(txn, msig, sk);
-        partialSigs.push(blob);
+        const { blob } = signMultisigTransaction(txn, msig, sk)
+        partialSigs.push(blob)
       }
 
       if (partialSigs.length > 1) {
-        signed.push(mergeMultisigTransactions(partialSigs));
+        signed.push(mergeMultisigTransactions(partialSigs))
       } else {
-        signed.push(partialSigs[0]);
+        signed.push(partialSigs[0])
       }
     }
 
-    return Promise.resolve(signed);
-  };
+    return Promise.resolve(signed)
+  }
 }
 
 /**
@@ -107,24 +92,23 @@ export function makeMultiSigAccountTransactionSigner(
  * signing capabilities. This should only be used to simulate transactions.
  */
 export function makeEmptyTransactionSigner(): TransactionSigner {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return (txnGroup: Transaction[], indexesToSign: number[]) => {
-    const unsigned: Uint8Array[] = [];
+    const unsigned: Uint8Array[] = []
 
     for (const index of indexesToSign) {
-      unsigned.push(encodeUnsignedSimulateTransaction(txnGroup[index]));
+      unsigned.push(encodeUnsignedSimulateTransaction(txnGroup[index]))
     }
 
-    return Promise.resolve(unsigned);
-  };
+    return Promise.resolve(unsigned)
+  }
 }
 
 /** Represents an unsigned transactions and a signer that can authorize that transaction. */
 export interface TransactionWithSigner {
   /** An unsigned transaction */
-  txn: Transaction;
+  txn: Transaction
   /** A transaction signer that can authorize txn */
-  signer: TransactionSigner;
+  signer: TransactionSigner
 }
 
 /**
@@ -132,13 +116,6 @@ export interface TransactionWithSigner {
  * @param value - The value to check.
  * @returns True if an only if the value has the structure of a TransactionWithSigner.
  */
-export function isTransactionWithSigner(
-  value: any
-): value is TransactionWithSigner {
-  return (
-    typeof value === 'object' &&
-    Object.keys(value).length === 2 &&
-    typeof value.txn === 'object' &&
-    typeof value.signer === 'function'
-  );
+export function isTransactionWithSigner(value: any): value is TransactionWithSigner {
+  return typeof value === 'object' && Object.keys(value).length === 2 && typeof value.txn === 'object' && typeof value.signer === 'function'
 }

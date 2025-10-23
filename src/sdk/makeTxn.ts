@@ -1,72 +1,71 @@
-import type { Transaction } from '../../algokit_transact/src/transactions/transaction.js';
-import { TransactionType as NewTransactionType, assignFee } from '../../algokit_transact/src/transactions/transaction.js';
+import type { Transaction } from '@algorandfoundation/algokit-transact'
+import { TransactionType as NewTransactionType, assignFee } from '@algorandfoundation/algokit-transact'
+import { foreignArraysToResourceReferences } from './appAccess.js'
+import { Address } from './encoding/address.js'
 import {
-  OnApplicationComplete,
-  TransactionType as OldTransactionType,
-  SuggestedParams,
-  PaymentTransactionParams,
-  KeyRegistrationTransactionParams,
-  AssetConfigurationTransactionParams,
-  AssetTransferTransactionParams,
-  AssetFreezeTransactionParams,
-  ApplicationCallTransactionParams,
   ApplicationCallReferenceParams,
-} from './types/transactions/base.js';
-import { Address } from './encoding/address.js';
-import { foreignArraysToResourceReferences } from './appAccess.js';
+  ApplicationCallTransactionParams,
+  AssetConfigurationTransactionParams,
+  AssetFreezeTransactionParams,
+  AssetTransferTransactionParams,
+  KeyRegistrationTransactionParams,
+  OnApplicationComplete,
+  PaymentTransactionParams,
+  SuggestedParams,
+} from './types/transactions/base.js'
 
 // Helper function to convert Address to string
 function addressToString(addr: string | Address | undefined): string | undefined {
-  if (!addr) return undefined;
-  return typeof addr === 'string' ? addr : addr.toString();
+  if (!addr) return undefined
+  return typeof addr === 'string' ? addr : addr.toString()
 }
 
 // Helper function to ensure bigint
 function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
-  if (value === undefined) return undefined;
-  return typeof value === 'bigint' ? value : BigInt(value);
+  if (value === undefined) return undefined
+  return typeof value === 'bigint' ? value : BigInt(value)
 }
 
 // Import new OnApplicationComplete type
-import { OnApplicationComplete as NewOnApplicationComplete } from '../../algokit_transact/src/transactions/app-call.js';
+import { OnApplicationComplete as NewOnApplicationComplete } from '@algorandfoundation/algokit-transact'
 
 // Helper function to map old OnApplicationComplete to new
 function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplicationComplete {
   switch (oldValue) {
     case OnApplicationComplete.NoOpOC:
-      return NewOnApplicationComplete.NoOp;
+      return NewOnApplicationComplete.NoOp
     case OnApplicationComplete.OptInOC:
-      return NewOnApplicationComplete.OptIn;
+      return NewOnApplicationComplete.OptIn
     case OnApplicationComplete.CloseOutOC:
-      return NewOnApplicationComplete.CloseOut;
+      return NewOnApplicationComplete.CloseOut
     case OnApplicationComplete.ClearStateOC:
-      return NewOnApplicationComplete.ClearState;
+      return NewOnApplicationComplete.ClearState
     case OnApplicationComplete.UpdateApplicationOC:
-      return NewOnApplicationComplete.UpdateApplication;
+      return NewOnApplicationComplete.UpdateApplication
     case OnApplicationComplete.DeleteApplicationOC:
-      return NewOnApplicationComplete.DeleteApplication;
+      return NewOnApplicationComplete.DeleteApplication
     default:
-      return NewOnApplicationComplete.NoOp;
+      return NewOnApplicationComplete.NoOp
   }
 }
 
 /** Contains parameters common to every transaction type */
 export interface CommonTransactionParams {
   /** Algorand address of sender */
-  sender: string | Address;
+  sender: string | Address
   /** Suggested parameters relevant to the network that will accept this transaction */
-  suggestedParams: SuggestedParams;
+  suggestedParams: SuggestedParams
   /** Optional, arbitrary data to be stored in the transaction's note field */
-  note?: Uint8Array;
+  note?: Uint8Array
   /**
    * Optional, 32-byte lease to associate with this transaction.
    *
    * The sender cannot send another transaction with the same lease until the last round of original
    * transaction has passed.
    */
-  lease?: Uint8Array;
+  lease?: Uint8Array
   /** The Algorand address that will be used to authorize all future transactions from the sender, if provided. */
-  rekeyTo?: string | Address;
+  rekeyTo?: string | Address
 }
 
 /**
@@ -99,13 +98,13 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
       amount: ensureBigInt(amount)!,
       closeRemainderTo: addressToString(closeRemainderTo),
     },
-  };
+  }
 
   // Assign fee using the fee from suggestedParams
   return assignFee(txn, {
     feePerByte: BigInt(0),
     minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  });
+  })
 }
 
 /**
@@ -146,12 +145,12 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
       voteKeyDilution: ensureBigInt(voteKeyDilution),
       nonParticipation,
     },
-  };
+  }
 
   return assignFee(txn, {
     feePerByte: BigInt(0),
     minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  });
+  })
 }
 
 /**
@@ -202,12 +201,12 @@ export function makeBaseAssetConfigTxn({
       url: assetURL,
       metadataHash: assetMetadataHash,
     },
-  };
+  }
 
   return assignFee(txn, {
     feePerByte: BigInt(0),
     minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  });
+  })
 }
 
 /**
@@ -232,8 +231,7 @@ export function makeAssetCreateTxnWithSuggestedParamsFromObject({
   lease,
   rekeyTo,
   suggestedParams,
-}: Omit<AssetConfigurationTransactionParams, 'assetIndex'> &
-  CommonTransactionParams): Transaction {
+}: Omit<AssetConfigurationTransactionParams, 'assetIndex'> & CommonTransactionParams): Transaction {
   return makeBaseAssetConfigTxn({
     sender,
     total,
@@ -251,7 +249,7 @@ export function makeAssetCreateTxnWithSuggestedParamsFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /** Contains asset modification transaction parameters */
@@ -259,35 +257,35 @@ export interface AssetModificationTransactionParams {
   /**
    * The unique ID of the asset to be modified
    */
-  assetIndex: number | bigint;
+  assetIndex: number | bigint
 
   /**
    * The Algorand address in charge of reserve, freeze, clawback, destruction, etc.
    *
    * If empty, this role will be irrevocably removed from this asset.
    */
-  manager?: string | Address;
+  manager?: string | Address
 
   /**
    * The Algorand address representing asset reserve.
    *
    * If empty, this role will be irrevocably removed from this asset.
    */
-  reserve?: string | Address;
+  reserve?: string | Address
 
   /**
    * The Algorand address with power to freeze/unfreeze asset holdings.
    *
    * If empty, this role will be irrevocably removed from this asset.
    */
-  freeze?: string | Address;
+  freeze?: string | Address
 
   /**
    * The Algorand address with power to revoke asset holdings.
    *
    * If empty, this role will be irrevocably removed from this asset.
    */
-  clawback?: string | Address;
+  clawback?: string | Address
 
   /**
    * This is a safety flag to prevent unintentionally removing a role from an asset. If undefined or
@@ -296,7 +294,7 @@ export interface AssetModificationTransactionParams {
    *
    * Set this to false to allow removing roles by leaving the corresponding address empty.
    */
-  strictEmptyAddressChecking?: boolean;
+  strictEmptyAddressChecking?: boolean
 }
 
 /**
@@ -322,16 +320,13 @@ export function makeAssetConfigTxnWithSuggestedParamsFromObject({
   suggestedParams,
 }: AssetModificationTransactionParams & CommonTransactionParams): Transaction {
   if (!assetIndex) {
-    throw Error('assetIndex must be provided');
+    throw Error('assetIndex must be provided')
   }
-  const strictChecking = strictEmptyAddressChecking ?? true;
-  if (
-    strictChecking &&
-    (manager == null || reserve == null || freeze == null || clawback == null)
-  ) {
+  const strictChecking = strictEmptyAddressChecking ?? true
+  if (strictChecking && (manager == null || reserve == null || freeze == null || clawback == null)) {
     throw Error(
-      'strictEmptyAddressChecking is enabled, but an address is empty. If this is intentional, set strictEmptyAddressChecking to false.'
-    );
+      'strictEmptyAddressChecking is enabled, but an address is empty. If this is intentional, set strictEmptyAddressChecking to false.',
+    )
   }
   return makeBaseAssetConfigTxn({
     sender,
@@ -344,7 +339,7 @@ export function makeAssetConfigTxnWithSuggestedParamsFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -360,10 +355,9 @@ export function makeAssetDestroyTxnWithSuggestedParamsFromObject({
   lease,
   rekeyTo,
   suggestedParams,
-}: Required<Pick<AssetConfigurationTransactionParams, 'assetIndex'>> &
-  CommonTransactionParams): Transaction {
+}: Required<Pick<AssetConfigurationTransactionParams, 'assetIndex'>> & CommonTransactionParams): Transaction {
   if (!assetIndex) {
-    throw Error('assetIndex must be provided');
+    throw Error('assetIndex must be provided')
   }
   return makeBaseAssetConfigTxn({
     sender,
@@ -372,7 +366,7 @@ export function makeAssetDestroyTxnWithSuggestedParamsFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -407,12 +401,12 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
       address: addressToString(freezeTarget)!,
       frozen,
     },
-  };
+  }
 
   return assignFee(txn, {
     feePerByte: BigInt(0),
     minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  });
+  })
 }
 
 /**
@@ -435,7 +429,7 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
   lease,
 }: AssetTransferTransactionParams & CommonTransactionParams): Transaction {
   if (!assetIndex) {
-    throw Error('assetIndex must be provided');
+    throw Error('assetIndex must be provided')
   }
 
   const txn: Transaction = {
@@ -455,12 +449,12 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
       sender: addressToString(assetSender),
       closeRemainderTo: addressToString(closeRemainderTo),
     },
-  };
+  }
 
   return assignFee(txn, {
     feePerByte: BigInt(0),
     minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  });
+  })
 }
 
 /**
@@ -493,19 +487,14 @@ export function makeApplicationCallTxnFromObject({
   lease,
   rekeyTo,
   suggestedParams,
-}: ApplicationCallTransactionParams &
-  CommonTransactionParams &
-  ApplicationCallReferenceParams): Transaction {
+}: ApplicationCallTransactionParams & CommonTransactionParams & ApplicationCallReferenceParams): Transaction {
   if (onComplete == null) {
-    throw Error('onComplete must be provided');
+    throw Error('onComplete must be provided')
   }
-  if (
-    access &&
-    (accounts || foreignApps || foreignAssets || boxes || holdings || locals)
-  ) {
-    throw Error('cannot specify both access and other access fields');
+  if (access && (accounts || foreignApps || foreignAssets || boxes || holdings || locals)) {
+    throw Error('cannot specify both access and other access fields')
   }
-  let access2 = access;
+  let access2 = access
   if (convertToAccess) {
     access2 = foreignArraysToResourceReferences({
       appIndex,
@@ -515,19 +504,21 @@ export function makeApplicationCallTxnFromObject({
       holdings,
       locals,
       boxes,
-    });
+    })
   }
 
   // Convert legacy foreign arrays to new format if access is not provided
-  const accountReferences = access2 ? undefined : accounts?.map(a => addressToString(a)!);
-  const appReferences = access2 ? undefined : foreignApps?.map(a => ensureBigInt(a)!);
-  const assetReferences = access2 ? undefined : foreignAssets?.map(a => ensureBigInt(a)!);
+  const accountReferences = access2 ? undefined : accounts?.map((a) => addressToString(a)!)
+  const appReferences = access2 ? undefined : foreignApps?.map((a) => ensureBigInt(a)!)
+  const assetReferences = access2 ? undefined : foreignAssets?.map((a) => ensureBigInt(a)!)
 
   // Convert boxes if present (boxes have app index and name)
-  const boxReferences = access2 ? undefined : boxes?.map(box => ({
-    appId: ensureBigInt(box.appIndex) || BigInt(0),
-    name: box.name,
-  }));
+  const boxReferences = access2
+    ? undefined
+    : boxes?.map((box) => ({
+        appId: ensureBigInt(box.appIndex) || BigInt(0),
+        name: box.name,
+      }))
 
   const txn: Transaction = {
     transactionType: NewTransactionType.AppCall,
@@ -544,14 +535,20 @@ export function makeApplicationCallTxnFromObject({
       onComplete: mapOnApplicationComplete(onComplete),
       approvalProgram,
       clearStateProgram: clearProgram,
-      globalStateSchema: (numGlobalInts !== undefined || numGlobalByteSlices !== undefined) ? {
-        numUint: numGlobalInts || 0,
-        numByteSlice: numGlobalByteSlices || 0,
-      } : undefined,
-      localStateSchema: (numLocalInts !== undefined || numLocalByteSlices !== undefined) ? {
-        numUint: numLocalInts || 0,
-        numByteSlice: numLocalByteSlices || 0,
-      } : undefined,
+      globalStateSchema:
+        numGlobalInts !== undefined || numGlobalByteSlices !== undefined
+          ? {
+              numUint: numGlobalInts || 0,
+              numByteSlice: numGlobalByteSlices || 0,
+            }
+          : undefined,
+      localStateSchema:
+        numLocalInts !== undefined || numLocalByteSlices !== undefined
+          ? {
+              numUint: numLocalInts || 0,
+              numByteSlice: numLocalByteSlices || 0,
+            }
+          : undefined,
       extraProgramPages: extraPages,
       args: appArgs,
       accountReferences,
@@ -559,12 +556,12 @@ export function makeApplicationCallTxnFromObject({
       assetReferences,
       boxReferences,
     },
-  };
+  }
 
   return assignFee(txn, {
     feePerByte: BigInt(0),
     minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  });
+  })
 }
 
 /**
@@ -595,20 +592,15 @@ export function makeApplicationCreateTxnFromObject({
   lease,
   rekeyTo,
   suggestedParams,
-}: Omit<
-  ApplicationCallTransactionParams,
-  'appIndex' | 'approvalProgram' | 'clearProgram'
-> &
-  Required<
-    Pick<ApplicationCallTransactionParams, 'approvalProgram' | 'clearProgram'>
-  > &
+}: Omit<ApplicationCallTransactionParams, 'appIndex' | 'approvalProgram' | 'clearProgram'> &
+  Required<Pick<ApplicationCallTransactionParams, 'approvalProgram' | 'clearProgram'>> &
   CommonTransactionParams &
   ApplicationCallReferenceParams): Transaction {
   if (!approvalProgram || !clearProgram) {
-    throw Error('approvalProgram and clearProgram must be provided');
+    throw Error('approvalProgram and clearProgram must be provided')
   }
   if (onComplete == null) {
-    throw Error('onComplete must be provided');
+    throw Error('onComplete must be provided')
   }
   return makeApplicationCallTxnFromObject({
     sender,
@@ -634,7 +626,7 @@ export function makeApplicationCreateTxnFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -671,16 +663,14 @@ export function makeApplicationUpdateTxnFromObject({
   | 'approvalProgram'
   | 'clearProgram'
 > &
-  Required<
-    Pick<ApplicationCallTransactionParams, 'approvalProgram' | 'clearProgram'>
-  > &
+  Required<Pick<ApplicationCallTransactionParams, 'approvalProgram' | 'clearProgram'>> &
   CommonTransactionParams &
   ApplicationCallReferenceParams): Transaction {
   if (!appIndex) {
-    throw Error('appIndex must be provided');
+    throw Error('appIndex must be provided')
   }
   if (!approvalProgram || !clearProgram) {
-    throw Error('approvalProgram and clearProgram must be provided');
+    throw Error('approvalProgram and clearProgram must be provided')
   }
   return makeApplicationCallTxnFromObject({
     sender,
@@ -701,7 +691,7 @@ export function makeApplicationUpdateTxnFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -739,7 +729,7 @@ export function makeApplicationDeleteTxnFromObject({
   CommonTransactionParams &
   ApplicationCallReferenceParams): Transaction {
   if (!appIndex) {
-    throw Error('appIndex must be provided');
+    throw Error('appIndex must be provided')
   }
   return makeApplicationCallTxnFromObject({
     sender,
@@ -758,7 +748,7 @@ export function makeApplicationDeleteTxnFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -796,7 +786,7 @@ export function makeApplicationOptInTxnFromObject({
   CommonTransactionParams &
   ApplicationCallReferenceParams): Transaction {
   if (!appIndex) {
-    throw Error('appIndex must be provided');
+    throw Error('appIndex must be provided')
   }
   return makeApplicationCallTxnFromObject({
     sender,
@@ -815,7 +805,7 @@ export function makeApplicationOptInTxnFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -853,7 +843,7 @@ export function makeApplicationCloseOutTxnFromObject({
   CommonTransactionParams &
   ApplicationCallReferenceParams): Transaction {
   if (!appIndex) {
-    throw Error('appIndex must be provided');
+    throw Error('appIndex must be provided')
   }
   return makeApplicationCallTxnFromObject({
     sender,
@@ -872,7 +862,7 @@ export function makeApplicationCloseOutTxnFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -910,7 +900,7 @@ export function makeApplicationClearStateTxnFromObject({
   CommonTransactionParams &
   ApplicationCallReferenceParams): Transaction {
   if (!appIndex) {
-    throw Error('appIndex must be provided');
+    throw Error('appIndex must be provided')
   }
   return makeApplicationCallTxnFromObject({
     sender,
@@ -929,7 +919,7 @@ export function makeApplicationClearStateTxnFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
 
 /**
@@ -967,7 +957,7 @@ export function makeApplicationNoOpTxnFromObject({
   CommonTransactionParams &
   ApplicationCallReferenceParams): Transaction {
   if (!appIndex) {
-    throw Error('appIndex must be provided');
+    throw Error('appIndex must be provided')
   }
   return makeApplicationCallTxnFromObject({
     sender,
@@ -986,5 +976,5 @@ export function makeApplicationNoOpTxnFromObject({
     lease,
     rekeyTo,
     suggestedParams,
-  });
+  })
 }
