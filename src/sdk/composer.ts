@@ -12,12 +12,17 @@ import {
   abiTypeIsTransaction,
 } from './abi/index.js'
 import { Address } from './encoding/address.js'
-import * as encoding from './encoding/encoding.js'
 import { assignGroupID } from './group.js'
 import { makeApplicationCallTxnFromObject } from './makeTxn.js'
-import { SignedTransaction } from './signedTransaction.js'
 import { TransactionSigner, TransactionWithSigner, isTransactionWithSigner } from './signer.js'
-import { Transaction } from './transaction.js'
+import type { Transaction, SignedTransaction } from '@algorandfoundation/algokit-transact'
+import {
+  decodeTransaction,
+  decodeSignedTransaction,
+  encodeTransaction,
+  getTransactionId,
+  groupTransactions,
+} from '@algorandfoundation/algokit-transact'
 import { BoxReference, OnApplicationComplete, ResourceReference, SuggestedParams } from './types/transactions/base.js'
 import { arrayEqual, ensureUint64, stringifyJSON } from './utils/utils.js'
 import { waitForConfirmation } from './wait.js'
@@ -134,12 +139,10 @@ export class AtomicTransactionComposer {
     const theClone = new AtomicTransactionComposer()
 
     theClone.transactions = this.transactions.map(({ txn, signer }) => {
-      const txnMap = txn.toEncodingData()
-      // erase the group ID
-      txnMap.delete('grp')
+      // Create a new transaction without the group ID
+      const txnCopy = { ...txn, group: undefined }
       return {
-        // not quite a deep copy, but good enough for our purposes (modifying txn.group in buildGroup)
-        txn: Transaction.fromEncodingData(txnMap),
+        txn: txnCopy,
         signer,
       }
     })
@@ -466,7 +469,13 @@ export class AtomicTransactionComposer {
         throw new Error('Cannot build a group with 0 transactions')
       }
       if (this.transactions.length > 1) {
-        assignGroupID(this.transactions.map((txnWithSigner) => txnWithSigner.txn))
+        // Use immutable groupTransactions - returns new array with grouped transactions
+        const groupedTxns = assignGroupID(this.transactions.map((txnWithSigner) => txnWithSigner.txn))
+        // Update the transactions array with the grouped versions
+        this.transactions = this.transactions.map((txnWithSigner, index) => ({
+          ...txnWithSigner,
+          txn: groupedTxns[index],
+        }))
       }
       this.status = AtomicTransactionComposerStatus.BUILT
     }
@@ -529,7 +538,7 @@ export class AtomicTransactionComposer {
 
     const txIDs = signedTxns.map((stxn, index) => {
       try {
-        return encoding.decodeMsgpack(stxn, SignedTransaction).txn.txID()
+        return getTransactionId(decodeSignedTransaction(stxn).transaction)
       } catch (err) {
         throw new Error(`Cannot decode signed transaction at index ${index}. ${err}`)
       }
@@ -597,7 +606,7 @@ export class AtomicTransactionComposer {
     }
 
     const stxns = await this.gatherSignatures()
-    const txnObjects: SignedTransaction[] = stxns.map((stxn) => encoding.decodeMsgpack(stxn, SignedTransaction))
+    const txnObjects: SignedTransaction[] = stxns.map((stxn) => decodeSignedTransaction(stxn))
 
     const currentRequest: SimulateRequest = request ?? { txnGroups: [] }
 
