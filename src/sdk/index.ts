@@ -160,10 +160,12 @@ export type { AssetFreezeTransactionFields } from '../../algokit_transact/src/tr
 export type { AppCallTransactionFields as ApplicationTransactionFields } from '../../algokit_transact/src/transactions/app-call.js'
 export * from './types/account'
 export type { default as Account } from './types/account'
-export * from './types/block'
+// Block types are now provided by @algorandfoundation/algod-client
+// export * from './types/block'
 export * from './types/intDecoding'
 export { default as IntDecoding } from './types/intDecoding'
-export * from './types/statedelta'
+// StateDelta types depend on old block.ts encoding - use algod_client models instead
+// export * from './types/statedelta'
 export * from './types/transactions/index'
 export * from './utils/utils'
 export { waitForConfirmation } from './wait'

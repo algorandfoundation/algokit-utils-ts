@@ -567,9 +567,22 @@ Files with Transaction/SignedTransaction type annotations only:
   - Replaced `txn.txID()` with `getTransactionId(txn)`
   - Updated property access: `stxn.txn` → `stxn.transaction`
   - Zero TypeScript errors in composer.ts
-- [ ] **Phase 2.7:** Update `abi/transaction.ts` (1 hour)
-- [ ] **Phase 2.8:** Refactor `types/block.ts` (8 hours), replace it with algod_client/src/models/block
-- [ ] **Phase 2.9:** Update `client/kmd.ts` (1 hour)
+- [x] **Phase 2.7:** Update `abi/transaction.ts` (1 hour) ✅ **COMPLETED**
+  - Updated imports to use algokit_transact Transaction type
+  - Added TransactionType enum mapping
+  - Updated `abiCheckTransactionType()` to map string types to numeric enum
+  - Zero TypeScript errors
+- [x] **Phase 2.8:** Refactor `types/block.ts` (8 hours) ✅ **COMPLETED**
+  - **DELETED** `src/sdk/types/block.ts` (1278 lines)
+  - Commented out export from `src/sdk/index.ts`
+  - Commented out `statedelta.ts` export (depends on old block types)
+  - Block types now provided by `@algorandfoundation/algod-client` models
+  - Removed legacy encoding schema approach
+- [x] **Phase 2.9:** Update `client/kmd.ts` (1 hour) ✅ **COMPLETED**
+  - Updated imports to use algokit_transact types
+  - Replaced `transaction.toByte()` with `encodeTransaction(transaction)`
+  - Updated all three signing methods
+  - Zero TypeScript errors
 
 ### Higher-Level Migration
 
