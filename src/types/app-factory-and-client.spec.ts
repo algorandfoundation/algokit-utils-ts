@@ -90,7 +90,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
     })
 
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
@@ -189,7 +189,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(app.confirmation.confirmedRound ?? 0n)
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return).toBe('arg_io')
   })
 
@@ -253,8 +253,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -287,8 +287,8 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appIndex).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(createdApp.appId)
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
     expect(app.return).toBe('arg_io')
     expect(app.deleteReturn).toBe('arg2_io')
   })
@@ -416,7 +416,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transactions[0].applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
+    expect(call.transactions[0].appCall?.boxReferences).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
 
     const call2 = await client.createTransaction.call({
       method: 'call_abi',
@@ -424,7 +424,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       boxReferences: ['1'],
     })
 
-    expect(call2.transactions[0].applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
+    expect(call2.transactions[0].appCall?.boxReferences).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
@@ -616,7 +616,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
-    expect(result.transaction.type).toBe(TransactionType.pay)
+    expect(result.transaction.transactionType).toBe(TransactionType.Payment)
     expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress.toString())
     expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)

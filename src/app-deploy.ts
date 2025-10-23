@@ -1,6 +1,6 @@
+import { compileTeal, getAppOnCompleteAction } from './app'
 import * as algosdk from './sdk'
 import { Address } from './sdk'
-import { compileTeal, getAppOnCompleteAction } from './app'
 import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-bridge'
 import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'
 import { AlgorandClientTransactionSender } from './types/algorand-client-transaction-sender'
@@ -30,7 +30,6 @@ import {
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
-import modelsv2 = algosdk.modelsv2
 
 /**
  * @deprecated Use `algorand.appDeployer.deploy` instead.
