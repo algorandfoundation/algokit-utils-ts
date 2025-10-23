@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "tsBuildInfoFile": "build/.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "references": [{ "path": "../algokit_common" }]
+}

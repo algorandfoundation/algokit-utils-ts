@@ -1,0 +1,47 @@
+{
+  "name": "@algorandfoundation/kmd-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client library for interacting with kmd.",
+  "author": "Algorand Foundation",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0"
+  },
+  "type": "commonjs",
+  "main": "index.js",
+  "module": "index.mjs",
+  "types": "index.d.ts",
+  "files": [
+    "**/*"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "require": "./index.js"
+    },
+    "./index.d.ts": "./index.d.ts",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "run-s lint build:*",
+    "build-watch": "rolldown --watch -c",
+    "build:0-clean": "rimraf dist coverage",
+    "build:1-compile": "rolldown -c",
+    "build:3-copy-pkg-json": "npx --yes @makerx/ts-toolkit@4.0.0-beta.22 copy-package-json --custom-sections module main type types exports",
+    "build:4-copy-readme": "cpy  README.md dist",
+    "test": "vitest run --coverage --passWithNoTests",
+    "test:watch": "vitest watch --coverage --passWithNoTests",
+    "lint": "eslint ./src/ --max-warnings=0",
+    "lint:fix": "eslint ./src/ --fix",
+    "check-types": "tsc --noEmit",
+    "audit": "better-npm-audit audit",
+    "format": "prettier --config ../.prettierrc.cjs --ignore-path ../../../.prettierignore --write .",
+    "pre-commit": "run-s check-types audit test"
+  },
+  "peerDependencies": {},
+  "devDependencies": {
+    "@algorandfoundation/algokit-transact": "../algokit_transact/dist"
+  }
+}

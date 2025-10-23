@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "tsBuildInfoFile": "build/.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["**/*.algo.ts"],
+  "references": [
+    { "path": "../algokit_common" },
+    { "path": "../algokit_abi" },
+    { "path": "../algokit_transact" },
+    { "path": "../algod_client" },
+    { "path": "../indexer_client" }
+  ]
+}
