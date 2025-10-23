@@ -1,8 +1,27 @@
 import * as convert from './convert'
 import { Address } from './encoding/address'
 import * as nacl from './nacl/naclWrappers'
-import { Transaction } from './transaction'
 import * as utils from './utils/utils'
+// Import Transaction and SignedTransaction from algokit_transact
+import type {
+  Transaction,
+  SignedTransaction,
+  TransactionType,
+} from '../../algokit_transact/src/transactions/transaction.js'
+import {
+  encodeTransaction,
+  decodeTransaction,
+  getTransactionId,
+  getTransactionIdRaw,
+  groupTransactions,
+  assignFee,
+  calculateFee,
+  encodeTransactionRaw,
+} from '../../algokit_transact/src/transactions/transaction.js'
+import {
+  encodeSignedTransaction,
+  decodeSignedTransaction as decodeSignedTxn,
+} from '../../algokit_transact/src/transactions/signed-transaction.js'
 
 const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 
@@ -25,9 +44,18 @@ export const MULTISIG_BAD_SENDER_ERROR_MSG = 'The transaction sender address and
  * @returns object contains the binary signed transaction and its txID
  */
 export function signTransaction(txn: Transaction, sk: Uint8Array) {
+  // Sign the transaction using nacl
+  const bytesToSign = encodeTransactionRaw(txn)
+  const signature = nacl.sign(bytesToSign, sk)
+
+  const signedTxn: SignedTransaction = {
+    transaction: txn,
+    signature,
+  }
+
   return {
-    txID: txn.txID(),
-    blob: txn.signTxn(sk),
+    txID: getTransactionId(txn),
+    blob: encodeSignedTransaction(signedTxn),
   }
 }
 
@@ -98,11 +126,38 @@ export {
   mergeMultisigTransactions,
   signMultisigTransaction,
 } from './multisigSigning'
-export { SignedTransaction, decodeSignedTransaction, encodeUnsignedSimulateTransaction } from './signedTransaction'
+// Re-export Transaction and SignedTransaction types and functions from algokit_transact
+export type { Transaction, SignedTransaction, TransactionType }
+export {
+  encodeTransaction,
+  decodeTransaction,
+  encodeSignedTransaction,
+  getTransactionId,
+  getTransactionIdRaw,
+  groupTransactions,
+  assignFee,
+  calculateFee,
+  encodeTransactionRaw,
+}
+// Export decodeSignedTransaction with original name
+export { decodeSignedTxn as decodeSignedTransaction }
+
+// TODO: encodeUnsignedSimulateTransaction needs to be implemented or replaced
+// For now, create a wrapper function
+export function encodeUnsignedSimulateTransaction(txn: Transaction): Uint8Array {
+  return encodeTransaction(txn)
+}
+
 export * from './signer'
 export { signLogicSigTransaction, signLogicSigTransactionObject } from './signing'
 export * from './stateproof'
-export * from './transaction'
+// Re-export transaction-related types from algokit_transact
+export type { PaymentTransactionFields } from '../../algokit_transact/src/transactions/payment.js'
+export type { KeyRegistrationTransactionFields } from '../../algokit_transact/src/transactions/key-registration.js'
+export type { AssetConfigTransactionFields } from '../../algokit_transact/src/transactions/asset-config.js'
+export type { AssetTransferTransactionFields } from '../../algokit_transact/src/transactions/asset-transfer.js'
+export type { AssetFreezeTransactionFields } from '../../algokit_transact/src/transactions/asset-freeze.js'
+export type { AppCallTransactionFields as ApplicationTransactionFields } from '../../algokit_transact/src/transactions/app-call.js'
 export * from './types/account'
 export type { default as Account } from './types/account'
 export * from './types/block'
