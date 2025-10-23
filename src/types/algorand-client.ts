@@ -1,3 +1,5 @@
+import { TransactionParams } from '@algorandfoundation/algod-client'
+import type { Account } from '../sdk'
 import * as algosdk from '../sdk'
 import { Address } from '../sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
@@ -10,7 +12,6 @@ import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
-import type { Account } from '../sdk'
 import LogicSigAccount = algosdk.LogicSigAccount
 
 /**
@@ -25,7 +26,7 @@ export class AlgorandClient {
   private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
 
-  private _cachedSuggestedParams?: algosdk.SuggestedParams
+  private _cachedSuggestedParams?: TransactionParams
   private _cachedSuggestedParamsExpiry?: Date
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
@@ -123,7 +124,7 @@ export class AlgorandClient {
    * const algorand = AlgorandClient.mainNet().setSuggestedParamsCache(suggestedParams, new Date(+new Date() + 3_600_000))
    * ```
    */
-  public setSuggestedParamsCache(suggestedParams: algosdk.SuggestedParams, until?: Date) {
+  public setSuggestedParamsCache(suggestedParams: TransactionParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
     this._cachedSuggestedParamsExpiry = until ?? new Date(+new Date() + this._cachedSuggestedParamsTimeout)
     return this
@@ -149,7 +150,7 @@ export class AlgorandClient {
    * @example
    * const params = await AlgorandClient.mainNet().getSuggestedParams();
    */
-  public async getSuggestedParams(): Promise<algosdk.SuggestedParams> {
+  public async getSuggestedParams(): Promise<TransactionParams> {
     if (this._cachedSuggestedParams && (!this._cachedSuggestedParamsExpiry || this._cachedSuggestedParamsExpiry > new Date())) {
       return {
         ...this._cachedSuggestedParams,

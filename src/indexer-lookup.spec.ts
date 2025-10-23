@@ -1,7 +1,8 @@
-import { Address } from './sdk'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import * as indexer from './indexer-lookup'
+import { Address } from './sdk'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 import { AlgoAmount } from './types/amount'
 
@@ -22,9 +23,9 @@ describe('indexer-lookup', () => {
     const { transaction } = await sendTestTransaction()
     await waitForIndexer()
 
-    const txn = await algorand.client.indexer.lookupTransactionByID(transaction.txID()).do()
+    const txn = await algorand.client.indexer.lookupTransactionByID(getTransactionId(transaction)).do()
 
-    expect(txn.transaction.id).toBe(transaction.txID())
+    expect(txn.transaction.id).toBe(getTransactionId(transaction))
     expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)
   }, 20_000)
 
@@ -55,7 +56,9 @@ describe('indexer-lookup', () => {
     )
 
     expect(transactions.currentRound).toBeGreaterThan(0n)
-    expect(transactions.transactions.map((t) => t.id).sort()).toEqual([transaction1.txID(), transaction2.txID()].sort())
+    expect(transactions.transactions.map((t) => t.id).sort()).toEqual(
+      [getTransactionId(transaction1), getTransactionId(transaction2)].sort(),
+    )
   }, 20_000)
 
   test('Application create transactions are found by creator with pagination', async () => {

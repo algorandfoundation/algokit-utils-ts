@@ -1,3 +1,5 @@
+import { TransactionParams } from '@algorandfoundation/algod-client'
+import { Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '../sdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
 import { AlgorandClientTransactionSender } from '../types/algorand-client-transaction-sender'
@@ -27,7 +29,6 @@ import {
 } from '../types/transaction'
 import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
 import Algodv2 = algosdk.Algodv2
-import Transaction = algosdk.Transaction
 import ABIMethod = algosdk.ABIMethod
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour and new `AlgorandClient` behaviour. */
@@ -40,7 +41,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
-  suggestedParams?: algosdk.SuggestedParams,
+  suggestedParams?: TransactionParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
   const appManager = new AppManager(algod)
   const newGroup = () =>
@@ -106,7 +107,7 @@ export async function legacySendAppTransactionBridge<
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
-  suggestedParams?: algosdk.SuggestedParams,
+  suggestedParams?: TransactionParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
   const encoder = new TextEncoder()
 
@@ -149,7 +150,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
           ? { txn: (await a).transaction, signer }
           : 'transaction' in a
             ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
-            : 'txID' in a
+            : 'transactionType' in a
               ? { txn: a, signer }
               : a
     }),

@@ -1,3 +1,4 @@
+import { EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
 import * as algosdk from './sdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import { encodeLease, getSenderAddress } from './transaction/transaction'
@@ -29,7 +30,6 @@ import ABIMethodParams = algosdk.ABIMethodParams
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
 import Algodv2 = algosdk.Algodv2
-import modelsv2 = algosdk.modelsv2
 import OnApplicationComplete = algosdk.OnApplicationComplete
 
 /**
@@ -232,7 +232,7 @@ export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppC
  * @param confirmation The transaction confirmation from algod
  * @returns The return value for the method call
  */
-export function getABIReturn(args?: AppCallArgs, confirmation?: modelsv2.PendingTransactionResponse): ABIReturn | undefined {
+export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransactionResponse): ABIReturn | undefined {
   if (!args || !args.method) {
     return undefined
   }
@@ -342,7 +342,7 @@ export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams
  * @param state A `global-state`, `local-state`, `global-state-deltas` or `local-state-deltas`
  * @returns An object keyeed by the UTF-8 representation of the key with various parsings of the values
  */
-export function decodeAppState(state: { key: string; value: modelsv2.TealValue | modelsv2.EvalDelta }[]): AppState {
+export function decodeAppState(state: { key: string; value: TealValue | EvalDelta }[]): AppState {
   return AppManager.decodeAppState(state.map(({ key, value }) => ({ key: Buffer.from(key, 'utf-8'), value })))
 }
 

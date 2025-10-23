@@ -1,3 +1,4 @@
+import { ApplicationStateSchema } from '@algorandfoundation/algod-client'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import * as algosdk from './sdk'
 import { Address } from './sdk'
@@ -226,7 +227,7 @@ export async function deployApp(
  * @param after The new schema
  * @returns Whether or not there is a breaking change
  */
-export function isSchemaIsBroken(before: modelsv2.ApplicationStateSchema, after: modelsv2.ApplicationStateSchema) {
+export function isSchemaIsBroken(before: ApplicationStateSchema, after: ApplicationStateSchema) {
   return before.numByteSlice < after.numByteSlice || before.numUint < after.numUint
 }
 

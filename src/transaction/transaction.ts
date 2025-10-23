@@ -1,4 +1,11 @@
-import modelsv2, { AlgodClient, BoxReference, PendingTransactionResponse, SimulateRequest } from '@algorandfoundation/algod-client'
+import modelsv2, {
+  AlgodClient,
+  ApplicationLocalReference,
+  AssetHoldingReference,
+  BoxReference,
+  PendingTransactionResponse,
+  SimulateRequest,
+} from '@algorandfoundation/algod-client'
 import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
 import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
@@ -371,7 +378,7 @@ async function getGroupExecutionInfo(
         const parentMinFee = parentPerByteFee < minTxnFee ? minTxnFee : parentPerByteFee
         const parentFeeDelta = parentMinFee - (originalTxn.fee ?? 0n)
         if (originalTxn.transactionType === TransactionType.AppCall) {
-          const calculateInnerFeeDelta = (itxns: algosdk.modelsv2.PendingTransactionResponse[], acc: bigint = 0n): bigint => {
+          const calculateInnerFeeDelta = (itxns: PendingTransactionResponse[], acc: bigint = 0n): bigint => {
             // Surplus inner transaction fees do not pool up to the parent transaction.
             // Additionally surplus inner transaction fees only pool from sibling transactions that are sent prior to a given inner transaction, hence why we iterate in reverse order.
             return itxns.reverse().reduce((acc, itxn) => {
@@ -565,14 +572,7 @@ export async function prepareGroupForSending(
 
     const populateGroupResource = (
       txns: algosdk.TransactionWithSigner[],
-      reference:
-        | string
-        | algosdk.modelsv2.BoxReference
-        | algosdk.modelsv2.ApplicationLocalReference
-        | algosdk.modelsv2.AssetHoldingReference
-        | bigint
-        | number
-        | Address,
+      reference: string | BoxReference | ApplicationLocalReference | AssetHoldingReference | bigint | number | Address,
       type: 'account' | 'assetHolding' | 'appLocal' | 'app' | 'box' | 'asset',
     ): void => {
       const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
@@ -589,7 +589,7 @@ export async function prepareGroupForSending(
 
       // If this is a asset holding or app local, first try to find a transaction that already has the account available
       if (type === 'assetHolding' || type === 'appLocal') {
-        const { account } = reference as algosdk.modelsv2.ApplicationLocalReference | algosdk.modelsv2.AssetHoldingReference
+        const { account } = reference as ApplicationLocalReference | AssetHoldingReference
 
         let txnIndex = txns.findIndex((t) => {
           if (!isApplBelowLimit(t)) return false
@@ -608,14 +608,14 @@ export async function prepareGroupForSending(
 
         if (txnIndex > -1) {
           if (type === 'assetHolding') {
-            const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
+            const { asset } = reference as AssetHoldingReference
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ;(txns[txnIndex].txn as any)['applicationCall'] = {
               ...txns[txnIndex].txn.appCall,
               assetReferences: [...(txns[txnIndex].txn?.appCall?.assetReferences ?? []), ...[asset]],
             } satisfies Partial<ApplicationTransactionFields>
           } else {
-            const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
+            const { app } = reference as ApplicationLocalReference
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ;(txns[txnIndex].txn as any)['applicationCall'] = {
               ...txns[txnIndex].txn.appCall,
@@ -633,16 +633,16 @@ export async function prepareGroupForSending(
           if ((t.txn.appCall?.accountReferences?.length ?? 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
 
           if (type === 'assetHolding') {
-            const { asset } = reference as algosdk.modelsv2.AssetHoldingReference
+            const { asset } = reference as AssetHoldingReference
             return t.txn.appCall?.assetReferences?.includes(asset)
           } else {
-            const { app } = reference as algosdk.modelsv2.ApplicationLocalReference
+            const { app } = reference as ApplicationLocalReference
             return t.txn.appCall?.appReferences?.includes(app) || t.txn.appCall?.appId === app
           }
         })
 
         if (txnIndex > -1) {
-          const { account } = reference as algosdk.modelsv2.AssetHoldingReference | algosdk.modelsv2.ApplicationLocalReference
+          const { account } = reference as AssetHoldingReference | ApplicationLocalReference
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(txns[txnIndex].txn as any)['applicationCall'] = {
@@ -694,7 +694,7 @@ export async function prepareGroupForSending(
         }
 
         // If we're adding a box, we need space for both the box ref and the app ref
-        if (type === 'box' && BigInt((reference as algosdk.modelsv2.BoxReference).app) !== BigInt(0)) {
+        if (type === 'box' && BigInt((reference as BoxReference).app) !== BigInt(0)) {
           return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES - 1
         }
 
@@ -721,7 +721,7 @@ export async function prepareGroupForSending(
           ],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'box') {
-        const { app, name } = reference as algosdk.modelsv2.BoxReference
+        const { app, name } = reference as BoxReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['applicationCall'] = {
           ...txns[txnIndex].txn.appCall,
@@ -736,7 +736,7 @@ export async function prepareGroupForSending(
           } satisfies Partial<ApplicationTransactionFields>
         }
       } else if (type === 'assetHolding') {
-        const { asset, account } = reference as algosdk.modelsv2.AssetHoldingReference
+        const { asset, account } = reference as AssetHoldingReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['applicationCall'] = {
           ...txns[txnIndex].txn.appCall,
@@ -744,7 +744,7 @@ export async function prepareGroupForSending(
           accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'appLocal') {
-        const { app, account } = reference as algosdk.modelsv2.ApplicationLocalReference
+        const { app, account } = reference as ApplicationLocalReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['applicationCall'] = {
           ...txns[txnIndex].txn.appCall,

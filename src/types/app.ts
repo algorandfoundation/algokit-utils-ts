@@ -1,3 +1,4 @@
+import { TransactionParams } from '@algorandfoundation/algod-client'
 import * as algosdk from '../sdk'
 import { Expand } from './expand'
 import {
@@ -136,7 +137,7 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
   /** The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
   clearStateProgram: Uint8Array | string
   /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
+  transactionParams?: TransactionParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** The arguments passed in to the app call */

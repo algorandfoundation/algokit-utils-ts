@@ -1,3 +1,4 @@
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Logger } from '../types/logging'
 import { LogSnapshotConfig } from '../types/testing'
 import { asJson } from '../util'
@@ -48,7 +49,7 @@ export class TestLogger implements Logger {
     const { transactions: transactionIds, accounts, apps } = config ?? {}
     let snapshot = this.capturedLogs.filter(config?.filterPredicate ?? (() => true)).join('\n')
     transactionIds?.forEach(
-      (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : txn.txID(), 'g'), `TXID_${id + 1}`)),
+      (txn, id) => (snapshot = snapshot.replace(new RegExp(typeof txn === 'string' ? txn : getTransactionId(txn), 'g'), `TXID_${id + 1}`)),
     )
     accounts?.forEach(
       (sender, id) =>

@@ -1,7 +1,7 @@
+import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { runWhenIndexerCaughtUp } from './indexer'
-import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 
@@ -90,10 +90,27 @@ class TransactionLoggingAlgodv2ProxyHandler implements ProxyHandler<Algodv2> {
     if (property === 'rawTransaction') {
       return (stxOrStxs: Uint8Array | Uint8Array[]) => {
         this.transactionLogger.logRawTransaction(stxOrStxs)
-        return target[property].call(receiver, stxOrStxs)
+
+        let forPosting = stxOrStxs
+        if (Array.isArray(stxOrStxs)) {
+          if (!stxOrStxs.every(isByteArray)) {
+            throw new TypeError('Array elements must be byte arrays')
+          }
+          // Flatten into a single Uint8Array
+          forPosting = algosdk.concatArrays(...stxOrStxs)
+        } else if (!isByteArray(forPosting)) {
+          throw new TypeError('Argument must be byte array')
+        }
+
+        return target[property].call(receiver, { body: forPosting })
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target as any)[property]
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isByteArray(array: any): array is Uint8Array {
+  return array && array.byteLength !== undefined
 }

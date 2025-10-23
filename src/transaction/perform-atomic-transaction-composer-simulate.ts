@@ -1,8 +1,8 @@
-import * as algosdk from '../sdk'
+import { SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '@algorandfoundation/algod-client'
 import { decodeSignedTransaction } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '../sdk'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import modelsv2 = algosdk.modelsv2
 
 /**
  * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
@@ -15,29 +15,29 @@ import modelsv2 = algosdk.modelsv2
 export async function performAtomicTransactionComposerSimulate(
   atc: AtomicTransactionComposer,
   algod: Algodv2,
-  options?: Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>,
+  options?: Omit<SimulateRequest, 'txnGroups'>,
 ) {
   const unsignedTransactionsSigners = atc.buildGroup()
   const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
 
-  const simulateRequest = new modelsv2.SimulateRequest({
+  const simulateRequest = {
     ...(options ?? {
       allowEmptySignatures: true,
       fixSigners: true,
       allowMoreLogging: true,
-      execTraceConfig: new modelsv2.SimulateTraceConfig({
+      execTraceConfig: {
         enable: true,
         scratchChange: true,
         stackChange: true,
         stateChange: true,
-      }),
+      } satisfies SimulateTraceConfig,
     }),
     txnGroups: [
-      new modelsv2.SimulateRequestTransactionGroup({
+      {
         txns: decodedSignedTransactions.map((txn) => decodeSignedTransaction(txn)),
-      }),
+      } satisfies SimulateRequestTransactionGroup,
     ],
-  })
-  const simulateResult = await algod.simulateTransactions(simulateRequest).do()
+  } satisfies SimulateRequest
+  const simulateResult = await algod.simulateTransaction({ body: simulateRequest })
   return simulateResult
 }

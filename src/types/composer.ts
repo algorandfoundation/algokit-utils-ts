@@ -1,3 +1,4 @@
+import { TransactionParams } from '@algorandfoundation/algod-client'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { ABIMethod, Address } from '../sdk'
@@ -505,7 +506,7 @@ export type TransactionComposerParams = {
   /** The function used to get the TransactionSigner for a given address */
   getSigner: (address: string | Address) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
-  getSuggestedParams?: () => Promise<algosdk.SuggestedParams>
+  getSuggestedParams?: () => Promise<TransactionParams>
   /** How many rounds a transaction should be valid for by default; if not specified
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
