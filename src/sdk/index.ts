@@ -3,24 +3,18 @@ import { Address } from './encoding/address'
 import * as nacl from './nacl/naclWrappers'
 import * as utils from './utils/utils'
 // Import Transaction and SignedTransaction from algokit_transact
-import type {
-  Transaction,
-  SignedTransaction,
-  TransactionType,
-} from '@algorandfoundation/algokit-transact'
+import type { SignedTransaction, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import {
-  encodeTransaction,
+  assignFee,
+  calculateFee,
+  decodeSignedTransaction as decodeSignedTxn,
   decodeTransaction,
+  encodeSignedTransaction,
+  encodeTransaction,
+  encodeTransactionRaw,
   getTransactionId,
   getTransactionIdRaw,
   groupTransactions,
-  assignFee,
-  calculateFee,
-  encodeTransactionRaw,
-} from '@algorandfoundation/algokit-transact'
-import {
-  encodeSignedTransaction,
-  decodeSignedTransaction as decodeSignedTxn,
 } from '@algorandfoundation/algokit-transact'
 
 const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
@@ -93,9 +87,8 @@ export * from './abi/index'
 export { default as generateAccount } from './account'
 export * from './client'
 // Export client classes with algosdk-compatible names
-export { KmdClient as Kmd } from './client/kmd'
 export { AlgodClient as Algodv2 } from '@algorandfoundation/algod-client'
-export * as modelsv2 from '@algorandfoundation/algod-client'
+export { KmdClient as Kmd } from './client/kmd'
 export { IndexerClient as Indexer } from './client/v2/indexer/index'
 export * as indexerModels from './client/v2/indexer/models/types'
 export * from './composer'
@@ -126,18 +119,18 @@ export {
   signMultisigTransaction,
 } from './multisigSigning'
 // Re-export Transaction and SignedTransaction types and functions from algokit_transact
-export type { Transaction, SignedTransaction, TransactionType }
 export {
-  encodeTransaction,
+  assignFee,
+  calculateFee,
   decodeTransaction,
   encodeSignedTransaction,
+  encodeTransaction,
+  encodeTransactionRaw,
   getTransactionId,
   getTransactionIdRaw,
   groupTransactions,
-  assignFee,
-  calculateFee,
-  encodeTransactionRaw,
 }
+export type { SignedTransaction, Transaction, TransactionType }
 // Export decodeSignedTransaction with original name
 export { decodeSignedTxn as decodeSignedTransaction }
 
@@ -152,12 +145,12 @@ export { signLogicSigTransaction, signLogicSigTransactionObject } from './signin
 export * from './stateproof'
 // Re-export transaction-related types from algokit_transact
 export type {
-  PaymentTransactionFields,
-  KeyRegistrationTransactionFields,
+  AppCallTransactionFields as ApplicationTransactionFields,
   AssetConfigTransactionFields,
-  AssetTransferTransactionFields,
   AssetFreezeTransactionFields,
-  AppCallTransactionFields as ApplicationTransactionFields
+  AssetTransferTransactionFields,
+  KeyRegistrationTransactionFields,
+  PaymentTransactionFields,
 } from '@algorandfoundation/algokit-transact'
 export * from './types/account'
 export type { default as Account } from './types/account'

@@ -1,3 +1,4 @@
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -39,7 +40,7 @@ describe('transaction', () => {
     const { algorand } = localnet.context
     const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), maxFee: (1_000_000).microAlgo() })
 
-    expect(confirmation?.txn.txn.fee).toBe(1000n)
+    expect(confirmation?.txn.transaction.fee).toBe(1000n)
   })
 
   test('Transaction fee is overridable', async () => {
@@ -47,7 +48,7 @@ describe('transaction', () => {
     const fee = (1).algo()
     const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), staticFee: fee })
 
-    expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
+    expect(confirmation.txn.transaction.fee).toBe(fee.microAlgo)
   })
 
   test('Transaction group is sent', async () => {
@@ -58,15 +59,15 @@ describe('transaction', () => {
       confirmations,
     } = await algorand.newGroup().addPayment(getTestTransaction((1).microAlgo())).addPayment(getTestTransaction((2).microAlgo())).send()
 
-    invariant(confirmations[0].txn.txn.group)
-    invariant(confirmations[1].txn.txn.group)
+    invariant(confirmations[0].txn.transaction.group)
+    invariant(confirmations[1].txn.transaction.group)
     invariant(txn1.group)
     invariant(txn2.group)
     expect(confirmations.length).toBe(2)
     expect(confirmations[0].confirmedRound).toBeGreaterThanOrEqual(txn1.firstValid)
     expect(confirmations[1].confirmedRound).toBeGreaterThanOrEqual(txn2.firstValid)
-    expect(Buffer.from(confirmations[0].txn.txn.group).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
-    expect(Buffer.from(confirmations[1].txn.txn.group).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
+    expect(Buffer.from(confirmations[0].txn.transaction.group).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
+    expect(Buffer.from(confirmations[1].txn.transaction.group).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
   })
 
   test('Multisig single account', async () => {
@@ -133,9 +134,9 @@ describe('transaction', () => {
     const { algorand, algod } = localnet.context
     const txn = await algorand.createTransaction.payment(getTestTransaction())
     try {
-      await waitForConfirmation(txn.txID(), 5, algod)
+      await waitForConfirmation(getTransactionId(txn), 5, algod)
     } catch (e: unknown) {
-      expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
+      expect((e as Error).message).toEqual(`Transaction ${getTransactionId(txn)} not confirmed after 5 rounds`)
     }
   })
 
@@ -149,7 +150,7 @@ describe('transaction', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const messageRegex = new RegExp(
-        `transaction ${txn2.txID()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
+        `transaction ${getTransactionId(txn2)}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
       )
       expect(e.traces[0].message).toMatch(messageRegex)
     }
@@ -465,7 +466,7 @@ describe('transaction', () => {
       await Promise.all(
         result.transactions.map(async (txn) => {
           expect(Buffer.from(txn.group!).toString('base64')).toBe(result.groupId)
-          await localnet.context.waitForIndexerTransaction(txn.txID())
+          await localnet.context.waitForIndexerTransaction(getTransactionId(txn))
         }),
       )
     })
@@ -966,8 +967,8 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
         .send({ populateAppCallResources: true })
 
-      const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallAccts = transactions[0].appCall?.accountReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
     })
@@ -990,8 +991,8 @@ describe('Resource population: Mixed', () => {
         )
         .send({ populateAppCallResources: true })
 
-      const v8CallApps = transactions[0].applicationCall?.foreignApps ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallApps = transactions[0].appCall?.appReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
     })
@@ -1100,7 +1101,7 @@ describe('Resource population: meta', () => {
     })
     const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('rekeyed account', async () => {
@@ -1121,7 +1122,7 @@ describe('Resource population: meta', () => {
       method: 'senderAssetBalance',
     })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('create box in new app', async () => {
@@ -1135,9 +1136,9 @@ describe('Resource population: meta', () => {
       staticFee: (4_000).microAlgo(),
     })
 
-    const boxRef = result.transaction.applicationCall?.boxes?.[0]
+    const boxRef = result.transaction.appCall?.boxReferences?.[0]
     expect(boxRef).toBeDefined()
-    expect(boxRef?.appIndex).toBe(0n)
+    expect(boxRef?.appId).toBe(0n)
   })
 
   test('order is deterministic', async () => {
@@ -1192,20 +1193,20 @@ describe('Resource population: meta', () => {
       for (const txnWithSigner of populatedAtc.buildGroup()) {
         const txn = txnWithSigner.txn
 
-        for (const acct of txn.applicationCall?.accounts ?? []) {
+        for (const acct of txn.appCall?.accountReferences ?? []) {
           resources.push(acct.toString())
         }
 
-        for (const asset of txn.applicationCall?.foreignAssets ?? []) {
+        for (const asset of txn.appCall?.assetReferences ?? []) {
           resources.push(asset.toString())
         }
 
-        for (const app of txn.applicationCall?.foreignApps ?? []) {
+        for (const app of txn.appCall?.appReferences ?? []) {
           resources.push(app.toString())
         }
 
-        for (const box of txn.applicationCall?.boxes ?? []) {
-          resources.push(`${box.appIndex}-${box.name.toString()}`)
+        for (const box of txn.appCall?.boxReferences ?? []) {
+          resources.push(`${box.appId}-${box.name.toString()}`)
         }
       }
 
