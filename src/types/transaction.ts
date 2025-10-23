@@ -1,13 +1,13 @@
+import { PendingTransactionResponse } from '@algorandfoundation/algod-client'
+import { Transaction } from '@algorandfoundation/algokit-transact'
+import type { Account } from '../sdk'
 import * as algosdk from '../sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
-import type { Account } from '../sdk'
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import LogicSigAccount = algosdk.LogicSigAccount
-import Transaction = algosdk.Transaction
-import modelsv2 = algosdk.modelsv2
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,7 +54,7 @@ export interface SendTransactionResult {
   /** The transaction */
   transaction: Transaction
   /** The response if the transaction was sent and waited for */
-  confirmation?: modelsv2.PendingTransactionResponse
+  confirmation?: PendingTransactionResponse
 }
 
 /** The result of preparing and/or sending multiple transactions */
@@ -64,7 +64,7 @@ export interface SendTransactionResults {
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations?: modelsv2.PendingTransactionResponse[]
+  confirmations?: PendingTransactionResponse[]
 }
 
 /** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
@@ -78,21 +78,21 @@ export interface SendAtomicTransactionComposerResults extends SendTransactionRes
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations: modelsv2.PendingTransactionResponse[]
+  confirmations: PendingTransactionResponse[]
 }
 
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
   /** The response from sending and waiting for the transaction */
-  confirmation: modelsv2.PendingTransactionResponse
+  confirmation: PendingTransactionResponse
 }
 
 /** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
 export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
   /** The response from sending and waiting for the primary transaction */
-  confirmation: modelsv2.PendingTransactionResponse
+  confirmation: PendingTransactionResponse
   /** The response from sending and waiting for the transactions */
-  confirmations: modelsv2.PendingTransactionResponse[]
+  confirmations: PendingTransactionResponse[]
 }
 
 /** Core account abstraction when signing/sending transactions

@@ -1,6 +1,6 @@
+import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { Address } from '../sdk'
-import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
@@ -85,7 +85,7 @@ export class KmdAccountManager {
     if (predicate) {
       for (i = 0; i < addresses.length; i++) {
         const address = addresses[i]
-        const account = await this._clientManager.algod.accountInformation(address).do()
+        const account = await this._clientManager.algod.accountInformation(address)
         if (predicate(account)) {
           break
         }

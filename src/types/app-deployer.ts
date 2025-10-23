@@ -1,8 +1,8 @@
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
+import * as algosdk from '../sdk'
+import { Address } from '../sdk'
 import { calculateExtraProgramPages } from '../util'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {
@@ -520,7 +520,7 @@ export class AppDeployer {
         const appTransactions = await indexer.searchTransactions(this._indexer!, (s) =>
           s
             .minRound(createdApp.createdAtRound)
-            .txType(algosdk.TransactionType.appl)
+            .txType(TransactionType.AppCall)
             .applicationID(Number(createdApp.id))
             .address(creatorAddress)
             .addressRole('sender')

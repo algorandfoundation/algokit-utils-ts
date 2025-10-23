@@ -1,4 +1,5 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
+import { SimulateRequest, TransactionParams } from '@algorandfoundation/algod-client'
+import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { ABIMethod, Address } from '../sdk'
@@ -12,12 +13,9 @@ import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
 import { Arc2TransactionNote, SendAtomicTransactionComposerResults, SendParams } from './transaction'
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import Transaction = algosdk.Transaction
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
 import isTransactionWithSigner = algosdk.isTransactionWithSigner
-import SimulateResponse = algosdk.modelsv2.SimulateResponse
-import modelsv2 = algosdk.modelsv2
 
 const address = (address: string | Address): Address => {
   return typeof address === 'string' ? Address.fromString(address) : address
@@ -38,7 +36,7 @@ export type SkipSignaturesSimulateOptions = Expand<
 /** The raw API options to control a simulate request.
  * See algod API docs for more information: https://dev.algorand.co/reference/rest-apis/algod/#simulatetransaction
  */
-export type RawSimulateOptions = Expand<Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>>
+export type RawSimulateOptions = Expand<Omit<SimulateRequest, 'txnGroups'>>
 
 /** All options to control a simulate request */
 export type SimulateOptions = Expand<Partial<SkipSignaturesSimulateOptions> & RawSimulateOptions>
@@ -567,7 +565,7 @@ export class TransactionComposer {
   private algod: algosdk.Algodv2
 
   /** An async function that will return suggested params for the transaction. */
-  private getSuggestedParams: () => Promise<algosdk.SuggestedParams>
+  private getSuggestedParams: () => Promise<TransactionParams>
 
   /** A function that takes in an address and return a signer function for that address. */
   private getSigner: (address: string | Address) => algosdk.TransactionSigner
@@ -2160,7 +2158,7 @@ export class TransactionComposer {
     return {
       confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
       transactions: transactions,
-      txIds: transactions.map((t) => t.txID()),
+      txIds: transactions.map((t) => getTransactionId(t)),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
       returns: methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),

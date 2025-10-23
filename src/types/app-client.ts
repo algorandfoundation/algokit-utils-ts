@@ -1,3 +1,5 @@
+import { TransactionParams } from '@algorandfoundation/algod-client'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -85,7 +87,6 @@ import getApplicationAddress = algosdk.getApplicationAddress
 import Indexer = algosdk.Indexer
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.ProgramSourceMap
-import SuggestedParams = algosdk.SuggestedParams
 import TransactionSigner = algosdk.TransactionSigner
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
@@ -128,7 +129,7 @@ export type AppDetailsBase = {
   /** Default sender to use for transactions issued by this application client */
   sender?: SendTransactionFrom
   /** Default suggested params object to use */
-  params?: SuggestedParams
+  params?: TransactionParams
   /** Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get
    * used in calls to `deploy`, `create` and `update` unless overridden in those calls
    */
@@ -1587,7 +1588,7 @@ export class AppClient {
 
       const txns = e.sentTransactions
 
-      const txn = txns.find((t) => e.message.includes(t.txID()))
+      const txn = txns.find((t) => e.message.includes(getTransactionId(t)))
 
       const programsDefinedAndEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
         if (a === undefined || b === undefined) return false
@@ -1601,8 +1602,8 @@ export class AppClient {
       }
 
       if (
-        !programsDefinedAndEqual(txn?.applicationCall?.clearProgram, this._lastCompiled.clear) ||
-        !programsDefinedAndEqual(txn?.applicationCall?.approvalProgram, this._lastCompiled?.approval)
+        !programsDefinedAndEqual(txn?.appCall?.clearStateProgram, this._lastCompiled.clear) ||
+        !programsDefinedAndEqual(txn?.appCall?.approvalProgram, this._lastCompiled?.approval)
       ) {
         return e
       }
@@ -1802,7 +1803,7 @@ export class ApplicationClient {
   private indexer?: algosdk.Indexer
   private appSpec: AppSpec
   private sender: SendTransactionFrom | undefined
-  private params: SuggestedParams | undefined
+  private params: TransactionParams | undefined
   private existingDeployments: LegacyAppLookup | undefined
   private deployTimeParams?: TealTemplateParams
 

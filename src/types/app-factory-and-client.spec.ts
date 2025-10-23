@@ -1,3 +1,4 @@
+import { TransactionType } from '@algorandfoundation/algokit-transact'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
 import * as algokit from '..'
@@ -12,7 +13,7 @@ import errorOuterAppArc56Json from '../../tests/example-contracts/inner_error/ar
 import nestedStruct from '../../tests/example-contracts/nested_struct/artifacts/NestedStruct.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
 import * as algosdk from '../sdk'
-import { ABIUintType, Address, OnApplicationComplete, TransactionSigner, TransactionType, getApplicationAddress } from '../sdk'
+import { ABIUintType, Address, OnApplicationComplete, TransactionSigner, getApplicationAddress } from '../sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { asJson } from '../util'
 import { OnSchemaBreak, OnUpdate } from './app'
@@ -57,7 +58,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -93,7 +94,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {

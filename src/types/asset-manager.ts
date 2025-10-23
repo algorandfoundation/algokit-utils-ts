@@ -1,6 +1,6 @@
+import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { Address } from '../sdk'
-import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
 import { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE, TransactionComposer } from './composer'
@@ -204,7 +204,8 @@ export class AssetManager {
    * @returns The account asset holding information
    */
   public async getAccountInformation(sender: string | Address, assetId: bigint): Promise<AccountAssetInformation> {
-    const info = await this._algod.accountAssetInformation(sender, Number(assetId)).do()
+    const senderAddress = typeof sender === 'string' ? sender : sender.toString()
+    const info = await this._algod.accountAssetInformation(senderAddress, Number(assetId))
 
     return {
       assetId: BigInt(assetId),

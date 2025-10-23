@@ -67,7 +67,7 @@ describe('application-client', () => {
 
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -118,7 +118,7 @@ describe('application-client', () => {
     expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
   })
 
   test('Deploy app - can still deploy when immutable and permanent', async () => {
@@ -170,7 +170,7 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
     expect(app.compiledApproval).toBeTruthy()
   })
 
@@ -202,7 +202,7 @@ describe('application-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
-    expect(app.confirmation?.applicationIndex).toBe(BigInt(app.appId))
+    expect(app.confirmation?.appId).toBe(BigInt(app.appId))
     expect(app.return?.returnValue).toBe('arg_io')
   })
 

@@ -1,5 +1,5 @@
+import { TransactionParams } from '@algorandfoundation/algod-client'
 import * as algosdk from '../sdk'
-import { SuggestedParams } from '../sdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
@@ -123,7 +123,7 @@ export class ClientManager {
     return this._kmd
   }
 
-  private _getNetworkPromise: Promise<SuggestedParams> | undefined
+  private _getNetworkPromise: Promise<TransactionParams> | undefined
   /**
    * Get details about the current network.
    * @example Getting genesis ID
@@ -140,10 +140,10 @@ export class ClientManager {
 
     const params = await this._getNetworkPromise
     return {
-      isTestNet: ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisID ?? 'unknown'),
-      isMainNet: ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisID ?? 'unknown'),
-      isLocalNet: ClientManager.genesisIdIsLocalNet(params.genesisID ?? 'unknown'),
-      genesisId: params.genesisID ?? 'unknown',
+      isTestNet: ['testnet-v1.0', 'testnet-v1', 'testnet'].includes(params.genesisId ?? 'unknown'),
+      isMainNet: ['mainnet-v1.0', 'mainnet-v1', 'mainnet'].includes(params.genesisId ?? 'unknown'),
+      isLocalNet: ClientManager.genesisIdIsLocalNet(params.genesisId ?? 'unknown'),
+      genesisId: params.genesisId ?? 'unknown',
       genesisHash: params.genesisHash ? Buffer.from(params.genesisHash).toString('base64') : 'unknown',
     }
   }

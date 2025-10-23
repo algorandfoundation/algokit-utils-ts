@@ -1,4 +1,5 @@
 import { TransactionParams } from '@algorandfoundation/algod-client'
+import { Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '../sdk'
 import { Expand } from './expand'
 import {
@@ -18,8 +19,6 @@ import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
 import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.ProgramSourceMap
-import SuggestedParams = algosdk.SuggestedParams
-import Transaction = algosdk.Transaction
 
 /** The name of the TEAL template variable for deploy-time immutability control */
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'
@@ -189,7 +188,7 @@ export interface AppCallParams extends SendTransactionParams {
   /** The account to make the call from */
   from: SendTransactionFrom
   /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
+  transactionParams?: TransactionParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** The arguments passed in to the app call */
