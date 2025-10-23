@@ -1,9 +1,12 @@
 import Account from './types/account.js';
-import { Transaction } from './transaction.js';
-import { encodeUnsignedSimulateTransaction } from './signedTransaction.js';
+import type { Transaction } from '../../algokit_transact/src/transactions/transaction.js';
+import { encodeTransaction, encodeTransactionRaw } from '../../algokit_transact/src/transactions/transaction.js';
+import { encodeSignedTransaction } from '../../algokit_transact/src/transactions/signed-transaction.js';
+import type { SignedTransaction } from '../../algokit_transact/src/transactions/signed-transaction.js';
 import { LogicSigAccount } from './logicsig.js';
 import { signLogicSigTransactionObject } from './signing.js';
 import { MultisigMetadata } from './multisig.js';
+import * as nacl from './nacl/naclWrappers.js';
 import {
   signMultisigTransaction,
   mergeMultisigTransactions,
@@ -32,7 +35,17 @@ export function makeBasicAccountTransactionSigner(
     const signed: Uint8Array[] = [];
 
     for (const index of indexesToSign) {
-      signed.push(txnGroup[index].signTxn(account.sk));
+      const txn = txnGroup[index];
+      // Sign transaction using nacl
+      const bytesToSign = encodeTransactionRaw(txn);
+      const signature = nacl.sign(bytesToSign, account.sk);
+
+      const signedTxn: SignedTransaction = {
+        transaction: txn,
+        signature,
+      };
+
+      signed.push(encodeSignedTransaction(signedTxn));
     }
 
     return Promise.resolve(signed);

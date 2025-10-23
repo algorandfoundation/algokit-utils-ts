@@ -2,9 +2,10 @@ import { Address } from './encoding/address.js'
 import * as encoding from './encoding/encoding.js'
 import { MultisigMetadata, addressFromMultisigPreImg, pksFromAddresses } from './multisig.js'
 import * as nacl from './nacl/naclWrappers.js'
-import { SignedTransaction } from './signedTransaction.js'
-import { Transaction } from './transaction.js'
-import { EncodedMultisig } from './types/transactions/encoded.js'
+import type { SignedTransaction, MultisigSignature, MultisigSubsignature } from '../../algokit_transact/src/transactions/signed-transaction.js'
+import { encodeSignedTransaction, decodeSignedTransaction } from '../../algokit_transact/src/transactions/signed-transaction.js'
+import type { Transaction } from '../../algokit_transact/src/transactions/transaction.js'
+import { getTransactionId, encodeTransactionRaw } from '../../algokit_transact/src/transactions/transaction.js'
 import * as utils from './utils/utils.js'
 
 export const MULTISIG_MERGE_LESSTHANTWO_ERROR_MSG = 'Not enough multisig transactions to merge. Need at least two'
@@ -28,12 +29,15 @@ const MULTISIG_KEY_NOT_EXIST_ERROR_MSG = 'Key does not exist'
 export function createMultisigTransaction(txn: Transaction, { version, threshold, addrs }: MultisigMetadata) {
   // construct the appendable multisigned transaction format
   const pks = pksFromAddresses(addrs)
-  const subsigs = pks.map((pk) => ({ pk }))
+  const subsignatures: MultisigSubsignature[] = pks.map((pk) => ({
+    address: new Address(pk).toString(),
+    signature: undefined,
+  }))
 
-  const msig: EncodedMultisig = {
-    v: version,
-    thr: threshold,
-    subsig: subsigs,
+  const multiSignature: MultisigSignature = {
+    version,
+    threshold,
+    subsignatures,
   }
 
   // if the address of this multisig is different from the transaction sender,
@@ -43,18 +47,18 @@ export function createMultisigTransaction(txn: Transaction, { version, threshold
     threshold,
     pks,
   })
-  let sgnr: Address | undefined
-  if (!txn.sender.equals(msigAddr)) {
-    sgnr = msigAddr
+  let authAddress: string | undefined
+  if (msigAddr.toString() !== txn.sender) {
+    authAddress = msigAddr.toString()
   }
 
-  const signedTxn = new SignedTransaction({
-    txn,
-    msig,
-    sgnr,
-  })
+  const signedTxn: SignedTransaction = {
+    transaction: txn,
+    multiSignature,
+    authAddress,
+  }
 
-  return encoding.encodeMsgpack(signedTxn)
+  return encodeSignedTransaction(signedTxn)
 }
 
 interface MultisigOptions {
@@ -88,21 +92,32 @@ function createMultisigTransactionWithSignature(
     addrs: pks.map((pk) => new Address(pk)),
   })
   // note: this is not signed yet, but will be shortly
-  const signedTxn = encoding.decodeMsgpack(encodedMsig, SignedTransaction)
+  const signedTxn = decodeSignedTransaction(encodedMsig)
 
   let keyExist = false
+
   // append the multisig signature to the corresponding public key in the multisig blob
-  signedTxn.msig!.subsig.forEach((subsig, i) => {
-    if (nacl.bytesEqual(subsig.pk, myPk)) {
+  const updatedSubsigs = signedTxn.multiSignature!.subsignatures.map((subsig) => {
+    if (Address.fromString(subsig.address).publicKey.every((byte, idx) => byte === myPk[idx])) {
       keyExist = true
-      signedTxn.msig!.subsig[i].s = rawSig
+      return { ...subsig, signature: rawSig }
     }
+    return subsig
   })
+
   if (!keyExist) {
     throw new Error(MULTISIG_KEY_NOT_EXIST_ERROR_MSG)
   }
 
-  return encoding.encodeMsgpack(signedTxn)
+  const updatedSignedTxn: SignedTransaction = {
+    ...signedTxn,
+    multiSignature: {
+      ...signedTxn.multiSignature!,
+      subsignatures: updatedSubsigs,
+    },
+  }
+
+  return encodeSignedTransaction(updatedSignedTxn)
 }
 
 /**
@@ -118,7 +133,10 @@ function createMultisigTransactionWithSignature(
 function partialSignTxn(transaction: Transaction, { version, threshold, pks }: MultisigMetadataWithPks, sk: Uint8Array) {
   // get signature verifier
   const myPk = nacl.keyPairFromSecretKey(sk).publicKey
-  return createMultisigTransactionWithSignature(transaction, { rawSig: transaction.rawSignTxn(sk), myPk }, { version, threshold, pks })
+  // Get bytes to sign using encodeTransactionRaw
+  const bytesToSign = encodeTransactionRaw(transaction)
+  const rawSig = nacl.sign(bytesToSign, sk)
+  return createMultisigTransactionWithSignature(transaction, { rawSig, myPk }, { version, threshold, pks })
 }
 
 /**
@@ -159,72 +177,74 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   if (multisigTxnBlobs.length < 2) {
     throw new Error(MULTISIG_MERGE_LESSTHANTWO_ERROR_MSG)
   }
-  const refSigTx = encoding.decodeMsgpack(multisigTxnBlobs[0], SignedTransaction)
-  if (!refSigTx.msig) {
+  const refSigTx = decodeSignedTransaction(multisigTxnBlobs[0])
+  if (!refSigTx.multiSignature) {
     throw new Error('Invalid multisig transaction, multisig structure missing at index 0')
   }
-  const refTxID = refSigTx.txn.txID()
-  const refAuthAddr = refSigTx.sgnr ? refSigTx.sgnr.toString() : undefined
+  const refTxID = getTransactionId(refSigTx.transaction)
+  const refAuthAddr = refSigTx.authAddress
   const refPreImage = {
-    version: refSigTx.msig.v,
-    threshold: refSigTx.msig.thr,
-    pks: refSigTx.msig.subsig.map((subsig) => subsig.pk),
+    version: refSigTx.multiSignature.version,
+    threshold: refSigTx.multiSignature.threshold,
+    pks: refSigTx.multiSignature.subsignatures.map((subsig) => Address.fromString(subsig.address).publicKey),
   }
   const refMsigAddr = addressFromMultisigPreImg(refPreImage)
 
-  const newSubsigs = refSigTx.msig.subsig.map((sig) => ({ ...sig }))
+  const newSubsigs: MultisigSubsignature[] = refSigTx.multiSignature.subsignatures.map((sig) => ({ ...sig }))
   for (let i = 1; i < multisigTxnBlobs.length; i++) {
-    const unisig = encoding.decodeMsgpack(multisigTxnBlobs[i], SignedTransaction)
-    if (!unisig.msig) {
+    const unisig = decodeSignedTransaction(multisigTxnBlobs[i])
+    if (!unisig.multiSignature) {
       throw new Error(`Invalid multisig transaction, multisig structure missing at index ${i}`)
     }
 
-    if (unisig.txn.txID() !== refTxID) {
+    if (getTransactionId(unisig.transaction) !== refTxID) {
       throw new Error(MULTISIG_MERGE_MISMATCH_ERROR_MSG)
     }
 
-    const authAddr = unisig.sgnr ? unisig.sgnr.toString() : undefined
+    const authAddr = unisig.authAddress
     if (refAuthAddr !== authAddr) {
       throw new Error(MULTISIG_MERGE_MISMATCH_AUTH_ADDR_MSG)
     }
 
     // check multisig has same preimage as reference
-    if (unisig.msig.subsig.length !== refSigTx.msig.subsig.length) {
+    if (unisig.multiSignature.subsignatures.length !== refSigTx.multiSignature.subsignatures.length) {
       throw new Error(MULTISIG_MERGE_WRONG_PREIMAGE_ERROR_MSG)
     }
     const preimg: MultisigMetadataWithPks = {
-      version: unisig.msig.v,
-      threshold: unisig.msig.thr,
-      pks: unisig.msig.subsig.map((subsig) => subsig.pk),
+      version: unisig.multiSignature.version,
+      threshold: unisig.multiSignature.threshold,
+      pks: unisig.multiSignature.subsignatures.map((subsig) => Address.fromString(subsig.address).publicKey),
     }
     const msgigAddr = addressFromMultisigPreImg(preimg)
-    if (!refMsigAddr.equals(msgigAddr)) {
+    if (refMsigAddr.toString() !== msgigAddr.toString()) {
       throw new Error(MULTISIG_MERGE_WRONG_PREIMAGE_ERROR_MSG)
     }
 
     // now, we can merge
-    unisig.msig.subsig.forEach((uniSubsig, index) => {
-      if (!uniSubsig.s) return
+    unisig.multiSignature.subsignatures.forEach((uniSubsig, index) => {
+      if (!uniSubsig.signature) return
       const current = newSubsigs[index]
-      if (current.s && !utils.arrayEqual(uniSubsig.s, current.s)) {
+      if (current.signature && !utils.arrayEqual(uniSubsig.signature, current.signature)) {
         // mismatch
         throw new Error(MULTISIG_MERGE_SIG_MISMATCH_ERROR_MSG)
       }
-      current.s = uniSubsig.s
+      current.signature = uniSubsig.signature
     })
   }
-  const msig: EncodedMultisig = {
-    v: refSigTx.msig.v,
-    thr: refSigTx.msig.thr,
-    subsig: newSubsigs,
+
+  const multiSignature: MultisigSignature = {
+    version: refSigTx.multiSignature.version,
+    threshold: refSigTx.multiSignature.threshold,
+    subsignatures: newSubsigs,
   }
-  const refSgnr = typeof refAuthAddr !== 'undefined' ? refSigTx.sgnr : undefined
-  const signedTxn = new SignedTransaction({
-    msig,
-    txn: refSigTx.txn,
-    sgnr: refSgnr,
-  })
-  return encoding.encodeMsgpack(signedTxn)
+
+  const signedTxn: SignedTransaction = {
+    transaction: refSigTx.transaction,
+    multiSignature,
+    authAddress: refAuthAddr,
+  }
+
+  return encodeSignedTransaction(signedTxn)
 }
 
 /**

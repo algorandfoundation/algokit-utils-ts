@@ -503,9 +503,24 @@ Files with Transaction/SignedTransaction type annotations only:
   - Updated `assignGroupID` to use immutable `groupTransactions()` function
   - Removed mutation logic (no longer modifying txn.group directly)
   - Zero TypeScript errors
-- [ ] **Phase 2.3:** Refactor `signing.ts` (4 hours)
-- [ ] **Phase 2.4:** Refactor `multisigSigning.ts` (8 hours)
-- [ ] **Phase 2.5:** Refactor `signer.ts` (4 hours)
+- [x] **Phase 2.3:** Refactor `signing.ts` (4 hours) ✅ **COMPLETED**
+  - Updated imports to use algokit_transact types
+  - Refactored `signLogicSigTransactionWithAddress` to create plain SignedTransaction objects
+  - Converted LogicSig to LogicSignature structure
+  - Updated address comparisons (Address class → string)
+  - Zero TypeScript errors
+- [x] **Phase 2.4:** Refactor `multisigSigning.ts` (8 hours) ✅ **COMPLETED**
+  - Refactored `createMultisigTransaction` to use new MultisigSignature type
+  - Updated `createMultisigTransactionWithSignature` with immutable approach
+  - Refactored `partialSignTxn` to use `encodeTransactionRaw` and nacl.sign
+  - Refactored `mergeMultisigTransactions` with new property names (msig→multiSignature, sgnr→authAddress)
+  - Converted from mutation to immutable object creation
+  - Zero TypeScript errors
+- [x] **Phase 2.5:** Refactor `signer.ts` (4 hours) ✅ **COMPLETED**
+  - Updated imports and type references
+  - Refactored `makeBasicAccountTransactionSigner` to manually sign with nacl
+  - Other signers work as-is since they use helper functions
+  - Zero TypeScript errors
 - [ ] **Phase 2.6:** Refactor `composer.ts` (24 hours) ⚠️ CRITICAL
 - [ ] **Phase 2.7:** Update `abi/transaction.ts` (1 hour)
 - [ ] **Phase 2.8:** Refactor `types/block.ts` (8 hours)
