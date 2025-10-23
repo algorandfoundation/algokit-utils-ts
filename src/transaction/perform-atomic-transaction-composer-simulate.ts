@@ -1,5 +1,5 @@
 import * as algosdk from '../sdk'
-import { SignedTransaction, decodeMsgpack } from '../sdk'
+import { decodeSignedTransaction } from '@algorandfoundation/algokit-transact'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import modelsv2 = algosdk.modelsv2
@@ -34,7 +34,7 @@ export async function performAtomicTransactionComposerSimulate(
     }),
     txnGroups: [
       new modelsv2.SimulateRequestTransactionGroup({
-        txns: decodedSignedTransactions.map((txn) => decodeMsgpack(txn, SignedTransaction)),
+        txns: decodedSignedTransactions.map((txn) => decodeSignedTransaction(txn)),
       }),
     ],
   })

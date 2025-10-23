@@ -586,7 +586,23 @@ Files with Transaction/SignedTransaction type annotations only:
 
 ### Higher-Level Migration
 
-- [ ] **Phase 3:** Update 6 utility files (6 hours)
+- [x] **Phase 3:** Update utility files ✅ **COMPLETED**
+  - **Phase 3.1:** Updated `perform-atomic-transaction-composer-simulate.ts`
+    - Replaced `decodeMsgpack(txn, SignedTransaction)` with `decodeSignedTransaction(txn)`
+  - **Phase 3.2:** Updated `testing/transaction-logger.ts`
+    - Updated property access: `decoded.txn` → `decoded.transaction`
+    - Replaced `decoded.txn.txID()` with `getTransactionId(decoded.transaction)`
+  - **Phase 3.3-3.6:** Checked remaining files - no changes needed
+    - `account/account.ts`, `types/transaction.ts`, `types/account-manager.ts`, `types/algorand-client.ts` all use type annotations that are re-exported through algosdk
+  - **Phase 3.7:** Updated `src/transaction/transaction.ts` ✅ **MAJOR UPDATE**
+    - Replaced 8 instances of `.txID()` → `getTransactionId()`
+    - Replaced `.toByte()` → `encodeTransaction()`
+    - Updated `.type` → `.transactionType`
+    - Updated `.sender.toString()` → `.sender`
+    - Imported `TransactionType` and `BoxReference` from algokit_transact
+    - Fixed property access: `TransactionType.appl` → `TransactionType.ApplicationCall`
+  - Zero TypeScript errors in all Phase 3 files
+  - Total project errors reduced from 209 to 3 (all in test files)
 - [ ] **Phase 4:** Verify algokit_utils integration (4 hours)
 - [ ] **Phase 5:** Verify client models (2 hours)
 

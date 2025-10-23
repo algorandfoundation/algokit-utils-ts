@@ -5,9 +5,8 @@ import {
   Address,
   ApplicationTransactionFields,
   stringifyJSON,
-  TransactionBoxReference,
-  TransactionType,
 } from '../sdk'
+import { getTransactionId, encodeTransaction, TransactionType, BoxReference } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
@@ -251,11 +250,11 @@ export const sendTransaction = async function (
 
   await algod.sendRawTransaction(signedTransaction).do()
 
-  Config.getLogger(suppressLog).verbose(`Sent transaction ID ${txnToSend.txID()} ${txnToSend.type} from ${getSenderAddress(from)}`)
+  Config.getLogger(suppressLog).verbose(`Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.transactionType} from ${getSenderAddress(from)}`)
 
   let confirmation: modelsv2.PendingTransactionResponse | undefined = undefined
   if (!skipWaiting) {
-    confirmation = await waitForConfirmation(txnToSend.txID(), maxRoundsToWaitForConfirmation ?? 5, algod)
+    confirmation = await waitForConfirmation(getTransactionId(txnToSend), maxRoundsToWaitForConfirmation ?? 5, algod)
   }
 
   return { transaction: txnToSend, confirmation }
@@ -365,10 +364,10 @@ async function getGroupExecutionInfo(
       if (sendParams.coverAppCallInnerTransactionFees) {
         // Min fee calc is lifted from algosdk https://github.com/algorand/js-algorand-sdk/blob/6973ff583b243ddb0632e91f4c0383021430a789/src/transaction.ts#L710
         // 75 is the number of bytes added to a txn after signing it
-        const parentPerByteFee = perByteTxnFee * BigInt(originalTxn.toByte().length + 75)
+        const parentPerByteFee = perByteTxnFee * BigInt(encodeTransaction(originalTxn).length + 75)
         const parentMinFee = parentPerByteFee < minTxnFee ? minTxnFee : parentPerByteFee
         const parentFeeDelta = parentMinFee - originalTxn.fee
-        if (originalTxn.type === TransactionType.appl) {
+        if (originalTxn.transactionType === algosdk.TransactionType.ApplicationCall) {
           const calculateInnerFeeDelta = (itxns: algosdk.modelsv2.PendingTransactionResponse[], acc: bigint = 0n): bigint => {
             // Surplus inner transaction fees do not pool up to the parent transaction.
             // Additionally surplus inner transaction fees only pool from sibling transactions that are sent prior to a given inner transaction, hence why we iterate in reverse order.
@@ -667,7 +666,7 @@ export async function prepareGroupForSending(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(txns[txnIndex].txn as any)['applicationCall'] = {
             ...txns[txnIndex].txn.applicationCall,
-            boxes: [...(txns[txnIndex].txn?.applicationCall?.boxes ?? []), ...[{ appIndex: app, name } satisfies TransactionBoxReference]],
+            boxes: [...(txns[txnIndex].txn?.applicationCall?.boxes ?? []), ...[{ appIndex: app, name } satisfies BoxReference]],
           } satisfies Partial<ApplicationTransactionFields>
 
           return
@@ -723,7 +722,7 @@ export async function prepareGroupForSending(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['applicationCall'] = {
           ...txns[txnIndex].txn.applicationCall,
-          boxes: [...(txns[txnIndex].txn?.applicationCall?.boxes ?? []), ...[{ appIndex: app, name } satisfies TransactionBoxReference]],
+          boxes: [...(txns[txnIndex].txn?.applicationCall?.boxes ?? []), ...[{ appIndex: app, name } satisfies BoxReference]],
         } satisfies Partial<ApplicationTransactionFields>
 
         if (app.toString() !== '0') {
@@ -870,7 +869,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).debug(
         `Transaction IDs (${groupId})`,
-        transactionsToSend.map((t) => t.txID()),
+        transactionsToSend.map((t) => getTransactionId(t)),
       )
     }
 
@@ -892,13 +891,13 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
     } else {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
-        `Sent transaction ID ${transactionsToSend[0].txID()} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender.toString()}`,
+        `Sent transaction ID ${getTransactionId(transactionsToSend[0])} ${transactionsToSend[0].transactionType} from ${transactionsToSend[0].sender}`,
       )
     }
 
     let confirmations: modelsv2.PendingTransactionResponse[] | undefined = undefined
     if (!sendParams?.skipWaiting) {
-      confirmations = await Promise.all(transactionsToSend.map(async (t) => await algod.pendingTransactionInformation(t.txID()).do()))
+      confirmations = await Promise.all(transactionsToSend.map(async (t) => await algod.pendingTransactionInformation(getTransactionId(t))))
     }
 
     const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
@@ -906,7 +905,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     return {
       groupId,
       confirmations,
-      txIds: transactionsToSend.map((t) => t.txID()),
+      txIds: transactionsToSend.map((t) => getTransactionId(t)),
       transactions: transactionsToSend,
       returns: result.methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),
     } as SendAtomicTransactionComposerResults
@@ -1017,7 +1016,7 @@ export const sendGroupOfTransactions = async function (groupSend: TransactionGro
 
       const txn = 'then' in t ? (await t).transaction : t
       if (!signer) {
-        throw new Error(`Attempt to send transaction ${txn.txID()} as part of a group transaction, but no signer parameter was provided.`)
+        throw new Error(`Attempt to send transaction ${getTransactionId(txn)} as part of a group transaction, but no signer parameter was provided.`)
       }
 
       return {

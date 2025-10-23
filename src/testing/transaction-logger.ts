@@ -1,8 +1,8 @@
 import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { runWhenIndexerCaughtUp } from './indexer'
+import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import Algodv2 = algosdk.Algodv2
-import decodeSignedTransaction = algosdk.decodeSignedTransaction
 import Indexer = algosdk.Indexer
 
 /**
@@ -15,10 +15,10 @@ export class TransactionLogger {
 
   private _pushTxn(stxn: Uint8Array) {
     const decoded = decodeSignedTransaction(stxn)
-    if (decoded.txn.lastValid > (this._latestLastValidRound ?? BigInt(0))) {
-      this._latestLastValidRound = BigInt(decoded.txn.lastValid)
+    if (decoded.transaction.lastValid > (this._latestLastValidRound ?? BigInt(0))) {
+      this._latestLastValidRound = decoded.transaction.lastValid
     }
-    this._sentTransactionIds.push(decoded.txn.txID())
+    this._sentTransactionIds.push(getTransactionId(decoded.transaction))
   }
 
   /**
