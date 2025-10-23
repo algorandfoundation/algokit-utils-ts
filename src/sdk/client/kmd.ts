@@ -4,7 +4,8 @@ import {
   coerceToBytes,
 } from '../encoding/binarydata.js';
 import IntDecoding from '../types/intDecoding.js';
-import { Transaction } from '../transaction.js';
+import type { Transaction } from '@algorandfoundation/algokit-transact';
+import { encodeTransaction } from '@algorandfoundation/algokit-transact';
 import { CustomTokenHeader, KMDTokenHeader } from './urlTokenBaseHTTPClient.js';
 import ServiceClient from './v2/serviceClient.js';
 
@@ -286,7 +287,7 @@ export class KmdClient extends ServiceClient {
     const req = {
       wallet_handle_token: walletHandle,
       wallet_password: walletPassword,
-      transaction: bytesToBase64(transaction.toByte()),
+      transaction: bytesToBase64(encodeTransaction(transaction)),
     };
     const res = await this.post('/v1/transaction/sign', req);
     return base64ToBytes(res.signed_transaction);
@@ -313,7 +314,7 @@ export class KmdClient extends ServiceClient {
     const req = {
       wallet_handle_token: walletHandle,
       wallet_password: walletPassword,
-      transaction: bytesToBase64(transaction.toByte()),
+      transaction: bytesToBase64(encodeTransaction(transaction)),
       public_key: bytesToBase64(pk),
     };
     const res = await this.post('/v1/transaction/sign', req);
@@ -400,7 +401,7 @@ export class KmdClient extends ServiceClient {
     const pubkey = coerceToBytes(pk);
     const req = {
       wallet_handle_token: walletHandle,
-      transaction: bytesToBase64(transaction.toByte()),
+      transaction: bytesToBase64(encodeTransaction(transaction)),
       public_key: bytesToBase64(pubkey),
       partial_multisig: partial,
       wallet_password: pw,

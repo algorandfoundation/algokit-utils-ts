@@ -559,9 +559,16 @@ Files with Transaction/SignedTransaction type annotations only:
   - Refactored `makeBasicAccountTransactionSigner` to manually sign with nacl
   - Other signers work as-is since they use helper functions
   - Zero TypeScript errors
-- [x] **Phase 2.6:** Refactor `composer.ts` (24 hours) ⚠️ CRITICAL
+- [x] **Phase 2.6:** Refactor `composer.ts` (24 hours) ✅ **COMPLETED**
+  - Updated imports to use algokit_transact types and functions
+  - Refactored `clone()` method to use immutable object spread
+  - Updated `buildGroup()` to use immutable `groupTransactions()`
+  - Replaced all `decodeMsgpack()` calls with `decodeSignedTransaction()`
+  - Replaced `txn.txID()` with `getTransactionId(txn)`
+  - Updated property access: `stxn.txn` → `stxn.transaction`
+  - Zero TypeScript errors in composer.ts
 - [ ] **Phase 2.7:** Update `abi/transaction.ts` (1 hour)
-- [ ] **Phase 2.8:** Refactor `types/block.ts` (8 hours)
+- [ ] **Phase 2.8:** Refactor `types/block.ts` (8 hours), replace it with algod_client/src/models/block
 - [ ] **Phase 2.9:** Update `client/kmd.ts` (1 hour)
 
 ### Higher-Level Migration

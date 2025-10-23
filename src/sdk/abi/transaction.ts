@@ -1,4 +1,5 @@
-import { Transaction } from '../transaction.js';
+import type { Transaction } from '@algorandfoundation/algokit-transact'
+import { TransactionType } from '@algorandfoundation/algokit-transact'
 
 export enum ABITransactionType {
   /**
@@ -46,16 +47,26 @@ export function abiTypeIsTransaction(type: any): type is ABITransactionType {
     type === ABITransactionType.axfer ||
     type === ABITransactionType.afrz ||
     type === ABITransactionType.appl
-  );
+  )
 }
 
-export function abiCheckTransactionType(
-  type: ABITransactionType,
-  txn: Transaction
-): boolean {
+export function abiCheckTransactionType(type: ABITransactionType, txn: Transaction): boolean {
   if (type === ABITransactionType.any) {
-    return true;
+    return true
   }
 
-  return txn.type ? txn.type.toString() === type.toString() : false;
+  // TODO: check this conversion
+  // Map ABI transaction types to numeric TransactionType enum
+  const typeMap: Record<ABITransactionType, TransactionType | null> = {
+    [ABITransactionType.any]: null,
+    [ABITransactionType.pay]: TransactionType.Payment,
+    [ABITransactionType.keyreg]: TransactionType.KeyRegistration,
+    [ABITransactionType.acfg]: TransactionType.AssetConfig,
+    [ABITransactionType.axfer]: TransactionType.AssetTransfer,
+    [ABITransactionType.afrz]: TransactionType.AssetFreeze,
+    [ABITransactionType.appl]: TransactionType.ApplicationCall,
+  }
+
+  const expectedType = typeMap[type]
+  return expectedType !== null && txn.transactionType === expectedType
 }
