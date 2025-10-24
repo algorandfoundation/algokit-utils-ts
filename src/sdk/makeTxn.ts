@@ -11,7 +11,6 @@ import {
   KeyRegistrationTransactionParams,
   OnApplicationComplete,
   PaymentTransactionParams,
-  SuggestedParams,
 } from './types/transactions/base.js'
 
 // Helper function to convert Address to string
@@ -28,6 +27,7 @@ function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
 
 // Import new OnApplicationComplete type
 import { OnApplicationComplete as NewOnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { TransactionParams } from '../../algod_client/dist/models/transaction-params.js'
 
 // Helper function to map old OnApplicationComplete to new
 function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplicationComplete {
@@ -54,7 +54,7 @@ export interface CommonTransactionParams {
   /** Algorand address of sender */
   sender: string | Address
   /** Suggested parameters relevant to the network that will accept this transaction */
-  suggestedParams: SuggestedParams
+  suggestedParams: TransactionParams
   /** Optional, arbitrary data to be stored in the transaction's note field */
   note?: Uint8Array
   /**
@@ -87,9 +87,9 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
     transactionType: NewTransactionType.Payment,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
-    lastValid: BigInt(suggestedParams.lastValid),
+    lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
-    genesisId: suggestedParams.genesisID,
+    genesisId: suggestedParams.genesisId,
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),
@@ -130,9 +130,9 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
     transactionType: NewTransactionType.KeyRegistration,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
-    lastValid: BigInt(suggestedParams.lastValid),
+    lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
-    genesisId: suggestedParams.genesisID,
+    genesisId: suggestedParams.genesisId,
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),
@@ -181,9 +181,9 @@ export function makeBaseAssetConfigTxn({
     transactionType: NewTransactionType.AssetConfig,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
-    lastValid: BigInt(suggestedParams.lastValid),
+    lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
-    genesisId: suggestedParams.genesisID,
+    genesisId: suggestedParams.genesisId,
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),
@@ -390,9 +390,9 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
     transactionType: NewTransactionType.AssetFreeze,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
-    lastValid: BigInt(suggestedParams.lastValid),
+    lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
-    genesisId: suggestedParams.genesisID,
+    genesisId: suggestedParams.genesisId,
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),
@@ -436,9 +436,9 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
     transactionType: NewTransactionType.AssetTransfer,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
-    lastValid: BigInt(suggestedParams.lastValid),
+    lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
-    genesisId: suggestedParams.genesisID,
+    genesisId: suggestedParams.genesisId,
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),
@@ -525,9 +525,9 @@ export function makeApplicationCallTxnFromObject({
     transactionType: NewTransactionType.AppCall,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstValid),
-    lastValid: BigInt(suggestedParams.lastValid),
+    lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
-    genesisId: suggestedParams.genesisID,
+    genesisId: suggestedParams.genesisId,
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),

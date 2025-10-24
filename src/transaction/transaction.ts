@@ -944,7 +944,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       if (simulate && simulate.txnGroups[0].failedAt) {
         for (const txn of simulate.txnGroups[0].txnResults) {
           err.traces.push({
-            trace: txn.execTrace?.toEncodingData(),
+            trace: undefined, // TODO: need to encode txn.execTrace?.toEncodingData(), SimulationTransactionExecTrace
             appBudget: txn.appBudgetConsumed,
             logicSigBudget: txn.logicSigBudgetConsumed,
             logs: txn.txnResult.logs,

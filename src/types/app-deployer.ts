@@ -1,4 +1,4 @@
-import { TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
 import * as algosdk from '../sdk'
@@ -520,7 +520,7 @@ export class AppDeployer {
         const appTransactions = await indexer.searchTransactions(this._indexer!, (s) =>
           s
             .minRound(createdApp.createdAtRound)
-            .txType(TransactionType.AppCall)
+            .txType('appl') // TODO: enum this
             .applicationID(Number(createdApp.id))
             .address(creatorAddress)
             .addressRole('sender')

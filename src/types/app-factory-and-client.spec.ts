@@ -119,7 +119,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
     expect(app.compiledApproval).toBeTruthy()
     expect(app.compiledClear).toBeTruthy()
   })
@@ -138,7 +138,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.operationPerformed === 'create')
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
-    expect(app.confirmation?.applicationIndex ?? 0n).toBe(app.appId)
+    expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
     expect(app.return).toBe('arg_io')
   })
 

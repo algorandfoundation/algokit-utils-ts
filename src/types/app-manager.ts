@@ -1,4 +1,4 @@
-import { EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import { BoxReference as AlgodBoxReference, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
 import * as algosdk from '../sdk'
 import { Address, ProgramSourceMap } from '../sdk'
 import { getABIReturnValue } from '../transaction/transaction'
@@ -393,12 +393,12 @@ export class AppManager {
    * const boxRef = AppManager.getBoxReference('boxName');
    * ```
    */
-  public static getBoxReference(boxId: BoxIdentifier | BoxReference): algosdk.BoxReference {
+  public static getBoxReference(boxId: BoxIdentifier | BoxReference): AlgodBoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
     return {
-      appIndex: ref.appId,
+      app: ref.appId,
       name: typeof ref.name === 'string' ? new TextEncoder().encode(ref.name) : 'length' in ref.name ? ref.name : ref.name.addr.publicKey,
-    } as algosdk.BoxReference
+    } as AlgodBoxReference
   }
 
   /**

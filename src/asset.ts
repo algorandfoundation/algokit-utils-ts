@@ -23,7 +23,7 @@ import Algodv2 = algosdk.Algodv2
 export async function createAsset(
   create: CreateAssetParams,
   algod: Algodv2,
-): Promise<SendTransactionResult & { confirmation?: { assetIndex: number | bigint } }> {
+): Promise<SendTransactionResult & { confirmation?: { assetId: number | bigint } }> {
   const params: AssetCreateParams = {
     sender: getSenderAddress(create.creator),
     total: BigInt(create.total),

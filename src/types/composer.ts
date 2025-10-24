@@ -1,4 +1,4 @@
-import { SimulateRequest, TransactionParams } from '@algorandfoundation/algod-client'
+import { SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algod-client'
 import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
@@ -1460,7 +1460,7 @@ export class TransactionComposer {
     txnParams.suggestedParams = { ...txnParams.suggestedParams }
 
     if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies algosdk.Transaction['lease']
-    if (params.rekeyTo) txnParams.rekeyTo = address(params.rekeyTo) satisfies algosdk.Transaction['rekeyTo']
+    if (params.rekeyTo) txnParams.rekeyTo = params.rekeyTo.toString() satisfies algosdk.Transaction['rekeyTo']
     const encoder = new TextEncoder()
     if (params.note)
       txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies algosdk.Transaction['note']
@@ -1470,16 +1470,16 @@ export class TransactionComposer {
     }
 
     if (params.lastValidRound) {
-      txnParams.suggestedParams.lastValid = params.lastValidRound
+      txnParams.suggestedParams.lastRound = params.lastValidRound
     } else {
       // If the validity window isn't set in this transaction or by default and we are pointing at
       //  LocalNet set a bigger window to avoid dead transactions
       const window = params.validityWindow
         ? BigInt(params.validityWindow)
-        : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(txnParams.suggestedParams.genesisID ?? 'unknown')
+        : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(txnParams.suggestedParams.genesisId ?? 'unknown')
           ? 1000n
           : this.defaultValidityWindow
-      txnParams.suggestedParams.lastValid = BigInt(txnParams.suggestedParams.firstValid) + window
+      txnParams.suggestedParams.lastRound = BigInt(txnParams.suggestedParams.firstValid) + window
     }
 
     if (params.staticFee !== undefined && params.extraFee !== undefined) {
@@ -1493,8 +1493,8 @@ export class TransactionComposer {
 
     const txn = buildTxn(txnParams)
 
-    if (params.extraFee) txn.fee += params.extraFee.microAlgo
-    if (params.maxFee !== undefined && txn.fee > params.maxFee.microAlgo) {
+    if (params.extraFee) txn.fee = (txn.fee ?? 0n) + params.extraFee.microAlgo
+    if (params.maxFee !== undefined && (txn.fee ?? 0n) > params.maxFee.microAlgo) {
       throw Error(`Transaction fee ${txn.fee} µALGO is greater than maxFee ${params.maxFee}`)
     }
 
@@ -1511,7 +1511,7 @@ export class TransactionComposer {
    */
   private async buildMethodCall(
     params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
-    suggestedParams: algosdk.SuggestedParams,
+    suggestedParams: TransactionParams,
     includeSigner: boolean,
   ): Promise<TransactionWithSignerAndContext[]> {
     const methodArgs: (algosdk.ABIArgument | TransactionWithSignerAndContext)[] = []
@@ -1699,7 +1699,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildPayment(params: PaymentParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildPayment(params: PaymentParams, suggestedParams: TransactionParams) {
     return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
@@ -1709,7 +1709,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetCreate(params: AssetCreateParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetCreate(params: AssetCreateParams, suggestedParams: TransactionParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       total: params.total,
@@ -1727,7 +1727,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetConfig(params: AssetConfigParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetConfig(params: AssetConfigParams, suggestedParams: TransactionParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1740,7 +1740,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: TransactionParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1748,7 +1748,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: TransactionParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1758,7 +1758,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: TransactionParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
@@ -1770,7 +1770,7 @@ export class TransactionComposer {
     })
   }
 
-  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: algosdk.SuggestedParams) {
+  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: TransactionParams) {
     const appId = 'appId' in params ? params.appId : 0n
     const approvalProgram =
       'approvalProgram' in params
@@ -1822,7 +1822,7 @@ export class TransactionComposer {
     }
   }
 
-  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: algosdk.SuggestedParams) {
+  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: TransactionParams) {
     if ('voteKey' in params) {
       return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
         sender: params.sender,
@@ -1845,7 +1845,7 @@ export class TransactionComposer {
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
-  private async buildTxn(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<TransactionWithContext[]> {
+  private async buildTxn(txn: Txn, suggestedParams: TransactionParams): Promise<TransactionWithContext[]> {
     switch (txn.type) {
       case 'pay':
         return [this.buildPayment(txn, suggestedParams)]
@@ -1872,7 +1872,7 @@ export class TransactionComposer {
     }
   }
 
-  private async buildTxnWithSigner(txn: Txn, suggestedParams: algosdk.SuggestedParams): Promise<TransactionWithSignerAndContext[]> {
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: TransactionParams): Promise<TransactionWithSignerAndContext[]> {
     if (txn.type === 'txnWithSigner') {
       return [
         {
@@ -2072,7 +2072,7 @@ export class TransactionComposer {
    * const result = await composer.simulate()
    * ```
    */
-  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  async simulate(): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -2085,7 +2085,7 @@ export class TransactionComposer {
    */
   async simulate(
     options: SkipSignaturesSimulateOptions,
-  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
+  ): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   /**
    * Compose the atomic transaction group and simulate sending it to the network
    * @returns The simulation result
@@ -2096,8 +2096,8 @@ export class TransactionComposer {
    * })
    * ```
    */
-  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }>
-  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateResponse }> {
+  async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
+  async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
     const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
 
@@ -2116,26 +2116,23 @@ export class TransactionComposer {
       await this.build()
     }
 
-    const { methodResults, simulateResponse } = await atc.simulate(
-      this.algod,
-      new modelsv2.SimulateRequest({
-        txnGroups: [],
-        ...rawOptions,
-        ...(Config.debug
-          ? {
-              allowEmptySignatures: true,
-              fixSigners: true,
-              allowMoreLogging: true,
-              execTraceConfig: new modelsv2.SimulateTraceConfig({
-                enable: true,
-                scratchChange: true,
-                stackChange: true,
-                stateChange: true,
-              }),
-            }
-          : undefined),
-      }),
-    )
+    const { methodResults, simulateResponse } = await atc.simulate(this.algod, {
+      txnGroups: [],
+      ...rawOptions,
+      ...(Config.debug
+        ? {
+            allowEmptySignatures: true,
+            fixSigners: true,
+            allowMoreLogging: true,
+            execTraceConfig: {
+              enable: true,
+              scratchChange: true,
+              stackChange: true,
+              stateChange: true,
+            },
+          }
+        : undefined),
+    } satisfies SimulateRequest)
 
     const failedGroup = simulateResponse?.txnGroups[0]
     if (failedGroup?.failureMessage) {

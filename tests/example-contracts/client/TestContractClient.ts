@@ -4,9 +4,11 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
-import type { ABIResult, TransactionWithSigner } from '../../../src/sdk'
-import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction, modelsv2 } from '../../../src/sdk'
+import { SimulateTransactionGroupResult } from '../../../algod_client/dist/models/simulate-transaction-group-result'
+import { SimulateTransactionResult } from '../../../algod_client/dist/models/simulate-transaction-result'
 import * as algokit from '../../../src/index'
+import type { ABIResult, TransactionWithSigner } from '../../../src/sdk'
+import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction } from '../../../src/sdk'
 import type {
   ABIAppCallArg,
   AppCallTransactionResult,
@@ -789,7 +791,7 @@ export class TestContractClient {
       },
       async simulate(options?: SimulateOptions) {
         await promiseChain
-        const result = await atc.simulate(client.algod, new modelsv2.SimulateRequest({ txnGroups: [], ...options }))
+        const result = await atc.simulate(client.algod, { txnGroups: [], ...options })
         return {
           ...result,
           returns: result.methodResults?.map((val, i) =>
@@ -914,11 +916,11 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    */
   execute(sendParams?: AppClientComposeExecuteParams): Promise<TestContractComposerResults<TReturns>>
 }
-export type SimulateOptions = Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>
+export type SimulateOptions = Omit<SimulateTransactionResult, 'txnGroups'>
 export type TestContractComposerSimulateResult<TReturns extends [...any[]]> = {
   returns: TReturns
   methodResults: ABIResult[]
-  simulateResponse: modelsv2.SimulateResponse
+  simulateResponse: SimulateTransactionGroupResult
 }
 export type TestContractComposerResults<TReturns extends [...any[]]> = {
   returns: TReturns

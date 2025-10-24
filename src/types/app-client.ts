@@ -1441,7 +1441,7 @@ export class AppClient {
                 // Simulate calls for a readonly method shouldn't invoke signing
                 skipSignatures: true,
                 // Simulate calls for a readonly method can use the max opcode budget
-                extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
+                extraOpcodeBudget: BigInt(MAX_SIMULATE_OPCODE_BUDGET),
               })
             return this.processMethodCallReturn(
               {

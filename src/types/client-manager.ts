@@ -590,9 +590,14 @@ export class ClientManager {
    */
   public static getAlgodClient(config: AlgoClientConfig): Algodv2 {
     const { token, server, port } = config
-    const tokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
-    const httpClientWithRetry = new AlgoHttpClientWithRetry(tokenHeader, server, port)
-    return new algosdk.Algodv2(httpClientWithRetry, server)
+    const baseUrl = port !== undefined ? `${server}:${port}` : server
+
+    const tokenHeader: algosdk.TokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
+
+    return new algosdk.Algodv2({
+      baseUrl: baseUrl,
+      headers: { ...tokenHeader },
+    })
   }
 
   /**
