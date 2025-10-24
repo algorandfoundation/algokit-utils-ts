@@ -1,4 +1,11 @@
-import { BoxReference as AlgodBoxReference, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import {
+  ApplicationLocalReference,
+  AssetHoldingReference,
+  EvalDelta,
+  PendingTransactionResponse,
+  TealValue,
+} from '@algorandfoundation/algod-client'
+import { BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '../sdk'
 import { Address, ProgramSourceMap } from '../sdk'
 import { getABIReturnValue } from '../transaction/transaction'
@@ -96,26 +103,6 @@ export interface BoxValuesRequestParams {
 }
 
 /**
- * Defines a holding by referring to an Address and Asset it belongs to.
- */
-export interface HoldingReference {
-  /** Asset ID for asset in access list. */
-  assetId: bigint
-  /** Address in access list, or the sender of the transaction. */
-  address: string | Address
-}
-
-/**
- * Defines a local state by referring to an Address and App it belongs to.
- */
-export interface LocalsReference {
-  /** Application ID for app in access list, or zero if referring to the called application. */
-  appId: bigint
-  /** Address in access list, or the sender of the transaction. */
-  address: string | Address
-}
-
-/**
  * Names a single resource reference. Only one of the fields should be set.
  */
 export interface AccessReference {
@@ -126,9 +113,9 @@ export interface AccessReference {
   /** Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram. */
   assetId?: bigint
   /** Defines a holding by referring to an Address and Asset it belongs to. */
-  holding?: HoldingReference
+  holding?: AssetHoldingReference
   /** Defines a local state by referring to an Address and App it belongs to. */
-  locals?: LocalsReference
+  locals?: ApplicationLocalReference
   /** Defines a box by its name and the application ID it belongs to. */
   box?: BoxReference
 }
@@ -393,12 +380,12 @@ export class AppManager {
    * const boxRef = AppManager.getBoxReference('boxName');
    * ```
    */
-  public static getBoxReference(boxId: BoxIdentifier | BoxReference): AlgodBoxReference {
+  public static getBoxReference(boxId: BoxIdentifier | BoxReference): TransactionBoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
     return {
-      app: ref.appId,
+      appId: ref.appId,
       name: typeof ref.name === 'string' ? new TextEncoder().encode(ref.name) : 'length' in ref.name ? ref.name : ref.name.addr.publicKey,
-    } as AlgodBoxReference
+    } as TransactionBoxReference
   }
 
   /**
@@ -588,20 +575,6 @@ export class AppManager {
   }
 }
 
-function getHoldingReference(holdingReference: HoldingReference): HoldingReference {
-  return {
-    assetId: holdingReference.assetId,
-    address: typeof holdingReference.address === 'string' ? Address.fromString(holdingReference.address) : holdingReference.address!,
-  } satisfies HoldingReference
-}
-
-function getLocalsReference(localsReference: LocalsReference): LocalsReference {
-  return {
-    appId: localsReference.appId,
-    address: typeof localsReference.address === 'string' ? Address.fromString(localsReference.address) : localsReference.address!,
-  } satisfies LocalsReference
-}
-
 /**
  * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
  */
@@ -610,8 +583,8 @@ export function getAccessReference(accessReference: AccessReference): AccessRefe
     address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
     appIndex: accessReference.appId,
     assetIndex: accessReference.assetId,
-    holding: accessReference.holding ? getHoldingReference(accessReference.holding) : undefined,
-    locals: accessReference.locals ? getLocalsReference(accessReference.locals) : undefined,
+    holding: accessReference.holding,
+    locals: accessReference.locals,
     box: accessReference.box ? AppManager.getBoxReference(accessReference.box) : undefined,
   } as AccessReference
 }

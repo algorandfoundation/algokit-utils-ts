@@ -1,5 +1,5 @@
 import { TransactionParams } from '@algorandfoundation/algod-client'
-import { Transaction } from '@algorandfoundation/algokit-transact'
+import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '../sdk'
 import { Expand } from './expand'
 import {
@@ -74,7 +74,7 @@ export interface CoreAppCallArgs {
   /** The optional lease for the transaction */
   lease?: string | Uint8Array
   /** Any box references to load */
-  boxes?: (algosdk.BoxReference | BoxReference | BoxIdentifier)[]
+  boxes?: (TransactBoxReference | BoxReference | BoxIdentifier)[]
   /** The address of any accounts to load in */
   accounts?: (string | Address)[]
   /** IDs of any apps to load into the foreignApps array */

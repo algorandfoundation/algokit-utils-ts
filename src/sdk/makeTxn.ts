@@ -1,5 +1,5 @@
 import type { Transaction } from '@algorandfoundation/algokit-transact'
-import { TransactionType as NewTransactionType, assignFee } from '@algorandfoundation/algokit-transact'
+import { TransactionType as NewTransactionType } from '@algorandfoundation/algokit-transact'
 import { foreignArraysToResourceReferences } from './appAccess.js'
 import { Address } from './encoding/address.js'
 import {
@@ -27,7 +27,7 @@ function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
 
 // Import new OnApplicationComplete type
 import { OnApplicationComplete as NewOnApplicationComplete } from '@algorandfoundation/algokit-transact'
-import { TransactionParams } from '../../algod_client/dist/models/transaction-params.js'
+import { TransactionParams as AlgodTransactionParams } from '../../algod_client/dist/models/transaction-params.js'
 
 // Helper function to map old OnApplicationComplete to new
 function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplicationComplete {
@@ -49,12 +49,16 @@ function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplica
   }
 }
 
+export type SdkTransactionParams = AlgodTransactionParams & {
+  firstRound: bigint
+}
+
 /** Contains parameters common to every transaction type */
 export interface CommonTransactionParams {
   /** Algorand address of sender */
   sender: string | Address
   /** Suggested parameters relevant to the network that will accept this transaction */
-  suggestedParams: TransactionParams
+  suggestedParams: SdkTransactionParams
   /** Optional, arbitrary data to be stored in the transaction's note field */
   note?: Uint8Array
   /**
@@ -86,7 +90,7 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     transactionType: NewTransactionType.Payment,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstValid),
+    firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
@@ -100,11 +104,7 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
     },
   }
 
-  // Assign fee using the fee from suggestedParams
-  return assignFee(txn, {
-    feePerByte: BigInt(0),
-    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  })
+  return txn
 }
 
 /**
@@ -129,7 +129,7 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     transactionType: NewTransactionType.KeyRegistration,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstValid),
+    firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
@@ -147,10 +147,7 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
     },
   }
 
-  return assignFee(txn, {
-    feePerByte: BigInt(0),
-    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  })
+  return txn
 }
 
 /**
@@ -180,7 +177,7 @@ export function makeBaseAssetConfigTxn({
   const txn: Transaction = {
     transactionType: NewTransactionType.AssetConfig,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstValid),
+    firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
@@ -203,10 +200,7 @@ export function makeBaseAssetConfigTxn({
     },
   }
 
-  return assignFee(txn, {
-    feePerByte: BigInt(0),
-    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  })
+  return txn
 }
 
 /**
@@ -389,7 +383,7 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     transactionType: NewTransactionType.AssetFreeze,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstValid),
+    firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
@@ -403,10 +397,7 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
     },
   }
 
-  return assignFee(txn, {
-    feePerByte: BigInt(0),
-    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  })
+  return txn
 }
 
 /**
@@ -435,7 +426,7 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     transactionType: NewTransactionType.AssetTransfer,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstValid),
+    firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
@@ -451,10 +442,7 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
     },
   }
 
-  return assignFee(txn, {
-    feePerByte: BigInt(0),
-    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  })
+  return txn
 }
 
 /**
@@ -517,14 +505,14 @@ export function makeApplicationCallTxnFromObject({
   const boxReferences = access2
     ? undefined
     : boxes?.map((box) => ({
-        appId: ensureBigInt(box.appIndex) || BigInt(0),
+        appId: ensureBigInt(box.appId) || BigInt(0),
         name: box.name,
       }))
 
   const txn: Transaction = {
     transactionType: NewTransactionType.AppCall,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstValid),
+    firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
@@ -559,10 +547,7 @@ export function makeApplicationCallTxnFromObject({
     },
   }
 
-  return assignFee(txn, {
-    feePerByte: BigInt(0),
-    minFee: BigInt(suggestedParams.fee || suggestedParams.minFee || 1000),
-  })
+  return txn
 }
 
 /**

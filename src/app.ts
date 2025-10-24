@@ -1,4 +1,5 @@
 import { EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import { BoxReference as TransactBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from './sdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import { encodeLease, getSenderAddress } from './transaction/transaction'
@@ -386,7 +387,7 @@ export async function getAppArgsForABICall(args: ABIAppCallArgs, from: SendTrans
  * @param box The box to return a reference for
  * @returns The box reference ready to pass into a `Transaction`
  */
-export function getBoxReference(box: BoxIdentifier | BoxReference | algosdk.BoxReference): algosdk.BoxReference {
+export function getBoxReference(box: BoxIdentifier | BoxReference | TransactBoxReference): TransactBoxReference {
   return _getBoxReference(box)
 }
 

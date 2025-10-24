@@ -32,7 +32,6 @@ import { performAtomicTransactionComposerSimulate } from './perform-atomic-trans
 
 // Type aliases for compatibility
 type Algodv2 = AlgodClient
-type SuggestedParams = algosdk.SuggestedParams
 type ApplicationTransactionFields = AppCallTransactionFields
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import TransactionSigner = algosdk.TransactionSigner
@@ -1106,7 +1105,7 @@ export const waitForConfirmation = async function (
  * @param transaction The transaction to cap or suggested params object about to be used to create a transaction
  * @param maxAcceptableFee The maximum acceptable fee to pay
  */
-export function capTransactionFee(transaction: algosdk.Transaction | SuggestedParams, maxAcceptableFee: AlgoAmount) {
+export function capTransactionFee(transaction: algosdk.Transaction | algosdk.SdkTransactionParams, maxAcceptableFee: AlgoAmount) {
   // If a flat fee hasn't already been defined
   if (!('flatFee' in transaction) || !transaction.flatFee) {
     // Once a transaction has been constructed by algosdk, transaction.fee indicates what the total transaction fee
@@ -1133,13 +1132,13 @@ export function capTransactionFee(transaction: algosdk.Transaction | SuggestedPa
  * @param transaction The transaction or suggested params
  * @param feeControl The fee control parameters
  */
-export function controlFees<T extends SuggestedParams | Transaction>(
+export function controlFees<T extends algosdk.SdkTransactionParams | Transaction>(
   transaction: T,
   feeControl: { fee?: AlgoAmount; maxFee?: AlgoAmount },
 ) {
   const { fee, maxFee } = feeControl
   if (fee) {
-    transaction.fee = Number(fee.microAlgo)
+    transaction.fee = fee.microAlgo
     if ('flatFee' in transaction) {
       transaction.flatFee = true
     }
@@ -1160,18 +1159,22 @@ export function controlFees<T extends SuggestedParams | Transaction>(
  * @param algod Algod algod
  * @returns The suggested transaction parameters
  */
-export async function getTransactionParams(params: SuggestedParams | undefined, algod: Algodv2): Promise<SuggestedParams> {
+export async function getTransactionParams(
+  params: algosdk.SdkTransactionParams | undefined,
+  algod: Algodv2,
+): Promise<algosdk.SdkTransactionParams> {
   if (params) {
     return { ...params }
   }
   const p = await algod.transactionParams()
   return {
     fee: p.fee,
-    firstValid: p.lastRound,
-    lastValid: p.lastRound + 1000n,
-    genesisID: p.genesisId,
+    firstRound: p.lastRound,
+    lastRound: p.lastRound + 1000n,
+    genesisId: p.genesisId,
     genesisHash: p.genesisHash,
     minFee: p.minFee,
+    consensusVersion: p.consensusVersion,
   }
 }
 

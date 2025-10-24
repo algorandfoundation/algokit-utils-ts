@@ -1,8 +1,7 @@
-import * as algosdk from '../sdk'
+import { SdkTransactionParams } from '../sdk'
 import { AlgoAmount } from './amount'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
-import SuggestedParams = algosdk.SuggestedParams
 
 /** @deprecated Parameters for `transferAlgos` call. */
 export interface AlgoTransferParams extends SendTransactionParams {
@@ -13,7 +12,7 @@ export interface AlgoTransferParams extends SendTransactionParams {
   /** The amount to send */
   amount: AlgoAmount
   /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
+  transactionParams?: SdkTransactionParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
@@ -27,7 +26,7 @@ export interface AlgoRekeyParams extends SendTransactionParams {
   /** The account / account address that will have the private key that is authorised to transact on behalf of the from account from now on */
   rekeyTo: SendTransactionFrom | string
   /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
+  transactionParams?: SdkTransactionParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
@@ -45,7 +44,7 @@ export interface EnsureFundedParams extends SendTransactionParams {
   /** When issuing a funding amount, the minimum amount to transfer (avoids many small transfers if this gets called often on an active account) */
   minFundingIncrement?: AlgoAmount
   /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
+  transactionParams?: SdkTransactionParams
   /** The (optional) transaction note, default: "Funding account to meet minimum requirement" */
   note?: TransactionNote
   /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
@@ -63,7 +62,7 @@ export interface TransferAssetParams extends SendTransactionParams {
   /** The amount to send as the smallest divisible unit value */
   amount: number | bigint
   /** Optional transaction parameters */
-  transactionParams?: SuggestedParams
+  transactionParams?: SdkTransactionParams
   /** An address of a target account from which to perform a clawback operation. Please note, in such cases senderAccount must be equal to clawback field on ASA metadata. */
   clawbackFrom?: SendTransactionFrom | string
   /** The (optional) transaction note */

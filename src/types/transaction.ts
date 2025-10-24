@@ -148,7 +148,7 @@ export interface AdditionalAtomicTransactionComposerContext {
   maxFees: Map<number, AlgoAmount>
 
   /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
-  suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>
+  suggestedParams: Pick<algosdk.SdkTransactionParams, 'fee' | 'minFee'>
 }
 
 /** An `AtomicTransactionComposer` with transactions to send. */

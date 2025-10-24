@@ -1436,7 +1436,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { address: alice, assetId } }],
+      accessReferences: [{ holding: { account: alice.toString(), asset: assetId } }],
     })
   })
 
@@ -1449,7 +1449,7 @@ describe('access references', () => {
       method: 'externalLocal',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ locals: { address: alice, appId: externalClient.appId } }],
+      accessReferences: [{ locals: { account: alice.toString(), app: externalClient.appId } }],
     })
   })
 })

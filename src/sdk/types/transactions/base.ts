@@ -1,5 +1,9 @@
+import { ApplicationLocalReference } from '@algorandfoundation/algod-client'
+import { BoxReference } from '@algorandfoundation/algokit-transact'
+import { AssetHoldingReference } from '../../../../algod_client/dist/models/asset-holding-reference.js'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
+import { SdkTransactionParams } from '../../makeTxn.js'
 import { StateProof, StateProofMessage } from '../../stateproof.js'
 
 /**
@@ -124,102 +128,17 @@ export function isOnApplicationComplete(v: unknown): v is OnApplicationComplete 
 }
 
 /**
- * Contains parameters relevant to the creation of a new transaction in a specific network at a specific time
- */
-export interface SuggestedParams {
-  /**
-   * Set this to true to specify fee as microalgos-per-txn
-   *   If the final calculated fee is lower than the protocol minimum fee, the fee will be increased to match the minimum
-   */
-  flatFee?: boolean
-
-  /**
-   * Integer fee per byte, in microAlgos. For a flat fee, set flatFee to true
-   */
-  fee: number | bigint
-
-  /**
-   * Minimum fee (not per byte) required for the transaction to be confirmed
-   */
-  minFee: number | bigint
-
-  /**
-   * First protocol round on which this txn is valid
-   */
-  firstValid: number | bigint
-
-  /**
-   * Last protocol round on which this txn is valid
-   */
-  lastValid: number | bigint
-
-  /**
-   * Specifies genesis ID of network in use
-   */
-  genesisID?: string
-
-  /**
-   * Specifies hash genesis block of network in use
-   */
-  genesisHash?: Uint8Array
-}
-
-/**
- * A grouping of the app ID and name of the box in an Uint8Array
- */
-export interface BoxReference {
-  /**
-   * A unique application index
-   */
-  appIndex: number | bigint
-
-  /**
-   * Name of box to reference
-   */
-  name: Uint8Array
-}
-
-/**
- * A grouping of the asset index and address of the account
- */
-export interface HoldingReference {
-  /**
-   * The asset index of the holding
-   */
-  assetIndex: number | bigint
-
-  /**
-   * The address of the account holding the asset
-   */
-  address: string | Address
-}
-
-/** A grouping of the application index and address of the account
- */
-export interface LocalsReference {
-  /**
-   * The application index of the local state
-   */
-  appIndex: number | bigint
-
-  /**
-   * The address of the account holding the local state
-   */
-  address: string | Address
-}
-
-/**
  * Parameters for resource references in application transactions
  */
 export interface ApplicationCallReferenceParams {
   /**
    * A grouping of the asset index and address of the account
    */
-  holdings?: HoldingReference[]
+  holdings?: AssetHoldingReference[]
 
   /** A grouping of the application index and address of the account
    */
-  locals?: LocalsReference[]
+  locals?: ApplicationLocalReference[]
 
   /**
    * If true, use the foreign accounts, apps, assets, boxes, holdings, and locals fields to construct the access list
@@ -246,12 +165,12 @@ export interface ResourceReference {
   /**
    * Holding definition: asset ID and account address
    */
-  holding?: HoldingReference
+  holding?: AssetHoldingReference
 
   /**
    * Local state definition: application ID and account address
    */
-  locals?: LocalsReference
+  locals?: ApplicationLocalReference
 
   /**
    * Box definition: application ID and a name of the box
@@ -630,7 +549,7 @@ export interface TransactionParams {
   /**
    * Suggested parameters relevant to the network that will accept this transaction
    */
-  suggestedParams: SuggestedParams
+  suggestedParams: SdkTransactionParams
 
   /**
    * Payment transaction parameters. Only set if type is TransactionType.pay
