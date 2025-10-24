@@ -1,4 +1,4 @@
-import { BoxReference } from '../../algokit_transact/dist/transactions/app-call'
+import { BoxReference } from '../algokit_transact'
 
 function boxReferenceToEncodingData(reference: BoxReference, foreignApps: bigint[], appIndex: bigint): Map<string, unknown> {
   const referenceId = BigInt(reference.appId)

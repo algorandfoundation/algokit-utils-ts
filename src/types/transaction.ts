@@ -1,5 +1,5 @@
-import { PendingTransactionResponse } from '@algorandfoundation/algod-client'
-import { Transaction } from '@algorandfoundation/algokit-transact'
+import { PendingTransactionResponse } from '../algod_client'
+import { Transaction } from '../algokit_transact'
 import type { Account } from '../sdk'
 import * as algosdk from '../sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'

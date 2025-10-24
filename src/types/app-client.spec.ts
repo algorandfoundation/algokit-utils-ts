@@ -1,4 +1,4 @@
-import { TransactionType } from '@algorandfoundation/algokit-transact'
+import { TransactionType } from '../algokit_transact'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'

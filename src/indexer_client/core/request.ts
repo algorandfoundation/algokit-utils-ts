@@ -3,6 +3,8 @@ import { ApiError } from './api-error'
 import { decodeMsgPack, encodeMsgPack } from './codecs'
 import type { QueryParams, BodyValue } from './base-http-request'
 
+type BodyInit = string | Uint8Array
+
 const encodeURIPath = (path: string): string => encodeURI(path).replace(/%5B/g, '[').replace(/%5D/g, ']')
 
 export async function request<T>(

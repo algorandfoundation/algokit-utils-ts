@@ -1,5 +1,5 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { TransactionParams } from '../algod_client'
+import { getTransactionId } from '../algokit_transact'
 import { Buffer } from 'buffer'
 import {
   callApp,

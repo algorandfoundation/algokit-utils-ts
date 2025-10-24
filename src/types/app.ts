@@ -1,5 +1,5 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
-import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
+import { TransactionParams } from '../algod_client'
+import { BoxReference as TransactBoxReference, Transaction } from '../algokit_transact'
 import * as algosdk from '../sdk'
 import { Expand } from './expand'
 import {

@@ -1,5 +1,5 @@
-import { ApplicationLocalReference, AssetHoldingReference } from '@algorandfoundation/algod-client'
-import { BoxReference } from '../../algokit_transact/dist/transactions/app-call.js'
+import { ApplicationLocalReference, AssetHoldingReference } from '../algod_client'
+import { BoxReference } from '../algokit_transact'
 import { Address } from './encoding/address.js'
 import { ResourceReference } from './types/transactions/base.js'
 import { ensureSafeUnsignedInteger } from './utils/utils.js'

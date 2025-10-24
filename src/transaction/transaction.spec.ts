@@ -1,4 +1,4 @@
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { getTransactionId } from '../algokit_transact'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'

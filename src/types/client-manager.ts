@@ -1,4 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
+import { TransactionParams } from '../algod_client'
 import * as algosdk from '../sdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'

@@ -1,7 +1,10 @@
-import type { ClientConfig } from './client-config'
 import { ApiError } from './api-error'
+import type { BodyValue, QueryParams } from './base-http-request'
+import type { ClientConfig } from './client-config'
 import { decodeMsgPack, encodeMsgPack } from './codecs'
-import type { QueryParams, BodyValue } from './base-http-request'
+
+// TODO: PD - look into this type, if needed, we need to fix the OAS templates
+type BodyInit = string | Uint8Array
 
 const encodeURIPath = (path: string): string => encodeURI(path).replace(/%5B/g, '[').replace(/%5D/g, ']')
 

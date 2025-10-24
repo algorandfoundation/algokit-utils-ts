@@ -4,7 +4,7 @@ import {
   MULTISIG_DOMAIN_SEPARATOR,
   PUBLIC_KEY_BYTE_LENGTH,
   hash,
-} from '@algorandfoundation/algokit-common'
+} from '../algokit_common'
 import { MultisigSignature, MultisigSubsignature } from './transactions/signed-transaction'
 
 /**

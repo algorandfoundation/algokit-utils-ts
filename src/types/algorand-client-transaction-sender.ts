@@ -1,4 +1,4 @@
-import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { Transaction, getTransactionId } from '../algokit_transact'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import * as algosdk from '../sdk'

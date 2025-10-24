@@ -1,4 +1,4 @@
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { getTransactionId } from '../algokit_transact'
 import { Logger } from '../types/logging'
 import { LogSnapshotConfig } from '../types/testing'
 import { asJson } from '../util'

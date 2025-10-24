@@ -1,5 +1,5 @@
 import type { ModelMetadata } from '../core/model-runtime'
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
+import type { SignedTransaction } from '../../algokit_transact'
 
 /**
  * PendingTransactions is an array of signed transactions exactly as they were submitted.

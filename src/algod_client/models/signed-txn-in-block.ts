@@ -9,7 +9,7 @@
  */
 
 import type { ModelMetadata } from '../core/model-runtime'
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
+import type { SignedTransaction } from '../../algokit_transact'
 import type { BlockAppEvalDelta } from './block-app-eval-delta'
 import { getModelMeta, registerModelMeta } from '../core/model-runtime'
 

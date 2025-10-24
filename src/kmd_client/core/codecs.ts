@@ -1,10 +1,9 @@
-import { encode as msgpackEncode, decode as msgpackDecode } from '@msgpack/msgpack'
+import { decode as msgpackDecode, encode as msgpackEncode } from 'algorand-msgpack'
 
 export function encodeMsgPack(value: unknown): Uint8Array {
   return msgpackEncode(value, {
     sortKeys: true,
     ignoreUndefined: true,
-    useBigInt64: true,
   })
 }
 

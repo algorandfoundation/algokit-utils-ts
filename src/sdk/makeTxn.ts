@@ -1,5 +1,5 @@
-import type { Transaction } from '@algorandfoundation/algokit-transact'
-import { TransactionType as NewTransactionType } from '@algorandfoundation/algokit-transact'
+import type { Transaction } from '../algokit_transact'
+import { TransactionType as NewTransactionType } from '../algokit_transact'
 import { foreignArraysToResourceReferences } from './appAccess.js'
 import { Address } from './encoding/address.js'
 import {
@@ -26,8 +26,8 @@ function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
 }
 
 // Import new OnApplicationComplete type
-import { OnApplicationComplete as NewOnApplicationComplete } from '@algorandfoundation/algokit-transact'
-import { TransactionParams as AlgodTransactionParams } from '../../algod_client/dist/models/transaction-params.js'
+import { OnApplicationComplete as NewOnApplicationComplete } from '../algokit_transact'
+import { TransactionParams as AlgodTransactionParams } from '../algod_client'
 
 // Helper function to map old OnApplicationComplete to new
 function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplicationComplete {

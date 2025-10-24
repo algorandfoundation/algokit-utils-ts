@@ -1,5 +1,5 @@
-import type { Transaction } from '@algorandfoundation/algokit-transact'
-import { encodeTransaction } from '@algorandfoundation/algokit-transact'
+import type { Transaction } from '../../algokit_transact'
+import { encodeTransaction } from '../../algokit_transact'
 import { base64ToBytes, bytesToBase64, coerceToBytes } from '../encoding/binarydata.js'
 import IntDecoding from '../types/intDecoding.js'
 import { CustomTokenHeader, KMDTokenHeader } from './urlTokenBaseHTTPClient.js'

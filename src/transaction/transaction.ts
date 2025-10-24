@@ -1,14 +1,15 @@
-import modelsv2, {
+import { Buffer } from 'buffer'
+import {
   AlgodClient,
   ApplicationLocalReference,
   AssetHoldingReference,
   BoxReference,
   PendingTransactionResponse,
   SimulateRequest,
-} from '@algorandfoundation/algod-client'
-import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
-import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
-import { Buffer } from 'buffer'
+} from '../algod_client'
+import * as modelsv2 from '../algod_client/models'
+import type { AppCallTransactionFields } from '../algokit_transact'
+import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '../algokit_transact'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { ABIMethod, ABIReturnType, Address, stringifyJSON } from '../sdk'

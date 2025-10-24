@@ -16,7 +16,7 @@ import {
 
 const txnTestData = Object.entries({
   ['asset create']: testData.assetCreate,
-  ['asset config']: testData.assetConfig,
+  ['asset config']: testData.assetReconfigure,
   ['asset destroy']: testData.assetDestroy,
 })
 

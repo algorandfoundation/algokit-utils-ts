@@ -6,7 +6,7 @@ import {
   LENGTH_ENCODE_BYTE_SIZE,
   PUBLIC_KEY_BYTE_LENGTH,
   publicKeyFromAddress,
-} from '@algorandfoundation/algokit-common'
+} from '../algokit_common'
 import type { ABIStructValue, ABIValue } from './abi-value'
 import { bigIntToBytes, bytesToBigInt } from './bigint'
 import { StructField } from './arc56-contract'

@@ -1,5 +1,5 @@
-import { SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algod-client'
-import { Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { SimulateRequest, SimulateTransaction, TransactionParams } from '../algod_client'
+import { Transaction, assignFee, getTransactionId } from '../algokit_transact'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { ABIMethod, Address, SdkTransactionParams } from '../sdk'

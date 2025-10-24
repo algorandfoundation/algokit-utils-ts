@@ -7,7 +7,7 @@ import {
   TRANSACTION_ID_LENGTH,
   hash,
   concatArrays,
-} from '@algorandfoundation/algokit-common'
+} from '../../algokit_common'
 import { addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec, stringCodec } from '../encoding/codecs'
 import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
 import {
@@ -871,7 +871,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
 
 function toMerkleArrayProofDto(model: MerkleArrayProof): MerkleArrayProofDto {
   return {
-    pth: model.path.map((p) => bytesCodec.encode(p)),
+    pth: model.path.map((p) => bytesCodec.encode(p)).filter((p): p is Uint8Array => p !== undefined),
     hsh: {
       t: numberCodec.encode(model.hashFactory.hashType),
     },
@@ -891,7 +891,7 @@ function fromMerkleArrayProofDto(dto?: MerkleArrayProofDto): MerkleArrayProof {
   }
 
   return {
-    path: dto.pth?.map((p) => bytesCodec.decode(p)),
+    path: dto.pth?.map((p) => bytesCodec.decode(p)).filter((p): p is Uint8Array => p !== undefined) ?? [],
     hashFactory: {
       hashType: numberCodec.decode(dto.hsh?.t),
     },

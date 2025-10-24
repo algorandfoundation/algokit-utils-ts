@@ -1,4 +1,4 @@
-import { ApplicationStateSchema } from '@algorandfoundation/algod-client'
+import { ApplicationStateSchema } from './algod_client'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import * as algosdk from './sdk'
 import { Address } from './sdk'

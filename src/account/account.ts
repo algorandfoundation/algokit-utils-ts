@@ -1,4 +1,4 @@
-import { Account as AccountInformation } from '@algorandfoundation/algod-client'
+import { Account as AccountInformation } from '../algod_client'
 import type { Account } from '../sdk'
 import * as algosdk from '../sdk'
 import { Address } from '../sdk'

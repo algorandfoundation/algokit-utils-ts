@@ -1,4 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
+import { TransactionParams } from '../algod_client'
 import { Config } from '../config'
 import type { Account } from '../sdk'
 import * as algosdk from '../sdk'

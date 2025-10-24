@@ -1,6 +1,6 @@
-import { ApplicationLocalReference } from '@algorandfoundation/algod-client'
-import { BoxReference } from '@algorandfoundation/algokit-transact'
-import { AssetHoldingReference } from '../../../../algod_client/dist/models/asset-holding-reference.js'
+// TODO: this is strange, maybe ApplicationLocalReference, AssetHoldingReference need to come from transact too
+import { ApplicationLocalReference, AssetHoldingReference } from '../../../algod_client'
+import { BoxReference } from '../../../algokit_transact'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
 import { SdkTransactionParams } from '../../makeTxn.js'

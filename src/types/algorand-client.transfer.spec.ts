@@ -1,4 +1,4 @@
-import { TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { TransactionType, getTransactionId } from '../algokit_transact'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
 import { algorandFixture } from '../testing'

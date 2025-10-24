@@ -1,4 +1,4 @@
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { getTransactionId } from './algokit_transact'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
 import * as indexer from './indexer-lookup'

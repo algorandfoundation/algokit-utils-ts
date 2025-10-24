@@ -4,8 +4,8 @@ import {
   EvalDelta,
   PendingTransactionResponse,
   TealValue,
-} from '@algorandfoundation/algod-client'
-import { BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+} from '../algod_client'
+import { BoxReference as TransactionBoxReference } from '../algokit_transact'
 import * as algosdk from '../sdk'
 import { Address, ProgramSourceMap } from '../sdk'
 import { getABIReturnValue } from '../transaction/transaction'

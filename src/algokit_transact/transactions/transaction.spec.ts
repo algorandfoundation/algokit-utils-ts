@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
+import { EMPTY_SIGNATURE } from '../../algokit_common'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
   encodeTransaction,

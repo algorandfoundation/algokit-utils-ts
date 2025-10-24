@@ -1,4 +1,4 @@
-import { Transaction } from '@algorandfoundation/algokit-transact'
+import { Transaction } from '../algokit_transact'
 import { BuiltTransactions, TransactionComposer } from './composer'
 import { Expand } from './expand'
 

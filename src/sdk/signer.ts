@@ -1,5 +1,5 @@
-import type { SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
-import { encodeSignedTransaction, encodeTransactionRaw } from '@algorandfoundation/algokit-transact'
+import type { SignedTransaction, Transaction } from '../algokit_transact'
+import { encodeSignedTransaction, encodeTransactionRaw } from '../algokit_transact'
 import { LogicSigAccount } from './logicsig.js'
 import { MultisigMetadata } from './multisig.js'
 import { mergeMultisigTransactions, signMultisigTransaction } from './multisigSigning.js'

@@ -3,7 +3,7 @@ import { Address } from './encoding/address'
 import * as nacl from './nacl/naclWrappers'
 import * as utils from './utils/utils'
 // Import Transaction and SignedTransaction from algokit_transact
-import type { SignedTransaction, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import type { SignedTransaction, Transaction, TransactionType } from '../algokit_transact'
 import {
   assignFee,
   calculateFee,
@@ -15,7 +15,7 @@ import {
   getTransactionId,
   getTransactionIdRaw,
   groupTransactions,
-} from '@algorandfoundation/algokit-transact'
+} from '../algokit_transact'
 
 const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 
@@ -87,7 +87,7 @@ export * from './abi/index'
 export { default as generateAccount } from './account'
 export * from './client'
 // Export client classes with algosdk-compatible names
-export { AlgodClient as Algodv2 } from '@algorandfoundation/algod-client'
+export { AlgodClient as Algodv2 } from '../algod_client'
 export { KmdClient as Kmd } from './client/kmd'
 export { IndexerClient as Indexer } from './client/v2/indexer/index'
 export * as indexerModels from './client/v2/indexer/models/types'
@@ -151,10 +151,10 @@ export type {
   AssetTransferTransactionFields,
   KeyRegistrationTransactionFields,
   PaymentTransactionFields,
-} from '@algorandfoundation/algokit-transact'
+} from '../algokit_transact'
 export * from './types/account'
 export type { default as Account } from './types/account'
-// Block types are now provided by @algorandfoundation/algod-client
+// Block types are now provided by ../algod_client
 // export * from './types/block'
 export * from './types/intDecoding'
 export { default as IntDecoding } from './types/intDecoding'

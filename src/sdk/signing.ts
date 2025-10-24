@@ -1,10 +1,10 @@
 import * as nacl from './nacl/naclWrappers.js';
 import { Address } from './encoding/address.js';
 import * as encoding from './encoding/encoding.js';
-import type { SignedTransaction, LogicSignature } from '@algorandfoundation/algokit-transact';
-import { encodeSignedTransaction } from '@algorandfoundation/algokit-transact';
-import type { Transaction } from '@algorandfoundation/algokit-transact';
-import { getTransactionId } from '@algorandfoundation/algokit-transact';
+import type { SignedTransaction, LogicSignature } from '../algokit_transact';
+import { encodeSignedTransaction } from '../algokit_transact';
+import type { Transaction } from '../algokit_transact';
+import { getTransactionId } from '../algokit_transact';
 import { LogicSig, LogicSigAccount } from './logicsig.js';
 import { addressFromMultisigPreImg } from './multisig.js';
 
