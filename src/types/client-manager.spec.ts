@@ -44,7 +44,7 @@ describe('ClientManager', () => {
 
       const response = await Promise.all(
         new Array(150).fill(0).map(async (_) => {
-          return await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA')
+          return await algod.accountInformation('XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA', { format: 'json' })
         }),
       )
       expect(response.length).toBe(150)

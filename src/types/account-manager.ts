@@ -248,7 +248,7 @@ export class AccountManager {
       lastProposed = undefined,
       address,
       ...account
-    } = await this._clientManager.algod.accountInformation(senderAddress)
+    } = await this._clientManager.algod.accountInformation(senderAddress, { format: 'json' }) // TODO: PD: revert this once algod client is fixed
 
     return {
       ...account,

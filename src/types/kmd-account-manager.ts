@@ -85,7 +85,7 @@ export class KmdAccountManager {
     if (predicate) {
       for (i = 0; i < addresses.length; i++) {
         const address = addresses[i]
-        const account = await this._clientManager.algod.accountInformation(address)
+        const account = await this._clientManager.algod.accountInformation(address, { format: 'json' })
         if (predicate(account)) {
           break
         }

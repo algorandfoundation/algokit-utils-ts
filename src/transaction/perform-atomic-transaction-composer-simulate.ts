@@ -1,5 +1,4 @@
 import { SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '../algod_client'
-import { decodeSignedTransaction } from '../algokit_transact'
 import * as algosdk from '../sdk'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
@@ -17,8 +16,7 @@ export async function performAtomicTransactionComposerSimulate(
   algod: Algodv2,
   options?: Omit<SimulateRequest, 'txnGroups'>,
 ) {
-  const unsignedTransactionsSigners = atc.buildGroup()
-  const decodedSignedTransactions = unsignedTransactionsSigners.map((ts) => algosdk.encodeUnsignedSimulateTransaction(ts.txn))
+  const transactionsWithSigners = atc.buildGroup()
 
   const simulateRequest = {
     ...(options ?? {
@@ -34,7 +32,9 @@ export async function performAtomicTransactionComposerSimulate(
     }),
     txnGroups: [
       {
-        txns: decodedSignedTransactions.map((txn) => decodeSignedTransaction(txn)),
+        txns: transactionsWithSigners.map((txn) => ({
+          transaction: txn.txn,
+        })),
       } satisfies SimulateRequestTransactionGroup,
     ],
   } satisfies SimulateRequest
