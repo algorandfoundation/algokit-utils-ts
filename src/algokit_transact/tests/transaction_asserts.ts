@@ -1,20 +1,20 @@
 import * as ed from '@noble/ed25519'
 import { expect } from 'vitest'
-import { TransactionTestData } from './common'
 import {
-  applyMultisigSubsignature,
-  encodeSignedTransaction,
-  mergeMultisignatures,
-  newMultisigSignature,
   SignedTransaction,
+  applyMultisigSubsignature,
   assignFee,
   decodeTransaction,
+  encodeSignedTransaction,
   encodeTransaction,
   estimateTransactionSize,
   getEncodedTransactionType,
   getTransactionId,
   getTransactionIdRaw,
-} from '../src'
+  mergeMultisignatures,
+  newMultisigSignature,
+} from '..'
+import { TransactionTestData } from './common'
 
 export const assertExample = async (label: string, testData: TransactionTestData) => {
   const signedTxn: SignedTransaction = {

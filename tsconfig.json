@@ -10,23 +10,8 @@
     "declaration": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "resolveJsonModule": true,
-    "composite": true,
-    "paths": {
-      "@algorandfoundation/algokit-common": ["./algokit_common/dist"],
-      "@algorandfoundation/algokit-abi": ["./algokit_abi/dist"],
-      "@algorandfoundation/algokit-transact": ["./algokit_transact/dist"],
-      "@algorandfoundation/algod-client": ["./algod_client/dist"],
-      "@algorandfoundation/kmd-client": ["./kmd_client/dist"]
-    }
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "tests/**/*.json", "rollup-multi-plugin.ts", "rollup.config.ts", "package.json"],
-  "exclude": ["**/*.algo.ts"],
-  "references": [
-    { "path": "./algokit_common" },
-    { "path": "./algokit_abi" },
-    { "path": "./algokit_transact" },
-    { "path": "./algod_client" },
-    { "path": "./kmd_client" }
-  ]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "rollup-multi-plugin.ts", "rollup.config.ts"],
+  "exclude": ["**/*.algo.ts"]
 }

@@ -12,14 +12,6 @@
   "main": "index.js",
   "module": "index.mjs",
   "types": "index.d.ts",
-  "workspaces": [
-    "algokit_common",
-    "algokit_abi",
-    "algokit_transact",
-    "algod_client",
-    "indexer_client",
-    "kmd_client"
-  ],
   "files": [
     "**/*"
   ],
