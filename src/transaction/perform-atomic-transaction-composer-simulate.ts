@@ -34,6 +34,7 @@ export async function performAtomicTransactionComposerSimulate(
       {
         txns: transactionsWithSigners.map((txn) => ({
           transaction: txn.txn,
+          signature: new Uint8Array(64), // TODO: PD - make an empty signer to do this
         })),
       } satisfies SimulateRequestTransactionGroup,
     ],

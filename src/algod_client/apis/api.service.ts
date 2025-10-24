@@ -1,6 +1,6 @@
-import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request'
-import { AlgorandSerializer } from '../core/model-runtime'
+import type { ApiRequestOptions, BaseHttpRequest } from '../core/base-http-request'
 import type { BodyFormat } from '../core/model-runtime'
+import { AlgorandSerializer } from '../core/model-runtime'
 import type {
   AbortCatchup,
   Account,
@@ -46,10 +46,10 @@ import type {
 } from '../models/index'
 import {
   AbortCatchupMeta,
-  AccountMeta,
   AccountApplicationInformationMeta,
   AccountAssetInformationMeta,
   AccountAssetsInformationMeta,
+  AccountMeta,
   AddParticipationKeyMeta,
   ApplicationMeta,
   AssetMeta,
@@ -58,13 +58,13 @@ import {
   DryrunRequestMeta,
   GenesisMeta,
   GetApplicationBoxesMeta,
-  GetBlockMeta,
   GetBlockHashMeta,
   GetBlockLogsMeta,
+  GetBlockMeta,
   GetBlockTimeStampOffsetMeta,
   GetBlockTxidsMeta,
-  GetPendingTransactionsMeta,
   GetPendingTransactionsByAddressMeta,
+  GetPendingTransactionsMeta,
   GetStatusMeta,
   GetSupplyMeta,
   GetSyncRoundMeta,
@@ -162,18 +162,17 @@ export class AlgodApi {
   async accountAssetInformation(
     address: string,
     assetId: number | bigint,
-    params?: { format?: 'json' | 'msgpack' },
     requestOptions?: ApiRequestOptions,
   ): Promise<AccountAssetInformation> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = (params?.format as BodyFormat | undefined) ?? 'msgpack'
+    const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'GET',
       url: '/v2/accounts/{address}/assets/{asset-id}',
       path: { address: address, 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
-      query: { format: params?.format },
+      query: {},
       headers,
       body: undefined,
       mediaType: undefined,
@@ -220,20 +219,16 @@ export class AlgodApi {
   /**
    * Given a specific account public key, this call returns the account's status, balance and spendable amounts
    */
-  async accountInformation(
-    address: string,
-    params?: { exclude?: 'all' | 'none'; format?: 'json' | 'msgpack' },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<Account> {
+  async accountInformation(address: string, params?: { exclude?: 'all' | 'none' }, requestOptions?: ApiRequestOptions): Promise<Account> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = (params?.format as BodyFormat | undefined) ?? 'msgpack'
+    const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'GET',
       url: '/v2/accounts/{address}',
       path: { address: address },
-      query: { exclude: params?.exclude, format: params?.format },
+      query: { exclude: params?.exclude },
       headers,
       body: undefined,
       mediaType: undefined,
