@@ -578,7 +578,7 @@ export class AppManager {
 /**
  * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
  */
-export function getAccessReference(accessReference: AccessReference): AccessReference {
+export function getAccessReference(accessReference: AccessReference): algosdk.ResourceReference {
   return {
     address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
     appIndex: accessReference.appId,
@@ -586,7 +586,7 @@ export function getAccessReference(accessReference: AccessReference): AccessRefe
     holding: accessReference.holding,
     locals: accessReference.locals,
     box: accessReference.box ? AppManager.getBoxReference(accessReference.box) : undefined,
-  } as AccessReference
+  } satisfies algosdk.ResourceReference
 }
 
 /**

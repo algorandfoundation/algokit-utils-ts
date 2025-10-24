@@ -1815,7 +1815,7 @@ export class TransactionComposer {
         clearProgram: clearStateProgram!,
       })
     } else {
-      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appId: appId })
+      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appIndex: appId })
     }
   }
 
