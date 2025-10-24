@@ -565,7 +565,7 @@ export class AtomicTransactionComposer {
 
     const stxns = await this.gatherSignatures()
 
-    await client.rawTransaction({ body: stxns[0] })
+    await client.rawTransaction({ body: stxns[0] }) // TODO: need to fix this to support multiple txns
 
     this.status = AtomicTransactionComposerStatus.SUBMITTED
 

@@ -1,5 +1,5 @@
 import type { SignedTransaction, Transaction } from '../algokit_transact'
-import { encodeSignedTransaction, encodeTransactionRaw } from '../algokit_transact'
+import { encodeSignedTransaction, encodeTransaction } from '../algokit_transact'
 import { LogicSigAccount } from './logicsig.js'
 import { MultisigMetadata } from './multisig.js'
 import { mergeMultisigTransactions, signMultisigTransaction } from './multisigSigning.js'
@@ -27,7 +27,7 @@ export function makeBasicAccountTransactionSigner(account: Account): Transaction
     for (const index of indexesToSign) {
       const txn = txnGroup[index]
       // Sign transaction using nacl
-      const bytesToSign = encodeTransactionRaw(txn)
+      const bytesToSign = encodeTransaction(txn)
       const signature = nacl.sign(bytesToSign, account.sk)
 
       const signedTxn: SignedTransaction = {

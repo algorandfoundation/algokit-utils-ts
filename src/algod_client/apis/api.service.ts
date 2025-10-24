@@ -1316,12 +1316,9 @@ export class AlgodApi {
     return payload as ShutdownNode
   }
 
-  async simulateTransaction(
-    params?: { format?: 'json' | 'msgpack'; body: SimulateRequest },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<SimulateTransaction> {
+  async simulateTransaction(params?: { body: SimulateRequest }, requestOptions?: ApiRequestOptions): Promise<SimulateTransaction> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = (params?.format as BodyFormat | undefined) ?? 'msgpack'
+    const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const bodyMeta = SimulateRequestMeta
@@ -1334,7 +1331,7 @@ export class AlgodApi {
       method: 'POST',
       url: '/v2/transactions/simulate',
       path: {},
-      query: { format: params?.format },
+      query: { format: 'msgpack' },
       headers,
       body: serializedBody,
       mediaType: mediaType,
