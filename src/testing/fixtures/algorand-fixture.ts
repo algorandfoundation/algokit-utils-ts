@@ -89,9 +89,10 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
   const newScope = async () => {
     Config.configure({ debug: true })
     const transactionLogger = new TransactionLogger()
-    const transactionLoggerAlgod = transactionLogger.capture(algod)
+    // TODO: implement the logic for wait for indexer
+    // const transactionLoggerAlgod = transactionLogger.capture(algod)
 
-    algorand = AlgorandClient.fromClients({ algod: transactionLoggerAlgod, indexer, kmd }).setSuggestedParamsCacheTimeout(0)
+    algorand = AlgorandClient.fromClients({ algod: algod, indexer, kmd }).setSuggestedParamsCacheTimeout(0)
 
     const testAccount = await getTestAccount({ initialFunds: fixtureConfig?.testAccountFunding ?? algos(10), suppressLog: true }, algorand)
     algorand.setSignerFromAccount(testAccount)
@@ -103,7 +104,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
     }
     context = {
       algorand,
-      algod: transactionLoggerAlgod,
+      algod: algod,
       indexer: indexer,
       kmd: kmd,
       testAccount,

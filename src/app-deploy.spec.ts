@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppCreateParams, getTestingAppDeployParams } from '../tests/example-contracts/testing-app/contract'
 import { Config } from './config'
-import { getApplicationAddress } from './sdk'
+import { getApplicationAddress, getTransactionId } from './sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 import { AppDeployMetadata } from './types/app'
 import { AppDeployParams } from './types/app-deployer'
@@ -20,10 +20,10 @@ describe('deploy-app', () => {
   const name = 'MY_APP'
 
   test('Created app is retrieved by name with deployment metadata', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
     const app1 = await algorand.send.appCreate(await getTestingAppCreateParams(testAccount, creationMetadata))
-    await waitForIndexer()
+    await waitForIndexerTransaction(getTransactionId(app1.transaction))
 
     const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
@@ -42,12 +42,12 @@ describe('deploy-app', () => {
   })
 
   test('Latest created app is retrieved', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: false }
     const app1 = await algorand.send.appCreate({ ...(await getTestingAppCreateParams(testAccount, creationMetadata)), lease: '1' })
     const app2 = await algorand.send.appCreate({ ...(await getTestingAppCreateParams(testAccount, creationMetadata)), lease: '2' })
     const app3 = await algorand.send.appCreate({ ...(await getTestingAppCreateParams(testAccount, creationMetadata)), lease: '3' })
-    await waitForIndexer()
+    await waitForIndexerTransaction(getTransactionId(app3.transaction))
 
     const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
@@ -57,7 +57,7 @@ describe('deploy-app', () => {
   })
 
   test('Created, updated and deleted apps are retrieved by name with deployment metadata', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
 
     const creationMetadata = { name, version: '1.0', updatable: true, deletable: true }
     const name2 = 'APP_2'
@@ -68,8 +68,8 @@ describe('deploy-app', () => {
 
     const updateMetadata = { name, version: '2.0', updatable: false, deletable: false }
     const update1 = await algorand.send.appUpdate({ ...(await getTestingAppCreateParams(testAccount, updateMetadata)), appId: app1.appId })
-    const _delete3 = await algorand.send.appDelete({ appId: app3.appId, sender: testAccount })
-    await waitForIndexer()
+    const delete3 = await algorand.send.appDelete({ appId: app3.appId, sender: testAccount })
+    await waitForIndexerTransaction(getTransactionId(delete3.transaction))
 
     const apps = await algorand.appDeployer.getCreatorAppsByName(testAccount)
 
@@ -150,14 +150,17 @@ describe('deploy-app', () => {
   })
 
   test('Deploy update to updatable updated app', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata({ updatable: true })
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
+
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -190,14 +193,16 @@ describe('deploy-app', () => {
   })
 
   test('Deploy update to immutable updated app fails', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata({ updatable: false })
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -226,14 +231,16 @@ describe('deploy-app', () => {
   })
 
   test('Deploy failure for updated app fails if onupdate = Fail', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -257,14 +264,16 @@ describe('deploy-app', () => {
   })
 
   test('Deploy replacement to deletable, updated app', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata({ deletable: true })
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -301,7 +310,7 @@ describe('deploy-app', () => {
 
   test('Deploy failure for replacement of permanent, updated app', async () => {
     Config.configure({ debug: false }) // Remove noise from snapshot
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
       sender: testAccount,
@@ -309,7 +318,9 @@ describe('deploy-app', () => {
     })) as AppDeployParams
 
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
@@ -339,14 +350,16 @@ describe('deploy-app', () => {
   })
 
   test('Deploy replacement of deletable schema broken app', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata({ deletable: true })
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -383,7 +396,7 @@ describe('deploy-app', () => {
 
   test('Deploy replacement to schema broken, permanent app fails', async () => {
     Config.configure({ debug: false }) // Remove noise from snapshot
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata({ deletable: false })
     const deployment1 = (await getTestingAppDeployParams({
       sender: testAccount,
@@ -391,7 +404,9 @@ describe('deploy-app', () => {
     })) as AppDeployParams
 
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = (await getTestingAppDeployParams({
@@ -421,14 +436,16 @@ describe('deploy-app', () => {
   })
 
   test('Deploy failure for replacement of schema broken app fails if onSchemaBreak = Fail', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -454,13 +471,15 @@ describe('deploy-app', () => {
   })
 
   test('Do nothing if deploying app with no changes', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const deployment = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: getMetadata(),
     })
     const initialDeployment = await algorand.appDeployer.deploy(deployment)
-    await waitForIndexer()
+    if (initialDeployment.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(initialDeployment.transaction))
+    }
     logging.testLogger.clear()
 
     const result = await algorand.appDeployer.deploy(deployment)
@@ -487,14 +506,16 @@ describe('deploy-app', () => {
   })
 
   test('Deploy append for schema broken app if onSchemaBreak = AppendApp', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
@@ -527,14 +548,16 @@ describe('deploy-app', () => {
   })
 
   test('Deploy append for update app if onUpdate = AppendApp', async () => {
-    const { algorand, testAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, waitForIndexerTransaction } = localnet.context
     const metadata = getMetadata()
     const deployment1 = await getTestingAppDeployParams({
       sender: testAccount,
       metadata: metadata,
     })
     const result1 = await algorand.appDeployer.deploy(deployment1)
-    await waitForIndexer()
+    if (result1.operationPerformed !== 'nothing') {
+      await waitForIndexerTransaction(getTransactionId(result1.transaction))
+    }
     logging.testLogger.clear()
 
     const deployment2 = await getTestingAppDeployParams({
