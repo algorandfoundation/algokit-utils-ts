@@ -26,8 +26,8 @@ function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
 }
 
 // Import new OnApplicationComplete type
-import { OnApplicationComplete as NewOnApplicationComplete } from '../algokit_transact'
 import { TransactionParams as AlgodTransactionParams } from '../algod_client'
+import { OnApplicationComplete as NewOnApplicationComplete } from '../algokit_transact'
 
 // Helper function to map old OnApplicationComplete to new
 function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplicationComplete {
@@ -538,7 +538,7 @@ export function makeApplicationCallTxnFromObject({
               numByteSlices: Number(numLocalByteSlices) || 0,
             }
           : undefined,
-      extraProgramPages: Number(extraPages),
+      extraProgramPages: extraPages !== undefined ? Number(extraPages) : undefined,
       args: appArgs,
       accountReferences,
       appReferences,
