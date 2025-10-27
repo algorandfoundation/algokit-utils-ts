@@ -8,7 +8,18 @@ import {
   concatArrays,
   hash,
 } from '../../algokit_common'
-import { OmitEmptyObjectCodec, addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, stringCodec } from '../encoding/codecs'
+import {
+  OmitEmptyObjectCodec,
+  addressArrayCodec,
+  addressCodec,
+  bigIntArrayCodec,
+  bigIntCodec,
+  booleanCodec,
+  bytesArrayCodec,
+  bytesCodec,
+  numberCodec,
+  stringCodec,
+} from '../encoding/codecs'
 import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
 import {
   AssetParamsDto,
@@ -609,10 +620,10 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         nbs: numberCodec.encode(transaction.appCall.localStateSchema.numByteSlices),
       })
     }
-    txDto.apaa = transaction.appCall.args?.map((arg) => bytesCodec.encode(arg) ?? bytesCodec.defaultValue())
-    txDto.apat = transaction.appCall.accountReferences?.map((a) => addressCodec.encode(a) ?? addressCodec.defaultValue())
-    txDto.apfa = transaction.appCall.appReferences?.map((a) => bigIntCodec.encode(a) ?? bigIntCodec.defaultValue())
-    txDto.apas = transaction.appCall.assetReferences?.map((a) => bigIntCodec.encode(a) ?? bigIntCodec.defaultValue())
+    txDto.apaa = bytesArrayCodec.encode(transaction.appCall.args ?? [])
+    txDto.apat = addressArrayCodec.encode(transaction.appCall.accountReferences ?? [])
+    txDto.apfa = bigIntArrayCodec.encode(transaction.appCall.appReferences ?? [])
+    txDto.apas = bigIntArrayCodec.encode(transaction.appCall.assetReferences ?? [])
     txDto.apep = numberCodec.encode(transaction.appCall.extraProgramPages)
   }
 

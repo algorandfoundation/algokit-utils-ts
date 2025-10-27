@@ -117,9 +117,40 @@ export class OmitEmptyObjectCodec<T extends object> extends Codec<T, T | undefin
   }
 }
 
+export class ArrayCodec<T, TEncoded = T> extends Codec<Array<T>, Array<TEncoded> | undefined> {
+  constructor(private elementCodec: Codec<T, TEncoded>) {
+    super()
+  }
+
+  public defaultValue(): Array<TEncoded> | undefined {
+    return undefined
+  }
+
+  protected toEncoded(value: Array<T>): Array<TEncoded> | undefined {
+    if (value.length === 0) {
+      return undefined
+    }
+    return value.map((item) => this.elementCodec.encode(item) ?? this.elementCodec.defaultValue())
+  }
+
+  protected fromEncoded(value: Array<TEncoded> | undefined): Array<T> {
+    if (value === undefined || value.length === 0) {
+      return []
+    }
+    return value.map((item) => this.elementCodec.decode(item))
+  }
+
+  protected isDefaultValue(value: Array<T>): boolean {
+    return value.length === 0
+  }
+}
+
 export const numberCodec = new NumberCodec()
 export const bigIntCodec = new BigIntCodec()
 export const stringCodec = new StringCodec()
 export const addressCodec = new AddressCodec()
 export const bytesCodec = new BytesCodec()
 export const booleanCodec = new BooleanCodec()
+export const bytesArrayCodec = new ArrayCodec(bytesCodec)
+export const addressArrayCodec = new ArrayCodec(addressCodec)
+export const bigIntArrayCodec = new ArrayCodec(bigIntCodec)
