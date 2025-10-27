@@ -1,6 +1,6 @@
-import { TransactionType, getTransactionId } from '../algokit_transact'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
+import { TransactionType, getTransactionId } from '../algokit_transact'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'
@@ -117,57 +117,49 @@ describe('Transfer capability', () => {
     const dummyAssetId = await generateTestAsset(algorand, testAccount, 100)
     const secondAccount = algorand.account.random()
 
-    try {
-      await algorand.send.assetTransfer({
+    await expect(
+      algorand.send.assetTransfer({
         sender: testAccount,
         receiver: secondAccount,
         assetId: dummyAssetId,
         amount: 1n,
         note: `Transfer 5 assets with id ${dummyAssetId}`,
-      })
-    } catch (e: unknown) {
-      expect((e as Error).name).toEqual('URLTokenBaseHTTPError')
-      expect((e as Error).message).toContain('receiver error: must optin')
-    }
+      }),
+    ).rejects.toThrow(/receiver error: must optin/)
   }, 10e6)
 
   test('Transfer ASA, sender is not opted in', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
-    const dummyAssetId = await generateTestAsset(algorand, testAccount, 100)
+    const assetCreator = await generateAccount({ initialFunds: (1).algo() })
+    const dummyAssetId = await generateTestAsset(algorand, assetCreator, 100)
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
     await algorand.send.assetOptIn({ sender: secondAccount, assetId: dummyAssetId })
 
-    try {
-      await algorand.send.assetTransfer({
+    await expect(
+      algorand.send.assetTransfer({
         sender: testAccount,
         receiver: secondAccount,
         assetId: dummyAssetId,
         amount: 1n,
         note: `Transfer 5 assets with id ${dummyAssetId}`,
-      })
-    } catch (e: unknown) {
-      expect((e as Error).name).toEqual('URLTokenBaseHTTPError')
-      expect((e as Error).message).toContain('sender error: must optin')
-    }
+      }),
+    ).rejects.toThrow(/asset .* missing from/)
   }, 10e6)
 
   test('Transfer ASA, asset doesnt exist', async () => {
     const { algorand, testAccount, generateAccount } = localnet.context
     const secondAccount = await generateAccount({ initialFunds: (1).algo() })
 
-    try {
-      await algorand.send.assetTransfer({
+    await expect(
+      algorand.send.assetTransfer({
         sender: testAccount,
         receiver: secondAccount,
         assetId: 1n,
         amount: 5n,
         note: 'Transfer asset with wrong id',
-      })
-    } catch (e: unknown) {
-      expect((e as Error).name).toEqual('URLTokenBaseHTTPError')
-      expect((e as Error).message).toContain('asset 1 missing from')
-    }
+      }),
+    ).rejects.toThrow(/asset 1 missing from/)
   }, 10e6)
 
   test('Transfer ASA, asset is transfered to another account', async () => {
