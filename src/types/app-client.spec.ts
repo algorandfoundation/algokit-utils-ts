@@ -533,7 +533,7 @@ describe('application-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.appCall?.boxReferences).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
+    expect(call.transaction.appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {

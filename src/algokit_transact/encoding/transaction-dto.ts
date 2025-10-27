@@ -113,6 +113,9 @@ export type TransactionDto = {
   /** Asset references */
   apas?: (bigint | number)[]
 
+  /** Box references */
+  apbx?: BoxReferenceDto[]
+
   /** Extra program pages */
   apep?: number
 
@@ -149,6 +152,17 @@ export type TransactionDto = {
 
   /** State proof message */
   spmsg?: StateProofMessageDto
+}
+
+/**
+ * Encodeable box reference structure for app call transactions
+ */
+export type BoxReferenceDto = {
+  /** App index (0 means current app) */
+  i?: bigint | number
+
+  /** Box name */
+  n?: Uint8Array
 }
 
 /**

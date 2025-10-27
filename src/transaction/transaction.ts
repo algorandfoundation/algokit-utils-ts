@@ -517,7 +517,6 @@ export async function prepareGroupForSending(
       }
 
       if (r && !hasAccessReferences) {
-        if (r.boxes || r.extraBoxRefs) throw Error('Unexpected boxes at the transaction level')
         if (r.appLocals) throw Error('Unexpected app local at the transaction level')
         if (r.assetHoldings)
           throw Error('Unexpected asset holding at the transaction level')
@@ -527,7 +526,10 @@ export async function prepareGroupForSending(
           accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])],
           appReferences: [...(group[i].txn?.appCall?.appReferences ?? []), ...(r.apps ?? [])],
           assetReferences: [...(group[i].txn?.appCall?.assetReferences ?? []), ...(r.assets ?? [])],
-          boxReferences: [...(group[i].txn?.appCall?.boxReferences ?? []), ...(r.boxes ?? [])],
+          boxReferences: [
+            ...(group[i].txn?.appCall?.boxReferences ?? []),
+            ...(r.boxes?.map((b) => ({ appId: b.app, name: b.name })) ?? []),
+          ],
         } satisfies Partial<ApplicationTransactionFields>
 
         const accounts = group[i].txn.appCall?.accountReferences?.length ?? 0
@@ -790,10 +792,25 @@ export async function prepareGroupForSending(
       })
 
       g.boxes?.forEach((b) => {
-        populateGroupResource(group, b, 'box')
+        // TODO: PD - revisit this, maybe we don't need it anymore after merging the ATC to composer
+        // When a box belongs to the current app being called, we need to normalize the app ID to 0
+        // Find which transaction this box is for by matching the app ID
+        const txnWithMatchingApp = group.findIndex((t) => {
+          const isAppCall = t.txn.transactionType === TransactionType.AppCall
+          const appId = t.txn.appCall?.appId
+          const matches = appId !== undefined && BigInt(appId) === BigInt(b.app)
+          return isAppCall && matches
+        })
+
+        const normalizedBox = txnWithMatchingApp !== -1 ? { app: 0n, name: b.name } : b
+
+        populateGroupResource(group, normalizedBox, 'box')
 
         // Remove apps as resource from the group if we're adding it here
-        g.apps = g.apps?.filter((app) => BigInt(app) !== BigInt(b.app))
+        // Only remove if it's not the current app (app 0)
+        if (normalizedBox.app !== 0n) {
+          g.apps = g.apps?.filter((app) => BigInt(app) !== BigInt(b.app))
+        }
       })
 
       g.assets?.forEach((a) => {
@@ -821,6 +838,7 @@ export async function prepareGroupForSending(
   })
 
   newAtc['methodCalls'] = atc['methodCalls']
+
   return newAtc
 }
 

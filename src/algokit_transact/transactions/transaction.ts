@@ -624,6 +624,13 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     txDto.apat = addressArrayCodec.encode(transaction.appCall.accountReferences ?? [])
     txDto.apfa = bigIntArrayCodec.encode(transaction.appCall.appReferences ?? [])
     txDto.apas = bigIntArrayCodec.encode(transaction.appCall.assetReferences ?? [])
+    // Encode box references
+    if (transaction.appCall.boxReferences && transaction.appCall.boxReferences.length > 0) {
+      txDto.apbx = transaction.appCall.boxReferences.map(box => ({
+        i: bigIntCodec.encode(box.appId),
+        n: bytesCodec.encode(box.name)
+      }))
+    }
     txDto.apep = numberCodec.encode(transaction.appCall.extraProgramPages)
   }
 
@@ -780,6 +787,10 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
         accountReferences: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
         appReferences: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
         assetReferences: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
+        boxReferences: transactionDto.apbx?.map((box) => ({
+          appId: bigIntCodec.decode(box.i),
+          name: bytesCodec.decode(box.n),
+        })),
         extraProgramPages: numberCodec.decodeOptional(transactionDto.apep),
         ...(transactionDto.apgs !== undefined
           ? {
