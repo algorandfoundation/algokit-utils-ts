@@ -90,6 +90,7 @@ export async function request<T>(
       if (ct.includes('application/msgpack')) {
         errorBody = decodeMsgPack(new Uint8Array(await response.arrayBuffer()))
       } else if (ct.includes('application/json')) {
+        // TODO: PD - update the template
         errorBody = JSON.parse(await response.text())
       } else {
         errorBody = await response.text()
@@ -116,7 +117,7 @@ export async function request<T>(
   }
 
   if (contentType.includes('application/json')) {
-    return (await response.text()) as unknown as T
+    return JSON.parse(await response.text()) as unknown as T
   }
 
   if (!contentType) {

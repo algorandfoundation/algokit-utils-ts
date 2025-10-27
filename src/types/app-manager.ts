@@ -271,11 +271,15 @@ export class AppManager {
     const addressStr = typeof address === 'string' ? address : address.toString()
     const appInfo = await this._algod.accountApplicationInformation(addressStr, Number(appId))
 
-    if (!appInfo.appLocalState?.keyValue) {
+    if (!appInfo.appLocalState) {
       throw new Error("Couldn't find local state")
     }
 
-    // Convert from new format (key: string) to old format (key: Uint8Array)
+    // If keyValue is undefined or empty, return empty state
+    if (!appInfo.appLocalState.keyValue || appInfo.appLocalState.keyValue.length === 0) {
+      return {}
+    }
+
     const convertedState = appInfo.appLocalState.keyValue.map((kv) => ({
       key: new Uint8Array(Buffer.from(kv.key, 'base64')),
       value: kv.value,
@@ -318,7 +322,7 @@ export class AppManager {
     const boxId = typeof boxName === 'object' && 'nameRaw' in boxName ? boxName.nameRaw : boxName
     const nameBytes = AppManager.getBoxReference(boxId).name
     const nameBase64 = Buffer.from(nameBytes).toString('base64')
-    const boxResult = await this._algod.getApplicationBoxByName(Number(appId), { name: nameBase64 })
+    const boxResult = await this._algod.getApplicationBoxByName(Number(appId), { name: `b64:${nameBase64}` })
     return boxResult.value
   }
 

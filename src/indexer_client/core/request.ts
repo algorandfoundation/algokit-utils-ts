@@ -115,7 +115,7 @@ export async function request<T>(
   }
 
   if (contentType.includes('application/json')) {
-    return (await response.text()) as unknown as T
+    return JSON.parse(await response.text()) as unknown as T
   }
 
   if (!contentType) {
