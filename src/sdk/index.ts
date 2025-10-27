@@ -39,7 +39,7 @@ export const MULTISIG_BAD_SENDER_ERROR_MSG = 'The transaction sender address and
  */
 export function signTransaction(txn: Transaction, sk: Uint8Array) {
   // Sign the transaction using nacl
-  const bytesToSign = encodeTransactionRaw(txn)
+  const bytesToSign = encodeTransaction(txn)
   const signature = nacl.sign(bytesToSign, sk)
 
   const signedTxn: SignedTransaction = {

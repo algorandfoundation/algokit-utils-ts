@@ -1,10 +1,5 @@
 import type { MultisigSignature, MultisigSubsignature, SignedTransaction, Transaction } from '../algokit_transact'
-import {
-  decodeSignedTransaction,
-  encodeSignedTransaction,
-  encodeTransactionRaw,
-  getTransactionId,
-} from '../algokit_transact'
+import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction, getTransactionId } from '../algokit_transact'
 import { Address } from './encoding/address.js'
 import { MultisigMetadata, addressFromMultisigPreImg, pksFromAddresses } from './multisig.js'
 import * as nacl from './nacl/naclWrappers.js'
@@ -135,8 +130,7 @@ function createMultisigTransactionWithSignature(
 function partialSignTxn(transaction: Transaction, { version, threshold, pks }: MultisigMetadataWithPks, sk: Uint8Array) {
   // get signature verifier
   const myPk = nacl.keyPairFromSecretKey(sk).publicKey
-  // Get bytes to sign using encodeTransactionRaw
-  const bytesToSign = encodeTransactionRaw(transaction)
+  const bytesToSign = encodeTransaction(transaction)
   const rawSig = nacl.sign(bytesToSign, sk)
   return createMultisigTransactionWithSignature(transaction, { rawSig, myPk }, { version, threshold, pks })
 }

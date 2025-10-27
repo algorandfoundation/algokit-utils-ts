@@ -430,7 +430,7 @@ export function calculateFee(transaction: Transaction, feeParams: FeeParams): bi
   }
 
   if (feeParams.maxFee && calculatedFee > feeParams.maxFee) {
-    throw new Error(`Transaction fee ${calculatedFee} µALGO is greater than max fee ${feeParams.maxFee} µALGO`)
+    throw new Error(`Transaction fee ${calculatedFee} µALGO is greater than maxFee ${feeParams.maxFee} µALGO`)
   }
 
   return calculatedFee
