@@ -228,6 +228,7 @@ export function makeAssetCreateTxnWithSuggestedParamsFromObject({
 }: Omit<AssetConfigurationTransactionParams, 'assetIndex'> & CommonTransactionParams): Transaction {
   return makeBaseAssetConfigTxn({
     sender,
+    assetIndex: 0,
     total,
     decimals,
     defaultFrozen,
