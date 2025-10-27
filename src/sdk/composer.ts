@@ -463,11 +463,9 @@ export class AtomicTransactionComposer {
         throw new Error('Cannot build a group with 0 transactions')
       }
       if (this.transactions.length > 1) {
-        // Use immutable groupTransactions - returns new array with grouped transactions
         const groupedTxns = assignGroupID(this.transactions.map((txnWithSigner) => txnWithSigner.txn))
-        // Update the transactions array with the grouped versions
         this.transactions = this.transactions.map((txnWithSigner, index) => ({
-          ...txnWithSigner,
+          signer: txnWithSigner.signer,
           txn: groupedTxns[index],
         }))
       }

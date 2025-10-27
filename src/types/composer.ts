@@ -1689,8 +1689,14 @@ export class TransactionComposer {
         maxFee,
       }
 
+      // Assign fee
+      // TODO: PD - review if this is the best way to do it
       return {
-        ...txnWithSigner,
+        signer: txnWithSigner.signer,
+        txn: {
+          ...txnWithSigner.txn,
+          fee: result.txn.fee,
+        },
         context,
       }
     })
