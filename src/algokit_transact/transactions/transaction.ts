@@ -5,10 +5,10 @@ import {
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
   TRANSACTION_ID_LENGTH,
-  hash,
   concatArrays,
+  hash,
 } from '../../algokit_common'
-import { addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, OmitEmptyObjectCodec, stringCodec } from '../encoding/codecs'
+import { OmitEmptyObjectCodec, addressCodec, bigIntCodec, booleanCodec, bytesCodec, numberCodec, stringCodec } from '../encoding/codecs'
 import { decodeMsgpack, encodeMsgpack } from '../encoding/msgpack'
 import {
   AssetParamsDto,
@@ -23,10 +23,10 @@ import { AppCallTransactionFields, OnApplicationComplete, StateSchema, validateA
 import { AssetConfigTransactionFields, validateAssetConfigTransaction } from './asset-config'
 import { AssetFreezeTransactionFields, validateAssetFreezeTransaction } from './asset-freeze'
 import { AssetTransferTransactionFields, validateAssetTransferTransaction } from './asset-transfer'
-import { getValidationErrorMessage, TransactionValidationError } from './common'
+import { TransactionValidationError, getValidationErrorMessage } from './common'
+import { HeartbeatTransactionFields } from './heartbeat'
 import { KeyRegistrationTransactionFields, validateKeyRegistrationTransaction } from './key-registration'
 import { PaymentTransactionFields } from './payment'
-import { HeartbeatTransactionFields } from './heartbeat'
 import { MerkleArrayProof, Reveal, StateProofTransactionFields } from './state-proof'
 
 /**
@@ -162,35 +162,35 @@ export enum TransactionType {
   /**
    * Payment transaction
    */
-  Payment,
+  Payment = 'pay',
   /**
    * Key registration transaction
    */
-  KeyRegistration,
+  KeyRegistration = 'keyreg',
   /**
    * Asset configuration transaction
    */
-  AssetConfig,
+  AssetConfig = 'acfg',
   /**
    * Asset transfer transaction
    */
-  AssetTransfer,
+  AssetTransfer = 'axfer',
   /**
    * Asset freeze transaction
    */
-  AssetFreeze,
+  AssetFreeze = 'afrz',
   /**
    * Application transaction
    */
-  AppCall,
+  AppCall = 'appl',
   /**
    * State proof transaction
    */
-  StateProof,
+  StateProof = 'stpf',
   /**
    * Heartbeat transaction
    */
-  Heartbeat,
+  Heartbeat = 'hb',
 }
 
 export type FeeParams = {

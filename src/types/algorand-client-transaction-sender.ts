@@ -1,5 +1,5 @@
-import { Transaction, getTransactionId } from '../algokit_transact'
 import { Buffer } from 'buffer'
+import { Transaction, getTransactionId } from '../algokit_transact'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
 import { Address } from '../sdk'
@@ -463,7 +463,8 @@ export class AlgorandClientTransactionSender {
    * @returns The result of the asset opt-in transaction and the transaction that was sent
    */
   assetOptIn = this._send((c) => c.addAssetOptIn, {
-    preLog: (params, transaction) => `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${getTransactionId(transaction)}`,
+    preLog: (params, transaction) =>
+      `Opting in ${params.sender} to asset with ID ${params.assetId} via transaction ${getTransactionId(transaction)}`,
   })
   /**
    * Opt an account out of an Algorand Standard Asset.

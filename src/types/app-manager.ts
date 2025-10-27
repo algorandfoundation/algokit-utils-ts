@@ -1,10 +1,4 @@
-import {
-  ApplicationLocalReference,
-  AssetHoldingReference,
-  EvalDelta,
-  PendingTransactionResponse,
-  TealValue,
-} from '../algod_client'
+import { ApplicationLocalReference, AssetHoldingReference, EvalDelta, PendingTransactionResponse, TealValue } from '../algod_client'
 import { BoxReference as TransactionBoxReference } from '../algokit_transact'
 import * as algosdk from '../sdk'
 import { Address, ProgramSourceMap } from '../sdk'
@@ -408,7 +402,7 @@ export class AppManager {
       const key = Buffer.from(stateVal.key).toString('utf-8')
       const tealValue = stateVal.value
 
-      const dataTypeFlag = 'action' in tealValue ? tealValue.action : tealValue.type
+      const dataTypeFlag = Number('action' in tealValue ? tealValue.action : tealValue.type)
       let valueBase64: string
       let valueRaw: Buffer
       switch (dataTypeFlag) {
