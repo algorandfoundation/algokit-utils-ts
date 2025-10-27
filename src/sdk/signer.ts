@@ -26,6 +26,8 @@ export function makeBasicAccountTransactionSigner(account: Account): Transaction
 
     for (const index of indexesToSign) {
       const txn = txnGroup[index]
+      const authAddress = account.addr.toString()
+
       // Sign transaction using nacl
       const bytesToSign = encodeTransaction(txn)
       const signature = nacl.sign(bytesToSign, account.sk)
@@ -33,6 +35,7 @@ export function makeBasicAccountTransactionSigner(account: Account): Transaction
       const signedTxn: SignedTransaction = {
         transaction: txn,
         signature,
+        authAddress: authAddress !== txn.sender ? authAddress : undefined,
       }
 
       signed.push(encodeSignedTransaction(signedTxn))

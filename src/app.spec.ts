@@ -39,7 +39,7 @@ describe('app', () => {
       rekeyTo,
     })
 
-    // If the rekey didn't work this will throw
+    // // If the rekey didn't work this will throw
     const rekeyedAccount = algorand.account.rekeyed(testAccount, rekeyTo)
     await algorand.send.payment({
       amount: (0).algo(),
