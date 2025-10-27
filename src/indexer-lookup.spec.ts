@@ -1,6 +1,6 @@
-import { getTransactionId } from './algokit_transact'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
+import { getTransactionId } from './algokit_transact'
 import * as indexer from './indexer-lookup'
 import { Address } from './sdk'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
@@ -19,9 +19,9 @@ describe('indexer-lookup', () => {
   }
 
   test('Transaction is found by id', async () => {
-    const { algorand, waitForIndexer } = localnet.context
+    const { algorand, waitForIndexerTransaction } = localnet.context
     const { transaction } = await sendTestTransaction()
-    await waitForIndexer()
+    await waitForIndexerTransaction(getTransactionId(transaction))
 
     const txn = await algorand.client.indexer.lookupTransactionByID(getTransactionId(transaction)).do()
 
@@ -39,7 +39,7 @@ describe('indexer-lookup', () => {
   }, 20_000)
 
   test('Transactions are searched with pagination', async () => {
-    const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, generateAccount, waitForIndexerTransaction } = localnet.context
     const secondAccount = await generateAccount({
       initialFunds: (1).algo(),
       suppressLog: true,
@@ -47,7 +47,7 @@ describe('indexer-lookup', () => {
     const { transaction: transaction1 } = await sendTestTransaction((1).microAlgo())
     const { transaction: transaction2 } = await sendTestTransaction((2).microAlgo())
     await sendTestTransaction((1).microAlgo(), secondAccount)
-    await waitForIndexer()
+    await waitForIndexerTransaction(getTransactionId(transaction2))
 
     const transactions = await indexer.searchTransactions(
       algorand.client.indexer,
@@ -62,7 +62,7 @@ describe('indexer-lookup', () => {
   }, 20_000)
 
   test('Application create transactions are found by creator with pagination', async () => {
-    const { algorand, testAccount, generateAccount, waitForIndexer } = localnet.context
+    const { algorand, testAccount, generateAccount, waitForIndexerTransaction } = localnet.context
     const secondAccount = await generateAccount({
       initialFunds: (1).algo(),
       suppressLog: true,
@@ -79,7 +79,7 @@ describe('indexer-lookup', () => {
     const { result: app1 } = await factory.send.bare.create()
     const { result: app2 } = await factory.send.bare.create({ deployTimeParams: { VALUE: 2 } })
     await factory.send.bare.create({ sender: secondAccount })
-    await waitForIndexer()
+    await waitForIndexerTransaction(getTransactionId(app2.transaction))
 
     const apps = await indexer.lookupAccountCreatedApplicationByAddress(algorand.client.indexer, testAccount, true, 1)
 
