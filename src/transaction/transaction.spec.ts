@@ -144,13 +144,18 @@ describe('transaction', () => {
     const { algorand, testAccount } = localnet.context
     const txn1 = await algorand.createTransaction.payment(getTestTransaction((1).microAlgo()))
     // This will fail due to fee being too high
-    const txn2 = await algorand.createTransaction.payment(getTestTransaction((9999999999999).microAlgo()))
+    const txn2 = await algorand.createTransaction.payment(getTestTransaction((2).microAlgo()))
+
+    const composer = algorand.newGroup()
     try {
-      await algorand.newGroup().addTransaction(txn1).addTransaction(txn2).send()
+      composer.addTransaction(txn1).addTransaction(txn2).send()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
+      const { transactions } = await composer.build()
+      const failedTransaction = transactions[-1].txn
+
       const messageRegex = new RegExp(
-        `transaction ${getTransactionId(txn2)}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
+        `transaction ${getTransactionId(failedTransaction)}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
       )
       expect(e.traces[0].message).toMatch(messageRegex)
     }
