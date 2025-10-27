@@ -522,7 +522,7 @@ export async function prepareGroupForSending(
         if (r.assetHoldings)
           throw Error('Unexpected asset holding at the transaction level')
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(group[i].txn as any)['applicationCall'] = {
+        ;(group[i].txn as any)['appCall'] = {
           ...group[i].txn.appCall,
           accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])],
           appReferences: [...(group[i].txn?.appCall?.appReferences ?? []), ...(r.apps ?? [])],
@@ -610,14 +610,14 @@ export async function prepareGroupForSending(
           if (type === 'assetHolding') {
             const { asset } = reference as AssetHoldingReference
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ;(txns[txnIndex].txn as any)['applicationCall'] = {
+            ;(txns[txnIndex].txn as any)['appCall'] = {
               ...txns[txnIndex].txn.appCall,
               assetReferences: [...(txns[txnIndex].txn?.appCall?.assetReferences ?? []), ...[asset]],
             } satisfies Partial<ApplicationTransactionFields>
           } else {
             const { app } = reference as ApplicationLocalReference
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ;(txns[txnIndex].txn as any)['applicationCall'] = {
+            ;(txns[txnIndex].txn as any)['appCall'] = {
               ...txns[txnIndex].txn.appCall,
               appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
             } satisfies Partial<ApplicationTransactionFields>
@@ -645,7 +645,7 @@ export async function prepareGroupForSending(
           const { account } = reference as AssetHoldingReference | ApplicationLocalReference
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(txns[txnIndex].txn as any)['applicationCall'] = {
+          ;(txns[txnIndex].txn as any)['appCall'] = {
             ...txns[txnIndex].txn.appCall,
             accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
           } satisfies Partial<ApplicationTransactionFields>
@@ -667,7 +667,7 @@ export async function prepareGroupForSending(
 
         if (txnIndex > -1) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(txns[txnIndex].txn as any)['applicationCall'] = {
+          ;(txns[txnIndex].txn as any)['appCall'] = {
             ...txns[txnIndex].txn.appCall,
             boxReferences: [...(txns[txnIndex].txn?.appCall?.boxReferences ?? []), ...[{ appId: app, name: name }]],
           } satisfies Partial<ApplicationTransactionFields>
@@ -707,13 +707,13 @@ export async function prepareGroupForSending(
 
       if (type === 'account') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[(reference as Address).toString()]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'app') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           appReferences: [
             ...(txns[txnIndex].txn?.appCall?.appReferences ?? []),
@@ -723,14 +723,14 @@ export async function prepareGroupForSending(
       } else if (type === 'box') {
         const { app, name } = reference as BoxReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           boxReferences: [...(txns[txnIndex].txn?.appCall?.boxReferences ?? []), ...[{ appId: app, name }]],
         } satisfies Partial<ApplicationTransactionFields>
 
         if (app.toString() !== '0') {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ;(txns[txnIndex].txn as any)['applicationCall'] = {
+          ;(txns[txnIndex].txn as any)['appCall'] = {
             ...txns[txnIndex].txn.appCall,
             appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
           } satisfies Partial<ApplicationTransactionFields>
@@ -738,7 +738,7 @@ export async function prepareGroupForSending(
       } else if (type === 'assetHolding') {
         const { asset, account } = reference as AssetHoldingReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           assetReferences: [...(txns[txnIndex].txn?.appCall?.assetReferences ?? []), ...[asset]],
           accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
@@ -746,14 +746,14 @@ export async function prepareGroupForSending(
       } else if (type === 'appLocal') {
         const { app, account } = reference as ApplicationLocalReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
           accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'asset') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ;(txns[txnIndex].txn as any)['applicationCall'] = {
+        ;(txns[txnIndex].txn as any)['appCall'] = {
           ...txns[txnIndex].txn.appCall,
           assetReferences: [
             ...(txns[txnIndex].txn?.appCall?.assetReferences ?? []),
