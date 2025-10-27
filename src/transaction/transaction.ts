@@ -914,18 +914,13 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     } as SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
+    // TODO: PD - look into error handling here again, it's possible that we don't need this comment anymore
     // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
+
+    const errorMessage = e.body?.message ?? 'Received error executing Atomic Transaction Composer'
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const err = new Error(typeof e === 'object' ? e?.message : 'Received error executing Atomic Transaction Composer') as any as any
+    const err = new Error(errorMessage) as any
     err.cause = e
-    if (typeof e === 'object') {
-      // Remove headers as it doesn't have anything useful.
-      delete e.response?.headers
-      err.response = e.response
-      // body property very noisy
-      if (e.response && 'body' in e.response) delete err.response.body
-      err.name = e.name
-    }
 
     if (Config.debug && typeof e === 'object') {
       err.traces = []
