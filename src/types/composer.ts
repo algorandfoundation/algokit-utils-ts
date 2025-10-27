@@ -1684,18 +1684,18 @@ export class TransactionComposer {
     // Process the ATC to get a set of transactions ready for broader grouping
     return this.buildAtc(methodAtc).map(({ context: _context, ...txnWithSigner }, idx) => {
       const maxFee = idx === methodAtc.count() - 1 ? result.context.maxFee : maxFees.get(idx)
+      // TODO: PD - review this way of assigning fee
+      const fee = idx === methodAtc.count() - 1 ? result.txn.fee : txnWithSigner.txn.fee
       const context = {
         ..._context, // Adds method context info
         maxFee,
       }
 
-      // Assign fee
-      // TODO: PD - review if this is the best way to do it
       return {
         signer: txnWithSigner.signer,
         txn: {
           ...txnWithSigner.txn,
-          fee: result.txn.fee,
+          fee: fee,
         },
         context,
       }
