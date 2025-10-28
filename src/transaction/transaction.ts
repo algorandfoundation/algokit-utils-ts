@@ -502,7 +502,7 @@ export async function prepareGroupForSending(
     : [0n, new Map<number, bigint>()]
 
   const appCallHasAccessReferences = (txn: algosdk.Transaction) => {
-    return txn.transactionType === TransactionType.AppCall && txn.appCall?.assetReferences && txn.appCall?.assetReferences.length > 0
+    return txn.transactionType === TransactionType.AppCall && txn.appCall?.access && txn.appCall?.access.length > 0
   }
 
   const indexesWithAccessReferences: number[] = []
@@ -935,7 +935,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     // TODO: PD - look into error handling here again, it's possible that we don't need this comment anymore
     // Create a new error object so the stack trace is correct (algosdk throws an error with a more limited stack trace)
 
-    const errorMessage = e.body?.message ?? 'Received error executing Atomic Transaction Composer'
+    const errorMessage = e.body?.message ?? e.message ?? 'Received error executing Atomic Transaction Composer'
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const err = new Error(errorMessage) as any
     err.cause = e
