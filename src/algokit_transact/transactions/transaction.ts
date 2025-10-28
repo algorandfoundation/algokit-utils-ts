@@ -5,6 +5,7 @@ import {
   TRANSACTION_DOMAIN_SEPARATOR,
   TRANSACTION_GROUP_DOMAIN_SEPARATOR,
   TRANSACTION_ID_LENGTH,
+  ZERO_ADDRESS,
   concatArrays,
   hash,
 } from '../../algokit_common'
@@ -26,11 +27,12 @@ import {
   HeartbeatParamsDto,
   HeartbeatProofDto,
   MerkleArrayProofDto,
+  ResourceReferenceDto,
   RevealDto,
   StateSchemaDto,
   TransactionDto,
 } from '../encoding/transaction-dto'
-import { AppCallTransactionFields, OnApplicationComplete, StateSchema, validateAppCallTransaction } from './app-call'
+import { AppCallTransactionFields, OnApplicationComplete, ResourceReference, StateSchema, validateAppCallTransaction } from './app-call'
 import { AssetConfigTransactionFields, validateAssetConfigTransaction } from './asset-config'
 import { AssetFreezeTransactionFields, validateAssetFreezeTransaction } from './asset-freeze'
 import { AssetTransferTransactionFields, validateAssetTransferTransaction } from './asset-transfer'
@@ -626,10 +628,107 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     txDto.apas = bigIntArrayCodec.encode(transaction.appCall.assetReferences ?? [])
     // Encode box references
     if (transaction.appCall.boxReferences && transaction.appCall.boxReferences.length > 0) {
-      txDto.apbx = transaction.appCall.boxReferences.map(box => ({
+      txDto.apbx = transaction.appCall.boxReferences.map((box) => ({
         i: bigIntCodec.encode(box.appId),
-        n: bytesCodec.encode(box.name)
+        n: bytesCodec.encode(box.name),
       }))
+    }
+    // Encode access references
+    if (transaction.appCall.access && transaction.appCall.access.length > 0) {
+      const accessList: ResourceReferenceDto[] = []
+      const appId = transaction.appCall.appId
+
+      // Helper function to compare two addresses
+      function addressesEqual(a?: Uint8Array, b?: string): boolean {
+        if (!a || !b) return false
+        const encodedB = addressCodec.encode(b)!
+
+        if (a.length !== encodedB.length) return false
+        for (let i = 0; i < a.length; i++) {
+          if (a[i] !== encodedB[i]) return false
+        }
+
+        return true
+      }
+
+      // Helper function to ensure a reference exists and return its 1-based index
+      function ensure(target: ResourceReference): number {
+        for (let idx = 0; idx < accessList.length; idx++) {
+          const a = accessList[idx]
+          if (addressesEqual(a.d, target.address) && a.s === target.assetId && a.p === target.appId) {
+            return idx + 1 // 1-based index
+          }
+        }
+        if (target.address) {
+          accessList.push({ d: addressCodec.encode(target.address) })
+        }
+        if (target.assetId !== undefined) {
+          accessList.push({ s: bigIntCodec.encode(target.assetId) })
+        }
+        if (target.appId !== undefined) {
+          accessList.push({ p: bigIntCodec.encode(target.appId) })
+        }
+        return accessList.length // length is 1-based position of new element
+      }
+
+      for (const resourceReference of transaction.appCall.access) {
+        if (resourceReference.address || resourceReference.assetId || resourceReference.appId) {
+          ensure(resourceReference)
+          continue
+        }
+
+        if (resourceReference.holding) {
+          const holding = resourceReference.holding
+          let addressIndex = 0
+          if (holding.address && holding.address !== ZERO_ADDRESS) {
+            addressIndex = ensure({ address: holding.address })
+          }
+          const assetIndex = ensure({ assetId: holding.assetId })
+          accessList.push({
+            h: {
+              d: addressIndex,
+              s: assetIndex,
+            },
+          })
+          continue
+        }
+
+        if (resourceReference.locals) {
+          const locals = resourceReference.locals
+          let addressIndex = 0
+          if (locals.address && locals.address !== ZERO_ADDRESS) {
+            addressIndex = ensure({ address: locals.address })
+          }
+          let appIndex = 0
+          if (locals.appId && locals.appId !== appId) {
+            appIndex = ensure({ appId: locals.appId })
+          }
+          accessList.push({
+            l: {
+              d: addressIndex,
+              p: appIndex,
+            },
+          })
+          continue
+        }
+
+        if (resourceReference.box) {
+          const b = resourceReference.box
+          let appIdx = 0
+          if (b.appId && b.appId !== appId) {
+            appIdx = ensure({ appId: b.appId })
+          }
+          const encodedName = bytesCodec.encode(b.name)
+          accessList.push({
+            b: {
+              i: appIdx,
+              n: encodedName,
+            },
+          })
+        }
+      }
+
+      txDto.al = accessList
     }
     txDto.apep = numberCodec.encode(transaction.appCall.extraProgramPages)
   }
@@ -791,6 +890,101 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
           appId: bigIntCodec.decode(box.i),
           name: bytesCodec.decode(box.n),
         })),
+        access: transactionDto.al
+          ? (() => {
+              const accessList = transactionDto.al!
+              const result: ResourceReference[] = []
+
+              for (const ref of accessList) {
+                const resourceRef: ResourceReference = {}
+
+                // d = address
+                if (ref.d) {
+                  resourceRef.address = addressCodec.decode(ref.d)
+                }
+                // p = appId
+                if (ref.p !== undefined) {
+                  resourceRef.appId = bigIntCodec.decode(ref.p)
+                }
+                // s = assetId
+                if (ref.s !== undefined) {
+                  resourceRef.assetId = bigIntCodec.decode(ref.s)
+                }
+                // b = box (i=appIndex, n=name)
+                if (ref.b) {
+                  const boxAppIdx = ref.b.i ?? 0
+                  let boxAppId = bigIntCodec.decode(transactionDto.apid)
+                  if (boxAppIdx > 0) {
+                    // Resolve the app index from the access list
+                    const referencedApp = accessList[boxAppIdx - 1]
+                    if (referencedApp?.p !== undefined) {
+                      boxAppId = bigIntCodec.decode(referencedApp.p)
+                    }
+                  }
+                  resourceRef.box = {
+                    appId: boxAppId,
+                    name: bytesCodec.decode(ref.b.n),
+                  }
+                }
+                // h = holding (d=addressIndex, s=assetIndex)
+                if (ref.h) {
+                  const addrIdx = ref.h.d ?? 0
+                  const assetIdx = ref.h.s ?? 0
+
+                  let holdingAddress = addressCodec.decode(transactionDto.snd)
+                  if (addrIdx > 0) {
+                    const referencedAddr = accessList[addrIdx - 1]
+                    if (referencedAddr?.d) {
+                      holdingAddress = addressCodec.decode(referencedAddr.d)
+                    }
+                  }
+
+                  let holdingAssetId = 0n
+                  if (assetIdx > 0) {
+                    const referencedAsset = accessList[assetIdx - 1]
+                    if (referencedAsset?.s !== undefined) {
+                      holdingAssetId = bigIntCodec.decode(referencedAsset.s)
+                    }
+                  }
+
+                  resourceRef.holding = {
+                    address: holdingAddress,
+                    assetId: holdingAssetId,
+                  }
+                }
+                // l = locals (d=addressIndex, p=appIndex)
+                if (ref.l) {
+                  const addrIdx = ref.l.d ?? 0
+                  const appIdx = ref.l.p ?? 0
+
+                  let localsAddress = addressCodec.decode(transactionDto.snd)
+                  if (addrIdx > 0) {
+                    const referencedAddr = accessList[addrIdx - 1]
+                    if (referencedAddr?.d) {
+                      localsAddress = addressCodec.decode(referencedAddr.d)
+                    }
+                  }
+
+                  let localsAppId = bigIntCodec.decode(transactionDto.apid)
+                  if (appIdx > 0) {
+                    const referencedApp = accessList[appIdx - 1]
+                    if (referencedApp?.p !== undefined) {
+                      localsAppId = bigIntCodec.decode(referencedApp.p)
+                    }
+                  }
+
+                  resourceRef.locals = {
+                    address: localsAddress,
+                    appId: localsAppId,
+                  }
+                }
+
+                result.push(resourceRef)
+              }
+
+              return result
+            })()
+          : undefined,
         extraProgramPages: numberCodec.decodeOptional(transactionDto.apep),
         ...(transactionDto.apgs !== undefined
           ? {

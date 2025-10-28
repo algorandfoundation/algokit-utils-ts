@@ -1,5 +1,5 @@
 import type { AlgodClient, PendingTransactionResponse, SimulateRequest, SimulateTransaction } from '../algod_client'
-import type { BoxReference, SignedTransaction } from '../algokit_transact'
+import type { BoxReference, ResourceReference, SignedTransaction } from '../algokit_transact'
 import { decodeSignedTransaction, getTransactionId } from '../algokit_transact'
 import {
   ABIAddressType,
@@ -17,7 +17,7 @@ import { Address } from './encoding/address.js'
 import { assignGroupID } from './group.js'
 import { SdkTransactionParams, makeApplicationCallTxnFromObject } from './makeTxn.js'
 import { TransactionSigner, TransactionWithSigner, isTransactionWithSigner } from './signer.js'
-import { OnApplicationComplete, ResourceReference } from './types/transactions/base.js'
+import { OnApplicationComplete } from './types/transactions/base.js'
 import { arrayEqual, ensureUint64, stringifyJSON } from './utils/utils.js'
 import { waitForConfirmation } from './wait.js'
 

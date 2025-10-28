@@ -1,6 +1,5 @@
 // TODO: this is strange, maybe ApplicationLocalReference, AssetHoldingReference need to come from transact too
-import { ApplicationLocalReference, AssetHoldingReference } from '../../../algod_client'
-import { BoxReference } from '../../../algokit_transact'
+import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '../../../algokit_transact'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
 import { SdkTransactionParams } from '../../makeTxn.js'
@@ -134,48 +133,16 @@ export interface ApplicationCallReferenceParams {
   /**
    * A grouping of the asset index and address of the account
    */
-  holdings?: AssetHoldingReference[]
+  holdings?: HoldingReference[]
 
   /** A grouping of the application index and address of the account
    */
-  locals?: ApplicationLocalReference[]
+  locals?: LocalsReference[]
 
   /**
    * If true, use the foreign accounts, apps, assets, boxes, holdings, and locals fields to construct the access list
    */
   convertToAccess?: boolean
-}
-
-export interface ResourceReference {
-  /**
-   * Address string, any additional accounts to supply to the application
-   */
-  address?: string | Address
-
-  /**
-   * Asset index uniquely specifying the asset
-   */
-  assetIndex?: number | bigint
-
-  /**
-   * A unique application ID
-   */
-  appIndex?: number | bigint
-
-  /**
-   * Holding definition: asset ID and account address
-   */
-  holding?: AssetHoldingReference
-
-  /**
-   * Local state definition: application ID and account address
-   */
-  locals?: ApplicationLocalReference
-
-  /**
-   * Box definition: application ID and a name of the box
-   */
-  box?: BoxReference
 }
 
 /**

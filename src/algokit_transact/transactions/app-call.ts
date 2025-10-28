@@ -106,6 +106,11 @@ export type AppCallTransactionFields = {
    * The boxes that should be made available for the runtime of the program.
    */
   boxReferences?: BoxReference[]
+
+  /**
+   * Resources accessed by the application
+   */
+  access?: ResourceReference[]
 }
 
 /**
@@ -183,6 +188,45 @@ export type BoxReference = {
    * Name of the box.
    */
   name: Uint8Array
+}
+
+/**
+ * Names a single resource reference. Only one of the fields should be set.
+ */
+export interface ResourceReference {
+  /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
+  address?: string
+  /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
+  appId?: bigint
+  /** Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram. */
+  assetId?: bigint
+  /** Defines a holding by referring to an Address and Asset it belongs to. */
+  holding?: HoldingReference
+  /** Defines a local state by referring to an Address and App it belongs to. */
+  locals?: LocalsReference
+  /** Defines a box by its name and the application ID it belongs to. */
+  box?: BoxReference
+}
+
+/**
+ * A grouping of the asset index and address of the account
+ */
+export interface HoldingReference {
+  /** The asset index of the holding */
+  assetId: bigint
+
+  /** The address of the account holding the asset */
+  address: string
+}
+
+/** A grouping of the application index and address of the account
+ */
+export interface LocalsReference {
+  /** The application index of the local state */
+  appId: bigint
+
+  /** The address of the account holding the local state */
+  address: string
 }
 
 const FIELD_ARGS = 'Args'

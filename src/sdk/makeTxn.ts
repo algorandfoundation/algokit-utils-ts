@@ -541,10 +541,12 @@ export function makeApplicationCallTxnFromObject({
           : undefined,
       extraProgramPages: extraPages !== undefined ? Number(extraPages) : undefined,
       args: appArgs,
-      accountReferences,
-      appReferences,
-      assetReferences,
-      boxReferences,
+      // Only pass legacy foreign arrays if access is not provided
+      accountReferences: access2 ? undefined : accountReferences,
+      assetReferences: access2 ? undefined : assetReferences,
+      appReferences: access2 ? undefined : appReferences,
+      boxReferences: access2 ? undefined : boxReferences,
+      access: access2,
     },
   }
 

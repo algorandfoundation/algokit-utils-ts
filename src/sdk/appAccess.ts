@@ -1,164 +1,6 @@
-import { ApplicationLocalReference, AssetHoldingReference } from '../algod_client'
-import { BoxReference } from '../algokit_transact'
+import { ZERO_ADDRESS } from '../algokit_common'
+import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '../algokit_transact'
 import { Address } from './encoding/address.js'
-import { ResourceReference } from './types/transactions/base.js'
-import { ensureSafeUnsignedInteger } from './utils/utils.js'
-
-/**
- * resourceReferencesToEncodingData translates an array of ResourceReferences into an array of encoding data
- * maps.
- */
-export function resourceReferencesToEncodingData(
-  appIndex: bigint,
-  references: ReadonlyArray<ResourceReference>,
-): Array<Map<string, unknown>> {
-  const accessList: Array<Map<string, unknown>> = []
-
-  function ensure(target: ResourceReference): number {
-    for (let idx = 0; idx < accessList.length; idx++) {
-      const a = accessList[idx]
-      const aAddress = a.get('d') as Address | undefined
-      const addressesEqual = (!target.address && !aAddress) || (target.address && aAddress && (target.address as Address).equals(aAddress))
-      if (addressesEqual && a.get('s') === target.assetIndex && a.get('p') === target.appIndex) {
-        return idx + 1 // 1-based index
-      }
-    }
-    if (target.address) {
-      accessList.push(new Map<string, unknown>([['d', target.address]]))
-    }
-    if (target.assetIndex) {
-      accessList.push(new Map<string, unknown>([['s', target.assetIndex]]))
-    }
-    if (target.appIndex) {
-      accessList.push(new Map<string, unknown>([['p', target.appIndex]]))
-    }
-    return accessList.length // length is 1-based position of new element
-  }
-
-  const zeroAddr = Address.zeroAddress()
-  for (const rr of references) {
-    if (rr.address || rr.assetIndex || rr.appIndex) {
-      ensure(rr)
-      continue
-    }
-
-    if (rr.holding) {
-      const h = rr.holding
-      let addrIdx = 0
-      if (h.account && !Address.fromString(h.account).equals(zeroAddr)) {
-        addrIdx = ensure({ address: h.account })
-      }
-      const assetIdx = ensure({ assetIndex: h.asset })
-      accessList.push(
-        new Map<string, unknown>([
-          [
-            'h',
-            new Map<string, unknown>([
-              ['d', addrIdx],
-              ['s', assetIdx],
-            ]),
-          ],
-        ]),
-      )
-      continue
-    }
-    if (rr.locals) {
-      const l = rr.locals
-      let addrIdx = 0
-      if (l.account && !Address.fromString(l.account).equals(zeroAddr)) {
-        addrIdx = ensure({ address: l.account })
-      }
-      let appIdx = 0
-      if (l.app && BigInt(l.app) !== appIndex) {
-        appIdx = ensure({ appIndex: l.app })
-      }
-      accessList.push(
-        new Map<string, unknown>([
-          [
-            'l',
-            new Map<string, unknown>([
-              ['d', addrIdx],
-              ['p', appIdx],
-            ]),
-          ],
-        ]),
-      )
-      continue
-    }
-    if (rr.box) {
-      const b = rr.box
-      let appIdx = 0
-      if (b.appId && BigInt(b.appId) !== appIndex) {
-        appIdx = ensure({ appIndex: b.appId })
-      }
-      accessList.push(
-        new Map<string, unknown>([
-          [
-            'b',
-            new Map<string, unknown>([
-              ['i', appIdx],
-              ['n', b.name],
-            ]),
-          ],
-        ]),
-      )
-    }
-  }
-  return accessList
-}
-
-export function convertIndicesToResourceReferences(accessList: Array<Map<string, unknown>>): Array<ResourceReference> {
-  const references: Array<ResourceReference> = []
-  for (const item of accessList) {
-    const address = item.get('d') as Address | undefined
-    const assetIndex = item.get('s') as bigint | undefined
-    const appIndex = item.get('p') as bigint | undefined
-    if (address) {
-      references.push({ address })
-      continue
-    }
-    if (assetIndex) {
-      references.push({ assetIndex })
-      continue
-    }
-    if (appIndex) {
-      references.push({ appIndex })
-      continue
-    }
-    const holding = item.get('h') as Map<string, unknown> | undefined
-    if (holding) {
-      const hAddressIndex = ensureSafeUnsignedInteger(holding.get('d') ?? 0)
-      const hAssetIndex = ensureSafeUnsignedInteger(holding.get('s'))
-      if (!hAssetIndex) {
-        throw new Error(`Holding missing asset index: ${holding}`)
-      }
-      const hAddress = hAddressIndex === 0 ? Address.zeroAddress() : (references[hAddressIndex - 1].address as Address)
-      const asset = references[hAssetIndex - 1].assetIndex as bigint
-      references.push({ holding: { account: hAddress.toString(), asset: asset } })
-      continue
-    }
-    const locals = item.get('l') as Map<string, unknown> | undefined
-    if (locals) {
-      const lAddressIndex = ensureSafeUnsignedInteger(locals.get('d') ?? 0)
-      const lAppIndex = ensureSafeUnsignedInteger(locals.get('p') ?? 0)
-      const lAddress = lAddressIndex === 0 ? Address.zeroAddress() : (references[lAddressIndex - 1].address as Address)
-      const app = lAppIndex === 0 ? BigInt(0) : (references[lAppIndex - 1].appIndex as bigint)
-      references.push({ locals: { account: lAddress.toString(), app: app } })
-      continue
-    }
-    const box = item.get('b') as Map<string, unknown> | undefined
-    if (box) {
-      const bAppIndex = ensureSafeUnsignedInteger(box.get('i') ?? 0)
-      const name = box.get('n') as Uint8Array
-      if (!name) {
-        throw new Error(`Box missing name: ${box}`)
-      }
-      const app = bAppIndex === 0 ? BigInt(0) : (references[bAppIndex - 1].appIndex as number | bigint)
-      references.push({ box: { appId: BigInt(app), name } })
-    }
-  }
-  return references
-}
 
 /**
  * foreignArraysToResourceReferences makes a single array of ResourceReferences from various foreign resource arrays.
@@ -184,68 +26,31 @@ export function foreignArraysToResourceReferences({
   accounts?: ReadonlyArray<string | Address>
   foreignAssets?: ReadonlyArray<number | bigint>
   foreignApps?: ReadonlyArray<number | bigint>
-  holdings?: ReadonlyArray<AssetHoldingReference>
-  locals?: ReadonlyArray<ApplicationLocalReference>
+  holdings?: ReadonlyArray<HoldingReference>
+  locals?: ReadonlyArray<LocalsReference>
   boxes?: ReadonlyArray<BoxReference>
 }): Array<ResourceReference> {
   const accessList: Array<ResourceReference> = []
-  function ensureAddress(addr: string | Address) {
-    let addr2: Address
-    if (typeof addr === 'string') {
-      if (addr === '') {
-        return
-      }
-      addr2 = Address.fromString(addr)
-    } else {
-      addr2 = addr
-    }
-    if (addr2.equals(Address.zeroAddress())) {
+  function ensureAddress(addr: string) {
+    if (!addr || addr === ZERO_ADDRESS) {
       return
     }
-    let addrFound = false
-    for (const rr of accessList) {
-      if (!rr.address) {
-        continue
-      }
-      let rrAddress = rr.address
-      if (typeof rr.address === 'string') {
-        rrAddress = Address.fromString(rr.address)
-      }
-      if ((rrAddress as Address).equals(addr2)) {
-        addrFound = true
-        break
-      }
-    }
-    if (!addrFound) {
+    if (!accessList.find((rr) => rr.address === addr)) {
       accessList.push({ address: addr })
     }
   }
   function ensureAsset(asset: number | bigint) {
-    let assetFound = false
-    for (const rr of accessList) {
-      if (rr.assetIndex === asset) {
-        assetFound = true
-        break
-      }
-    }
-    if (!assetFound) {
-      accessList.push({ assetIndex: asset })
+    if (!accessList.find((rr) => rr.assetId === BigInt(asset))) {
+      accessList.push({ assetId: BigInt(asset) })
     }
   }
   function ensureApp(app: number | bigint) {
-    let appFound = false
-    for (const rr of accessList) {
-      if (rr.appIndex === app) {
-        appFound = true
-        break
-      }
-    }
-    if (!appFound) {
-      accessList.push({ appIndex: app })
+    if (!accessList.find((rr) => rr.appId === app)) {
+      accessList.push({ appId: BigInt(app) })
     }
   }
   for (const acct of accounts ?? []) {
-    ensureAddress(acct)
+    ensureAddress(acct.toString())
   }
   for (const asset of foreignAssets ?? []) {
     ensureAsset(asset)
@@ -254,18 +59,18 @@ export function foreignArraysToResourceReferences({
     ensureApp(app)
   }
   for (const holding of holdings ?? []) {
-    if (holding.account) {
-      ensureAddress(holding.account)
+    if (holding.address) {
+      ensureAddress(holding.address)
     }
-    ensureAsset(holding.asset)
-    accessList.push({ holding })
+    ensureAsset(holding.assetId)
+    accessList.push(holding)
   }
   for (const local of locals ?? []) {
-    if (local.account) {
-      ensureAddress(local.account)
+    if (local.address) {
+      ensureAddress(local.address)
     }
-    if (local.app && BigInt(local.app) !== appIndex) {
-      ensureApp(local.app)
+    if (local.appId && BigInt(local.appId) !== appIndex) {
+      ensureApp(local.appId)
     }
     accessList.push({ locals: local })
   }

@@ -116,6 +116,9 @@ export type TransactionDto = {
   /** Box references */
   apbx?: BoxReferenceDto[]
 
+  /** Access references (unified resource references) */
+  al?: ResourceReferenceDto[]
+
   /** Extra program pages */
   apep?: number
 
@@ -389,4 +392,42 @@ export type StateSchemaDto = {
 
   /** Number of byte slices */
   nbs?: number
+}
+
+/**
+ * Encodeable resource reference structure for app call transactions
+ */
+export type ResourceReferenceDto = {
+  /** Account address */
+  d?: Uint8Array
+
+  /** App index */
+  p?: bigint | number
+
+  /** Asset index */
+  s?: bigint | number
+
+  /** Box reference */
+  b?: {
+    /** App index (0 or index into access list) */
+    i?: number
+    /** Box name */
+    n?: Uint8Array
+  }
+
+  /** Holding reference (1-based indices into access list) */
+  h?: {
+    /** Address index */
+    d?: number
+    /** Asset index (1-based index into access list) */
+    s?: number
+  }
+
+  /** Local state reference (1-based indices into access list) */
+  l?: {
+    /** Address index */
+    d?: number
+    /** App index (0 means current app, or 1-based index into access list) */
+    p?: number
+  }
 }

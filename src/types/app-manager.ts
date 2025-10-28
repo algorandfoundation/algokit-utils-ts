@@ -1,5 +1,5 @@
 import { ApplicationLocalReference, AssetHoldingReference, EvalDelta, PendingTransactionResponse, TealValue } from '../algod_client'
-import { BoxReference as TransactionBoxReference } from '../algokit_transact'
+import { ResourceReference, BoxReference as TransactionBoxReference } from '../algokit_transact'
 import * as algosdk from '../sdk'
 import { Address, ProgramSourceMap } from '../sdk'
 import { getABIReturnValue } from '../transaction/transaction'
@@ -96,6 +96,7 @@ export interface BoxValuesRequestParams {
   type: algosdk.ABIType
 }
 
+// TODO: PD - remove this?
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
@@ -576,15 +577,35 @@ export class AppManager {
 /**
  * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
  */
-export function getAccessReference(accessReference: AccessReference): algosdk.ResourceReference {
-  return {
-    address: typeof accessReference.address === 'string' ? Address.fromString(accessReference.address) : accessReference.address,
-    appIndex: accessReference.appId,
-    assetIndex: accessReference.assetId,
-    holding: accessReference.holding,
-    locals: accessReference.locals,
-    box: accessReference.box ? AppManager.getBoxReference(accessReference.box) : undefined,
-  } satisfies algosdk.ResourceReference
+export function getAccessReference(accessReference: AccessReference): ResourceReference {
+  const result: ResourceReference = {}
+
+  if (accessReference.address !== undefined) {
+    result.address = accessReference.address.toString()
+  }
+  if (accessReference.appId !== undefined) {
+    result.appId = accessReference.appId
+  }
+  if (accessReference.assetId !== undefined) {
+    result.assetId = accessReference.assetId
+  }
+  if (accessReference.holding !== undefined) {
+    result.holding = {
+      address: accessReference.holding.account,
+      assetId: accessReference.holding.asset,
+    }
+  }
+  if (accessReference.locals !== undefined) {
+    result.locals = {
+      address: accessReference.locals.account,
+      appId: accessReference.locals.app,
+    }
+  }
+  if (accessReference.box !== undefined) {
+    result.box = AppManager.getBoxReference(accessReference.box)
+  }
+
+  return result
 }
 
 /**

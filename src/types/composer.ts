@@ -1624,16 +1624,22 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
+    // If accessReferences is provided, we should not pass legacy foreign arrays
+    const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
     const txnParams = {
       appID: appId,
       sender: params.sender,
       suggestedParams,
       onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
-      appAccounts: params.accountReferences,
-      appForeignApps: params.appReferences?.map((x) => Number(x)),
-      appForeignAssets: params.assetReferences?.map((x) => Number(x)),
-      boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      ...(hasAccessReferences
+        ? { access: params.accessReferences?.map(getAccessReference) }
+        : {
+            appAccounts: params.accountReferences,
+            appForeignApps: params.appReferences?.map((x) => Number(x)),
+            appForeignAssets: params.assetReferences?.map((x) => Number(x)),
+            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
       approvalProgram,
       clearProgram: clearStateProgram,
       extraPages:
@@ -1788,16 +1794,22 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
+    // If accessReferences is provided, we should not pass legacy foreign arrays
+    const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
     const sdkParams = {
       sender: params.sender,
       suggestedParams,
       appArgs: params.args,
       onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
-      accounts: params.accountReferences,
-      foreignApps: params.appReferences?.map((x) => Number(x)),
-      foreignAssets: params.assetReferences?.map((x) => Number(x)),
-      boxes: params.boxReferences?.map(AppManager.getBoxReference),
-      access: params.accessReferences?.map(getAccessReference),
+      ...(hasAccessReferences
+        ? { access: params.accessReferences?.map(getAccessReference) }
+        : {
+            accounts: params.accountReferences,
+            foreignApps: params.appReferences?.map((x) => Number(x)),
+            foreignAssets: params.assetReferences?.map((x) => Number(x)),
+            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
       approvalProgram,
       clearProgram: clearStateProgram,
     }
