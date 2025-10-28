@@ -640,6 +640,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
 
       // Helper function to compare two addresses
       function addressesEqual(a?: Uint8Array, b?: string): boolean {
+        if (!a && !b) return true
         if (!a || !b) return false
         const encodedB = addressCodec.encode(b)!
 
@@ -655,7 +656,11 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       function ensure(target: ResourceReference): number {
         for (let idx = 0; idx < accessList.length; idx++) {
           const a = accessList[idx]
-          if (addressesEqual(a.d, target.address) && a.s === target.assetId && a.p === target.appId) {
+          if (
+            addressesEqual(a.d, target.address) &&
+            a.s === bigIntCodec.encode(target.assetId) &&
+            a.p === bigIntCodec.encode(target.appId)
+          ) {
             return idx + 1 // 1-based index
           }
         }
@@ -686,8 +691,8 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           const assetIndex = ensure({ assetId: holding.assetId })
           accessList.push({
             h: {
-              d: addressIndex,
-              s: assetIndex,
+              d: numberCodec.encode(addressIndex),
+              s: numberCodec.encode(assetIndex),
             },
           })
           continue
@@ -703,10 +708,11 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           if (locals.appId && locals.appId !== appId) {
             appIndex = ensure({ appId: locals.appId })
           }
+          // TODO: PD - confirm what happens if both are 0
           accessList.push({
             l: {
-              d: addressIndex,
-              p: appIndex,
+              d: numberCodec.encode(addressIndex),
+              p: numberCodec.encode(appIndex),
             },
           })
           continue
@@ -813,6 +819,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
   return txDto
 }
 
+// TODO: PD - fix bug https://github.com/algorand/js-algorand-sdk/issues/1013
 export function fromTransactionDto(transactionDto: TransactionDto): Transaction {
   const transactionType = fromTransactionTypeDto(transactionDto.type)
 
@@ -895,90 +902,70 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
               const result: ResourceReference[] = []
 
               for (const ref of accessList) {
-                const resourceRef: ResourceReference = {}
-
-                // d = address
                 if (ref.d) {
-                  resourceRef.address = addressCodec.decode(ref.d)
+                  result.push({ address: addressCodec.decode(ref.d) })
+                  continue
                 }
-                // p = appId
-                if (ref.p !== undefined) {
-                  resourceRef.appId = bigIntCodec.decode(ref.p)
-                }
-                // s = assetId
                 if (ref.s !== undefined) {
-                  resourceRef.assetId = bigIntCodec.decode(ref.s)
+                  result.push({ assetId: bigIntCodec.decode(ref.s) })
+                  continue
                 }
-                // b = box (i=appIndex, n=name)
-                if (ref.b) {
-                  const boxAppIdx = ref.b.i ?? 0
-                  let boxAppId = bigIntCodec.decode(transactionDto.apid)
-                  if (boxAppIdx > 0) {
-                    // Resolve the app index from the access list
-                    const referencedApp = accessList[boxAppIdx - 1]
-                    if (referencedApp?.p !== undefined) {
-                      boxAppId = bigIntCodec.decode(referencedApp.p)
-                    }
-                  }
-                  resourceRef.box = {
-                    appId: boxAppId,
-                    name: bytesCodec.decode(ref.b.n),
-                  }
+                if (ref.p !== undefined) {
+                  result.push({ appId: bigIntCodec.decode(ref.p) })
+                  continue
                 }
-                // h = holding (d=addressIndex, s=assetIndex)
                 if (ref.h) {
                   const addrIdx = ref.h.d ?? 0
-                  const assetIdx = ref.h.s ?? 0
+                  const assetIdx = ref.h.s
 
-                  let holdingAddress = addressCodec.decode(transactionDto.snd)
-                  if (addrIdx > 0) {
-                    const referencedAddr = accessList[addrIdx - 1]
-                    if (referencedAddr?.d) {
-                      holdingAddress = addressCodec.decode(referencedAddr.d)
-                    }
+                  if (assetIdx === undefined) {
+                    throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
                   }
 
-                  let holdingAssetId = 0n
-                  if (assetIdx > 0) {
-                    const referencedAsset = accessList[assetIdx - 1]
-                    if (referencedAsset?.s !== undefined) {
-                      holdingAssetId = bigIntCodec.decode(referencedAsset.s)
-                    }
-                  }
+                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : result[addrIdx - 1].address!
+                  const holdingAssetId = result[assetIdx - 1].assetId!
 
-                  resourceRef.holding = {
-                    address: holdingAddress,
-                    assetId: holdingAssetId,
-                  }
+                  result.push({
+                    holding: {
+                      address: holdingAddress,
+                      assetId: holdingAssetId,
+                    },
+                  })
+                  continue
                 }
-                // l = locals (d=addressIndex, p=appIndex)
+
                 if (ref.l) {
                   const addrIdx = ref.l.d ?? 0
                   const appIdx = ref.l.p ?? 0
 
-                  let localsAddress = addressCodec.decode(transactionDto.snd)
-                  if (addrIdx > 0) {
-                    const referencedAddr = accessList[addrIdx - 1]
-                    if (referencedAddr?.d) {
-                      localsAddress = addressCodec.decode(referencedAddr.d)
-                    }
-                  }
+                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : result[addrIdx - 1].address!
+                  const localsAppId = appIdx === 0 ? BigInt(0) : result[appIdx - 1].appId!
 
-                  let localsAppId = bigIntCodec.decode(transactionDto.apid)
-                  if (appIdx > 0) {
-                    const referencedApp = accessList[appIdx - 1]
-                    if (referencedApp?.p !== undefined) {
-                      localsAppId = bigIntCodec.decode(referencedApp.p)
-                    }
-                  }
-
-                  resourceRef.locals = {
-                    address: localsAddress,
-                    appId: localsAppId,
-                  }
+                  result.push({
+                    locals: {
+                      address: localsAddress,
+                      appId: localsAppId,
+                    },
+                  })
+                  continue
                 }
+                if (ref.b) {
+                  const boxAppIdx = ref.b.i ?? 0
+                  const name = ref.b.n
 
-                result.push(resourceRef)
+                  if (!name) {
+                    throw new Error(`Box missing name: ${JSON.stringify(ref.b)}`)
+                  }
+
+                  const boxAppId = boxAppIdx === 0 ? BigInt(0) : result[boxAppIdx - 1].appId!
+
+                  result.push({
+                    box: {
+                      appId: boxAppId,
+                      name: bytesCodec.decode(name),
+                    },
+                  })
+                }
               }
 
               return result
