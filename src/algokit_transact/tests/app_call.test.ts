@@ -514,7 +514,7 @@ describe('App Call', () => {
       })
 
       test('should throw error when too many account references are provided', () => {
-        const manyAccounts = Array.from({ length: 5 }, () => 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK') // Max is 4
+        const manyAccounts = Array.from({ length: 9 }, () => 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK') // Max is 8
         const transaction: Transaction = {
           transactionType: TransactionType.AppCall,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
@@ -527,7 +527,7 @@ describe('App Call', () => {
           },
         }
 
-        expect(() => validateTransaction(transaction)).toThrow('App call validation failed: Account references cannot exceed 4 refs')
+        expect(() => validateTransaction(transaction)).toThrow('App call validation failed: Account references cannot exceed 8 refs')
       })
 
       test('should throw error when too many app references are provided', () => {

@@ -1382,7 +1382,7 @@ describe('access references', () => {
         populateAppCallResources: false,
         accountReferences: [alice, ...(await getTestAccounts(8))],
       }),
-    ).rejects.toThrow(/max number of accounts is 8/)
+    ).rejects.toThrow(/Account references cannot exceed 8 refs/)
   })
 
   test('up to 16 access addresses can be used', async () => {

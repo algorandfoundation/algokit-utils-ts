@@ -718,11 +718,10 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           if (b.appId && b.appId !== appId) {
             appIdx = ensure({ appId: b.appId })
           }
-          const encodedName = bytesCodec.encode(b.name)
           accessList.push({
             b: {
-              i: appIdx,
-              n: encodedName,
+              i: numberCodec.encode(appIdx),
+              n: bytesCodec.encode(b.name),
             },
           })
         }
