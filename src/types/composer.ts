@@ -611,6 +611,9 @@ export class TransactionComposer {
   /** Cached signed transaction group */
   private signedGroup?: SignedTransaction[]
 
+  /** Cached method calls map (transaction index to ABIMethod) */
+  private builtMethodCalls?: Map<number, ABIMethod>
+
   /** Configuration for composer behavior */
   private composerConfig: TransactionComposerConfig
 
@@ -692,12 +695,14 @@ export class TransactionComposer {
    * @param suggestedParams - Suggested parameters from algod
    * @param _defaultValidityWindow - Default validity window (not yet used)
    * @param groupAnalysis - Optional analysis results for resource population
+   * @param methodCallsMap - Optional map to populate with method call information
    * @returns Array of built transactions
    */
   private async _buildTransactions(
     suggestedParams: TransactionParams,
     _defaultValidityWindow: bigint,
     groupAnalysis?: GroupAnalysis,
+    methodCallsMap?: Map<number, ABIMethod>,
   ): Promise<Transaction[]> {
     const builtTransactions: Transaction[] = []
 
@@ -719,6 +724,14 @@ export class TransactionComposer {
         case 'atc': {
           // Build ATC transactions and extract them
           const atcTxns = this.buildAtc(ctxn.atc)
+          // Track method calls from ATC
+          if (methodCallsMap) {
+            atcTxns.forEach((txnWithContext, offset) => {
+              if (txnWithContext.context.abiMethod) {
+                methodCallsMap.set(builtTransactions.length + offset, txnWithContext.context.abiMethod)
+              }
+            })
+          }
           builtTransactions.push(...atcTxns.map((t) => t.txn))
           break
         }
@@ -726,6 +739,14 @@ export class TransactionComposer {
         case 'methodCall': {
           // Build method call transactions
           const methodTxns = await this.buildMethodCall(ctxn, sdkTransactionParams, false)
+          // Track method calls - the last transaction in the group is the actual method call
+          if (methodCallsMap) {
+            methodTxns.forEach((txnWithContext, offset) => {
+              if (txnWithContext.context.abiMethod) {
+                methodCallsMap.set(builtTransactions.length + offset, txnWithContext.context.abiMethod)
+              }
+            })
+          }
           builtTransactions.push(...methodTxns.map((t) => t.txn))
           break
         }
@@ -859,10 +880,7 @@ export class TransactionComposer {
    * @param defaultValidityWindow - Default validity window for transactions
    * @returns Analysis results including resource requirements for each transaction
    */
-  private async _analyzeGroupRequirements(
-    suggestedParams: TransactionParams,
-    defaultValidityWindow: bigint,
-  ): Promise<GroupAnalysis> {
+  private async _analyzeGroupRequirements(suggestedParams: TransactionParams, defaultValidityWindow: bigint): Promise<GroupAnalysis> {
     // Build transactions without resource population first
     const builtTransactions = await this._buildTransactions(suggestedParams, defaultValidityWindow)
 
@@ -922,9 +940,7 @@ export class TransactionComposer {
 
     return {
       transactions: txnAnalysisResults,
-      unnamedResourcesAccessed: this.composerConfig.populateAppCallResources?.enabled
-        ? groupResponse.unnamedResourcesAccessed
-        : undefined,
+      unnamedResourcesAccessed: this.composerConfig.populateAppCallResources?.enabled ? groupResponse.unnamedResourcesAccessed : undefined,
     }
   }
 
@@ -936,7 +952,8 @@ export class TransactionComposer {
    */
   private async _buildNew(): Promise<{ transactions: TransactionWithSigner[]; methodCalls: Map<number, ABIMethod> }> {
     if (this.builtGroup) {
-      return { transactions: this.builtGroup, methodCalls: new Map() } // TODO: track method calls
+      // If we have a cached build, return it along with the cached method calls
+      return { transactions: this.builtGroup, methodCalls: this.builtMethodCalls ?? new Map() }
     }
 
     const suggestedParams = await this.getSuggestedParams()
@@ -944,23 +961,22 @@ export class TransactionComposer {
 
     // Phase 1: Analyze group requirements if needed
     // Check if we need to analyze: either resource population is enabled, or we have app calls
-    const shouldAnalyze =
-      this.composerConfig.populateAppCallResources.enabled && this.transactions.some((t) => _isAppCall(t))
+    const shouldAnalyze = this.composerConfig.populateAppCallResources.enabled && this.transactions.some((t) => _isAppCall(t))
 
-    const groupAnalysis = shouldAnalyze
-      ? await this._analyzeGroupRequirements(suggestedParams, defaultValidityWindow)
-      : undefined
+    const groupAnalysis = shouldAnalyze ? await this._analyzeGroupRequirements(suggestedParams, defaultValidityWindow) : undefined
 
-    // Phase 2: Build transactions with resource population if analysis was performed
-    const transactions = await this._buildTransactions(suggestedParams, defaultValidityWindow, groupAnalysis)
+    // Phase 2: Build transactions with method call tracking
+    const methodCalls = new Map<number, ABIMethod>()
+    const transactions = await this._buildTransactions(suggestedParams, defaultValidityWindow, groupAnalysis, methodCalls)
 
     // Phase 3: Attach signers
     const transactionsWithSigners = this._gatherSigners(transactions)
 
-    // Cache the result
+    // Cache the results
     this.builtGroup = transactionsWithSigners
+    this.builtMethodCalls = methodCalls
 
-    return { transactions: this.builtGroup, methodCalls: new Map() } // TODO: populate methodCalls
+    return { transactions: this.builtGroup, methodCalls }
   }
 
   /**
@@ -1075,8 +1091,19 @@ export class TransactionComposer {
       }
     }
 
-    // Parse ABI return values (empty for now, will implement in Phase 12)
+    // Parse ABI return values from method calls
     const abiReturns: ABIReturn[] = []
+    if (confirmations.length > 0 && this.builtMethodCalls && this.builtMethodCalls.size > 0) {
+      // Iterate through all transactions and check if they are method calls
+      for (let i = 0; i < confirmations.length; i++) {
+        const method = this.builtMethodCalls.get(i)
+        if (method) {
+          // This transaction is a method call, extract the return value
+          const abiReturn = _extractAbiReturnFromLogs(confirmations[i], method)
+          abiReturns.push(abiReturn)
+        }
+      }
+    }
 
     // Build result in backward-compatible format
     return {
@@ -1132,7 +1159,20 @@ export class TransactionComposer {
     const transactions = signedTransactions.map((stxn) => stxn.transaction)
     const transactionIds = transactions.map((txn) => getTransactionId(txn))
     const confirmations = simulateResponse.txnGroups[0].txnResults.map((r) => r.txnResult)
-    const abiReturns: ABIReturn[] = [] // TODO: implement in Phase 12
+
+    // Parse ABI return values from method calls
+    const abiReturns: ABIReturn[] = []
+    if (this.builtMethodCalls && this.builtMethodCalls.size > 0) {
+      // Iterate through all transactions and check if they are method calls
+      for (let i = 0; i < confirmations.length; i++) {
+        const method = this.builtMethodCalls.get(i)
+        if (method) {
+          // This transaction is a method call, extract the return value
+          const abiReturn = _extractAbiReturnFromLogs(confirmations[i], method)
+          abiReturns.push(abiReturn)
+        }
+      }
+    }
 
     return {
       confirmations,
@@ -2577,6 +2617,7 @@ export class TransactionComposer {
     // Clear new implementation caches
     this.builtGroup = undefined
     this.signedGroup = undefined
+    this.builtMethodCalls = undefined
     return await this.build()
   }
 
@@ -2999,4 +3040,77 @@ function _populateGroupResources(transactions: Transaction[], groupResources: Si
   }
 
   // TODO: Handle appLocals, assetHoldings, and extraBoxRefs for a more complete implementation
+}
+
+// ABI return values are stored in logs with the prefix 0x151f7c75
+const ABI_RETURN_PREFIX = new Uint8Array([0x15, 0x1f, 0x7c, 0x75])
+
+/**
+ * Check if a log entry has the ABI return prefix
+ */
+function _hasAbiReturnPrefix(log: Uint8Array): boolean {
+  if (log.length < ABI_RETURN_PREFIX.length) {
+    return false
+  }
+  for (let i = 0; i < ABI_RETURN_PREFIX.length; i++) {
+    if (log[i] !== ABI_RETURN_PREFIX[i]) {
+      return false
+    }
+  }
+  return true
+}
+
+/**
+ * Extract ABI return value from transaction logs
+ * @param confirmation - Transaction confirmation response
+ * @param method - ABI method definition
+ * @returns Parsed ABI return value
+ */
+function _extractAbiReturnFromLogs(confirmation: PendingTransactionResponse, method: ABIMethod): ABIReturn {
+  // Check if method has return type
+  const returnType = method.returns.type
+  if (returnType === 'void' || returnType.toString() === 'void') {
+    return {
+      method,
+      rawReturnValue: new Uint8Array(0),
+      returnValue: new Uint8Array(0), // Empty Uint8Array for void returns
+      decodeError: undefined,
+    }
+  }
+
+  // Non-void method - must examine the last log
+  const logs = confirmation.logs
+  if (!logs || logs.length === 0) {
+    return {
+      decodeError: new Error(`No logs found for method ${method.name} which requires a return type`),
+    }
+  }
+
+  const lastLog = logs[logs.length - 1]
+
+  // Check if the last log entry has the ABI return prefix
+  if (!_hasAbiReturnPrefix(lastLog)) {
+    return {
+      decodeError: new Error(`Transaction log for method ${method.name} doesn't match with ABI return value format`),
+    }
+  }
+
+  // Extract the return value bytes (skip the prefix)
+  const returnBytes = lastLog.slice(ABI_RETURN_PREFIX.length)
+
+  try {
+    // Decode the return value using the method's return type
+    // returnType is an ABIType which has a decode method
+    const returnValue = typeof returnType !== 'string' ? returnType.decode(returnBytes) : new Uint8Array(0)
+    return {
+      method,
+      rawReturnValue: returnBytes,
+      returnValue,
+      decodeError: undefined,
+    }
+  } catch (e) {
+    return {
+      decodeError: new Error(`Failed to decode ABI return value for method ${method.name}: ${e}`),
+    }
+  }
 }
