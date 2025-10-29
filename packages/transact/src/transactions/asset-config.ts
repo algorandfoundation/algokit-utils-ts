@@ -3,7 +3,7 @@ import {
   MAX_ASSET_NAME_LENGTH,
   MAX_ASSET_UNIT_NAME_LENGTH,
   MAX_ASSET_URL_LENGTH,
-} from '../../algokit_common'
+} from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
 /**

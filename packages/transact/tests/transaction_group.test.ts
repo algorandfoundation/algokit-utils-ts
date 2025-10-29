@@ -5,8 +5,8 @@ import {
   decodeSignedTransactions,
   encodeSignedTransaction,
   encodeSignedTransactions,
-} from '../transactions/signed-transaction'
-import { decodeTransactions, encodeTransaction, encodeTransactions, groupTransactions } from '../transactions/transaction'
+} from '../src/transactions/signed-transaction'
+import { decodeTransactions, encodeTransaction, encodeTransactions, groupTransactions } from '../src/transactions/transaction'
 import { testData } from './common'
 
 const simplePayment = testData.simplePayment

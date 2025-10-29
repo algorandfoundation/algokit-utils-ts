@@ -1,10 +1,10 @@
 import {
-  addressFromPublicKey,
-  publicKeyFromAddress,
   MULTISIG_DOMAIN_SEPARATOR,
   PUBLIC_KEY_BYTE_LENGTH,
+  addressFromPublicKey,
   hash,
-} from '../algokit_common'
+  publicKeyFromAddress,
+} from '@algorandfoundation/algokit-common'
 import { MultisigSignature, MultisigSubsignature } from './transactions/signed-transaction'
 
 /**

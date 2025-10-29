@@ -20,10 +20,10 @@ export {
   decodeSignedTransactions,
   encodeSignedTransaction,
   encodeSignedTransactions,
-  type SignedTransaction,
+  type LogicSignature,
   type MultisigSignature,
   type MultisigSubsignature,
-  type LogicSignature,
+  type SignedTransaction,
 } from './transactions/signed-transaction'
 
 export * from './transactions/app-call'
@@ -33,7 +33,7 @@ export * from './transactions/asset-transfer'
 export * from './transactions/key-registration'
 export * from './transactions/payment'
 
-export { addressFromPublicKey, publicKeyFromAddress } from '../algokit_common'
+export { addressFromPublicKey, publicKeyFromAddress } from '@algorandfoundation/algokit-common'
 
 export {
   addressFromMultisigSignature,

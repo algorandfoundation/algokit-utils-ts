@@ -32,5 +32,8 @@
   },
   "dependencies": {},
   "peerDependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "@algorandfoundation/algokit-common": "*",
+    "@noble/ed25519": "^3.0.0"
+  }
 }

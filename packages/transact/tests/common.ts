@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as fs from 'fs'
 import * as path from 'path'
-import { OnApplicationComplete, Transaction, TransactionType } from '..'
-import { Reveal, SigslotCommit, StateProof, StateProofTransactionFields } from '../transactions/state-proof'
+import { OnApplicationComplete, Transaction, TransactionType } from '../src'
+import { Reveal, SigslotCommit, StateProof, StateProofTransactionFields } from '../src/transactions/state-proof'
 
 const jsonString = fs.readFileSync(path.join(__dirname, 'test_data.json'), 'utf-8')
 

@@ -1,8 +1,8 @@
 import type { ModelMetadata } from '../core/model-runtime'
 import { getModelMeta, registerModelMeta } from '../core/model-runtime'
-import type { SignedTxnInBlock } from './signed-txn-in-block'
 import type { BlockStateDelta } from './block-state-delta'
 import { BlockStateDeltaMeta } from './block-state-delta'
+import type { SignedTxnInBlock } from './signed-txn-in-block'
 
 /**
  * State changes from application execution, including inner transactions and logs.

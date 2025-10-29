@@ -1,4 +1,3 @@
-import base32 from 'hi-base32'
 import {
   MAX_TX_GROUP_SIZE,
   SIGNATURE_ENCODING_INCR,
@@ -8,7 +7,8 @@ import {
   ZERO_ADDRESS,
   concatArrays,
   hash,
-} from '../../algokit_common'
+} from '@algorandfoundation/algokit-common'
+import base32 from 'hi-base32'
 import {
   OmitEmptyObjectCodec,
   addressArrayCodec,

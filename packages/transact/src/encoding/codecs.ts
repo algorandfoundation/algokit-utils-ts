@@ -1,4 +1,4 @@
-import { addressFromPublicKey, PUBLIC_KEY_BYTE_LENGTH, publicKeyFromAddress } from '../../algokit_common'
+import { addressFromPublicKey, PUBLIC_KEY_BYTE_LENGTH, publicKeyFromAddress } from '@algorandfoundation/algokit-common'
 
 abstract class Codec<T, TEncoded = T> {
   public abstract defaultValue(): TEncoded

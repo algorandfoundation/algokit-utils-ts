@@ -1,7 +1,7 @@
+import { Buffer } from 'buffer'
 import { describe, expect, test } from 'vitest'
 import { getABIMethod, getABIMethodSelector, getABIMethodSignature } from './abi-method'
 import { parseTupleContent } from './abi-type'
-import { Buffer } from 'buffer'
 
 describe('getABIMethod', () => {
   test.each([

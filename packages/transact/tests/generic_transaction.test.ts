@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { decodeTransaction } from '../transactions/transaction'
+import { decodeTransaction } from '../src/transactions/transaction'
 import { testData } from './common'
 
 describe('Generic Transaction', () => {

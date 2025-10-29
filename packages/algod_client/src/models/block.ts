@@ -1,8 +1,8 @@
 import type { ModelMetadata } from '../core/model-runtime'
-import type { SignedTxnInBlock } from './signed-txn-in-block'
-import { SignedTxnInBlockMeta } from './signed-txn-in-block'
 import type { BlockStateProofTracking } from './block_state_proof_tracking'
 import { BlockStateProofTrackingMeta } from './block_state_proof_tracking'
+import type { SignedTxnInBlock } from './signed-txn-in-block'
+import { SignedTxnInBlockMeta } from './signed-txn-in-block'
 
 /**
  * Block contains the BlockHeader and the list of transactions (Payset).

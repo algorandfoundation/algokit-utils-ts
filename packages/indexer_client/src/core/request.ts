@@ -1,7 +1,7 @@
-import type { ClientConfig } from './client-config'
 import { ApiError } from './api-error'
+import type { BodyValue, QueryParams } from './base-http-request'
+import type { ClientConfig } from './client-config'
 import { decodeMsgPack, encodeMsgPack } from './codecs'
-import type { QueryParams, BodyValue } from './base-http-request'
 
 type BodyInit = string | Uint8Array
 

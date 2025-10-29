@@ -13,7 +13,7 @@ import {
   getTransactionIdRaw,
   mergeMultisignatures,
   newMultisigSignature,
-} from '..'
+} from '../src'
 import { TransactionTestData } from './common'
 
 export const assertExample = async (label: string, testData: TransactionTestData) => {

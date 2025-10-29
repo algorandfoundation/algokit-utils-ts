@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { Transaction, TransactionType, validateTransaction } from '../transactions/transaction'
+import { Transaction, TransactionType, validateTransaction } from '../src/transactions/transaction'
 import { testData } from './common'
 import {
   assertAssignFee,
@@ -10,23 +10,27 @@ import {
   assertEncodeWithSignature,
   assertEncodedTransactionType,
   assertExample,
+  assertMultisigExample,
   assertTransactionId,
 } from './transaction_asserts'
 
-const freezeTestData = Object.entries({
-  freeze: testData.assetFreeze,
-  unfreeze: testData.assetUnfreeze,
+const txnTestData = Object.entries({
+  ['payment']: testData.simplePayment,
 })
 
-describe('Asset Freeze', () => {
-  // Polytest Suite: Asset Freeze
+describe('Payment', () => {
+  // Polytest Suite: Payment
 
   describe('Transaction Tests', () => {
     // Polytest Group: Transaction Tests
 
-    for (const [label, testData] of freezeTestData) {
+    for (const [label, testData] of txnTestData) {
       test('example', async () => {
         await assertExample(label, testData)
+      })
+
+      test('multisig example', async () => {
+        await assertMultisigExample(label, testData)
       })
 
       test('get transaction id', () => {
@@ -63,83 +67,63 @@ describe('Asset Freeze', () => {
     }
   })
 
-  describe('Asset Freeze Validation', () => {
-    test('should throw error when asset ID is zero', () => {
+  describe('Payment Transaction Validation', () => {
+    test('should validate valid payment transaction', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        transactionType: TransactionType.Payment,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
-        assetFreeze: {
-          assetId: 0n, // Invalid asset ID
-          freezeTarget: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          frozen: true,
-        },
-      }
-
-      expect(() => validateTransaction(transaction)).toThrow('Asset freeze validation failed: Asset ID must not be 0')
-    })
-
-    test('should validate valid asset freeze transaction', () => {
-      const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
-        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
-        firstValid: 1000n,
-        lastValid: 2000n,
-        assetFreeze: {
-          assetId: 123n, // Valid asset ID
-          freezeTarget: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          frozen: true,
+        payment: {
+          amount: 1000000n, // 1 ALGO
+          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
         },
       }
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
-    test('should validate asset unfreeze transaction', () => {
+    test('should validate payment transaction with zero amount', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        transactionType: TransactionType.Payment,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
-        assetFreeze: {
-          assetId: 123n,
-          freezeTarget: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
-          frozen: false, // Unfreeze
+        payment: {
+          amount: 0n, // Zero payment is allowed
+          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
         },
       }
 
       expect(() => validateTransaction(transaction)).not.toThrow()
     })
 
-    test('should validate freezing the sender themselves', () => {
+    test('should validate payment transaction with close remainder', () => {
+      const transaction: Transaction = {
+        transactionType: TransactionType.Payment,
+        sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
+        firstValid: 1000n,
+        lastValid: 2000n,
+        payment: {
+          amount: 500000n, // 0.5 ALGO
+          receiver: 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK',
+          closeRemainderTo: 'BNSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK', // Close account
+        },
+      }
+
+      expect(() => validateTransaction(transaction)).not.toThrow()
+    })
+
+    test('should validate self-payment transaction', () => {
       const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        transactionType: TransactionType.Payment,
         sender: senderAddress,
         firstValid: 1000n,
         lastValid: 2000n,
-        assetFreeze: {
-          assetId: 123n,
-          freezeTarget: senderAddress, // Freeze self
-          frozen: true,
-        },
-      }
-
-      expect(() => validateTransaction(transaction)).not.toThrow()
-    })
-
-    test('should validate unfreezing the sender themselves', () => {
-      const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
-      const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
-        sender: senderAddress,
-        firstValid: 1000n,
-        lastValid: 2000n,
-        assetFreeze: {
-          assetId: 123n,
-          freezeTarget: senderAddress, // Unfreeze self
-          frozen: false,
+        payment: {
+          amount: 1000000n,
+          receiver: senderAddress, // Self-payment
         },
       }
 

@@ -2,7 +2,7 @@ import {
   decodeSignedTransaction as transactDecodeSignedTransaction,
   encodeSignedTransaction as transactEncodeSignedTransaction,
   type SignedTransaction,
-} from '../../algokit_transact'
+} from '@algorandfoundation/algokit-transact'
 import { decodeMsgPack, encodeMsgPack } from './codecs'
 import { fromBase64, toBase64 } from './serialization'
 

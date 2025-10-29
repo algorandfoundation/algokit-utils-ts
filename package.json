@@ -66,12 +66,12 @@
     "algosdk": "^3.5.2"
   },
   "devDependencies": {
-    "@algorandfoundation/algod-client": "workspace:*",
-    "@algorandfoundation/algokit-abi": "workspace:*",
-    "@algorandfoundation/algokit-common": "workspace:*",
-    "@algorandfoundation/algokit-transact": "workspace:*",
-    "@algorandfoundation/indexer-client": "workspace:*",
-    "@algorandfoundation/kmd-client": "workspace:*",
+    "@algorandfoundation/algod-client": "*",
+    "@algorandfoundation/algokit-abi": "*",
+    "@algorandfoundation/algokit-common": "*",
+    "@algorandfoundation/algokit-transact": "*",
+    "@algorandfoundation/indexer-client": "*",
+    "@algorandfoundation/kmd-client": "*",
     "@algorandfoundation/tealscript": "^0.106.3",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",

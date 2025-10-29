@@ -6,10 +6,10 @@ import {
   LENGTH_ENCODE_BYTE_SIZE,
   PUBLIC_KEY_BYTE_LENGTH,
   publicKeyFromAddress,
-} from '../algokit_common'
+} from '@algorandfoundation/algokit-common'
 import type { ABIStructValue, ABIValue } from './abi-value'
-import { bigIntToBytes, bytesToBigInt } from './bigint'
 import { StructField } from './arc56-contract'
+import { bigIntToBytes, bytesToBigInt } from './bigint'
 
 export enum ABITypeName {
   Uint = 'Uint',

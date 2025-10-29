@@ -10,7 +10,7 @@ import {
   MAX_LOCAL_STATE_KEYS,
   MAX_OVERALL_REFERENCES,
   PROGRAM_PAGE_SIZE,
-} from '../../algokit_common'
+} from '@algorandfoundation/algokit-common'
 import { TransactionValidationError, TransactionValidationErrorType } from './common'
 
 /**

@@ -1,10 +1,10 @@
 import {
-  encodeSignedTransaction as transactEncodeSignedTransaction,
   decodeSignedTransaction as transactDecodeSignedTransaction,
+  encodeSignedTransaction as transactEncodeSignedTransaction,
   type SignedTransaction,
-} from '../../algokit_transact'
-import { encodeMsgPack, decodeMsgPack } from './codecs'
-import { toBase64, fromBase64 } from './serialization'
+} from '@algorandfoundation/algokit-transact'
+import { decodeMsgPack, encodeMsgPack } from './codecs'
+import { fromBase64, toBase64 } from './serialization'
 
 export type BodyFormat = 'json' | 'msgpack'
 

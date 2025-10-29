@@ -24,43 +24,43 @@ describe('Heartbeat', () => {
     // Polytest Group: Transaction Tests
 
     for (const [label, testData] of txnTestData) {
-      test("example", async () => {
+      test('example', async () => {
         await assertExample(label, testData)
       })
 
-      test("multisig example", async () => {
+      test('multisig example', async () => {
         await assertMultisigExample(label, testData)
       })
 
-      test("get transaction id", () => {
+      test('get transaction id', () => {
         assertTransactionId(label, testData)
       })
 
-      test("assign fee", () => {
+      test('assign fee', () => {
         assertAssignFee(label, testData)
       })
 
-      test("get encoded transaction type", () => {
+      test('get encoded transaction type', () => {
         assertEncodedTransactionType(label, testData)
       })
 
-      test("decode without prefix", () => {
+      test('decode without prefix', () => {
         assertDecodeWithoutPrefix(label, testData)
       })
 
-      test("decode with prefix", () => {
+      test('decode with prefix', () => {
         assertDecodeWithPrefix(label, testData)
       })
 
-      test("encode with auth address", async () => {
+      test('encode with auth address', async () => {
         await assertEncodeWithAuthAddress(label, testData)
       })
 
-      test("encode with signature", () => {
+      test('encode with signature', () => {
         assertEncodeWithSignature(label, testData)
       })
 
-      test("encode", () => {
+      test('encode', () => {
         assertEncode(label, testData)
       })
     }

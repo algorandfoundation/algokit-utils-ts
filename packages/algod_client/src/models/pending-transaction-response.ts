@@ -1,5 +1,5 @@
+import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { ModelMetadata } from '../core/model-runtime'
-import type { SignedTransaction } from '../../algokit_transact'
 import type { AccountStateDelta } from './account-state-delta'
 import { AccountStateDeltaMeta } from './account-state-delta'
 import type { StateDelta } from './state-delta'

@@ -1,9 +1,8 @@
 import sha512 from 'js-sha512'
-import { ABIType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
+import { ABIType, getABIStructType, getABIType, getABITypeName, parseTupleContent } from './abi-type'
 import { ABIValue } from './abi-value'
 import { ARC28Event } from './arc28-event'
 import { Arc56Contract, Arc56Method } from './arc56-contract'
-import { getABIStructType } from './abi-type'
 
 export enum ABITransactionType {
   Txn = 'txn',

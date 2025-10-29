@@ -14,5 +14,12 @@
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["**/*.algo.ts"],
-  "references": [{ "path": "./packages/common" }]
+  "references": [
+    { "path": "./packages/common" },
+    { "path": "./packages/abi" },
+    { "path": "./packages/transact" },
+    { "path": "./packages/algod_client" },
+    { "path": "./packages/kmd_client" },
+    { "path": "./packages/indexer_client" }
+  ]
 }
