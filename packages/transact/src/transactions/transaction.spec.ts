@@ -2,13 +2,13 @@ import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
 import { describe, expect, test } from 'vitest'
 import { encodeSignedTransaction } from './signed-transaction'
 import {
+  Transaction,
+  TransactionType,
   encodeTransaction,
   encodeTransactionRaw,
   estimateTransactionSize,
   getTransactionId,
   getTransactionIdRaw,
-  Transaction,
-  TransactionType,
   validateTransaction,
 } from './transaction'
 
