@@ -1,12 +1,23 @@
+import fg from 'fast-glob'
 import { LogLevel, LogOrStringHandler, RollupLog, defineConfig } from 'rolldown'
 import { dts } from 'rolldown-plugin-dts'
 import workspacePkg from './package.json' with { type: 'json' }
 
-export default function createConfig(externalDependencies: string[], input: string[] = ['src/index.ts']): typeof config {
+type StringOrRegExp = string | RegExp
+
+export default function createConfig(externalDependencies: StringOrRegExp[], input: string[] = ['src/index.ts']): typeof config {
   const external = Array.from(new Set([...Object.keys(workspacePkg.dependencies || {}), ...externalDependencies]))
 
+  const resolvedInput = input.flatMap((pattern) => {
+    // If it contains glob characters or negations, resolve with fast-glob
+    if (pattern.includes('*') || pattern.includes('!')) {
+      return fg.sync(pattern, { ignore: input.filter((p) => p.startsWith('!')) })
+    }
+    return pattern
+  })
+
   const common = defineConfig({
-    input,
+    input: resolvedInput,
     checks: {
       circularDependency: true,
     },
@@ -15,7 +26,7 @@ export default function createConfig(externalDependencies: string[], input: stri
       propertyReadSideEffects: false,
     },
     tsconfig: 'tsconfig.build.json',
-    external,
+    external: external,
     onLog(level: LogLevel, log: RollupLog, handler: LogOrStringHandler) {
       // Ignore logs produced for .d.ts files
       if (log.message.includes('.d.ts')) {
