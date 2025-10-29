@@ -12,6 +12,14 @@
     "isolatedModules": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "rollup-multi-plugin.ts", "rollup.config.ts"],
-  "exclude": ["**/*.algo.ts"]
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["**/*.algo.ts"],
+  "references": [
+    { "path": "./packages/common" },
+    { "path": "./packages/abi" },
+    { "path": "./packages/transact" },
+    { "path": "./packages/algod_client" },
+    { "path": "./packages/kmd_client" },
+    { "path": "./packages/indexer_client" }
+  ]
 }
