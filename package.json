@@ -32,7 +32,27 @@
       "require": "./testing/index.js"
     },
     "./index.d.ts": "./index.d.ts",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./algokit_transact": {
+      "types": "./algokit_transact/index.d.ts",
+      "import": "./algokit_transact/index.mjs",
+      "require": "./algokit_transact/index.js"
+    },
+    "./algosdk_legacy": {
+      "types": "./sdk/index.d.ts",
+      "import": "./sdk/index.mjs",
+      "require": "./sdk/index.js"
+    },
+    "./algod_client": {
+      "types": "./algod_client/index.d.ts",
+      "import": "./algod_client/index.mjs",
+      "require": "./algod_client/index.js"
+    },
+    "./algokit_common": {
+      "types": "./algokit_common/index.d.ts",
+      "import": "./algokit_common/index.mjs",
+      "require": "./algokit_common/index.js"
+    }
   },
   "scripts": {
     "build": "run-s build:*",
@@ -95,6 +115,7 @@
     "semantic-release": "^24.1.2",
     "tiny-invariant": "^1.3.1",
     "ts-node": "^10.9.1",
+    "tslib": "^2.8.1",
     "typedoc": "^0.25.13",
     "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "^5.4.5",

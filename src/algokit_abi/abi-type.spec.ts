@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
+import type { ABIStructType } from './abi-type'
 import { ABIType, ABITypeName, decodeABIValue, encodeABIValue, getABIType } from './abi-type'
 import { ABIStructValue, ABIValue } from './abi-value'
-import type { ABIStructType } from './abi-type'
 
 describe('ABIType encode decode', () => {
   const basicTypeCases = [
@@ -451,3 +451,5 @@ describe('ABIType encode decode', () => {
     expect(decoded.name).toBe('world')
   })
 })
+
+// TODO: add failed tests

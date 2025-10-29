@@ -34,7 +34,16 @@ const normaliseEsmOutput = (): Plugin => {
 }
 
 const config: RollupOptions = {
-  input: ['src/index.ts', 'src/testing/index.ts', 'src/types/*.ts', '!src/types/*.spec.ts'],
+  input: [
+    'src/index.ts',
+    'src/testing/index.ts',
+    'src/types/*.ts',
+    '!src/types/*.spec.ts',
+    'src/sdk/*.ts',
+    'src/algod_client/*.ts',
+    'src/algokit_common/*.ts',
+    'src/algokit_transact/*.ts',
+  ],
   output: [
     {
       dir: 'dist',
