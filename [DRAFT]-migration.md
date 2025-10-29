@@ -1,0 +1,48 @@
+# MIGRATION plan
+
+- Pull sdk into utils
+  - remove sdk package
+  - fix dependencies
+  - build ⇒ all good
+- Pull algokit\_{x} packages into utils
+  - fix up rolldown
+  - build ⇒ all good
+- Remove algod client from sdk and replace it with algokit_algod_client
+  - run into issues with signed transaction
+  - delete dryrun feature
+  - status - can’t build
+- Replace sdk transaction and signed transaction with algokit version
+- replace block too
+  - TODO: look into state delta (deleted it)
+- fixed all sdk errors
+- fix transactions, introduced temp SignedTransaction type
+  - Fix all txID() with getTransactionId
+  - replace algosdk.SuggestedParams with TransactionParams from algod client
+  - in debugger, new SimulateTransactionGroupResult
+- next step: remove Transaction from algosdk
+
+- TODO: review the retry logic
+- TODO: remove algosdk.Algodv2
+- const { lastRound: firstRound } = suggestedParams! // TODO: document suggested params doesn't have first round anymore
+- explain the type differences between transact and algod
+- remove waitForIndexer
+  - DO NOT remove it
+- BIG CHANGE: transaction Id can be changed after sending with composer because the group Id can be added
+
+- Fee calc inside the txn constructor
+- error messages changed, for example, asset tests
+- `AssetHoldingReference` replaced by `HoldingReference`
+- `ApplicationLocalReference` replaced by `LocalsReference`
+- BoxReference is gone too
+- Error name is gone (snapshot tests updated)
+- TODO: remove the ATC too
+- TODO: add interface for breaking change, for example, Transaction
+- TODO: simplify signer + account
+- TODO: maybe rename appCall field to applicationCall
+  - the same for other fields to make them match with sdk
+- TODO: take notes of the legacy functions to be removed and communicate with devrels
+- TODO: standardise box ref
+- TODO: remove legacy OnApplicationComplete
+- TODO: keep track of the changes we make to algokit_transact to fit with algosdk
+- For integration with lora to work:
+  - need to update subscriber to use the new utils and remove algosdk
