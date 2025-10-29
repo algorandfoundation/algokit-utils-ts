@@ -5,10 +5,18 @@ import {
   SimulateUnnamedResourcesAccessed,
   TransactionParams,
 } from '../algod_client'
-import { SignedTransaction, Transaction, TransactionType, assignFee, getTransactionId } from '../algokit_transact'
+import {
+  OnApplicationComplete,
+  SignedTransaction,
+  Transaction,
+  TransactionType,
+  assignFee,
+  getTransactionId,
+  groupTransactions,
+} from '../algokit_transact'
 import { Config } from '../config'
 import * as algosdk from '../sdk'
-import { ABIMethod, Address, SdkTransactionParams } from '../sdk'
+import { ABIMethod, ABIType, ABIValue, Address, SdkTransactionParams, abiTypeIsReference, abiTypeIsTransaction } from '../sdk'
 import { encodeLease } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
@@ -453,7 +461,6 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
    */
   args?: (
     | algosdk.ABIValue
-    // The following should match the above `AppMethodCallTransactionArgument` type above
     | TransactionWithSigner
     | Transaction
     | Promise<Transaction>
@@ -464,6 +471,7 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
   )[]
 }
 
+// TODO: PD - rename this to ComposerTransaction
 export type Txn =
   | (PaymentParams & { type: 'pay' })
   | (AssetCreateParams & { type: 'assetCreate' })
@@ -476,7 +484,6 @@ export type Txn =
   | ((AppCallParams | AppCreateParams | AppUpdateParams) & { type: 'appCall' })
   | ((OnlineKeyRegistrationParams | OfflineKeyRegistrationParams) & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
-  | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
 /** Configuration for transaction composer behavior */
@@ -578,7 +585,7 @@ type TransactionWithSignerAndContext = algosdk.TransactionWithSigner & Transacti
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: algosdk.Transaction[]
+  transactions: Transaction[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, algosdk.ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
@@ -681,52 +688,35 @@ export class TransactionComposer {
    * This is the new implementation that replaces SDK ATC's buildGroup.
    *
    * @param suggestedParams - Suggested parameters from algod
-   * @param _defaultValidityWindow - Default validity window (not yet used)
+   * @param defaultValidityWindow - Default validity window
    * @param groupAnalysis - Optional analysis results for resource population
    * @param methodCallsMap - Optional map to populate with method call information
    * @returns Array of built transactions
    */
-  private async _buildTransactions(
+  private async buildTransactions(
     suggestedParams: TransactionParams,
-    _defaultValidityWindow: bigint,
+    defaultValidityWindow: bigint,
     groupAnalysis?: GroupAnalysis,
-    methodCallsMap?: Map<number, ABIMethod>,
+    methodCallsMap?: Map<number, ABIMethod>, // TODO: PD review this, it's to keep track of the method calls only
   ): Promise<Transaction[]> {
     const builtTransactions: Transaction[] = []
 
-    // Convert to SDK params format for compatibility with existing builders
-    const sdkTransactionParams: SdkTransactionParams = {
-      ...suggestedParams,
-      firstRound: suggestedParams.lastRound,
-      lastRound: suggestedParams.lastRound + 1000n,
-    }
-
     // Build each transaction from the transactions array
     for (const ctxn of this.transactions) {
+      let transaction: Transaction
+      const commonParams = getCommonParams(ctxn)
+      const header = buildTransactionHeader(commonParams, suggestedParams, defaultValidityWindow)
+      let calculateFee = header.fee === undefined
+
       switch (ctxn.type) {
+        // TODO: PD - what to do with 'txn'
         case 'txnWithSigner':
-          // Raw transaction, use as-is
-          builtTransactions.push(ctxn.txn)
+          transaction = ctxn.txn
+          calculateFee = false
           break
-
-        case 'atc': {
-          // Build ATC transactions and extract them
-          const atcTxns = this.buildAtc(ctxn.atc)
-          // Track method calls from ATC
-          if (methodCallsMap) {
-            atcTxns.forEach((txnWithContext, offset) => {
-              if (txnWithContext.context.abiMethod) {
-                methodCallsMap.set(builtTransactions.length + offset, txnWithContext.context.abiMethod)
-              }
-            })
-          }
-          builtTransactions.push(...atcTxns.map((t) => t.txn))
-          break
-        }
-
         case 'methodCall': {
           // Build method call transactions
-          const methodTxns = await this.buildMethodCall(ctxn, sdkTransactionParams, false)
+          const methodTxns = await this.buildMethodCall(ctxn, header, false)
           // Track method calls - the last transaction in the group is the actual method call
           if (methodCallsMap) {
             methodTxns.forEach((txnWithContext, offset) => {
@@ -736,77 +726,64 @@ export class TransactionComposer {
             })
           }
           builtTransactions.push(...methodTxns.map((t) => t.txn))
-          break
+          continue
         }
-
         case 'pay': {
-          const result = this.buildPayment(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildPayment(ctxn, header)
           break
         }
-
         case 'assetCreate': {
-          const result = this.buildAssetCreate(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildAssetCreate(ctxn, header)
           break
         }
-
         case 'assetConfig': {
-          const result = this.buildAssetConfig(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildAssetConfig(ctxn, header)
           break
         }
-
         case 'assetDestroy': {
-          const result = this.buildAssetDestroy(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildAssetDestroy(ctxn, header)
           break
         }
-
         case 'assetFreeze': {
-          const result = this.buildAssetFreeze(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildAssetFreeze(ctxn, header)
           break
         }
-
         case 'assetTransfer': {
-          const result = this.buildAssetTransfer(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildAssetTransfer(ctxn, header)
           break
         }
-
         case 'assetOptIn': {
-          const result = this.buildAssetTransfer({ ...ctxn, receiver: ctxn.sender, amount: 0n }, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildAssetTransfer({ ...ctxn, receiver: ctxn.sender, amount: 0n }, header)
           break
         }
-
         case 'assetOptOut': {
-          const result = this.buildAssetTransfer(
-            { ...ctxn, receiver: ctxn.sender, amount: 0n, closeAssetTo: ctxn.creator },
-            sdkTransactionParams,
-          )
-          builtTransactions.push(result.txn)
+          transaction = this.buildAssetTransfer({ ...ctxn, receiver: ctxn.sender, amount: 0n, closeAssetTo: ctxn.creator }, header)
           break
         }
-
         case 'appCall': {
-          const result = await this.buildAppCall(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = await this.buildAppCall(ctxn, header)
           break
         }
-
         case 'keyReg': {
-          const result = this.buildKeyReg(ctxn, sdkTransactionParams)
-          builtTransactions.push(result.txn)
+          transaction = this.buildKeyReg(ctxn, header)
           break
         }
-
         default: {
           const _exhaustiveCheck: never = ctxn
           throw new Error(`Unsupported transaction type: ${(_exhaustiveCheck as ComposerTransaction).type}`)
         }
       }
+
+      if (calculateFee) {
+        transaction = assignFee(transaction, {
+          feePerByte: suggestedParams.fee,
+          minFee: suggestedParams.minFee,
+          extraFee: commonParams.extraFee?.microAlgos,
+          maxFee: commonParams.maxFee?.microAlgos,
+        })
+      }
+
+      builtTransactions.push(transaction)
     }
 
     // Apply resource population if analysis was performed
@@ -824,10 +801,7 @@ export class TransactionComposer {
       }
     }
 
-    // Group transactions if more than one
     if (builtTransactions.length > 1) {
-      // Import and use groupTransactions from algokit_transact
-      const { groupTransactions } = await import('../algokit_transact')
       return groupTransactions(builtTransactions)
     }
 
@@ -870,7 +844,7 @@ export class TransactionComposer {
    */
   private async _analyzeGroupRequirements(suggestedParams: TransactionParams, defaultValidityWindow: bigint): Promise<GroupAnalysis> {
     // Build transactions without resource population first
-    const builtTransactions = await this._buildTransactions(suggestedParams, defaultValidityWindow)
+    const builtTransactions = await this.buildTransactions(suggestedParams, defaultValidityWindow)
 
     // Prepare transactions for simulation - remove group IDs
     let transactionsToSimulate = builtTransactions.map((txn) => {
@@ -955,7 +929,7 @@ export class TransactionComposer {
 
     // Phase 2: Build transactions with method call tracking
     const methodCalls = new Map<number, ABIMethod>()
-    const transactions = await this._buildTransactions(suggestedParams, defaultValidityWindow, groupAnalysis, methodCalls)
+    const transactions = await this.buildTransactions(suggestedParams, defaultValidityWindow, groupAnalysis, methodCalls)
 
     // Phase 3: Attach signers
     const transactionsWithSigners = this._gatherSigners(transactions)
@@ -1956,22 +1930,6 @@ export class TransactionComposer {
     return this
   }
 
-  /**
-   * Add the transactions within an `AtomicTransactionComposer` to the transaction group.
-   * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
-   * @returns The composer so you can chain method calls
-   * @example
-   * ```typescript
-   * const atc = new AtomicTransactionComposer()
-   *   .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: 1000n })
-   * composer.addAtc(atc)
-   * ```
-   */
-  addAtc(atc: algosdk.AtomicTransactionComposer): TransactionComposer {
-    this.transactions.push({ atc, type: 'atc' })
-    return this
-  }
-
   /** Build an ATC and return transactions ready to be incorporated into a broader set of transactions this composer is composing */
   private buildAtc(atc: algosdk.AtomicTransactionComposer): TransactionWithSignerAndContext[] {
     const group = atc.buildGroup()
@@ -2056,7 +2014,7 @@ export class TransactionComposer {
    */
   private async buildMethodCall(
     params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
-    suggestedParams: SdkTransactionParams,
+    header: TransactionHeader,
     includeSigner: boolean,
   ): Promise<TransactionWithSignerAndContext[]> {
     const methodArgs: (algosdk.ABIArgument | TransactionWithSignerAndContext)[] = []
@@ -2256,78 +2214,90 @@ export class TransactionComposer {
     })
   }
 
-  private buildPayment(params: PaymentParams, suggestedParams: SdkTransactionParams) {
-    return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      receiver: params.receiver,
-      amount: params.amount.microAlgo,
-      closeRemainderTo: params.closeRemainderTo,
-      suggestedParams,
-    })
+  private buildPayment(params: PaymentParams, header: TransactionHeader) {
+    return {
+      ...header,
+      transactionType: TransactionType.Payment,
+      payment: {
+        receiver: addressToString(params.receiver),
+        amount: params.amount.microAlgo,
+        closeRemainderTo: optionalAddressToString(params.closeRemainderTo),
+      },
+    } satisfies Transaction
   }
 
-  private buildAssetCreate(params: AssetCreateParams, suggestedParams: SdkTransactionParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      total: params.total,
-      decimals: params.decimals ?? 0,
-      assetName: params.assetName,
-      unitName: params.unitName,
-      assetURL: params.url,
-      defaultFrozen: params.defaultFrozen ?? false,
-      assetMetadataHash: typeof params.metadataHash === 'string' ? Buffer.from(params.metadataHash, 'utf-8') : params.metadataHash,
-      manager: params.manager,
-      reserve: params.reserve,
-      freeze: params.freeze,
-      clawback: params.clawback,
-      suggestedParams,
-    })
+  private buildAssetCreate(params: AssetCreateParams, header: TransactionHeader) {
+    return {
+      ...header,
+      transactionType: TransactionType.AssetConfig,
+      assetConfig: {
+        assetId: 0n,
+        total: params.total,
+        decimals: params.decimals ?? 0,
+        defaultFrozen: params.defaultFrozen ?? false,
+        assetName: params.assetName,
+        unitName: params.unitName,
+        url: params.url,
+        metadataHash: typeof params.metadataHash === 'string' ? Buffer.from(params.metadataHash, 'utf-8') : params.metadataHash,
+        manager: optionalAddressToString(params.manager),
+        reserve: optionalAddressToString(params.reserve),
+        freeze: optionalAddressToString(params.freeze),
+        clawback: optionalAddressToString(params.clawback),
+      },
+    } satisfies Transaction
   }
 
-  private buildAssetConfig(params: AssetConfigParams, suggestedParams: SdkTransactionParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      assetIndex: params.assetId,
-      suggestedParams,
-      manager: params.manager,
-      reserve: params.reserve,
-      freeze: params.freeze,
-      clawback: params.clawback,
-      strictEmptyAddressChecking: false,
-    })
+  private buildAssetConfig(params: AssetConfigParams, header: TransactionHeader) {
+    return {
+      ...header,
+      transactionType: TransactionType.AssetConfig,
+      assetConfig: {
+        assetId: params.assetId,
+        manager: optionalAddressToString(params.manager),
+        reserve: optionalAddressToString(params.reserve),
+        freeze: optionalAddressToString(params.freeze),
+        clawback: optionalAddressToString(params.clawback),
+      },
+    } satisfies Transaction
   }
 
-  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: SdkTransactionParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      assetIndex: params.assetId,
-      suggestedParams,
-    })
+  private buildAssetDestroy(params: AssetDestroyParams, header: TransactionHeader) {
+    return {
+      ...header,
+      transactionType: TransactionType.AssetConfig,
+      assetConfig: {
+        assetId: params.assetId,
+      },
+    } satisfies Transaction
   }
 
-  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: SdkTransactionParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      assetIndex: params.assetId,
-      freezeTarget: params.account,
-      frozen: params.frozen,
-      suggestedParams,
-    })
+  private buildAssetFreeze(params: AssetFreezeParams, header: TransactionHeader) {
+    return {
+      ...header,
+      transactionType: TransactionType.AssetFreeze,
+      assetFreeze: {
+        assetId: params.assetId,
+        freezeTarget: addressToString(params.account),
+        frozen: params.frozen,
+      },
+    } satisfies Transaction
   }
 
-  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: SdkTransactionParams) {
-    return this.commonTxnBuildStep(algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      receiver: params.receiver,
-      assetIndex: params.assetId,
-      amount: params.amount,
-      suggestedParams,
-      closeRemainderTo: params.closeAssetTo,
-      assetSender: params.clawbackTarget,
-    })
+  private buildAssetTransfer(params: AssetTransferParams, header: TransactionHeader) {
+    return {
+      ...header,
+      transactionType: TransactionType.AssetTransfer,
+      assetTransfer: {
+        assetId: params.assetId,
+        amount: params.amount,
+        receiver: addressToString(params.receiver),
+        assetSender: optionalAddressToString(params.clawbackTarget),
+        closeRemainderTo: optionalAddressToString(params.closeAssetTo),
+      },
+    } satisfies Transaction
   }
 
-  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: SdkTransactionParams) {
+  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, header: TransactionHeader) {
     const appId = 'appId' in params ? params.appId : 0n
     const approvalProgram =
       'approvalProgram' in params
@@ -2342,121 +2312,147 @@ export class TransactionComposer {
           : params.clearStateProgram
         : undefined
 
+    if (appId === 0n) {
+      if (approvalProgram === undefined || clearStateProgram === undefined) {
+        throw new Error('approvalProgram and clearStateProgram are required for application creation')
+      }
+    }
+
     // If accessReferences is provided, we should not pass legacy foreign arrays
     const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
-    const sdkParams = {
-      sender: params.sender,
-      suggestedParams,
-      appArgs: params.args,
-      onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
-      ...(hasAccessReferences
-        ? { access: params.accessReferences?.map(getAccessReference) }
-        : {
-            accounts: params.accountReferences,
-            foreignApps: params.appReferences?.map((x) => Number(x)),
-            foreignAssets: params.assetReferences?.map((x) => Number(x)),
-            boxes: params.boxReferences?.map(AppManager.getBoxReference),
-          }),
-      approvalProgram,
-      clearProgram: clearStateProgram,
-    }
+    const extraProgramPages =
+      appId === 0n && 'extraProgramPages' in params && params.extraProgramPages !== undefined
+        ? params.extraProgramPages
+        : appId === 0n
+          ? calculateExtraProgramPages(approvalProgram!, clearStateProgram!)
+          : undefined
 
-    if (appId === 0n) {
-      if (sdkParams.approvalProgram === undefined || sdkParams.clearProgram === undefined) {
-        throw new Error('approvalProgram and clearStateProgram are required for application creation')
-      }
-
-      return this.commonTxnBuildStep(algosdk.makeApplicationCreateTxnFromObject, params, {
-        ...sdkParams,
-        extraPages:
-          'extraProgramPages' in params && params.extraProgramPages !== undefined
-            ? params.extraProgramPages
-            : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
-        numLocalInts: 'schema' in params ? (params.schema?.localInts ?? 0) : 0,
-        numLocalByteSlices: 'schema' in params ? (params.schema?.localByteSlices ?? 0) : 0,
-        numGlobalInts: 'schema' in params ? (params.schema?.globalInts ?? 0) : 0,
-        numGlobalByteSlices: 'schema' in params ? (params.schema?.globalByteSlices ?? 0) : 0,
-        approvalProgram: approvalProgram!,
-        clearProgram: clearStateProgram!,
-      })
-    } else {
-      return this.commonTxnBuildStep(algosdk.makeApplicationCallTxnFromObject, params, { ...sdkParams, appIndex: appId })
-    }
+    return {
+      ...header,
+      transactionType: TransactionType.AppCall,
+      appCall: {
+        appId,
+        onComplete: (params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC) as unknown as OnApplicationComplete,
+        approvalProgram,
+        clearStateProgram,
+        globalStateSchema:
+          appId === 0n && 'schema' in params
+            ? {
+                numUints: params.schema?.globalInts ?? 0,
+                numByteSlices: params.schema?.globalByteSlices ?? 0,
+              }
+            : undefined,
+        localStateSchema:
+          appId === 0n && 'schema' in params
+            ? {
+                numUints: params.schema?.localInts ?? 0,
+                numByteSlices: params.schema?.localByteSlices ?? 0,
+              }
+            : undefined,
+        extraProgramPages,
+        args: params.args,
+        ...(hasAccessReferences
+          ? { access: params.accessReferences?.map(getAccessReference) }
+          : {
+              accountReferences: params.accountReferences?.map((a) => addressToString(a)),
+              appReferences: params.appReferences,
+              assetReferences: params.assetReferences,
+              boxReferences: params.boxReferences?.map((box) => AppManager.getBoxReference(box)),
+            }),
+      },
+    } satisfies Transaction
   }
 
-  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: SdkTransactionParams) {
+  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, header: TransactionHeader) {
     if ('voteKey' in params) {
-      return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
-        sender: params.sender,
-        voteKey: params.voteKey,
-        selectionKey: params.selectionKey,
-        voteFirst: params.voteFirst,
-        voteLast: params.voteLast,
-        voteKeyDilution: params.voteKeyDilution,
-        suggestedParams,
-        nonParticipation: false,
-        stateProofKey: params.stateProofKey,
-      })
+      return {
+        ...header,
+        transactionType: TransactionType.KeyRegistration,
+        keyRegistration: {
+          voteKey: params.voteKey,
+          selectionKey: params.selectionKey,
+          voteFirst: params.voteFirst,
+          voteLast: params.voteLast,
+          voteKeyDilution: params.voteKeyDilution,
+          stateProofKey: params.stateProofKey,
+          nonParticipation: false,
+        },
+      } satisfies Transaction
     }
 
-    return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      suggestedParams,
-      nonParticipation: params.preventAccountFromEverParticipatingAgain,
-    })
+    return {
+      ...header,
+      transactionType: TransactionType.KeyRegistration,
+      keyRegistration: {
+        nonParticipation: params.preventAccountFromEverParticipatingAgain,
+      },
+    } satisfies Transaction
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
   private async buildTxn(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithContext[]> {
+    const commonParams = getCommonParams(txn)
+    const header = buildTransactionHeader(commonParams, suggestedParams, this.defaultValidityWindow)
+
+    let transaction: Transaction
     switch (txn.type) {
       case 'pay':
-        return [this.buildPayment(txn, suggestedParams)]
+        transaction = this.buildPayment(txn, header)
+        break
       case 'assetCreate':
-        return [this.buildAssetCreate(txn, suggestedParams)]
+        transaction = this.buildAssetCreate(txn, header)
+        break
       case 'appCall':
-        return [await this.buildAppCall(txn, suggestedParams)]
+        transaction = await this.buildAppCall(txn, header)
+        break
       case 'assetConfig':
-        return [this.buildAssetConfig(txn, suggestedParams)]
+        transaction = this.buildAssetConfig(txn, header)
+        break
       case 'assetDestroy':
-        return [this.buildAssetDestroy(txn, suggestedParams)]
+        transaction = this.buildAssetDestroy(txn, header)
+        break
       case 'assetFreeze':
-        return [this.buildAssetFreeze(txn, suggestedParams)]
+        transaction = this.buildAssetFreeze(txn, header)
+        break
       case 'assetTransfer':
-        return [this.buildAssetTransfer(txn, suggestedParams)]
+        transaction = this.buildAssetTransfer(txn, header)
+        break
       case 'assetOptIn':
-        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, suggestedParams)]
+        transaction = this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n }, header)
+        break
       case 'assetOptOut':
-        return [this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator }, suggestedParams)]
+        transaction = this.buildAssetTransfer({ ...txn, receiver: txn.sender, amount: 0n, closeAssetTo: txn.creator }, header)
+        break
       case 'keyReg':
-        return [this.buildKeyReg(txn, suggestedParams)]
+        transaction = this.buildKeyReg(txn, header)
+        break
       default:
         throw Error(`Unsupported txn type`)
     }
+
+    return [{ txn: transaction, context: {} }]
   }
 
-  private async buildTxnWithSigner(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithSignerAndContext[]> {
-    if (txn.type === 'txnWithSigner') {
-      return [
-        {
-          ...txn,
-          context: {},
-        },
-      ]
-    }
+  // TODO: PD - review if we still need this
+  // private async buildTxnWithSigner(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithSignerAndContext[]> {
+  //   if (txn.type === 'txnWithSigner') {
+  //     return [
+  //       {
+  //         ...txn,
+  //         context: {},
+  //       },
+  //     ]
+  //   }
 
-    if (txn.type === 'atc') {
-      return this.buildAtc(txn.atc)
-    }
+  //   if (txn.type === 'methodCall') {
+  //     return await this.buildMethodCall(txn, suggestedParams, true)
+  //   }
 
-    if (txn.type === 'methodCall') {
-      return await this.buildMethodCall(txn, suggestedParams, true)
-    }
+  //   const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
 
-    const signer = txn.signer ? ('signer' in txn.signer ? txn.signer.signer : txn.signer) : this.getSigner(txn.sender)
-
-    return (await this.buildTxn(txn, suggestedParams)).map(({ txn, context }) => ({ txn, signer, context }))
-  }
+  //   return (await this.buildTxn(txn, suggestedParams)).map(({ txn, context }) => ({ txn, signer, context }))
+  // }
 
   /**
    * Get the number of transactions currently added to this composer.
@@ -2635,10 +2631,6 @@ function _getCommonParams(ctxn: ComposerTransaction): CommonTransactionParams {
       lastValidRound: ctxn.txn.lastValid,
       signer: ctxn.signer,
     }
-  }
-
-  if (ctxn.type === 'atc') {
-    throw new Error('Cannot get common params from ATC transaction')
   }
 
   // For all other types, they have CommonTransactionParams
@@ -2927,4 +2919,292 @@ function _extractAbiReturnFromLogs(confirmation: PendingTransactionResponse, met
       decodeError: new Error(`Failed to decode ABI return value for method ${method.name}: ${e}`),
     }
   }
+}
+
+function buildTransactionHeader(
+  commonParams: CommonTransactionParams,
+  suggestedParams: TransactionParams,
+  defaultValidityWindow: bigint,
+): TransactionHeader {
+  const firstValid = commonParams.firstValidRound ?? suggestedParams.lastRound
+  const note =
+    commonParams.note !== undefined
+      ? typeof commonParams.note === 'string'
+        ? new TextEncoder().encode(commonParams.note)
+        : commonParams.note
+      : undefined
+
+  return {
+    sender: addressToString(commonParams.sender),
+    rekeyTo: optionalAddressToString(commonParams.rekeyTo),
+    note: note,
+    lease: encodeLease(commonParams.lease),
+    fee: commonParams.staticFee?.microAlgos,
+    genesisId: suggestedParams.genesisId,
+    genesisHash: suggestedParams.genesisHash,
+    firstValid,
+    lastValid:
+      commonParams.lastValidRound ??
+      (commonParams.validityWindow !== undefined
+        ? firstValid + BigInt(commonParams.validityWindow)
+        : firstValid + BigInt(defaultValidityWindow)),
+    group: undefined,
+  }
+}
+
+function getCommonParams(ctxn: ComposerTransaction): CommonTransactionParams {
+  switch (ctxn.type) {
+    // TODO: PD - where is just transaction
+    case 'txnWithSigner':
+      return {
+        sender: ctxn.txn.sender,
+        signer: ctxn.signer,
+        rekeyTo: ctxn.txn.rekeyTo,
+        note: ctxn.txn.note,
+        lease: ctxn.txn.lease,
+        staticFee: ctxn.txn.fee ? new AlgoAmount({ microAlgos: ctxn.txn.fee }) : undefined,
+        firstValidRound: ctxn.txn.firstValid,
+        lastValidRound: ctxn.txn.lastValid,
+      }
+    default:
+      return {
+        sender: ctxn.sender,
+        signer: ctxn.signer,
+        rekeyTo: ctxn.rekeyTo,
+        note: ctxn.note,
+        lease: ctxn.lease,
+        staticFee: ctxn.staticFee,
+        extraFee: ctxn.extraFee,
+        maxFee: ctxn.maxFee,
+        validityWindow: ctxn.validityWindow,
+        firstValidRound: ctxn.firstValidRound,
+        lastValidRound: ctxn.lastValidRound,
+      }
+  }
+}
+
+type AppMethodCallArgs = AppMethodCall<unknown>['args']
+
+/**
+ * Populate reference arrays from processed ABI method call arguments
+ */
+function populateMethodArgsIntoReferenceArrays(
+  sender: string,
+  appId: bigint,
+  method: ABIMethod,
+  methodArgs: AppMethodCallArgs,
+  accountReferences?: string[],
+  appReferences?: bigint[],
+  assetReferences?: bigint[],
+): { accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
+  const accounts = accountReferences ?? []
+  const assets = assetReferences ?? []
+  const apps = appReferences ?? []
+
+  methodArgs?.forEach((arg, i) => {
+    const argType = method.args[i].type
+    if (abiTypeIsReference(argType)) {
+      switch (argType) {
+        case 'account':
+          if (typeof arg === 'string' && arg !== sender && !accounts.includes(arg)) {
+            accounts.push(arg)
+          }
+          break
+        case 'asset':
+          if (typeof arg === 'bigint' && !assets.includes(arg)) {
+            assets.push(arg)
+          }
+          break
+        case 'application':
+          if (typeof arg === 'bigint' && arg !== appId && !apps.includes(arg)) {
+            apps.push(arg)
+          }
+          break
+      }
+    }
+  })
+
+  return { accountReferences: accounts, appReferences: apps, assetReferences: assets }
+}
+
+const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
+
+/**
+ * Encode ABI method arguments with tuple packing support
+ */
+function encodeMethodArguments(
+  method: ABIMethod,
+  args: AppMethodCallArgs[],
+  sender: string,
+  appId: bigint,
+  accountReferences: string[],
+  appReferences: bigint[],
+  assetReferences: bigint[],
+): Uint8Array[] {
+  const encodedArgs = new Array<Uint8Array>()
+
+  // Insert method selector at the front
+  encodedArgs.push(method.getSelector())
+
+  // Get ABI types for non-transaction arguments
+  const abiTypes = new Array<ABIType>()
+  const abiValues = new Array<ABIValue>()
+
+  // Process each method argument
+  for (let i = 0; i < method.args.length; i++) {
+    const methodArg = method.args[i]
+    const argValue = args[i]
+
+    if (abiTypeIsTransaction(methodArg.type)) {
+      // Transaction arguments are not ABI encoded - they're handled separately
+      continue
+    }
+
+    if (abiTypeIsReference(methodArg.type)) {
+      // Reference types are encoded as uint8 indexes
+      const referenceType = methodArg.type
+      if (typeof argValue === 'string' || typeof argValue === 'bigint') {
+        const foreignIndex = calculateMethodArgReferenceArrayIndex(
+          argValue,
+          referenceType,
+          sender,
+          appId,
+          accountReferences,
+          appReferences,
+          assetReferences,
+        )
+
+        abiTypes.push(new algosdk.ABIUintType(8))
+        abiValues.push(foreignIndex)
+      } else {
+        throw new Error(`Invalid reference value for ${referenceType}: ${argValue}`)
+      }
+    } else if (argValue !== undefined) {
+      // Regular ABI value
+      abiTypes.push(methodArg.type)
+      abiValues.push(argValue)
+    }
+    // Skip undefined values (transaction placeholders or arc56 default values)
+  }
+
+  if (abiValues.length !== abiTypes.length) {
+    throw new Error('Mismatch in length of non-transaction arguments')
+  }
+
+  // Apply ARC-4 tuple packing for methods with more than 14 arguments
+  // 14 instead of 15 in the ARC-4 because the first argument (method selector) is added separately
+  if (abiTypes.length > ARGS_TUPLE_PACKING_THRESHOLD) {
+    encodedArgs.push(...encodeArgsWithTuplePacking(abiTypes, abiValues))
+  } else {
+    encodedArgs.push(...encodeArgsIndividually(abiTypes, abiValues))
+  }
+
+  return encodedArgs
+}
+
+/**
+ * Calculate array index for ABI reference values
+ */
+function calculateMethodArgReferenceArrayIndex(
+  refValue: string | bigint,
+  referenceType: 'account' | 'asset' | 'application',
+  sender: string,
+  appId: bigint,
+  accountReferences: string[],
+  appReferences: bigint[],
+  assetReferences: bigint[],
+): number {
+  switch (referenceType) {
+    case 'account':
+      if (typeof refValue === 'string') {
+        // If address is the same as sender, use index 0
+        if (refValue === sender) return 0
+        const index = accountReferences.indexOf(refValue)
+        if (index === -1) throw new Error(`Account ${refValue} not found in reference array`)
+        return index + 1
+      }
+      throw new Error('Account reference must be a string')
+    case 'asset':
+      if (typeof refValue === 'bigint') {
+        const index = assetReferences.indexOf(refValue)
+        if (index === -1) throw new Error(`Asset ${refValue} not found in reference array`)
+        return index
+      }
+      throw new Error('Asset reference must be a bigint')
+    case 'application':
+      if (typeof refValue === 'bigint') {
+        // If app ID is the same as the current app, use index 0
+        if (refValue === appId) return 0
+        const index = appReferences.indexOf(refValue)
+        if (index === -1) throw new Error(`Application ${refValue} not found in reference array`)
+        return index + 1
+      }
+      throw new Error('Application reference must be a bigint')
+    default:
+      throw new Error(`Unknown reference type: ${referenceType}`)
+  }
+}
+
+/**
+ * Encode individual ABI values
+ */
+function encodeArgsIndividually(abiTypes: ABIType[], abiValues: ABIValue[]): Uint8Array[] {
+  const encodedArgs: Uint8Array[] = []
+
+  for (let i = 0; i < abiTypes.length; i++) {
+    const abiType = abiTypes[i]
+    const abiValue = abiValues[i]
+    const encoded = abiType.encode(abiValue)
+    encodedArgs.push(encoded)
+  }
+
+  return encodedArgs
+}
+
+/**
+ * Encode ABI values with tuple packing for methods with many arguments
+ */
+function encodeArgsWithTuplePacking(abiTypes: ABIType[], abiValues: ABIValue[]): Uint8Array[] {
+  const encodedArgs: Uint8Array[] = []
+
+  // Encode first 14 arguments individually
+  const first14AbiTypes = abiTypes.slice(0, ARGS_TUPLE_PACKING_THRESHOLD)
+  const first14AbiValues = abiValues.slice(0, ARGS_TUPLE_PACKING_THRESHOLD)
+  encodedArgs.push(...encodeArgsIndividually(first14AbiTypes, first14AbiValues))
+
+  // Pack remaining arguments into tuple at position 15
+  const remainingAbiTypes = abiTypes.slice(ARGS_TUPLE_PACKING_THRESHOLD)
+  const remainingAbiValues = abiValues.slice(ARGS_TUPLE_PACKING_THRESHOLD)
+
+  if (remainingAbiTypes.length > 0) {
+    const tupleType = new algosdk.ABITupleType(remainingAbiTypes)
+    const tupleValue = remainingAbiValues
+    const tupleEncoded = tupleType.encode(tupleValue)
+    encodedArgs.push(tupleEncoded)
+  }
+
+  return encodedArgs
+}
+
+type TransactionHeader = {
+  sender: string
+  fee?: bigint
+  firstValid: bigint
+  lastValid: bigint
+  genesisHash?: Uint8Array
+  genesisId?: string
+  note?: Uint8Array
+  rekeyTo?: string
+  lease?: Uint8Array
+  group?: Uint8Array
+}
+
+// Helper function to convert Address to string
+function addressToString(addr: string | Address): string {
+  return typeof addr === 'string' ? addr : addr.toString()
+}
+
+function optionalAddressToString(addr: string | Address | undefined): string | undefined {
+  if (addr === undefined) return undefined
+  return typeof addr === 'string' ? addr : addr.toString()
 }

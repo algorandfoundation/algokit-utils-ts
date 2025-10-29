@@ -28,7 +28,7 @@
 - remove waitForIndexer
   - DO NOT remove it
 - BIG CHANGE: transaction Id can be changed after sending with composer because the group Id can be added
-
+- ATC was removed as a transaction type in the composer
 - Fee calc inside the txn constructor
 - error messages changed, for example, asset tests
 - `AssetHoldingReference` replaced by `HoldingReference`
