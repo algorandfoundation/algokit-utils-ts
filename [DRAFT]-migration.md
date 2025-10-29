@@ -46,3 +46,5 @@
 - TODO: keep track of the changes we make to algokit_transact to fit with algosdk
 - For integration with lora to work:
   - need to update subscriber to use the new utils and remove algosdk
+- TODO: go ahead with resource/fee on build. Need to have backward compatibility, when resource population is set in send, do it but make sure that it only happens once.
+- TODO: convert transaction to class
