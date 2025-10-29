@@ -1,0 +1,301 @@
+import {
+  encodeSignedTransaction as transactEncodeSignedTransaction,
+  decodeSignedTransaction as transactDecodeSignedTransaction,
+  type SignedTransaction,
+} from '../../algokit_transact'
+import { encodeMsgPack, decodeMsgPack } from './codecs'
+import { toBase64, fromBase64 } from './serialization'
+
+export type BodyFormat = 'json' | 'msgpack'
+
+export interface ScalarFieldType {
+  readonly kind: 'scalar'
+  readonly isBytes?: boolean
+  readonly isBigint?: boolean
+}
+
+export interface CodecFieldType {
+  readonly kind: 'codec'
+  readonly codecKey: string
+}
+
+export interface ModelFieldType {
+  readonly kind: 'model'
+  readonly meta: ModelMetadata | (() => ModelMetadata)
+}
+
+export interface ArrayFieldType {
+  readonly kind: 'array'
+  readonly item: FieldType
+}
+
+export interface RecordFieldType {
+  readonly kind: 'record'
+  readonly value: FieldType
+}
+
+export type FieldType = ScalarFieldType | CodecFieldType | ModelFieldType | ArrayFieldType | RecordFieldType
+
+export interface FieldMetadata {
+  readonly name: string
+  readonly wireKey?: string
+  readonly optional: boolean
+  readonly nullable: boolean
+  readonly type: FieldType
+  /**
+   * If true and the field is a SignedTransaction codec, its encoded map entries
+   * are merged into the parent object (no own wire key).
+   */
+  readonly flattened?: boolean
+}
+
+export type ModelKind = 'object' | 'array' | 'passthrough'
+
+export interface ModelMetadata {
+  readonly name: string
+  readonly kind: ModelKind
+  readonly fields?: readonly FieldMetadata[]
+  readonly arrayItems?: FieldType
+  readonly codecKey?: string
+  readonly additionalProperties?: FieldType
+  readonly passThrough?: FieldType
+}
+
+// Registry for model metadata to avoid direct circular imports between model files
+const modelMetaRegistry = new Map<string, ModelMetadata>()
+
+export function registerModelMeta(name: string, meta: ModelMetadata): void {
+  modelMetaRegistry.set(name, meta)
+}
+
+export function getModelMeta(name: string): ModelMetadata {
+  const meta = modelMetaRegistry.get(name)
+  if (!meta) throw new Error(`Model metadata not registered: ${name}`)
+  return meta
+}
+
+export interface TypeCodec<TValue = unknown> {
+  encode(value: TValue, format: BodyFormat): unknown
+  decode(value: unknown, format: BodyFormat): TValue
+}
+
+const codecRegistry = new Map<string, TypeCodec<unknown>>()
+
+export function registerCodec<T>(key: string, codec: TypeCodec<T>): void {
+  codecRegistry.set(key, codec as TypeCodec<unknown>)
+}
+
+export function getCodec<T = unknown>(key: string): TypeCodec<T> | undefined {
+  return codecRegistry.get(key) as TypeCodec<T> | undefined
+}
+
+export class AlgorandSerializer {
+  static encode(value: unknown, meta: ModelMetadata, format: BodyFormat = 'msgpack'): Uint8Array | string {
+    const wire = this.transform(value, meta, { direction: 'encode', format })
+    if (format === 'msgpack') {
+      return wire instanceof Uint8Array ? wire : encodeMsgPack(wire)
+    }
+    return typeof wire === 'string' ? wire : JSON.stringify(wire)
+  }
+
+  static decode<T>(payload: unknown, meta: ModelMetadata, format: BodyFormat = 'msgpack'): T {
+    let wire: unknown = payload
+    if (format === 'msgpack') {
+      if (payload instanceof Uint8Array) {
+        wire = decodeMsgPack(payload)
+      }
+    } else if (typeof payload === 'string') {
+      wire = JSON.parse(payload)
+    }
+    return this.transform(wire, meta, { direction: 'decode', format }) as T
+  }
+
+  private static transform(value: unknown, meta: ModelMetadata, ctx: TransformContext): unknown {
+    if (value === undefined || value === null) {
+      return value
+    }
+
+    if (meta.codecKey) {
+      return this.applyCodec(value, meta.codecKey, ctx)
+    }
+
+    switch (meta.kind) {
+      case 'object':
+        return this.transformObject(value, meta, ctx)
+      case 'array':
+        return this.transformType(value, { kind: 'array', item: meta.arrayItems ?? { kind: 'scalar' } }, ctx)
+      case 'passthrough':
+      default:
+        return this.transformType(value, meta.passThrough ?? { kind: 'scalar' }, ctx)
+    }
+  }
+
+  private static transformObject(value: unknown, meta: ModelMetadata, ctx: TransformContext): unknown {
+    const fields = meta.fields ?? []
+    const hasFlattenedSignedTxn = fields.some((f) => f.flattened && f.type.kind === 'codec' && f.type.codecKey === 'SignedTransaction')
+    if (ctx.direction === 'encode') {
+      const src = value as Record<string, unknown>
+      const out: Record<string, unknown> = {}
+      for (const field of fields) {
+        const fieldValue = src[field.name]
+        if (fieldValue === undefined) continue
+        const encoded = this.transformType(fieldValue, field.type, ctx)
+        if (encoded === undefined && fieldValue === undefined) continue
+        if (field.flattened && field.type.kind === 'codec' && field.type.codecKey === 'SignedTransaction') {
+          // Merge signed transaction map into parent
+          const mapValue = encoded as Record<string, unknown>
+          for (const [k, v] of Object.entries(mapValue ?? {})) out[k] = v
+          continue
+        }
+        if (field.wireKey) out[field.wireKey] = encoded
+      }
+      if (meta.additionalProperties) {
+        for (const [key, val] of Object.entries(src)) {
+          if (fields.some((f) => f.name === key)) continue
+          out[key] = this.transformType(val, meta.additionalProperties, ctx)
+        }
+      }
+      return out
+    }
+
+    const src = value as Record<string, unknown>
+    const out: Record<string, unknown> = {}
+    const fieldByWire = new Map(fields.filter((f) => !!f.wireKey).map((field) => [field.wireKey as string, field]))
+
+    for (const [wireKey, wireValue] of Object.entries(src)) {
+      const field = fieldByWire.get(wireKey)
+      if (field) {
+        const decoded = this.transformType(wireValue, field.type, ctx)
+        out[field.name] = decoded
+        continue
+      }
+      if (meta.additionalProperties) {
+        out[wireKey] = this.transformType(wireValue, meta.additionalProperties, ctx)
+        continue
+      }
+      // If we have a flattened SignedTransaction, skip unknown keys (e.g., 'sig', 'txn')
+      if (!hasFlattenedSignedTxn) {
+        out[wireKey] = wireValue
+      }
+    }
+
+    // If there are flattened fields, attempt to reconstruct them from remaining keys by decoding
+    for (const field of fields) {
+      if (out[field.name] !== undefined) continue
+      if (field.flattened && field.type.kind === 'codec' && field.type.codecKey === 'SignedTransaction') {
+        // Reconstruct from entire object map
+        out[field.name] = this.applyCodec(src, 'SignedTransaction', ctx)
+      }
+    }
+
+    return out
+  }
+
+  private static transformType(value: unknown, type: FieldType, ctx: TransformContext): unknown {
+    if (value === undefined || value === null) return value
+
+    switch (type.kind) {
+      case 'scalar':
+        return this.transformScalar(value, type, ctx)
+      case 'codec':
+        return this.applyCodec(value, type.codecKey, ctx)
+      case 'model':
+        return this.transform(value, typeof type.meta === 'function' ? type.meta() : type.meta, ctx)
+      case 'array':
+        if (!Array.isArray(value)) return value
+        return value.map((item) => this.transformType(item, type.item, ctx))
+      case 'record':
+        if (typeof value !== 'object' || value === null) return value
+        return Object.fromEntries(
+          Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, this.transformType(v, type.value, ctx)]),
+        )
+      default:
+        return value
+    }
+  }
+
+  private static transformScalar(value: unknown, meta: ScalarFieldType, ctx: TransformContext): unknown {
+    if (ctx.direction === 'encode') {
+      if (meta.isBytes && ctx.format === 'json') {
+        if (value instanceof Uint8Array) return toBase64(value)
+      }
+      if (meta.isBigint && ctx.format === 'json') {
+        if (typeof value === 'bigint') return value.toString()
+        if (typeof value === 'number') return Math.trunc(value).toString()
+        if (typeof value === 'string') return value
+      }
+      return value
+    }
+
+    if (meta.isBytes && ctx.format === 'json' && typeof value === 'string') {
+      return fromBase64(value)
+    }
+
+    if (meta.isBigint) {
+      if (typeof value === 'string') {
+        try {
+          return BigInt(value)
+        } catch {
+          return value
+        }
+      }
+      if (typeof value === 'number' && Number.isInteger(value)) {
+        return BigInt(value)
+      }
+    }
+
+    return value
+  }
+
+  private static applyCodec(value: unknown, codecKey: string, ctx: TransformContext): unknown {
+    const codec = codecRegistry.get(codecKey)
+    if (!codec) {
+      throw new Error(`Codec for "${codecKey}" is not registered`)
+    }
+    return ctx.direction === 'encode' ? codec.encode(value, ctx.format) : codec.decode(value, ctx.format)
+  }
+}
+
+type TransformDirection = 'encode' | 'decode'
+
+interface TransformContext {
+  readonly direction: TransformDirection
+  readonly format: BodyFormat
+}
+
+const encodeSignedTransactionImpl = (value: unknown): Uint8Array => transactEncodeSignedTransaction(value as SignedTransaction)
+const decodeSignedTransactionImpl = (value: Uint8Array): SignedTransaction => transactDecodeSignedTransaction(value)
+
+class SignedTransactionCodec implements TypeCodec<unknown> {
+  encode(value: unknown, format: BodyFormat): unknown {
+    if (value == null) return value
+    if (format === 'json') {
+      if (value instanceof Uint8Array) return toBase64(value)
+      return toBase64(encodeSignedTransactionImpl(value))
+    }
+    if (value instanceof Uint8Array) {
+      // Already canonical bytes; decode to structured map so parent encoding keeps map semantics
+      return decodeMsgPack(value)
+    }
+    // Convert signed transaction object into canonical map representation
+    return decodeMsgPack(encodeSignedTransactionImpl(value))
+  }
+
+  decode(value: unknown, format: BodyFormat): unknown {
+    if (value == null) return value
+    if (format === 'json') {
+      if (typeof value === 'string') return decodeSignedTransactionImpl(fromBase64(value))
+      if (value instanceof Uint8Array) return decodeSignedTransactionImpl(value)
+      return value
+    }
+    if (value instanceof Uint8Array) return decodeSignedTransactionImpl(value)
+    // Value is a decoded map; re-encode to bytes before handing to transact decoder
+    try {
+      return decodeSignedTransactionImpl(encodeMsgPack(value))
+    } catch {
+      return value
+    }
+  }
+}
+
+registerCodec('SignedTransaction', new SignedTransactionCodec())
