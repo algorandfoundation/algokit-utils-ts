@@ -1,5 +1,5 @@
 {
-  "name": "@algorandfoundation/indexer-client",
+  "name": "@algorandfoundation/algokit-indexer-client",
   "version": "0.1.0",
   "private": true,
   "description": "Client library for interacting with algod.",
@@ -27,7 +27,7 @@
     "lint:fix": "eslint ./src/ --fix",
     "check-types": "tsc --noEmit",
     "audit": "better-npm-audit audit",
-    "format": "prettier --config ../.prettierrc.cjs --ignore-path ../../../.prettierignore --write .",
+    "format": "prettier --config ../../.prettierrc.cjs --ignore-path ../../.prettierignore --write .",
     "pre-commit": "run-s check-types lint:fix audit format test"
   },
   "dependencies": {},
