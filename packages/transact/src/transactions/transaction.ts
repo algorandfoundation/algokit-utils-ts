@@ -623,12 +623,12 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       })
     }
     txDto.apaa = bytesArrayCodec.encode(transaction.applicationCall.args ?? [])
-    txDto.apat = addressArrayCodec.encode(transaction.applicationCall.accountReferences ?? [])
-    txDto.apfa = bigIntArrayCodec.encode(transaction.applicationCall.appReferences ?? [])
-    txDto.apas = bigIntArrayCodec.encode(transaction.applicationCall.assetReferences ?? [])
+    txDto.apat = addressArrayCodec.encode(transaction.applicationCall.accounts ?? [])
+    txDto.apfa = bigIntArrayCodec.encode(transaction.applicationCall.foreignApps ?? [])
+    txDto.apas = bigIntArrayCodec.encode(transaction.applicationCall.foreignAssets ?? [])
     // Encode box references
-    if (transaction.applicationCall.boxReferences && transaction.applicationCall.boxReferences.length > 0) {
-      txDto.apbx = transaction.applicationCall.boxReferences.map((box) => ({
+    if (transaction.applicationCall.boxes && transaction.applicationCall.boxes.length > 0) {
+      txDto.apbx = transaction.applicationCall.boxes.map((box) => ({
         i: bigIntCodec.encode(box.appIndex),
         n: bytesCodec.encode(box.name),
       }))
@@ -889,11 +889,11 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
         approvalProgram: bytesCodec.decodeOptional(transactionDto.apap),
         clearStateProgram: bytesCodec.decodeOptional(transactionDto.apsu),
         args: transactionDto.apaa?.map((arg) => bytesCodec.decode(arg)),
-        accountReferences: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
-        appReferences: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
-        assetReferences: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
-        boxReferences: transactionDto.apbx?.map((box) => ({
-          appId: bigIntCodec.decode(box.i),
+        accounts: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
+        foreignApps: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
+        foreignAssets: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
+        boxes: transactionDto.apbx?.map((box) => ({
+          appIndex: bigIntCodec.decode(box.i),
           name: bytesCodec.decode(box.n),
         })),
         access: transactionDto.al

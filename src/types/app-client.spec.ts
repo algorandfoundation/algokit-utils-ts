@@ -537,12 +537,12 @@ describe('application-client', () => {
     const call = await client.call({
       method: 'call_abi',
       methodArgs: ['test'],
-      boxes: [{ appIndex: 0, name: '1' }],
+      boxes: [{ appId: 0, name: '1' }],
       sendParams: { skipSending: true },
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.applicationCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
+    expect(call.transaction.applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {

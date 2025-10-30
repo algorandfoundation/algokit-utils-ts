@@ -177,6 +177,10 @@ function _getAccountAddress(account: string | algosdk.Address) {
 export function _getBoxReference(box: LegacyBoxIdentifier | LegacyBoxReference | TransactBoxReference): TransactBoxReference {
   const encoder = new TextEncoder()
 
+  if (typeof box === 'object' && 'appIndex' in box) {
+    return box
+  }
+
   const ref = typeof box === 'object' && 'appId' in box ? box : { appId: 0, name: box }
   return {
     appIndex: ref.appId,

@@ -972,8 +972,8 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
         .send({ populateAppCallResources: true })
 
-      const v8CallAccts = transactions[0].applicationCall?.accountReferences ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accountReferences ?? []
+      const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
+      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
 
       expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
     })
@@ -996,8 +996,8 @@ describe('Resource population: Mixed', () => {
         )
         .send({ populateAppCallResources: true })
 
-      const v8CallApps = transactions[0].applicationCall?.appReferences ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accountReferences ?? []
+      const v8CallApps = transactions[0].applicationCall?.foreignApps ?? []
+      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
 
       expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
     })
@@ -1106,7 +1106,7 @@ describe('Resource population: meta', () => {
     })
     const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
-    expect(res.transaction.applicationCall?.accountReferences?.length || 0).toBe(0)
+    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
   })
 
   test('rekeyed account', async () => {
@@ -1127,7 +1127,7 @@ describe('Resource population: meta', () => {
       method: 'senderAssetBalance',
     })
 
-    expect(res.transaction.applicationCall?.accountReferences?.length || 0).toBe(0)
+    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
   })
 
   test('create box in new app', async () => {
@@ -1141,7 +1141,7 @@ describe('Resource population: meta', () => {
       staticFee: (4_000).microAlgo(),
     })
 
-    const boxRef = result.transaction.applicationCall?.boxReferences?.[0]
+    const boxRef = result.transaction.applicationCall?.boxes?.[0]
     expect(boxRef).toBeDefined()
     expect(boxRef?.appIndex).toBe(0n)
   })
@@ -1198,19 +1198,19 @@ describe('Resource population: meta', () => {
       for (const txnWithSigner of populatedAtc.buildGroup()) {
         const txn = txnWithSigner.txn
 
-        for (const acct of txn.applicationCall?.accountReferences ?? []) {
+        for (const acct of txn.applicationCall?.accounts ?? []) {
           resources.push(acct.toString())
         }
 
-        for (const asset of txn.applicationCall?.assetReferences ?? []) {
+        for (const asset of txn.applicationCall?.foreignAssets ?? []) {
           resources.push(asset.toString())
         }
 
-        for (const app of txn.applicationCall?.appReferences ?? []) {
+        for (const app of txn.applicationCall?.foreignApps ?? []) {
           resources.push(app.toString())
         }
 
-        for (const box of txn.applicationCall?.boxReferences ?? []) {
+        for (const box of txn.applicationCall?.boxes ?? []) {
           resources.push(`${box.appIndex}-${box.name.toString()}`)
         }
       }

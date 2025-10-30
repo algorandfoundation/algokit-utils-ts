@@ -86,13 +86,13 @@ export type AppCallTransactionFields = {
    * List of accounts in addition to the sender that may be accessed
    * from the app's approval program and clear state program.
    */
-  accountReferences?: string[]
+  accounts?: string[]
 
   /**
    * List of apps in addition to the current app that may be called
    * from the app's approval program and clear state program.
    */
-  appReferences?: bigint[]
+  foreignApps?: bigint[]
 
   /**
    * Lists the assets whose parameters may be accessed by this app's
@@ -100,12 +100,12 @@ export type AppCallTransactionFields = {
    *
    * The access is read-only.
    */
-  assetReferences?: bigint[]
+  foreignAssets?: bigint[]
 
   /**
    * The boxes that should be made available for the runtime of the program.
    */
-  boxReferences?: BoxReference[]
+  boxes?: BoxReference[]
 
   /**
    * Resources accessed by the application
@@ -438,36 +438,36 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     }
   }
 
-  if (appCall.accountReferences && appCall.accountReferences.length > MAX_ACCOUNT_REFERENCES) {
+  if (appCall.accounts && appCall.accounts.length > MAX_ACCOUNT_REFERENCES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
       data: {
         field: 'Account references',
-        actual: appCall.accountReferences.length,
+        actual: appCall.accounts.length,
         max: MAX_ACCOUNT_REFERENCES,
         unit: 'refs',
       },
     })
   }
 
-  if (appCall.appReferences && appCall.appReferences.length > MAX_APP_REFERENCES) {
+  if (appCall.foreignApps && appCall.foreignApps.length > MAX_APP_REFERENCES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
       data: {
         field: 'App references',
-        actual: appCall.appReferences.length,
+        actual: appCall.foreignApps.length,
         max: MAX_APP_REFERENCES,
         unit: 'refs',
       },
     })
   }
 
-  if (appCall.assetReferences && appCall.assetReferences.length > MAX_ASSET_REFERENCES) {
+  if (appCall.foreignAssets && appCall.foreignAssets.length > MAX_ASSET_REFERENCES) {
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
       data: {
         field: 'Asset references',
-        actual: appCall.assetReferences.length,
+        actual: appCall.foreignAssets.length,
         max: MAX_ASSET_REFERENCES,
         unit: 'refs',
       },
@@ -475,13 +475,13 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
   }
 
   // Validate box references
-  if (appCall.boxReferences) {
-    if (appCall.boxReferences.length > MAX_BOX_REFERENCES) {
+  if (appCall.boxes) {
+    if (appCall.boxes.length > MAX_BOX_REFERENCES) {
       errors.push({
         type: TransactionValidationErrorType.FieldTooLong,
         data: {
           field: 'Box references',
-          actual: appCall.boxReferences.length,
+          actual: appCall.boxes.length,
           max: MAX_BOX_REFERENCES,
           unit: 'refs',
         },
@@ -489,8 +489,8 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     }
 
     // Validate that box reference app IDs are in app references
-    const appRefs = appCall.appReferences || []
-    for (const boxRef of appCall.boxReferences) {
+    const appRefs = appCall.foreignApps || []
+    for (const boxRef of appCall.boxes) {
       if (boxRef.appIndex !== 0n && boxRef.appIndex !== appCall.appId && !appRefs.includes(boxRef.appIndex)) {
         errors.push({
           type: TransactionValidationErrorType.ArbitraryConstraint,
@@ -502,10 +502,10 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
 
   // Validate overall reference count
   const totalReferences =
-    (appCall.accountReferences?.length || 0) +
-    (appCall.appReferences?.length || 0) +
-    (appCall.assetReferences?.length || 0) +
-    (appCall.boxReferences?.length || 0)
+    (appCall.accounts?.length || 0) +
+    (appCall.foreignApps?.length || 0) +
+    (appCall.foreignAssets?.length || 0) +
+    (appCall.boxes?.length || 0)
 
   if (totalReferences > MAX_OVERALL_REFERENCES) {
     errors.push({

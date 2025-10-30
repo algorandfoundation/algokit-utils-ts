@@ -506,7 +506,7 @@ export function makeApplicationCallTxnFromObject({
   const boxReferences = access2
     ? undefined
     : boxes?.map((box) => ({
-        appId: ensureBigInt(box.appIndex) || BigInt(0),
+        appIndex: ensureBigInt(box.appIndex) || BigInt(0),
         name: box.name,
       }))
 
@@ -542,10 +542,10 @@ export function makeApplicationCallTxnFromObject({
       extraProgramPages: extraPages !== undefined ? Number(extraPages) : undefined,
       args: appArgs,
       // Only pass legacy foreign arrays if access is not provided
-      accountReferences: access2 ? undefined : accountReferences,
-      assetReferences: access2 ? undefined : assetReferences,
-      appReferences: access2 ? undefined : appReferences,
-      boxReferences: access2 ? undefined : boxReferences,
+      accounts: access2 ? undefined : accountReferences,
+      foreignAssets: access2 ? undefined : assetReferences,
+      foreignApps: access2 ? undefined : appReferences,
+      boxes: access2 ? undefined : boxReferences,
       access: access2,
     },
   }

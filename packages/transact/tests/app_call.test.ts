@@ -408,9 +408,9 @@ describe('App Call', () => {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.NoOp,
             args: [new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6])],
-            accountReferences: ['ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK'],
-            appReferences: [456n, 789n],
-            assetReferences: [101112n, 131415n],
+            accounts: ['ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK'],
+            foreignApps: [456n, 789n],
+            foreignAssets: [101112n, 131415n],
           },
         }
 
@@ -523,7 +523,7 @@ describe('App Call', () => {
           applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
-            accountReferences: manyAccounts,
+            accounts: manyAccounts,
           },
         }
 
@@ -540,7 +540,7 @@ describe('App Call', () => {
           applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
-            appReferences: manyApps,
+            foreignApps: manyApps,
           },
         }
 
@@ -557,7 +557,7 @@ describe('App Call', () => {
           applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
-            assetReferences: manyAssets,
+            foreignAssets: manyAssets,
           },
         }
 
@@ -580,9 +580,9 @@ describe('App Call', () => {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             args: maxArgs,
-            accountReferences: maxAccounts,
-            appReferences: maxApps,
-            assetReferences: maxAssets,
+            accounts: maxAccounts,
+            foreignApps: maxApps,
+            foreignAssets: maxAssets,
           },
         }
 
