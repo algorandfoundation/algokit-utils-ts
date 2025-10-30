@@ -149,7 +149,8 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
           ? { txn: (await a).transaction, signer }
           : 'transaction' in a
             ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
-            : 'type' in a
+            : // TODO: PD - revert this after the transaction class is done
+              'type' in a
               ? { txn: a, signer }
               : a
     }),

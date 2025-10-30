@@ -50,7 +50,7 @@ export function createMultisigTransaction(txn: Transaction, { version, threshold
   }
 
   const signedTxn: SignedTransaction = {
-    transaction: txn,
+    txn: txn,
     multiSignature,
     authAddress,
   }
@@ -177,7 +177,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   if (!refSigTx.multiSignature) {
     throw new Error('Invalid multisig transaction, multisig structure missing at index 0')
   }
-  const refTxID = getTransactionId(refSigTx.transaction)
+  const refTxID = getTransactionId(refSigTx.txn)
   const refAuthAddr = refSigTx.authAddress
   const refPreImage = {
     version: refSigTx.multiSignature.version,
@@ -193,7 +193,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
       throw new Error(`Invalid multisig transaction, multisig structure missing at index ${i}`)
     }
 
-    if (getTransactionId(unisig.transaction) !== refTxID) {
+    if (getTransactionId(unisig.txn) !== refTxID) {
       throw new Error(MULTISIG_MERGE_MISMATCH_ERROR_MSG)
     }
 
@@ -235,7 +235,7 @@ export function mergeMultisigTransactions(multisigTxnBlobs: Uint8Array[]) {
   }
 
   const signedTxn: SignedTransaction = {
-    transaction: refSigTx.transaction,
+    txn: refSigTx.txn,
     multiSignature,
     authAddress: refAuthAddr,
   }
@@ -284,9 +284,9 @@ export function appendSignMultisigTransaction(
   const pks = pksFromAddresses(addrs)
   // obtain underlying txn, sign it, and merge it
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
-  const partialSignedBlob = partialSignTxn(multisigTxObj.transaction, { version, threshold, pks }, sk)
+  const partialSignedBlob = partialSignTxn(multisigTxObj.txn, { version, threshold, pks }, sk)
   return {
-    txID: getTransactionId(multisigTxObj.transaction),
+    txID: getTransactionId(multisigTxObj.txn),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }
@@ -311,9 +311,9 @@ export function appendSignRawMultisigSignature(
   const pks = pksFromAddresses(addrs)
   // obtain underlying txn, sign it, and merge it
   const multisigTxObj = decodeSignedTransaction(multisigTxnBlob)
-  const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.transaction, { version, threshold, pks }, signerAddr, signature)
+  const partialSignedBlob = partialSignWithMultisigSignature(multisigTxObj.txn, { version, threshold, pks }, signerAddr, signature)
   return {
-    txID: getTransactionId(multisigTxObj.transaction),
+    txID: getTransactionId(multisigTxObj.txn),
     blob: mergeMultisigTransactions([multisigTxnBlob, partialSignedBlob]),
   }
 }

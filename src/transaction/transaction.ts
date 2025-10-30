@@ -383,7 +383,7 @@ async function getGroupExecutionInfo(
             return itxns.reverse().reduce((acc, itxn) => {
               const currentFeeDelta =
                 (itxn.innerTxns && itxn.innerTxns.length > 0 ? calculateInnerFeeDelta(itxn.innerTxns, acc) : acc) +
-                (minTxnFee - (itxn.txn.transaction.fee ?? 0n)) // Inner transactions don't require per byte fees
+                (minTxnFee - (itxn.txn.txn.fee ?? 0n)) // Inner transactions don't require per byte fees
               return currentFeeDelta < 0n ? 0n : currentFeeDelta
             }, acc)
           }

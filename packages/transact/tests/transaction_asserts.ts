@@ -18,7 +18,7 @@ import { TransactionTestData } from './common'
 
 export const assertExample = async (label: string, testData: TransactionTestData) => {
   const signedTxn: SignedTransaction = {
-    transaction: testData.transaction,
+    txn: testData.transaction,
     signature: await ed.signAsync(encodeTransaction(testData.transaction), testData.signingPrivateKey),
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)
@@ -48,7 +48,7 @@ export const assertDecodeWithPrefix = (label: string, testData: TransactionTestD
 export const assertEncodeWithAuthAddress = async (label: string, testData: TransactionTestData) => {
   const sig = await ed.signAsync(testData.unsignedBytes, testData.signingPrivateKey)
   const signedTxn: SignedTransaction = {
-    transaction: testData.transaction,
+    txn: testData.transaction,
     signature: sig,
     authAddress: testData.rekeyedSenderAuthAddress,
   }
@@ -60,7 +60,7 @@ export const assertEncodeWithAuthAddress = async (label: string, testData: Trans
 export const assertEncodeWithSignature = async (label: string, testData: TransactionTestData) => {
   const sig = await ed.signAsync(testData.unsignedBytes, testData.signingPrivateKey)
   const signedTxn: SignedTransaction = {
-    transaction: testData.transaction,
+    txn: testData.transaction,
     signature: sig,
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)
@@ -96,7 +96,7 @@ export const assertMultisigExample = async (label: string, testData: Transaction
   const multisigSignature = mergeMultisignatures(multisigSignature0, multisigSignature1)
 
   const signedTxn: SignedTransaction = {
-    transaction: testData.transaction,
+    txn: testData.transaction,
     multiSignature: multisigSignature,
   }
   const encodedSignedTxn = encodeSignedTransaction(signedTxn)

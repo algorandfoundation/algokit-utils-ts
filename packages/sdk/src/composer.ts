@@ -530,7 +530,7 @@ export class AtomicTransactionComposer {
 
     const txIDs = signedTxns.map((stxn, index) => {
       try {
-        return getTransactionId(decodeSignedTransaction(stxn).transaction)
+        return getTransactionId(decodeSignedTransaction(stxn).txn)
       } catch (err) {
         throw new Error(`Cannot decode signed transaction at index ${index}. ${err}`)
       }

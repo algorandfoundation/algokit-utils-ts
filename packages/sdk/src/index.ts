@@ -31,7 +31,7 @@ export function signTransaction(txn: Transaction, sk: Uint8Array) {
   const signature = nacl.sign(bytesToSign, sk)
 
   const signedTxn: SignedTransaction = {
-    transaction: txn,
+    txn: txn,
     signature,
   }
 

@@ -34,13 +34,13 @@ describe('Transfer capability', () => {
     const accountInfo = await algorand.account.getInformation(secondAccount)
 
     expect(result.transaction.type).toBe(TransactionType.pay)
-    expect(result.confirmation.txn.transaction.type).toBe('pay')
+    expect(result.confirmation.txn.txn.type).toBe('pay')
 
     expect(result.transaction.payment?.amount).toBe(5_000_000n)
-    expect(result.confirmation.txn.transaction.payment?.amount).toBe(5_000_000n)
+    expect(result.confirmation.txn.txn.payment?.amount).toBe(5_000_000n)
 
     expect(result.transaction.sender.toString()).toBe(testAccount.toString())
-    expect(result.confirmation.txn.transaction.sender.toString()).toBe(testAccount.toString())
+    expect(result.confirmation.txn.txn.sender.toString()).toBe(testAccount.toString())
 
     expect(accountInfo.balance.microAlgo).toBe(5_000_000n)
   })
@@ -261,7 +261,7 @@ describe('Transfer capability', () => {
     })
 
     invariant(result)
-    const resultReceiver = result.confirmation.txn.transaction.sender
+    const resultReceiver = result.confirmation.txn.txn.sender
     expect(resultReceiver.toString()).toBe(dispenser.toString())
     const accountInfo = await algorand.account.getInformation(secondAccount)
     expect(accountInfo.balance.algo).toBe(1)

@@ -40,7 +40,7 @@ describe('transaction', () => {
     const { algorand } = localnet.context
     const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), maxFee: (1_000_000).microAlgo() })
 
-    expect(confirmation?.txn.transaction.fee).toBe(1000n)
+    expect(confirmation?.txn.txn.fee).toBe(1000n)
   })
 
   test('Transaction fee is overridable', async () => {
@@ -48,7 +48,7 @@ describe('transaction', () => {
     const fee = (1).algo()
     const { confirmation } = await algorand.send.payment({ ...getTestTransaction(), staticFee: fee })
 
-    expect(confirmation.txn.transaction.fee).toBe(fee.microAlgo)
+    expect(confirmation.txn.txn.fee).toBe(fee.microAlgo)
   })
 
   test('Transaction group is sent', async () => {
@@ -59,15 +59,15 @@ describe('transaction', () => {
       confirmations,
     } = await algorand.newGroup().addPayment(getTestTransaction((1).microAlgo())).addPayment(getTestTransaction((2).microAlgo())).send()
 
-    invariant(confirmations[0].txn.transaction.group)
-    invariant(confirmations[1].txn.transaction.group)
+    invariant(confirmations[0].txn.txn.group)
+    invariant(confirmations[1].txn.txn.group)
     invariant(txn1.group)
     invariant(txn2.group)
     expect(confirmations.length).toBe(2)
     expect(confirmations[0].confirmedRound).toBeGreaterThanOrEqual(txn1.firstValid)
     expect(confirmations[1].confirmedRound).toBeGreaterThanOrEqual(txn2.firstValid)
-    expect(Buffer.from(confirmations[0].txn.transaction.group).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
-    expect(Buffer.from(confirmations[1].txn.transaction.group).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
+    expect(Buffer.from(confirmations[0].txn.txn.group).toString('hex')).toBe(Buffer.from(txn1.group).toString('hex'))
+    expect(Buffer.from(confirmations[1].txn.txn.group).toString('hex')).toBe(Buffer.from(txn2.group).toString('hex'))
   })
 
   test('Multisig single account', async () => {

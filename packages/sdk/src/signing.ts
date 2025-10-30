@@ -34,7 +34,7 @@ function signLogicSigTransactionWithAddress(txn: Transaction, lsig: LogicSig, ls
   }
 
   const signedTxn: SignedTransaction = {
-    transaction: txn,
+    txn: txn,
     logicSignature,
     authAddress,
   }

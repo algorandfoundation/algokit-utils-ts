@@ -1,7 +1,7 @@
-import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { AlgodClient } from '@algorandfoundation/algod-client'
-import { Config } from '../config'
+import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
+import { Config } from '../config'
 import { runWhenIndexerCaughtUp } from './indexer'
 import Indexer = algosdk.Indexer
 
@@ -15,10 +15,10 @@ export class TransactionLogger {
 
   private _pushTxn(stxn: Uint8Array) {
     const decoded = decodeSignedTransaction(stxn)
-    if (decoded.transaction.lastValid > (this._latestLastValidRound ?? BigInt(0))) {
-      this._latestLastValidRound = decoded.transaction.lastValid
+    if (decoded.txn.lastValid > (this._latestLastValidRound ?? BigInt(0))) {
+      this._latestLastValidRound = decoded.txn.lastValid
     }
-    this._sentTransactionIds.push(getTransactionId(decoded.transaction))
+    this._sentTransactionIds.push(getTransactionId(decoded.txn))
   }
 
   /**
@@ -85,6 +85,7 @@ class TransactionLoggingAlgodClientProxyHandler implements ProxyHandler<AlgodCli
     this.transactionLogger = transactionLogger
   }
 
+  // TODO: PD - restore this logic
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get(target: AlgodClient, property: string | symbol, receiver: any) {
     if (property === 'rawTransaction') {

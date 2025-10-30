@@ -1,4 +1,4 @@
-import { SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig, AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient, SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '@algorandfoundation/algod-client'
 import * as algosdk from '@algorandfoundation/sdk'
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 
@@ -32,7 +32,7 @@ export async function performAtomicTransactionComposerSimulate(
     txnGroups: [
       {
         txns: transactionsWithSigners.map((txn) => ({
-          transaction: txn.txn,
+          txn: txn.txn,
           signature: new Uint8Array(64), // TODO: PD - make an empty signer to do this
         })),
       } satisfies SimulateRequestTransactionGroup,
