@@ -10,6 +10,7 @@ import { Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
+import { appendSignMultisigTransaction, signMultisigTransaction } from '@algorandfoundation/sdk/src/multisigSigning'
 import { AlgoAmount } from './amount'
 import MultisigMetadata = algosdk.MultisigMetadata
 import TransactionSigner = algosdk.TransactionSigner
@@ -69,9 +70,9 @@ export class MultisigAccount {
     let signedTxn = 'sender' in transaction ? undefined : transaction
     for (const signer of this._signingAccounts) {
       if (signedTxn) {
-        signedTxn = algosdk.appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
+        signedTxn = appendSignMultisigTransaction(signedTxn, this._params, signer.sk).blob
       } else {
-        signedTxn = algosdk.signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
+        signedTxn = signMultisigTransaction(transaction as Transaction, this._params, signer.sk).blob
       }
     }
     return signedTxn!

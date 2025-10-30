@@ -1,4 +1,3 @@
-import * as algosdk from '@algorandfoundation/sdk'
 import { AlgodClient } from '@algorandfoundation/algod-client'
 import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetailsById, ApplicationClient } from './types/app-client'
 

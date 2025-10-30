@@ -1,7 +1,6 @@
 import { AlgodClient } from '@algorandfoundation/algod-client'
-import { Config } from '../config'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
+import { Config } from '../config'
 import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
 import { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE, TransactionComposer } from './composer'

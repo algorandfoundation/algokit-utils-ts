@@ -1,8 +1,8 @@
 import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algod-client'
 import { Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
-import { Config } from '../config'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, Address, SdkTransactionParams } from '@algorandfoundation/sdk'
+import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
@@ -534,7 +534,7 @@ type TransactionWithSignerAndContext = algosdk.TransactionWithSigner & Transacti
 /** Set of transactions built by `TransactionComposer`. */
 export interface BuiltTransactions {
   /** The built transactions */
-  transactions: algosdk.Transaction[]
+  transactions: Transaction[]
   /** Any `ABIMethod` objects associated with any of the transactions in a map keyed by transaction index. */
   methodCalls: Map<number, algosdk.ABIMethod>
   /** Any `TransactionSigner` objects associated with any of the transactions in a map keyed by transaction index. */
@@ -1455,11 +1455,11 @@ export class TransactionComposer {
     // We are going to mutate suggested params, let's create a clone first
     txnParams.suggestedParams = { ...txnParams.suggestedParams }
 
-    if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies algosdk.Transaction['lease']
-    if (params.rekeyTo) txnParams.rekeyTo = params.rekeyTo.toString() satisfies algosdk.Transaction['rekeyTo']
+    if (params.lease) txnParams.lease = encodeLease(params.lease)! satisfies Transaction['lease']
+    if (params.rekeyTo) txnParams.rekeyTo = params.rekeyTo.toString() satisfies Transaction['rekeyTo']
     const encoder = new TextEncoder()
     if (params.note)
-      txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies algosdk.Transaction['note']
+      txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies Transaction['note']
 
     if (params.firstValidRound) {
       txnParams.suggestedParams.firstRound = params.firstValidRound
@@ -1927,7 +1927,7 @@ export class TransactionComposer {
       lastRound: suggestedParams.lastRound + 1000n,
     }
 
-    const transactions: algosdk.Transaction[] = []
+    const transactions: Transaction[] = []
     const methodCalls = new Map<number, algosdk.ABIMethod>()
     const signers = new Map<number, algosdk.TransactionSigner>()
 

@@ -1,21 +1,9 @@
+import type { SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
+import { encodeSignedTransaction, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as convert from './convert'
 import { Address } from './encoding/address'
 import * as nacl from './nacl/naclWrappers'
 import * as utils from './utils/utils'
-// Import Transaction and SignedTransaction from algokit_transact
-import type { SignedTransaction, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import {
-  assignFee,
-  calculateFee,
-  decodeSignedTransaction as decodeSignedTxn,
-  decodeTransaction,
-  encodeSignedTransaction,
-  encodeTransaction,
-  encodeTransactionRaw,
-  getTransactionId,
-  getTransactionIdRaw,
-  groupTransactions,
-} from '@algorandfoundation/algokit-transact'
 
 const SIGN_BYTES_PREFIX = Uint8Array.from([77, 88]) // "MX"
 
@@ -110,30 +98,8 @@ export {
   seedFromMnemonic,
 } from './mnemonic/mnemonic'
 export * from './multisig'
-export {
-  appendSignMultisigTransaction,
-  appendSignRawMultisigSignature,
-  createMultisigTransaction,
-  mergeMultisigTransactions,
-  signMultisigTransaction,
-} from './multisigSigning'
-// Re-export Transaction and SignedTransaction types and functions from algokit_transact
-export {
-  assignFee,
-  calculateFee,
-  decodeTransaction,
-  encodeSignedTransaction,
-  encodeTransaction,
-  encodeTransactionRaw,
-  getTransactionId,
-  getTransactionIdRaw,
-  groupTransactions,
-}
-export type { SignedTransaction, Transaction, TransactionType }
-// Export decodeSignedTransaction with original name
-export { decodeSignedTxn as decodeSignedTransaction }
 
-// TODO: encodeUnsignedSimulateTransaction needs to be implemented or replaced
+// TODO: PD - fix this encodeUnsignedSimulateTransaction needs to be implemented or replaced
 // For now, create a wrapper function
 export function encodeUnsignedSimulateTransaction(txn: Transaction): Uint8Array {
   return encodeTransaction(txn)
@@ -142,23 +108,10 @@ export function encodeUnsignedSimulateTransaction(txn: Transaction): Uint8Array 
 export * from './signer'
 export { signLogicSigTransaction, signLogicSigTransactionObject } from './signing'
 export * from './stateproof'
-// Re-export transaction-related types from algokit_transact
-export type {
-  AppCallTransactionFields as ApplicationTransactionFields,
-  AssetConfigTransactionFields,
-  AssetFreezeTransactionFields,
-  AssetTransferTransactionFields,
-  KeyRegistrationTransactionFields,
-  PaymentTransactionFields,
-} from '@algorandfoundation/algokit-transact'
 export * from './types/account'
 export type { default as Account } from './types/account'
-// Block types are now provided by ../algod_client
-// export * from './types/block'
 export * from './types/intDecoding'
 export { default as IntDecoding } from './types/intDecoding'
-// StateDelta types depend on old block.ts encoding - use algod_client models instead
-// export * from './types/statedelta'
 export * from './types/transactions/index'
 export * from './utils/utils'
 export { waitForConfirmation } from './wait'

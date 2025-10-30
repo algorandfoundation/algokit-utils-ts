@@ -1,4 +1,3 @@
-import * as algosdk from '@algorandfoundation/sdk'
 import { AlgodClient } from '@algorandfoundation/algod-client'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'

@@ -1,5 +1,7 @@
 import { AlgodClient, TransactionParams } from '@algorandfoundation/algod-client'
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -14,8 +16,6 @@ import {
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
 import { Config } from '../config'
-import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { asJson, binaryStartsWith } from '../util'
@@ -1579,7 +1579,7 @@ export class AppClient {
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
-  private handleCallErrors = async (e: Error & { sentTransactions?: algosdk.Transaction[] }) => {
+  private handleCallErrors = async (e: Error & { sentTransactions?: Transaction[] }) => {
     // We can't use the app ID in an error to identify new apps, so instead we check the programs
     // to identify if this is the correct app
     if (this.appId === 0n) {

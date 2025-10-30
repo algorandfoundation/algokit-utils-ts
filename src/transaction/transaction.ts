@@ -367,7 +367,7 @@ async function getGroupExecutionInfo(
   return {
     groupUnnamedResourcesAccessed: sendParams.populateAppCallResources ? sortedResources : undefined,
     txns: groupResponse.txnResults.map((txn, i) => {
-      const originalTxn = atc['transactions'][i].txn as algosdk.Transaction
+      const originalTxn = atc['transactions'][i].txn as Transaction
 
       let requiredFeeDelta = 0n
       if (sendParams.coverAppCallInnerTransactionFees) {
@@ -500,7 +500,7 @@ export async function prepareGroupForSending(
         )
     : [0n, new Map<number, bigint>()]
 
-  const appCallHasAccessReferences = (txn: algosdk.Transaction) => {
+  const appCallHasAccessReferences = (txn: Transaction) => {
     return txn.transactionType === TransactionType.AppCall && txn.appCall?.access && txn.appCall?.access.length > 0
   }
 
@@ -1119,7 +1119,7 @@ export const waitForConfirmation = async function (
  * @param transaction The transaction to cap or suggested params object about to be used to create a transaction
  * @param maxAcceptableFee The maximum acceptable fee to pay
  */
-export function capTransactionFee(transaction: algosdk.Transaction | algosdk.SdkTransactionParams, maxAcceptableFee: AlgoAmount) {
+export function capTransactionFee(transaction: Transaction | algosdk.SdkTransactionParams, maxAcceptableFee: AlgoAmount) {
   // If a flat fee hasn't already been defined
   if (!('flatFee' in transaction) || !transaction.flatFee) {
     // Once a transaction has been constructed by algosdk, transaction.fee indicates what the total transaction fee

@@ -5,9 +5,10 @@
  * requires: @algorandfoundation/algokit-utils: ^2
  */
 import { AlgodClient, SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algod-client'
-import * as algokit from '../../../src/index'
+import { Transaction } from '@algorandfoundation/algokit-transact'
 import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
-import { AtomicTransactionComposer, OnApplicationComplete, Transaction } from '@algorandfoundation/sdk'
+import { AtomicTransactionComposer, OnApplicationComplete } from '@algorandfoundation/sdk'
+import * as algokit from '../../../src/index'
 import type {
   ABIAppCallArg,
   AppCallTransactionResult,
