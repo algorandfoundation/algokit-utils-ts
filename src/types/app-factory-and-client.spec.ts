@@ -1,6 +1,6 @@
-import { TransactionType } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, Address, OnApplicationComplete, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { ABIUintType, Address, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, test } from 'vitest'
 import * as algokit from '..'
@@ -83,7 +83,7 @@ describe('ARC32: app-factory-and-app-client', () => {
 
   test('Create app with oncomplete overload', async () => {
     const { result: app } = await factory.send.bare.create({
-      onComplete: OnApplicationComplete.OptInOC,
+      onComplete: OnApplicationComplete.OptIn,
       updatable: true,
       deletable: true,
       deployTimeParams: {
@@ -91,7 +91,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       },
     })
 
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptIn)
     expect(app.appId).toBeGreaterThan(0n)
     expect(app.appAddress).toEqual(getApplicationAddress(app.appId))
     expect(app.confirmation?.appId ?? 0n).toBe(app.appId)
@@ -190,7 +190,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(app.confirmation.confirmedRound ?? 0n)
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
     expect(app.return).toBe('arg_io')
   })
 
@@ -255,7 +255,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
     expect(app.deleteResult.transaction.applicationCall?.appId).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -289,7 +289,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
     expect(app.deleteResult.transaction.applicationCall?.appId).toBe(createdApp.appId)
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
     expect(app.return).toBe('arg_io')
     expect(app.deleteReturn).toBe('arg2_io')
   })
@@ -907,7 +907,7 @@ retsub
       ;({ appClient } = await factory.send.create({
         extraFee: algokit.microAlgos(1000),
         method: 'createApplication',
-        onComplete: OnApplicationComplete.OptInOC,
+        onComplete: OnApplicationComplete.OptIn,
       }))
 
       await algorand.account.ensureFunded(appClient.appAddress, testAccount, algokit.microAlgos(251200))

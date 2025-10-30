@@ -1,68 +1,16 @@
-import { BoxReference, HoldingReference, LocalsReference, ResourceReference, TransactionType } from '@algorandfoundation/algokit-transact'
+import {
+  BoxReference,
+  HoldingReference,
+  LocalsReference,
+  OnApplicationComplete,
+  ResourceReference,
+  TransactionType,
+} from '@algorandfoundation/algokit-transact'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
 import { SdkTransactionParams } from '../../makeTxn.js'
 import { StateProof, StateProofMessage } from '../../stateproof.js'
 
-// TODO: PD - remove this
-/**
- * Enums for application transactions on-transaction-complete behavior
- */
-export enum OnApplicationComplete {
-  /**
-   * NoOpOC indicates that an application transaction will simply call its
-   * ApprovalProgram
-   */
-  NoOpOC,
-
-  /**
-   * OptInOC indicates that an application transaction will allocate some
-   * LocalState for the application in the sender's account
-   */
-  OptInOC,
-
-  /**
-   * CloseOutOC indicates that an application transaction will deallocate
-   * some LocalState for the application from the user's account
-   */
-  CloseOutOC,
-
-  /**
-   * ClearStateOC is similar to CloseOutOC, but may never fail. This
-   * allows users to reclaim their minimum balance from an application
-   * they no longer wish to opt in to.
-   */
-  ClearStateOC,
-
-  /**
-   * UpdateApplicationOC indicates that an application transaction will
-   * update the ApprovalProgram and ClearStateProgram for the application
-   */
-  UpdateApplicationOC,
-
-  /**
-   * DeleteApplicationOC indicates that an application transaction will
-   * delete the AppParams for the application from the creator's balance
-   * record
-   */
-  DeleteApplicationOC,
-}
-
-/**
- * Check if a value is a valid OnApplicationComplete value
- * @param v - value to check
- * @returns true if v is a valid OnApplicationComplete value
- */
-export function isOnApplicationComplete(v: unknown): v is OnApplicationComplete {
-  return (
-    v === OnApplicationComplete.NoOpOC ||
-    v === OnApplicationComplete.OptInOC ||
-    v === OnApplicationComplete.CloseOutOC ||
-    v === OnApplicationComplete.ClearStateOC ||
-    v === OnApplicationComplete.UpdateApplicationOC ||
-    v === OnApplicationComplete.DeleteApplicationOC
-  )
-}
 
 /**
  * Parameters for resource references in application transactions

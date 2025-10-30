@@ -1,4 +1,4 @@
-import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
@@ -567,7 +567,7 @@ export class AlgorandClientTransactionSender {
    *    localByteSlices: 4
    *  },
    *  extraProgramPages: 1,
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -615,7 +615,7 @@ export class AlgorandClientTransactionSender {
    *  sender: 'CREATORADDRESS',
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
-   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  onComplete: OnApplicationComplete.UpdateApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -661,7 +661,7 @@ export class AlgorandClientTransactionSender {
    * ```typescript
    * await algorand.send.appDelete({
    *  sender: 'CREATORADDRESS',
-   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  onComplete: OnApplicationComplete.DeleteApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -707,7 +707,7 @@ export class AlgorandClientTransactionSender {
    * ```typescript
    * await algorand.send.appCall({
    *  sender: 'CREATORADDRESS',
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -775,7 +775,7 @@ export class AlgorandClientTransactionSender {
    *    localByteSlices: 4
    *  },
    *  extraProgramPages: 1,
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -835,7 +835,7 @@ export class AlgorandClientTransactionSender {
    *  args: ["arg1_value"],
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
-   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  onComplete: OnApplicationComplete.UpdateApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -893,7 +893,7 @@ export class AlgorandClientTransactionSender {
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
-   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  onComplete: OnApplicationComplete.DeleteApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -951,7 +951,7 @@ export class AlgorandClientTransactionSender {
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]

@@ -1,5 +1,5 @@
 import type { Transaction } from '@algorandfoundation/algokit-transact'
-import { TransactionType } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import { foreignArraysToResourceReferences } from './appAccess.js'
 import { Address } from './encoding/address.js'
 import {
@@ -9,7 +9,6 @@ import {
   AssetFreezeTransactionParams,
   AssetTransferTransactionParams,
   KeyRegistrationTransactionParams,
-  OnApplicationComplete,
   PaymentTransactionParams,
 } from './types/transactions/base.js'
 
@@ -25,29 +24,7 @@ function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
   return typeof value === 'bigint' ? value : BigInt(value)
 }
 
-// Import new OnApplicationComplete type
 import { TransactionParams as AlgodTransactionParams } from '@algorandfoundation/algod-client'
-import { OnApplicationComplete as NewOnApplicationComplete } from '@algorandfoundation/algokit-transact'
-
-// Helper function to map old OnApplicationComplete to new
-function mapOnApplicationComplete(oldValue: OnApplicationComplete): NewOnApplicationComplete {
-  switch (oldValue) {
-    case OnApplicationComplete.NoOpOC:
-      return NewOnApplicationComplete.NoOp
-    case OnApplicationComplete.OptInOC:
-      return NewOnApplicationComplete.OptIn
-    case OnApplicationComplete.CloseOutOC:
-      return NewOnApplicationComplete.CloseOut
-    case OnApplicationComplete.ClearStateOC:
-      return NewOnApplicationComplete.ClearState
-    case OnApplicationComplete.UpdateApplicationOC:
-      return NewOnApplicationComplete.UpdateApplication
-    case OnApplicationComplete.DeleteApplicationOC:
-      return NewOnApplicationComplete.DeleteApplication
-    default:
-      return NewOnApplicationComplete.NoOp
-  }
-}
 
 export type SdkTransactionParams = AlgodTransactionParams & {
   firstRound: bigint
@@ -522,7 +499,7 @@ export function makeApplicationCallTxnFromObject({
     rekeyTo: addressToString(rekeyTo),
     applicationCall: {
       appId: ensureBigInt(appIndex) || BigInt(0),
-      onComplete: mapOnApplicationComplete(onComplete),
+      onComplete,
       approvalProgram,
       clearStateProgram: clearProgram,
       globalStateSchema:
@@ -664,7 +641,7 @@ export function makeApplicationUpdateTxnFromObject({
   return makeApplicationCallTxnFromObject({
     sender,
     appIndex,
-    onComplete: OnApplicationComplete.UpdateApplicationOC,
+    onComplete: OnApplicationComplete.UpdateApplication,
     appArgs,
     accounts,
     foreignApps,
@@ -723,7 +700,7 @@ export function makeApplicationDeleteTxnFromObject({
   return makeApplicationCallTxnFromObject({
     sender,
     appIndex,
-    onComplete: OnApplicationComplete.DeleteApplicationOC,
+    onComplete: OnApplicationComplete.DeleteApplication,
     appArgs,
     accounts,
     foreignApps,
@@ -780,7 +757,7 @@ export function makeApplicationOptInTxnFromObject({
   return makeApplicationCallTxnFromObject({
     sender,
     appIndex,
-    onComplete: OnApplicationComplete.OptInOC,
+    onComplete: OnApplicationComplete.OptIn,
     appArgs,
     accounts,
     foreignApps,
@@ -837,7 +814,7 @@ export function makeApplicationCloseOutTxnFromObject({
   return makeApplicationCallTxnFromObject({
     sender,
     appIndex,
-    onComplete: OnApplicationComplete.CloseOutOC,
+    onComplete: OnApplicationComplete.CloseOut,
     appArgs,
     accounts,
     foreignApps,
@@ -894,7 +871,7 @@ export function makeApplicationClearStateTxnFromObject({
   return makeApplicationCallTxnFromObject({
     sender,
     appIndex,
-    onComplete: OnApplicationComplete.ClearStateOC,
+    onComplete: OnApplicationComplete.ClearState,
     appArgs,
     accounts,
     foreignApps,
@@ -951,7 +928,7 @@ export function makeApplicationNoOpTxnFromObject({
   return makeApplicationCallTxnFromObject({
     sender,
     appIndex,
-    onComplete: OnApplicationComplete.NoOpOC,
+    onComplete: OnApplicationComplete.NoOp,
     appArgs,
     accounts,
     foreignApps,

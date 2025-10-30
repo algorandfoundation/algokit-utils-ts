@@ -1,12 +1,11 @@
 import { AlgodClient } from '@algorandfoundation/algod-client'
-import { TransactionType } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIUintType,
   Account,
   Address,
   Indexer,
-  OnApplicationComplete,
   TransactionSigner,
   getApplicationAddress,
 } from '@algorandfoundation/sdk'
@@ -124,7 +123,7 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptIn)
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
     expect(app.confirmation?.appId).toBe(BigInt(app.appId))
@@ -289,7 +288,7 @@ describe('application-client', () => {
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -327,7 +326,7 @@ describe('application-client', () => {
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
     expect(app.deleteResult.transaction.applicationCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -374,7 +373,7 @@ describe('application-client', () => {
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
     expect(app.deleteResult.transaction.applicationCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
     expect(app.return?.returnValue).toBe('arg_io')
     expect(app.deleteReturn?.returnValue).toBe('arg2_io')
   })

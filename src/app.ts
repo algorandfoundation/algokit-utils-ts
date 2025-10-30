@@ -1,5 +1,5 @@
 import { EvalDelta, PendingTransactionResponse, TealValue, AlgodClient } from '@algorandfoundation/algod-client'
-import { BoxReference as TransactBoxReference } from '@algorandfoundation/algokit-transact'
+import { BoxReference as TransactBoxReference, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import { encodeLease, getSenderAddress } from './transaction/transaction'
@@ -30,7 +30,6 @@ import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
-import OnApplicationComplete = algosdk.OnApplicationComplete
 
 /**
  * @deprecated Use `algorand.send.appCreate()` / `algorand.createTransaction.appCreate()` / `algorand.send.appCreateMethodCall()`
@@ -46,7 +45,7 @@ export async function createApp(
   algod: AlgodClient,
 ): Promise<Partial<AppCompilationResult> & AppCallTransactionResult & AppReference> {
   const onComplete = getAppOnCompleteAction(create.onCompleteAction)
-  if (onComplete === algosdk.OnApplicationComplete.ClearStateOC) {
+  if (onComplete === OnApplicationComplete.ClearState) {
     throw new Error('Cannot create an app with on-complete action of ClearState')
   }
 
@@ -114,7 +113,7 @@ export async function updateApp(
         {
           appId: BigInt(update.appId),
           sender: getSenderAddress(update.from),
-          onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+          onComplete: OnApplicationComplete.UpdateApplication,
           approvalProgram: update.approvalProgram,
           clearStateProgram: update.clearStateProgram,
           method: update.args.method instanceof ABIMethod ? update.args.method : new ABIMethod(update.args.method),
@@ -130,7 +129,7 @@ export async function updateApp(
         {
           appId: BigInt(update.appId),
           sender: getSenderAddress(update.from),
-          onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+          onComplete: OnApplicationComplete.UpdateApplication,
           approvalProgram: update.approvalProgram,
           clearStateProgram: update.clearStateProgram,
         },
@@ -140,38 +139,38 @@ export async function updateApp(
 }
 
 /**
- * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
+ * @deprecated Use `OnApplicationComplete` directly instead.
  *
- * Returns a `algosdk.OnApplicationComplete` for the given onCompleteAction.
+ * Returns a `OnApplicationComplete` for the given onCompleteAction.
  *
- * If given `undefined` will return `OnApplicationComplete.NoOpOC`.
+ * If given `undefined` will return `OnApplicationComplete.NoOp`.
  *
- * If given an `AppCallType` will convert the string enum to the correct underlying `algosdk.OnApplicationComplete`.
+ * If given an `AppCallType` will convert the string enum to the correct underlying `OnApplicationComplete`.
  *
  * @param onCompletionAction The on completion action
- * @returns The `algosdk.OnApplicationComplete`
+ * @returns The `OnApplicationComplete`
  */
 export function getAppOnCompleteAction(onCompletionAction?: AppCallType | OnApplicationComplete) {
   switch (onCompletionAction) {
     case undefined:
     case 'no_op':
-    case OnApplicationComplete.NoOpOC:
-      return OnApplicationComplete.NoOpOC
+    case OnApplicationComplete.NoOp:
+      return OnApplicationComplete.NoOp
     case 'opt_in':
-    case OnApplicationComplete.OptInOC:
-      return OnApplicationComplete.OptInOC
+    case OnApplicationComplete.OptIn:
+      return OnApplicationComplete.OptIn
     case 'close_out':
-    case OnApplicationComplete.CloseOutOC:
-      return OnApplicationComplete.CloseOutOC
+    case OnApplicationComplete.CloseOut:
+      return OnApplicationComplete.CloseOut
     case 'clear_state':
-    case OnApplicationComplete.ClearStateOC:
-      return OnApplicationComplete.ClearStateOC
+    case OnApplicationComplete.ClearState:
+      return OnApplicationComplete.ClearState
     case 'update_application':
-    case OnApplicationComplete.UpdateApplicationOC:
-      return OnApplicationComplete.UpdateApplicationOC
+    case OnApplicationComplete.UpdateApplication:
+      return OnApplicationComplete.UpdateApplication
     case 'delete_application':
-    case OnApplicationComplete.DeleteApplicationOC:
-      return OnApplicationComplete.DeleteApplicationOC
+    case OnApplicationComplete.DeleteApplication:
+      return OnApplicationComplete.DeleteApplication
   }
 }
 
@@ -186,10 +185,10 @@ export function getAppOnCompleteAction(onCompletionAction?: AppCallType | OnAppl
  */
 export async function callApp(call: AppCallParams, algod: AlgodClient): Promise<AppCallTransactionResult> {
   const onComplete = getAppOnCompleteAction(call.callType)
-  if (onComplete === algosdk.OnApplicationComplete.UpdateApplicationOC) {
+  if (onComplete === OnApplicationComplete.UpdateApplication) {
     throw new Error('Cannot execute an app call with on-complete action of Update')
   }
-  if (call.args?.method && onComplete === algosdk.OnApplicationComplete.ClearStateOC) {
+  if (call.args?.method && onComplete === OnApplicationComplete.ClearState) {
     throw new Error('Cannot execute an ABI method call with on-complete action of ClearState')
   }
 

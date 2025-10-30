@@ -1,5 +1,5 @@
 import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algod-client'
-import { Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, Address, SdkTransactionParams } from '@algorandfoundation/sdk'
 import { Config } from '../config'
@@ -340,7 +340,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
   /** ID of the application; 0 if the application is being created. */
   appId: bigint
   /** The [on-complete](https://dev.algorand.co/concepts/smart-contracts/avm#oncomplete) action of the call; defaults to no-op. */
-  onComplete?: algosdk.OnApplicationComplete
+  onComplete?: OnApplicationComplete
   /** Any [arguments to pass to the smart contract call](/concepts/smart-contracts/languages/teal/#argument-passing). */
   args?: Uint8Array[]
   /** Any account addresses to add to the [accounts array](https://dev.algorand.co/concepts/smart-contracts/resource-usage#what-are-reference-arrays). */
@@ -362,7 +362,7 @@ export type CommonAppCallParams = CommonTransactionParams & {
 /** Parameters to define an app create transaction */
 export type AppCreateParams = Expand<
   Omit<CommonAppCallParams, 'appId'> & {
-    onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.ClearStateOC>
+    onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
     /** The program to execute for all OnCompletes other than ClearState as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal that will be compiled (string) or compiled teal (encoded as a byte array (Uint8Array)). */
@@ -388,7 +388,7 @@ export type AppCreateParams = Expand<
 /** Parameters to define an app update transaction */
 export type AppUpdateParams = Expand<
   CommonAppCallParams & {
-    onComplete?: algosdk.OnApplicationComplete.UpdateApplicationOC
+    onComplete?: OnApplicationComplete.UpdateApplication
     /** The program to execute for all OnCompletes other than ClearState as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
     approvalProgram: string | Uint8Array
     /** The program to execute for ClearState OnComplete as raw teal (string) or compiled teal (base 64 encoded as a byte array (Uint8Array)) */
@@ -398,20 +398,20 @@ export type AppUpdateParams = Expand<
 
 /** Parameters to define an application call transaction. */
 export type AppCallParams = CommonAppCallParams & {
-  onComplete?: Exclude<algosdk.OnApplicationComplete, algosdk.OnApplicationComplete.UpdateApplicationOC>
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
 }
 
 /** Common parameters to define an ABI method call transaction. */
 export type AppMethodCallParams = CommonAppCallParams & {
   onComplete?: Exclude<
-    algosdk.OnApplicationComplete,
-    algosdk.OnApplicationComplete.UpdateApplicationOC | algosdk.OnApplicationComplete.ClearStateOC
+    OnApplicationComplete,
+    OnApplicationComplete.UpdateApplication | OnApplicationComplete.ClearState
   >
 }
 
 /** Parameters to define an application delete call transaction. */
 export type AppDeleteParams = CommonAppCallParams & {
-  onComplete?: algosdk.OnApplicationComplete.DeleteApplicationOC
+  onComplete?: OnApplicationComplete.DeleteApplication
 }
 
 /** Parameters to define an ABI method call create transaction. */
@@ -955,7 +955,7 @@ export class TransactionComposer {
    *    localByteSlices: 4
    *  },
    *  extraProgramPages: 1,
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1003,7 +1003,7 @@ export class TransactionComposer {
    *  sender: 'CREATORADDRESS',
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
-   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  onComplete: OnApplicationComplete.UpdateApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1024,7 +1024,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
+    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.UpdateApplication })
 
     return this
   }
@@ -1043,7 +1043,7 @@ export class TransactionComposer {
    * ```typescript
    * composer.addAppDelete({
    *  sender: 'CREATORADDRESS',
-   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  onComplete: OnApplicationComplete.DeleteApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1064,7 +1064,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
+    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.DeleteApplication })
 
     return this
   }
@@ -1085,7 +1085,7 @@ export class TransactionComposer {
    * ```typescript
    * composer.addAppCall({
    *  sender: 'CREATORADDRESS',
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1146,7 +1146,7 @@ export class TransactionComposer {
    *    localByteSlices: 4
    *  },
    *  extraProgramPages: 1,
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1199,7 +1199,7 @@ export class TransactionComposer {
    *  args: ["arg1_value"],
    *  approvalProgram: "TEALCODE",
    *  clearStateProgram: "TEALCODE",
-   *  onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+   *  onComplete: OnApplicationComplete.UpdateApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1220,7 +1220,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC })
+    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.UpdateApplication })
     return this
   }
 
@@ -1250,7 +1250,7 @@ export class TransactionComposer {
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
-   *  onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+   *  onComplete: OnApplicationComplete.DeleteApplication,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1271,7 +1271,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
-    this.txns.push({ ...params, type: 'methodCall', onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC })
+    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.DeleteApplication })
     return this
   }
 
@@ -1301,7 +1301,7 @@ export class TransactionComposer {
    *  sender: 'CREATORADDRESS',
    *  method: method,
    *  args: ["arg1_value"],
-   *  onComplete: algosdk.OnApplicationComplete.OptInOC,
+   *  onComplete: OnApplicationComplete.OptIn,
    *  args: [new Uint8Array(1, 2, 3, 4)]
    *  accountReferences: ["ACCOUNT_1"]
    *  appReferences: [123n, 1234n]
@@ -1631,7 +1631,7 @@ export class TransactionComposer {
       appID: appId,
       sender: params.sender,
       suggestedParams,
-      onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       ...(hasAccessReferences
         ? { access: params.accessReferences?.map(getAccessReference) }
         : {
@@ -1801,7 +1801,7 @@ export class TransactionComposer {
       sender: params.sender,
       suggestedParams,
       appArgs: params.args,
-      onComplete: params.onComplete ?? algosdk.OnApplicationComplete.NoOpOC,
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       ...(hasAccessReferences
         ? { access: params.accessReferences?.map(getAccessReference) }
         : {

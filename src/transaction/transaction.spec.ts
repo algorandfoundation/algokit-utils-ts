@@ -1,4 +1,4 @@
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
@@ -906,7 +906,7 @@ const resourcePopulationTests = (version: 8 | 9) => () => {
       const result = await appClient.send.call({
         method: 'addressBalance',
         args: [algosdk.generateAccount().addr.toString()],
-        onComplete: algosdk.OnApplicationComplete.NoOpOC,
+        onComplete: OnApplicationComplete.NoOp,
       })
 
       // Ensure the transaction was not sent via simulate

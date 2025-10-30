@@ -1,6 +1,6 @@
 import type { AlgodClient, PendingTransactionResponse, SimulateRequest, SimulateTransaction } from '@algorandfoundation/algod-client'
 import type { BoxReference, ResourceReference, SignedTransaction } from '@algorandfoundation/algokit-transact'
-import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { decodeSignedTransaction, getTransactionId, OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import {
   ABIAddressType,
   ABIMethod,
@@ -17,7 +17,6 @@ import { Address } from './encoding/address.js'
 import { assignGroupID } from './group.js'
 import { SdkTransactionParams, makeApplicationCallTxnFromObject } from './makeTxn.js'
 import { TransactionSigner, TransactionWithSigner, isTransactionWithSigner } from './signer.js'
-import { OnApplicationComplete } from './types/transactions/base.js'
 import { arrayEqual, ensureUint64, stringifyJSON } from './utils/utils.js'
 import { waitForConfirmation } from './wait.js'
 
@@ -211,11 +210,11 @@ export class AtomicTransactionComposer {
     sender: string | Address
     /** Transactions params to use for this application call */
     suggestedParams: SdkTransactionParams
-    /** The OnComplete action to take for this application call. If omitted, OnApplicationComplete.NoOpOC will be used. */
+    /** The OnComplete action to take for this application call. If omitted, OnApplicationComplete.NoOp will be used. */
     onComplete?: OnApplicationComplete
-    /** The approval program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplicationOC */
+    /** The approval program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplication */
     approvalProgram?: Uint8Array
-    /** The clear program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplicationOC */
+    /** The clear program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplication */
     clearProgram?: Uint8Array
     /** The global integer schema size. Only set this if this is an application creation call. */
     numGlobalInts?: number
@@ -269,10 +268,10 @@ export class AtomicTransactionComposer {
           'One of the following required parameters for application creation is missing: approvalProgram, clearProgram, numGlobalInts, numGlobalByteSlices, numLocalInts, numLocalByteSlices',
         )
       }
-    } else if (onComplete === OnApplicationComplete.UpdateApplicationOC) {
+    } else if (onComplete === OnApplicationComplete.UpdateApplication) {
       if (approvalProgram == null || clearProgram == null) {
         throw new Error(
-          'One of the following required parameters for OnApplicationComplete.UpdateApplicationOC is missing: approvalProgram, clearProgram',
+          'One of the following required parameters for OnApplicationComplete.UpdateApplication is missing: approvalProgram, clearProgram',
         )
       }
       if (
@@ -431,7 +430,7 @@ export class AtomicTransactionComposer {
         foreignAssets: access ? undefined : foreignAssets,
         boxes: access ? undefined : boxReferences,
         access,
-        onComplete: onComplete == null ? OnApplicationComplete.NoOpOC : onComplete,
+        onComplete: onComplete == null ? OnApplicationComplete.NoOp : onComplete,
         approvalProgram,
         clearProgram,
         numGlobalInts,

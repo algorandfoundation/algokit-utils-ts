@@ -1,5 +1,5 @@
 import { TransactionParams } from '@algorandfoundation/algod-client'
-import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
+import { BoxReference as TransactBoxReference, OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Expand } from './expand'
 import {
@@ -17,7 +17,6 @@ import ABIMethodParams = algosdk.ABIMethodParams
 import ABIType = algosdk.ABIType
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
-import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.ProgramSourceMap
 
 /** The name of the TEAL template variable for deploy-time immutability control */
@@ -151,7 +150,7 @@ export interface CreateAppParams extends CreateOrUpdateAppParams {
   /** The storage schema to request for the created app */
   schema: AppStorageSchema
   /** Override the on-completion action for the create call; defaults to NoOp */
-  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
 }
 
 /**
@@ -164,11 +163,11 @@ export interface UpdateAppParams extends CreateOrUpdateAppParams {
 }
 
 /**
- * @deprecated Use `algosdk.OnApplicationComplete` directly instead.
+ * @deprecated Use `OnApplicationComplete` directly instead.
  *
  * The type of call / [on-completion action](https://dev.algorand.co/concepts/smart-contracts/overview#smart-contract-lifecycle) for a smart contract call.
  *
- * Equivalent of `algosdk.OnApplicationComplete`, but as a more convenient string enum.
+ * Equivalent of `OnApplicationComplete`, but as a more convenient string enum.
  *
  * * `no_op`: Normal smart contract call, no special on-complete action
  * * `opt_in`: Opt-in to smart contract local storage
@@ -184,7 +183,7 @@ export interface AppCallParams extends SendTransactionParams {
   /** The id of the app to call */
   appId: number | bigint
   /** The type of call, everything except create (see `createApp`) and update (see `updateApp`) */
-  callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
+  callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
   /** The account to make the call from */
   from: SendTransactionFrom
   /** Optional transaction parameters */
@@ -322,7 +321,7 @@ export interface AppDeploymentParams
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppCallArgs
   /** Override the on-completion action for the create call; defaults to NoOp */
-  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */

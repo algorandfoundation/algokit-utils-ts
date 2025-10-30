@@ -1,5 +1,5 @@
 import { AlgodClient, TransactionParams } from '@algorandfoundation/algod-client'
-import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
@@ -84,7 +84,6 @@ import ABIValue = algosdk.ABIValue
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import getApplicationAddress = algosdk.getApplicationAddress
 import Indexer = algosdk.Indexer
-import OnApplicationComplete = algosdk.OnApplicationComplete
 import SourceMap = algosdk.ProgramSourceMap
 import TransactionSigner = algosdk.TransactionSigner
 
@@ -185,7 +184,7 @@ export interface AppClientDeployCallInterfaceParams {
   /** Any args to pass to any create transaction that is issued as part of deployment */
   createArgs?: AppClientCallArgs
   /** Override the on-completion action for the create call; defaults to NoOp */
-  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  createOnCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
   /** Any args to pass to any update transaction that is issued as part of deployment */
   updateArgs?: AppClientCallArgs
   /** Any args to pass to any delete transaction that is issued as part of deployment */
@@ -236,7 +235,7 @@ export interface AppClientCompilationParams {
 /** On-complete action parameter for creating a contract using ApplicationClient */
 export type AppClientCreateOnComplete = {
   /** Override the on-completion action for the create call; defaults to NoOp */
-  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearStateOC>
+  onCompleteAction?: Exclude<AppCallType, 'clear_state'> | Exclude<OnApplicationComplete, OnApplicationComplete.ClearState>
 }
 
 /** Parameters for creating a contract using ApplicationClient */
@@ -352,7 +351,7 @@ export type CloneAppClientParams = Expand<Partial<Omit<AppClientParams, 'algoran
 /** onComplete parameter for a non-update app call */
 export type CallOnComplete = {
   /** On-complete of the call; defaults to no-op */
-  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>
 }
 
 /** AppClient common parameters for a bare app call */
@@ -1199,28 +1198,28 @@ export class AppClient {
             ...params,
             ...(await this.compile(params)),
           },
-          OnApplicationComplete.UpdateApplicationOC,
+          OnApplicationComplete.UpdateApplication,
         ) as AppUpdateParams
       },
       /** Return params for an opt-in call */
       optIn: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.OptInOC) as AppCallParams
+        return this.getBareParams(params, OnApplicationComplete.OptIn) as AppCallParams
       },
       /** Return params for a delete call */
       delete: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.DeleteApplicationOC) as AppDeleteParams
+        return this.getBareParams(params, OnApplicationComplete.DeleteApplication) as AppDeleteParams
       },
       /** Return params for a clear state call */
       clearState: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.ClearStateOC) as AppCallParams
+        return this.getBareParams(params, OnApplicationComplete.ClearState) as AppCallParams
       },
       /** Return params for a close out call */
       closeOut: (params?: AppClientBareCallParams) => {
-        return this.getBareParams(params, OnApplicationComplete.CloseOutOC) as AppCallParams
+        return this.getBareParams(params, OnApplicationComplete.CloseOut) as AppCallParams
       },
       /** Return params for a call (defaults to no-op) */
       call: (params?: AppClientBareCallParams & CallOnComplete) => {
-        return this.getBareParams(params, params?.onComplete ?? OnApplicationComplete.NoOpOC) as AppCallParams
+        return this.getBareParams(params, params?.onComplete ?? OnApplicationComplete.NoOp) as AppCallParams
       },
     }
   }
@@ -1313,7 +1312,7 @@ export class AppClient {
             ...params,
             ...(await this.compile(params)),
           },
-          OnApplicationComplete.UpdateApplicationOC,
+          OnApplicationComplete.UpdateApplication,
         )) satisfies AppUpdateMethodCall
       },
       /**
@@ -1322,7 +1321,7 @@ export class AppClient {
        * @returns The parameters which can be used to create an opt-in ABI method call
        */
       optIn: async (params: AppClientMethodCallParams) => {
-        return (await this.getABIParams(params, OnApplicationComplete.OptInOC)) as AppCallMethodCall
+        return (await this.getABIParams(params, OnApplicationComplete.OptIn)) as AppCallMethodCall
       },
       /**
        * Return params for an delete ABI call
@@ -1330,21 +1329,21 @@ export class AppClient {
        * @returns The parameters which can be used to create a delete ABI method call
        */
       delete: async (params: AppClientMethodCallParams) => {
-        return (await this.getABIParams(params, OnApplicationComplete.DeleteApplicationOC)) as AppDeleteMethodCall
+        return (await this.getABIParams(params, OnApplicationComplete.DeleteApplication)) as AppDeleteMethodCall
       },
       /** Return params for an close out ABI call
        * @param params The parameters for the close out ABI method call
        * @returns The parameters which can be used to create a close out ABI method call
        */
       closeOut: async (params: AppClientMethodCallParams) => {
-        return (await this.getABIParams(params, OnApplicationComplete.CloseOutOC)) as AppCallMethodCall
+        return (await this.getABIParams(params, OnApplicationComplete.CloseOut)) as AppCallMethodCall
       },
       /** Return params for an ABI call
        * @param params The parameters for the ABI method call
        * @returns The parameters which can be used to create an ABI method call
        */
       call: async (params: AppClientMethodCallParams & CallOnComplete) => {
-        return (await this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOpOC)) as AppCallMethodCall
+        return (await this.getABIParams(params, params.onComplete ?? OnApplicationComplete.NoOp)) as AppCallMethodCall
       },
     }
   }
@@ -1414,7 +1413,7 @@ export class AppClient {
       call: async (params: AppClientMethodCallParams & CallOnComplete & SendParams) => {
         // Read-only call - do it via simulate
         if (
-          (params.onComplete === OnApplicationComplete.NoOpOC || !params.onComplete) &&
+          (params.onComplete === OnApplicationComplete.NoOp || !params.onComplete) &&
           getArc56Method(params.method, this._appSpec).method.readonly
         ) {
           const readonlyParams = {
@@ -2231,7 +2230,7 @@ export class ApplicationClient {
    */
   async callOfType(
     call: AppClientCallParams = {},
-    callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplicationOC>,
+    callType: Exclude<AppCallType, 'update_application'> | Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication>,
   ) {
     const { sender: callSender, note, sendParams, ...args } = call
 

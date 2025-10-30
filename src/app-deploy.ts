@@ -1,4 +1,5 @@
 import { AlgodClient, ApplicationStateSchema } from '@algorandfoundation/algod-client'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
 import { compileTeal, getAppOnCompleteAction } from './app'
@@ -97,8 +98,8 @@ export async function deployApp(
     maxFee: deployment.maxFee,
     extraProgramPages: deployment.schema.extraPages,
     onComplete: getAppOnCompleteAction(deployment.createOnCompleteAction) as Exclude<
-      algosdk.OnApplicationComplete,
-      algosdk.OnApplicationComplete.ClearStateOC
+      OnApplicationComplete,
+      OnApplicationComplete.ClearState
     >,
     schema: deployment.schema,
   } satisfies Partial<AppCreateParams>
@@ -117,7 +118,7 @@ export async function deployApp(
     rekeyTo: deployment.updateArgs?.rekeyTo ? getSenderAddress(deployment.updateArgs?.rekeyTo) : undefined,
     staticFee: deployment.fee,
     maxFee: deployment.maxFee,
-    onComplete: algosdk.OnApplicationComplete.UpdateApplicationOC,
+    onComplete: OnApplicationComplete.UpdateApplication,
   } satisfies Partial<AppUpdateParams>
 
   const deleteParams = {
@@ -132,7 +133,7 @@ export async function deployApp(
     rekeyTo: deployment.deleteArgs?.rekeyTo ? getSenderAddress(deployment.deleteArgs?.rekeyTo) : undefined,
     staticFee: deployment.fee,
     maxFee: deployment.maxFee,
-    onComplete: algosdk.OnApplicationComplete.DeleteApplicationOC,
+    onComplete: OnApplicationComplete.DeleteApplication,
   } satisfies Partial<AppDeleteParams>
 
   const encoder = new TextEncoder()
