@@ -115,7 +115,7 @@ export async function legacySendAppTransactionBridge<
     accountReferences: appArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
     appReferences: appArgs?.apps?.map((a) => BigInt(a)),
     assetReferences: appArgs?.assets?.map((a) => BigInt(a)),
-    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appId), name: r.name }) satisfies BoxReference),
+    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
     lease: appArgs?.lease,
     rekeyTo: appArgs?.rekeyTo ? getSenderAddress(appArgs?.rekeyTo) : undefined,
     args: appArgs
@@ -179,7 +179,7 @@ export function _getBoxReference(box: LegacyBoxIdentifier | LegacyBoxReference |
 
   const ref = typeof box === 'object' && 'appId' in box ? box : { appId: 0, name: box }
   return {
-    appId: ref.appId,
+    appIndex: ref.appId,
     name:
       typeof ref.name === 'string'
         ? encoder.encode(ref.name)

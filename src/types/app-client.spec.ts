@@ -537,7 +537,7 @@ describe('application-client', () => {
     const call = await client.call({
       method: 'call_abi',
       methodArgs: ['test'],
-      boxes: [{ appId: 0, name: '1' }],
+      boxes: [{ appIndex: 0, name: '1' }],
       sendParams: { skipSending: true },
     })
 

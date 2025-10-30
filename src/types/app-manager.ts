@@ -1,4 +1,11 @@
-import { AlgodClient, ApplicationLocalReference, AssetHoldingReference, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import {
+  AlgodClient,
+  ApplicationLocalReference,
+  AssetHoldingReference,
+  EvalDelta,
+  PendingTransactionResponse,
+  TealValue,
+} from '@algorandfoundation/algod-client'
 import { ResourceReference, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
@@ -382,7 +389,7 @@ export class AppManager {
   public static getBoxReference(boxId: BoxIdentifier | BoxReference): TransactionBoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
     return {
-      appId: ref.appId,
+      appIndex: ref.appId,
       name: typeof ref.name === 'string' ? new TextEncoder().encode(ref.name) : 'length' in ref.name ? ref.name : ref.name.addr.publicKey,
     } as TransactionBoxReference
   }

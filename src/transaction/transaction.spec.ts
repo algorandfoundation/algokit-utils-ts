@@ -1143,7 +1143,7 @@ describe('Resource population: meta', () => {
 
     const boxRef = result.transaction.applicationCall?.boxReferences?.[0]
     expect(boxRef).toBeDefined()
-    expect(boxRef?.appId).toBe(0n)
+    expect(boxRef?.appIndex).toBe(0n)
   })
 
   test('order is deterministic', async () => {
@@ -1211,7 +1211,7 @@ describe('Resource population: meta', () => {
         }
 
         for (const box of txn.applicationCall?.boxReferences ?? []) {
-          resources.push(`${box.appId}-${box.name.toString()}`)
+          resources.push(`${box.appIndex}-${box.name.toString()}`)
         }
       }
 

@@ -90,7 +90,7 @@ export async function deployApp(
     assetReferences: deployment.createArgs?.assets?.map((a) => BigInt(a)),
     boxReferences: deployment.createArgs?.boxes
       ?.map(_getBoxReference)
-      ?.map((r) => ({ appId: BigInt(r.appId), name: r.name }) satisfies BoxReference),
+      ?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
     lease: deployment.createArgs?.lease,
     rekeyTo: deployment.createArgs?.rekeyTo ? getSenderAddress(deployment.createArgs?.rekeyTo) : undefined,
     staticFee: deployment.fee,
@@ -112,7 +112,7 @@ export async function deployApp(
     assetReferences: deployment.updateArgs?.assets?.map((a) => BigInt(a)),
     boxReferences: deployment.updateArgs?.boxes
       ?.map(_getBoxReference)
-      ?.map((r) => ({ appId: BigInt(r.appId), name: r.name }) satisfies BoxReference),
+      ?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
     lease: deployment.updateArgs?.lease,
     rekeyTo: deployment.updateArgs?.rekeyTo ? getSenderAddress(deployment.updateArgs?.rekeyTo) : undefined,
     staticFee: deployment.fee,
@@ -127,7 +127,7 @@ export async function deployApp(
     assetReferences: deployment.deleteArgs?.assets?.map((a) => BigInt(a)),
     boxReferences: deployment.deleteArgs?.boxes
       ?.map(_getBoxReference)
-      ?.map((r) => ({ appId: BigInt(r.appId), name: r.name }) satisfies BoxReference),
+      ?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
     lease: deployment.deleteArgs?.lease,
     rekeyTo: deployment.deleteArgs?.rekeyTo ? getSenderAddress(deployment.deleteArgs?.rekeyTo) : undefined,
     staticFee: deployment.fee,

@@ -1,7 +1,7 @@
 import { BoxReference } from '@algorandfoundation/algokit-transact'
 
 function boxReferenceToEncodingData(reference: BoxReference, foreignApps: bigint[], appIndex: bigint): Map<string, unknown> {
-  const referenceId = BigInt(reference.appId)
+  const referenceId = BigInt(reference.appIndex)
   const referenceName = reference.name
   const isOwnReference = referenceId === BigInt(0) || referenceId === appIndex
 

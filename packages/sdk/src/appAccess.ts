@@ -75,8 +75,8 @@ export function foreignArraysToResourceReferences({
     accessList.push({ locals: local })
   }
   for (const box of boxes ?? []) {
-    if (box.appId && BigInt(box.appId) !== appIndex) {
-      ensureApp(box.appId)
+    if (box.appIndex && BigInt(box.appIndex) !== appIndex) {
+      ensureApp(box.appIndex)
     }
     accessList.push({ box })
   }

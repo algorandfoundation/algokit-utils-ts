@@ -629,7 +629,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     // Encode box references
     if (transaction.applicationCall.boxReferences && transaction.applicationCall.boxReferences.length > 0) {
       txDto.apbx = transaction.applicationCall.boxReferences.map((box) => ({
-        i: bigIntCodec.encode(box.appId),
+        i: bigIntCodec.encode(box.appIndex),
         n: bytesCodec.encode(box.name),
       }))
     }
@@ -721,8 +721,8 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         if (resourceReference.box) {
           const b = resourceReference.box
           let appIdx = 0
-          if (b.appId && b.appId !== appId) {
-            appIdx = ensure({ appId: b.appId })
+          if (b.appIndex && b.appIndex !== appId) {
+            appIdx = ensure({ appId: b.appIndex })
           }
           accessList.push({
             b: {
@@ -961,7 +961,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
 
                   result.push({
                     box: {
-                      appId: boxAppId,
+                      appIndex: boxAppId,
                       name: bytesCodec.decode(name),
                     },
                   })

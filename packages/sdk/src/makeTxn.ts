@@ -506,7 +506,7 @@ export function makeApplicationCallTxnFromObject({
   const boxReferences = access2
     ? undefined
     : boxes?.map((box) => ({
-        appId: ensureBigInt(box.appId) || BigInt(0),
+        appId: ensureBigInt(box.appIndex) || BigInt(0),
         name: box.name,
       }))
 

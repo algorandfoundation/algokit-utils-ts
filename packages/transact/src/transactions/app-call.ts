@@ -182,7 +182,7 @@ export type BoxReference = {
    * App ID that owns the box.
    * A value of 0 indicates the current app.
    */
-  appId: bigint
+  appIndex: bigint
 
   /**
    * Name of the box.
@@ -491,10 +491,10 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     // Validate that box reference app IDs are in app references
     const appRefs = appCall.appReferences || []
     for (const boxRef of appCall.boxReferences) {
-      if (boxRef.appId !== 0n && boxRef.appId !== appCall.appId && !appRefs.includes(boxRef.appId)) {
+      if (boxRef.appIndex !== 0n && boxRef.appIndex !== appCall.appId && !appRefs.includes(boxRef.appIndex)) {
         errors.push({
           type: TransactionValidationErrorType.ArbitraryConstraint,
-          data: `Box reference for app ID ${boxRef.appId} must be in app references`,
+          data: `Box reference for app ID ${boxRef.appIndex} must be in app references`,
         })
       }
     }
