@@ -1,9 +1,9 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { KmdAccountManager } from '../types/kmd-account-manager'
 import type { Account } from '@algorandfoundation/sdk'
-import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
@@ -27,7 +27,7 @@ import Kmd = algosdk.Kmd
  */
 export async function getOrCreateKmdWalletAccount(
   walletAccount: { name: string; fundWith?: AlgoAmount },
-  algod: Algodv2,
+  algod: AlgodClient,
   kmdClient?: Kmd,
 ): Promise<Account> {
   return (

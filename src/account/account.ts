@@ -1,4 +1,4 @@
-import { Account as AccountInformation } from '@algorandfoundation/algod-client'
+import { Account as AccountInformation, AlgodClient } from '@algorandfoundation/algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
@@ -9,7 +9,6 @@ import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
-import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 import MultisigMetadata = algosdk.MultisigMetadata
 import TransactionSigner = algosdk.TransactionSigner
@@ -97,7 +96,7 @@ export function randomAccount(): Account {
  */
 export async function mnemonicAccountFromEnvironment(
   account: string | { name: string; fundWith?: AlgoAmount },
-  algod: Algodv2,
+  algod: AlgodClient,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
   return (
@@ -146,7 +145,7 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
  * @param algod The algod instance
  * @returns The account information
  */
-export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
+export async function getAccountInformation(sender: string | SendTransactionFrom, algod: AlgodClient): Promise<AccountInformation> {
   return await algod.accountInformation(getSenderAddress(sender))
 }
 
@@ -171,7 +170,7 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
 export async function getAccountAssetInformation(
   sender: string | SendTransactionFrom,
   assetId: number | bigint,
-  algod: Algodv2,
+  algod: AlgodClient,
 ): Promise<AccountAssetInformation> {
   return AlgorandClient.fromClients({ algod }).asset.getAccountInformation(getSenderAddress(sender), BigInt(assetId))
 }

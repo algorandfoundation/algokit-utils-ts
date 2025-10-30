@@ -1,4 +1,4 @@
-import { SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algod-client'
+import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algod-client'
 import { Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -496,7 +496,7 @@ class ErrorTransformerError extends Error {
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
-  algod: algosdk.Algodv2
+  algod: AlgodClient
   /** The function used to get the TransactionSigner for a given address */
   getSigner: (address: string | Address) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
@@ -558,7 +558,7 @@ export class TransactionComposer {
   private txns: Txn[] = []
 
   /** The algod client used by the composer. */
-  private algod: algosdk.Algodv2
+  private algod: AlgodClient
 
   /** An async function that will return suggested params for the transaction. */
   private getSuggestedParams: () => Promise<TransactionParams>

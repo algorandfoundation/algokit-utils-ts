@@ -1,4 +1,4 @@
-import { ApplicationStateSchema } from '@algorandfoundation/algod-client'
+import { ApplicationStateSchema, AlgodClient } from '@algorandfoundation/algod-client'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
@@ -29,7 +29,6 @@ import {
   TransactionComposer,
 } from './types/composer'
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
-import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 
 /**
@@ -51,7 +50,7 @@ import Indexer = algosdk.Indexer
  */
 export async function deployApp(
   deployment: AppDeploymentParams,
-  algod: Algodv2,
+  algod: AlgodClient,
   indexer?: Indexer,
 ): Promise<
   Partial<AppCompilationResult> &
@@ -326,7 +325,7 @@ export function performTemplateSubstitution(tealCode: string, templateParams?: T
  */
 export async function performTemplateSubstitutionAndCompile(
   tealCode: string,
-  algod: Algodv2,
+  algod: AlgodClient,
   templateParams?: TealTemplateParams,
   deploymentMetadata?: AppDeployMetadata,
 ): Promise<CompiledTeal> {

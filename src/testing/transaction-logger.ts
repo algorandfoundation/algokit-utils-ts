@@ -1,12 +1,12 @@
 import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { Config } from '../config'
 import * as algosdk from '@algorandfoundation/sdk'
 import { runWhenIndexerCaughtUp } from './indexer'
-import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 
 /**
- * Allows you to keep track of Algorand transaction IDs by wrapping an `Algodv2` in a proxy.
+ * Allows you to keep track of Algorand transaction IDs by wrapping an `AlgodClient` in a proxy.
  * Useful for automated tests.
  */
 export class TransactionLogger {
@@ -46,13 +46,13 @@ export class TransactionLogger {
     }
   }
 
-  /** Return a proxy that wraps the given Algodv2 with this transaction logger.
+  /** Return a proxy that wraps the given AlgodClient with this transaction logger.
    *
-   * @param algod The `Algodv2` to wrap
-   * @returns The wrapped `Algodv2`, any transactions sent using this algod instance will be logged by this transaction logger
+   * @param algod The `AlgodClient` to wrap
+   * @returns The wrapped `AlgodClient`, any transactions sent using this algod instance will be logged by this transaction logger
    */
-  capture(algod: Algodv2): Algodv2 {
-    return new Proxy<Algodv2>(algod, new TransactionLoggingAlgodv2ProxyHandler(this))
+  capture(algod: AlgodClient): AlgodClient {
+    return new Proxy<AlgodClient>(algod, new TransactionLoggingAlgodClientProxyHandler(this))
   }
 
   /** Wait until all logged transactions IDs appear in the given `Indexer`. */
@@ -78,7 +78,7 @@ export class TransactionLogger {
   }
 }
 
-class TransactionLoggingAlgodv2ProxyHandler implements ProxyHandler<Algodv2> {
+class TransactionLoggingAlgodClientProxyHandler implements ProxyHandler<AlgodClient> {
   private transactionLogger: TransactionLogger
 
   constructor(transactionLogger: TransactionLogger) {
@@ -86,7 +86,7 @@ class TransactionLoggingAlgodv2ProxyHandler implements ProxyHandler<Algodv2> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get(target: Algodv2, property: string | symbol, receiver: any) {
+  get(target: AlgodClient, property: string | symbol, receiver: any) {
     if (property === 'rawTransaction') {
       return ({ body: stxOrStxs }: { body: Uint8Array | Uint8Array[] }) => {
         this.transactionLogger.logRawTransaction(stxOrStxs)

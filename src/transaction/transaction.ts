@@ -32,7 +32,6 @@ import { asJson, convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
 
 // Type aliases for compatibility
-type Algodv2 = AlgodClient
 type ApplicationTransactionFields = AppCallTransactionFields
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import TransactionSigner = algosdk.TransactionSigner
@@ -285,7 +284,7 @@ export const sendTransaction = async function (
  */
 async function getGroupExecutionInfo(
   atc: algosdk.AtomicTransactionComposer,
-  algod: algosdk.Algodv2,
+  algod: AlgodClient,
   sendParams: SendParams,
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
 ) {
@@ -421,7 +420,7 @@ async function getGroupExecutionInfo(
  * See https://github.com/algorand/go-algorand/pull/5684
  *
  */
-export async function populateAppCallResources(atc: algosdk.AtomicTransactionComposer, algod: algosdk.Algodv2) {
+export async function populateAppCallResources(atc: algosdk.AtomicTransactionComposer, algod: AlgodClient) {
   return await prepareGroupForSending(atc, algod, { populateAppCallResources: true })
 }
 
@@ -442,7 +441,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
  */
 export async function prepareGroupForSending(
   atc: algosdk.AtomicTransactionComposer,
-  algod: algosdk.Algodv2,
+  algod: AlgodClient,
   sendParams: SendParams,
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
 ) {
@@ -848,7 +847,7 @@ export async function prepareGroupForSending(
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
-export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: Algodv2) {
+export const sendAtomicTransactionComposer = async function (atcSend: AtomicTransactionComposerToSend, algod: AlgodClient) {
   const { atc: givenAtc, sendParams, additionalAtcContext, ...executeParams } = atcSend
 
   let atc: AtomicTransactionComposer
@@ -1016,7 +1015,7 @@ export function getABIReturnValue(result: algosdk.ABIResult, type: ABIReturnType
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
-export const sendGroupOfTransactions = async function (groupSend: TransactionGroupToSend, algod: Algodv2) {
+export const sendGroupOfTransactions = async function (groupSend: TransactionGroupToSend, algod: AlgodClient) {
   const { transactions, signer, sendParams } = groupSend
 
   const defaultTransactionSigner = signer ? getSenderTransactionSigner(signer) : undefined
@@ -1065,7 +1064,7 @@ export const sendGroupOfTransactions = async function (groupSend: TransactionGro
 export const waitForConfirmation = async function (
   transactionId: string,
   maxRoundsToWait: number | bigint,
-  algod: Algodv2,
+  algod: AlgodClient,
 ): Promise<modelsv2.PendingTransactionResponse> {
   if (maxRoundsToWait < 0) {
     throw new Error(`Invalid timeout, received ${maxRoundsToWait}, expected > 0`)
@@ -1176,7 +1175,7 @@ export function controlFees<T extends algosdk.SdkTransactionParams | Transaction
  */
 export async function getTransactionParams(
   params: algosdk.SdkTransactionParams | undefined,
-  algod: Algodv2,
+  algod: AlgodClient,
 ): Promise<algosdk.SdkTransactionParams> {
   if (params) {
     return { ...params }

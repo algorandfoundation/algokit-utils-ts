@@ -1,8 +1,8 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { AccountManager } from '../types/account-manager'
 import { ClientManager } from '../types/client-manager'
 
-import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
@@ -16,6 +16,6 @@ import Kmd = algosdk.Kmd
  * @param algod An algod client
  * @param kmd A KMD client, if not specified then a default KMD client will be loaded from environment variables
  */
-export async function getDispenserAccount(algod: Algodv2, kmd?: Kmd) {
+export async function getDispenserAccount(algod: AlgodClient, kmd?: Kmd) {
   return new AccountManager(new ClientManager({ algod, kmd })).dispenserFromEnvironment()
 }

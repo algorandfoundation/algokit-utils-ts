@@ -1,10 +1,10 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { Address } from '@algorandfoundation/sdk'
 import { AlgorandClient, Config } from '../'
 import { TransactionSignerAccount } from '../types/account'
 import { GetTestAccountParams } from '../types/testing'
 import type { Account } from '@algorandfoundation/sdk'
-import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
@@ -21,7 +21,7 @@ import Kmd = algosdk.Kmd
  */
 export async function getTestAccount(
   params: GetTestAccountParams,
-  algod: Algodv2,
+  algod: AlgodClient,
   kmd?: Kmd,
 ): Promise<Address & Account & TransactionSignerAccount>
 /**
@@ -39,7 +39,7 @@ export async function getTestAccount(
 ): Promise<Address & Account & TransactionSignerAccount>
 export async function getTestAccount(
   { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
-  algodOrAlgorandClient: Algodv2 | AlgorandClient,
+  algodOrAlgorandClient: AlgodClient | AlgorandClient,
   kmd?: Kmd,
 ): Promise<Address & Account & TransactionSignerAccount> {
   const algorand =

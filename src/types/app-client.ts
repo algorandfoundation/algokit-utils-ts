@@ -1,4 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
+import { AlgodClient, TransactionParams } from '@algorandfoundation/algod-client'
 import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import {
@@ -81,7 +81,6 @@ import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIType = algosdk.ABIType
 import ABIValue = algosdk.ABIValue
-import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import getApplicationAddress = algosdk.getApplicationAddress
 import Indexer = algosdk.Indexer
@@ -1799,7 +1798,7 @@ export class AppClient {
  *
  * Application client - a class that wraps an ARC-0032 app spec and provides high productivity methods to deploy and call the app */
 export class ApplicationClient {
-  private algod: Algodv2
+  private algod: AlgodClient
   private indexer?: algosdk.Indexer
   private appSpec: AppSpec
   private sender: SendTransactionFrom | undefined
@@ -1825,7 +1824,7 @@ export class ApplicationClient {
    * @param appDetails The details of the app
    * @param algod An algod instance
    */
-  constructor(appDetails: AppSpecAppDetails, algod: Algodv2) {
+  constructor(appDetails: AppSpecAppDetails, algod: AlgodClient) {
     const { app, sender, params, deployTimeParams, ...appIdentifier } = appDetails
     this.algod = algod
     this.appSpec = typeof app == 'string' ? (JSON.parse(app) as AppSpec) : app

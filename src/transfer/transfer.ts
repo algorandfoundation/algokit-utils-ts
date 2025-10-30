@@ -1,11 +1,11 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { AlgorandClient } from '../types/algorand-client'
 import { TestNetDispenserApiClient } from '../types/dispenser-client'
 import { SendTransactionResult } from '../types/transaction'
 import { AlgoRekeyParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from '../types/transfer'
-import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
@@ -17,7 +17,7 @@ import Kmd = algosdk.Kmd
  * https://dev.algorand.co/concepts/smart-contracts/costs-constraints#mbr
  *
  * @param funding The funding configuration of type `EnsureFundedParams`, including the account to fund, minimum spending balance, and optional parameters. If you set `useDispenserApi` to true, you must also set `ALGOKIT_DISPENSER_ACCESS_TOKEN` in your environment variables.
- * @param algod An instance of the Algodv2 client.
+ * @param algod An instance of the AlgodClient client.
  * @param kmd An optional instance of the Kmd client.
  * @returns
  * - `EnsureFundedReturnType` if funds were transferred.
@@ -25,7 +25,7 @@ import Kmd = algosdk.Kmd
  */
 export async function ensureFunded<T extends EnsureFundedParams>(
   funding: T,
-  algod: Algodv2,
+  algod: AlgodClient,
   kmd?: Kmd,
 ): Promise<EnsureFundedReturnType | undefined> {
   const algorand = AlgorandClient.fromClients({ algod, kmd })
@@ -87,7 +87,7 @@ export async function ensureFunded<T extends EnsureFundedParams>(
  * await algokit.transferAsset({ from, to, assetId, amount }, algod)
  * ```
  */
-export async function transferAsset(transfer: TransferAssetParams, algod: Algodv2): Promise<SendTransactionResult> {
+export async function transferAsset(transfer: TransferAssetParams, algod: AlgodClient): Promise<SendTransactionResult> {
   return legacySendTransactionBridge(
     algod,
     transfer.from,
@@ -122,7 +122,7 @@ export async function transferAsset(transfer: TransferAssetParams, algod: Algodv
  * await algokit.rekeyAccount({ from, rekeyTo }, algod)
  * ```
  */
-export async function rekeyAccount(rekey: AlgoRekeyParams, algod: Algodv2): Promise<SendTransactionResult> {
+export async function rekeyAccount(rekey: AlgoRekeyParams, algod: AlgodClient): Promise<SendTransactionResult> {
   return legacySendTransactionBridge(
     algod,
     rekey.from,

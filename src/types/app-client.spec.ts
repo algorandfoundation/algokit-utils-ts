@@ -5,8 +5,9 @@ import * as algokit from '..'
 import { algo } from '..'
 import boxMapAppSpec from '../../tests/example-contracts/box_map/artifacts/BoxMapTest.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, Account, Address, Algodv2, Indexer, OnApplicationComplete, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
+import { ABIUintType, Account, Address, Indexer, OnApplicationComplete, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
 import { ABIAppCallArg } from './app'
@@ -24,7 +25,7 @@ describe('application-client', () => {
     appSpec = (await getTestingAppContract()).appSpec
   })
 
-  const deploy = async (account: Address & Account, algod: Algodv2, indexer: Indexer) => {
+  const deploy = async (account: Address & Account, algod: AlgodClient, indexer: Indexer) => {
     const client = algokit.getAppClient(
       {
         resolveBy: 'creatorAndName',

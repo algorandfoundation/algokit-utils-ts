@@ -1,4 +1,5 @@
 import { Transaction } from '@algorandfoundation/algokit-transact'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
@@ -8,7 +9,6 @@ import { AlgoAmount } from '../types/amount'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgorandClient } from './algorand-client'
 import { AlgoConfig } from './network-client'
-import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer
 import Kmd = algosdk.Kmd
 import LogicSigAccount = algosdk.LogicSigAccount
@@ -20,7 +20,7 @@ export interface AlgorandTestAutomationContext {
   /** An AlgorandClient instance loaded with the current context, including testAccount and any generated accounts loaded as signers */
   algorand: AlgorandClient
   /** Algod client instance that will log transactions in `transactionLogger` */
-  algod: Algodv2
+  algod: AlgodClient
   /** Indexer client instance */
   indexer: Indexer
   /** KMD client instance */
@@ -52,7 +52,7 @@ export interface GetTestAccountParams {
 /** Configuration for creating an Algorand testing fixture. */
 export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   /** An optional algod client, if not specified then it will create one against `algodConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
-  algod?: Algodv2
+  algod?: AlgodClient
   /** An optional indexer client, if not specified then it will create one against `indexerConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
   indexer?: Indexer
   /** An optional kmd client, if not specified then it will create one against `kmdConfig` (if present) then environment variables defined network (if present) or default LocalNet. */
@@ -60,7 +60,7 @@ export interface AlgorandFixtureConfig extends Partial<AlgoConfig> {
   /** The amount of funds to allocate to the default testing account, if not specified then it will get 10 ALGO. */
   testAccountFunding?: AlgoAmount
   /** Optional override for how to get an account; this allows you to retrieve accounts from a known or cached list of accounts. */
-  accountGetter?: (algod: Algodv2, kmd?: Kmd) => Promise<Account>
+  accountGetter?: (algod: AlgodClient, kmd?: Kmd) => Promise<Account>
 }
 
 /** An Algorand automated testing fixture */

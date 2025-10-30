@@ -1,3 +1,4 @@
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { Config } from '../config'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
@@ -137,7 +138,7 @@ export interface AssetInformation {
 
 /** Allows management of asset information. */
 export class AssetManager {
-  private _algod: algosdk.Algodv2
+  private _algod: AlgodClient
   private _newGroup: () => TransactionComposer
 
   /**
@@ -149,7 +150,7 @@ export class AssetManager {
    * const assetManager = new AssetManager(algod, () => new TransactionComposer({algod, () => signer, () => suggestedParams}))
    * ```
    */
-  constructor(algod: algosdk.Algodv2, newGroup: () => TransactionComposer) {
+  constructor(algod: AlgodClient, newGroup: () => TransactionComposer) {
     this._algod = algod
     this._newGroup = newGroup
   }

@@ -1,6 +1,6 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetailsById, ApplicationClient } from './types/app-client'
-import Algodv2 = algosdk.Algodv2
 
 /**
  * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
@@ -37,7 +37,7 @@ import Algodv2 = algosdk.Algodv2
  *
  * @returns The application client
  */
-export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
+export function getAppClient(appDetails: AppSpecAppDetails, algod: AlgodClient) {
   return new ApplicationClient(appDetails, algod)
 }
 
@@ -63,7 +63,7 @@ export function getAppClient(appDetails: AppSpecAppDetails, algod: Algodv2) {
  *
  * @returns The application client
  */
-export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algodv2) {
+export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: AlgodClient) {
   return new ApplicationClient({ ...appDetails, resolveBy: 'id' }, algod)
 }
 
@@ -90,6 +90,6 @@ export function getAppClientById(appDetails: AppSpecAppDetailsById, algod: Algod
  *
  * @returns The application client
  */
-export function getAppClientByCreatorAndName(appDetails: AppSpecAppDetailsByCreatorAndName, algod: Algodv2) {
+export function getAppClientByCreatorAndName(appDetails: AppSpecAppDetailsByCreatorAndName, algod: AlgodClient) {
   return new ApplicationClient({ ...appDetails, resolveBy: 'creatorAndName' }, algod)
 }

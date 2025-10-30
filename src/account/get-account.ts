@@ -1,11 +1,11 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { AccountConfig, SigningAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { getAccountConfigFromEnvironment } from './get-account-config-from-environment'
 import type { Account } from '@algorandfoundation/sdk'
-import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**  @deprecated use `algorand.account.fromEnvironment()` instead
@@ -40,7 +40,7 @@ import Kmd = algosdk.Kmd
  */
 export async function getAccount(
   account: { name: string; fundWith?: AlgoAmount } | string,
-  algod: Algodv2,
+  algod: AlgodClient,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
@@ -67,7 +67,7 @@ export async function getAccount(
  */
 export async function getAccount(
   account: { config: AccountConfig; fundWith?: AlgoAmount },
-  algod: Algodv2,
+  algod: AlgodClient,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount>
 
@@ -104,7 +104,7 @@ export async function getAccount(
  */
 export async function getAccount(
   account: { name: string; fundWith?: AlgoAmount } | { config: AccountConfig; fundWith?: AlgoAmount } | string,
-  algod: Algodv2,
+  algod: AlgodClient,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
   let name: string

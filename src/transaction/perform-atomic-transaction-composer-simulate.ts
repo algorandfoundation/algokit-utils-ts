@@ -1,6 +1,5 @@
-import { SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '@algorandfoundation/algod-client'
+import { SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig, AlgodClient } from '@algorandfoundation/algod-client'
 import * as algosdk from '@algorandfoundation/sdk'
-import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 
 /**
@@ -13,7 +12,7 @@ import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
  */
 export async function performAtomicTransactionComposerSimulate(
   atc: AtomicTransactionComposer,
-  algod: Algodv2,
+  algod: AlgodClient,
   options?: Omit<SimulateRequest, 'txnGroups'>,
 ) {
   const transactionsWithSigners = atc.buildGroup()

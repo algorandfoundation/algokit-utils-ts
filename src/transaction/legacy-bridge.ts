@@ -1,4 +1,5 @@
 import { TransactionParams } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
@@ -28,12 +29,11 @@ import {
   TransactionNote,
 } from '../types/transaction'
 import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
-import Algodv2 = algosdk.Algodv2
 import ABIMethod = algosdk.ABIMethod
 
 /** @deprecated Bridges between legacy `sendTransaction` behaviour and new `AlgorandClient` behaviour. */
 export async function legacySendTransactionBridge<T extends CommonTransactionParams, TResult extends SendSingleTransactionResult>(
-  algod: Algodv2,
+  algod: AlgodClient,
   from: SendTransactionFrom,
   sendParams: SendTransactionParams,
   params: T,
@@ -98,7 +98,7 @@ export async function legacySendAppTransactionBridge<
     | AppCallMethodCall,
   TResult extends SendSingleTransactionResult,
 >(
-  algod: Algodv2,
+  algod: AlgodClient,
   from: SendTransactionFrom,
   appArgs: RawAppCallArgs | ABIAppCallArgs | undefined,
   sendParams: SendTransactionParams & { note?: TransactionNote },

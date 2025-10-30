@@ -3,7 +3,6 @@
 A collection of random notes pop up during the migration process.
 
 - TODO: review the retry logic
-- TODO: remove algosdk.Algodv2
 - const { lastRound: firstRound } = suggestedParams! // TODO: document suggested params doesn't have first round anymore
 - explain the type differences between transact and algod
 - remove waitForIndexer

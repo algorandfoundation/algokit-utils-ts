@@ -1,4 +1,4 @@
-import { EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import { EvalDelta, PendingTransactionResponse, TealValue, AlgodClient } from '@algorandfoundation/algod-client'
 import { BoxReference as TransactBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
@@ -30,7 +30,6 @@ import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIValue = algosdk.ABIValue
 import Address = algosdk.Address
-import Algodv2 = algosdk.Algodv2
 import OnApplicationComplete = algosdk.OnApplicationComplete
 
 /**
@@ -44,7 +43,7 @@ import OnApplicationComplete = algosdk.OnApplicationComplete
  */
 export async function createApp(
   create: CreateAppParams,
-  algod: Algodv2,
+  algod: AlgodClient,
 ): Promise<Partial<AppCompilationResult> & AppCallTransactionResult & AppReference> {
   const onComplete = getAppOnCompleteAction(create.onCompleteAction)
   if (onComplete === algosdk.OnApplicationComplete.ClearStateOC) {
@@ -104,7 +103,7 @@ export async function createApp(
  */
 export async function updateApp(
   update: UpdateAppParams,
-  algod: Algodv2,
+  algod: AlgodClient,
 ): Promise<Partial<AppCompilationResult> & AppCallTransactionResult> {
   return update.args?.method
     ? await legacySendAppTransactionBridge(
@@ -185,7 +184,7 @@ export function getAppOnCompleteAction(onCompletionAction?: AppCallType | OnAppl
  * @param algod An algod client
  * @returns The result of the call
  */
-export async function callApp(call: AppCallParams, algod: Algodv2): Promise<AppCallTransactionResult> {
+export async function callApp(call: AppCallParams, algod: AlgodClient): Promise<AppCallTransactionResult> {
   const onComplete = getAppOnCompleteAction(call.callType)
   if (onComplete === algosdk.OnApplicationComplete.UpdateApplicationOC) {
     throw new Error('Cannot execute an app call with on-complete action of Update')
@@ -250,7 +249,7 @@ export function getABIReturn(args?: AppCallArgs, confirmation?: PendingTransacti
  * @param algod An algod client instance
  * @returns The current global state
  */
-export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) {
+export async function getAppGlobalState(appId: number | bigint, algod: AlgodClient) {
   return await new AppManager(algod).getGlobalState(BigInt(appId))
 }
 
@@ -263,7 +262,7 @@ export async function getAppGlobalState(appId: number | bigint, algod: Algodv2) 
  * @param algod An algod client instance
  * @returns The current local state for the given (app, account) combination
  */
-export async function getAppLocalState(appId: number | bigint, account: string | SendTransactionFrom, algod: Algodv2) {
+export async function getAppLocalState(appId: number | bigint, account: string | SendTransactionFrom, algod: AlgodClient) {
   return new AppManager(algod).getLocalState(BigInt(appId), getSenderAddress(account))
 }
 
@@ -274,7 +273,7 @@ export async function getAppLocalState(appId: number | bigint, account: string |
  * @param algod An algod client instance
  * @returns The current box names
  */
-export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Promise<BoxName[]> {
+export async function getAppBoxNames(appId: number | bigint, algod: AlgodClient): Promise<BoxName[]> {
   return new AppManager(algod).getBoxNames(BigInt(appId))
 }
 
@@ -286,7 +285,7 @@ export async function getAppBoxNames(appId: number | bigint, algod: Algodv2): Pr
  * @param algod An algod client instance
  * @returns The current box value as a byte array
  */
-export async function getAppBoxValue(appId: number | bigint, boxName: string | Uint8Array | BoxName, algod: Algodv2): Promise<Uint8Array> {
+export async function getAppBoxValue(appId: number | bigint, boxName: string | Uint8Array | BoxName, algod: AlgodClient): Promise<Uint8Array> {
   return new AppManager(algod).getBoxValue(BigInt(appId), typeof boxName !== 'string' && 'name' in boxName ? boxName.nameRaw : boxName)
 }
 
@@ -298,7 +297,7 @@ export async function getAppBoxValue(appId: number | bigint, boxName: string | U
  * @param algod An algod client instance
  * @returns The current box values as a byte array in the same order as the passed in box names
  */
-export async function getAppBoxValues(appId: number, boxNames: (string | Uint8Array | BoxName)[], algod: Algodv2): Promise<Uint8Array[]> {
+export async function getAppBoxValues(appId: number, boxNames: (string | Uint8Array | BoxName)[], algod: AlgodClient): Promise<Uint8Array[]> {
   return new AppManager(algod).getBoxValues(
     BigInt(appId),
     boxNames.map((b) => (typeof b !== 'string' && 'name' in b ? b.nameRaw : b)),
@@ -312,7 +311,7 @@ export async function getAppBoxValues(appId: number, boxNames: (string | Uint8Ar
  * @param algod An algod client instance
  * @returns The current box value as an ABI value
  */
-export async function getAppBoxValueFromABIType(request: BoxValueRequestParams, algod: Algodv2): Promise<ABIValue> {
+export async function getAppBoxValueFromABIType(request: BoxValueRequestParams, algod: AlgodClient): Promise<ABIValue> {
   return new AppManager(algod).getBoxValueFromABIType({
     appId: BigInt(request.appId),
     boxName: typeof request.boxName !== 'string' && 'name' in request.boxName ? request.boxName.nameRaw : request.boxName,
@@ -327,7 +326,7 @@ export async function getAppBoxValueFromABIType(request: BoxValueRequestParams, 
  * @param algod An algod client instance
  * @returns The current box values as an ABI value in the same order as the passed in box names
  */
-export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams, algod: Algodv2): Promise<ABIValue[]> {
+export async function getAppBoxValuesFromABIType(request: BoxValuesRequestParams, algod: AlgodClient): Promise<ABIValue[]> {
   return new AppManager(algod).getBoxValuesFromABIType({
     appId: BigInt(request.appId),
     boxNames: request.boxNames.map((b) => (typeof b !== 'string' && 'name' in b ? b.nameRaw : b)),
@@ -404,7 +403,7 @@ function _getAccountAddress(account: string | Address) {
  * @param algod An algod client
  * @returns The data about the app
  */
-export async function getAppById(appId: number | bigint, algod: Algodv2) {
+export async function getAppById(appId: number | bigint, algod: AlgodClient) {
   return await algod.getApplicationById(toNumber(appId))
 }
 
@@ -417,7 +416,7 @@ export async function getAppById(appId: number | bigint, algod: Algodv2) {
  * @param tealCode The TEAL code
  * @returns The information about the compiled file
  */
-export async function compileTeal(tealCode: string, algod: Algodv2): Promise<CompiledTeal> {
+export async function compileTeal(tealCode: string, algod: AlgodClient): Promise<CompiledTeal> {
   return await new AppManager(algod).compileTeal(tealCode)
 }
 

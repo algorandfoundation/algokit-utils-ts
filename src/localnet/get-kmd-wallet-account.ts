@@ -1,8 +1,8 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { ClientManager } from '../types/client-manager'
 import { KmdAccountManager } from '../types/kmd-account-manager'
 import type { Account } from '@algorandfoundation/sdk'
-import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 
 /**
@@ -30,7 +30,7 @@ export async function getKmdWalletAccount(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate?: (account: Record<string, any>) => boolean
   },
-  algod: Algodv2,
+  algod: AlgodClient,
   kmdClient?: Kmd,
 ): Promise<Account | undefined> {
   return (

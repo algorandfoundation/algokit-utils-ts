@@ -4,10 +4,10 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
-import { SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algod-client'
+import { AlgodClient, SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algod-client'
 import * as algokit from '../../../src/index'
 import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
-import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction } from '@algorandfoundation/sdk'
+import { AtomicTransactionComposer, OnApplicationComplete, Transaction } from '@algorandfoundation/sdk'
 import type {
   ABIAppCallArg,
   AppCallTransactionResult,
@@ -552,7 +552,7 @@ export class TestContractClient {
    */
   constructor(
     appDetails: AppDetails,
-    private algod: Algodv2,
+    private algod: AlgodClient,
   ) {
     this.sender = appDetails.sender
     this.appClient = algokit.getAppClient(

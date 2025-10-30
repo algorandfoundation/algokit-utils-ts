@@ -1,4 +1,4 @@
-import { ApplicationLocalReference, AssetHoldingReference, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import { AlgodClient, ApplicationLocalReference, AssetHoldingReference, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
 import { ResourceReference, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
@@ -117,14 +117,14 @@ export interface AccessReference {
 
 /** Allows management of application information. */
 export class AppManager {
-  private _algod: algosdk.Algodv2
+  private _algod: AlgodClient
   private _compilationResults: Record<string, CompiledTeal> = {}
 
   /**
    * Creates an `AppManager`
    * @param algod An algod instance
    */
-  constructor(algod: algosdk.Algodv2) {
+  constructor(algod: AlgodClient) {
     this._algod = algod
   }
 

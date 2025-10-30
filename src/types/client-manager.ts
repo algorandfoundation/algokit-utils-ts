@@ -1,4 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
+import { TransactionParams, AlgodClient } from '@algorandfoundation/algod-client'
 import * as algosdk from '@algorandfoundation/sdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
@@ -9,12 +9,11 @@ import { Expand } from './expand'
 import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './network-client'
 import Kmd = algosdk.Kmd
 import Indexer = algosdk.Indexer
-import Algodv2 = algosdk.Algodv2
 
 /** Clients from algosdk that interact with the official Algorand APIs */
 export interface AlgoSdkClients {
   /** Algod client, see https://dev.algorand.co/reference/rest-apis/algod/ */
-  algod: algosdk.Algodv2
+  algod: AlgodClient
   /** Optional indexer client, see https://dev.algorand.co/reference/rest-apis/indexer */
   indexer?: algosdk.Indexer
   /** Optional KMD client, see https://dev.algorand.co/reference/rest-apis/kmd/ */
@@ -47,7 +46,7 @@ export type ClientTypedAppFactoryParams = Expand<Omit<AppFactoryParams, 'algoran
 
 /** Exposes access to various API clients. */
 export class ClientManager {
-  private _algod: algosdk.Algodv2
+  private _algod: AlgodClient
   private _indexer?: algosdk.Indexer
   private _kmd?: algosdk.Kmd
   private _algorand?: AlgorandClient
@@ -91,7 +90,7 @@ export class ClientManager {
    * Returns an algosdk Algod API client.
    * @returns The Algod client
    */
-  public get algod(): algosdk.Algodv2 {
+  public get algod(): AlgodClient {
     return this._algod
   }
 
@@ -588,13 +587,13 @@ export class ClientManager {
    *  await algod.healthCheck().do()
    * ```
    */
-  public static getAlgodClient(config: AlgoClientConfig): Algodv2 {
+  public static getAlgodClient(config: AlgoClientConfig): AlgodClient {
     const { token, server, port } = config
     const baseUrl = port !== undefined ? `${server}:${port}` : server
 
     const tokenHeader: algosdk.TokenHeader = typeof token === 'string' ? { 'X-Algo-API-Token': token } : (token ?? {})
 
-    return new algosdk.Algodv2({
+    return new AlgodClient({
       baseUrl: baseUrl,
       headers: { ...tokenHeader },
     })
@@ -611,7 +610,7 @@ export class ClientManager {
    *  await algod.healthCheck().do()
    *  ```
    */
-  public static getAlgodClientFromEnvironment(): Algodv2 {
+  public static getAlgodClientFromEnvironment(): AlgodClient {
     return ClientManager.getAlgodClient(ClientManager.getAlgodConfigFromEnvironment())
   }
 
