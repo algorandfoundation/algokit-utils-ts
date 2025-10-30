@@ -1,5 +1,5 @@
 import type { Transaction } from '@algorandfoundation/algokit-transact'
-import { TransactionType as NewTransactionType } from '@algorandfoundation/algokit-transact'
+import { TransactionType } from '@algorandfoundation/algokit-transact'
 import { foreignArraysToResourceReferences } from './appAccess.js'
 import { Address } from './encoding/address.js'
 import {
@@ -88,7 +88,7 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
   rekeyTo,
 }: PaymentTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    transactionType: NewTransactionType.Payment,
+    type: TransactionType.pay,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -127,7 +127,7 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
   rekeyTo,
 }: KeyRegistrationTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    transactionType: NewTransactionType.KeyRegistration,
+    type: TransactionType.keyreg,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -175,7 +175,7 @@ export function makeBaseAssetConfigTxn({
   suggestedParams,
 }: AssetConfigurationTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    transactionType: NewTransactionType.AssetConfig,
+    type: TransactionType.acfg,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -382,7 +382,7 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
   rekeyTo,
 }: AssetFreezeTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    transactionType: NewTransactionType.AssetFreeze,
+    type: TransactionType.afrz,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -425,7 +425,7 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
   }
 
   const txn: Transaction = {
-    transactionType: NewTransactionType.AssetTransfer,
+    type: TransactionType.axfer,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -511,7 +511,7 @@ export function makeApplicationCallTxnFromObject({
       }))
 
   const txn: Transaction = {
-    transactionType: NewTransactionType.AppCall,
+    type: TransactionType.appl,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -520,7 +520,7 @@ export function makeApplicationCallTxnFromObject({
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),
-    appCall: {
+    applicationCall: {
       appId: ensureBigInt(appIndex) || BigInt(0),
       onComplete: mapOnApplicationComplete(onComplete),
       approvalProgram,

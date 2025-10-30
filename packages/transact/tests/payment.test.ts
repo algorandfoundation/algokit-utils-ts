@@ -70,7 +70,7 @@ describe('Payment', () => {
   describe('Payment Transaction Validation', () => {
     test('should validate valid payment transaction', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.Payment,
+        type: TransactionType.pay,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -85,7 +85,7 @@ describe('Payment', () => {
 
     test('should validate payment transaction with zero amount', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.Payment,
+        type: TransactionType.pay,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -100,7 +100,7 @@ describe('Payment', () => {
 
     test('should validate payment transaction with close remainder', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.Payment,
+        type: TransactionType.pay,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -117,7 +117,7 @@ describe('Payment', () => {
     test('should validate self-payment transaction', () => {
       const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
       const transaction: Transaction = {
-        transactionType: TransactionType.Payment,
+        type: TransactionType.pay,
         sender: senderAddress,
         firstValid: 1000n,
         lastValid: 2000n,

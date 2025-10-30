@@ -1,72 +1,10 @@
-// TODO: this is strange, maybe ApplicationLocalReference, AssetHoldingReference need to come from transact too
-import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '@algorandfoundation/algokit-transact'
+import { BoxReference, HoldingReference, LocalsReference, ResourceReference, TransactionType } from '@algorandfoundation/algokit-transact'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
 import { SdkTransactionParams } from '../../makeTxn.js'
 import { StateProof, StateProofMessage } from '../../stateproof.js'
 
-/**
- * Enum for application transaction types.
- */
-export enum TransactionType {
-  /**
-   * Payment transaction
-   */
-  pay = 'pay',
-
-  /**
-   * Key registration transaction
-   */
-  keyreg = 'keyreg',
-
-  /**
-   * Asset configuration transaction
-   */
-  acfg = 'acfg',
-
-  /**
-   * Asset transfer transaction
-   */
-  axfer = 'axfer',
-
-  /**
-   * Asset freeze transaction
-   */
-  afrz = 'afrz',
-
-  /**
-   * Application transaction
-   */
-  appl = 'appl',
-  /**
-   * State proof transaction
-   */
-  stpf = 'stpf',
-
-  /**
-   * Heartbeat transaction
-   */
-  hb = 'hb',
-}
-
-/**
- * Check if a string is a valid transaction type
- * @param s - string to check
- * @returns true if s is a valid transaction type
- */
-export function isTransactionType(s: string): s is TransactionType {
-  return (
-    s === TransactionType.pay ||
-    s === TransactionType.keyreg ||
-    s === TransactionType.acfg ||
-    s === TransactionType.axfer ||
-    s === TransactionType.afrz ||
-    s === TransactionType.appl ||
-    s === TransactionType.stpf ||
-    s === TransactionType.hb
-  )
-}
-
+// TODO: PD - remove this
 /**
  * Enums for application transactions on-transaction-complete behavior
  */

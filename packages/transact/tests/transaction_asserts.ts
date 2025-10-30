@@ -32,7 +32,7 @@ export const assertTransactionId = (label: string, testData: TransactionTestData
 }
 
 export const assertEncodedTransactionType = (label: string, testData: TransactionTestData) => {
-  expect(getEncodedTransactionType(testData.unsignedBytes), label).toBe(testData.transaction.transactionType)
+  expect(getEncodedTransactionType(testData.unsignedBytes), label).toBe(testData.transaction.type)
 }
 
 export const assertDecodeWithoutPrefix = (label: string, testData: TransactionTestData) => {

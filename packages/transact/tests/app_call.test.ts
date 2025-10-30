@@ -75,11 +75,11 @@ describe('App Call', () => {
     describe('App Creation Validation', () => {
       test('should throw error when approval program is missing for app creation', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             // approvalProgram: missing - should cause error
@@ -92,11 +92,11 @@ describe('App Call', () => {
 
       test('should throw error when clear state program is missing for app creation', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -109,11 +109,11 @@ describe('App Call', () => {
 
       test('should throw error when extra program pages exceed maximum', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -130,11 +130,11 @@ describe('App Call', () => {
       test('should throw error when approval program exceeds max size', () => {
         const largeProgram = new Uint8Array(2049) // Exceeds basic 2048 byte limit
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: largeProgram,
@@ -149,11 +149,11 @@ describe('App Call', () => {
       test('should throw error when clear state program exceeds max size', () => {
         const largeProgram = new Uint8Array(2049) // Exceeds basic 2048 byte limit
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -169,11 +169,11 @@ describe('App Call', () => {
         const mediumProgram1 = new Uint8Array(1500)
         const mediumProgram2 = new Uint8Array(1500) // Combined: 3000 > 2048
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: mediumProgram1,
@@ -189,11 +189,11 @@ describe('App Call', () => {
 
       test('should throw error when global state schema exceeds maximum keys', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -210,11 +210,11 @@ describe('App Call', () => {
 
       test('should throw error when local state schema exceeds maximum keys', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -231,11 +231,11 @@ describe('App Call', () => {
 
       test('should validate valid app creation transaction', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -258,11 +258,11 @@ describe('App Call', () => {
       test('should validate app creation with large programs when extra pages are provided', () => {
         const largeProgram = new Uint8Array(4000) // Requires extra pages
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 0n, // App creation
             onComplete: OnApplicationComplete.NoOp,
             approvalProgram: largeProgram,
@@ -278,11 +278,11 @@ describe('App Call', () => {
     describe('App Update Validation', () => {
       test('should throw error when approval program is missing for app update', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.UpdateApplication,
             // approvalProgram: missing - should cause error
@@ -295,11 +295,11 @@ describe('App Call', () => {
 
       test('should throw error when clear state program is missing for app update', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.UpdateApplication,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -312,11 +312,11 @@ describe('App Call', () => {
 
       test('should throw error when trying to modify immutable field (global state schema)', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.UpdateApplication,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -336,11 +336,11 @@ describe('App Call', () => {
 
       test('should throw error when trying to modify immutable field (local state schema)', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.UpdateApplication,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -360,11 +360,11 @@ describe('App Call', () => {
 
       test('should throw error when trying to modify immutable field (extra program pages)', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.UpdateApplication,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -380,11 +380,11 @@ describe('App Call', () => {
 
       test('should validate valid app update transaction', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.UpdateApplication,
             approvalProgram: new Uint8Array([1, 2, 3]),
@@ -400,11 +400,11 @@ describe('App Call', () => {
     describe('App Call/Delete Validation', () => {
       test('should validate valid app call transaction', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.NoOp,
             args: [new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6])],
@@ -419,11 +419,11 @@ describe('App Call', () => {
 
       test('should validate valid app delete transaction', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.DeleteApplication,
           },
@@ -434,11 +434,11 @@ describe('App Call', () => {
 
       test('should validate app opt-in transaction', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.OptIn,
           },
@@ -449,11 +449,11 @@ describe('App Call', () => {
 
       test('should validate app close-out transaction', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.CloseOut,
           },
@@ -464,11 +464,11 @@ describe('App Call', () => {
 
       test('should validate app clear state transaction', () => {
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.ClearState,
           },
@@ -482,11 +482,11 @@ describe('App Call', () => {
       test('should throw error when too many args are provided', () => {
         const manyArgs = Array.from({ length: 17 }, (_, i) => new Uint8Array([i])) // Max is 16
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             args: manyArgs,
@@ -499,11 +499,11 @@ describe('App Call', () => {
       test('should throw error when args total size exceeds maximum', () => {
         const largeArg = new Uint8Array(2049) // Exceeds 2048 byte limit
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             args: [largeArg],
@@ -516,11 +516,11 @@ describe('App Call', () => {
       test('should throw error when too many account references are provided', () => {
         const manyAccounts = Array.from({ length: 9 }, () => 'ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK') // Max is 8
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             accountReferences: manyAccounts,
@@ -533,11 +533,11 @@ describe('App Call', () => {
       test('should throw error when too many app references are provided', () => {
         const manyApps = Array.from({ length: 9 }, (_, i) => BigInt(i + 1)) // Max is 8
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             appReferences: manyApps,
@@ -550,11 +550,11 @@ describe('App Call', () => {
       test('should throw error when too many asset references are provided', () => {
         const manyAssets = Array.from({ length: 9 }, (_, i) => BigInt(i + 1)) // Max is 8
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             assetReferences: manyAssets,
@@ -572,11 +572,11 @@ describe('App Call', () => {
         const maxArgs = Array.from({ length: 16 }, (_, i) => new Uint8Array([i]))
 
         const transaction: Transaction = {
-          transactionType: TransactionType.AppCall,
+          type: TransactionType.appl,
           sender: '424ZV7KBBUJ52DUKP2KLQ6I5GBOHKBXOW7Q7UQIOOYNDWYRM4EKOSMVVRI',
           firstValid: 1000n,
           lastValid: 2000n,
-          appCall: {
+          applicationCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             args: maxArgs,

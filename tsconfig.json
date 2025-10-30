@@ -18,6 +18,7 @@
     { "path": "./packages/common" },
     { "path": "./packages/abi" },
     { "path": "./packages/transact" },
+    { "path": "./packages/sdk" },
     { "path": "./packages/algod_client" },
     { "path": "./packages/kmd_client" },
     { "path": "./packages/indexer_client" }

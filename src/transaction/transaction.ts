@@ -246,7 +246,7 @@ export const sendTransaction = async function (
   const populateAppCallResources = sendParams?.populateAppCallResources ?? Config.populateAppCallResources
 
   // Populate resources if the transaction is an appcall and populateAppCallResources wasn't explicitly set to false
-  if (txnToSend.transactionType === TransactionType.AppCall && populateAppCallResources) {
+  if (txnToSend.type === TransactionType.appl && populateAppCallResources) {
     const newAtc = new AtomicTransactionComposer()
     newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
     const atc = await prepareGroupForSending(newAtc, algod, { ...sendParams, populateAppCallResources })
@@ -258,7 +258,7 @@ export const sendTransaction = async function (
   await algod.rawTransaction({ body: signedTransaction })
 
   Config.getLogger(suppressLog).verbose(
-    `Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.transactionType} from ${getSenderAddress(from)}`,
+    `Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.type} from ${getSenderAddress(from)}`,
   )
 
   let confirmation: PendingTransactionResponse | undefined = undefined
@@ -303,7 +303,7 @@ async function getGroupExecutionInfo(
   emptySignerAtc['transactions'].forEach((t: algosdk.TransactionWithSigner, i: number) => {
     t.signer = nullSigner
 
-    if (sendParams.coverAppCallInnerTransactionFees && t.txn.transactionType === TransactionType.AppCall) {
+    if (sendParams.coverAppCallInnerTransactionFees && t.txn.type === TransactionType.appl) {
       if (!additionalAtcContext?.suggestedParams) {
         throw Error(`Please provide additionalAtcContext.suggestedParams when coverAppCallInnerTransactionFees is enabled`)
       }
@@ -376,7 +376,7 @@ async function getGroupExecutionInfo(
         const parentPerByteFee = perByteTxnFee * BigInt(encodeTransaction(originalTxn).length + 75)
         const parentMinFee = parentPerByteFee < minTxnFee ? minTxnFee : parentPerByteFee
         const parentFeeDelta = parentMinFee - (originalTxn.fee ?? 0n)
-        if (originalTxn.transactionType === TransactionType.AppCall) {
+        if (originalTxn.type === TransactionType.appl) {
           const calculateInnerFeeDelta = (itxns: PendingTransactionResponse[], acc: bigint = 0n): bigint => {
             // Surplus inner transaction fees do not pool up to the parent transaction.
             // Additionally surplus inner transaction fees only pool from sibling transactions that are sent prior to a given inner transaction, hence why we iterate in reverse order.
@@ -456,8 +456,7 @@ export async function prepareGroupForSending(
           const maxFee = additionalAtcContext?.maxFees?.get(i)?.microAlgo
           const immutableFee = maxFee !== undefined && maxFee === txnInGroup.fee
           // Because we don't alter non app call transaction, they take priority
-          const priorityMultiplier =
-            txn.requiredFeeDelta > 0n && (immutableFee || txnInGroup.transactionType !== TransactionType.AppCall) ? 1_000n : 1n
+          const priorityMultiplier = txn.requiredFeeDelta > 0n && (immutableFee || txnInGroup.type !== TransactionType.appl) ? 1_000n : 1n
 
           return {
             ...txn,
@@ -501,14 +500,14 @@ export async function prepareGroupForSending(
     : [0n, new Map<number, bigint>()]
 
   const appCallHasAccessReferences = (txn: Transaction) => {
-    return txn.transactionType === TransactionType.AppCall && txn.appCall?.access && txn.appCall?.access.length > 0
+    return txn.type === TransactionType.appl && txn.applicationCall?.access && txn.applicationCall?.access.length > 0
   }
 
   const indexesWithAccessReferences: number[] = []
 
   executionInfo.txns.forEach(({ unnamedResourcesAccessed: r }, i) => {
     // Populate Transaction App Call Resources
-    if (sendParams.populateAppCallResources && group[i].txn.transactionType === TransactionType.AppCall) {
+    if (sendParams.populateAppCallResources && group[i].txn.type === TransactionType.appl) {
       const hasAccessReferences = appCallHasAccessReferences(group[i].txn)
 
       if (hasAccessReferences && (r || executionInfo.groupUnnamedResourcesAccessed)) {
@@ -521,22 +520,22 @@ export async function prepareGroupForSending(
           throw Error('Unexpected asset holding at the transaction level')
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(group[i].txn as any)['appCall'] = {
-          ...group[i].txn.appCall,
-          accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])],
-          appReferences: [...(group[i].txn?.appCall?.appReferences ?? []), ...(r.apps ?? [])],
-          assetReferences: [...(group[i].txn?.appCall?.assetReferences ?? []), ...(r.assets ?? [])],
+          ...group[i].txn.applicationCall,
+          accountReferences: [...(group[i].txn?.applicationCall?.accountReferences ?? []), ...(r.accounts ?? [])],
+          appReferences: [...(group[i].txn?.applicationCall?.appReferences ?? []), ...(r.apps ?? [])],
+          assetReferences: [...(group[i].txn?.applicationCall?.assetReferences ?? []), ...(r.assets ?? [])],
           boxReferences: [
-            ...(group[i].txn?.appCall?.boxReferences ?? []),
+            ...(group[i].txn?.applicationCall?.boxReferences ?? []),
             ...(r.boxes?.map((b) => ({ appId: b.app, name: b.name })) ?? []),
           ],
         } satisfies Partial<ApplicationTransactionFields>
 
-        const accounts = group[i].txn.appCall?.accountReferences?.length ?? 0
+        const accounts = group[i].txn.applicationCall?.accountReferences?.length ?? 0
         if (accounts > MAX_APP_CALL_ACCOUNT_REFERENCES)
           throw Error(`Account reference limit of ${MAX_APP_CALL_ACCOUNT_REFERENCES} exceeded in transaction ${i}`)
-        const assets = group[i].txn.appCall?.assetReferences?.length ?? 0
-        const apps = group[i].txn.appCall?.appReferences?.length ?? 0
-        const boxes = group[i].txn.appCall?.boxReferences?.length ?? 0
+        const assets = group[i].txn.applicationCall?.assetReferences?.length ?? 0
+        const apps = group[i].txn.applicationCall?.appReferences?.length ?? 0
+        const boxes = group[i].txn.applicationCall?.boxReferences?.length ?? 0
         if (accounts + assets + apps + boxes > MAX_APP_CALL_FOREIGN_REFERENCES) {
           throw Error(`Resource reference limit of ${MAX_APP_CALL_FOREIGN_REFERENCES} exceeded in transaction ${i}`)
         }
@@ -548,7 +547,7 @@ export async function prepareGroupForSending(
       const additionalTransactionFee = additionalTransactionFees.get(i)
 
       if (additionalTransactionFee !== undefined) {
-        if (group[i].txn.transactionType !== TransactionType.AppCall) {
+        if (group[i].txn.type !== TransactionType.appl) {
           throw Error(`An additional fee of ${additionalTransactionFee} µALGO is required for non app call transaction ${i}`)
         }
         const transactionFee = (group[i].txn.fee ?? 0n) + additionalTransactionFee
@@ -577,13 +576,13 @@ export async function prepareGroupForSending(
       type: 'account' | 'assetHolding' | 'appLocal' | 'app' | 'box' | 'asset',
     ): void => {
       const isApplBelowLimit = (t: algosdk.TransactionWithSigner) => {
-        if (t.txn.transactionType !== TransactionType.AppCall) return false
+        if (t.txn.type !== TransactionType.appl) return false
         if (appCallHasAccessReferences(t.txn)) return false
 
-        const accounts = t.txn.appCall?.accountReferences?.length ?? 0
-        const assets = t.txn.appCall?.assetReferences?.length ?? 0
-        const apps = t.txn.appCall?.appReferences?.length ?? 0
-        const boxes = t.txn.appCall?.boxReferences?.length ?? 0
+        const accounts = t.txn.applicationCall?.accountReferences?.length ?? 0
+        const assets = t.txn.applicationCall?.assetReferences?.length ?? 0
+        const apps = t.txn.applicationCall?.appReferences?.length ?? 0
+        const boxes = t.txn.applicationCall?.boxReferences?.length ?? 0
 
         return accounts + assets + apps + boxes < MAX_APP_CALL_FOREIGN_REFERENCES
       }
@@ -597,9 +596,9 @@ export async function prepareGroupForSending(
 
           return (
             // account is in the foreign accounts array
-            t.txn.appCall?.accountReferences?.map((a) => a.toString()).includes(account.toString()) ||
+            t.txn.applicationCall?.accountReferences?.map((a) => a.toString()).includes(account.toString()) ||
             // account is available as an app account
-            t.txn.appCall?.appReferences?.map((a) => algosdk.getApplicationAddress(a).toString()).includes(account.toString()) ||
+            t.txn.applicationCall?.appReferences?.map((a) => algosdk.getApplicationAddress(a).toString()).includes(account.toString()) ||
             // account is available since it's in one of the fields
             Object.values(t.txn).some((f) =>
               stringifyJSON(f, (_, v) => (v instanceof Address ? v.toString() : v))?.includes(account.toString()),
@@ -612,15 +611,15 @@ export async function prepareGroupForSending(
             const { asset } = reference as AssetHoldingReference
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ;(txns[txnIndex].txn as any)['appCall'] = {
-              ...txns[txnIndex].txn.appCall,
-              assetReferences: [...(txns[txnIndex].txn?.appCall?.assetReferences ?? []), ...[asset]],
+              ...txns[txnIndex].txn.applicationCall,
+              assetReferences: [...(txns[txnIndex].txn?.applicationCall?.assetReferences ?? []), ...[asset]],
             } satisfies Partial<ApplicationTransactionFields>
           } else {
             const { app } = reference as ApplicationLocalReference
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ;(txns[txnIndex].txn as any)['appCall'] = {
-              ...txns[txnIndex].txn.appCall,
-              appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
+              ...txns[txnIndex].txn.applicationCall,
+              appReferences: [...(txns[txnIndex].txn?.applicationCall?.appReferences ?? []), ...[app]],
             } satisfies Partial<ApplicationTransactionFields>
           }
           return
@@ -631,14 +630,14 @@ export async function prepareGroupForSending(
           if (!isApplBelowLimit(t)) return false
 
           // check if there is space in the accounts array
-          if ((t.txn.appCall?.accountReferences?.length ?? 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
+          if ((t.txn.applicationCall?.accountReferences?.length ?? 0) >= MAX_APP_CALL_ACCOUNT_REFERENCES) return false
 
           if (type === 'assetHolding') {
             const { asset } = reference as AssetHoldingReference
-            return t.txn.appCall?.assetReferences?.includes(asset)
+            return t.txn.applicationCall?.assetReferences?.includes(asset)
           } else {
             const { app } = reference as ApplicationLocalReference
-            return t.txn.appCall?.appReferences?.includes(app) || t.txn.appCall?.appId === app
+            return t.txn.applicationCall?.appReferences?.includes(app) || t.txn.applicationCall?.appId === app
           }
         })
 
@@ -647,8 +646,8 @@ export async function prepareGroupForSending(
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(txns[txnIndex].txn as any)['appCall'] = {
-            ...txns[txnIndex].txn.appCall,
-            accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+            ...txns[txnIndex].txn.applicationCall,
+            accountReferences: [...(txns[txnIndex].txn?.applicationCall?.accountReferences ?? []), ...[account]],
           } satisfies Partial<ApplicationTransactionFields>
 
           return
@@ -663,14 +662,14 @@ export async function prepareGroupForSending(
           if (!isApplBelowLimit(t)) return false
 
           // If the app is in the foreign array OR the app being called, then we know it's available
-          return t.txn.appCall?.appReferences?.includes(app) || t.txn.appCall?.appId === app
+          return t.txn.applicationCall?.appReferences?.includes(app) || t.txn.applicationCall?.appId === app
         })
 
         if (txnIndex > -1) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(txns[txnIndex].txn as any)['appCall'] = {
-            ...txns[txnIndex].txn.appCall,
-            boxReferences: [...(txns[txnIndex].txn?.appCall?.boxReferences ?? []), ...[{ appId: app, name: name }]],
+            ...txns[txnIndex].txn.applicationCall,
+            boxReferences: [...(txns[txnIndex].txn?.applicationCall?.boxReferences ?? []), ...[{ appId: app, name: name }]],
           } satisfies Partial<ApplicationTransactionFields>
 
           return
@@ -679,15 +678,15 @@ export async function prepareGroupForSending(
 
       // Find the txn index to put the reference(s)
       const txnIndex = txns.findIndex((t) => {
-        if (t.txn.transactionType !== TransactionType.AppCall) return false
+        if (t.txn.type !== TransactionType.appl) return false
         if (appCallHasAccessReferences(t.txn)) return false
 
-        const accounts = t.txn.appCall?.accountReferences?.length ?? 0
+        const accounts = t.txn.applicationCall?.accountReferences?.length ?? 0
         if (type === 'account') return accounts < MAX_APP_CALL_ACCOUNT_REFERENCES
 
-        const assets = t.txn.appCall?.assetReferences?.length ?? 0
-        const apps = t.txn.appCall?.appReferences?.length ?? 0
-        const boxes = t.txn.appCall?.boxReferences?.length ?? 0
+        const assets = t.txn.applicationCall?.assetReferences?.length ?? 0
+        const apps = t.txn.applicationCall?.appReferences?.length ?? 0
+        const boxes = t.txn.applicationCall?.boxReferences?.length ?? 0
 
         // If we're adding local state or asset holding, we need space for the acocunt and the other reference
         if (type === 'assetHolding' || type === 'appLocal') {
@@ -709,15 +708,15 @@ export async function prepareGroupForSending(
       if (type === 'account') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
-          ...txns[txnIndex].txn.appCall,
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[(reference as Address).toString()]],
+          ...txns[txnIndex].txn.applicationCall,
+          accountReferences: [...(txns[txnIndex].txn?.applicationCall?.accountReferences ?? []), ...[(reference as Address).toString()]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'app') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
-          ...txns[txnIndex].txn.appCall,
+          ...txns[txnIndex].txn.applicationCall,
           appReferences: [
-            ...(txns[txnIndex].txn?.appCall?.appReferences ?? []),
+            ...(txns[txnIndex].txn?.applicationCall?.appReferences ?? []),
             ...[typeof reference === 'bigint' ? reference : BigInt(reference as number)],
           ],
         } satisfies Partial<ApplicationTransactionFields>
@@ -725,39 +724,39 @@ export async function prepareGroupForSending(
         const { app, name } = reference as BoxReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
-          ...txns[txnIndex].txn.appCall,
-          boxReferences: [...(txns[txnIndex].txn?.appCall?.boxReferences ?? []), ...[{ appId: app, name }]],
+          ...txns[txnIndex].txn.applicationCall,
+          boxReferences: [...(txns[txnIndex].txn?.applicationCall?.boxReferences ?? []), ...[{ appId: app, name }]],
         } satisfies Partial<ApplicationTransactionFields>
 
         if (app.toString() !== '0') {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ;(txns[txnIndex].txn as any)['appCall'] = {
-            ...txns[txnIndex].txn.appCall,
-            appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
+            ...txns[txnIndex].txn.applicationCall,
+            appReferences: [...(txns[txnIndex].txn?.applicationCall?.appReferences ?? []), ...[app]],
           } satisfies Partial<ApplicationTransactionFields>
         }
       } else if (type === 'assetHolding') {
         const { asset, account } = reference as AssetHoldingReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
-          ...txns[txnIndex].txn.appCall,
-          assetReferences: [...(txns[txnIndex].txn?.appCall?.assetReferences ?? []), ...[asset]],
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+          ...txns[txnIndex].txn.applicationCall,
+          assetReferences: [...(txns[txnIndex].txn?.applicationCall?.assetReferences ?? []), ...[asset]],
+          accountReferences: [...(txns[txnIndex].txn?.applicationCall?.accountReferences ?? []), ...[account]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'appLocal') {
         const { app, account } = reference as ApplicationLocalReference
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
-          ...txns[txnIndex].txn.appCall,
-          appReferences: [...(txns[txnIndex].txn?.appCall?.appReferences ?? []), ...[app]],
-          accountReferences: [...(txns[txnIndex].txn?.appCall?.accountReferences ?? []), ...[account]],
+          ...txns[txnIndex].txn.applicationCall,
+          appReferences: [...(txns[txnIndex].txn?.applicationCall?.appReferences ?? []), ...[app]],
+          accountReferences: [...(txns[txnIndex].txn?.applicationCall?.accountReferences ?? []), ...[account]],
         } satisfies Partial<ApplicationTransactionFields>
       } else if (type === 'asset') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ;(txns[txnIndex].txn as any)['appCall'] = {
-          ...txns[txnIndex].txn.appCall,
+          ...txns[txnIndex].txn.applicationCall,
           assetReferences: [
-            ...(txns[txnIndex].txn?.appCall?.assetReferences ?? []),
+            ...(txns[txnIndex].txn?.applicationCall?.assetReferences ?? []),
             ...[typeof reference === 'bigint' ? reference : BigInt(reference as number)],
           ],
         } satisfies Partial<ApplicationTransactionFields>
@@ -795,8 +794,8 @@ export async function prepareGroupForSending(
         // When a box belongs to the current app being called, we need to normalize the app ID to 0
         // Find which transaction this box is for by matching the app ID
         const txnWithMatchingApp = group.findIndex((t) => {
-          const isAppCall = t.txn.transactionType === TransactionType.AppCall
-          const appId = t.txn.appCall?.appId
+          const isAppCall = t.txn.type === TransactionType.appl
+          const appId = t.txn.applicationCall?.appId
           const matches = appId !== undefined && BigInt(appId) === BigInt(b.app)
           return isAppCall && matches
         })
@@ -863,7 +862,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
     if (
       (populateAppCallResources || coverAppCallInnerTransactionFees) &&
-      transactionsWithSigner.map((t) => t.txn.transactionType).includes(TransactionType.AppCall)
+      transactionsWithSigner.map((t) => t.txn.type).includes(TransactionType.appl)
     ) {
       atc = await prepareGroupForSending(
         givenAtc,
@@ -911,7 +910,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
     } else {
       Config.getLogger(executeParams?.suppressLog ?? sendParams?.suppressLog).verbose(
-        `Sent transaction ID ${getTransactionId(transactionsToSend[0])} ${transactionsToSend[0].transactionType} from ${transactionsToSend[0].sender}`,
+        `Sent transaction ID ${getTransactionId(transactionsToSend[0])} ${transactionsToSend[0].type} from ${transactionsToSend[0].sender}`,
       )
     }
 

@@ -1,6 +1,6 @@
+import { TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
-import { TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'
@@ -33,8 +33,8 @@ describe('Transfer capability', () => {
 
     const accountInfo = await algorand.account.getInformation(secondAccount)
 
-    expect(result.transaction.transactionType).toBe(TransactionType.Payment)
-    expect(result.confirmation.txn.transaction.transactionType).toBe('pay')
+    expect(result.transaction.type).toBe(TransactionType.pay)
+    expect(result.confirmation.txn.transaction.type).toBe('pay')
 
     expect(result.transaction.payment?.amount).toBe(5_000_000n)
     expect(result.confirmation.txn.transaction.payment?.amount).toBe(5_000_000n)

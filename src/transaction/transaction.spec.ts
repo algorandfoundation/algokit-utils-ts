@@ -1,3 +1,6 @@
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { APP_SPEC as nestedContractAppSpec } from '../../tests/example-contracts/client/TestContractClient'
@@ -5,11 +8,8 @@ import innerFeeContract from '../../tests/example-contracts/inner-fee/applicatio
 import externalARC32 from '../../tests/example-contracts/resource-packer/artifacts/ExternalApp.arc32.json'
 import v8ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv8.arc32.json'
 import v9ARC32 from '../../tests/example-contracts/resource-packer/artifacts/ResourcePackerv9.arc32.json'
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { algo, microAlgo } from '../amount'
 import { Config } from '../config'
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
 import { algorandFixture } from '../testing'
 import { AlgoAmount } from '../types/amount'
 import { AppClient } from '../types/app-client'
@@ -972,8 +972,8 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
         .send({ populateAppCallResources: true })
 
-      const v8CallAccts = transactions[0].appCall?.accountReferences ?? []
-      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
+      const v8CallAccts = transactions[0].applicationCall?.accountReferences ?? []
+      const v9CallAccts = transactions[1].applicationCall?.accountReferences ?? []
 
       expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
     })
@@ -996,8 +996,8 @@ describe('Resource population: Mixed', () => {
         )
         .send({ populateAppCallResources: true })
 
-      const v8CallApps = transactions[0].appCall?.appReferences ?? []
-      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
+      const v8CallApps = transactions[0].applicationCall?.appReferences ?? []
+      const v9CallAccts = transactions[1].applicationCall?.accountReferences ?? []
 
       expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
     })
@@ -1106,7 +1106,7 @@ describe('Resource population: meta', () => {
     })
     const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
-    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
+    expect(res.transaction.applicationCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('rekeyed account', async () => {
@@ -1127,7 +1127,7 @@ describe('Resource population: meta', () => {
       method: 'senderAssetBalance',
     })
 
-    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
+    expect(res.transaction.applicationCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('create box in new app', async () => {
@@ -1141,7 +1141,7 @@ describe('Resource population: meta', () => {
       staticFee: (4_000).microAlgo(),
     })
 
-    const boxRef = result.transaction.appCall?.boxReferences?.[0]
+    const boxRef = result.transaction.applicationCall?.boxReferences?.[0]
     expect(boxRef).toBeDefined()
     expect(boxRef?.appId).toBe(0n)
   })
@@ -1198,19 +1198,19 @@ describe('Resource population: meta', () => {
       for (const txnWithSigner of populatedAtc.buildGroup()) {
         const txn = txnWithSigner.txn
 
-        for (const acct of txn.appCall?.accountReferences ?? []) {
+        for (const acct of txn.applicationCall?.accountReferences ?? []) {
           resources.push(acct.toString())
         }
 
-        for (const asset of txn.appCall?.assetReferences ?? []) {
+        for (const asset of txn.applicationCall?.assetReferences ?? []) {
           resources.push(asset.toString())
         }
 
-        for (const app of txn.appCall?.appReferences ?? []) {
+        for (const app of txn.applicationCall?.appReferences ?? []) {
           resources.push(app.toString())
         }
 
-        for (const box of txn.appCall?.boxReferences ?? []) {
+        for (const box of txn.applicationCall?.boxReferences ?? []) {
           resources.push(`${box.appId}-${box.name.toString()}`)
         }
       }

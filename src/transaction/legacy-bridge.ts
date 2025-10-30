@@ -1,5 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient, TransactionParams } from '@algorandfoundation/algod-client'
 import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { AlgorandClientTransactionCreator } from '../types/algorand-client-transaction-creator'
@@ -150,7 +149,7 @@ export async function _getAppArgsForABICall(args: ABIAppCallArgs, from: SendTran
           ? { txn: (await a).transaction, signer }
           : 'transaction' in a
             ? { txn: a.transaction, signer: 'signer' in a ? getSenderTransactionSigner(a.signer) : signer }
-            : 'transactionType' in a
+            : 'type' in a
               ? { txn: a, signer }
               : a
     }),

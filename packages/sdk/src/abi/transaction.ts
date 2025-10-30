@@ -59,14 +59,14 @@ export function abiCheckTransactionType(type: ABITransactionType, txn: Transacti
   // Map ABI transaction types to numeric TransactionType enum
   const typeMap: Record<ABITransactionType, TransactionType | null> = {
     [ABITransactionType.any]: null,
-    [ABITransactionType.pay]: TransactionType.Payment,
-    [ABITransactionType.keyreg]: TransactionType.KeyRegistration,
-    [ABITransactionType.acfg]: TransactionType.AssetConfig,
-    [ABITransactionType.axfer]: TransactionType.AssetTransfer,
-    [ABITransactionType.afrz]: TransactionType.AssetFreeze,
-    [ABITransactionType.appl]: TransactionType.AppCall,
+    [ABITransactionType.pay]: TransactionType.pay,
+    [ABITransactionType.keyreg]: TransactionType.keyreg,
+    [ABITransactionType.acfg]: TransactionType.acfg,
+    [ABITransactionType.axfer]: TransactionType.axfer,
+    [ABITransactionType.afrz]: TransactionType.afrz,
+    [ABITransactionType.appl]: TransactionType.appl,
   }
 
   const expectedType = typeMap[type]
-  return expectedType !== null && txn.transactionType === expectedType
+  return expectedType !== null && txn.type === expectedType
 }

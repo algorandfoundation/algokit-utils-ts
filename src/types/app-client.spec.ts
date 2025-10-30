@@ -1,13 +1,21 @@
+import { AlgodClient } from '@algorandfoundation/algod-client'
 import { TransactionType } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import {
+  ABIUintType,
+  Account,
+  Address,
+  Indexer,
+  OnApplicationComplete,
+  TransactionSigner,
+  getApplicationAddress,
+} from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
 import { afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import * as algokit from '..'
 import { algo } from '..'
 import boxMapAppSpec from '../../tests/example-contracts/box_map/artifacts/BoxMapTest.arc56.json'
 import { getTestingAppContract } from '../../tests/example-contracts/testing-app/contract'
-import { AlgodClient } from '@algorandfoundation/algod-client'
-import * as algosdk from '@algorandfoundation/sdk'
-import { ABIUintType, Account, Address, Indexer, OnApplicationComplete, TransactionSigner, getApplicationAddress } from '@algorandfoundation/sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from '../testing'
 import { AlgoAmount } from './amount'
 import { ABIAppCallArg } from './app'
@@ -116,7 +124,7 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptInOC)
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
     expect(app.confirmation?.appId).toBe(BigInt(app.appId))
@@ -281,7 +289,7 @@ describe('application-client', () => {
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
-    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
+    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -318,8 +326,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appId).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -365,8 +373,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
+    expect(app.deleteResult.transaction.applicationCall?.appId).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplicationOC)
     expect(app.return?.returnValue).toBe('arg_io')
     expect(app.deleteReturn?.returnValue).toBe('arg2_io')
   })
@@ -534,7 +542,7 @@ describe('application-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
+    expect(call.transaction.applicationCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
@@ -731,7 +739,7 @@ describe('application-client', () => {
     })
 
     expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
-    expect(result.transaction.transactionType).toBe(TransactionType.Payment)
+    expect(result.transaction.type).toBe(TransactionType.pay)
     expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress)
     expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)
