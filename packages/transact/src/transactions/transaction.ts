@@ -631,7 +631,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       // TODO: same fix for account, app
       txDto.apbx = transaction.applicationCall.boxes.map((box) => {
         const isCurrentApp = box.appIndex === 0n || box.appIndex === transaction.applicationCall.appId
-        const foreignAppsIndex = transaction.applicationCall.foreignApps?.indexOf(box.appIndex) + 1
+        const foreignAppsIndex = (transaction.applicationCall.foreignApps ?? []).indexOf(box.appIndex) + 1
         if (foreignAppsIndex === 0 && !isCurrentApp) {
           throw new Error(`Box ref with appId ${box.appIndex} not in foreign-apps`)
         }
@@ -901,10 +901,25 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
         accounts: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
         foreignApps: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
         foreignAssets: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
-        boxes: transactionDto.apbx?.map((box) => ({
-          appIndex: bigIntCodec.decode(box.i),
-          name: bytesCodec.decode(box.n),
-        })),
+        boxes: transactionDto.apbx?.map((box) => {
+          const index = typeof box.i === 'bigint' ? Number(box.i) : (box.i ?? 0)
+          let appId: bigint
+          if (index === 0) {
+            // 0 means current app
+            appId = 0n
+          } else {
+            // 1-based index into foreignApps array
+            const foreignAppId = transactionDto.apfa?.[index - 1]
+            if (foreignAppId === undefined) {
+              throw new Error(`Failed to find the foreign app at index ${index - 1}`)
+            }
+            appId = bigIntCodec.decode(foreignAppId)
+          }
+          return {
+            appIndex: appId,
+            name: bytesCodec.decode(box.n),
+          }
+        }),
         access: transactionDto.al
           ? (() => {
               const accessList = transactionDto.al!
