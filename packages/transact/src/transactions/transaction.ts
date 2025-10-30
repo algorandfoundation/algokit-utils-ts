@@ -628,10 +628,19 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     txDto.apas = bigIntArrayCodec.encode(transaction.applicationCall.foreignAssets ?? [])
     // Encode box references
     if (transaction.applicationCall.boxes && transaction.applicationCall.boxes.length > 0) {
-      txDto.apbx = transaction.applicationCall.boxes.map((box) => ({
-        i: bigIntCodec.encode(box.appIndex),
-        n: bytesCodec.encode(box.name),
-      }))
+      // TODO: same fix for account, app
+      txDto.apbx = transaction.applicationCall.boxes.map((box) => {
+        const isCurrentApp = box.appIndex === 0n || box.appIndex === transaction.applicationCall.appId
+        const foreignAppsIndex = transaction.applicationCall.foreignApps?.indexOf(box.appIndex) + 1
+        if (foreignAppsIndex === 0 && !isCurrentApp) {
+          throw new Error(`Box ref with appId ${box.appIndex} not in foreign-apps`)
+        }
+
+        return {
+          i: numberCodec.encode(foreignAppsIndex),
+          n: bytesCodec.encode(box.name),
+        }
+      })
     }
     // Encode access references
     if (transaction.applicationCall.access && transaction.applicationCall.access.length > 0) {

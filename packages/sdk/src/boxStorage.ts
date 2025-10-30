@@ -1,3 +1,4 @@
+// TODO: PD - delete this file
 import { BoxReference } from '@algorandfoundation/algokit-transact'
 
 function boxReferenceToEncodingData(reference: BoxReference, foreignApps: bigint[], appIndex: bigint): Map<string, unknown> {

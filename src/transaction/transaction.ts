@@ -1,4 +1,3 @@
-import * as modelsv2 from '@algorandfoundation/algod-client'
 import {
   AlgodClient,
   ApplicationLocalReference,
@@ -787,25 +786,10 @@ export async function prepareGroupForSending(
       })
 
       g.boxes?.forEach((b) => {
-        // TODO: PD - revisit this, maybe we don't need it anymore after merging the ATC to composer
-        // When a box belongs to the current app being called, we need to normalize the app ID to 0
-        // Find which transaction this box is for by matching the app ID
-        const txnWithMatchingApp = group.findIndex((t) => {
-          const isAppCall = t.txn.type === TransactionType.appl
-          const appId = t.txn.applicationCall?.appId
-          const matches = appId !== undefined && BigInt(appId) === BigInt(b.app)
-          return isAppCall && matches
-        })
-
-        const normalizedBox = txnWithMatchingApp !== -1 ? { app: 0n, name: b.name } : b
-
-        populateGroupResource(group, normalizedBox, 'box')
+        populateGroupResource(group, b, 'box')
 
         // Remove apps as resource from the group if we're adding it here
-        // Only remove if it's not the current app (app 0)
-        if (normalizedBox.app !== 0n) {
-          g.apps = g.apps?.filter((app) => BigInt(app) !== BigInt(b.app))
-        }
+        g.apps = g.apps?.filter((app) => BigInt(app) !== BigInt(b.app))
       })
 
       g.assets?.forEach((a) => {
@@ -911,7 +895,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
       )
     }
 
-    let confirmations: modelsv2.PendingTransactionResponse[] | undefined = undefined
+    let confirmations: PendingTransactionResponse[] | undefined = undefined
     if (!sendParams?.skipWaiting) {
       confirmations = await Promise.all(transactionsToSend.map(async (t) => await algod.pendingTransactionInformation(getTransactionId(t))))
     }
@@ -1061,7 +1045,7 @@ export const waitForConfirmation = async function (
   transactionId: string,
   maxRoundsToWait: number | bigint,
   algod: AlgodClient,
-): Promise<modelsv2.PendingTransactionResponse> {
+): Promise<PendingTransactionResponse> {
   if (maxRoundsToWait < 0) {
     throw new Error(`Invalid timeout, received ${maxRoundsToWait}, expected > 0`)
   }
