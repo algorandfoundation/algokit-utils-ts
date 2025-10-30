@@ -4,10 +4,10 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
-import { SimulateTransactionGroupResult, SimulateTransactionResult } from '../../../src/algod_client'
+import { SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algod-client'
 import * as algokit from '../../../src/index'
-import type { ABIResult, TransactionWithSigner } from '../../../src/sdk'
-import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction } from '../../../src/sdk'
+import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
+import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction } from '@algorandfoundation/sdk'
 import type {
   ABIAppCallArg,
   AppCallTransactionResult,

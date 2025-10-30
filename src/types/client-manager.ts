@@ -1,5 +1,5 @@
-import { TransactionParams } from '../algod_client'
-import * as algosdk from '../sdk'
+import { TransactionParams } from '@algorandfoundation/algod-client'
+import * as algosdk from '@algorandfoundation/sdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'

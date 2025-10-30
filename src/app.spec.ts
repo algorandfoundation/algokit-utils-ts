@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
-import * as algosdk from './sdk'
+import * as algosdk from '@algorandfoundation/sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 
 describe('app', () => {

@@ -2,7 +2,7 @@
  * An asynchronous event listener
  */
 
-import { SimulateTransactionGroupResult } from '../algod_client'
+import { SimulateTransactionGroupResult } from '@algorandfoundation/algod-client'
 import { CompiledTeal } from './app'
 
 /** The directory name for AlgoKit project related files */

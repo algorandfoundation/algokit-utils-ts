@@ -1,8 +1,8 @@
-import { getTransactionId } from '../algokit_transact'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
 import * as indexer from '../indexer-lookup'
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { calculateExtraProgramPages } from '../util'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {

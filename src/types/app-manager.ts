@@ -1,7 +1,7 @@
-import { ApplicationLocalReference, AssetHoldingReference, EvalDelta, PendingTransactionResponse, TealValue } from '../algod_client'
-import { ResourceReference, BoxReference as TransactionBoxReference } from '../algokit_transact'
-import * as algosdk from '../sdk'
-import { Address, ProgramSourceMap } from '../sdk'
+import { ApplicationLocalReference, AssetHoldingReference, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import { ResourceReference, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { getABIReturnValue } from '../transaction/transaction'
 import { TransactionSignerAccount } from './account'
 import {

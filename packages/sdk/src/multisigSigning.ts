@@ -1,5 +1,5 @@
-import type { MultisigSignature, MultisigSubsignature, SignedTransaction, Transaction } from '../algokit_transact'
-import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction, getTransactionId } from '../algokit_transact'
+import type { MultisigSignature, MultisigSubsignature, SignedTransaction, Transaction } from '@algorandfoundation/algokit-transact'
+import { decodeSignedTransaction, encodeSignedTransaction, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Address } from './encoding/address.js'
 import { MultisigMetadata, addressFromMultisigPreImg, pksFromAddresses } from './multisig.js'
 import * as nacl from './nacl/naclWrappers.js'

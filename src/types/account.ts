@@ -5,11 +5,11 @@ import {
   ApplicationStateSchema,
   Asset,
   AssetHolding,
-} from '../algod_client'
-import { Transaction } from '../algokit_transact'
-import type { Account } from '../sdk'
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+} from '@algorandfoundation/algod-client'
+import { Transaction } from '@algorandfoundation/algokit-transact'
+import type { Account } from '@algorandfoundation/sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { AlgoAmount } from './amount'
 import MultisigMetadata = algosdk.MultisigMetadata
 import TransactionSigner = algosdk.TransactionSigner

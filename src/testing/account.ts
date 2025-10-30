@@ -1,9 +1,9 @@
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { AlgorandClient, Config } from '../'
 import { TransactionSignerAccount } from '../types/account'
 import { GetTestAccountParams } from '../types/testing'
-import type { Account } from '../sdk'
+import type { Account } from '@algorandfoundation/sdk'
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 

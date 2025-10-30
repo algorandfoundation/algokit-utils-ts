@@ -1,5 +1,5 @@
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
 import {

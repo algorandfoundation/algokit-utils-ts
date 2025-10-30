@@ -1,6 +1,6 @@
-import type { AlgodClient, PendingTransactionResponse, SimulateRequest, SimulateTransaction } from '../../algod_client/src/index.js'
-import type { BoxReference, ResourceReference, SignedTransaction } from '../algokit_transact'
-import { decodeSignedTransaction, getTransactionId } from '../algokit_transact'
+import type { AlgodClient, PendingTransactionResponse, SimulateRequest, SimulateTransaction } from '@algorandfoundation/algod-client'
+import type { BoxReference, ResourceReference, SignedTransaction } from '@algorandfoundation/algokit-transact'
+import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import {
   ABIAddressType,
   ABIMethod,

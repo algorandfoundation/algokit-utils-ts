@@ -1,6 +1,6 @@
 import { Config } from '../config'
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'

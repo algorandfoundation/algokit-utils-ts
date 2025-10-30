@@ -1,4 +1,4 @@
-import * as algosdk from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
 
 /** Wrapper class to ensure safe, explicit conversion between µAlgo, Algo and numbers */
 export class AlgoAmount {

@@ -1,5 +1,5 @@
-import type { Transaction } from '../../algokit_transact'
-import { TransactionType } from '../../algokit_transact'
+import type { Transaction } from '@algorandfoundation/algokit-transact'
+import { TransactionType } from '@algorandfoundation/algokit-transact'
 
 export enum ABITransactionType {
   /**

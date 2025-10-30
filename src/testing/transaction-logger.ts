@@ -1,6 +1,6 @@
-import { decodeSignedTransaction, getTransactionId } from '../algokit_transact'
+import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
-import * as algosdk from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
 import { runWhenIndexerCaughtUp } from './indexer'
 import Algodv2 = algosdk.Algodv2
 import Indexer = algosdk.Indexer

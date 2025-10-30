@@ -1,5 +1,5 @@
-import { SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '../algod_client'
-import * as algosdk from '../sdk'
+import { SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '@algorandfoundation/algod-client'
+import * as algosdk from '@algorandfoundation/sdk'
 import Algodv2 = algosdk.Algodv2
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 

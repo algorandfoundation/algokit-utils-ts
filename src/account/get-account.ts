@@ -1,10 +1,10 @@
-import * as algosdk from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
 import { AccountConfig, SigningAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { getAccountConfigFromEnvironment } from './get-account-config-from-environment'
-import type { Account } from '../sdk'
+import type { Account } from '@algorandfoundation/sdk'
 import Algodv2 = algosdk.Algodv2
 import Kmd = algosdk.Kmd
 

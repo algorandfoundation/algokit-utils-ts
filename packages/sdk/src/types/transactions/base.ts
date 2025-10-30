@@ -1,5 +1,5 @@
 // TODO: this is strange, maybe ApplicationLocalReference, AssetHoldingReference need to come from transact too
-import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '../../../algokit_transact'
+import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '@algorandfoundation/algokit-transact'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
 import { SdkTransactionParams } from '../../makeTxn.js'

@@ -87,7 +87,7 @@ export * from './abi/index'
 export { default as generateAccount } from './account'
 export * from './client'
 // Export client classes with algosdk-compatible names
-export { AlgodClient as Algodv2 } from '../../algod_client/src'
+export { AlgodClient as Algodv2 } from '@algorandfoundation/algod-client'
 export { KmdClient as Kmd } from './client/kmd'
 export { IndexerClient as Indexer } from './client/v2/indexer/index'
 export * as indexerModels from './client/v2/indexer/models/types'
@@ -151,7 +151,7 @@ export type {
   AssetTransferTransactionFields,
   KeyRegistrationTransactionFields,
   PaymentTransactionFields,
-} from '../algokit_transact'
+} from '@algorandfoundation/algokit-transact'
 export * from './types/account'
 export type { default as Account } from './types/account'
 // Block types are now provided by ../algod_client

@@ -1,5 +1,5 @@
-import * as algosdk from '../sdk'
-import type { Account } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import type { Account } from '@algorandfoundation/sdk'
 
 /**
  * @deprecated Use `algorand.account.fromMnemonic(mnemonicSecret)` or `algosdk.mnemonicToSecretKey(mnemonicSecret)` instead.

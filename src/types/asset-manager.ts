@@ -1,6 +1,6 @@
 import { Config } from '../config'
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { chunkArray } from '../util'
 import { AccountAssetInformation } from './account'
 import { CommonTransactionParams, MAX_TRANSACTION_GROUP_SIZE, TransactionComposer } from './composer'

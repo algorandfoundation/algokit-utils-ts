@@ -1,7 +1,7 @@
 import { convertAbiByteArrays as convertAbiByteArrays } from './util'
 
 import { describe, it, expect } from 'vitest'
-import { ABIValue, ABIByteType, ABIArrayStaticType, ABIArrayDynamicType, ABITupleType, ABIBoolType, ABIUintType } from './sdk' // Adjust this import path
+import { ABIValue, ABIByteType, ABIArrayStaticType, ABIArrayDynamicType, ABITupleType, ABIBoolType, ABIUintType } from '@algorandfoundation/sdk' // Adjust this import path
 
 describe('convertAbiByteArrays', () => {
   describe('Basic byte arrays', () => {

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
-import { getTransactionId } from './algokit_transact'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as indexer from './indexer-lookup'
-import { Address } from './sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 import { AlgoAmount } from './types/amount'
 

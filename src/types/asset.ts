@@ -1,4 +1,4 @@
-import { SdkTransactionParams } from '../sdk'
+import { SdkTransactionParams } from '@algorandfoundation/sdk'
 import { AlgoAmount } from './amount'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 

@@ -1,4 +1,4 @@
-import * as algosdk from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
 import { AccountManager } from '../types/account-manager'
 import { ClientManager } from '../types/client-manager'
 

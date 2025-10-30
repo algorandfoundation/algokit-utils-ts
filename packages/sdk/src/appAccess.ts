@@ -1,5 +1,5 @@
-import { ZERO_ADDRESS } from '../algokit_common'
-import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '../algokit_transact'
+import { ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
+import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '@algorandfoundation/algokit-transact'
 import { Address } from './encoding/address.js'
 
 /**

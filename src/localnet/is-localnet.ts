@@ -1,4 +1,4 @@
-import * as algosdk from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
 import { ClientManager } from '../types/client-manager'
 import Algodv2 = algosdk.Algodv2
 

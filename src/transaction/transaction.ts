@@ -6,13 +6,13 @@ import {
   BoxReference,
   PendingTransactionResponse,
   SimulateRequest,
-} from '../algod_client'
-import * as modelsv2 from '../algod_client/models'
-import type { AppCallTransactionFields } from '../algokit_transact'
-import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '../algokit_transact'
+} from '@algorandfoundation/algod-client'
+import * as modelsv2 from '@algorandfoundation/algod-client/models'
+import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
+import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Config } from '../config'
-import * as algosdk from '../sdk'
-import { ABIMethod, ABIReturnType, Address, stringifyJSON } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { ABIMethod, ABIReturnType, Address, stringifyJSON } from '@algorandfoundation/sdk'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
 import { EventType } from '../types/lifecycle-events'

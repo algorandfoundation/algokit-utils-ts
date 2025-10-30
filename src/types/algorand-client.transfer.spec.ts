@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant'
 import { afterEach, beforeEach, describe, expect, test, vitest } from 'vitest'
-import { TransactionType, getTransactionId } from '../algokit_transact'
+import { TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import { algorandFixture } from '../testing'
 import { generateTestAsset } from '../testing/_asset'
 import { AlgorandClient } from './algorand-client'

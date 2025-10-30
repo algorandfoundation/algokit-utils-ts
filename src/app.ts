@@ -1,6 +1,6 @@
-import { EvalDelta, PendingTransactionResponse, TealValue } from './algod_client'
-import { BoxReference as TransactBoxReference } from './algokit_transact'
-import * as algosdk from './sdk'
+import { EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algod-client'
+import { BoxReference as TransactBoxReference } from '@algorandfoundation/algokit-transact'
+import * as algosdk from '@algorandfoundation/sdk'
 import { _getAppArgsForABICall, _getBoxReference, legacySendAppTransactionBridge } from './transaction/legacy-bridge'
 import { encodeLease, getSenderAddress } from './transaction/transaction'
 import {

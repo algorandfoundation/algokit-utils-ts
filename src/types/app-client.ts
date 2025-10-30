@@ -1,5 +1,5 @@
-import { TransactionParams } from '../algod_client'
-import { getTransactionId } from '../algokit_transact'
+import { TransactionParams } from '@algorandfoundation/algod-client'
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -14,8 +14,8 @@ import {
 } from '../app'
 import { deployApp, getCreatorAppsByName, performTemplateSubstitution, replaceDeployTimeControlParams } from '../app-deploy'
 import { Config } from '../config'
-import * as algosdk from '../sdk'
-import { Address } from '../sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { asJson, binaryStartsWith } from '../util'
