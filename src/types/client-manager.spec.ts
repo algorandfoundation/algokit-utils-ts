@@ -51,7 +51,7 @@ describe('ClientManager', () => {
       expect(myLogger.warn).toHaveBeenCalledWith(
         'algosdk request failed 1 times. Retrying in 0ms: URLTokenBaseHTTPError: Network request error. Received status 429 (Too Many Requests)',
       )
-    }, 10_000)
+    })
   })
 
   describe('Config', () => {
