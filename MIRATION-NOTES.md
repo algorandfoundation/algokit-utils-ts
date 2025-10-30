@@ -18,13 +18,12 @@ A collection of random notes pop up during the migration process.
 - TODO: remove the ATC too
 - TODO: add interface for breaking change, for example, Transaction
 - TODO: simplify signer + account
-- TODO: maybe rename appCall field to applicationCall
-  - the same for other fields to make them match with sdk
 - TODO: take notes of the legacy functions to be removed and communicate with devrels
 - TODO: standardise box ref
-- TODO: remove legacy OnApplicationComplete
 - TODO: keep track of the changes we make to algokit_transact to fit with algosdk
 - For integration with lora to work:
   - need to update subscriber to use the new utils and remove algosdk
 - TODO: go ahead with resource/fee on build. Need to have backward compatibility, when resource population is set in send, do it but make sure that it only happens once.
 - TODO: convert transaction to class
+- Should we consolidate the duplicated types between SDK and Utils, for example `AccessReference` in `app-manager`
+- `encodeUnsignedSimulateTransaction` was removed from sdk

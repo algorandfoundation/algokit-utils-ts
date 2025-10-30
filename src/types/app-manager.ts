@@ -103,7 +103,6 @@ export interface BoxValuesRequestParams {
   type: algosdk.ABIType
 }
 
-// TODO: PD - remove this?
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */

@@ -98,13 +98,6 @@ export {
   seedFromMnemonic,
 } from './mnemonic/mnemonic'
 export * from './multisig'
-
-// TODO: PD - fix this encodeUnsignedSimulateTransaction needs to be implemented or replaced
-// For now, create a wrapper function
-export function encodeUnsignedSimulateTransaction(txn: Transaction): Uint8Array {
-  return encodeTransaction(txn)
-}
-
 export * from './signer'
 export { signLogicSigTransaction, signLogicSigTransactionObject } from './signing'
 export * from './stateproof'
