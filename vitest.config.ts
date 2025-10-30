@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   appType: 'custom',
   test: {
+    projects: ['.', 'packages/*'],
     include: ['**/*.spec.ts', '**/*.test.ts'],
     exclude: ['node_modules'],
     // Sometimes indexer catchup is slowwwww...
