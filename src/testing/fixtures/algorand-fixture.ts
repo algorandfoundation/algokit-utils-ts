@@ -114,7 +114,7 @@ export function algorandFixture(fixtureConfig?: AlgorandFixtureConfig, config?: 
         return account
       },
       transactionLogger: transactionLogger,
-      waitForIndexer: () => transactionLogger.waitForIndexer(indexer), // TODO: delete this
+      waitForIndexer: () => transactionLogger.waitForIndexer(indexer),
       waitForIndexerTransaction: (transactionId: string) => runWhenIndexerCaughtUp(() => indexer.lookupTransactionByID(transactionId).do()),
     }
   }

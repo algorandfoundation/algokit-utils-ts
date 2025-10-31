@@ -167,13 +167,21 @@ export interface AtomicTransactionComposerToSend extends SendParams {
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext
 }
 
-class TransactionWrapperClass {
+/**
+ * A wrapper class for Transaction that adds a txID() method while maintaining
+ * transparent access to all underlying Transaction properties through a Proxy.
+ *
+ * All Transaction properties are accessible directly on instances of this class.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export class TransactionWrapper {
   private _transaction: Transaction
 
   constructor(transaction: Transaction) {
     this._transaction = transaction
 
     // Create a proxy to forward all property accesses to the underlying transaction
+    // The proxy makes all Transaction properties available on this instance
     return new Proxy(this, {
       get(target, prop) {
         // Only intercept the txID method
@@ -204,36 +212,31 @@ class TransactionWrapperClass {
         }
         return Reflect.getOwnPropertyDescriptor(target._transaction, prop)
       },
-    }) as unknown as TransactionWrapper
+    }) as unknown as TransactionWrapper & Transaction
   }
 
+  /**
+   * Get the transaction ID
+   * @returns The transaction ID as a base64-encoded string
+   */
   txID(): string {
     return getTransactionId(this._transaction)
   }
 }
 
-// Export a type that combines the class with Transaction properties
-export type TransactionWrapper = TransactionWrapperClass & Transaction
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
+export interface TransactionWrapper extends Transaction {}
 
-// Export a constructor that returns the combined type
-export const TransactionWrapper = TransactionWrapperClass as new (transaction: Transaction) => TransactionWrapper
-
-/** Wrapper type for SignedTransaction that replaces Transaction with TransactionWrapper */
+// TODO: PD - review the names of these wrapper
 export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {
   txn: TransactionWrapper
 }
 
-/** Wrapper type for PendingTransactionResponse that replaces Transaction with TransactionWrapper */
 export type PendingTransactionResponseWrapper = Omit<PendingTransactionResponse, 'txn' | 'innerTxns'> & {
   txn: SignedTransactionWrapper
   innerTxns?: PendingTransactionResponseWrapper[]
 }
 
-/**
- * Converts a SignedTransaction to SignedTransactionWrapper by wrapping the transaction
- * @param signedTransaction - The signed transaction to wrap
- * @returns A SignedTransactionWrapper with the transaction wrapped
- */
 function wrapSignedTransaction(signedTransaction: SignedTransaction): SignedTransactionWrapper {
   return {
     ...signedTransaction,
