@@ -44,17 +44,17 @@
     "build:3-copy-pkg-json": "tstk copy-package-json -c",
     "build:4-copy-readme": "cpy README.md LICENSE dist",
     "build:5-fix-readme-links": "replace-in-files --string '(./' --replacement '(https://github.com/algorandfoundation/algokit-utils-ts/blob/main/' dist/README.md",
-    "test": "vitest run --coverage --passWithNoTests && npm run test --workspaces --if-present",
+    "test": "vitest run --coverage --passWithNoTests",
     "test:watch": "vitest watch --coverage --passWithNoTests",
-    "lint": "eslint ./src/",
-    "lint:fix": "eslint ./src/ --fix",
+    "lint": "eslint ./src/ && npm run lint --workspaces --if-present",
+    "lint:fix": "eslint ./src/ --fix && npm run lint --workspaces --if-present",
     "check-types": "tsc --build",
     "audit": "better-npm-audit audit",
-    "format": "prettier --write .",
+    "format": "prettier --write . && npm run format --workspaces --if-present",
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
     "generate:code-docs": "typedoc",
-    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs"
+    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs && npm run pre-commit --workspaces --if-present"
   },
   "overrides": {
     "esbuild": "0.25.0"
@@ -66,12 +66,12 @@
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
-    "@algorandfoundation/algod-client": "*",
+    "@algorandfoundation/algokit-algod-client": "*",
     "@algorandfoundation/algokit-abi": "*",
     "@algorandfoundation/algokit-common": "*",
     "@algorandfoundation/algokit-transact": "*",
-    "@algorandfoundation/indexer-client": "*",
-    "@algorandfoundation/kmd-client": "*",
+    "@algorandfoundation/algokit-indexer-client": "*",
+    "@algorandfoundation/algokit-kmd-client": "*",
     "@algorandfoundation/sdk": "*",
     "@algorandfoundation/tealscript": "^0.106.3",
     "@commitlint/cli": "^19.5.0",
@@ -83,7 +83,7 @@
     "@types/json-bigint": "^1.0.4",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
-    "@vitest/coverage-v8": "^2.1.2",
+    "@vitest/coverage-v8": "^4.0.5",
     "better-npm-audit": "^3.11.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "^5.0.0",
@@ -106,8 +106,8 @@
     "typescript": "^5.4.5",
     "typescript-eslint": "^8.16.0",
     "uuid": "^10.0.0",
-    "vitest": "^2.1.2",
-    "vitest-fetch-mock": "^0.3.0"
+    "vitest": "^4.0.5",
+    "vitest-fetch-mock": "^0.4.5"
   },
   "release": {
     "branches": [
