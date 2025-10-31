@@ -26,6 +26,7 @@ import {
   SendTransactionParams,
   SendTransactionResult,
   TransactionNote,
+  TransactionWrapper,
 } from '../types/transaction'
 import { encodeLease, encodeTransactionNote, getSenderAddress, getSenderTransactionSigner } from './transaction'
 import ABIMethod = algosdk.ABIMethod
@@ -41,7 +42,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
   suggestedParams?: TransactionParams,
-): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
+): Promise<(SendTransactionResult | TResult) & { transactions: TransactionWrapper[] }> {
   const appManager = new AppManager(algod)
   const newGroup = () =>
     new TransactionComposer({
@@ -78,7 +79,7 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
         transaction.methodCalls.forEach((m, i) => sendParams.atc!['methodCalls'].set(i + baseIndex, m))
       }
     }
-    return { transaction: txns.at(-1)!, transactions: txns }
+    return { transaction: new TransactionWrapper(txns.at(-1)!), transactions: txns.map((t) => new TransactionWrapper(t)) }
   }
 
   return { ...(await send(transactionSender)({ ...sendParams, ...params })) }
@@ -107,7 +108,7 @@ export async function legacySendAppTransactionBridge<
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
   suggestedParams?: TransactionParams,
-): Promise<(SendTransactionResult | TResult) & { transactions: Transaction[] }> {
+): Promise<(SendTransactionResult | TResult) & { transactions: TransactionWrapper[] }> {
   const encoder = new TextEncoder()
 
   const paramsWithAppArgs = {

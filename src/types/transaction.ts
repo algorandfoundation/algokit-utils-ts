@@ -1,5 +1,5 @@
 import { PendingTransactionResponse } from '@algorandfoundation/algod-client'
-import { Transaction } from '@algorandfoundation/algokit-transact'
+import { SignedTransaction, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
@@ -52,23 +52,23 @@ export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerRe
 /** The result of sending a transaction */
 export interface SendTransactionResult {
   /** The transaction */
-  transaction: Transaction
+  transaction: TransactionWrapper
   /** The response if the transaction was sent and waited for */
-  confirmation?: PendingTransactionResponse
+  confirmation?: PendingTransactionResponseWrapper
 }
 
 /** The result of preparing and/or sending multiple transactions */
 export interface SendTransactionResults {
   /** The transactions that have been prepared and/or sent */
-  transactions: Transaction[]
+  transactions: TransactionWrapper[]
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations?: PendingTransactionResponse[]
+  confirmations?: PendingTransactionResponseWrapper[]
 }
 
 /** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
-export interface SendAtomicTransactionComposerResults extends SendTransactionResults {
+export interface SendAtomicTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
   /** base64 encoded representation of the group ID of the atomic group */
   groupId: string
   /** The transaction IDs that have been prepared and/or sent */
@@ -78,21 +78,21 @@ export interface SendAtomicTransactionComposerResults extends SendTransactionRes
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations: PendingTransactionResponse[]
+  confirmations: PendingTransactionResponseWrapper[]
 }
 
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
   /** The response from sending and waiting for the transaction */
-  confirmation: PendingTransactionResponse
+  confirmation: PendingTransactionResponseWrapper
 }
 
 /** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
 export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
   /** The response from sending and waiting for the primary transaction */
-  confirmation: PendingTransactionResponse
+  confirmation: PendingTransactionResponseWrapper
   /** The response from sending and waiting for the transactions */
-  confirmations: PendingTransactionResponse[]
+  confirmations: PendingTransactionResponseWrapper[]
 }
 
 /** Core account abstraction when signing/sending transactions
@@ -165,4 +165,94 @@ export interface AtomicTransactionComposerToSend extends SendParams {
    * This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
    **/
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext
+}
+
+class TransactionWrapperClass {
+  private _transaction: Transaction
+
+  constructor(transaction: Transaction) {
+    this._transaction = transaction
+
+    // Create a proxy to forward all property accesses to the underlying transaction
+    return new Proxy(this, {
+      get(target, prop) {
+        // Only intercept the txID method
+        if (prop === 'txID') {
+          return target.txID.bind(target)
+        }
+        // Forward everything else to the underlying transaction
+        const value = Reflect.get(target._transaction, prop)
+        // If it's a function, bind it to the transaction
+        if (typeof value === 'function') {
+          return value.bind(target._transaction)
+        }
+        return value
+      },
+      set(target, prop, value) {
+        // Set on the underlying transaction
+        return Reflect.set(target._transaction, prop, value)
+      },
+      has(target, prop) {
+        return prop === 'txID' || prop in target._transaction
+      },
+      ownKeys(target) {
+        return ['txID', ...Reflect.ownKeys(target._transaction)]
+      },
+      getOwnPropertyDescriptor(target, prop) {
+        if (prop === 'txID') {
+          return { configurable: true, enumerable: true, writable: true }
+        }
+        return Reflect.getOwnPropertyDescriptor(target._transaction, prop)
+      },
+    }) as unknown as TransactionWrapper
+  }
+
+  txID(): string {
+    return getTransactionId(this._transaction)
+  }
+}
+
+// Export a type that combines the class with Transaction properties
+export type TransactionWrapper = TransactionWrapperClass & Transaction
+
+// Export a constructor that returns the combined type
+export const TransactionWrapper = TransactionWrapperClass as new (transaction: Transaction) => TransactionWrapper
+
+/** Wrapper type for SignedTransaction that replaces Transaction with TransactionWrapper */
+export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {
+  txn: TransactionWrapper
+}
+
+/** Wrapper type for PendingTransactionResponse that replaces Transaction with TransactionWrapper */
+export type PendingTransactionResponseWrapper = Omit<PendingTransactionResponse, 'txn' | 'innerTxns'> & {
+  txn: SignedTransactionWrapper
+  innerTxns?: PendingTransactionResponseWrapper[]
+}
+
+/**
+ * Converts a SignedTransaction to SignedTransactionWrapper by wrapping the transaction
+ * @param signedTransaction - The signed transaction to wrap
+ * @returns A SignedTransactionWrapper with the transaction wrapped
+ */
+function wrapSignedTransaction(signedTransaction: SignedTransaction): SignedTransactionWrapper {
+  return {
+    ...signedTransaction,
+    txn: new TransactionWrapper(signedTransaction.txn),
+  }
+}
+
+export function wrapPendingTransactionResponse(response: PendingTransactionResponse): PendingTransactionResponseWrapper {
+  return {
+    ...response,
+    txn: wrapSignedTransaction(response.txn),
+    innerTxns: response.innerTxns?.map(wrapPendingTransactionResponse),
+  }
+}
+
+export function wrapPendingTransactionResponseOptional(
+  response?: PendingTransactionResponse,
+): PendingTransactionResponseWrapper | undefined {
+  if (!response) return undefined
+
+  return wrapPendingTransactionResponse(response)
 }

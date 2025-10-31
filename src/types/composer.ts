@@ -11,7 +11,13 @@ import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessRefe
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
-import { Arc2TransactionNote, SendAtomicTransactionComposerResults, SendParams } from './transaction'
+import {
+  Arc2TransactionNote,
+  SendAtomicTransactionComposerResults,
+  SendParams,
+  TransactionWrapper,
+  wrapPendingTransactionResponse,
+} from './transaction'
 import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
 import TransactionSigner = algosdk.TransactionSigner
 import TransactionWithSigner = algosdk.TransactionWithSigner
@@ -403,10 +409,7 @@ export type AppCallParams = CommonAppCallParams & {
 
 /** Common parameters to define an ABI method call transaction. */
 export type AppMethodCallParams = CommonAppCallParams & {
-  onComplete?: Exclude<
-    OnApplicationComplete,
-    OnApplicationComplete.UpdateApplication | OnApplicationComplete.ClearState
-  >
+  onComplete?: Exclude<OnApplicationComplete, OnApplicationComplete.UpdateApplication | OnApplicationComplete.ClearState>
 }
 
 /** Parameters to define an application delete call transaction. */
@@ -2177,8 +2180,8 @@ export class TransactionComposer {
     const transactions = atc.buildGroup().map((t) => t.txn)
     const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
     return {
-      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
-      transactions: transactions,
+      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
+      transactions: transactions.map((t) => new TransactionWrapper(t)),
       txIds: transactions.map((t) => getTransactionId(t)),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,

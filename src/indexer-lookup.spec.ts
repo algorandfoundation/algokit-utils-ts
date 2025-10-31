@@ -1,8 +1,8 @@
+import { getTransactionId } from '@algorandfoundation/algokit-transact'
+import { Address } from '@algorandfoundation/sdk'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as indexer from './indexer-lookup'
-import { Address } from '@algorandfoundation/sdk'
 import { algorandFixture, runWhenIndexerCaughtUp } from './testing'
 import { AlgoAmount } from './types/amount'
 
@@ -25,7 +25,7 @@ describe('indexer-lookup', () => {
 
     const txn = await algorand.client.indexer.lookupTransactionByID(getTransactionId(transaction)).do()
 
-    expect(txn.transaction.id).toBe(getTransactionId(transaction))
+    expect(txn.transaction.id).toBe(transaction.txID())
     expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)
   }, 20_000)
 

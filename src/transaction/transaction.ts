@@ -26,6 +26,8 @@ import {
   TransactionGroupToSend,
   TransactionNote,
   TransactionToSign,
+  TransactionWrapper,
+  wrapPendingTransactionResponse,
 } from '../types/transaction'
 import { asJson, convertABIDecodedBigIntToNumber, convertAbiByteArrays, toNumber } from '../util'
 import { performAtomicTransactionComposerSimulate } from './perform-atomic-transaction-composer-simulate'
@@ -233,11 +235,11 @@ export const sendTransaction = async function (
 
   if (atc) {
     atc.addTransaction({ txn: transaction, signer: getSenderTransactionSigner(from) })
-    return { transaction }
+    return { transaction: new TransactionWrapper(transaction) }
   }
 
   if (skipSending) {
-    return { transaction }
+    return { transaction: new TransactionWrapper(transaction) }
   }
 
   let txnToSend = transaction
@@ -265,7 +267,10 @@ export const sendTransaction = async function (
     confirmation = await waitForConfirmation(getTransactionId(txnToSend), maxRoundsToWaitForConfirmation ?? 5, algod)
   }
 
-  return { transaction: txnToSend, confirmation }
+  return {
+    transaction: new TransactionWrapper(txnToSend),
+    confirmation: confirmation ? wrapPendingTransactionResponse(confirmation) : undefined,
+  }
 }
 
 /**
@@ -904,7 +909,7 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
 
     return {
       groupId,
-      confirmations,
+      confirmations: confirmations?.map(wrapPendingTransactionResponse),
       txIds: transactionsToSend.map((t) => getTransactionId(t)),
       transactions: transactionsToSend,
       returns: result.methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),

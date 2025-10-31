@@ -1,4 +1,4 @@
-import { OnApplicationComplete, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'

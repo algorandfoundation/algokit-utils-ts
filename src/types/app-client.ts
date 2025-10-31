@@ -76,7 +76,15 @@ import {
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { LogicError } from './logic-error'
-import { SendParams, SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
+import {
+  SendParams,
+  SendTransactionFrom,
+  SendTransactionParams,
+  TransactionNote,
+  TransactionWrapper,
+  wrapPendingTransactionResponse,
+  wrapPendingTransactionResponseOptional,
+} from './transaction'
 import ABIMethod = algosdk.ABIMethod
 import ABIMethodParams = algosdk.ABIMethodParams
 import ABIType = algosdk.ABIType
@@ -2165,10 +2173,10 @@ export class ApplicationClient {
       }
       const txns = atc.buildGroup()
       return {
-        transaction: txns[txns.length - 1].txn,
-        confirmation: result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult,
-        confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => t.txnResult),
-        transactions: txns.map((t) => t.txn),
+        transaction: new TransactionWrapper(txns[txns.length - 1].txn),
+        confirmation: wrapPendingTransactionResponseOptional(result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult),
+        confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
+        transactions: txns.map((t) => new TransactionWrapper(t.txn)),
         return: (result.methodResults?.length ?? 0 > 0) ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
       } satisfies AppCallTransactionResult
     }
