@@ -27,3 +27,4 @@ A collection of random notes pop up during the migration process.
 - TODO: convert transaction to class
 - Should we consolidate the duplicated types between SDK and Utils, for example `AccessReference` in `app-manager`
 - `encodeUnsignedSimulateTransaction` was removed from sdk
+- Consider align assetId and appId in PendingTransactionResponse with sdk?

@@ -204,8 +204,7 @@ export class AssetManager {
    * @returns The account asset holding information
    */
   public async getAccountInformation(sender: string | Address, assetId: bigint): Promise<AccountAssetInformation> {
-    const senderAddress = typeof sender === 'string' ? sender : sender.toString()
-    const info = await this._algod.accountAssetInformation(senderAddress, Number(assetId))
+    const info = await this._algod.accountAssetInformation(sender.toString(), Number(assetId))
 
     return {
       assetId: BigInt(assetId),

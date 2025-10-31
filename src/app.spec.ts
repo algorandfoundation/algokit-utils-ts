@@ -1,6 +1,6 @@
+import * as algosdk from '@algorandfoundation/sdk'
 import { afterEach, beforeEach, describe, expect, test } from 'vitest'
 import { getTestingAppContract } from '../tests/example-contracts/testing-app/contract'
-import * as algosdk from '@algorandfoundation/sdk'
 import { algoKitLogCaptureFixture, algorandFixture } from './testing'
 
 describe('app', () => {
@@ -39,7 +39,7 @@ describe('app', () => {
       rekeyTo,
     })
 
-    // // If the rekey didn't work this will throw
+    // If the rekey didn't work this will throw
     const rekeyedAccount = algorand.account.rekeyed(testAccount, rekeyTo)
     await algorand.send.payment({
       amount: (0).algo(),
