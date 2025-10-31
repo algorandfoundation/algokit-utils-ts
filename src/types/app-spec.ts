@@ -1,8 +1,6 @@
 import * as algosdk from '@algorandfoundation/sdk'
+import { ABIContractParams, ABIMethod, ABIMethodParams } from '@algorandfoundation/sdk'
 import { Arc56Contract, Method as Arc56Method, StorageKey, StructField } from './app-arc56'
-import ABIContractParams = algosdk.ABIContractParams
-import ABIMethodParams = algosdk.ABIMethodParams
-import ABIMethod = algosdk.ABIMethod
 
 /**
  * Converts an ARC-32 Application Specification to an ARC-56 Contract

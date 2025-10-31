@@ -1,7 +1,6 @@
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import { Address, Indexer } from '@algorandfoundation/sdk'
 import { LookupAssetHoldingsOptions } from './types/indexer'
-import Indexer = algosdk.Indexer
 export type SearchForTransactions = ReturnType<Indexer['searchForTransactions']>
 
 const DEFAULT_INDEXER_MAX_API_RESOURCES_PER_ACCOUNT = 1000 //MaxAPIResourcesPerAccount: This is the default maximum, though may be provider specific

@@ -1,4 +1,4 @@
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { AppSpecAppDetails, AppSpecAppDetailsByCreatorAndName, AppSpecAppDetailsById, ApplicationClient } from './types/app-client'
 
 /**

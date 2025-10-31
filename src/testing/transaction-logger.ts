@@ -1,9 +1,9 @@
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
+import { Indexer } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { runWhenIndexerCaughtUp } from './indexer'
-import Indexer = algosdk.Indexer
 
 /**
  * Allows you to keep track of Algorand transaction IDs by wrapping an `AlgodClient` in a proxy.

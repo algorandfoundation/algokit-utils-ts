@@ -1,12 +1,10 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { type Account, Kmd } from '@algorandfoundation/sdk'
 import { AccountConfig, SigningAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { getAccountConfigFromEnvironment } from './get-account-config-from-environment'
-import type { Account } from '@algorandfoundation/sdk'
-import Kmd = algosdk.Kmd
 
 /**  @deprecated use `algorand.account.fromEnvironment()` instead
  *

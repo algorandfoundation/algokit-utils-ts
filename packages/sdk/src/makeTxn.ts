@@ -24,7 +24,7 @@ function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
   return typeof value === 'bigint' ? value : BigInt(value)
 }
 
-import { TransactionParams as AlgodTransactionParams } from '@algorandfoundation/algod-client'
+import { TransactionParams as AlgodTransactionParams } from '@algorandfoundation/algokit-algod-client'
 
 export type SdkTransactionParams = AlgodTransactionParams & {
   firstRound: bigint

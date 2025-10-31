@@ -1,7 +1,7 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
+import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AccountManager } from './account-manager'
 import { AlgorandClientTransactionCreator } from './algorand-client-transaction-creator'
@@ -12,7 +12,6 @@ import { AssetManager } from './asset-manager'
 import { AlgoSdkClients, ClientManager } from './client-manager'
 import { ErrorTransformer, TransactionComposer } from './composer'
 import { AlgoConfig } from './network-client'
-import LogicSigAccount = algosdk.LogicSigAccount
 
 /**
  * A client that brokers easy access to Algorand functionality.

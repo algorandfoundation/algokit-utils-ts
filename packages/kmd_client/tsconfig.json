@@ -2,7 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "tsBuildInfoFile": "build/.tsbuildinfo"
+    "paths": {
+      "@algorandfoundation/algokit-kmd-client": ["../packages/kmd_client/src"],
+      "@algorandfoundation/algokit-kmd-client/*": ["../packages/kmd_client/src/*"]
+    }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

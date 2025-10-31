@@ -1,4 +1,4 @@
-import type { AlgodClient, PendingTransactionResponse } from '@algorandfoundation/algod-client'
+import type { AlgodClient, PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 
 /**
  * Wait until a transaction has been confirmed or rejected by the network, or

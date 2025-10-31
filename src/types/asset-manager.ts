@@ -1,4 +1,4 @@
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Address } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { chunkArray } from '../util'

@@ -1,9 +1,8 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { type Account, Kmd } from '@algorandfoundation/sdk'
 import { AccountManager } from '../types/account-manager'
 import { ClientManager } from '../types/client-manager'
-import type { Account } from '@algorandfoundation/sdk'
-import Kmd = algosdk.Kmd
+
 /**
  * @deprecated Use `algorand.account.kmd.getLocalNetDispenserAccount()` instead.
  *

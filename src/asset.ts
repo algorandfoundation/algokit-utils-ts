@@ -1,4 +1,4 @@
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { encodeTransactionNote, getSenderAddress } from './transaction'
 import { legacySendTransactionBridge } from './transaction/legacy-bridge'
 import { AlgorandClient } from './types/algorand-client'
@@ -121,7 +121,7 @@ export async function assetOptOut(optOut: AssetOptOutParams, algod: AlgodClient)
  * Opt in to a list of assets on the Algorand blockchain.
  *
  * @param optIn - The bulk opt-in request.
- * @param algod - An instance of the AlgodClient class from the `@algorandfoundation/algod-client` library.
+ * @param algod - An instance of the AlgodClient class.
  * @returns A record object where the keys are the asset IDs and the values are the corresponding transaction IDs for successful opt-ins.
  * @throws If there is an error during the opt-in process.
  * @example algokit.bulkOptIn({ account: account, assetIds: [12345, 67890] }, algod)

@@ -1,9 +1,7 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { type Account, Kmd } from '@algorandfoundation/sdk'
 import { ClientManager } from '../types/client-manager'
 import { KmdAccountManager } from '../types/kmd-account-manager'
-import type { Account } from '@algorandfoundation/sdk'
-import Kmd = algosdk.Kmd
 
 /**
  * @deprecated use `algorand.account.kmd.getWalletAccount(name, predicate)` or `new KMDAccountManager(clientManager).getWalletAccount(name, predicate)` instead.

@@ -1,6 +1,10 @@
-import { AlgodClient, SimulateRequest, SimulateRequestTransactionGroup, SimulateTraceConfig } from '@algorandfoundation/algod-client'
-import * as algosdk from '@algorandfoundation/sdk'
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
+import {
+  AlgodClient,
+  SimulateRequest,
+  SimulateRequestTransactionGroup,
+  SimulateTraceConfig,
+} from '@algorandfoundation/algokit-algod-client'
+import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
 
 /**
  * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.

@@ -12,6 +12,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "declarationMap": true,
-    "composite": true
+    "baseUrl": "."
   }
 }

@@ -1,12 +1,11 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { Kmd } from '@algorandfoundation/sdk'
 import { legacySendTransactionBridge } from '../transaction/legacy-bridge'
 import { encodeTransactionNote, getSenderAddress } from '../transaction/transaction'
 import { AlgorandClient } from '../types/algorand-client'
 import { TestNetDispenserApiClient } from '../types/dispenser-client'
 import { SendTransactionResult } from '../types/transaction'
 import { AlgoRekeyParams, EnsureFundedParams, EnsureFundedReturnType, TransferAssetParams } from '../types/transfer'
-import Kmd = algosdk.Kmd
 
 /**
  * @deprecated Use `algorand.account.ensureFunded()` / `algorand.account.ensureFundedFromEnvironment()`

@@ -256,9 +256,9 @@ export class AlgorandClientTransactionSender {
   assetCreate = async (params: AssetCreateParams & SendParams) => {
     const result = await this._send((c) => c.addAssetCreate, {
       postLog: (params, result) =>
-        `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetIndex} via transaction ${result.txIds.at(-1)}`,
+        `Created asset${params.assetName ? ` ${params.assetName}` : ''}${params.unitName ? ` (${params.unitName})` : ''} with ${params.total} units and ${params.decimals ?? 0} decimals created by ${params.sender} with ID ${result.confirmation.assetId} via transaction ${result.txIds.at(-1)}`,
     })(params)
-    return { ...result, assetId: BigInt(result.confirmation.assetIndex ?? 0) }
+    return { ...result, assetId: BigInt(result.confirmation.assetId ?? 0) }
   }
   /**
    * Configure an existing Algorand Standard Asset.

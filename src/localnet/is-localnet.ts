@@ -1,4 +1,4 @@
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { ClientManager } from '../types/client-manager'
 
 /** @deprecated Use `await algorand.client.isLocalNet()` or `await new ClientManager({ algod }).isLocalNet()` instead.

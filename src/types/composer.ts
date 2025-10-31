@@ -1,7 +1,15 @@
-import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algod-client'
+import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, Address, SdkTransactionParams } from '@algorandfoundation/sdk'
+import {
+  ABIMethod,
+  Address,
+  AtomicTransactionComposer,
+  SdkTransactionParams,
+  TransactionSigner,
+  TransactionWithSigner,
+  isTransactionWithSigner,
+} from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
@@ -18,10 +26,6 @@ import {
   TransactionWrapper,
   wrapPendingTransactionResponse,
 } from './transaction'
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import TransactionSigner = algosdk.TransactionSigner
-import TransactionWithSigner = algosdk.TransactionWithSigner
-import isTransactionWithSigner = algosdk.isTransactionWithSigner
 
 export const MAX_TRANSACTION_GROUP_SIZE = 16
 

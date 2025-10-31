@@ -1,17 +1,14 @@
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { Transaction } from '@algorandfoundation/algokit-transact'
-import { AlgodClient } from '@algorandfoundation/algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import { Address, Indexer, Kmd, LogicSigAccount } from '@algorandfoundation/sdk'
 import { TransactionLogger } from '../testing'
 import { TestLogger } from '../testing/test-logger'
 import { AlgoAmount } from '../types/amount'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgorandClient } from './algorand-client'
 import { AlgoConfig } from './network-client'
-import Indexer = algosdk.Indexer
-import Kmd = algosdk.Kmd
-import LogicSigAccount = algosdk.LogicSigAccount
 
 /**
  * Test automation context.

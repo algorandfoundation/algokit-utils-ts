@@ -1,7 +1,7 @@
-import { Account as AccountInformation, AlgodClient } from '@algorandfoundation/algod-client'
+import { Account as AccountInformation, AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import { Address, Kmd, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
 import { getSenderAddress } from '../transaction/transaction'
 import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
@@ -9,9 +9,6 @@ import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
-import Kmd = algosdk.Kmd
-import MultisigMetadata = algosdk.MultisigMetadata
-import TransactionSigner = algosdk.TransactionSigner
 
 /**
  * @deprecated Use `algorand.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.

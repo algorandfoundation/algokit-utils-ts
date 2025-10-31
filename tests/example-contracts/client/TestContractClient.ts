@@ -4,7 +4,7 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
-import { AlgodClient, SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algod-client'
+import { AlgodClient, SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
 import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
 import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
