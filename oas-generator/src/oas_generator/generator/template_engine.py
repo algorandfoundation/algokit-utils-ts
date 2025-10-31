@@ -756,8 +756,6 @@ class CodeGenerator:
                 "export { BlockMeta } from './block';\n"
                 "export type { SignedTxnInBlock } from './signed-txn-in-block';\n"
                 "export { SignedTxnInBlockMeta } from './signed-txn-in-block';\n"
-                "export type { GetBlock } from './get-block';\n"
-                "export { GetBlockMeta } from './get-block';\n"
             )
             files[index_path] = base_index + extras
         files.update(self.operation_processor.generate_service(output_dir, ops_by_tag, tags, service_class))

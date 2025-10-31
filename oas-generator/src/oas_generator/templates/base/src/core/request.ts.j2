@@ -64,11 +64,11 @@ export async function request<T>(config: ClientConfig, options: {
   let bodyPayload: BodyInit | undefined = undefined;
   if (options.body != null) {
     if (options.body instanceof Uint8Array) {
-      bodyPayload = options.body;
+      bodyPayload = options.body.slice().buffer;
     } else if (typeof options.body === 'string') {
       bodyPayload = options.body;
     } else if (options.mediaType?.includes('msgpack')) {
-      bodyPayload = encodeMsgPack(options.body);
+      bodyPayload = encodeMsgPack(options.body).slice().buffer;
     } else if (options.mediaType?.includes('json')) {
       bodyPayload = JSON.stringify(options.body);
     } else {
@@ -116,7 +116,7 @@ export async function request<T>(config: ClientConfig, options: {
   }
 
   if (contentType.includes('application/json')) {
-    return (await response.text()) as unknown as T;
+    return JSON.parse(await response.text()) as unknown as T;
   }
 
   if (!contentType) {
