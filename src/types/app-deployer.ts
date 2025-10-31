@@ -1,8 +1,8 @@
-import { getTransactionId } from '@algorandfoundation/algokit-transact'
-import { Config } from '../config'
-import * as indexer from '../indexer-lookup'
+import { TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
+import { Config } from '../config'
+import * as indexer from '../indexer-lookup'
 import { calculateExtraProgramPages } from '../util'
 import { AlgorandClientTransactionSender } from './algorand-client-transaction-sender'
 import {
@@ -312,7 +312,7 @@ export class AppDeployer {
       const deleteTransaction = result.transactions.at(-1)!
 
       Config.getLogger(sendParams?.suppressLog).warn(
-        `Sent transactions ${getTransactionId(transaction)} to create app with id ${confirmation.appId} and ${getTransactionId(deleteTransaction)} to delete app with id ${
+        `Sent transactions ${transaction.txID()} to create app with id ${confirmation.appId} and ${getTransactionId(deleteTransaction)} to delete app with id ${
           existingApp.appId
         } from ${createParams.sender} account.`,
       )
@@ -520,7 +520,7 @@ export class AppDeployer {
         const appTransactions = await indexer.searchTransactions(this._indexer!, (s) =>
           s
             .minRound(createdApp.createdAtRound)
-            .txType('appl') // TODO: enum this
+            .txType(TransactionType.appl)
             .applicationID(Number(createdApp.id))
             .address(creatorAddress)
             .addressRole('sender')
