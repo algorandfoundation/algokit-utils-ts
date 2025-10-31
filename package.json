@@ -55,7 +55,10 @@
     "semantic-release": "semantic-release",
     "generate:code-docs": "typedoc",
     "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs && npm run pre-commit --workspaces --if-present",
-    "generate:algod": "cd oas-generator && uv run oas-generator ../algokit-configs/openapi-converter/specs/algod.oas3.json --output ../packages/algod_client/ --package-name algod_client --description \"TypeScript client for algod interaction.\" --verbose && prettier --write ../packages/algod_client/src/ && cd .."
+    "generate:clients": "run-s generate:client-*",
+    "generate:client-algod": "cd oas-generator && uv run oas-generator ../algokit-configs/openapi-converter/specs/algod.oas3.json --output ../packages/algod_client/ --package-name algod_client --description \"TypeScript client for algod interaction.\" --verbose && prettier --write ../packages/algod_client/src/ && cd ..",
+    "generate:client-indexer": "cd oas-generator && uv run oas-generator ../algokit-configs/openapi-converter/specs/indexer.oas3.json --output ../packages/indexer_client/ --package-name indexer_client --description \"TypeScript client for indexer interaction.\" --verbose && prettier --write ../packages/indexer_client/src/ && cd ..",
+    "generate:client-kmd": "cd oas-generator && uv run oas-generator ../algokit-configs/openapi-converter/specs/kmd.oas3.json --output ../packages/kmd_client/ --package-name kmd_client --description \"TypeScript client for kmd interaction.\" --verbose && prettier --write ../packages/kmd_client/src/ && cd .."
   },
   "overrides": {
     "esbuild": "0.25.0"

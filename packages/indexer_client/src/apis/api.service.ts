@@ -1,6 +1,6 @@
-import type { ApiRequestOptions, BaseHttpRequest } from '../core/base-http-request'
-import type { BodyFormat } from '../core/model-runtime'
+import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
+import type { BodyFormat } from '../core/model-runtime'
 import type {
   Block,
   Box,
