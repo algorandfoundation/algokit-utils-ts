@@ -4,7 +4,7 @@
     "target": "ES2022",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
-    "lib": ["es2023"],
+    "lib": ["es2020", "dom"],
     "types": ["node"],
     "declaration": true,
     "importHelpers": true,

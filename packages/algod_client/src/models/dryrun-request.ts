@@ -1,5 +1,5 @@
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { ModelMetadata } from '../core/model-runtime'
+import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from './account'
 import { AccountMeta } from './account'
 import type { Application } from './application'

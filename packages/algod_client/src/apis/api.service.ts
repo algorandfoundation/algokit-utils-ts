@@ -1,6 +1,6 @@
-import type { ApiRequestOptions, BaseHttpRequest } from '../core/base-http-request'
-import type { BodyFormat } from '../core/model-runtime'
+import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
+import type { BodyFormat } from '../core/model-runtime'
 import type {
   AbortCatchup,
   Account,
@@ -46,10 +46,10 @@ import type {
 } from '../models/index'
 import {
   AbortCatchupMeta,
+  AccountMeta,
   AccountApplicationInformationMeta,
   AccountAssetInformationMeta,
   AccountAssetsInformationMeta,
-  AccountMeta,
   AddParticipationKeyMeta,
   ApplicationMeta,
   AssetMeta,
@@ -58,13 +58,13 @@ import {
   DryrunRequestMeta,
   GenesisMeta,
   GetApplicationBoxesMeta,
+  GetBlockMeta,
   GetBlockHashMeta,
   GetBlockLogsMeta,
-  GetBlockMeta,
   GetBlockTimeStampOffsetMeta,
   GetBlockTxidsMeta,
-  GetPendingTransactionsByAddressMeta,
   GetPendingTransactionsMeta,
+  GetPendingTransactionsByAddressMeta,
   GetStatusMeta,
   GetSupplyMeta,
   GetSyncRoundMeta,

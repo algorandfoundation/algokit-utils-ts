@@ -107,22 +107,22 @@ export type WaitForBlock = {
   /**
    * Yes votes required for consensus upgrade
    */
-  upgradeVotesRequired?: bigint
+  upgradeVotesRequired?: number
 
   /**
    * Total votes cast for consensus upgrade
    */
-  upgradeVotes?: bigint
+  upgradeVotes?: number
 
   /**
    * Yes votes cast for consensus upgrade
    */
-  upgradeYesVotes?: bigint
+  upgradeYesVotes?: number
 
   /**
    * No votes cast for consensus upgrade
    */
-  upgradeNoVotes?: bigint
+  upgradeNoVotes?: number
 
   /**
    * Next protocol round
@@ -132,7 +132,7 @@ export type WaitForBlock = {
   /**
    * Total voting rounds for current upgrade
    */
-  upgradeVoteRounds?: bigint
+  upgradeVoteRounds?: number
 }
 
 export const WaitForBlockMeta: ModelMetadata = {
@@ -172,7 +172,7 @@ export const WaitForBlockMeta: ModelMetadata = {
       wireKey: 'next-version-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'nextVersionSupported',
@@ -270,7 +270,7 @@ export const WaitForBlockMeta: ModelMetadata = {
       wireKey: 'upgrade-delay',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'upgradeNodeVote',
@@ -312,7 +312,7 @@ export const WaitForBlockMeta: ModelMetadata = {
       wireKey: 'upgrade-next-protocol-vote-before',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'upgradeVoteRounds',

@@ -5,6 +5,7 @@
     "target": "ES2020",
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
+    "lib": ["es2020", "dom"],
     "types": ["node"],
     "outDir": "dist",
     "declaration": true,
