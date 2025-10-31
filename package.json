@@ -54,7 +54,8 @@
     "commit-lint": "commitlint --edit -o",
     "semantic-release": "semantic-release",
     "generate:code-docs": "typedoc",
-    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs && npm run pre-commit --workspaces --if-present"
+    "pre-commit": "run-s check-types lint:fix audit format test generate:code-docs && npm run pre-commit --workspaces --if-present",
+    "generate:algod": "cd oas-generator && uv run oas-generator ../algokit-configs/openapi-converter/specs/algod.oas3.json --output ../packages/algod_client/ --package-name algod_client --description \"TypeScript client for algod interaction.\" --verbose && cd .."
   },
   "overrides": {
     "esbuild": "0.25.0"

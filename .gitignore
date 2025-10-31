@@ -57,3 +57,12 @@ out/
 .env
 .env.*
 !.env.template
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+ENV/
