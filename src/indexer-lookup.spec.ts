@@ -21,9 +21,9 @@ describe('indexer-lookup', () => {
   test('Transaction is found by id', async () => {
     const { algorand, waitForIndexerTransaction } = localnet.context
     const { transaction } = await sendTestTransaction()
-    await waitForIndexerTransaction(getTransactionId(transaction))
+    await waitForIndexerTransaction(transaction.txID())
 
-    const txn = await algorand.client.indexer.lookupTransactionByID(getTransactionId(transaction)).do()
+    const txn = await algorand.client.indexer.lookupTransactionByID(transaction.txID()).do()
 
     expect(txn.transaction.id).toBe(transaction.txID())
     expect(txn.currentRound).toBeGreaterThanOrEqual(transaction.firstValid)

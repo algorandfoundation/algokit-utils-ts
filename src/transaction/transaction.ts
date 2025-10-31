@@ -908,12 +908,12 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
 
     return {
-      groupId,
-      confirmations: confirmations?.map(wrapPendingTransactionResponse),
+      groupId: groupId!,
+      confirmations: (confirmations ?? []).map(wrapPendingTransactionResponse),
       txIds: transactionsToSend.map((t) => getTransactionId(t)),
-      transactions: transactionsToSend,
+      transactions: transactionsToSend.map((t) => new TransactionWrapper(t)),
       returns: result.methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),
-    } as SendAtomicTransactionComposerResults
+    } satisfies SendAtomicTransactionComposerResults
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     // TODO: PD - look into error handling here again, it's possible that we don't need this comment anymore
