@@ -558,7 +558,7 @@ export class TransactionComposer {
   private txnMaxFees: Map<number, AlgoAmount> = new Map()
 
   /** Transactions that have not yet been composed */
-  private txns: Txn[] = []
+  private txns: ComposerTransaction[] = []
 
   /** The algod client used by the composer. */
   private algod: AlgodClient
@@ -1863,7 +1863,7 @@ export class TransactionComposer {
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
-  private async buildTxn(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithContext[]> {
+  private async buildTxn(txn: ComposerTransaction, suggestedParams: SdkTransactionParams): Promise<TransactionWithContext[]> {
     switch (txn.type) {
       case 'pay':
         return [this.buildPayment(txn, suggestedParams)]
@@ -1890,7 +1890,10 @@ export class TransactionComposer {
     }
   }
 
-  private async buildTxnWithSigner(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithSignerAndContext[]> {
+  private async buildTxnWithSigner(
+    txn: ComposerTransaction,
+    suggestedParams: SdkTransactionParams,
+  ): Promise<TransactionWithSignerAndContext[]> {
     if (txn.type === 'txnWithSigner') {
       return [
         {
@@ -2200,5 +2203,18 @@ export class TransactionComposer {
     const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : asJson(note.data)}`
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
+  }
+
+  foo() {
+    this.addAppCallMethodCall({
+      appId: 0n,
+      sender: '',
+      method: undefined,
+      args: [
+        {
+          sender: '',
+        } satisfies PaymentParams,
+      ],
+    })
   }
 }
