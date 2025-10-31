@@ -11,4 +11,12 @@ export interface ClientConfig {
   password?: string
   headers?: Record<string, string> | (() => Record<string, string> | Promise<Record<string, string>>)
   encodePath?: (path: string) => string
+  /** Optional override for retry attempts; values <= 1 disable retries. This is the canonical field. */
+  maxRetries?: number
+  /** Optional cap on exponential backoff delay in milliseconds. */
+  maxBackoffMs?: number
+  /** Optional list of HTTP status codes that should trigger a retry. */
+  retryStatusCodes?: number[]
+  /** Optional list of Node.js/System error codes that should trigger a retry. */
+  retryErrorCodes?: string[]
 }
