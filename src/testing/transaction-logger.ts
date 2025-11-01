@@ -1,6 +1,5 @@
 import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
 import { decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
 import { Indexer } from '@algorandfoundation/sdk'
 import { Config } from '../config'
 import { runWhenIndexerCaughtUp } from './indexer'
@@ -85,33 +84,15 @@ class TransactionLoggingAlgodClientProxyHandler implements ProxyHandler<AlgodCli
     this.transactionLogger = transactionLogger
   }
 
-  // TODO: PD - restore this logic
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get(target: AlgodClient, property: string | symbol, receiver: any) {
-    if (property === 'rawTransaction') {
-      return ({ body: stxOrStxs }: { body: Uint8Array | Uint8Array[] }) => {
+    if (property === 'sendRawTransaction') {
+      return (stxOrStxs: Uint8Array | Uint8Array[]) => {
         this.transactionLogger.logRawTransaction(stxOrStxs)
-
-        let forPosting = stxOrStxs
-        if (Array.isArray(stxOrStxs)) {
-          if (!stxOrStxs.every(isByteArray)) {
-            throw new TypeError('Array elements must be byte arrays')
-          }
-          // Flatten into a single Uint8Array
-          forPosting = algosdk.concatArrays(...stxOrStxs)
-        } else if (!isByteArray(forPosting)) {
-          throw new TypeError('Argument must be byte array')
-        }
-
-        return target[property].call(receiver, { body: forPosting })
+        return target[property].call(receiver, stxOrStxs)
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target as any)[property]
   }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isByteArray(array: any): array is Uint8Array {
-  return array && array.byteLength !== undefined
 }

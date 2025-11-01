@@ -282,9 +282,26 @@ class OperationProcessor:
         # Collect unique operations
         all_operations = self._collect_unique_operations(operations_by_tag, tags)
 
+        # Get private and skipped methods configurations for this service
+        private_methods = self._get_private_methods(service_class_name)
+        skipped_methods = self._get_skipped_methods(service_class_name)
+
+        # Mark operations as private or skipped, where required
+        for operation in all_operations:
+            if operation.operation_id in private_methods:
+                operation.is_private = True
+            if operation.operation_id in skipped_methods:
+                operation.skip_generation = True
+
+        # Filter out operations marked for skipping
+        all_operations = [op for op in all_operations if not op.skip_generation]
+
         # Convert to template context
         operations_context = [op.to_dict() for op in all_operations]
         import_types = set().union(*(op.import_types for op in all_operations))
+
+        # Get custom imports and methods for this service
+        custom_imports, custom_methods = self._get_custom_service_extensions(service_class_name)
 
         # Generate service file
         files[apis_dir / constants.API_SERVICE_FILE] = self.renderer.render(
@@ -294,6 +311,8 @@ class OperationProcessor:
                 "operations": operations_context,
                 "import_types": sorted(import_types),
                 "service_class_name": service_class_name,
+                "custom_imports": custom_imports,
+                "custom_methods": custom_methods,
             },
         )
 
@@ -303,6 +322,61 @@ class OperationProcessor:
         )
 
         return files
+
+    def _get_custom_service_extensions(self, service_class_name: str) -> tuple[list[str], list[str]]:
+        """Get custom imports and methods for specific service classes."""
+        custom_imports: list[str] = []
+        custom_methods: list[str] = []
+
+        if service_class_name == "AlgodApi":
+            custom_imports = [
+                "import { concatArrays } from '@algorandfoundation/algokit-common';",
+            ]
+            send_raw_transaction_method = '''/**
+   * Send a signed transaction or array of signed transactions to the network.
+   */
+  async sendRawTransaction(stxOrStxs: Uint8Array | Uint8Array[]): Promise<RawTransaction> {
+    let rawTransactions = stxOrStxs;
+    if (Array.isArray(stxOrStxs)) {
+      if (!stxOrStxs.every((a) => a instanceof Uint8Array)) {
+        throw new Error('Array elements must be byte arrays');
+      }
+      rawTransactions = concatArrays(...stxOrStxs);
+    } else if (!(rawTransactions instanceof Uint8Array)) {
+      throw new Error('Argument must be byte array');
+    }
+    return this.rawTransaction({ body: rawTransactions });
+  }'''
+
+            custom_methods = [send_raw_transaction_method]
+
+        return custom_imports, custom_methods
+
+    def _get_private_methods(self, service_class_name: str) -> set[str]:
+        """Get set of operation IDs that should be marked as private for specific service classes."""
+        # Default configuration for private methods by service class
+        private_method_config = {
+            "AlgodApi": {
+                "RawTransaction"  # This is the raw transaction endpoint we're wrapping with sendRawTransaction
+            },
+            "IndexerApi": set(),  # No private methods by default
+            "KmdApi": set(),  # No private methods by default
+        }
+
+        return private_method_config.get(service_class_name, set())
+
+    def _get_skipped_methods(self, service_class_name: str) -> set[str]:
+        """Get set of operation IDs that should be skipped during generation for specific service classes."""
+        # Default configuration for methods to skip generation by service class
+        skip_generation_config = {
+            "AlgodApi": {
+                "RawTransactionAsync", # Not exposed via algosdk
+            },
+            "IndexerApi": set(),
+            "KmdApi": set(),
+        }
+
+        return skip_generation_config.get(service_class_name, set())
 
     def _initialize_model_names(self, spec: Schema) -> None:
         """Initialize set of model names from spec."""

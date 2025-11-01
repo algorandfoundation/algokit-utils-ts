@@ -54,6 +54,8 @@ class OperationContext:
     # we don't expose it to callers but still need to set it implicitly on requests
     force_msgpack_query: bool = False
     error_types: list[ErrorDescriptor] | None = None
+    is_private: bool = False
+    skip_generation: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for template rendering."""
@@ -72,6 +74,8 @@ class OperationContext:
             "formatVarName": self.format_var_name,
             "forceMsgpackQuery": self.force_msgpack_query,
             "errorTypes": [self._error_to_dict(e) for e in (self.error_types or [])],
+            "isPrivate": self.is_private,
+            "skipGeneration": self.skip_generation,
         }
 
     @staticmethod

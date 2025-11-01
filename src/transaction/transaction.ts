@@ -254,7 +254,7 @@ export const sendTransaction = async function (
 
   const signedTransaction = await signTransaction(txnToSend, from)
 
-  await algod.rawTransaction({ body: signedTransaction })
+  await algod.sendRawTransaction(signedTransaction)
 
   Config.getLogger(suppressLog).verbose(
     `Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.type} from ${getSenderAddress(from)}`,

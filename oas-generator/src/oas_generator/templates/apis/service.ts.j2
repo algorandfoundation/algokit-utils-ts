@@ -1,6 +1,11 @@
 import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request';
 import { AlgorandSerializer } from '../core/model-runtime';
 import type { BodyFormat } from '../core/model-runtime';
+{% if custom_imports %}
+{% for import_statement in custom_imports %}
+{{ import_statement }}
+{% endfor %}
+{% endif %}
 {% if import_types and import_types|length > 0 %}
 {% set sorted = import_types | sort %}
 import type { {{ sorted | join(', ') }} } from '../models/index';
@@ -84,7 +89,7 @@ export class {{ service_class_name }} {
 {% for op in operations %}
   {% set is_raw_bytes_body = op.requestBody and op.requestBody.tsType == 'Uint8Array' %}
   {{ op.description | ts_doc_comment }}
-  async {{ op.operationId | ts_camel_case }}(
+  {% if op.isPrivate %}private {% endif %}async {{ op.operationId | ts_camel_case }}(
 {%- for p in op.pathParameters %}
     {{ p.varName }}: {{ p.tsType }},
 {%- endfor %}
@@ -163,4 +168,10 @@ export class {{ service_class_name }} {
   }
 
 {% endfor %}
+{% if custom_methods %}
+{% for method in custom_methods %}
+
+  {{ method }}
+{% endfor %}
+{% endif %}
 }
