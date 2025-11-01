@@ -1,6 +1,7 @@
 import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
 import type { BodyFormat } from '../core/model-runtime'
+import { concatArrays } from '@algorandfoundation/algokit-common'
 import type {
   AbortCatchup,
   Account,
@@ -1184,7 +1185,7 @@ export class AlgodApi {
     return payload as DebugSettingsProf
   }
 
-  async rawTransaction(params?: { body: Uint8Array }, requestOptions?: ApiRequestOptions): Promise<RawTransaction> {
+  private async rawTransaction(params?: { body: Uint8Array }, requestOptions?: ApiRequestOptions): Promise<RawTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1209,33 +1210,6 @@ export class AlgodApi {
       return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
     }
     return payload as RawTransaction
-  }
-
-  async rawTransactionAsync(params?: { body: Uint8Array }, requestOptions?: ApiRequestOptions): Promise<void> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const serializedBody = params?.body ?? undefined
-    const mediaType = 'application/msgpack'
-    headers['Content-Type'] = mediaType
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'POST',
-      url: '/v2/transactions/async',
-      path: {},
-      query: {},
-      headers,
-      body: serializedBody,
-      mediaType: mediaType,
-      ...(requestOptions ?? {}),
-    })
-
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as void
   }
 
   /**
@@ -1564,5 +1538,21 @@ export class AlgodApi {
       return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
     }
     return payload as WaitForBlock
+  }
+
+  /**
+   * Send a signed transaction or array of signed transactions to the network.
+   */
+  async sendRawTransaction(stxOrStxs: Uint8Array | Uint8Array[]): Promise<RawTransaction> {
+    let rawTransactions = stxOrStxs
+    if (Array.isArray(stxOrStxs)) {
+      if (!stxOrStxs.every((a) => a instanceof Uint8Array)) {
+        throw new Error('Array elements must be byte arrays')
+      }
+      rawTransactions = concatArrays(...stxOrStxs)
+    } else if (!(rawTransactions instanceof Uint8Array)) {
+      throw new Error('Argument must be byte array')
+    }
+    return this.rawTransaction({ body: rawTransactions })
   }
 }

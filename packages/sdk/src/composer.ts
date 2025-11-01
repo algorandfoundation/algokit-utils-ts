@@ -567,15 +567,7 @@ export class AtomicTransactionComposer {
 
     const stxns = await this.gatherSignatures()
 
-    const totalLength = stxns.reduce((sum, stxn) => sum + stxn.length, 0)
-    const merged = new Uint8Array(totalLength)
-    let offset = 0
-    for (const stxn of stxns) {
-      merged.set(stxn, offset)
-      offset += stxn.length
-    }
-
-    await client.rawTransaction({ body: merged })
+    await client.sendRawTransaction(stxns)
 
     this.status = AtomicTransactionComposerStatus.SUBMITTED
 
