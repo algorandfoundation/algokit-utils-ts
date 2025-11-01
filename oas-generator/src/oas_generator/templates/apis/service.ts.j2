@@ -1,4 +1,4 @@
-import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request';
+import type { BaseHttpRequest } from '../core/base-http-request';
 import { AlgorandSerializer } from '../core/model-runtime';
 import type { BodyFormat } from '../core/model-runtime';
 {% if custom_imports %}
@@ -101,9 +101,8 @@ export class {{ service_class_name }} {
 {%- if op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE'] %}
       body{% if not op.requestBody.required %}?{% endif %}: {{ op.requestBody.tsType }};
 {%- endif %}
-    },
+    }
 {%- endif %}
-    requestOptions?: ApiRequestOptions
   ): Promise<{{ op.responseTsType }}> {
     const headers: Record<string, string> = {};
     {% set supports_msgpack = op.returnsMsgpack or (op.requestBody and op.requestBody.supportsMsgpack) %}
@@ -157,7 +156,6 @@ export class {{ service_class_name }} {
       body: undefined,
       mediaType: undefined,
       {% endif %}
-      ...(requestOptions ?? {}),
     });
 
     const responseMeta = {{ meta_expr(op.responseTsType) }};
