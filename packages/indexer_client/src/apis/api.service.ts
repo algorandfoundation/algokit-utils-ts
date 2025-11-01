@@ -1,4 +1,4 @@
-import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request'
+import type { BaseHttpRequest } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
 import type { BodyFormat } from '../core/model-runtime'
 import type {
@@ -65,7 +65,6 @@ export class IndexerApi {
   async lookupAccountAppLocalStates(
     accountId: string,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAccountAppLocalStates> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -84,7 +83,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAccountAppLocalStatesMeta
@@ -100,7 +98,6 @@ export class IndexerApi {
   async lookupAccountAssets(
     accountId: string,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAccountAssets> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -119,7 +116,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAccountAssetsMeta
@@ -139,7 +135,6 @@ export class IndexerApi {
       includeAll?: boolean
       exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
     },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAccountById> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -157,7 +152,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAccountByIdMeta
@@ -173,7 +167,6 @@ export class IndexerApi {
   async lookupAccountCreatedApplications(
     accountId: string,
     params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAccountCreatedApplications> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -192,7 +185,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAccountCreatedApplicationsMeta
@@ -208,7 +200,6 @@ export class IndexerApi {
   async lookupAccountCreatedAssets(
     accountId: string,
     params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAccountCreatedAssets> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -227,7 +218,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAccountCreatedAssetsMeta
@@ -259,7 +249,6 @@ export class IndexerApi {
       currencyLessThan?: number | bigint
       rekeyTo?: boolean
     },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAccountTransactions> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -293,7 +282,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAccountTransactionsMeta
@@ -306,11 +294,7 @@ export class IndexerApi {
   /**
    * Given an application ID and box name, returns base64 encoded box name and value. Box names must be in the goal app call arg form 'encoding:value'. For ints, use the form 'int:1234'. For raw bytes, encode base 64 and use 'b64' prefix as in 'b64:A=='. For printable strings, use the form 'str:hello'. For addresses, use the form 'addr:XYZ...'.
    */
-  async lookupApplicationBoxByIdAndName(
-    applicationId: number | bigint,
-    params?: { name: string },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<Box> {
+  async lookupApplicationBoxByIdAndName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -323,7 +307,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = BoxMeta
@@ -336,11 +319,7 @@ export class IndexerApi {
   /**
    * Lookup application.
    */
-  async lookupApplicationById(
-    applicationId: number | bigint,
-    params?: { includeAll?: boolean },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<LookupApplicationById> {
+  async lookupApplicationById(applicationId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupApplicationById> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -353,7 +332,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupApplicationByIdMeta
@@ -376,7 +354,6 @@ export class IndexerApi {
       maxRound?: number | bigint
       senderAddress?: string
     },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupApplicationLogsById> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -397,7 +374,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupApplicationLogsByIdMeta
@@ -419,7 +395,6 @@ export class IndexerApi {
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
     },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAssetBalances> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -443,7 +418,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAssetBalancesMeta
@@ -456,11 +430,7 @@ export class IndexerApi {
   /**
    * Lookup asset information.
    */
-  async lookupAssetById(
-    assetId: number | bigint,
-    params?: { includeAll?: boolean },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<LookupAssetById> {
+  async lookupAssetById(assetId: number | bigint, params?: { includeAll?: boolean }): Promise<LookupAssetById> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -473,7 +443,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAssetByIdMeta
@@ -507,7 +476,6 @@ export class IndexerApi {
       excludeCloseTo?: boolean
       rekeyTo?: boolean
     },
-    requestOptions?: ApiRequestOptions,
   ): Promise<LookupAssetTransactions> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -543,7 +511,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupAssetTransactionsMeta
@@ -556,7 +523,7 @@ export class IndexerApi {
   /**
    * Lookup block.
    */
-  async lookupBlock(roundNumber: number | bigint, params?: { headerOnly?: boolean }, requestOptions?: ApiRequestOptions): Promise<Block> {
+  async lookupBlock(roundNumber: number | bigint, params?: { headerOnly?: boolean }): Promise<Block> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -569,7 +536,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = BlockMeta
@@ -582,7 +548,7 @@ export class IndexerApi {
   /**
    * Lookup a single transaction.
    */
-  async lookupTransaction(txid: string, requestOptions?: ApiRequestOptions): Promise<LookupTransaction> {
+  async lookupTransaction(txid: string): Promise<LookupTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -595,7 +561,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LookupTransactionMeta
@@ -605,7 +570,7 @@ export class IndexerApi {
     return payload as LookupTransaction
   }
 
-  async makeHealthCheck(requestOptions?: ApiRequestOptions): Promise<HealthCheck> {
+  async makeHealthCheck(): Promise<HealthCheck> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -618,7 +583,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = HealthCheckMeta
@@ -631,22 +595,19 @@ export class IndexerApi {
   /**
    * Search for accounts.
    */
-  async searchForAccounts(
-    params?: {
-      assetId?: number | bigint
-      limit?: number | bigint
-      next?: string
-      currencyGreaterThan?: number | bigint
-      includeAll?: boolean
-      exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
-      currencyLessThan?: number | bigint
-      authAddr?: string
-      round?: number | bigint
-      applicationId?: number | bigint
-      onlineOnly?: boolean
-    },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<SearchForAccounts> {
+  async searchForAccounts(params?: {
+    assetId?: number | bigint
+    limit?: number | bigint
+    next?: string
+    currencyGreaterThan?: number | bigint
+    includeAll?: boolean
+    exclude?: 'all' | 'assets' | 'created-assets' | 'apps-local-state' | 'created-apps' | 'none'[]
+    currencyLessThan?: number | bigint
+    authAddr?: string
+    round?: number | bigint
+    applicationId?: number | bigint
+    onlineOnly?: boolean
+  }): Promise<SearchForAccounts> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -675,7 +636,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = SearchForAccountsMeta
@@ -691,7 +651,6 @@ export class IndexerApi {
   async searchForApplicationBoxes(
     applicationId: number | bigint,
     params?: { limit?: number | bigint; next?: string },
-    requestOptions?: ApiRequestOptions,
   ): Promise<SearchForApplicationBoxes> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -705,7 +664,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = SearchForApplicationBoxesMeta
@@ -718,10 +676,13 @@ export class IndexerApi {
   /**
    * Search for applications
    */
-  async searchForApplications(
-    params?: { applicationId?: number | bigint; creator?: string; includeAll?: boolean; limit?: number | bigint; next?: string },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<SearchForApplications> {
+  async searchForApplications(params?: {
+    applicationId?: number | bigint
+    creator?: string
+    includeAll?: boolean
+    limit?: number | bigint
+    next?: string
+  }): Promise<SearchForApplications> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -740,7 +701,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = SearchForApplicationsMeta
@@ -753,18 +713,15 @@ export class IndexerApi {
   /**
    * Search for assets.
    */
-  async searchForAssets(
-    params?: {
-      includeAll?: boolean
-      limit?: number | bigint
-      next?: string
-      creator?: string
-      name?: string
-      unit?: string
-      assetId?: number | bigint
-    },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<SearchForAssets> {
+  async searchForAssets(params?: {
+    includeAll?: boolean
+    limit?: number | bigint
+    next?: string
+    creator?: string
+    name?: string
+    unit?: string
+    assetId?: number | bigint
+  }): Promise<SearchForAssets> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -785,7 +742,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = SearchForAssetsMeta
@@ -798,20 +754,17 @@ export class IndexerApi {
   /**
    * Search for block headers. Block headers are returned in ascending round order. Transactions are not included in the output.
    */
-  async searchForBlockHeaders(
-    params?: {
-      limit?: number | bigint
-      next?: string
-      minRound?: number | bigint
-      maxRound?: number | bigint
-      beforeTime?: string
-      afterTime?: string
-      proposers?: string[]
-      expired?: string[]
-      absent?: string[]
-    },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<SearchForBlockHeaders> {
+  async searchForBlockHeaders(params?: {
+    limit?: number | bigint
+    next?: string
+    minRound?: number | bigint
+    maxRound?: number | bigint
+    beforeTime?: string
+    afterTime?: string
+    proposers?: string[]
+    expired?: string[]
+    absent?: string[]
+  }): Promise<SearchForBlockHeaders> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -834,7 +787,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = SearchForBlockHeadersMeta
@@ -847,31 +799,28 @@ export class IndexerApi {
   /**
    * Search for transactions. Transactions are returned oldest to newest unless the address parameter is used, in which case results are returned newest to oldest.
    */
-  async searchForTransactions(
-    params?: {
-      limit?: number | bigint
-      next?: string
-      notePrefix?: string
-      txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
-      sigType?: 'sig' | 'msig' | 'lsig'
-      groupId?: string
-      txid?: string
-      round?: number | bigint
-      minRound?: number | bigint
-      maxRound?: number | bigint
-      assetId?: number | bigint
-      beforeTime?: string
-      afterTime?: string
-      currencyGreaterThan?: number | bigint
-      currencyLessThan?: number | bigint
-      address?: string
-      addressRole?: 'sender' | 'receiver' | 'freeze-target'
-      excludeCloseTo?: boolean
-      rekeyTo?: boolean
-      applicationId?: number | bigint
-    },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<SearchForTransactions> {
+  async searchForTransactions(params?: {
+    limit?: number | bigint
+    next?: string
+    notePrefix?: string
+    txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
+    sigType?: 'sig' | 'msig' | 'lsig'
+    groupId?: string
+    txid?: string
+    round?: number | bigint
+    minRound?: number | bigint
+    maxRound?: number | bigint
+    assetId?: number | bigint
+    beforeTime?: string
+    afterTime?: string
+    currencyGreaterThan?: number | bigint
+    currencyLessThan?: number | bigint
+    address?: string
+    addressRole?: 'sender' | 'receiver' | 'freeze-target'
+    excludeCloseTo?: boolean
+    rekeyTo?: boolean
+    applicationId?: number | bigint
+  }): Promise<SearchForTransactions> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = IndexerApi.acceptFor(responseFormat)
@@ -909,7 +858,6 @@ export class IndexerApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = SearchForTransactionsMeta

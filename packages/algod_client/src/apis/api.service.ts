@@ -1,4 +1,4 @@
-import type { BaseHttpRequest, ApiRequestOptions } from '../core/base-http-request'
+import type { BaseHttpRequest } from '../core/base-http-request'
 import { AlgorandSerializer } from '../core/model-runtime'
 import type { BodyFormat } from '../core/model-runtime'
 import { concatArrays } from '@algorandfoundation/algokit-common'
@@ -103,7 +103,7 @@ export class AlgodApi {
   /**
    * Given a catchpoint, it aborts catching up to this catchpoint
    */
-  async abortCatchup(catchpoint: string, requestOptions?: ApiRequestOptions): Promise<AbortCatchup> {
+  async abortCatchup(catchpoint: string): Promise<AbortCatchup> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -116,7 +116,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = AbortCatchupMeta
@@ -133,7 +132,6 @@ export class AlgodApi {
     address: string,
     applicationId: number | bigint,
     params?: { format?: 'json' | 'msgpack' },
-    requestOptions?: ApiRequestOptions,
   ): Promise<AccountApplicationInformation> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = (params?.format as BodyFormat | undefined) ?? 'msgpack'
@@ -147,7 +145,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = AccountApplicationInformationMeta
@@ -160,11 +157,7 @@ export class AlgodApi {
   /**
    * Given a specific account public key and asset ID, this call returns the account's asset holding and asset parameters (if either exist). Asset parameters will only be returned if the provided address is the asset's creator.
    */
-  async accountAssetInformation(
-    address: string,
-    assetId: number | bigint,
-    requestOptions?: ApiRequestOptions,
-  ): Promise<AccountAssetInformation> {
+  async accountAssetInformation(address: string, assetId: number | bigint): Promise<AccountAssetInformation> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -177,7 +170,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = AccountAssetInformationMeta
@@ -190,11 +182,7 @@ export class AlgodApi {
   /**
    * Lookup an account's asset holdings.
    */
-  async accountAssetsInformation(
-    address: string,
-    params?: { limit?: number | bigint; next?: string },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<AccountAssetsInformation> {
+  async accountAssetsInformation(address: string, params?: { limit?: number | bigint; next?: string }): Promise<AccountAssetsInformation> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -207,7 +195,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = AccountAssetsInformationMeta
@@ -220,7 +207,7 @@ export class AlgodApi {
   /**
    * Given a specific account public key, this call returns the account's status, balance and spendable amounts
    */
-  async accountInformation(address: string, params?: { exclude?: 'all' | 'none' }, requestOptions?: ApiRequestOptions): Promise<Account> {
+  async accountInformation(address: string, params?: { exclude?: 'all' | 'none' }): Promise<Account> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -233,7 +220,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = AccountMeta
@@ -243,7 +229,7 @@ export class AlgodApi {
     return payload as Account
   }
 
-  async addParticipationKey(params?: { body: string }, requestOptions?: ApiRequestOptions): Promise<AddParticipationKey> {
+  async addParticipationKey(params?: { body: string }): Promise<AddParticipationKey> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -262,7 +248,6 @@ export class AlgodApi {
       headers,
       body: serializedBody,
       mediaType: mediaType,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = AddParticipationKeyMeta
@@ -275,7 +260,7 @@ export class AlgodApi {
   /**
    * Given a participation ID, append state proof keys to a particular set of participation keys
    */
-  async appendKeys(participationId: string, params?: { body: string }, requestOptions?: ApiRequestOptions): Promise<ParticipationKey> {
+  async appendKeys(participationId: string, params?: { body: string }): Promise<ParticipationKey> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -294,7 +279,6 @@ export class AlgodApi {
       headers,
       body: serializedBody,
       mediaType: mediaType,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = ParticipationKeyMeta
@@ -307,7 +291,7 @@ export class AlgodApi {
   /**
    * Delete a given participation key by ID
    */
-  async deleteParticipationKeyById(participationId: string, requestOptions?: ApiRequestOptions): Promise<void> {
+  async deleteParticipationKeyById(participationId: string): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -320,7 +304,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -330,7 +313,7 @@ export class AlgodApi {
     return payload as void
   }
 
-  async experimentalCheck(requestOptions?: ApiRequestOptions): Promise<void> {
+  async experimentalCheck(): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -343,7 +326,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -356,7 +338,6 @@ export class AlgodApi {
   async generateParticipationKeys(
     address: string,
     params?: { dilution?: number | bigint; first: number | bigint; last: number | bigint },
-    requestOptions?: ApiRequestOptions,
   ): Promise<string> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -374,7 +355,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -387,11 +367,7 @@ export class AlgodApi {
   /**
    * Given an application ID and box name, it returns the round, box name, and value (each base64 encoded). Box names must be in the goal app call arg encoding form 'encoding:value'. For ints, use the form 'int:1234'. For raw bytes, use the form 'b64:A=='. For printable strings, use the form 'str:hello'. For addresses, use the form 'addr:XYZ...'.
    */
-  async getApplicationBoxByName(
-    applicationId: number | bigint,
-    params?: { name: string },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<Box> {
+  async getApplicationBoxByName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -404,7 +380,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = BoxMeta
@@ -417,11 +392,7 @@ export class AlgodApi {
   /**
    * Given an application ID, return all Box names. No particular ordering is guaranteed. Request fails when client or server-side configured limits prevent returning all Box names.
    */
-  async getApplicationBoxes(
-    applicationId: number | bigint,
-    params?: { max?: number | bigint },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<GetApplicationBoxes> {
+  async getApplicationBoxes(applicationId: number | bigint, params?: { max?: number | bigint }): Promise<GetApplicationBoxes> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -434,7 +405,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetApplicationBoxesMeta
@@ -447,7 +417,7 @@ export class AlgodApi {
   /**
    * Given a application ID, it returns application information including creator, approval and clear programs, global and local schemas, and global state.
    */
-  async getApplicationById(applicationId: number | bigint, requestOptions?: ApiRequestOptions): Promise<Application> {
+  async getApplicationById(applicationId: number | bigint): Promise<Application> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -460,7 +430,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = ApplicationMeta
@@ -473,7 +442,7 @@ export class AlgodApi {
   /**
    * Given a asset ID, it returns asset information including creator, name, total supply and special addresses.
    */
-  async getAssetById(assetId: number | bigint, requestOptions?: ApiRequestOptions): Promise<Asset> {
+  async getAssetById(assetId: number | bigint): Promise<Asset> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -486,7 +455,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = AssetMeta
@@ -496,7 +464,7 @@ export class AlgodApi {
     return payload as Asset
   }
 
-  async getBlock(round: number | bigint, params?: { headerOnly?: boolean }, requestOptions?: ApiRequestOptions): Promise<GetBlock> {
+  async getBlock(round: number | bigint, params?: { headerOnly?: boolean }): Promise<GetBlock> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -509,7 +477,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetBlockMeta
@@ -519,7 +486,7 @@ export class AlgodApi {
     return payload as GetBlock
   }
 
-  async getBlockHash(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<GetBlockHash> {
+  async getBlockHash(round: number | bigint): Promise<GetBlockHash> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -532,7 +499,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetBlockHashMeta
@@ -545,7 +511,7 @@ export class AlgodApi {
   /**
    * Get all of the logs from outer and inner app calls in the given round
    */
-  async getBlockLogs(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<GetBlockLogs> {
+  async getBlockLogs(round: number | bigint): Promise<GetBlockLogs> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -558,7 +524,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetBlockLogsMeta
@@ -571,7 +536,7 @@ export class AlgodApi {
   /**
    * Gets the current timestamp offset.
    */
-  async getBlockTimeStampOffset(requestOptions?: ApiRequestOptions): Promise<GetBlockTimeStampOffset> {
+  async getBlockTimeStampOffset(): Promise<GetBlockTimeStampOffset> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -584,7 +549,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetBlockTimeStampOffsetMeta
@@ -594,7 +558,7 @@ export class AlgodApi {
     return payload as GetBlockTimeStampOffset
   }
 
-  async getBlockTxids(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<GetBlockTxids> {
+  async getBlockTxids(round: number | bigint): Promise<GetBlockTxids> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -607,7 +571,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetBlockTxidsMeta
@@ -620,7 +583,7 @@ export class AlgodApi {
   /**
    * Returns the merged (defaults + overrides) config file in json.
    */
-  async getConfig(requestOptions?: ApiRequestOptions): Promise<string> {
+  async getConfig(): Promise<string> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -633,7 +596,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -646,7 +608,7 @@ export class AlgodApi {
   /**
    * Retrieves the current settings for blocking and mutex profiles
    */
-  async getDebugSettingsProf(requestOptions?: ApiRequestOptions): Promise<DebugSettingsProf> {
+  async getDebugSettingsProf(): Promise<DebugSettingsProf> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -659,7 +621,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = DebugSettingsProfMeta
@@ -672,7 +633,7 @@ export class AlgodApi {
   /**
    * Returns the entire genesis file in json.
    */
-  async getGenesis(requestOptions?: ApiRequestOptions): Promise<Genesis> {
+  async getGenesis(): Promise<Genesis> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -685,7 +646,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GenesisMeta
@@ -698,7 +658,7 @@ export class AlgodApi {
   /**
    * Get ledger deltas for a round.
    */
-  async getLedgerStateDelta(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<LedgerStateDelta> {
+  async getLedgerStateDelta(round: number | bigint): Promise<LedgerStateDelta> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -711,7 +671,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LedgerStateDeltaMeta
@@ -724,7 +683,7 @@ export class AlgodApi {
   /**
    * Get a ledger delta for a given transaction group.
    */
-  async getLedgerStateDeltaForTransactionGroup(id: string, requestOptions?: ApiRequestOptions): Promise<LedgerStateDelta> {
+  async getLedgerStateDeltaForTransactionGroup(id: string): Promise<LedgerStateDelta> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -737,7 +696,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LedgerStateDeltaMeta
@@ -747,7 +705,7 @@ export class AlgodApi {
     return payload as LedgerStateDelta
   }
 
-  async getLightBlockHeaderProof(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<LightBlockHeaderProof> {
+  async getLightBlockHeaderProof(round: number | bigint): Promise<LightBlockHeaderProof> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -760,7 +718,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = LightBlockHeaderProofMeta
@@ -773,7 +730,7 @@ export class AlgodApi {
   /**
    * Given a participation ID, return information about that participation key
    */
-  async getParticipationKeyById(participationId: string, requestOptions?: ApiRequestOptions): Promise<ParticipationKey> {
+  async getParticipationKeyById(participationId: string): Promise<ParticipationKey> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -786,7 +743,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = ParticipationKeyMeta
@@ -799,7 +755,7 @@ export class AlgodApi {
   /**
    * Return a list of participation keys
    */
-  async getParticipationKeys(requestOptions?: ApiRequestOptions): Promise<ParticipationKey[]> {
+  async getParticipationKeys(): Promise<ParticipationKey[]> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -812,7 +768,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = {
@@ -829,7 +784,7 @@ export class AlgodApi {
   /**
    * Get the list of pending transactions, sorted by priority, in decreasing order, truncated at the end at MAX. If MAX = 0, returns all pending transactions.
    */
-  async getPendingTransactions(params?: { max?: number | bigint }, requestOptions?: ApiRequestOptions): Promise<GetPendingTransactions> {
+  async getPendingTransactions(params?: { max?: number | bigint }): Promise<GetPendingTransactions> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -842,7 +797,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetPendingTransactionsMeta
@@ -855,11 +809,7 @@ export class AlgodApi {
   /**
    * Get the list of pending transactions by address, sorted by priority, in decreasing order, truncated at the end at MAX. If MAX = 0, returns all pending transactions.
    */
-  async getPendingTransactionsByAddress(
-    address: string,
-    params?: { max?: number | bigint },
-    requestOptions?: ApiRequestOptions,
-  ): Promise<GetPendingTransactionsByAddress> {
+  async getPendingTransactionsByAddress(address: string, params?: { max?: number | bigint }): Promise<GetPendingTransactionsByAddress> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -872,7 +822,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetPendingTransactionsByAddressMeta
@@ -882,7 +831,7 @@ export class AlgodApi {
     return payload as GetPendingTransactionsByAddress
   }
 
-  async getReady(requestOptions?: ApiRequestOptions): Promise<void> {
+  async getReady(): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -895,7 +844,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -905,7 +853,7 @@ export class AlgodApi {
     return payload as void
   }
 
-  async getStateProof(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<StateProof> {
+  async getStateProof(round: number | bigint): Promise<StateProof> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -918,7 +866,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = StateProofMeta
@@ -928,7 +875,7 @@ export class AlgodApi {
     return payload as StateProof
   }
 
-  async getStatus(requestOptions?: ApiRequestOptions): Promise<GetStatus> {
+  async getStatus(): Promise<GetStatus> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -941,7 +888,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetStatusMeta
@@ -951,7 +897,7 @@ export class AlgodApi {
     return payload as GetStatus
   }
 
-  async getSupply(requestOptions?: ApiRequestOptions): Promise<GetSupply> {
+  async getSupply(): Promise<GetSupply> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -964,7 +910,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetSupplyMeta
@@ -977,7 +922,7 @@ export class AlgodApi {
   /**
    * Gets the minimum sync round for the ledger.
    */
-  async getSyncRound(requestOptions?: ApiRequestOptions): Promise<GetSyncRound> {
+  async getSyncRound(): Promise<GetSyncRound> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -990,7 +935,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetSyncRoundMeta
@@ -1003,10 +947,7 @@ export class AlgodApi {
   /**
    * Get ledger deltas for transaction groups in a given round.
    */
-  async getTransactionGroupLedgerStateDeltasForRound(
-    round: number | bigint,
-    requestOptions?: ApiRequestOptions,
-  ): Promise<GetTransactionGroupLedgerStateDeltasForRound> {
+  async getTransactionGroupLedgerStateDeltasForRound(round: number | bigint): Promise<GetTransactionGroupLedgerStateDeltasForRound> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1019,7 +960,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = GetTransactionGroupLedgerStateDeltasForRoundMeta
@@ -1033,7 +973,6 @@ export class AlgodApi {
     round: number | bigint,
     txid: string,
     params?: { hashtype?: 'sha512_256' | 'sha256'; format?: 'json' | 'msgpack' },
-    requestOptions?: ApiRequestOptions,
   ): Promise<TransactionProof> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -1047,7 +986,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = TransactionProofMeta
@@ -1060,7 +998,7 @@ export class AlgodApi {
   /**
    * Retrieves the supported API versions, binary build versions, and genesis information.
    */
-  async getVersion(requestOptions?: ApiRequestOptions): Promise<Version> {
+  async getVersion(): Promise<Version> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1073,7 +1011,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = VersionMeta
@@ -1083,7 +1020,7 @@ export class AlgodApi {
     return payload as Version
   }
 
-  async healthCheck(requestOptions?: ApiRequestOptions): Promise<void> {
+  async healthCheck(): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1096,7 +1033,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -1106,7 +1042,7 @@ export class AlgodApi {
     return payload as void
   }
 
-  async metrics(requestOptions?: ApiRequestOptions): Promise<void> {
+  async metrics(): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1119,7 +1055,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -1136,7 +1071,7 @@ export class AlgodApi {
    * - transaction removed from pool due to error (committed round = 0, pool error != "")
    * Or the transaction may have happened sufficiently long ago that the node no longer remembers it, and this will return an error.
    */
-  async pendingTransactionInformation(txid: string, requestOptions?: ApiRequestOptions): Promise<PendingTransactionResponse> {
+  async pendingTransactionInformation(txid: string): Promise<PendingTransactionResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1149,7 +1084,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = PendingTransactionResponseMeta
@@ -1162,7 +1096,7 @@ export class AlgodApi {
   /**
    * Enables blocking and mutex profiles, and returns the old settings
    */
-  async putDebugSettingsProf(requestOptions?: ApiRequestOptions): Promise<DebugSettingsProf> {
+  async putDebugSettingsProf(): Promise<DebugSettingsProf> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1175,7 +1109,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = DebugSettingsProfMeta
@@ -1185,7 +1118,7 @@ export class AlgodApi {
     return payload as DebugSettingsProf
   }
 
-  private async rawTransaction(params?: { body: Uint8Array }, requestOptions?: ApiRequestOptions): Promise<RawTransaction> {
+  private async rawTransaction(params?: { body: Uint8Array }): Promise<RawTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1202,7 +1135,6 @@ export class AlgodApi {
       headers,
       body: serializedBody,
       mediaType: mediaType,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = RawTransactionMeta
@@ -1215,7 +1147,7 @@ export class AlgodApi {
   /**
    * Sets the timestamp offset (seconds) for blocks in dev mode. Providing an offset of 0 will unset this value and try to use the real clock for the timestamp.
    */
-  async setBlockTimeStampOffset(offset: number | bigint, requestOptions?: ApiRequestOptions): Promise<void> {
+  async setBlockTimeStampOffset(offset: number | bigint): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1228,7 +1160,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -1241,7 +1172,7 @@ export class AlgodApi {
   /**
    * Sets the minimum sync round on the ledger.
    */
-  async setSyncRound(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<void> {
+  async setSyncRound(round: number | bigint): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1254,7 +1185,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -1267,7 +1197,7 @@ export class AlgodApi {
   /**
    * Special management endpoint to shutdown the node. Optionally provide a timeout parameter to indicate that the node should begin shutting down after a number of seconds.
    */
-  async shutdownNode(params?: { timeout?: number | bigint }, requestOptions?: ApiRequestOptions): Promise<ShutdownNode> {
+  async shutdownNode(params?: { timeout?: number | bigint }): Promise<ShutdownNode> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1280,7 +1210,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = ShutdownNodeMeta
@@ -1290,7 +1219,7 @@ export class AlgodApi {
     return payload as ShutdownNode
   }
 
-  async simulateTransaction(params?: { body: SimulateRequest }, requestOptions?: ApiRequestOptions): Promise<SimulateTransaction> {
+  async simulateTransaction(params?: { body: SimulateRequest }): Promise<SimulateTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1309,7 +1238,6 @@ export class AlgodApi {
       headers,
       body: serializedBody,
       mediaType: mediaType,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = SimulateTransactionMeta
@@ -1322,7 +1250,7 @@ export class AlgodApi {
   /**
    * Given a catchpoint, it starts catching up to this catchpoint
    */
-  async startCatchup(catchpoint: string, params?: { min?: number | bigint }, requestOptions?: ApiRequestOptions): Promise<StartCatchup> {
+  async startCatchup(catchpoint: string, params?: { min?: number | bigint }): Promise<StartCatchup> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1335,7 +1263,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = StartCatchupMeta
@@ -1348,7 +1275,7 @@ export class AlgodApi {
   /**
    * Returns the entire swagger spec in json.
    */
-  async swaggerJson(requestOptions?: ApiRequestOptions): Promise<string> {
+  async swaggerJson(): Promise<string> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1361,7 +1288,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -1374,7 +1300,7 @@ export class AlgodApi {
   /**
    * Given TEAL source code in plain text, return base64 encoded program bytes and base32 SHA512_256 hash of program bytes (Address style). This endpoint is only enabled when a node's configuration file sets EnableDeveloperAPI to true.
    */
-  async tealCompile(params?: { sourcemap?: boolean; body: string }, requestOptions?: ApiRequestOptions): Promise<TealCompile> {
+  async tealCompile(params?: { sourcemap?: boolean; body: string }): Promise<TealCompile> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1393,7 +1319,6 @@ export class AlgodApi {
       headers,
       body: serializedBody,
       mediaType: mediaType,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = TealCompileMeta
@@ -1406,7 +1331,7 @@ export class AlgodApi {
   /**
    * Given the program bytes, return the TEAL source code in plain text. This endpoint is only enabled when a node's configuration file sets EnableDeveloperAPI to true.
    */
-  async tealDisassemble(params?: { body: Uint8Array }, requestOptions?: ApiRequestOptions): Promise<TealDisassemble> {
+  async tealDisassemble(params?: { body: Uint8Array }): Promise<TealDisassemble> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1423,7 +1348,6 @@ export class AlgodApi {
       headers,
       body: serializedBody,
       mediaType: mediaType,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = TealDisassembleMeta
@@ -1436,7 +1360,7 @@ export class AlgodApi {
   /**
    * Executes TEAL program(s) in context and returns debugging information about the execution. This endpoint is only enabled when a node's configuration file sets EnableDeveloperAPI to true.
    */
-  async tealDryrun(params?: { body?: DryrunRequest }, requestOptions?: ApiRequestOptions): Promise<TealDryrun> {
+  async tealDryrun(params?: { body?: DryrunRequest }): Promise<TealDryrun> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1455,7 +1379,6 @@ export class AlgodApi {
       headers,
       body: serializedBody,
       mediaType: mediaType,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = TealDryrunMeta
@@ -1465,7 +1388,7 @@ export class AlgodApi {
     return payload as TealDryrun
   }
 
-  async transactionParams(requestOptions?: ApiRequestOptions): Promise<TransactionParams> {
+  async transactionParams(): Promise<TransactionParams> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1478,7 +1401,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = TransactionParamsMeta
@@ -1491,7 +1413,7 @@ export class AlgodApi {
   /**
    * Unset the ledger sync round.
    */
-  async unsetSyncRound(requestOptions?: ApiRequestOptions): Promise<void> {
+  async unsetSyncRound(): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1504,7 +1426,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = undefined
@@ -1517,7 +1438,7 @@ export class AlgodApi {
   /**
    * Waits for a block to appear after round {round} and returns the node's status at the time. There is a 1 minute timeout, when reached the current status is returned regardless of whether or not it is the round after the given round.
    */
-  async waitForBlock(round: number | bigint, requestOptions?: ApiRequestOptions): Promise<WaitForBlock> {
+  async waitForBlock(round: number | bigint): Promise<WaitForBlock> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1530,7 +1451,6 @@ export class AlgodApi {
       headers,
       body: undefined,
       mediaType: undefined,
-      ...(requestOptions ?? {}),
     })
 
     const responseMeta = WaitForBlockMeta
