@@ -100,7 +100,7 @@ export class KmdApi {
   /**
    * Create a new wallet (collection of keys) with the given parameters.
    */
-  async createWallet(params?: { body: CreateWalletRequest }): Promise<PostWalletResponse> {
+  async createWallet(body: CreateWalletRequest): Promise<PostWalletResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -108,8 +108,7 @@ export class KmdApi {
     const bodyMeta = CreateWalletRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -181,7 +180,7 @@ export class KmdApi {
   /**
    * Export the secret key associated with the passed public key.
    */
-  async exportKey(params?: { body: ExportKeyRequest }): Promise<PostKeyExportResponse> {
+  async exportKey(body: ExportKeyRequest): Promise<PostKeyExportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -189,8 +188,7 @@ export class KmdApi {
     const bodyMeta = ExportKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -212,7 +210,7 @@ export class KmdApi {
   /**
    * Export the master derivation key from the wallet. This key is a master "backup" key for the underlying wallet. With it, you can regenerate all of the wallets that have been generated with this wallet's `POST /v1/key` endpoint. This key will not allow you to recover keys imported from other wallets, however.
    */
-  async exportMasterKey(params?: { body: ExportMasterKeyRequest }): Promise<PostMasterKeyExportResponse> {
+  async exportMasterKey(body: ExportMasterKeyRequest): Promise<PostMasterKeyExportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -220,8 +218,7 @@ export class KmdApi {
     const bodyMeta = ExportMasterKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -243,7 +240,7 @@ export class KmdApi {
   /**
    * Given a multisig address whose preimage this wallet stores, returns the information used to generate the address, including public keys, threshold, and multisig version.
    */
-  async exportMultisig(params?: { body: ExportMultisigRequest }): Promise<PostMultisigExportResponse> {
+  async exportMultisig(body: ExportMultisigRequest): Promise<PostMultisigExportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -251,8 +248,7 @@ export class KmdApi {
     const bodyMeta = ExportMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -274,7 +270,7 @@ export class KmdApi {
   /**
    * Generates the next key in the deterministic key sequence (as determined by the master derivation key) and adds it to the wallet, returning the public key.
    */
-  async generateKey(params?: { body: GenerateKeyRequest }): Promise<PostKeyResponse> {
+  async generateKey(body: GenerateKeyRequest): Promise<PostKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -282,8 +278,7 @@ export class KmdApi {
     const bodyMeta = GenerateKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -327,7 +322,7 @@ export class KmdApi {
   /**
    * Returns information about the wallet associated with the passed wallet handle token. Additionally returns expiration information about the token itself.
    */
-  async getWalletInfo(params?: { body: WalletInfoRequest }): Promise<PostWalletInfoResponse> {
+  async getWalletInfo(body: WalletInfoRequest): Promise<PostWalletInfoResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -335,8 +330,7 @@ export class KmdApi {
     const bodyMeta = WalletInfoRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -358,7 +352,7 @@ export class KmdApi {
   /**
    * Import an externally generated key into the wallet. Note that if you wish to back up the imported key, you must do so by backing up the entire wallet database, because imported keys were not derived from the wallet's master derivation key.
    */
-  async importKey(params?: { body: ImportKeyRequest }): Promise<PostKeyImportResponse> {
+  async importKey(body: ImportKeyRequest): Promise<PostKeyImportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -366,8 +360,7 @@ export class KmdApi {
     const bodyMeta = ImportKeyRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -389,7 +382,7 @@ export class KmdApi {
   /**
    * Generates a multisig account from the passed public keys array and multisig metadata, and stores all of this in the wallet.
    */
-  async importMultisig(params?: { body: ImportMultisigRequest }): Promise<PostMultisigImportResponse> {
+  async importMultisig(body: ImportMultisigRequest): Promise<PostMultisigImportResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -397,8 +390,7 @@ export class KmdApi {
     const bodyMeta = ImportMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -420,7 +412,7 @@ export class KmdApi {
   /**
    * Unlock the wallet and return a wallet handle token that can be used for subsequent operations. These tokens expire periodically and must be renewed. You can `POST` the token to `/v1/wallet/info` to see how much time remains until expiration, and renew it with `/v1/wallet/renew`. When you're done, you can invalidate the token with `/v1/wallet/release`.
    */
-  async initWalletHandleToken(params?: { body: InitWalletHandleTokenRequest }): Promise<PostWalletInitResponse> {
+  async initWalletHandleToken(body: InitWalletHandleTokenRequest): Promise<PostWalletInitResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -428,8 +420,7 @@ export class KmdApi {
     const bodyMeta = InitWalletHandleTokenRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -451,7 +442,7 @@ export class KmdApi {
   /**
    * Lists all of the public keys in this wallet. All of them have a stored private key.
    */
-  async listKeysInWallet(params?: { body: ListKeysRequest }): Promise<PostKeyListResponse> {
+  async listKeysInWallet(body: ListKeysRequest): Promise<PostKeyListResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -459,8 +450,7 @@ export class KmdApi {
     const bodyMeta = ListKeysRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -482,7 +472,7 @@ export class KmdApi {
   /**
    * Lists all of the multisig accounts whose preimages this wallet stores
    */
-  async listMultisg(params?: { body: ListMultisigRequest }): Promise<PostMultisigListResponse> {
+  async listMultisg(body: ListMultisigRequest): Promise<PostMultisigListResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -490,8 +480,7 @@ export class KmdApi {
     const bodyMeta = ListMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -538,7 +527,7 @@ export class KmdApi {
   /**
    * Invalidate the passed wallet handle token, making it invalid for use in subsequent requests.
    */
-  async releaseWalletHandleToken(params?: { body: ReleaseWalletHandleTokenRequest }): Promise<PostWalletReleaseResponse> {
+  async releaseWalletHandleToken(body: ReleaseWalletHandleTokenRequest): Promise<PostWalletReleaseResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -546,8 +535,7 @@ export class KmdApi {
     const bodyMeta = ReleaseWalletHandleTokenRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -569,7 +557,7 @@ export class KmdApi {
   /**
    * Rename the underlying wallet to something else
    */
-  async renameWallet(params?: { body: RenameWalletRequest }): Promise<PostWalletRenameResponse> {
+  async renameWallet(body: RenameWalletRequest): Promise<PostWalletRenameResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -577,8 +565,7 @@ export class KmdApi {
     const bodyMeta = RenameWalletRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -600,7 +587,7 @@ export class KmdApi {
   /**
    * Renew a wallet handle token, increasing its expiration duration to its initial value
    */
-  async renewWalletHandleToken(params?: { body: RenewWalletHandleTokenRequest }): Promise<PostWalletRenewResponse> {
+  async renewWalletHandleToken(body: RenewWalletHandleTokenRequest): Promise<PostWalletRenewResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -608,8 +595,7 @@ export class KmdApi {
     const bodyMeta = RenewWalletHandleTokenRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -631,7 +617,7 @@ export class KmdApi {
   /**
    * Start a multisig signature, or add a signature to a partially completed multisig signature object.
    */
-  async signMultisigProgram(params?: { body: SignProgramMultisigRequest }): Promise<PostMultisigProgramSignResponse> {
+  async signMultisigProgram(body: SignProgramMultisigRequest): Promise<PostMultisigProgramSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -639,8 +625,7 @@ export class KmdApi {
     const bodyMeta = SignProgramMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -662,7 +647,7 @@ export class KmdApi {
   /**
    * Start a multisig signature, or add a signature to a partially completed multisig signature object.
    */
-  async signMultisigTransaction(params?: { body: SignMultisigRequest }): Promise<PostMultisigTransactionSignResponse> {
+  async signMultisigTransaction(body: SignMultisigRequest): Promise<PostMultisigTransactionSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -670,8 +655,7 @@ export class KmdApi {
     const bodyMeta = SignMultisigRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -693,7 +677,7 @@ export class KmdApi {
   /**
    * Signs the passed program with a key from the wallet, determined by the account named in the request.
    */
-  async signProgram(params?: { body: SignProgramRequest }): Promise<PostProgramSignResponse> {
+  async signProgram(body: SignProgramRequest): Promise<PostProgramSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -701,8 +685,7 @@ export class KmdApi {
     const bodyMeta = SignProgramRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -724,7 +707,7 @@ export class KmdApi {
   /**
    * Signs the passed transaction with a key from the wallet, determined by the sender encoded in the transaction.
    */
-  async signTransaction(params?: { body: SignTransactionRequest }): Promise<PostTransactionSignResponse> {
+  async signTransaction(body: SignTransactionRequest): Promise<PostTransactionSignResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
@@ -732,8 +715,7 @@ export class KmdApi {
     const bodyMeta = SignTransactionRequestMeta
     const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',

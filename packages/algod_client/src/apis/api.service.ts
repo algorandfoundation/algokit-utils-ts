@@ -229,7 +229,7 @@ export class AlgodApi {
     return payload as Account
   }
 
-  async addParticipationKey(params?: { body: string }): Promise<AddParticipationKey> {
+  async addParticipationKey(body: string): Promise<AddParticipationKey> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -237,8 +237,7 @@ export class AlgodApi {
     const bodyMeta = undefined
     const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -260,7 +259,7 @@ export class AlgodApi {
   /**
    * Given a participation ID, append state proof keys to a particular set of participation keys
    */
-  async appendKeys(participationId: string, params?: { body: string }): Promise<ParticipationKey> {
+  async appendKeys(participationId: string, body: string): Promise<ParticipationKey> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -268,8 +267,7 @@ export class AlgodApi {
     const bodyMeta = undefined
     const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -1118,12 +1116,12 @@ export class AlgodApi {
     return payload as DebugSettingsProf
   }
 
-  private async rawTransaction(params?: { body: Uint8Array }): Promise<RawTransaction> {
+  private async rawTransaction(body: Uint8Array): Promise<RawTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const serializedBody = params?.body ?? undefined
+    const serializedBody = body ?? undefined
     const mediaType = 'application/msgpack'
     headers['Content-Type'] = mediaType
 
@@ -1219,7 +1217,7 @@ export class AlgodApi {
     return payload as ShutdownNode
   }
 
-  async simulateTransaction(params?: { body: SimulateRequest }): Promise<SimulateTransaction> {
+  async simulateTransaction(body: SimulateRequest): Promise<SimulateTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1227,8 +1225,7 @@ export class AlgodApi {
     const bodyMeta = SimulateRequestMeta
     const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -1300,7 +1297,7 @@ export class AlgodApi {
   /**
    * Given TEAL source code in plain text, return base64 encoded program bytes and base32 SHA512_256 hash of program bytes (Address style). This endpoint is only enabled when a node's configuration file sets EnableDeveloperAPI to true.
    */
-  async tealCompile(params?: { sourcemap?: boolean; body: string }): Promise<TealCompile> {
+  async tealCompile(body: string, params?: { sourcemap?: boolean }): Promise<TealCompile> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1308,8 +1305,7 @@ export class AlgodApi {
     const bodyMeta = undefined
     const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
@@ -1331,12 +1327,12 @@ export class AlgodApi {
   /**
    * Given the program bytes, return the TEAL source code in plain text. This endpoint is only enabled when a node's configuration file sets EnableDeveloperAPI to true.
    */
-  async tealDisassemble(params?: { body: Uint8Array }): Promise<TealDisassemble> {
+  async tealDisassemble(body: Uint8Array): Promise<TealDisassemble> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
-    const serializedBody = params?.body ?? undefined
+    const serializedBody = body ?? undefined
     const mediaType = 'application/msgpack'
     headers['Content-Type'] = mediaType
 
@@ -1360,7 +1356,7 @@ export class AlgodApi {
   /**
    * Executes TEAL program(s) in context and returns debugging information about the execution. This endpoint is only enabled when a node's configuration file sets EnableDeveloperAPI to true.
    */
-  async tealDryrun(params?: { body?: DryrunRequest }): Promise<TealDryrun> {
+  async tealDryrun(body?: DryrunRequest): Promise<TealDryrun> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1368,8 +1364,7 @@ export class AlgodApi {
     const bodyMeta = DryrunRequestMeta
     const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
     if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody =
-      bodyMeta && params?.body !== undefined ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat) : params?.body
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
