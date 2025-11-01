@@ -5,15 +5,13 @@ import {
   ApplicationStateSchema,
   Asset,
   AssetHolding,
-} from '@algorandfoundation/algod-client'
+} from '@algorandfoundation/algokit-algod-client'
 import { Transaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import { Address, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
 import { appendSignMultisigTransaction, signMultisigTransaction } from '@algorandfoundation/sdk/src/multisigSigning'
 import { AlgoAmount } from './amount'
-import MultisigMetadata = algosdk.MultisigMetadata
-import TransactionSigner = algosdk.TransactionSigner
 
 /**
  * The account name identifier used for fund dispensing in test environments

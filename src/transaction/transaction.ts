@@ -5,11 +5,11 @@ import {
   BoxReference,
   PendingTransactionResponse,
   SimulateRequest,
-} from '@algorandfoundation/algod-client'
+} from '@algorandfoundation/algokit-algod-client'
 import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
 import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, ABIReturnType, Address, stringifyJSON } from '@algorandfoundation/sdk'
+import { ABIMethod, ABIReturnType, Address, AtomicTransactionComposer, TransactionSigner, stringifyJSON } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
@@ -34,8 +34,6 @@ import { performAtomicTransactionComposerSimulate } from './perform-atomic-trans
 
 // Type aliases for compatibility
 type ApplicationTransactionFields = AppCallTransactionFields
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import TransactionSigner = algosdk.TransactionSigner
 
 export interface TransactionWithSigner {
   txn: Transaction

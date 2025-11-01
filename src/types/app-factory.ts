@@ -1,6 +1,5 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
+import { ABIValue, Address, ProgramSourceMap, TransactionSigner } from '@algorandfoundation/sdk'
 import { TransactionSignerAccount } from './account'
 import { type AlgorandClient } from './algorand-client'
 import {
@@ -40,9 +39,6 @@ import { AppSpec } from './app-spec'
 import { AppCreateMethodCall, AppCreateParams, AppMethodCall, AppMethodCallTransactionArgument, CommonAppCallParams } from './composer'
 import { Expand } from './expand'
 import { SendParams } from './transaction'
-import SourceMap = algosdk.ProgramSourceMap
-import ABIValue = algosdk.ABIValue
-import TransactionSigner = algosdk.TransactionSigner
 
 /** Parameters to create an app client */
 export interface AppFactoryParams {
@@ -179,8 +175,8 @@ export class AppFactory {
   private _updatable?: boolean
   private _deletable?: boolean
 
-  private _approvalSourceMap: SourceMap | undefined
-  private _clearSourceMap: SourceMap | undefined
+  private _approvalSourceMap: ProgramSourceMap | undefined
+  private _clearSourceMap: ProgramSourceMap | undefined
 
   private _paramsMethods: ReturnType<AppFactory['getParamsMethods']>
 
@@ -517,8 +513,8 @@ export class AppFactory {
    * @param sourceMaps The source maps to import
    */
   importSourceMaps(sourceMaps: AppSourceMaps) {
-    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
-    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
+    this._approvalSourceMap = new ProgramSourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new ProgramSourceMap(sourceMaps.clearSourceMap)
   }
 
   private getDeployTimeControl(control: 'updatable' | 'deletable'): boolean | undefined {

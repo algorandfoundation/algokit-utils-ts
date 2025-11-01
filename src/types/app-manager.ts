@@ -5,7 +5,7 @@ import {
   EvalDelta,
   PendingTransactionResponse,
   TealValue,
-} from '@algorandfoundation/algod-client'
+} from '@algorandfoundation/algokit-algod-client'
 import { ResourceReference, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'

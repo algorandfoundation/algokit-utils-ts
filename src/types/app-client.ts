@@ -1,7 +1,18 @@
-import { AlgodClient, TransactionParams } from '@algorandfoundation/algod-client'
+import { AlgodClient, TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import {
+  ABIMethod,
+  ABIMethodParams,
+  ABIType,
+  ABIValue,
+  Address,
+  AtomicTransactionComposer,
+  Indexer,
+  ProgramSourceMap,
+  TransactionSigner,
+  getApplicationAddress,
+} from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
 import {
   callApp,
@@ -85,15 +96,6 @@ import {
   wrapPendingTransactionResponse,
   wrapPendingTransactionResponseOptional,
 } from './transaction'
-import ABIMethod = algosdk.ABIMethod
-import ABIMethodParams = algosdk.ABIMethodParams
-import ABIType = algosdk.ABIType
-import ABIValue = algosdk.ABIValue
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import getApplicationAddress = algosdk.getApplicationAddress
-import Indexer = algosdk.Indexer
-import SourceMap = algosdk.ProgramSourceMap
-import TransactionSigner = algosdk.TransactionSigner
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
 const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
@@ -348,9 +350,9 @@ export interface AppClientParams {
   /** Optional signer to use as the default signer for default sender calls (if not specified then the signer will be resolved from `AlgorandClient`). */
   defaultSigner?: TransactionSigner
   /** Optional source map for the approval program */
-  approvalSourceMap?: SourceMap
+  approvalSourceMap?: ProgramSourceMap
   /** Optional source map for the clear state program */
-  clearSourceMap?: SourceMap
+  clearSourceMap?: ProgramSourceMap
 }
 
 /** Parameters to clone an app client */
@@ -492,8 +494,8 @@ export class AppClient {
   private _defaultSender?: Address
   private _defaultSigner?: TransactionSigner
 
-  private _approvalSourceMap: SourceMap | undefined
-  private _clearSourceMap: SourceMap | undefined
+  private _approvalSourceMap: ProgramSourceMap | undefined
+  private _clearSourceMap: ProgramSourceMap | undefined
 
   private _localStateMethods: (address: string | Address) => ReturnType<AppClient['getStateMethods']>
   private _globalStateMethods: ReturnType<AppClient['getStateMethods']>
@@ -911,8 +913,8 @@ export class AppClient {
    * @param sourceMaps The source maps to import
    */
   public importSourceMaps(sourceMaps: AppSourceMaps) {
-    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
-    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
+    this._approvalSourceMap = new ProgramSourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new ProgramSourceMap(sourceMaps.clearSourceMap)
   }
 
   /**
@@ -983,8 +985,8 @@ export class AppClient {
     appSpec: Arc56Contract,
     details: {
       /** Whether or not the code was running the clear state program (defaults to approval program) */ isClearStateProgram?: boolean
-      /** Approval program source map */ approvalSourceMap?: SourceMap
-      /** Clear state program source map */ clearSourceMap?: SourceMap
+      /** Approval program source map */ approvalSourceMap?: ProgramSourceMap
+      /** Clear state program source map */ clearSourceMap?: ProgramSourceMap
       /** program bytes */ program?: Uint8Array
       /** ARC56 approval source info */ approvalSourceInfo?: ProgramSourceInfo
       /** ARC56 clear source info */ clearSourceInfo?: ProgramSourceInfo
@@ -1818,8 +1820,8 @@ export class ApplicationClient {
   private _creator: string | undefined
   private _appName: string
 
-  private _approvalSourceMap: SourceMap | undefined
-  private _clearSourceMap: SourceMap | undefined
+  private _approvalSourceMap: ProgramSourceMap | undefined
+  private _clearSourceMap: ProgramSourceMap | undefined
 
   /**
    * @deprecated Use `AppClient` instead e.g. via `algorand.client.getAppClientById` or
@@ -1921,8 +1923,8 @@ export class ApplicationClient {
    * @param sourceMaps The source maps to import
    */
   importSourceMaps(sourceMaps: AppSourceMaps) {
-    this._approvalSourceMap = new SourceMap(sourceMaps.approvalSourceMap)
-    this._clearSourceMap = new SourceMap(sourceMaps.clearSourceMap)
+    this._approvalSourceMap = new ProgramSourceMap(sourceMaps.approvalSourceMap)
+    this._clearSourceMap = new ProgramSourceMap(sourceMaps.clearSourceMap)
   }
 
   /**

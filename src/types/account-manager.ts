@@ -1,8 +1,8 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
-import { Config } from '../config'
+import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import { Address, LogicSigAccount, TransactionSigner } from '@algorandfoundation/sdk'
+import { Config } from '../config'
 import { calculateFundAmount, memoize } from '../util'
 import { AccountInformation, DISPENSER_ACCOUNT, MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -11,8 +11,6 @@ import { CommonTransactionParams, TransactionComposer } from './composer'
 import { TestNetDispenserApiClient } from './dispenser-client'
 import { KmdAccountManager } from './kmd-account-manager'
 import { SendParams, SendSingleTransactionResult } from './transaction'
-import LogicSigAccount = algosdk.LogicSigAccount
-import TransactionSigner = algosdk.TransactionSigner
 
 const address = (address: string | Address) => (typeof address === 'string' ? Address.fromString(address) : address)
 

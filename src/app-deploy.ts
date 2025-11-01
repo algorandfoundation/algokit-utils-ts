@@ -1,7 +1,7 @@
-import { AlgodClient, ApplicationStateSchema } from '@algorandfoundation/algod-client'
+import { AlgodClient, ApplicationStateSchema } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { Address } from '@algorandfoundation/sdk'
+import { Address, Indexer } from '@algorandfoundation/sdk'
 import { compileTeal, getAppOnCompleteAction } from './app'
 import { _getAppArgsForABICall, _getBoxReference } from './transaction/legacy-bridge'
 import { getSenderAddress, getSenderTransactionSigner } from './transaction/transaction'
@@ -30,7 +30,6 @@ import {
   TransactionComposer,
 } from './types/composer'
 import { Arc2TransactionNote, ConfirmedTransactionResult, ConfirmedTransactionResults, SendTransactionFrom } from './types/transaction'
-import Indexer = algosdk.Indexer
 
 /**
  * @deprecated Use `algorand.appDeployer.deploy` instead.

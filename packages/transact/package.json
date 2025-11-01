@@ -14,13 +14,6 @@
     "**/*"
   ],
   "scripts": {
-    "build": "run-s build:*",
-    "build-watch": "rolldown --watch -c",
-    "build:0-clean": "rimraf dist coverage",
-    "build:1-lint": "npm run lint",
-    "build:2-compile": "rolldown -c",
-    "build:3-copy-pkg-json": "tstk copy-package-json -c",
-    "build:4-copy-readme": "cpy  README.md dist",
     "test": "vitest run --coverage --passWithNoTests",
     "test:watch": "vitest watch --coverage --passWithNoTests",
     "lint": "eslint ./src/",
@@ -33,7 +26,6 @@
   "dependencies": {},
   "peerDependencies": {},
   "devDependencies": {
-    "@algorandfoundation/algokit-common": "*",
     "@noble/ed25519": "^3.0.0"
   }
 }

@@ -1,6 +1,6 @@
-import { TransactionParams } from '@algorandfoundation/algod-client'
-import { BoxReference as TransactBoxReference, OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
-import * as algosdk from '@algorandfoundation/sdk'
+import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
+import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,
@@ -11,13 +11,7 @@ import {
   TransactionNote,
   TransactionToSign,
 } from './transaction'
-import ABIArgument = algosdk.ABIArgument
-import ABIMethod = algosdk.ABIMethod
-import ABIMethodParams = algosdk.ABIMethodParams
-import ABIType = algosdk.ABIType
-import ABIValue = algosdk.ABIValue
-import Address = algosdk.Address
-import SourceMap = algosdk.ProgramSourceMap
+type SourceMap = ProgramSourceMap
 
 /** The name of the TEAL template variable for deploy-time immutability control */
 export const UPDATABLE_TEMPLATE_NAME = 'TMPL_UPDATABLE'

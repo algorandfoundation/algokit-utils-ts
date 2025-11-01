@@ -1,9 +1,7 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { Kmd } from '@algorandfoundation/sdk'
 import { AccountManager } from '../types/account-manager'
 import { ClientManager } from '../types/client-manager'
-
-import Kmd = algosdk.Kmd
 
 /**
  * @deprecated Use `algorand.account.dispenserFromEnvironment()` or `new AccountManager(clientManager).dispenserFromEnvironment()` instead

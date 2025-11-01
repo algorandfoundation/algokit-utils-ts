@@ -1,5 +1,6 @@
-import { TransactionParams, AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient, TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import * as algosdk from '@algorandfoundation/sdk'
+import { Indexer, Kmd } from '@algorandfoundation/sdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
 import { type AlgorandClient } from './algorand-client'
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName } from './app-client'
@@ -7,8 +8,6 @@ import { AppFactory, AppFactoryParams } from './app-factory'
 import { TestNetDispenserApiClient, TestNetDispenserApiClientParams } from './dispenser-client'
 import { Expand } from './expand'
 import { AlgoClientConfig, AlgoConfig, NetworkDetails, genesisIdIsLocalNet } from './network-client'
-import Kmd = algosdk.Kmd
-import Indexer = algosdk.Indexer
 
 /** Clients from algosdk that interact with the official Algorand APIs */
 export interface AlgoSdkClients {

@@ -630,8 +630,8 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     if (transaction.applicationCall.boxes && transaction.applicationCall.boxes.length > 0) {
       // TODO: PD same fix for account, app
       txDto.apbx = transaction.applicationCall.boxes.map((box) => {
-        const isCurrentApp = box.appIndex === 0n || box.appIndex === transaction.applicationCall.appId
-        const foreignAppsIndex = (transaction.applicationCall.foreignApps ?? []).indexOf(box.appIndex) + 1
+        const isCurrentApp = box.appIndex === 0n || box.appIndex === transaction.applicationCall?.appId
+        const foreignAppsIndex = (transaction.applicationCall?.foreignApps ?? []).indexOf(box.appIndex) + 1
         if (foreignAppsIndex === 0 && !isCurrentApp) {
           throw new Error(`Box ref with appId ${box.appIndex} not in foreign-apps`)
         }

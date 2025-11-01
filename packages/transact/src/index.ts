@@ -1,5 +1,4 @@
 export {
-  TransactionType,
   assignFee,
   calculateFee,
   decodeTransaction,
@@ -12,6 +11,7 @@ export {
   getTransactionId,
   getTransactionIdRaw,
   groupTransactions,
+  TransactionType,
   type Transaction,
 } from './transactions/transaction'
 

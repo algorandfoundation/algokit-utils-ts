@@ -1,9 +1,7 @@
-import * as algosdk from '@algorandfoundation/sdk'
-import { AlgodClient } from '@algorandfoundation/algod-client'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import { Indexer, Kmd } from '@algorandfoundation/sdk'
 import { ClientManager } from './types/client-manager'
 import { AlgoClientConfig, AlgoConfig } from './types/network-client'
-import Indexer = algosdk.Indexer
-import Kmd = algosdk.Kmd
 
 /**
  * @deprecated Use `ClientManager.getConfigFromEnvironmentOrLocalNet()` instead.
