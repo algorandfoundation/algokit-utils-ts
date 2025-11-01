@@ -93,14 +93,14 @@ export class {{ service_class_name }} {
 {%- for p in op.pathParameters %}
     {{ p.varName }}: {{ p.tsType }},
 {%- endfor %}
-{%- if op.otherParameters|length > 0 or (op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE']) %}
+{%- if op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE'] %}
+    body{% if not op.requestBody.required %}?{% endif %}: {{ op.requestBody.tsType }},
+{%- endif %}
+{%- if op.otherParameters|length > 0 %}
     params?: {
 {%- for p in op.otherParameters %}
       {{ p.varName }}{% if not p.required %}?{% endif %}: {{ p.tsType }};
 {%- endfor %}
-{%- if op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE'] %}
-      body{% if not op.requestBody.required %}?{% endif %}: {{ op.requestBody.tsType }};
-{%- endif %}
     }
 {%- endif %}
   ): Promise<{{ op.responseTsType }}> {
@@ -111,16 +111,16 @@ export class {{ service_class_name }} {
 
     {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE'] %}
       {% if is_raw_bytes_body %}
-    const serializedBody = params?.body ?? undefined;
+    const serializedBody = body ?? undefined;
     const mediaType = 'application/msgpack';
     headers['Content-Type'] = mediaType;
       {% else %}
     const bodyMeta = {{ meta_expr(op.requestBody.tsType) }};
     const mediaType = bodyMeta ? {{ service_class_name }}.mediaFor(responseFormat) : undefined;
     if (mediaType) headers['Content-Type'] = mediaType;
-    const serializedBody = bodyMeta && params?.body !== undefined
-      ? AlgorandSerializer.encode(params.body, bodyMeta, responseFormat)
-      : params?.body;
+    const serializedBody = bodyMeta && body !== undefined
+      ? AlgorandSerializer.encode(body, bodyMeta, responseFormat)
+      : body;
       {% endif %}
     {% endif %}
 
