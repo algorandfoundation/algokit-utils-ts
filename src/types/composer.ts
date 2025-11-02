@@ -16,6 +16,7 @@ import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
+import { extractComposerTransactionsFromAppMethodCallParams } from './composer-helper'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
@@ -562,7 +563,7 @@ export class TransactionComposer {
   private txnMaxFees: Map<number, AlgoAmount> = new Map()
 
   /** Transactions that have not yet been composed */
-  private txns: ComposerTransaction[] = []
+  private txns: Txn[] = []
 
   /** The algod client used by the composer. */
   private algod: AlgodClient
@@ -1173,7 +1174,10 @@ export class TransactionComposer {
    *})
    * ```
    */
-  addAppCreateMethodCall(params: AppCreateMethodCall) {
+  async addAppCreateMethodCall(params: AppCreateMethodCall) {
+    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+    this.txns.push(...txnArgs)
+
     this.txns.push({ ...params, type: 'methodCall' })
     return this
   }
@@ -1226,7 +1230,10 @@ export class TransactionComposer {
    *})
    * ```
    */
-  addAppUpdateMethodCall(params: AppUpdateMethodCall) {
+  async addAppUpdateMethodCall(params: AppUpdateMethodCall) {
+    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+    this.txns.push(...txnArgs)
+
     this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.UpdateApplication })
     return this
   }
@@ -1277,7 +1284,10 @@ export class TransactionComposer {
    *})
    * ```
    */
-  addAppDeleteMethodCall(params: AppDeleteMethodCall) {
+  async addAppDeleteMethodCall(params: AppDeleteMethodCall) {
+    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+    this.txns.push(...txnArgs)
+
     this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.DeleteApplication })
     return this
   }
@@ -1328,7 +1338,10 @@ export class TransactionComposer {
    *})
    * ```
    */
-  addAppCallMethodCall(params: AppCallMethodCall) {
+  async addAppCallMethodCall(params: AppCallMethodCall) {
+    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+    this.txns.push(...txnArgs)
+
     this.txns.push({ ...params, type: 'methodCall' })
     return this
   }
@@ -1867,7 +1880,7 @@ export class TransactionComposer {
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
-  private async buildTxn(txn: ComposerTransaction, suggestedParams: SdkTransactionParams): Promise<TransactionWithContext[]> {
+  private async buildTxn(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithContext[]> {
     switch (txn.type) {
       case 'pay':
         return [this.buildPayment(txn, suggestedParams)]
@@ -1894,10 +1907,7 @@ export class TransactionComposer {
     }
   }
 
-  private async buildTxnWithSigner(
-    txn: ComposerTransaction,
-    suggestedParams: SdkTransactionParams,
-  ): Promise<TransactionWithSignerAndContext[]> {
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithSignerAndContext[]> {
     if (txn.type === 'txnWithSigner') {
       return [
         {
@@ -2207,18 +2217,5 @@ export class TransactionComposer {
     const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : asJson(note.data)}`
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
-  }
-
-  foo() {
-    this.addAppCallMethodCall({
-      appId: 0n,
-      sender: '',
-      method: undefined,
-      args: [
-        {
-          sender: '',
-        } satisfies PaymentParams,
-      ],
-    })
   }
 }
