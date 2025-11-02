@@ -1,4 +1,10 @@
-import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import {
+  AlgodClient,
+  SimulateRequest,
+  SimulateTransaction,
+  SimulateUnnamedResourcesAccessed,
+  TransactionParams,
+} from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
@@ -16,8 +22,19 @@ import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
-import { extractComposerTransactionsFromAppMethodCallParams } from './composer-helper'
+import {
+  buildAssetConfig,
+  buildAssetCreate,
+  buildAssetDestroy,
+  buildAssetFreeze,
+  buildAssetOptIn,
+  buildAssetOptOut,
+  buildAssetTransfer,
+  buildPayment,
+  extractComposerTransactionsFromAppMethodCallParams,
+} from './composer-helper'
 import { Expand } from './expand'
+import { FeeDelta } from './fee-coverage'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
 import {
@@ -501,6 +518,30 @@ class ErrorTransformerError extends Error {
   }
 }
 
+export interface ResourcePopulation {
+  enabled: boolean
+  useAccessList: boolean
+}
+
+export type TransactionComposerConfig = {
+  coverAppCallInnerTransactionFees: boolean
+  populateAppCallResources: ResourcePopulation
+}
+
+type TransactionAnalysis = {
+  /** The fee difference required for this transaction */
+  requiredFeeDelta?: FeeDelta
+  /** Resources accessed by this transaction but not declared */
+  unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
+}
+
+type GroupAnalysis = {
+  /** Analysis of each transaction in the group */
+  transactions: TransactionAnalysis[]
+  /** Resources accessed by the group that qualify for group resource sharing */
+  unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
+}
+
 /** Parameters to create an `TransactionComposer`. */
 export type TransactionComposerParams = {
   /** The algod client to use to get suggestedParams and send the transaction group */
@@ -523,6 +564,7 @@ export type TransactionComposerParams = {
    * callbacks can later be registered with `registerErrorTransformer`
    */
   errorTransformers?: ErrorTransformer[]
+  composerConfig?: TransactionComposerConfig
 }
 
 /** Represents a Transaction with additional context that was used to build that transaction. */
@@ -584,6 +626,8 @@ export class TransactionComposer {
 
   private errorTransformers: ErrorTransformer[]
 
+  private composerConfig: TransactionComposerConfig
+
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
     if (!(originalError instanceof Error)) {
@@ -620,6 +664,10 @@ export class TransactionComposer {
     this.defaultValidityWindowIsExplicit = params.defaultValidityWindow !== undefined
     this.appManager = params.appManager ?? new AppManager(params.algod)
     this.errorTransformers = params.errorTransformers ?? []
+    this.composerConfig = params.composerConfig ?? {
+      coverAppCallInnerTransactionFees: false,
+      populateAppCallResources: { enabled: true, useAccessList: false },
+    }
   }
 
   /**
@@ -1728,16 +1776,6 @@ export class TransactionComposer {
     })
   }
 
-  private buildPayment(params: PaymentParams, suggestedParams: SdkTransactionParams) {
-    return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
-      sender: params.sender,
-      receiver: params.receiver,
-      amount: params.amount.microAlgo,
-      closeRemainderTo: params.closeRemainderTo,
-      suggestedParams,
-    })
-  }
-
   private buildAssetCreate(params: AssetCreateParams, suggestedParams: SdkTransactionParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
@@ -2034,6 +2072,287 @@ export class TransactionComposer {
     }
 
     return { atc: this.atc, transactions: this.atc.buildGroup(), methodCalls: this.atc['methodCalls'] }
+  }
+
+  private async buildTransactions(
+    suggestedParams: TransactionParams,
+    defaultValidityWindow: number,
+    groupAnalysis?: GroupAnalysis,
+  ): Promise<Transaction[]> {
+    let builtTransactions = new Array<Transaction>()
+
+    for (const ctxn of this.txns) {
+      let transaction: Transaction
+      const commonParams = getCommonParams(ctxn)
+      const header = this.buildTransactionHeader(commonParams, suggestedParams, defaultValidityWindow)
+      let calculateFee = header.fee === undefined
+
+      switch (ctxn.type) {
+        case ComposerTransactionType.Transaction:
+          calculateFee = false
+          transaction = ctxn.data
+          break
+        case ComposerTransactionType.TransactionWithSigner:
+          calculateFee = false
+          transaction = ctxn.data.transaction
+          break
+        case 'pay':
+          transaction = buildPayment(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'assetCreate':
+          transaction = buildAssetCreate(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'assetConfig':
+          transaction = buildAssetConfig(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'assetFreeze':
+          transaction = buildAssetFreeze(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'assetDestroy':
+          transaction = buildAssetDestroy(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'assetTransfer':
+          transaction = buildAssetTransfer(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'assetOptIn':
+          transaction = buildAssetOptIn(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'assetOptOut':
+          transaction = buildAssetOptOut(ctxn, suggestedParams, defaultValidityWindow)
+          break
+        case 'appCall':
+          transaction = buildAssetOptIn(ctxn, suggestedParams, defaultValidityWindow)
+          break
+
+        default:
+          throw new Error(`Unsupported transaction type: ${(ctxn as { type: ComposerTransactionType }).type}`)
+      }
+
+      if (calculateFee) {
+        transaction = assignFee(transaction, {
+          feePerByte: suggestedParams.fee,
+          minFee: suggestedParams.minFee,
+          extraFee: commonParams.extraFee,
+          maxFee: commonParams.maxFee,
+        })
+      }
+
+      builtTransactions.push(transaction)
+    }
+
+    if (groupAnalysis) {
+      // Process fee adjustments
+      let surplusGroupFees = 0n
+      const transactionAnalysis: Array<{
+        groupIndex: number
+        requiredFeeDelta?: FeeDelta
+        priority: FeePriority
+        unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
+      }> = []
+
+      // Process fee adjustments
+      groupAnalysis.transactions.forEach((txnAnalysis, groupIndex) => {
+        // Accumulate surplus fees
+        if (txnAnalysis.requiredFeeDelta && FeeDelta.isSurplus(txnAnalysis.requiredFeeDelta)) {
+          surplusGroupFees += FeeDelta.amount(txnAnalysis.requiredFeeDelta)
+        }
+
+        // Calculate priority and add to transaction info
+        const ctxn = this.transactions[groupIndex]
+        const txn = builtTransactions[groupIndex]
+        const logicalMaxFee = getLogicalMaxFee(ctxn)
+        const isImmutableFee = logicalMaxFee !== undefined && logicalMaxFee === (txn.fee || 0n)
+
+        let priority = FeePriority.Covered
+        if (txnAnalysis.requiredFeeDelta && FeeDelta.isDeficit(txnAnalysis.requiredFeeDelta)) {
+          const deficitAmount = FeeDelta.amount(txnAnalysis.requiredFeeDelta)
+          if (isImmutableFee || txn.transactionType !== TransactionType.AppCall) {
+            // High priority: transactions that can't be modified
+            priority = FeePriority.ImmutableDeficit(deficitAmount)
+          } else {
+            // Normal priority: app call transactions that can be modified
+            priority = FeePriority.ModifiableDeficit(deficitAmount)
+          }
+        }
+
+        transactionAnalysis.push({
+          groupIndex,
+          requiredFeeDelta: txnAnalysis.requiredFeeDelta,
+          priority,
+          unnamedResourcesAccessed: txnAnalysis.unnamedResourcesAccessed,
+        })
+      })
+
+      // Sort transactions by priority (highest first)
+      transactionAnalysis.sort((a, b) => b.priority.compare(a.priority))
+
+      // Cover any additional fees required for the transactions
+      for (const { groupIndex, requiredFeeDelta, unnamedResourcesAccessed } of transactionAnalysis) {
+        if (requiredFeeDelta && FeeDelta.isDeficit(requiredFeeDelta)) {
+          const deficitAmount = FeeDelta.amount(requiredFeeDelta)
+          let additionalFeeDelta: FeeDelta | undefined
+
+          if (surplusGroupFees === 0n) {
+            // No surplus group fees, the transaction must cover its own deficit
+            additionalFeeDelta = requiredFeeDelta
+          } else if (surplusGroupFees >= deficitAmount) {
+            // Surplus fully covers the deficit
+            surplusGroupFees -= deficitAmount
+          } else {
+            // Surplus partially covers the deficit
+            additionalFeeDelta = FeeDelta.fromBigInt(deficitAmount - surplusGroupFees)
+            surplusGroupFees = 0n
+          }
+
+          // If there is any additional fee deficit, the transaction must cover it by modifying the fee
+          if (additionalFeeDelta && FeeDelta.isDeficit(additionalFeeDelta)) {
+            const additionalDeficitAmount = FeeDelta.amount(additionalFeeDelta)
+
+            if (builtTransactions[groupIndex].transactionType === TransactionType.AppCall) {
+              const currentFee = builtTransactions[groupIndex].fee || 0n
+              const transactionFee = currentFee + additionalDeficitAmount
+
+              const logicalMaxFee = getLogicalMaxFee(this.transactions[groupIndex])
+              if (!logicalMaxFee || transactionFee > logicalMaxFee) {
+                throw new Error(
+                  `Calculated transaction fee ${transactionFee} µALGO is greater than max of ${logicalMaxFee ?? 0n} for transaction ${groupIndex}`,
+                )
+              }
+
+              builtTransactions[groupIndex].fee = transactionFee
+            } else {
+              throw new Error(
+                `An additional fee of ${additionalDeficitAmount} µALGO is required for non app call transaction ${groupIndex}`,
+              )
+            }
+          }
+        }
+
+        // Apply transaction-level resource population
+        if (unnamedResourcesAccessed && builtTransactions[groupIndex].transactionType === TransactionType.AppCall) {
+          populateTransactionResources(builtTransactions[groupIndex], unnamedResourcesAccessed, groupIndex)
+        }
+      }
+
+      // Apply group-level resource population
+      if (groupAnalysis.unnamedResourcesAccessed) {
+        populateGroupResources(builtTransactions, groupAnalysis.unnamedResourcesAccessed)
+      }
+    }
+
+    if (builtTransactions.length > 1) {
+      builtTransactions = groupTransactions(builtTransactions)
+    }
+
+    return builtTransactions
+  }
+
+  private async analyzeGroupRequirements(
+    suggestedParams: TransactionParams,
+    defaultValidityWindow: number,
+    analysisParams: TransactionComposerConfig,
+  ): Promise<GroupAnalysis> {
+    const appCallIndexesWithoutMaxFees: number[] = []
+
+    const builtTransactions = await this.buildTransactions(suggestedParams, defaultValidityWindow)
+
+    let transactionsToSimulate = builtTransactions.map((txn, groupIndex) => {
+      const ctxn = this.transactions[groupIndex]
+      const txnToSimulate = { ...txn }
+      txnToSimulate.group = undefined
+      if (analysisParams.coverAppCallInnerTransactionFees && txn.transactionType === TransactionType.AppCall) {
+        const logicalMaxFee = getLogicalMaxFee(ctxn)
+        if (logicalMaxFee !== undefined) {
+          txnToSimulate.fee = logicalMaxFee
+        } else {
+          appCallIndexesWithoutMaxFees.push(groupIndex)
+        }
+      }
+
+      return txnToSimulate
+    })
+
+    // Regroup the transactions, as the transactions have likely been adjusted
+    if (transactionsToSimulate.length > 1) {
+      transactionsToSimulate = groupTransactions(transactionsToSimulate)
+    }
+
+    // Check for required max fees on app calls when fee coverage is enabled
+    if (analysisParams.coverAppCallInnerTransactionFees && appCallIndexesWithoutMaxFees.length > 0) {
+      throw new Error(
+        `Please provide a max fee for each app call transaction when inner transaction fee coverage is enabled. Required for transaction ${appCallIndexesWithoutMaxFees.join(', ')}`,
+      )
+    }
+
+    const signedTransactions = transactionsToSimulate.map(
+      (txn) =>
+        ({
+          transaction: txn,
+          signature: EMPTY_SIGNATURE,
+        }) satisfies SignedTransaction,
+    )
+
+    const simulateRequest: SimulateRequest = {
+      txnGroups: [
+        {
+          txns: signedTransactions,
+        },
+      ],
+      allowUnnamedResources: true,
+      allowEmptySignatures: true,
+      fixSigners: true,
+    }
+
+    const response: SimulateTransaction = await this.algodClient.simulateTransaction({ body: simulateRequest })
+    const groupResponse = response.txnGroups[0]
+
+    // Handle any simulation failures
+    if (groupResponse.failureMessage) {
+      if (analysisParams.coverAppCallInnerTransactionFees && groupResponse.failureMessage.includes('fee too small')) {
+        throw new Error(
+          'Fees were too small to analyze group requirements via simulate. You may need to increase an app call transaction max fee.',
+        )
+      }
+
+      throw new Error(
+        `Error analyzing group requirements via simulate in transaction ${groupResponse.failedAt?.join(', ')}: ${groupResponse.failureMessage}`,
+      )
+    }
+
+    const txnAnalysisResults: TransactionAnalysis[] = groupResponse.txnResults.map((simulateTxnResult, groupIndex) => {
+      const btxn = builtTransactions[groupIndex]
+
+      let requiredFeeDelta: FeeDelta | undefined
+
+      if (analysisParams.coverAppCallInnerTransactionFees) {
+        const minTxnFee = calculateFee(btxn, {
+          feePerByte: suggestedParams.fee,
+          minFee: suggestedParams.minFee,
+        })
+        const txnFee = btxn.fee ?? 0n
+        const txnFeeDelta = FeeDelta.fromBigInt(minTxnFee - txnFee)
+
+        if (btxn.transactionType === TransactionType.AppCall) {
+          // Calculate inner transaction fee delta
+          const innerTxnsFeeDelta = calculateInnerFeeDelta(simulateTxnResult.txnResult.innerTxns, suggestedParams.minFee)
+          requiredFeeDelta = FeeDelta.fromBigInt(
+            (innerTxnsFeeDelta ? FeeDelta.toBigInt(innerTxnsFeeDelta) : 0n) + (txnFeeDelta ? FeeDelta.toBigInt(txnFeeDelta) : 0n),
+          )
+        } else {
+          requiredFeeDelta = txnFeeDelta
+        }
+      }
+
+      return {
+        requiredFeeDelta,
+        unnamedResourcesAccessed: analysisParams.populateAppCallResources?.enabled ? simulateTxnResult.unnamedResourcesAccessed : undefined,
+      }
+    })
+
+    return {
+      transactions: txnAnalysisResults,
+      unnamedResourcesAccessed: analysisParams.populateAppCallResources?.enabled ? groupResponse.unnamedResourcesAccessed : undefined,
+    }
   }
 
   /**
