@@ -43,6 +43,6 @@ export async function performAtomicTransactionComposerSimulate(
       } satisfies SimulateRequestTransactionGroup,
     ],
   } satisfies SimulateRequest
-  const simulateResult = await algod.simulateTransaction({ body: simulateRequest })
+  const simulateResult = await algod.simulateTransaction(simulateRequest)
   return simulateResult
 }
