@@ -1,6 +1,18 @@
 import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
-import { ABIValue, Address, TransactionSigner, TransactionWithSigner } from '@algorandfoundation/sdk'
+import {
+  ABIMethod,
+  ABIReferenceType,
+  ABITupleType,
+  ABIType,
+  ABIUintType,
+  ABIValue,
+  Address,
+  TransactionSigner,
+  TransactionWithSigner,
+  abiTypeIsReference,
+  abiTypeIsTransaction,
+} from '@algorandfoundation/sdk'
 import { encodeLease } from 'src/transaction'
 import { calculateExtraProgramPages } from 'src/util'
 import { AppManager, getAccessReference } from './app-manager'
@@ -33,6 +45,8 @@ type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
 type ExtractedMethodCallTransactionArg =
   | (TransactionWithSigner & { type: 'txnWithSigner' })
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
+
+const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 
 export async function extractComposerTransactionsFromAppMethodCallParams(
   methodCallArgs: AppMethodCallArgs,
@@ -403,5 +417,282 @@ export const buildKeyReg = (params: OnlineKeyRegistrationParams | OfflineKeyRegi
         nonParticipation: params.preventAccountFromEverParticipatingAgain,
       },
     }
+  }
+}
+
+/**
+ * Populate reference arrays from processed ABI method call arguments
+ */
+function populateMethodArgsIntoReferenceArrays(
+  sender: string,
+  appId: bigint,
+  method: ABIMethod,
+  methodArgs: AppMethodCallArg[],
+  accountReferences?: string[],
+  appReferences?: bigint[],
+  assetReferences?: bigint[],
+): { accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
+  const accounts = accountReferences ?? []
+  const assets = assetReferences ?? []
+  const apps = appReferences ?? []
+
+  methodArgs.forEach((arg, i) => {
+    const argType = method.args[i].type
+    if (abiTypeIsReference(argType)) {
+      switch (argType) {
+        case 'account':
+          if (typeof arg === 'string' && arg !== sender && !accounts.includes(arg)) {
+            accounts.push(arg)
+          }
+          break
+        case 'asset':
+          if (typeof arg === 'bigint' && !assets.includes(arg)) {
+            assets.push(arg)
+          }
+          break
+        case 'application':
+          if (typeof arg === 'bigint' && arg !== appId && !apps.includes(arg)) {
+            apps.push(arg)
+          }
+          break
+      }
+    }
+  })
+
+  return { accountReferences: accounts, appReferences: apps, assetReferences: assets }
+}
+
+/**
+ * Calculate array index for ABI reference values
+ */
+function calculateMethodArgReferenceArrayIndex(
+  refValue: string | bigint,
+  referenceType: ABIReferenceType,
+  sender: string,
+  appId: bigint,
+  accountReferences: string[],
+  appReferences: bigint[],
+  assetReferences: bigint[],
+): number {
+  switch (referenceType) {
+    case 'account':
+      if (typeof refValue === 'string') {
+        // If address is the same as sender, use index 0
+        if (refValue === sender) return 0
+        const index = accountReferences.indexOf(refValue)
+        if (index === -1) throw new Error(`Account ${refValue} not found in reference array`)
+        return index + 1
+      }
+      throw new Error('Account reference must be a string')
+    case 'asset':
+      if (typeof refValue === 'bigint') {
+        const index = assetReferences.indexOf(refValue)
+        if (index === -1) throw new Error(`Asset ${refValue} not found in reference array`)
+        return index
+      }
+      throw new Error('Asset reference must be a bigint')
+    case 'application':
+      if (typeof refValue === 'bigint') {
+        // If app ID is the same as the current app, use index 0
+        if (refValue === appId) return 0
+        const index = appReferences.indexOf(refValue)
+        if (index === -1) throw new Error(`Application ${refValue} not found in reference array`)
+        return index + 1
+      }
+      throw new Error('Application reference must be a bigint')
+    default:
+      throw new Error(`Unknown reference type: ${referenceType}`)
+  }
+}
+
+/**
+ * Encode ABI method arguments with tuple packing support
+ * Ports the logic from the Rust encode_method_arguments function
+ */
+function encodeMethodArguments(
+  method: ABIMethod,
+  args: AppMethodCallArg[],
+  sender: string,
+  appId: bigint,
+  accountReferences: string[],
+  appReferences: bigint[],
+  assetReferences: bigint[],
+): Uint8Array[] {
+  const encodedArgs = new Array<Uint8Array>()
+
+  // Insert method selector at the front
+  encodedArgs.push(method.getSelector())
+
+  // Get ABI types for non-transaction arguments
+  const abiTypes = new Array<ABIType>()
+  const abiValues = new Array<ABIValue>()
+
+  // Process each method argument
+  for (let i = 0; i < method.args.length; i++) {
+    const methodArg = method.args[i]
+    const argValue = args[i]
+
+    if (abiTypeIsTransaction(methodArg.type)) {
+      // Transaction arguments are not ABI encoded - they're handled separately
+    } else if (abiTypeIsReference(methodArg.type)) {
+      // Reference types are encoded as uint8 indexes
+      const referenceType = methodArg.type
+      if (typeof argValue === 'string' || typeof argValue === 'bigint') {
+        const foreignIndex = calculateMethodArgReferenceArrayIndex(
+          argValue,
+          referenceType,
+          sender,
+          appId,
+          accountReferences,
+          appReferences,
+          assetReferences,
+        )
+
+        abiTypes.push(new ABIUintType(8))
+        abiValues.push(foreignIndex)
+      } else {
+        throw new Error(`Invalid reference value for ${referenceType}: ${argValue}`)
+      }
+    } else if (argValue !== undefined) {
+      // Regular ABI value
+      abiTypes.push(methodArg.type)
+      // it's safe to cast to ABIValue here because the abiType must be ABIValue
+      abiValues.push(argValue as ABIValue)
+    }
+
+    // Skip undefined values (transaction placeholders)
+  }
+
+  if (abiValues.length !== abiTypes.length) {
+    throw new Error('Mismatch in length of non-transaction arguments')
+  }
+
+  // Apply ARC-4 tuple packing for methods with more than 14 arguments
+  // 14 instead of 15 in the ARC-4 because the first argument (method selector) is added separately
+  if (abiTypes.length > ARGS_TUPLE_PACKING_THRESHOLD) {
+    encodedArgs.push(...encodeArgsWithTuplePacking(abiTypes, abiValues))
+  } else {
+    encodedArgs.push(...encodeArgsIndividually(abiTypes, abiValues))
+  }
+
+  return encodedArgs
+}
+
+/**
+ * Encode individual ABI values
+ */
+function encodeArgsIndividually(abiTypes: ABIType[], abiValues: ABIValue[]): Uint8Array[] {
+  const encodedArgs: Uint8Array[] = []
+
+  for (let i = 0; i < abiTypes.length; i++) {
+    const abiType = abiTypes[i]
+    const abiValue = abiValues[i]
+    const encoded = abiType.encode(abiValue)
+    encodedArgs.push(encoded)
+  }
+
+  return encodedArgs
+}
+
+/**
+ * Encode ABI values with tuple packing for methods with many arguments
+ */
+function encodeArgsWithTuplePacking(abiTypes: ABIType[], abiValues: ABIValue[]): Uint8Array[] {
+  const encodedArgs: Uint8Array[] = []
+
+  // Encode first 14 arguments individually
+  const first14AbiTypes = abiTypes.slice(0, ARGS_TUPLE_PACKING_THRESHOLD)
+  const first14AbiValues = abiValues.slice(0, ARGS_TUPLE_PACKING_THRESHOLD)
+  encodedArgs.push(...encodeArgsIndividually(first14AbiTypes, first14AbiValues))
+
+  // Pack remaining arguments into tuple at position 15
+  const remainingAbiTypes = abiTypes.slice(ARGS_TUPLE_PACKING_THRESHOLD)
+  const remainingAbiValues = abiValues.slice(ARGS_TUPLE_PACKING_THRESHOLD)
+
+  if (remainingAbiTypes.length > 0) {
+    const tupleType = new ABITupleType(remainingAbiTypes)
+    const tupleValue = remainingAbiValues
+    const tupleEncoded = tupleType.encode(tupleValue)
+    encodedArgs.push(tupleEncoded)
+  }
+
+  return encodedArgs
+}
+
+/**
+ * Common method call building logic
+ */
+function buildMethodCallCommon(
+  params: {
+    appId: bigint
+    method: ABIMethod
+    args: AppMethodCallArg[]
+    accountReferences?: string[]
+    appReferences?: bigint[]
+    assetReferences?: bigint[]
+    // TODO: PD - access list references
+  },
+  header: TransactionHeader,
+): { args: Uint8Array[]; accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
+  const { accountReferences, appReferences, assetReferences } = populateMethodArgsIntoReferenceArrays(
+    header.sender,
+    params.appId,
+    params.method,
+    params.args,
+    params.accountReferences,
+    params.appReferences,
+    params.assetReferences,
+  )
+
+  const encodedArgs = encodeMethodArguments(
+    params.method,
+    params.args,
+    header.sender,
+    params.appId,
+    accountReferences,
+    appReferences,
+    assetReferences,
+  )
+
+  return {
+    args: encodedArgs,
+    accountReferences,
+    appReferences,
+    assetReferences,
+  }
+}
+
+// TODO: PD - we should make a new type for AppCreateMethodCall to capture that the params don't have nested transactions anymore
+export const buildAppCreateMethodCall = (params: AppCreateMethodCall, header: TransactionHeader): Transaction => {
+  const common = buildMethodCallCommon(
+    {
+      appId: 0n,
+      method: params.method,
+      args: params.args,
+      accountReferences: params.accountReferences,
+      appReferences: params.appReferences,
+      assetReferences: params.assetReferences,
+      // TODO: PD - access list references
+    },
+    header,
+  )
+
+  return {
+    ...header,
+    transactionType: TransactionType.AppCall,
+    appCall: {
+      appId: 0n,
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
+      approvalProgram: params.approvalProgram,
+      clearStateProgram: params.clearStateProgram,
+      globalStateSchema: params.globalStateSchema,
+      localStateSchema: params.localStateSchema,
+      extraProgramPages: params.extraProgramPages,
+      args: common.args,
+      accountReferences: common.accountReferences,
+      appReferences: common.appReferences,
+      assetReferences: common.assetReferences,
+      boxReferences: params.boxReferences,
+    },
   }
 }

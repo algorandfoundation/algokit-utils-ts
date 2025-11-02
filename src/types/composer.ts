@@ -2083,78 +2083,68 @@ export class TransactionComposer {
     defaultValidityWindow: number,
     groupAnalysis?: GroupAnalysis,
   ): Promise<Transaction[]> {
-    let builtTransactions = new Array<Transaction>()
+    let transactions = new Array<Transaction>()
 
     for (const ctxn of this.txns) {
       if (ctxn.type === 'txnWithSigner') {
-        builtTransactions.push({
-          transactions: ctxn.txn,
-        })
+        transactions.push(ctxn.txn)
+      } else {
+        let transaction: Transaction
+        const header = buildTransactionHeader(ctxn, suggestedParams, defaultValidityWindow)
+        const calculateFee = header?.fee === undefined
+
+        switch (ctxn.type) {
+          case 'pay':
+            transaction = buildPayment(ctxn, header)
+            break
+          case 'assetCreate':
+            transaction = buildAssetCreate(ctxn, header)
+            break
+          case 'assetConfig':
+            transaction = buildAssetConfig(ctxn, header)
+            break
+          case 'assetFreeze':
+            transaction = buildAssetFreeze(ctxn, header)
+            break
+          case 'assetDestroy':
+            transaction = buildAssetDestroy(ctxn, header)
+            break
+          case 'assetTransfer':
+            transaction = buildAssetTransfer(ctxn, header)
+            break
+          case 'assetOptIn':
+            transaction = buildAssetOptIn(ctxn, header)
+            break
+          case 'assetOptOut':
+            transaction = buildAssetOptOut(ctxn, header)
+            break
+          case 'appCall':
+            if (!('appId' in ctxn)) {
+              transaction = await buildAppCreate(ctxn, this.appManager, header)
+            } else if ('approvalProgram' in ctxn && 'clearStateProgram' in ctxn) {
+              transaction = await buildAppUpdate(ctxn, this.appManager, header)
+            } else {
+              transaction = buildAppCall(ctxn, header)
+            }
+            break
+          case 'keyReg':
+            transaction = buildKeyReg(ctxn, header)
+            break
+          default:
+            throw new Error(`Unsupported transaction type: ${(ctxn as { type: ComposerTransactionType }).type}`)
+        }
+
+        if (calculateFee) {
+          transaction = assignFee(transaction, {
+            feePerByte: suggestedParams.fee,
+            minFee: suggestedParams.minFee,
+            extraFee: ctxn.extraFee?.microAlgos,
+            maxFee: ctxn.maxFee?.microAlgos,
+          })
+        }
+
+        transactions.push(transaction)
       }
-      let transaction: Transaction
-      const header = ctxn.type === 'txnWithSigner' ? undefined : buildTransactionHeader(ctxn, suggestedParams, defaultValidityWindow)
-      let calculateFee = header?.fee === undefined
-
-      switch (ctxn.type) {
-        case ComposerTransactionType.Transaction:
-          calculateFee = false
-          transaction = ctxn.data
-          break
-        case ComposerTransactionType.TransactionWithSigner:
-          calculateFee = false
-          transaction = ctxn.data.transaction
-          break
-        case 'pay':
-          transaction = buildPayment(ctxn, header)
-          break
-        case 'assetCreate':
-          transaction = buildAssetCreate(ctxn, header)
-          break
-        case 'assetConfig':
-          transaction = buildAssetConfig(ctxn, header)
-          break
-        case 'assetFreeze':
-          transaction = buildAssetFreeze(ctxn, header)
-          break
-        case 'assetDestroy':
-          transaction = buildAssetDestroy(ctxn, header)
-          break
-        case 'assetTransfer':
-          transaction = buildAssetTransfer(ctxn, header)
-          break
-        case 'assetOptIn':
-          transaction = buildAssetOptIn(ctxn, header)
-          break
-        case 'assetOptOut':
-          transaction = buildAssetOptOut(ctxn, header)
-          break
-        case 'appCall':
-          if (!('appId' in ctxn)) {
-            transaction = await buildAppCreate(ctxn, this.appManager, header)
-          } else if ('approvalProgram' in ctxn && 'clearStateProgram' in ctxn) {
-            transaction = await buildAppUpdate(ctxn, this.appManager, header)
-          } else {
-            transaction = buildAppCall(ctxn, header)
-          }
-          break
-        case 'keyReg':
-          transaction = buildKeyReg(ctxn, header)
-          break
-
-        default:
-          throw new Error(`Unsupported transaction type: ${(ctxn as { type: ComposerTransactionType }).type}`)
-      }
-
-      if (calculateFee) {
-        transaction = assignFee(transaction, {
-          feePerByte: suggestedParams.fee,
-          minFee: suggestedParams.minFee,
-          extraFee: commonParams.extraFee,
-          maxFee: commonParams.maxFee,
-        })
-      }
-
-      builtTransactions.push(transaction)
     }
 
     if (groupAnalysis) {
@@ -2176,7 +2166,7 @@ export class TransactionComposer {
 
         // Calculate priority and add to transaction info
         const ctxn = this.transactions[groupIndex]
-        const txn = builtTransactions[groupIndex]
+        const txn = transactions[groupIndex]
         const logicalMaxFee = getLogicalMaxFee(ctxn)
         const isImmutableFee = logicalMaxFee !== undefined && logicalMaxFee === (txn.fee || 0n)
 
@@ -2225,8 +2215,8 @@ export class TransactionComposer {
           if (additionalFeeDelta && FeeDelta.isDeficit(additionalFeeDelta)) {
             const additionalDeficitAmount = FeeDelta.amount(additionalFeeDelta)
 
-            if (builtTransactions[groupIndex].transactionType === TransactionType.AppCall) {
-              const currentFee = builtTransactions[groupIndex].fee || 0n
+            if (transactions[groupIndex].transactionType === TransactionType.AppCall) {
+              const currentFee = transactions[groupIndex].fee || 0n
               const transactionFee = currentFee + additionalDeficitAmount
 
               const logicalMaxFee = getLogicalMaxFee(this.transactions[groupIndex])
@@ -2236,7 +2226,7 @@ export class TransactionComposer {
                 )
               }
 
-              builtTransactions[groupIndex].fee = transactionFee
+              transactions[groupIndex].fee = transactionFee
             } else {
               throw new Error(
                 `An additional fee of ${additionalDeficitAmount} µALGO is required for non app call transaction ${groupIndex}`,
@@ -2246,22 +2236,22 @@ export class TransactionComposer {
         }
 
         // Apply transaction-level resource population
-        if (unnamedResourcesAccessed && builtTransactions[groupIndex].transactionType === TransactionType.AppCall) {
-          populateTransactionResources(builtTransactions[groupIndex], unnamedResourcesAccessed, groupIndex)
+        if (unnamedResourcesAccessed && transactions[groupIndex].transactionType === TransactionType.AppCall) {
+          populateTransactionResources(transactions[groupIndex], unnamedResourcesAccessed, groupIndex)
         }
       }
 
       // Apply group-level resource population
       if (groupAnalysis.unnamedResourcesAccessed) {
-        populateGroupResources(builtTransactions, groupAnalysis.unnamedResourcesAccessed)
+        populateGroupResources(transactions, groupAnalysis.unnamedResourcesAccessed)
       }
     }
 
-    if (builtTransactions.length > 1) {
-      builtTransactions = groupTransactions(builtTransactions)
+    if (transactions.length > 1) {
+      transactions = groupTransactions(transactions)
     }
 
-    return builtTransactions
+    return transactions
   }
 
   private async analyzeGroupRequirements(
