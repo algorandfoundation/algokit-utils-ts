@@ -1,7 +1,9 @@
 import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
-import { Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import { ABIValue, Address, TransactionSigner, TransactionWithSigner } from '@algorandfoundation/sdk'
 import { encodeLease } from 'src/transaction'
+import { calculateExtraProgramPages } from 'src/util'
+import { AppManager, getAccessReference } from './app-manager'
 import {
   AppCallMethodCall,
   AppCallParams,
@@ -305,36 +307,68 @@ export const buildAssetOptOut = (
 }
 
 export const buildAppCall = async (
-  params: AppCallParams,
+  params: AppCallParams | AppUpdateParams | AppCreateParams,
+  appManager: AppManager,
   transactionParams: TransactionParams,
   defaultValidityWindow: number,
 ): Promise<Transaction> => {
+  // TODO: PD - find out about rejectVersion
+
   const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
 
   const appId = 'appId' in params ? params.appId : 0n
   const approvalProgram =
     'approvalProgram' in params
       ? typeof params.approvalProgram === 'string'
-        ? (await this.appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
+        ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
         : params.approvalProgram
       : undefined
   const clearStateProgram =
     'clearStateProgram' in params
       ? typeof params.clearStateProgram === 'string'
-        ? (await this.appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+        ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
         : params.clearStateProgram
       : undefined
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
+  if (appId === 0n) {
+    if (!approvalProgram || !clearStateProgram) {
+      throw Error('approvalProgram and clearProgram must be provided')
+    }
+  }
+
   return {
     ...header,
-    type: TransactionType.axfer,
-    assetTransfer: {
-      assetId: params.assetId,
-      amount: 0n,
-      receiver: header.sender,
+    type: TransactionType.appl,
+    applicationCall: {
+      appId: 0n, // App creation always uses ID 0
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearStateProgram,
+      globalStateSchema: params.globalStateSchema,
+      localStateSchema: params.localStateSchema,
+      extraProgramPages:
+        'extraProgramPages' in params && params.extraProgramPages !== undefined
+          ? params.extraProgramPages
+          : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
+      args: params.args,
+      ...(hasAccessReferences
+        ? { access: params.accessReferences?.map(getAccessReference) }
+        : {
+            accounts: params.accountReferences?.map((a) => a.toString()),
+            foreignApps: params.appReferences,
+            foreignAssets: params.assetReferences,
+            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
     },
+  }
+
+  // TODO: PD - review both makeApplicationCallTxnFromObject and makeApplicationCreateTxnFromObject
+  // to make sure we capture all the logic
+  return {
+    ...header,
+    type: TransactionType.appl,
   }
 }
