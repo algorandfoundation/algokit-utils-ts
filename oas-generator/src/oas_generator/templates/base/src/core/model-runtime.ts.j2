@@ -6,7 +6,7 @@ import {
 import { encodeMsgPack, decodeMsgPack } from './codecs';
 import { toBase64, fromBase64 } from './serialization';
 
-export type BodyFormat = 'json' | 'msgpack';
+export type BodyFormat = 'json' | 'msgpack' | 'map';
 
 export interface ScalarFieldType {
   readonly kind: 'scalar';
@@ -90,7 +90,16 @@ export function getCodec<T = unknown>(key: string): TypeCodec<T> | undefined {
 }
 
 export class AlgorandSerializer {
-  static encode(value: unknown, meta: ModelMetadata, format: BodyFormat = 'msgpack'): Uint8Array | string {
+  static encode(value: unknown, meta: ModelMetadata, format: 'map'): Map<string, unknown>
+  static encode(value: unknown, meta: ModelMetadata, format: 'json'): string
+  static encode(value: unknown, meta: ModelMetadata, format?: 'msgpack'): Uint8Array
+  static encode(value: unknown, meta: ModelMetadata, format: BodyFormat = 'msgpack'): Uint8Array | string | Map<string, unknown> {
+    if (format === 'map') {
+      // For map format, use msgpack transformation to preserve types like bigint, then convert to nested Maps
+      const wire = this.transform(value, meta, { direction: 'encode', format: 'msgpack' });
+      return this.convertToNestedMaps(wire) as Map<string, unknown>;
+    }
+
     const wire = this.transform(value, meta, { direction: 'encode', format });
     if (format === 'msgpack') {
       return wire instanceof Uint8Array ? wire : encodeMsgPack(wire);
@@ -257,6 +266,35 @@ export class AlgorandSerializer {
     return ctx.direction === 'encode'
       ? codec.encode(value, ctx.format)
       : codec.decode(value, ctx.format);
+  }
+
+  private static convertToNestedMaps(value: unknown): Map<string, unknown> | unknown[] | unknown {
+    if (value === null || value === undefined) {
+      return value;
+    }
+
+    if (Array.isArray(value)) {
+      // Keep arrays as arrays but recursively convert nested objects to Maps
+      return value.map((item) => {
+        if (typeof item === 'object' && item !== null && !Array.isArray(item) && !(item instanceof Uint8Array)) {
+          return this.convertToNestedMaps(item);
+        } else if (Array.isArray(item)) {
+          return this.convertToNestedMaps(item);
+        }
+        return item;
+      })
+    }
+
+    if (typeof value === 'object' && value !== null && !(value instanceof Uint8Array)) {
+      const map = new Map<string, unknown>();
+      Object.entries(value as Record<string, unknown>).forEach(([key, val]) => {
+        map.set(key, this.convertToNestedMaps(val));
+      });
+      return map;
+    }
+
+    // For primitive values and Uint8Array, return them directly
+    return value;
   }
 }
 

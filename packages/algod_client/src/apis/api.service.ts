@@ -1468,6 +1468,6 @@ export class AlgodApi {
     } else if (!(rawTransactions instanceof Uint8Array)) {
       throw new Error('Argument must be byte array')
     }
-    return this.rawTransaction({ body: rawTransactions })
+    return this.rawTransaction(rawTransactions)
   }
 }

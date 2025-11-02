@@ -14,7 +14,7 @@ export function decodeMsgPack<T = unknown>(buffer: Uint8Array): T {
  * Maps are converted to objects recursively, except for the special case
  * where the field name is "r" which remains as a Map.
  */
-export function mapToObject(value: unknown, fieldName?: string): unknown {
+function mapToObject(value: unknown, fieldName?: string): unknown {
   // Preserve Uint8Array as-is
   if (value instanceof Uint8Array) {
     return value;

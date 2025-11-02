@@ -612,7 +612,7 @@ export class AtomicTransactionComposer {
       },
     ]
 
-    const simulateResponse = await client.simulateTransaction({ body: currentRequest })
+    const simulateResponse = await client.simulateTransaction(currentRequest)
 
     // Parse method response
     const methodResults: ABIResult[] = []

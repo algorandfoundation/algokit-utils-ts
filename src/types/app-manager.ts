@@ -154,7 +154,7 @@ export class AppManager {
       return this._compilationResults[tealCode]
     }
 
-    const compiled = await this._algod.tealCompile({ body: tealCode, sourcemap: true })
+    const compiled = await this._algod.tealCompile(tealCode, { sourcemap: true })
     const result = {
       teal: tealCode,
       compiled: compiled.result,

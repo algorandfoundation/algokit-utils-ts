@@ -7,7 +7,7 @@ export type AvmValue = {
   /**
    * value type. Value `1` refers to **bytes**, value `2` refers to **uint64**
    */
-  type: bigint
+  type: number
 
   /**
    * bytes value.
@@ -29,7 +29,7 @@ export const AvmValueMeta: ModelMetadata = {
       wireKey: 'type',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'bytes',
