@@ -28,3 +28,5 @@ A collection of random notes pop up during the migration process.
 - Should we consolidate the duplicated types between SDK and Utils, for example `AccessReference` in `app-manager`
 - `encodeUnsignedSimulateTransaction` was removed from sdk
 - Consider align assetId and appId in PendingTransactionResponse with sdk?
+- In the existing utils, there isn't an easy way to distingush AppDeleteCall and AppCall.
+  - Someone can define an AppDeleteCall, not set the onComplete field and it would be set to NoOp

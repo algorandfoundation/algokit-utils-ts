@@ -9,6 +9,7 @@ import {
   AppCallParams,
   AppCreateMethodCall,
   AppCreateParams,
+  AppDeleteParams,
   AppMethodCall,
   AppMethodCallParams,
   AppUpdateMethodCall,
@@ -21,6 +22,8 @@ import {
   AssetOptOutParams,
   AssetTransferParams,
   CommonTransactionParams,
+  OfflineKeyRegistrationParams,
+  OnlineKeyRegistrationParams,
   PaymentParams,
 } from './composer'
 
@@ -115,7 +118,7 @@ const ensureString = (data?: string | Uint8Array) => {
   return typeof data === 'string' ? encoder.encode(data) : data
 }
 
-const buildTransactionHeader = (
+export const buildTransactionHeader = (
   commonParams: CommonTransactionParams,
   transactionParams: TransactionParams,
   defaultValidityWindow: number,
@@ -155,9 +158,7 @@ export type TransactionHeader = {
   group?: Uint8Array
 }
 
-export const buildPayment = (params: PaymentParams, transactionParams: TransactionParams, defaultValidityWindow: number): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildPayment = (params: PaymentParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.pay,
@@ -168,13 +169,7 @@ export const buildPayment = (params: PaymentParams, transactionParams: Transacti
   }
 }
 
-export const buildAssetCreate = (
-  params: AssetCreateParams,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildAssetCreate = (params: AssetCreateParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.acfg,
@@ -195,13 +190,7 @@ export const buildAssetCreate = (
   }
 }
 
-export const buildAssetConfig = (
-  params: AssetConfigParams,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildAssetConfig = (params: AssetConfigParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.acfg,
@@ -215,13 +204,7 @@ export const buildAssetConfig = (
   }
 }
 
-export const buildAssetFreeze = (
-  params: AssetFreezeParams,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildAssetFreeze = (params: AssetFreezeParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.afrz,
@@ -233,13 +216,7 @@ export const buildAssetFreeze = (
   }
 }
 
-export const buildAssetDestroy = (
-  params: AssetDestroyParams,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildAssetDestroy = (params: AssetDestroyParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.acfg,
@@ -249,13 +226,7 @@ export const buildAssetDestroy = (
   }
 }
 
-export const buildAssetTransfer = (
-  params: AssetTransferParams,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildAssetTransfer = (params: AssetTransferParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.axfer,
@@ -269,13 +240,7 @@ export const buildAssetTransfer = (
   }
 }
 
-export const buildAssetOptIn = (
-  params: AssetOptInParams,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildAssetOptIn = (params: AssetOptInParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.axfer,
@@ -287,13 +252,7 @@ export const buildAssetOptIn = (
   }
 }
 
-export const buildAssetOptOut = (
-  params: AssetOptOutParams,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Transaction => {
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
+export const buildAssetOptOut = (params: AssetOptOutParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
     type: TransactionType.axfer,
@@ -306,38 +265,20 @@ export const buildAssetOptOut = (
   }
 }
 
-export const buildAppCall = async (
-  params: AppCallParams | AppUpdateParams | AppCreateParams,
-  appManager: AppManager,
-  transactionParams: TransactionParams,
-  defaultValidityWindow: number,
-): Promise<Transaction> => {
+export const buildAppCreate = async (params: AppCreateParams, appManager: AppManager, header: TransactionHeader): Promise<Transaction> => {
   // TODO: PD - find out about rejectVersion
 
-  const header = buildTransactionHeader(params, transactionParams, defaultValidityWindow)
-
-  const appId = 'appId' in params ? params.appId : 0n
   const approvalProgram =
-    'approvalProgram' in params
-      ? typeof params.approvalProgram === 'string'
-        ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
-        : params.approvalProgram
-      : undefined
+    typeof params.approvalProgram === 'string'
+      ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
+      : params.approvalProgram
   const clearStateProgram =
-    'clearStateProgram' in params
-      ? typeof params.clearStateProgram === 'string'
-        ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
-        : params.clearStateProgram
-      : undefined
+    typeof params.clearStateProgram === 'string'
+      ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+      : params.clearStateProgram
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
-
-  if (appId === 0n) {
-    if (!approvalProgram || !clearStateProgram) {
-      throw Error('approvalProgram and clearProgram must be provided')
-    }
-  }
 
   return {
     ...header,
@@ -347,10 +288,22 @@ export const buildAppCall = async (
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       approvalProgram: approvalProgram,
       clearStateProgram: clearStateProgram,
-      globalStateSchema: params.globalStateSchema,
-      localStateSchema: params.localStateSchema,
+      globalStateSchema:
+        params.schema?.globalByteSlices !== undefined || params.schema?.globalInts !== undefined
+          ? {
+              numByteSlices: params.schema?.globalByteSlices ?? 0,
+              numUints: params.schema?.globalInts ?? 0,
+            }
+          : undefined,
+      localStateSchema:
+        params.schema?.localByteSlices !== undefined || params.schema?.localInts !== undefined
+          ? {
+              numByteSlices: params.schema?.localByteSlices ?? 0,
+              numUints: params.schema?.localInts ?? 0,
+            }
+          : undefined,
       extraProgramPages:
-        'extraProgramPages' in params && params.extraProgramPages !== undefined
+        params.extraProgramPages !== undefined
           ? params.extraProgramPages
           : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
       args: params.args,
@@ -364,11 +317,91 @@ export const buildAppCall = async (
           }),
     },
   }
+}
 
-  // TODO: PD - review both makeApplicationCallTxnFromObject and makeApplicationCreateTxnFromObject
-  // to make sure we capture all the logic
+export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppManager, header: TransactionHeader): Promise<Transaction> => {
+  // TODO: PD - find out about rejectVersion
+
+  const approvalProgram =
+    typeof params.approvalProgram === 'string'
+      ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
+      : params.approvalProgram
+  const clearStateProgram =
+    typeof params.clearStateProgram === 'string'
+      ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+      : params.clearStateProgram
+
+  // If accessReferences is provided, we should not pass legacy foreign arrays
+  const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
   return {
     ...header,
     type: TransactionType.appl,
+    applicationCall: {
+      appId: params.appId,
+      onComplete: OnApplicationComplete.UpdateApplication,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearStateProgram,
+      args: params.args,
+      ...(hasAccessReferences
+        ? { access: params.accessReferences?.map(getAccessReference) }
+        : {
+            accounts: params.accountReferences?.map((a) => a.toString()),
+            foreignApps: params.appReferences,
+            foreignAssets: params.assetReferences,
+            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
+    },
+  }
+}
+
+export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: TransactionHeader): Transaction => {
+  // TODO: PD - find out about rejectVersion
+
+  // If accessReferences is provided, we should not pass legacy foreign arrays
+  const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
+  return {
+    ...header,
+    type: TransactionType.appl,
+    applicationCall: {
+      appId: params.appId,
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
+      args: params.args,
+      ...(hasAccessReferences
+        ? { access: params.accessReferences?.map(getAccessReference) }
+        : {
+            accounts: params.accountReferences?.map((a) => a.toString()),
+            foreignApps: params.appReferences,
+            foreignAssets: params.assetReferences,
+            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
+    },
+  }
+}
+
+export const buildKeyReg = (params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, header: TransactionHeader): Transaction => {
+  if ('voteKey' in params) {
+    return {
+      ...header,
+      type: TransactionType.keyreg,
+      keyRegistration: {
+        voteKey: params.voteKey,
+        selectionKey: params.selectionKey,
+        voteFirst: params.voteFirst,
+        voteLast: params.voteLast,
+        voteKeyDilution: params.voteKeyDilution,
+        nonParticipation: false,
+        stateProofKey: params.stateProofKey,
+      },
+    }
+  } else {
+    return {
+      ...header,
+      type: TransactionType.keyreg,
+      keyRegistration: {
+        nonParticipation: params.preventAccountFromEverParticipatingAgain,
+      },
+    }
   }
 }

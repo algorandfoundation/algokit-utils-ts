@@ -23,6 +23,9 @@ import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
 import {
+  buildAppCall,
+  buildAppCreate,
+  buildAppUpdate,
   buildAssetConfig,
   buildAssetCreate,
   buildAssetDestroy,
@@ -30,7 +33,9 @@ import {
   buildAssetOptIn,
   buildAssetOptOut,
   buildAssetTransfer,
+  buildKeyReg,
   buildPayment,
+  buildTransactionHeader,
   extractComposerTransactionsFromAppMethodCallParams,
 } from './composer-helper'
 import { Expand } from './expand'
@@ -495,7 +500,6 @@ export type Txn =
   | ((AppCallParams | AppCreateParams | AppUpdateParams) & { type: 'appCall' })
   | ((OnlineKeyRegistrationParams | OfflineKeyRegistrationParams) & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
-  | { atc: algosdk.AtomicTransactionComposer; type: 'atc' }
   | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
 
 /**
@@ -2082,10 +2086,14 @@ export class TransactionComposer {
     let builtTransactions = new Array<Transaction>()
 
     for (const ctxn of this.txns) {
+      if (ctxn.type === 'txnWithSigner') {
+        builtTransactions.push({
+          transactions: ctxn.txn,
+        })
+      }
       let transaction: Transaction
-      const commonParams = getCommonParams(ctxn)
-      const header = this.buildTransactionHeader(commonParams, suggestedParams, defaultValidityWindow)
-      let calculateFee = header.fee === undefined
+      const header = ctxn.type === 'txnWithSigner' ? undefined : buildTransactionHeader(ctxn, suggestedParams, defaultValidityWindow)
+      let calculateFee = header?.fee === undefined
 
       switch (ctxn.type) {
         case ComposerTransactionType.Transaction:
@@ -2097,31 +2105,40 @@ export class TransactionComposer {
           transaction = ctxn.data.transaction
           break
         case 'pay':
-          transaction = buildPayment(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildPayment(ctxn, header)
           break
         case 'assetCreate':
-          transaction = buildAssetCreate(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildAssetCreate(ctxn, header)
           break
         case 'assetConfig':
-          transaction = buildAssetConfig(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildAssetConfig(ctxn, header)
           break
         case 'assetFreeze':
-          transaction = buildAssetFreeze(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildAssetFreeze(ctxn, header)
           break
         case 'assetDestroy':
-          transaction = buildAssetDestroy(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildAssetDestroy(ctxn, header)
           break
         case 'assetTransfer':
-          transaction = buildAssetTransfer(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildAssetTransfer(ctxn, header)
           break
         case 'assetOptIn':
-          transaction = buildAssetOptIn(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildAssetOptIn(ctxn, header)
           break
         case 'assetOptOut':
-          transaction = buildAssetOptOut(ctxn, suggestedParams, defaultValidityWindow)
+          transaction = buildAssetOptOut(ctxn, header)
           break
         case 'appCall':
-          transaction = buildAssetOptIn(ctxn, suggestedParams, defaultValidityWindow)
+          if (!('appId' in ctxn)) {
+            transaction = await buildAppCreate(ctxn, this.appManager, header)
+          } else if ('approvalProgram' in ctxn && 'clearStateProgram' in ctxn) {
+            transaction = await buildAppUpdate(ctxn, this.appManager, header)
+          } else {
+            transaction = buildAppCall(ctxn, header)
+          }
+          break
+        case 'keyReg':
+          transaction = buildKeyReg(ctxn, header)
           break
 
         default:
