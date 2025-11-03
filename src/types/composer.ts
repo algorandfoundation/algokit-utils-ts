@@ -14,6 +14,7 @@ import {
   TransactionType,
   assignFee,
   calculateFee,
+  decodeSignedTransaction,
   encodeSignedTransactions,
   getTransactionId,
   groupTransactions,
@@ -651,6 +652,17 @@ export class TransactionComposer {
     }
 
     let transformedError = originalError
+
+    // TODO: PD - can we handle this so that the error has name
+    // similar to the error handling in `sendAtomicTransactionComposer`
+    if (
+      'body' in transformedError &&
+      transformedError.body &&
+      typeof transformedError.body === 'object' &&
+      'message' in transformedError.body
+    ) {
+      transformedError = new Error(transformedError.body.message as string)
+    }
 
     for (const transformer of this.errorTransformers) {
       try {
@@ -1893,48 +1905,52 @@ export class TransactionComposer {
    * ```
    */
   async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
-    // TODO: PD - resource population + fee if not done already
-    await this.gatherSignatures()
+    try {
+      // TODO: PD - resource population + fee if not done already
+      await this.gatherSignatures()
 
-    if (!this.signedGroup || this.signedGroup.length === 0) {
-      throw new Error('No transactions available')
-    }
-
-    const group = this.signedGroup[0].txn.group
-
-    let waitRounds = params?.maxRoundsToWaitForConfirmation
-
-    if (waitRounds === undefined) {
-      const suggestedParams = await this.getSuggestedParams()
-      const firstRound = suggestedParams.lastRound
-      const lastRound = this.signedGroup.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
-      waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
-    }
-
-    const encodedTxns = encodeSignedTransactions(this.signedGroup)
-    const encodedBytes = concatArrays(...encodedTxns)
-
-    await this.algod.rawTransaction({ body: encodedBytes })
-
-    const transactions = this.signedGroup.map((stxn) => stxn.txn)
-    const transactionIds = transactions.map((txn) => getTransactionId(txn))
-
-    const confirmations = new Array<PendingTransactionResponse>()
-    if (params?.maxRoundsToWaitForConfirmation) {
-      for (const id of transactionIds) {
-        const confirmation = await waitForConfirmation(this.algod, id, waitRounds)
-        confirmations.push(confirmation)
+      if (!this.signedGroup || this.signedGroup.length === 0) {
+        throw new Error('No transactions available')
       }
-    }
 
-    const abiReturns = this.parseAbiReturnValues(confirmations)
+      const group = this.signedGroup[0].txn.group
 
-    return {
-      groupId: group ? Buffer.from(group).toString('base64') : undefined,
-      transactions: transactions.map((t) => new TransactionWrapper(t)),
-      txIds: transactionIds,
-      returns: abiReturns,
-      confirmations: confirmations.map((c) => wrapPendingTransactionResponse(c)),
+      let waitRounds = params?.maxRoundsToWaitForConfirmation
+
+      if (waitRounds === undefined) {
+        const suggestedParams = await this.getSuggestedParams()
+        const firstRound = suggestedParams.lastRound
+        const lastRound = this.signedGroup.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
+        waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
+      }
+
+      const encodedTxns = encodeSignedTransactions(this.signedGroup)
+      const encodedBytes = concatArrays(...encodedTxns)
+
+      await this.algod.rawTransaction({ body: encodedBytes })
+
+      const transactions = this.signedGroup.map((stxn) => stxn.txn)
+      const transactionIds = transactions.map((txn) => getTransactionId(txn))
+
+      const confirmations = new Array<PendingTransactionResponse>()
+      if (params?.maxRoundsToWaitForConfirmation) {
+        for (const id of transactionIds) {
+          const confirmation = await waitForConfirmation(this.algod, id, waitRounds)
+          confirmations.push(confirmation)
+        }
+      }
+
+      const abiReturns = this.parseAbiReturnValues(confirmations)
+
+      return {
+        groupId: group ? Buffer.from(group).toString('base64') : undefined,
+        transactions: transactions.map((t) => new TransactionWrapper(t)),
+        txIds: transactionIds,
+        returns: abiReturns,
+        confirmations: confirmations.map((c) => wrapPendingTransactionResponse(c)),
+      }
+    } catch (originalError: unknown) {
+      throw await this.transformError(originalError)
     }
   }
 
@@ -2098,10 +2114,7 @@ export class TransactionComposer {
     signerEntries.forEach(([, indexes], signerIndex) => {
       const stxs = signedGroups[signerIndex]
       indexes.forEach((txIndex, stxIndex) => {
-        signedTransactions[txIndex] = {
-          txn: transactions[txIndex],
-          signature: stxs[stxIndex],
-        }
+        signedTransactions[txIndex] = decodeSignedTransaction(stxs[stxIndex])
       })
     })
 

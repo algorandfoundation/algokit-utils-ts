@@ -21,8 +21,8 @@ import {
   abiTypeIsReference,
   abiTypeIsTransaction,
 } from '@algorandfoundation/sdk'
-import { encodeLease } from 'src/transaction'
-import { calculateExtraProgramPages } from 'src/util'
+import { encodeLease } from '../transaction'
+import { calculateExtraProgramPages } from '../util'
 import { AppManager, getAccessReference } from './app-manager'
 import {
   AppCallParams,
