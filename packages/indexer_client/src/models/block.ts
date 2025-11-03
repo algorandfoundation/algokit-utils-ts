@@ -27,17 +27,17 @@ export type Block = {
   /**
    * the sum of all fees paid by transactions in this block.
    */
-  feesCollected?: bigint
+  feesCollected?: number
 
   /**
    * the potential bonus payout for this block.
    */
-  bonus?: bigint
+  bonus?: number
 
   /**
    * the actual amount transferred to the proposer from the fee sink.
    */
-  proposerPayout?: bigint
+  proposerPayout?: number
 
   /**
    * \[gh\] hash to which this block belongs.
@@ -78,7 +78,7 @@ export type Block = {
   /**
    * \[ts\] Block creation timestamp in seconds since epoch
    */
-  timestamp: bigint
+  timestamp: number
 
   /**
    * \[txns\] list of transactions corresponding to a given round.
@@ -105,7 +105,7 @@ export type Block = {
    *
    * Specifically, TxnCounter is the number of the next transaction that will be committed after this block.  It is 0 when no transactions have ever been committed (since TxnCounter started being supported).
    */
-  txnCounter?: bigint
+  txnCounter?: number
   upgradeState?: BlockUpgradeState
   upgradeVote?: BlockUpgradeVote
   participationUpdates?: ParticipationUpdates

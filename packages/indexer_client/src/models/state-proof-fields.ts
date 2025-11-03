@@ -26,7 +26,7 @@ export type StateProofFields = {
   /**
    * \[v\] Salt version of the merkle signature.
    */
-  saltVersion?: bigint
+  saltVersion?: number
 
   /**
    * \[r\] Note that this is actually stored as a map[uint64] - Reveal in the actual msgp

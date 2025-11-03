@@ -28,7 +28,7 @@ export type DryrunRequest = {
   /**
    * LatestTimestamp is available to some TEAL scripts. Defaults to the latest confirmed timestamp this algod is attached to.
    */
-  latestTimestamp: bigint
+  latestTimestamp: number
   sources: DryrunSource[]
 }
 

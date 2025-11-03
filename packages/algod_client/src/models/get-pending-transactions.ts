@@ -13,7 +13,7 @@ export type GetPendingTransactions = {
   /**
    * Total number of transactions in the pool.
    */
-  totalTransactions: bigint
+  totalTransactions: number
 }
 
 export const GetPendingTransactionsMeta: ModelMetadata = {

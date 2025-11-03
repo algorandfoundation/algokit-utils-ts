@@ -64,7 +64,8 @@
             "in": "query",
             "description": "Asset ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -88,7 +89,8 @@
             "in": "query",
             "description": "Results should have an amount greater than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -125,7 +127,8 @@
             "in": "query",
             "description": "Results should have an amount less than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -143,7 +146,8 @@
             "in": "query",
             "description": "Include results for the specified round. For performance reasons, this parameter may be disabled on some configurations. Using application-id or asset-id filters will return both creator and opt-in accounts. Filtering by include-all will return creator and opt-in accounts for deleted assets and accounts. Non-opt-in managers are not included in the results when asset-id is used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -151,7 +155,8 @@
             "in": "query",
             "description": "Application ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -183,7 +188,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -263,7 +269,8 @@
             "in": "query",
             "description": "Include results for the specified round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -313,7 +320,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     }
                   }
                 }
@@ -411,7 +419,8 @@
             "in": "query",
             "description": "Asset ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -453,7 +462,8 @@
                   "properties": {
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -561,7 +571,8 @@
             "in": "query",
             "description": "Asset ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -609,7 +620,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -711,7 +723,8 @@
             "in": "query",
             "description": "Application ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -759,7 +772,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -861,7 +875,8 @@
             "in": "query",
             "description": "Application ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -909,7 +924,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -1066,7 +1082,8 @@
             "in": "query",
             "description": "Include results for the specified round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1074,7 +1091,8 @@
             "in": "query",
             "description": "Include results at or after the specified min-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1082,7 +1100,8 @@
             "in": "query",
             "description": "Include results at or before the specified max-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1090,7 +1109,8 @@
             "in": "query",
             "description": "Asset ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1120,7 +1140,8 @@
             "in": "query",
             "description": "Results should have an amount greater than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1128,7 +1149,8 @@
             "in": "query",
             "description": "Results should have an amount less than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1163,7 +1185,8 @@
                   "properties": {
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -1240,7 +1263,8 @@
             "in": "query",
             "description": "Application ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1296,7 +1320,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -1345,7 +1370,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1373,7 +1399,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     }
                   }
                 }
@@ -1441,7 +1468,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1475,7 +1503,8 @@
                   "properties": {
                     "application-id": {
                       "type": "integer",
-                      "description": "\\[appidx\\] application index."
+                      "description": "\\[appidx\\] application index.",
+                      "x-algokit-bigint": true
                     },
                     "boxes": {
                       "type": "array",
@@ -1575,7 +1604,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1681,7 +1711,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1713,7 +1744,8 @@
             "in": "query",
             "description": "Include results at or after the specified min-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1721,7 +1753,8 @@
             "in": "query",
             "description": "Include results at or before the specified max-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1749,11 +1782,13 @@
                   "properties": {
                     "application-id": {
                       "type": "integer",
-                      "description": "\\[appidx\\] application index."
+                      "description": "\\[appidx\\] application index.",
+                      "x-algokit-bigint": true
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -1834,7 +1869,8 @@
             "in": "query",
             "description": "Asset ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           }
         ],
@@ -1858,7 +1894,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -1929,7 +1966,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -1958,7 +1996,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     }
                   }
                 }
@@ -2071,7 +2110,8 @@
             "in": "query",
             "description": "Results should have an amount greater than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2079,7 +2119,8 @@
             "in": "query",
             "description": "Results should have an amount less than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2087,7 +2128,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           }
         ],
@@ -2111,7 +2153,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -2246,7 +2289,8 @@
             "in": "query",
             "description": "Include results for the specified round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2254,7 +2298,8 @@
             "in": "query",
             "description": "Include results at or after the specified min-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2262,7 +2307,8 @@
             "in": "query",
             "description": "Include results at or before the specified max-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2292,7 +2338,8 @@
             "in": "query",
             "description": "Results should have an amount greater than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2300,7 +2347,8 @@
             "in": "query",
             "description": "Results should have an amount less than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2339,7 +2387,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2365,7 +2414,8 @@
                   "properties": {
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -2458,7 +2508,8 @@
             "in": "query",
             "description": "Include results at or after the specified min-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2466,7 +2517,8 @@
             "in": "query",
             "description": "Include results at or before the specified max-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2548,7 +2600,8 @@
                   "properties": {
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -2626,7 +2679,8 @@
             "description": "Round number",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2730,7 +2784,8 @@
                     },
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     }
                   }
                 }
@@ -2893,7 +2948,8 @@
             "in": "query",
             "description": "Include results for the specified round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2901,7 +2957,8 @@
             "in": "query",
             "description": "Include results at or after the specified min-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2909,7 +2966,8 @@
             "in": "query",
             "description": "Include results at or before the specified max-round.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2917,7 +2975,8 @@
             "in": "query",
             "description": "Asset ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2947,7 +3006,8 @@
             "in": "query",
             "description": "Results should have an amount greater than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -2955,7 +3015,8 @@
             "in": "query",
             "description": "Results should have an amount less than this value. MicroAlgos are the default currency unless an asset-id is provided, in which case the asset will be used.",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           {
@@ -3002,7 +3063,8 @@
             "in": "query",
             "description": "Application ID",
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           }
         ],
@@ -3020,7 +3082,8 @@
                   "properties": {
                     "current-round": {
                       "type": "integer",
-                      "description": "Round at which the results were computed."
+                      "description": "Round at which the results were computed.",
+                      "x-algokit-bigint": true
                     },
                     "next-token": {
                       "type": "string",
@@ -3802,11 +3865,13 @@
           },
           "rewards-calculation-round": {
             "type": "integer",
-            "description": "\\[rwcalr\\] number of leftover MicroAlgos after the distribution of rewards-rate MicroAlgos for every reward unit in the next round."
+            "description": "\\[rwcalr\\] number of leftover MicroAlgos after the distribution of rewards-rate MicroAlgos for every reward unit in the next round.",
+            "x-algokit-bigint": true
           },
           "rewards-level": {
             "type": "integer",
-            "description": "\\[earn\\] How many rewards, in MicroAlgos, have been distributed to each RewardUnit of MicroAlgos since genesis."
+            "description": "\\[earn\\] How many rewards, in MicroAlgos, have been distributed to each RewardUnit of MicroAlgos since genesis.",
+            "x-algokit-bigint": true
           },
           "rewards-pool": {
             "type": "string",
@@ -3814,11 +3879,13 @@
           },
           "rewards-rate": {
             "type": "integer",
-            "description": "\\[rate\\] Number of new MicroAlgos added to the participation stake from rewards at the next round."
+            "description": "\\[rate\\] Number of new MicroAlgos added to the participation stake from rewards at the next round.",
+            "x-algokit-bigint": true
           },
           "rewards-residue": {
             "type": "integer",
-            "description": "\\[frac\\] Number of leftover MicroAlgos after the distribution of RewardsRate/rewardUnits MicroAlgos for every reward unit in the next round."
+            "description": "\\[frac\\] Number of leftover MicroAlgos after the distribution of RewardsRate/rewardUnits MicroAlgos for every reward unit in the next round.",
+            "x-algokit-bigint": true
           }
         },
         "description": "Fields relating to rewards,"
@@ -3843,11 +3910,13 @@
           },
           "next-protocol-switch-on": {
             "type": "integer",
-            "description": "\\[nextswitch\\] Round on which the protocol upgrade will take effect."
+            "description": "\\[nextswitch\\] Round on which the protocol upgrade will take effect.",
+            "x-algokit-bigint": true
           },
           "next-protocol-vote-before": {
             "type": "integer",
-            "description": "\\[nextbefore\\] Deadline round for this protocol upgrade (No votes will be consider after this round)."
+            "description": "\\[nextbefore\\] Deadline round for this protocol upgrade (No votes will be consider after this round).",
+            "x-algokit-bigint": true
           }
         },
         "description": "Fields relating to a protocol upgrade."
@@ -3861,7 +3930,8 @@
           },
           "upgrade-delay": {
             "type": "integer",
-            "description": "\\[upgradedelay\\] Indicates the time between acceptance and execution."
+            "description": "\\[upgradedelay\\] Indicates the time between acceptance and execution.",
+            "x-algokit-bigint": true
           },
           "upgrade-propose": {
             "type": "string",
@@ -3922,7 +3992,8 @@
         "properties": {
           "app": {
             "type": "integer",
-            "description": "Application ID to which the box belongs, or zero if referring to the called application."
+            "description": "Application ID to which the box belongs, or zero if referring to the called application.",
+            "x-algokit-bigint": true
           },
           "name": {
             "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
@@ -3987,7 +4058,8 @@
           },
           "asset": {
             "type": "integer",
-            "description": "\\[s\\] Asset ID for asset in access list."
+            "description": "\\[s\\] Asset ID for asset in access list.",
+            "x-algokit-bigint": true
           }
         },
         "description": "HoldingRef names a holding by referring to an Address and Asset it belongs to."
@@ -4006,7 +4078,8 @@
           },
           "app": {
             "type": "integer",
-            "description": "\\[p\\] Application ID for app in access list, or zero if referring to the called application."
+            "description": "\\[p\\] Application ID for app in access list, or zero if referring to the called application.",
+            "x-algokit-bigint": true
           }
         },
         "description": "LocalsRef names a local state by referring to an Address and App it belongs to."
@@ -4088,7 +4161,8 @@
           },
           "application-id": {
             "type": "integer",
-            "description": "\\[p\\] Application id whose GlobalState may be read by the executing\n ApprovalProgram or ClearStateProgram."
+            "description": "\\[p\\] Application id whose GlobalState may be read by the executing\n ApprovalProgram or ClearStateProgram.",
+            "x-algokit-bigint": true
           },
           "asset-id": {
             "type": "integer",
@@ -4225,7 +4299,8 @@
           },
           "close-rewards": {
             "type": "integer",
-            "description": "\\[rc\\] rewards applied to close-remainder-to account."
+            "description": "\\[rc\\] rewards applied to close-remainder-to account.",
+            "x-algokit-bigint": true
           },
           "closing-amount": {
             "type": "integer",
@@ -4304,7 +4379,8 @@
           },
           "receiver-rewards": {
             "type": "integer",
-            "description": "\\[rr\\] rewards applied to receiver account."
+            "description": "\\[rr\\] rewards applied to receiver account.",
+            "x-algokit-bigint": true
           },
           "rekey-to": {
             "type": "string",
@@ -4321,7 +4397,8 @@
           },
           "sender-rewards": {
             "type": "integer",
-            "description": "\\[rs\\] rewards applied to sender account."
+            "description": "\\[rs\\] rewards applied to sender account.",
+            "x-algokit-bigint": true
           },
           "signature": {
             "$ref": "#/components/schemas/TransactionSignature"
@@ -4379,7 +4456,8 @@
         "properties": {
           "application-id": {
             "type": "integer",
-            "description": "\\[apid\\] ID of the application being configured or empty if creating."
+            "description": "\\[apid\\] ID of the application being configured or empty if creating.",
+            "x-algokit-bigint": true
           },
           "on-completion": {
             "$ref": "#/components/schemas/OnCompletion"
@@ -4417,14 +4495,16 @@
             "type": "array",
             "description": "\\[apfa\\] Lists the applications in addition to the application-id whose global states may be accessed by this application's approval-program and clear-state-program. The access is read-only.",
             "items": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           "foreign-assets": {
             "type": "array",
             "description": "\\[apas\\] lists the assets whose parameters may be accessed by this application's ApprovalProgram and ClearStateProgram. The access is read-only.",
             "items": {
-              "type": "integer"
+              "type": "integer",
+              "x-algokit-bigint": true
             }
           },
           "local-state-schema": {
@@ -4647,7 +4727,8 @@
           },
           "close-amount": {
             "type": "integer",
-            "description": "Number of MicroAlgos that were sent to the close-remainder-to address when closing the sender account."
+            "description": "Number of MicroAlgos that were sent to the close-remainder-to address when closing the sender account.",
+            "x-algokit-bigint": true
           },
           "close-remainder-to": {
             "type": "string",
@@ -4957,7 +5038,8 @@
           },
           "online-total-weight": {
             "type": "integer",
-            "description": "\\[t\\] The total number of microalgos held by the online accounts during the StateProof round."
+            "description": "\\[t\\] The total number of microalgos held by the online accounts during the StateProof round.",
+            "x-algokit-bigint": true
           },
           "next-round": {
             "type": "integer",
@@ -5015,7 +5097,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 }
               }
             }
@@ -5035,7 +5118,8 @@
               "properties": {
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5071,7 +5155,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5101,7 +5186,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5127,7 +5213,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 }
               }
             }
@@ -5153,7 +5240,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5177,11 +5265,13 @@
               "properties": {
                 "application-id": {
                   "type": "integer",
-                  "description": "\\[appidx\\] application index."
+                  "description": "\\[appidx\\] application index.",
+                  "x-algokit-bigint": true
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5217,7 +5307,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5244,7 +5335,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 }
               }
             }
@@ -5264,7 +5356,8 @@
               "properties": {
                 "application-id": {
                   "type": "integer",
-                  "description": "\\[appidx\\] application index."
+                  "description": "\\[appidx\\] application index.",
+                  "x-algokit-bigint": true
                 },
                 "boxes": {
                   "type": "array",
@@ -5332,7 +5425,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5366,7 +5460,8 @@
               "properties": {
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",
@@ -5409,7 +5504,8 @@
                 },
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 }
               }
             }
@@ -5429,7 +5525,8 @@
               "properties": {
                 "current-round": {
                   "type": "integer",
-                  "description": "Round at which the results were computed."
+                  "description": "Round at which the results were computed.",
+                  "x-algokit-bigint": true
                 },
                 "next-token": {
                   "type": "string",

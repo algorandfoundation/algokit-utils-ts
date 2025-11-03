@@ -44,7 +44,7 @@ export const TransactionPaymentMeta: ModelMetadata = {
       wireKey: 'close-amount',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'closeRemainderTo',

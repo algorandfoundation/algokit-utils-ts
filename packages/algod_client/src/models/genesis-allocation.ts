@@ -5,7 +5,7 @@ export type GenesisAllocation = {
   comment: string
   state: {
     algo: bigint
-    onl: bigint
+    onl: number
     sel?: string
     stprf?: string
     vote?: string

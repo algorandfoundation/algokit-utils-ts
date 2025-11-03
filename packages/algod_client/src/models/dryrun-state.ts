@@ -9,12 +9,12 @@ export type DryrunState = {
   /**
    * Line number
    */
-  line: bigint
+  line: number
 
   /**
    * Program counter
    */
-  pc: bigint
+  pc: number
   stack: TealValue[]
   scratch?: TealValue[]
 

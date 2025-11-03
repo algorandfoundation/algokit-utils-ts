@@ -99,7 +99,7 @@ export const PendingTransactionResponseMeta: ModelMetadata = {
       wireKey: 'close-rewards',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'closingAmount',

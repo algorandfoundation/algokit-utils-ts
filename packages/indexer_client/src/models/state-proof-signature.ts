@@ -4,7 +4,7 @@ import { MerkleArrayProofMeta } from './merkle-array-proof'
 
 export type StateProofSignature = {
   falconSignature?: Uint8Array
-  merkleArrayIndex?: bigint
+  merkleArrayIndex?: number
   proof?: MerkleArrayProof
 
   /**

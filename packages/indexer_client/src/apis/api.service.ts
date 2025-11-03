@@ -64,7 +64,7 @@ export class IndexerApi {
    */
   async lookupAccountAppLocalStates(
     accountId: string,
-    params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
+    params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountAppLocalStates> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -77,7 +77,7 @@ export class IndexerApi {
       query: {
         'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
         'include-all': params?.includeAll,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
       },
       headers,
@@ -97,7 +97,7 @@ export class IndexerApi {
    */
   async lookupAccountAssets(
     accountId: string,
-    params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
+    params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountAssets> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -110,7 +110,7 @@ export class IndexerApi {
       query: {
         'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
         'include-all': params?.includeAll,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
       },
       headers,
@@ -166,7 +166,7 @@ export class IndexerApi {
    */
   async lookupAccountCreatedApplications(
     accountId: string,
-    params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
+    params?: { applicationId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountCreatedApplications> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -179,7 +179,7 @@ export class IndexerApi {
       query: {
         'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
         'include-all': params?.includeAll,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
       },
       headers,
@@ -199,7 +199,7 @@ export class IndexerApi {
    */
   async lookupAccountCreatedAssets(
     accountId: string,
-    params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number | bigint; next?: string },
+    params?: { assetId?: number | bigint; includeAll?: boolean; limit?: number; next?: string },
   ): Promise<LookupAccountCreatedAssets> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -212,7 +212,7 @@ export class IndexerApi {
       query: {
         'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
         'include-all': params?.includeAll,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
       },
       headers,
@@ -233,7 +233,7 @@ export class IndexerApi {
   async lookupAccountTransactions(
     accountId: string,
     params?: {
-      limit?: number | bigint
+      limit?: number
       next?: string
       notePrefix?: string
       txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
@@ -259,7 +259,7 @@ export class IndexerApi {
       url: '/v2/accounts/{account-id}/transactions',
       path: { 'account-id': accountId },
       query: {
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         'note-prefix': params?.notePrefix,
         'tx-type': params?.txType,
@@ -347,7 +347,7 @@ export class IndexerApi {
   async lookupApplicationLogsById(
     applicationId: number | bigint,
     params?: {
-      limit?: number | bigint
+      limit?: number
       next?: string
       txid?: string
       minRound?: number | bigint
@@ -364,7 +364,7 @@ export class IndexerApi {
       url: '/v2/applications/{application-id}/logs',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
       query: {
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         txid: params?.txid,
         'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
@@ -390,7 +390,7 @@ export class IndexerApi {
     assetId: number | bigint,
     params?: {
       includeAll?: boolean
-      limit?: number | bigint
+      limit?: number
       next?: string
       currencyGreaterThan?: number | bigint
       currencyLessThan?: number | bigint
@@ -406,7 +406,7 @@ export class IndexerApi {
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
       query: {
         'include-all': params?.includeAll,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         'currency-greater-than':
           typeof params?.currencyGreaterThan === 'bigint'
@@ -458,7 +458,7 @@ export class IndexerApi {
   async lookupAssetTransactions(
     assetId: number | bigint,
     params?: {
-      limit?: number | bigint
+      limit?: number
       next?: string
       notePrefix?: string
       txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
@@ -486,7 +486,7 @@ export class IndexerApi {
       url: '/v2/assets/{asset-id}/transactions',
       path: { 'asset-id': typeof assetId === 'bigint' ? assetId.toString() : assetId },
       query: {
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         'note-prefix': params?.notePrefix,
         'tx-type': params?.txType,
@@ -597,7 +597,7 @@ export class IndexerApi {
    */
   async searchForAccounts(params?: {
     assetId?: number | bigint
-    limit?: number | bigint
+    limit?: number
     next?: string
     currencyGreaterThan?: number | bigint
     includeAll?: boolean
@@ -618,7 +618,7 @@ export class IndexerApi {
       path: {},
       query: {
         'asset-id': typeof params?.assetId === 'bigint' ? (params!.assetId as bigint).toString() : params?.assetId,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         'currency-greater-than':
           typeof params?.currencyGreaterThan === 'bigint'
@@ -650,7 +650,7 @@ export class IndexerApi {
    */
   async searchForApplicationBoxes(
     applicationId: number | bigint,
-    params?: { limit?: number | bigint; next?: string },
+    params?: { limit?: number; next?: string },
   ): Promise<SearchForApplicationBoxes> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -660,7 +660,7 @@ export class IndexerApi {
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
-      query: { limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit, next: params?.next },
+      query: { limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
       mediaType: undefined,
@@ -680,7 +680,7 @@ export class IndexerApi {
     applicationId?: number | bigint
     creator?: string
     includeAll?: boolean
-    limit?: number | bigint
+    limit?: number
     next?: string
   }): Promise<SearchForApplications> {
     const headers: Record<string, string> = {}
@@ -695,7 +695,7 @@ export class IndexerApi {
         'application-id': typeof params?.applicationId === 'bigint' ? (params!.applicationId as bigint).toString() : params?.applicationId,
         creator: params?.creator,
         'include-all': params?.includeAll,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
       },
       headers,
@@ -715,7 +715,7 @@ export class IndexerApi {
    */
   async searchForAssets(params?: {
     includeAll?: boolean
-    limit?: number | bigint
+    limit?: number
     next?: string
     creator?: string
     name?: string
@@ -732,7 +732,7 @@ export class IndexerApi {
       path: {},
       query: {
         'include-all': params?.includeAll,
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         creator: params?.creator,
         name: params?.name,
@@ -755,7 +755,7 @@ export class IndexerApi {
    * Search for block headers. Block headers are returned in ascending round order. Transactions are not included in the output.
    */
   async searchForBlockHeaders(params?: {
-    limit?: number | bigint
+    limit?: number
     next?: string
     minRound?: number | bigint
     maxRound?: number | bigint
@@ -774,7 +774,7 @@ export class IndexerApi {
       url: '/v2/block-headers',
       path: {},
       query: {
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         'min-round': typeof params?.minRound === 'bigint' ? (params!.minRound as bigint).toString() : params?.minRound,
         'max-round': typeof params?.maxRound === 'bigint' ? (params!.maxRound as bigint).toString() : params?.maxRound,
@@ -800,7 +800,7 @@ export class IndexerApi {
    * Search for transactions. Transactions are returned oldest to newest unless the address parameter is used, in which case results are returned newest to oldest.
    */
   async searchForTransactions(params?: {
-    limit?: number | bigint
+    limit?: number
     next?: string
     notePrefix?: string
     txType?: 'pay' | 'keyreg' | 'acfg' | 'axfer' | 'afrz' | 'appl' | 'stpf' | 'hb'
@@ -830,7 +830,7 @@ export class IndexerApi {
       url: '/v2/transactions',
       path: {},
       query: {
-        limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit,
+        limit: params?.limit,
         next: params?.next,
         'note-prefix': params?.notePrefix,
         'tx-type': params?.txType,

@@ -189,27 +189,11 @@ def _map_primitive(schema_type: str, schema_format: str | None, schema: Schema) 
     if schema_type == "integer":
         schema_format = schema.get(SchemaKey.FORMAT)
         is_declared_bigint = schema.get(constants.X_ALGOKIT_BIGINT) is True
-        is_signed_32_bit = schema_format == "int32"
-        coerced_to_number = False
-
-        if not is_declared_bigint and not is_signed_32_bit:
-            maximum: int | None = schema.get(SchemaKey.MAXIMUM)
-            minimum: int | None = schema.get(SchemaKey.MINIMUM)
-            description = str(schema.get("description", "")).lower()
-
-            if (
-                (maximum is not None and maximum <= _U32_MAX_VALUE)
-                or (minimum is not None and minimum >= 0 and maximum is not None and maximum <= _SMALL_INTEGER_MAX)
-                or any(keyword in description for keyword in _ENUM_KEYWORDS)
-            ):
-                coerced_to_number = True
 
         result = (
             TypeScriptType.BIGINT
             if is_declared_bigint
             else TypeScriptType.NUMBER
-            if is_signed_32_bit or coerced_to_number
-            else TypeScriptType.BIGINT
         )
     elif schema_type == "number":
         result = TypeScriptType.NUMBER

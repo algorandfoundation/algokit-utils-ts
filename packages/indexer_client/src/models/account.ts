@@ -52,7 +52,7 @@ export type Account = {
   /**
    * the sum of all extra application program pages for this account.
    */
-  appsTotalExtraPages?: bigint
+  appsTotalExtraPages?: number
 
   /**
    * assets held by this account.
@@ -121,32 +121,32 @@ export type Account = {
   /**
    * The count of all applications that have been opted in, equivalent to the count of application local data (AppLocalState objects) stored in this account.
    */
-  totalAppsOptedIn: bigint
+  totalAppsOptedIn: number
 
   /**
    * The count of all assets that have been opted in, equivalent to the count of AssetHolding objects held by this account.
    */
-  totalAssetsOptedIn: bigint
+  totalAssetsOptedIn: number
 
   /**
    * For app-accounts only. The total number of bytes allocated for the keys and values of boxes which belong to the associated application.
    */
-  totalBoxBytes: bigint
+  totalBoxBytes: number
 
   /**
    * For app-accounts only. The total number of boxes which belong to the associated application.
    */
-  totalBoxes: bigint
+  totalBoxes: number
 
   /**
    * The count of all apps (AppParams objects) created by this account.
    */
-  totalCreatedApps: bigint
+  totalCreatedApps: number
 
   /**
    * The count of all assets (AssetParams objects) created by this account.
    */
-  totalCreatedAssets: bigint
+  totalCreatedAssets: number
 
   /**
    * The address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field.

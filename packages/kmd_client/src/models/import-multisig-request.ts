@@ -6,9 +6,9 @@ import { PublicKeyMeta } from './public-key'
  * APIV1POSTMultisigImportRequest is the request for `POST /v1/multisig/import`
  */
 export type ImportMultisigRequest = {
-  multisigVersion?: bigint
+  multisigVersion?: number
   pks?: PublicKey[]
-  threshold?: bigint
+  threshold?: number
   walletHandleToken?: string
 }
 

@@ -182,7 +182,7 @@ export class AlgodApi {
   /**
    * Lookup an account's asset holdings.
    */
-  async accountAssetsInformation(address: string, params?: { limit?: number | bigint; next?: string }): Promise<AccountAssetsInformation> {
+  async accountAssetsInformation(address: string, params?: { limit?: number; next?: string }): Promise<AccountAssetsInformation> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -191,7 +191,7 @@ export class AlgodApi {
       method: 'GET',
       url: '/v2/accounts/{address}/assets',
       path: { address: address },
-      query: { limit: typeof params?.limit === 'bigint' ? (params!.limit as bigint).toString() : params?.limit, next: params?.next },
+      query: { limit: params?.limit, next: params?.next },
       headers,
       body: undefined,
       mediaType: undefined,
@@ -390,7 +390,7 @@ export class AlgodApi {
   /**
    * Given an application ID, return all Box names. No particular ordering is guaranteed. Request fails when client or server-side configured limits prevent returning all Box names.
    */
-  async getApplicationBoxes(applicationId: number | bigint, params?: { max?: number | bigint }): Promise<GetApplicationBoxes> {
+  async getApplicationBoxes(applicationId: number | bigint, params?: { max?: number }): Promise<GetApplicationBoxes> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -399,7 +399,7 @@ export class AlgodApi {
       method: 'GET',
       url: '/v2/applications/{application-id}/boxes',
       path: { 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
-      query: { max: typeof params?.max === 'bigint' ? (params!.max as bigint).toString() : params?.max },
+      query: { max: params?.max },
       headers,
       body: undefined,
       mediaType: undefined,
@@ -782,7 +782,7 @@ export class AlgodApi {
   /**
    * Get the list of pending transactions, sorted by priority, in decreasing order, truncated at the end at MAX. If MAX = 0, returns all pending transactions.
    */
-  async getPendingTransactions(params?: { max?: number | bigint }): Promise<GetPendingTransactions> {
+  async getPendingTransactions(params?: { max?: number }): Promise<GetPendingTransactions> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -791,7 +791,7 @@ export class AlgodApi {
       method: 'GET',
       url: '/v2/transactions/pending',
       path: {},
-      query: { max: typeof params?.max === 'bigint' ? (params!.max as bigint).toString() : params?.max, format: 'msgpack' },
+      query: { max: params?.max, format: 'msgpack' },
       headers,
       body: undefined,
       mediaType: undefined,
@@ -807,7 +807,7 @@ export class AlgodApi {
   /**
    * Get the list of pending transactions by address, sorted by priority, in decreasing order, truncated at the end at MAX. If MAX = 0, returns all pending transactions.
    */
-  async getPendingTransactionsByAddress(address: string, params?: { max?: number | bigint }): Promise<GetPendingTransactionsByAddress> {
+  async getPendingTransactionsByAddress(address: string, params?: { max?: number }): Promise<GetPendingTransactionsByAddress> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -816,7 +816,7 @@ export class AlgodApi {
       method: 'GET',
       url: '/v2/accounts/{address}/transactions/pending',
       path: { address: address },
-      query: { max: typeof params?.max === 'bigint' ? (params!.max as bigint).toString() : params?.max, format: 'msgpack' },
+      query: { max: params?.max, format: 'msgpack' },
       headers,
       body: undefined,
       mediaType: undefined,
@@ -1145,7 +1145,7 @@ export class AlgodApi {
   /**
    * Sets the timestamp offset (seconds) for blocks in dev mode. Providing an offset of 0 will unset this value and try to use the real clock for the timestamp.
    */
-  async setBlockTimeStampOffset(offset: number | bigint): Promise<void> {
+  async setBlockTimeStampOffset(offset: number): Promise<void> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1153,7 +1153,7 @@ export class AlgodApi {
     const payload = await this.httpRequest.request<unknown>({
       method: 'POST',
       url: '/v2/devmode/blocks/offset/{offset}',
-      path: { offset: typeof offset === 'bigint' ? offset.toString() : offset },
+      path: { offset: offset },
       query: {},
       headers,
       body: undefined,
@@ -1195,7 +1195,7 @@ export class AlgodApi {
   /**
    * Special management endpoint to shutdown the node. Optionally provide a timeout parameter to indicate that the node should begin shutting down after a number of seconds.
    */
-  async shutdownNode(params?: { timeout?: number | bigint }): Promise<ShutdownNode> {
+  async shutdownNode(params?: { timeout?: number }): Promise<ShutdownNode> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1204,7 +1204,7 @@ export class AlgodApi {
       method: 'POST',
       url: '/v2/shutdown',
       path: {},
-      query: { timeout: typeof params?.timeout === 'bigint' ? (params!.timeout as bigint).toString() : params?.timeout },
+      query: { timeout: params?.timeout },
       headers,
       body: undefined,
       mediaType: undefined,

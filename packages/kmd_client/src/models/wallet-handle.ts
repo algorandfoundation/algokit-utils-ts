@@ -7,7 +7,7 @@ import { WalletMeta } from './wallet'
  * and the number of number of seconds to expiration
  */
 export type WalletHandle = {
-  expiresSeconds?: bigint
+  expiresSeconds?: number
   wallet?: Wallet
 }
 

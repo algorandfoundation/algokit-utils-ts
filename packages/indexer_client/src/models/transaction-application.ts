@@ -71,7 +71,7 @@ export type TransactionApplication = {
   /**
    * \[aprv\] the lowest application version for which this transaction should immediately fail. 0 indicates that no version check should be performed.
    */
-  rejectVersion?: bigint
+  rejectVersion?: number
 }
 
 export const TransactionApplicationMeta: ModelMetadata = {
@@ -83,7 +83,7 @@ export const TransactionApplicationMeta: ModelMetadata = {
       wireKey: 'application-id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'onCompletion',
@@ -125,14 +125,14 @@ export const TransactionApplicationMeta: ModelMetadata = {
       wireKey: 'foreign-apps',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
     },
     {
       name: 'foreignAssets',
       wireKey: 'foreign-assets',
       optional: true,
       nullable: false,
-      type: { kind: 'array', item: { kind: 'scalar' } },
+      type: { kind: 'array', item: { kind: 'scalar', isBigint: true } },
     },
     {
       name: 'localStateSchema',
