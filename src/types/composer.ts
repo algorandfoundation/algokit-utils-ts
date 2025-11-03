@@ -46,7 +46,6 @@ import {
   calculateInnerFeeDelta,
   extractComposerTransactionsFromAppMethodCallParams,
   getDefaultValidityWindow,
-  getLogicalMaxFee,
   populateGroupResources,
   populateTransactionResources,
   processAppMethodCallArgs,
@@ -519,19 +518,20 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
   )[]
 }
 
-export type Txn =
-  | (PaymentParams & { type: 'pay' })
-  | (AssetCreateParams & { type: 'assetCreate' })
-  | (AssetConfigParams & { type: 'assetConfig' })
-  | (AssetFreezeParams & { type: 'assetFreeze' })
-  | (AssetDestroyParams & { type: 'assetDestroy' })
-  | (AssetTransferParams & { type: 'assetTransfer' })
-  | (AssetOptInParams & { type: 'assetOptIn' })
-  | (AssetOptOutParams & { type: 'assetOptOut' })
-  | ((AppCallParams | AppCreateParams | AppUpdateParams) & { type: 'appCall' })
-  | ((OnlineKeyRegistrationParams | OfflineKeyRegistrationParams) & { type: 'keyReg' })
-  | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
-  | ((ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall) & { type: 'methodCall' })
+type Txn =
+  | { data: PaymentParams; type: 'pay' }
+  | { data: AssetCreateParams; type: 'assetCreate' }
+  | { data: AssetConfigParams; type: 'assetConfig' }
+  | { data: AssetFreezeParams; type: 'assetFreeze' }
+  | { data: AssetDestroyParams; type: 'assetDestroy' }
+  | { data: AssetTransferParams; type: 'assetTransfer' }
+  | { data: AssetOptInParams; type: 'assetOptIn' }
+  | { data: AssetOptOutParams; type: 'assetOptOut' }
+  | { data: AppCallParams | AppCreateParams | AppUpdateParams; type: 'appCall' }
+  | { data: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams; type: 'keyReg' }
+  | { data: algosdk.TransactionWithSigner; type: 'txnWithSigner' }
+  | { data: Promise<Transaction>; type: 'asyncTxn' }
+  | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
 
 /**
  * A function that transforms an error into a new error.
@@ -695,6 +695,7 @@ export class TransactionComposer {
     return this
   }
 
+  // TODO: PD - logic to enforce max group size
   /**
    * Add a pre-built transaction to the transaction group.
    * @param transaction The pre-built transaction
@@ -707,8 +708,10 @@ export class TransactionComposer {
    */
   addTransaction(transaction: Transaction, signer?: TransactionSigner): TransactionComposer {
     this.txns.push({
-      txn: transaction,
-      signer: signer ?? this.getSigner(transaction.sender),
+      data: {
+        txn: transaction,
+        signer: signer ?? this.getSigner(transaction.sender),
+      },
       type: 'txnWithSigner',
     })
 
@@ -749,7 +752,7 @@ export class TransactionComposer {
    * })
    */
   addPayment(params: PaymentParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'pay' })
+    this.txns.push({ data: params, type: 'pay' })
 
     return this
   }
@@ -790,7 +793,7 @@ export class TransactionComposer {
    * })
    */
   addAssetCreate(params: AssetCreateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetCreate' })
+    this.txns.push({ data: params, type: 'assetCreate' })
 
     return this
   }
@@ -825,7 +828,7 @@ export class TransactionComposer {
    * })
    */
   addAssetConfig(params: AssetConfigParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetConfig' })
+    this.txns.push({ data: params, type: 'assetConfig' })
 
     return this
   }
@@ -859,7 +862,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetFreeze(params: AssetFreezeParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetFreeze' })
+    this.txns.push({ data: params, type: 'assetFreeze' })
 
     return this
   }
@@ -891,7 +894,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetDestroy(params: AssetDestroyParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetDestroy' })
+    this.txns.push({ data: params, type: 'assetDestroy' })
 
     return this
   }
@@ -928,7 +931,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetTransfer(params: AssetTransferParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetTransfer' })
+    this.txns.push({ data: params, type: 'assetTransfer' })
 
     return this
   }
@@ -960,7 +963,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptIn(params: AssetOptInParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetOptIn' })
+    this.txns.push({ data: params, type: 'assetOptIn' })
 
     return this
   }
@@ -998,7 +1001,7 @@ export class TransactionComposer {
    * ```
    */
   addAssetOptOut(params: AssetOptOutParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'assetOptOut' })
+    this.txns.push({ data: params, type: 'assetOptOut' })
 
     return this
   }
@@ -1053,7 +1056,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreate(params: AppCreateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall' })
+    this.txns.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -1095,7 +1098,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdate(params: AppUpdateParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.UpdateApplication })
+    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.UpdateApplication }, type: 'appCall' })
 
     return this
   }
@@ -1135,7 +1138,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDelete(params: AppDeleteParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall', onComplete: OnApplicationComplete.DeleteApplication })
+    this.txns.push({ data: { ...params, onComplete: OnApplicationComplete.DeleteApplication }, type: 'appCall' })
 
     return this
   }
@@ -1177,7 +1180,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCall(params: AppCallParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'appCall' })
+    this.txns.push({ data: params, type: 'appCall' })
 
     return this
   }
@@ -1237,13 +1240,12 @@ export class TransactionComposer {
    *})
    * ```
    */
-  async addAppCreateMethodCall(params: AppCreateMethodCall) {
-    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+  addAppCreateMethodCall(params: AppCreateMethodCall) {
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
     this.txns.push(...txnArgs)
 
     this.txns.push({
-      ...params,
-      args: processAppMethodCallArgs(params.args),
+      data: { ...params, args: processAppMethodCallArgs(params.args) },
       type: 'methodCall',
     })
     return this
@@ -1297,15 +1299,13 @@ export class TransactionComposer {
    *})
    * ```
    */
-  async addAppUpdateMethodCall(params: AppUpdateMethodCall) {
-    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+  addAppUpdateMethodCall(params: AppUpdateMethodCall) {
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
     this.txns.push(...txnArgs)
 
     this.txns.push({
-      ...params,
-      args: processAppMethodCallArgs(params.args),
+      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.UpdateApplication },
       type: 'methodCall',
-      onComplete: OnApplicationComplete.UpdateApplication,
     })
     return this
   }
@@ -1356,15 +1356,13 @@ export class TransactionComposer {
    *})
    * ```
    */
-  async addAppDeleteMethodCall(params: AppDeleteMethodCall) {
-    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+  addAppDeleteMethodCall(params: AppDeleteMethodCall) {
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
     this.txns.push(...txnArgs)
 
     this.txns.push({
-      ...params,
-      args: processAppMethodCallArgs(params.args),
+      data: { ...params, args: processAppMethodCallArgs(params.args), onComplete: OnApplicationComplete.DeleteApplication },
       type: 'methodCall',
-      onComplete: OnApplicationComplete.DeleteApplication,
     })
     return this
   }
@@ -1415,11 +1413,11 @@ export class TransactionComposer {
    *})
    * ```
    */
-  async addAppCallMethodCall(params: AppCallMethodCall) {
-    const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
+  addAppCallMethodCall(params: AppCallMethodCall) {
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
     this.txns.push(...txnArgs)
 
-    this.txns.push({ ...params, args: processAppMethodCallArgs(params.args), type: 'methodCall' })
+    this.txns.push({ data: { ...params, args: processAppMethodCallArgs(params.args) }, type: 'methodCall' })
     return this
   }
 
@@ -1465,7 +1463,7 @@ export class TransactionComposer {
    * ```
    */
   addOnlineKeyRegistration(params: OnlineKeyRegistrationParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'keyReg' })
+    this.txns.push({ data: params, type: 'keyReg' })
 
     return this
   }
@@ -1500,7 +1498,7 @@ export class TransactionComposer {
    * ```
    */
   addOfflineKeyRegistration(params: OfflineKeyRegistrationParams): TransactionComposer {
-    this.txns.push({ ...params, type: 'keyReg' })
+    this.txns.push({ data: params, type: 'keyReg' })
 
     return this
   }
@@ -1510,10 +1508,7 @@ export class TransactionComposer {
    * @returns The number of transactions currently added to this composer
    */
   async count() {
-    const suggestedParams = await this.getSuggestedParams()
-    const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
-
-    return (await this.buildTransactions(suggestedParams, defaultValidityWindow)).length
+    return (await this.buildTransactions()).transactions.length
   }
 
   /**
@@ -1529,87 +1524,97 @@ export class TransactionComposer {
    * const { atc, transactions, methodCalls } = await composer.build()
    * ```
    */
-  public async build(): Promise<TransactionWithSigner[]> {
-    if (this.builtGroup) {
-      return this.builtGroup
+  public async build() {
+    if (!this.builtGroup) {
+      // TODO: PD - do we need to share the same suggested params between analyzeGroupRequirements and buildTransactions
+      const groupAnalysis =
+        (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources.enabled) &&
+        this.txns.some((t) => isAppCall(t))
+          ? await this.analyzeGroupRequirements(this.composerConfig)
+          : undefined
+
+      const transactions = await this.buildTransactions(groupAnalysis)
+      const transactionsWithSigners = this.gatherSigners(transactions)
+
+      this.builtGroup = transactionsWithSigners
     }
 
-    const suggestedParams = await this.getSuggestedParams()
-    const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
+    const methodCalls = new Map(
+      this.txns
+        .map((t, index) => (t.type === 'methodCall' ? ([index, t.data.method] as const) : null))
+        .filter((entry): entry is [number, ABIMethod] => entry !== null),
+    )
 
-    const groupAnalysis =
-      (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources.enabled) &&
-      this.txns.some((t) => isAppCall(t))
-        ? await this.analyzeGroupRequirements(suggestedParams, defaultValidityWindow, this.composerConfig)
-        : undefined
-
-    const transactions = await this.buildTransactions(suggestedParams, defaultValidityWindow, groupAnalysis)
-    const transactionsWithSigners = this.gatherSigners(transactions)
-
-    this.builtGroup = transactionsWithSigners
-    // TODO: PD - do we need to return 'methodCalls' field
-    return this.builtGroup
+    return {
+      transactions: this.builtGroup,
+      methodCalls: methodCalls,
+    }
   }
 
-  private async buildTransactions(
-    suggestedParams: TransactionParams,
-    defaultValidityWindow: number,
-    groupAnalysis?: GroupAnalysis,
-  ): Promise<Transaction[]> {
+  public async buildTransactions(groupAnalysis?: GroupAnalysis): Promise<BuiltTransactions> {
+    const suggestedParams = await this.getSuggestedParams()
+    const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
+    const signers = new Map<number, algosdk.TransactionSigner>()
+
     let transactions = new Array<Transaction>()
 
-    for (const ctxn of this.txns) {
+    for (let i = 0; i < this.txns.length; i++) {
+      const ctxn = this.txns[i]
+
       if (ctxn.type === 'txnWithSigner') {
-        transactions.push(ctxn.txn)
+        transactions.push(ctxn.data.txn)
+        signers.set(i, ctxn.data.signer)
+      } else if (ctxn.type === 'asyncTxn') {
+        transactions.push(await ctxn.data)
       } else {
         let transaction: Transaction
-        const header = buildTransactionHeader(ctxn, suggestedParams, defaultValidityWindow)
+        const header = buildTransactionHeader(ctxn.data, suggestedParams, defaultValidityWindow)
         const calculateFee = header?.fee === undefined
 
         switch (ctxn.type) {
           case 'pay':
-            transaction = buildPayment(ctxn, header)
+            transaction = buildPayment(ctxn.data, header)
             break
           case 'assetCreate':
-            transaction = buildAssetCreate(ctxn, header)
+            transaction = buildAssetCreate(ctxn.data, header)
             break
           case 'assetConfig':
-            transaction = buildAssetConfig(ctxn, header)
+            transaction = buildAssetConfig(ctxn.data, header)
             break
           case 'assetFreeze':
-            transaction = buildAssetFreeze(ctxn, header)
+            transaction = buildAssetFreeze(ctxn.data, header)
             break
           case 'assetDestroy':
-            transaction = buildAssetDestroy(ctxn, header)
+            transaction = buildAssetDestroy(ctxn.data, header)
             break
           case 'assetTransfer':
-            transaction = buildAssetTransfer(ctxn, header)
+            transaction = buildAssetTransfer(ctxn.data, header)
             break
           case 'assetOptIn':
-            transaction = buildAssetOptIn(ctxn, header)
+            transaction = buildAssetOptIn(ctxn.data, header)
             break
           case 'assetOptOut':
-            transaction = buildAssetOptOut(ctxn, header)
+            transaction = buildAssetOptOut(ctxn.data, header)
             break
           case 'appCall':
-            if (!('appId' in ctxn)) {
-              transaction = await buildAppCreate(ctxn, this.appManager, header)
-            } else if ('approvalProgram' in ctxn && 'clearStateProgram' in ctxn) {
-              transaction = await buildAppUpdate(ctxn, this.appManager, header)
+            if (!('appId' in ctxn.data)) {
+              transaction = await buildAppCreate(ctxn.data, this.appManager, header)
+            } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
+              transaction = await buildAppUpdate(ctxn.data, this.appManager, header)
             } else {
-              transaction = buildAppCall(ctxn, header)
+              transaction = buildAppCall(ctxn.data, header)
             }
             break
           case 'keyReg':
-            transaction = buildKeyReg(ctxn, header)
+            transaction = buildKeyReg(ctxn.data, header)
             break
           case 'methodCall':
-            if (!('appId' in ctxn)) {
-              transaction = await buildAppCreateMethodCall(ctxn, this.appManager, header)
-            } else if ('approvalProgram' in ctxn && 'clearStateProgram' in ctxn) {
-              transaction = await buildAppUpdateMethodCall(ctxn, this.appManager, header)
+            if (!('appId' in ctxn.data)) {
+              transaction = await buildAppCreateMethodCall(ctxn.data, this.appManager, header)
+            } else if ('approvalProgram' in ctxn.data && 'clearStateProgram' in ctxn.data) {
+              transaction = await buildAppUpdateMethodCall(ctxn.data, this.appManager, header)
             } else {
-              transaction = await buildAppCallMethodCall(ctxn, header)
+              transaction = await buildAppCallMethodCall(ctxn.data, header)
             }
             break
           default:
@@ -1621,12 +1626,17 @@ export class TransactionComposer {
           transaction = assignFee(transaction, {
             feePerByte: suggestedParams.fee,
             minFee: suggestedParams.minFee,
-            extraFee: ctxn.extraFee?.microAlgos,
-            maxFee: ctxn.maxFee?.microAlgos,
+            extraFee: ctxn.data.extraFee?.microAlgos,
+            maxFee: ctxn.data.maxFee?.microAlgos,
           })
         }
 
         transactions.push(transaction)
+
+        if (ctxn.data.signer) {
+          const signer = 'signer' in ctxn.data.signer ? ctxn.data.signer.signer : ctxn.data.signer
+          signers.set(i, signer)
+        }
       }
     }
 
@@ -1734,37 +1744,30 @@ export class TransactionComposer {
       transactions = groupTransactions(transactions)
     }
 
-    return transactions
+    const methodCalls = new Map(
+      this.txns
+        .map((t, index) => (t.type === 'methodCall' ? ([index, t.data.method] as const) : null))
+        .filter((entry): entry is [number, ABIMethod] => entry !== null),
+    )
+
+    return { transactions, methodCalls, signers }
   }
 
-  private gatherSigners(transactions: Transaction[]): TransactionWithSigner[] {
-    return transactions.map((txn, index) => {
-      const ctxn = this.txns[index]
-      if (ctxn.type === 'txnWithSigner') return ctxn
-      if (!ctxn.signer) {
-        return {
-          txn,
-          signer: this.getSigner(txn.sender),
-        }
-      }
-
-      // Extract the real signer from TransactionSignerAccount
-      const signer = 'signer' in ctxn.signer ? ctxn.signer.signer : ctxn.signer
+  private gatherSigners(builtTransactions: BuiltTransactions): TransactionWithSigner[] {
+    return builtTransactions.transactions.map((txn, index) => {
       return {
         txn,
-        signer: signer,
+        signer: builtTransactions.signers.get(index) ?? this.getSigner(txn.sender),
       }
     })
   }
 
-  private async analyzeGroupRequirements(
-    suggestedParams: TransactionParams,
-    defaultValidityWindow: number,
-    analysisParams: TransactionComposerConfig,
-  ): Promise<GroupAnalysis> {
+  private async analyzeGroupRequirements(analysisParams: TransactionComposerConfig): Promise<GroupAnalysis> {
+    const suggestedParams = await this.getSuggestedParams()
+
     const appCallIndexesWithoutMaxFees: number[] = []
 
-    const builtTransactions = await this.buildTransactions(suggestedParams, defaultValidityWindow)
+    const builtTransactions = (await this.buildTransactions()).transactions
 
     let transactionsToSimulate = builtTransactions.map((txn, groupIndex) => {
       const ctxn = this.txns[groupIndex]
@@ -1878,7 +1881,7 @@ export class TransactionComposer {
     return await this.build()
   }
 
-  // TODO: clone and other missing methods from the atc
+  // TODO: PD - clone and other missing methods from the atc
 
   /**
    * Compose the atomic transaction group and send it to the network.
@@ -1890,6 +1893,7 @@ export class TransactionComposer {
    * ```
    */
   async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
+    // TODO: PD - resource population + fee if not done already
     await this.gatherSignatures()
 
     if (!this.signedGroup || this.signedGroup.length === 0) {
@@ -1982,7 +1986,7 @@ export class TransactionComposer {
   async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
-    const transactionsWithSigners = await this.build()
+    const transactionsWithSigners = (await this.build()).transactions
     let signedTransactions: SignedTransaction[]
     // Build the transactions
     if (skipSignatures) {
@@ -2137,14 +2141,31 @@ export class TransactionComposer {
 }
 
 function isAppCall(ctxn: Txn): boolean {
-  return ctxn.type === 'appCall' || ctxn.type === 'methodCall' || (ctxn.type === 'txnWithSigner' && ctxn.txn.type === TransactionType.appl)
+  return (
+    ctxn.type === 'appCall' || ctxn.type === 'methodCall' || (ctxn.type === 'txnWithSigner' && ctxn.data.txn.type === TransactionType.appl)
+  )
 }
 
 export function getMethodFromTransaction(transaction: Txn): ABIMethod | undefined {
   switch (transaction.type) {
     case 'methodCall':
-      return transaction.method
+      return transaction.data.method
     default:
       return undefined
   }
+}
+
+/** Get the logical maximum fee based on staticFee and maxFee */
+function getLogicalMaxFee(ctxn: Txn): bigint | undefined {
+  if (ctxn.type === 'txnWithSigner' || ctxn.type === 'asyncTxn') {
+    return undefined
+  }
+
+  const maxFee = ctxn.data.maxFee
+  const staticFee = ctxn.data.staticFee
+
+  if (maxFee !== undefined && (staticFee === undefined || maxFee.microAlgos > staticFee.microAlgos)) {
+    return maxFee.microAlgos
+  }
+  return staticFee?.microAlgos
 }

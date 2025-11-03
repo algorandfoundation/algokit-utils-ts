@@ -17,7 +17,6 @@ import {
   ABIUintType,
   ABIValue,
   Address,
-  TransactionSigner,
   TransactionWithSigner,
   abiTypeIsReference,
   abiTypeIsTransaction,
@@ -46,7 +45,6 @@ import {
   ProcessedAppCallMethodCall,
   ProcessedAppCreateMethodCall,
   ProcessedAppUpdateMethodCall,
-  Txn,
 } from './composer'
 import { FeeDelta } from './fee-coverage'
 import { genesisIdIsLocalNet } from './network-client'
@@ -54,16 +52,15 @@ import { genesisIdIsLocalNet } from './network-client'
 type AppMethodCallArgs = AppMethodCall<unknown>['args']
 type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
 
+// TODO: PD - match this with the type from composer
 type ExtractedMethodCallTransactionArg =
-  | (TransactionWithSigner & { type: 'txnWithSigner' })
-  | ((ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall) & { type: 'methodCall' })
+  | { data: TransactionWithSigner; type: 'txnWithSigner' }
+  | { data: Promise<Transaction>; type: 'asyncTxn' }
+  | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
 
 const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 
-export async function extractComposerTransactionsFromAppMethodCallParams(
-  methodCallArgs: AppMethodCallArgs,
-  getSigner: (address: string | Address) => TransactionSigner,
-): Promise<ExtractedMethodCallTransactionArg[]> {
+export function extractComposerTransactionsFromAppMethodCallParams(methodCallArgs: AppMethodCallArgs): ExtractedMethodCallTransactionArg[] {
   const composerTransactions = new Array<ExtractedMethodCallTransactionArg>()
   if (!methodCallArgs) return []
 
@@ -81,32 +78,40 @@ export async function extractComposerTransactionsFromAppMethodCallParams(
 
     if (isTransactionWithSignerArg(arg)) {
       composerTransactions.push({
-        txn: arg.txn,
-        signer: arg.signer,
+        data: {
+          txn: arg.txn,
+          signer: arg.signer,
+        },
         type: 'txnWithSigner',
       })
 
       continue
     }
     if (isAppCallMethodCallArg(arg)) {
-      const nestedComposerTransactions = await extractComposerTransactionsFromAppMethodCallParams(arg.args, getSigner)
+      const nestedComposerTransactions = extractComposerTransactionsFromAppMethodCallParams(arg.args)
       composerTransactions.push(...nestedComposerTransactions)
       composerTransactions.push({
-        ...arg,
-        args: processAppMethodCallArgs(arg.args),
+        data: {
+          ...arg,
+          args: processAppMethodCallArgs(arg.args),
+        },
         type: 'methodCall',
       } satisfies ExtractedMethodCallTransactionArg)
 
       continue
     }
+    if (arg instanceof Promise) {
+      composerTransactions.push({
+        data: arg,
+        type: 'asyncTxn',
+      })
+      continue
+    }
 
-    const txn = await arg
     composerTransactions.push({
-      txn: txn,
-      signer: getSigner(txn.sender),
-      type: 'txnWithSigner',
+      data: Promise.resolve(arg),
+      type: 'asyncTxn',
     })
-    methodCallArgs[i] = undefined
   }
 
   return composerTransactions
@@ -820,21 +825,6 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
     },
   }
-}
-
-/** Get the logical maximum fee based on staticFee and maxFee */
-export function getLogicalMaxFee(ctxn: Txn): bigint | undefined {
-  if (ctxn.type === 'txnWithSigner') {
-    return undefined
-  }
-
-  const maxFee = ctxn.maxFee
-  const staticFee = ctxn.staticFee
-
-  if (maxFee !== undefined && (staticFee === undefined || maxFee.microAlgos > staticFee.microAlgos)) {
-    return maxFee.microAlgos
-  }
-  return staticFee?.microAlgos
 }
 
 /**
