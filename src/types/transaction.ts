@@ -1,7 +1,7 @@
 import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
 import { SignedTransaction, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { type Account, AtomicTransactionComposer, LogicSigAccount } from '@algorandfoundation/sdk'
+import { AtomicTransactionComposer, LogicSigAccount, type Account } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
@@ -68,7 +68,7 @@ export interface SendTransactionResults {
 /** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
 export interface SendAtomicTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
   /** base64 encoded representation of the group ID of the atomic group */
-  groupId: string
+  groupId: string | undefined
   /** The transaction IDs that have been prepared and/or sent */
   txIds: string[]
   /** If ABI method(s) were called the processed return values */

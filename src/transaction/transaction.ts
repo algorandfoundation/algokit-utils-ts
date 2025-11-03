@@ -824,6 +824,7 @@ export async function prepareGroupForSending(
   return newAtc
 }
 
+// TODO: PD - how do we migrate this?
 /**
  * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
  * @param atcSend The parameters controlling the send, including `atc` The `AtomicTransactionComposer` and params to control send behaviour
