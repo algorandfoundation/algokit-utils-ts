@@ -134,7 +134,7 @@ export function processAppMethodCallArgs(args: AppMethodCallArg[] | undefined): 
 }
 
 function isTransactionWithSignerArg(arg: AppMethodCallArg): arg is TransactionWithSigner {
-  return typeof arg === 'object' && arg !== undefined && 'transaction' in arg && 'signer' in arg
+  return typeof arg === 'object' && arg !== undefined && 'txn' in arg && 'signer' in arg
 }
 
 function isAppCallMethodCallArg(
@@ -817,7 +817,7 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
     type: TransactionType.appl,
     applicationCall: {
       appId: params.appId,
-      onComplete: OnApplicationComplete.UpdateApplication,
+      onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       args: common.args,
       accounts: common.accountReferences,
       foreignApps: common.appReferences,

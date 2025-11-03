@@ -653,15 +653,24 @@ export class TransactionComposer {
 
     let transformedError = originalError
 
-    // TODO: PD - can we handle this so that the error has name
-    // similar to the error handling in `sendAtomicTransactionComposer`
+    // If this is an ApiError with a body message, create a new error with that message
+    // so that error transformers can work with the detailed error message
+    // Preserve other properties like traces for debugging
     if (
       'body' in transformedError &&
       transformedError.body &&
       typeof transformedError.body === 'object' &&
       'message' in transformedError.body
     ) {
-      transformedError = new Error(transformedError.body.message as string)
+      const newError = new Error(transformedError.body.message as string)
+      // Preserve important properties from the original error or body
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const traces = (transformedError as any).traces || (transformedError.body as any).traces
+      if (traces) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ;(newError as any).traces = traces
+      }
+      transformedError = newError
     }
 
     for (const transformer of this.errorTransformers) {
@@ -1933,7 +1942,7 @@ export class TransactionComposer {
       const transactionIds = transactions.map((txn) => getTransactionId(txn))
 
       const confirmations = new Array<PendingTransactionResponse>()
-      if (params?.maxRoundsToWaitForConfirmation) {
+      if (params?.maxRoundsToWaitForConfirmation !== 0) {
         for (const id of transactionIds) {
           const confirmation = await waitForConfirmation(this.algod, id, waitRounds)
           confirmations.push(confirmation)
