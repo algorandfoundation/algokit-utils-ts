@@ -28,3 +28,4 @@ A collection of random notes pop up during the migration process.
 - Should we consolidate the duplicated types between SDK and Utils, for example `AccessReference` in `app-manager`
 - `encodeUnsignedSimulateTransaction` was removed from sdk
 - Consider align assetId and appId in PendingTransactionResponse with sdk?
+- can't add atc into the composer anymore

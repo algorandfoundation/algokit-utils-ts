@@ -47,6 +47,7 @@ import {
   Txn,
 } from './composer'
 import { FeeDelta } from './fee-coverage'
+import { genesisIdIsLocalNet } from './network-client'
 
 type AppMethodCallArgs = AppMethodCall<unknown>['args']
 type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
@@ -1249,4 +1250,13 @@ export function calculateInnerFeeDelta(
 
     return currentFeeDelta
   }, acc)
+}
+
+export function getDefaultValidityWindow(genesisId: string): number {
+  const isLocalNet = genesisIdIsLocalNet(genesisId)
+  if (isLocalNet) {
+    return 1000 // LocalNet gets bigger window to avoid dead transactions
+  } else {
+    return 10 // Standard default validity window
+  }
 }

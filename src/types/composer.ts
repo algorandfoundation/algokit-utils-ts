@@ -1,5 +1,6 @@
 import {
   AlgodClient,
+  PendingTransactionResponse,
   SimulateRequest,
   SimulateTransaction,
   SimulateUnnamedResourcesAccessed,
@@ -20,17 +21,17 @@ import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
   Address,
-  AtomicTransactionComposer,
   SdkTransactionParams,
   TransactionSigner,
   TransactionWithSigner,
   isTransactionWithSigner,
 } from '@algorandfoundation/sdk'
 import { Config } from '../config'
-import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '../transaction/transaction'
+import { encodeLease, sendAtomicTransactionComposer } from '../transaction/transaction'
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
+import { ABIReturn } from './app'
 import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
 import {
   buildAppCall,
@@ -51,6 +52,7 @@ import {
   buildTransactionHeader,
   calculateInnerFeeDelta,
   extractComposerTransactionsFromAppMethodCallParams,
+  getDefaultValidityWindow,
   getLogicalMaxFee,
   populateGroupResources,
   populateTransactionResources,
@@ -667,6 +669,10 @@ export class TransactionComposer {
   private errorTransformers: ErrorTransformer[]
 
   private composerConfig: TransactionComposerConfig
+
+  // TODO: PD - review these names
+  private builtGroup?: TransactionWithSigner[]
+  private signedGroup?: SignedTransaction[]
 
   private async transformError(originalError: unknown): Promise<unknown> {
     // Transformers only work with Error instances, so immediately return anything else
@@ -1530,22 +1536,6 @@ export class TransactionComposer {
     return this
   }
 
-  /**
-   * Add the transactions within an `AtomicTransactionComposer` to the transaction group.
-   * @param atc The `AtomicTransactionComposer` to build transactions from and add to the group
-   * @returns The composer so you can chain method calls
-   * @example
-   * ```typescript
-   * const atc = new AtomicTransactionComposer()
-   *   .addPayment({ sender: 'SENDERADDRESS', receiver: 'RECEIVERADDRESS', amount: 1000n })
-   * composer.addAtc(atc)
-   * ```
-   */
-  addAtc(atc: algosdk.AtomicTransactionComposer): TransactionComposer {
-    this.txns.push({ atc, type: 'atc' })
-    return this
-  }
-
   /** Build an ATC and return transactions ready to be incorporated into a broader set of transactions this composer is composing */
   private buildAtc(atc: algosdk.AtomicTransactionComposer): TransactionWithSignerAndContext[] {
     const group = atc.buildGroup()
@@ -2023,62 +2013,14 @@ export class TransactionComposer {
   }
 
   /**
-   * Compose all of the transactions without signers and return the transaction objects directly along with any ABI method calls.
-   *
-   * @returns The array of built transactions and any corresponding method calls
-   * @example
-   * ```typescript
-   * const { transactions, methodCalls, signers } = await composer.buildTransactions()
-   * ```
-   */
-  async buildTransactions(): Promise<BuiltTransactions> {
-    const suggestedParams = await this.getSuggestedParams()
-    const sdkTransactionParams: SdkTransactionParams = {
-      ...suggestedParams,
-      firstRound: suggestedParams.lastRound,
-      lastRound: suggestedParams.lastRound + 1000n,
-    }
-
-    const transactions: Transaction[] = []
-    const methodCalls = new Map<number, algosdk.ABIMethod>()
-    const signers = new Map<number, algosdk.TransactionSigner>()
-
-    for (const txn of this.txns) {
-      if (!['txnWithSigner', 'atc', 'methodCall'].includes(txn.type)) {
-        transactions.push(...(await this.buildTxn(txn, sdkTransactionParams)).map((txn) => txn.txn))
-      } else {
-        const transactionsWithSigner =
-          txn.type === 'txnWithSigner'
-            ? [txn]
-            : txn.type === 'atc'
-              ? this.buildAtc(txn.atc)
-              : txn.type === 'methodCall'
-                ? await this.buildMethodCall(txn, sdkTransactionParams, false)
-                : []
-
-        transactionsWithSigner.forEach((ts) => {
-          transactions.push(ts.txn)
-          const groupIdx = transactions.length - 1
-
-          if (ts.signer && ts.signer !== TransactionComposer.NULL_SIGNER) {
-            signers.set(groupIdx, ts.signer)
-          }
-          if ('context' in ts && ts.context.abiMethod) {
-            methodCalls.set(groupIdx, ts.context.abiMethod)
-          }
-        })
-      }
-    }
-
-    return { transactions, methodCalls, signers }
-  }
-
-  /**
    * Get the number of transactions currently added to this composer.
    * @returns The number of transactions currently added to this composer
    */
   async count() {
-    return (await this.buildTransactions()).transactions.length
+    const suggestedParams = await this.getSuggestedParams()
+    const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
+
+    return (await this.buildTransactions(suggestedParams, defaultValidityWindow)).length
   }
 
   /**
@@ -2094,38 +2036,26 @@ export class TransactionComposer {
    * const { atc, transactions, methodCalls } = await composer.build()
    * ```
    */
-  async build() {
-    if (this.atc.getStatus() === algosdk.AtomicTransactionComposerStatus.BUILDING) {
-      const suggestedParams = await this.getSuggestedParams()
-      const sdkTransactionParams: SdkTransactionParams = {
-        ...suggestedParams,
-        firstRound: suggestedParams.lastRound,
-        lastRound: suggestedParams.lastRound + 1000n,
-      }
-      // Build all of the transactions
-      const txnWithSigners: TransactionWithSignerAndContext[] = []
-      for (const txn of this.txns) {
-        txnWithSigners.push(...(await this.buildTxnWithSigner(txn, sdkTransactionParams)))
-      }
-
-      // Add all of the transactions to the underlying ATC
-      const methodCalls = new Map<number, algosdk.ABIMethod>()
-      txnWithSigners.forEach(({ context, ...ts }, idx) => {
-        this.atc.addTransaction(ts)
-
-        // Populate consolidated set of all ABI method calls
-        if (context.abiMethod) {
-          methodCalls.set(idx, context.abiMethod)
-        }
-
-        if (context.maxFee !== undefined) {
-          this.txnMaxFees.set(idx, context.maxFee)
-        }
-      })
-      this.atc['methodCalls'] = methodCalls
+  public async build(): Promise<TransactionWithSigner[]> {
+    if (this.builtGroup) {
+      return this.builtGroup
     }
 
-    return { atc: this.atc, transactions: this.atc.buildGroup(), methodCalls: this.atc['methodCalls'] }
+    const suggestedParams = await this.getSuggestedParams()
+    const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
+
+    const groupAnalysis =
+      (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources.enabled) &&
+      this.txns.some((t) => isAppCall(t))
+        ? await this.analyzeGroupRequirements(suggestedParams, defaultValidityWindow, this.composerConfig)
+        : undefined
+
+    const transactions = await this.buildTransactions(suggestedParams, defaultValidityWindow, groupAnalysis)
+    const transactionsWithSigners = this.gatherSigners(transactions)
+
+    this.builtGroup = transactionsWithSigners
+    // TODO: PD - do we need to return 'methodCalls' field
+    return this.builtGroup
   }
 
   private async buildTransactions(
@@ -2312,6 +2242,26 @@ export class TransactionComposer {
     }
 
     return transactions
+  }
+
+  private gatherSigners(transactions: Transaction[]): TransactionWithSigner[] {
+    return transactions.map((txn, index) => {
+      const ctxn = this.txns[index]
+      if (ctxn.type === 'txnWithSigner') return ctxn
+      if (!ctxn.signer) {
+        return {
+          txn,
+          signer: this.getSigner(txn.sender),
+        }
+      }
+
+      // Extract the real signer from TransactionSignerAccount
+      const signer = 'signer' in ctxn.signer ? ctxn.signer.signer : ctxn.signer
+      return {
+        txn,
+        signer: signer,
+      }
+    })
   }
 
   private async analyzeGroupRequirements(
@@ -2529,25 +2479,28 @@ export class TransactionComposer {
   async simulate(options: RawSimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }>
   async simulate(options?: SimulateOptions): Promise<SendAtomicTransactionComposerResults & { simulateResponse: SimulateTransaction }> {
     const { skipSignatures = false, ...rawOptions } = options ?? {}
-    const atc = skipSignatures ? new AtomicTransactionComposer() : this.atc
-
+    const transactionsWithSigners = await this.build()
+    let signedTransactions: SignedTransaction[]
     // Build the transactions
     if (skipSignatures) {
       rawOptions.allowEmptySignatures = true
       rawOptions.fixSigners = true
       // Build transactions uses empty signers
-      const transactions = await this.buildTransactions()
-      for (const txn of transactions.transactions) {
-        atc.addTransaction({ txn, signer: TransactionComposer.NULL_SIGNER })
-      }
-      atc['methodCalls'] = transactions.methodCalls
+      signedTransactions = transactionsWithSigners.map((txnWithSigner) => ({
+        txn: txnWithSigner.txn,
+        signature: EMPTY_SIGNATURE,
+      }))
     } else {
       // Build creates real signatures
-      await this.build()
+      signedTransactions = await this.gatherSignatures()
     }
 
-    const { methodResults, simulateResponse } = await atc.simulate(this.algod, {
-      txnGroups: [],
+    const simulateRequest = {
+      txnGroups: [
+        {
+          txns: signedTransactions,
+        },
+      ],
       ...rawOptions,
       ...(Config.debug
         ? {
@@ -2562,33 +2515,36 @@ export class TransactionComposer {
             },
           }
         : undefined),
-    } satisfies SimulateRequest)
+    } satisfies SimulateRequest
 
-    const failedGroup = simulateResponse?.txnGroups[0]
-    if (failedGroup?.failureMessage) {
-      const errorMessage = `Transaction failed at transaction(s) ${failedGroup.failedAt?.join(', ') || 'unknown'} in the group. ${failedGroup.failureMessage}`
+    const simulateResponse = await this.algod.simulateTransaction({ body: simulateRequest })
+    const simulateResult = simulateResponse.txnGroups[0]
+
+    if (simulateResult?.failureMessage) {
+      const errorMessage = `Transaction failed at transaction(s) ${simulateResult.failedAt?.join(', ') || 'unknown'} in the group. ${simulateResult.failureMessage}`
       const error = new Error(errorMessage)
 
       if (Config.debug) {
-        await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
+        await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
       }
 
       throw await this.transformError(error)
     }
 
     if (Config.debug && Config.traceAll) {
-      await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateResponse })
+      await Config.events.emitAsync(EventType.TxnGroupSimulated, { simulateTransaction: simulateResponse })
     }
 
-    const transactions = atc.buildGroup().map((t) => t.txn)
-    const methodCalls = [...(atc['methodCalls'] as Map<number, ABIMethod>).values()]
+    const transactions = signedTransactions.map((stxn) => stxn.txn)
+    const abiReturns = this.parseAbiReturnValues(simulateResult.txnResults.map((t) => t.txnResult))
+
     return {
-      confirmations: simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
+      confirmations: simulateResult.txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
       transactions: transactions.map((t) => new TransactionWrapper(t)),
       txIds: transactions.map((t) => getTransactionId(t)),
       groupId: Buffer.from(transactions[0].group ?? new Uint8Array()).toString('base64'),
       simulateResponse,
-      returns: methodResults.map((r, i) => getABIReturnValue(r, methodCalls[i]!.returns.type)),
+      returns: abiReturns,
     }
   }
 
@@ -2603,5 +2559,89 @@ export class TransactionComposer {
     const arc2Payload = `${note.dAppName}:${note.format}${typeof note.data === 'string' ? note.data : asJson(note.data)}`
     const encoder = new TextEncoder()
     return encoder.encode(arc2Payload)
+  }
+
+  private async gatherSignatures(): Promise<SignedTransaction[]> {
+    if (this.signedGroup) {
+      return this.signedGroup
+    }
+
+    await this.build()
+
+    if (!this.builtGroup || this.builtGroup.length === 0) {
+      throw new Error('No transactions available')
+    }
+
+    const transactions = this.builtGroup.map((txnWithSigner) => txnWithSigner.txn)
+
+    // Group transactions by signer
+    const signerGroups = new Map<TransactionSigner, number[]>()
+    this.builtGroup.forEach(({ signer }, index) => {
+      const indexes = signerGroups.get(signer) ?? []
+      indexes.push(index)
+      signerGroups.set(signer, indexes)
+    })
+
+    // Sign transactions in parallel for each signer
+    const signerEntries = Array.from(signerGroups)
+    const signedGroups = await Promise.all(signerEntries.map(([signer, indexes]) => signer(transactions, indexes)))
+
+    // Reconstruct signed transactions in original order
+    const signedTransactions = new Array<SignedTransaction>(this.builtGroup.length)
+    signerEntries.forEach(([, indexes], signerIndex) => {
+      const stxs = signedGroups[signerIndex]
+      indexes.forEach((txIndex, stxIndex) => {
+        signedTransactions[txIndex] = {
+          txn: transactions[txIndex],
+          signature: stxs[stxIndex],
+        }
+      })
+    })
+
+    // Verify all transactions were signed
+    const unsignedIndexes = signedTransactions
+      .map((stxn, index) => (stxn === undefined ? index : null))
+      .filter((index): index is number => index !== null)
+
+    if (unsignedIndexes.length > 0) {
+      throw new Error(`Transactions at indexes [${unsignedIndexes.join(', ')}] were not signed`)
+    }
+
+    this.signedGroup = signedTransactions
+    return this.signedGroup
+  }
+
+  private parseAbiReturnValues(confirmations: PendingTransactionResponse[]): ABIReturn[] {
+    const abiReturns = new Array<ABIReturn>()
+
+    for (let i = 0; i < confirmations.length; i++) {
+      const confirmation = confirmations[i]
+      const transaction = this.txns[i]
+
+      if (transaction) {
+        const method = getMethodFromTransaction(transaction)
+        if (method && method.returns.type !== 'void') {
+          const abiReturn = AppManager.getABIReturn(confirmation, method)
+          if (abiReturn !== undefined) {
+            abiReturns.push(abiReturn)
+          }
+        }
+      }
+    }
+
+    return abiReturns
+  }
+}
+
+function isAppCall(ctxn: Txn): boolean {
+  return ctxn.type === 'appCall' || ctxn.type === 'methodCall' || (ctxn.type === 'txnWithSigner' && ctxn.txn.type === TransactionType.appl)
+}
+
+export function getMethodFromTransaction(transaction: Txn): ABIMethod | undefined {
+  switch (transaction.type) {
+    case 'methodCall':
+      return transaction.method
+    default:
+      return undefined
   }
 }
