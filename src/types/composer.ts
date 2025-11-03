@@ -24,8 +24,11 @@ import { AlgoAmount } from './amount'
 import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
 import {
   buildAppCall,
+  buildAppCallMethodCall,
   buildAppCreate,
+  buildAppCreateMethodCall,
   buildAppUpdate,
+  buildAppUpdateMethodCall,
   buildAssetConfig,
   buildAssetCreate,
   buildAssetDestroy,
@@ -37,6 +40,7 @@ import {
   buildPayment,
   buildTransactionHeader,
   extractComposerTransactionsFromAppMethodCallParams,
+  processAppMethodCallArgs,
 } from './composer-helper'
 import { Expand } from './expand'
 import { FeeDelta } from './fee-coverage'
@@ -445,13 +449,31 @@ export type AppDeleteParams = CommonAppCallParams & {
 }
 
 /** Parameters to define an ABI method call create transaction. */
-export type AppCreateMethodCall = AppMethodCall<AppCreateParams>
+export type AppCreateMethodCall = Expand<AppMethodCall<AppCreateParams>>
 /** Parameters to define an ABI method call update transaction. */
-export type AppUpdateMethodCall = AppMethodCall<AppUpdateParams>
+export type AppUpdateMethodCall = Expand<AppMethodCall<AppUpdateParams>>
 /** Parameters to define an ABI method call delete transaction. */
-export type AppDeleteMethodCall = AppMethodCall<AppDeleteParams>
+export type AppDeleteMethodCall = Expand<AppMethodCall<AppDeleteParams>>
 /** Parameters to define an ABI method call transaction. */
-export type AppCallMethodCall = AppMethodCall<AppMethodCallParams>
+export type AppCallMethodCall = Expand<AppMethodCall<AppMethodCallParams>>
+
+export type ProcessedAppCreateMethodCall = Expand<
+  Omit<AppCreateMethodCall, 'args'> & {
+    args?: (algosdk.ABIValue | undefined)[]
+  }
+>
+
+export type ProcessedAppUpdateMethodCall = Expand<
+  Omit<AppUpdateMethodCall, 'args'> & {
+    args?: (algosdk.ABIValue | undefined)[]
+  }
+>
+
+export type ProcessedAppCallMethodCall = Expand<
+  Omit<AppCallMethodCall, 'args'> & {
+    args?: (algosdk.ABIValue | undefined)[]
+  }
+>
 
 /** Types that can be used to define a transaction argument for an ABI call transaction. */
 export type AppMethodCallTransactionArgument =
@@ -500,7 +522,7 @@ export type Txn =
   | ((AppCallParams | AppCreateParams | AppUpdateParams) & { type: 'appCall' })
   | ((OnlineKeyRegistrationParams | OfflineKeyRegistrationParams) & { type: 'keyReg' })
   | (algosdk.TransactionWithSigner & { type: 'txnWithSigner' })
-  | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
+  | ((ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall) & { type: 'methodCall' })
 
 /**
  * A function that transforms an error into a new error.
@@ -1230,7 +1252,11 @@ export class TransactionComposer {
     const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
     this.txns.push(...txnArgs)
 
-    this.txns.push({ ...params, type: 'methodCall' })
+    this.txns.push({
+      ...params,
+      args: processAppMethodCallArgs(params.args),
+      type: 'methodCall',
+    })
     return this
   }
 
@@ -1286,7 +1312,12 @@ export class TransactionComposer {
     const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
     this.txns.push(...txnArgs)
 
-    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.UpdateApplication })
+    this.txns.push({
+      ...params,
+      args: processAppMethodCallArgs(params.args),
+      type: 'methodCall',
+      onComplete: OnApplicationComplete.UpdateApplication,
+    })
     return this
   }
 
@@ -1340,7 +1371,12 @@ export class TransactionComposer {
     const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
     this.txns.push(...txnArgs)
 
-    this.txns.push({ ...params, type: 'methodCall', onComplete: OnApplicationComplete.DeleteApplication })
+    this.txns.push({
+      ...params,
+      args: processAppMethodCallArgs(params.args),
+      type: 'methodCall',
+      onComplete: OnApplicationComplete.DeleteApplication,
+    })
     return this
   }
 
@@ -1394,7 +1430,7 @@ export class TransactionComposer {
     const txnArgs = await extractComposerTransactionsFromAppMethodCallParams(params.args, this.getSigner)
     this.txns.push(...txnArgs)
 
-    this.txns.push({ ...params, type: 'methodCall' })
+    this.txns.push({ ...params, args: processAppMethodCallArgs(params.args), type: 'methodCall' })
     return this
   }
 
@@ -2130,8 +2166,18 @@ export class TransactionComposer {
           case 'keyReg':
             transaction = buildKeyReg(ctxn, header)
             break
+          case 'methodCall':
+            if (!('appId' in ctxn)) {
+              transaction = await buildAppCreateMethodCall(ctxn, this.appManager, header)
+            } else if ('approvalProgram' in ctxn && 'clearStateProgram' in ctxn) {
+              transaction = await buildAppUpdateMethodCall(ctxn, this.appManager, header)
+            } else {
+              transaction = await buildAppCallMethodCall(ctxn, header)
+            }
+            break
           default:
-            throw new Error(`Unsupported transaction type: ${(ctxn as { type: ComposerTransactionType }).type}`)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            throw new Error(`Unsupported transaction type: ${(ctxn as any).type}`)
         }
 
         if (calculateFee) {

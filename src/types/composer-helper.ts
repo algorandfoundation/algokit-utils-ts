@@ -17,14 +17,11 @@ import { encodeLease } from 'src/transaction'
 import { calculateExtraProgramPages } from 'src/util'
 import { AppManager, getAccessReference } from './app-manager'
 import {
-  AppCallMethodCall,
   AppCallParams,
-  AppCreateMethodCall,
   AppCreateParams,
   AppDeleteParams,
   AppMethodCall,
   AppMethodCallParams,
-  AppUpdateMethodCall,
   AppUpdateParams,
   AssetConfigParams,
   AssetCreateParams,
@@ -37,6 +34,9 @@ import {
   OfflineKeyRegistrationParams,
   OnlineKeyRegistrationParams,
   PaymentParams,
+  ProcessedAppCallMethodCall,
+  ProcessedAppCreateMethodCall,
+  ProcessedAppUpdateMethodCall,
 } from './composer'
 
 type AppMethodCallArgs = AppMethodCall<unknown>['args']
@@ -44,7 +44,7 @@ type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
 
 type ExtractedMethodCallTransactionArg =
   | (TransactionWithSigner & { type: 'txnWithSigner' })
-  | ((AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall) & { type: 'methodCall' })
+  | ((ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall) & { type: 'methodCall' })
 
 const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 
@@ -74,9 +74,6 @@ export async function extractComposerTransactionsFromAppMethodCallParams(
         type: 'txnWithSigner',
       })
 
-      // TODO: PD - review this way of marking args as undefined
-      // Is it possible to replace them with an indicator that the arg was converted into a txn in the group
-      methodCallArgs[i] = undefined
       continue
     }
     if (isAppCallMethodCallArg(arg)) {
@@ -84,10 +81,10 @@ export async function extractComposerTransactionsFromAppMethodCallParams(
       composerTransactions.push(...nestedComposerTransactions)
       composerTransactions.push({
         ...arg,
+        args: processAppMethodCallArgs(arg.args),
         type: 'methodCall',
-      })
+      } satisfies ExtractedMethodCallTransactionArg)
 
-      methodCallArgs[i] = undefined
       continue
     }
 
@@ -101,6 +98,22 @@ export async function extractComposerTransactionsFromAppMethodCallParams(
   }
 
   return composerTransactions
+}
+
+export function processAppMethodCallArgs(args: AppMethodCallArg[] | undefined): (ABIValue | undefined)[] | undefined {
+  if (args === undefined) return undefined
+
+  return args.map((arg) => {
+    if (arg === undefined) {
+      // Handle explicit placeholders (either transaction or default value)
+      return undefined
+    } else if (!isAbiValue(arg)) {
+      // Handle Transactions by replacing with the transaction placeholder
+      // If the arg is not an ABIValue, it's must be a transaction
+      return undefined
+    }
+    return arg
+  })
 }
 
 function isTransactionWithSignerArg(arg: AppMethodCallArg): arg is TransactionWithSigner {
@@ -290,6 +303,22 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
     typeof params.clearStateProgram === 'string'
       ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
       : params.clearStateProgram
+  const globalStateSchema =
+    params.schema?.globalByteSlices !== undefined || params.schema?.globalInts !== undefined
+      ? {
+          numByteSlices: params.schema?.globalByteSlices ?? 0,
+          numUints: params.schema?.globalInts ?? 0,
+        }
+      : undefined
+  const localStateSchema =
+    params.schema?.localByteSlices !== undefined || params.schema?.localInts !== undefined
+      ? {
+          numByteSlices: params.schema?.localByteSlices ?? 0,
+          numUints: params.schema?.localInts ?? 0,
+        }
+      : undefined
+  const extraProgramPages =
+    params.extraProgramPages !== undefined ? params.extraProgramPages : calculateExtraProgramPages(approvalProgram!, clearStateProgram!)
 
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
@@ -302,24 +331,9 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       approvalProgram: approvalProgram,
       clearStateProgram: clearStateProgram,
-      globalStateSchema:
-        params.schema?.globalByteSlices !== undefined || params.schema?.globalInts !== undefined
-          ? {
-              numByteSlices: params.schema?.globalByteSlices ?? 0,
-              numUints: params.schema?.globalInts ?? 0,
-            }
-          : undefined,
-      localStateSchema:
-        params.schema?.localByteSlices !== undefined || params.schema?.localInts !== undefined
-          ? {
-              numByteSlices: params.schema?.localByteSlices ?? 0,
-              numUints: params.schema?.localInts ?? 0,
-            }
-          : undefined,
-      extraProgramPages:
-        params.extraProgramPages !== undefined
-          ? params.extraProgramPages
-          : calculateExtraProgramPages(approvalProgram!, clearStateProgram!),
+      globalStateSchema: globalStateSchema,
+      localStateSchema: localStateSchema,
+      extraProgramPages: extraProgramPages,
       args: params.args,
       ...(hasAccessReferences
         ? { access: params.accessReferences?.map(getAccessReference) }
@@ -511,7 +525,7 @@ function calculateMethodArgReferenceArrayIndex(
  */
 function encodeMethodArguments(
   method: ABIMethod,
-  args: AppMethodCallArg[],
+  args: (ABIValue | undefined)[],
   sender: string,
   appId: bigint,
   accountReferences: string[],
@@ -626,7 +640,7 @@ function buildMethodCallCommon(
   params: {
     appId: bigint
     method: ABIMethod
-    args: AppMethodCallArg[]
+    args: (ABIValue | undefined)[]
     accountReferences?: string[]
     appReferences?: bigint[]
     assetReferences?: bigint[]
@@ -638,7 +652,7 @@ function buildMethodCallCommon(
     header.sender,
     params.appId,
     params.method,
-    params.args,
+    params.args ?? [],
     params.accountReferences,
     params.appReferences,
     params.assetReferences,
@@ -662,37 +676,136 @@ function buildMethodCallCommon(
   }
 }
 
-// TODO: PD - we should make a new type for AppCreateMethodCall to capture that the params don't have nested transactions anymore
-export const buildAppCreateMethodCall = (params: AppCreateMethodCall, header: TransactionHeader): Transaction => {
+export const buildAppCreateMethodCall = async (
+  params: ProcessedAppCreateMethodCall,
+  appManager: AppManager,
+  header: TransactionHeader,
+): Promise<Transaction> => {
+  const approvalProgram =
+    typeof params.approvalProgram === 'string'
+      ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
+      : params.approvalProgram
+  const clearStateProgram =
+    typeof params.clearStateProgram === 'string'
+      ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+      : params.clearStateProgram
+  const globalStateSchema =
+    params.schema?.globalByteSlices !== undefined || params.schema?.globalInts !== undefined
+      ? {
+          numByteSlices: params.schema?.globalByteSlices ?? 0,
+          numUints: params.schema?.globalInts ?? 0,
+        }
+      : undefined
+  const localStateSchema =
+    params.schema?.localByteSlices !== undefined || params.schema?.localInts !== undefined
+      ? {
+          numByteSlices: params.schema?.localByteSlices ?? 0,
+          numUints: params.schema?.localInts ?? 0,
+        }
+      : undefined
+  const extraProgramPages =
+    params.extraProgramPages !== undefined ? params.extraProgramPages : calculateExtraProgramPages(approvalProgram!, clearStateProgram!)
+  const accountReferences = params.accountReferences?.map((a) => a.toString())
   const common = buildMethodCallCommon(
     {
       appId: 0n,
       method: params.method,
-      args: params.args,
-      accountReferences: params.accountReferences,
+      args: params.args ?? [],
+      accountReferences: accountReferences,
       appReferences: params.appReferences,
       assetReferences: params.assetReferences,
       // TODO: PD - access list references
     },
     header,
   )
-
   return {
     ...header,
-    transactionType: TransactionType.AppCall,
-    appCall: {
+    type: TransactionType.appl,
+    applicationCall: {
       appId: 0n,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
-      approvalProgram: params.approvalProgram,
-      clearStateProgram: params.clearStateProgram,
-      globalStateSchema: params.globalStateSchema,
-      localStateSchema: params.localStateSchema,
-      extraProgramPages: params.extraProgramPages,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearStateProgram,
+      globalStateSchema: globalStateSchema,
+      localStateSchema: localStateSchema,
+      extraProgramPages: extraProgramPages,
       args: common.args,
-      accountReferences: common.accountReferences,
-      appReferences: common.appReferences,
-      assetReferences: common.assetReferences,
-      boxReferences: params.boxReferences,
+      accounts: common.accountReferences,
+      foreignApps: common.appReferences,
+      foreignAssets: common.assetReferences,
+      boxes: params.boxReferences?.map(AppManager.getBoxReference),
+    },
+  }
+}
+
+export const buildAppUpdateMethodCall = async (
+  params: ProcessedAppUpdateMethodCall,
+  appManager: AppManager,
+  header: TransactionHeader,
+): Promise<Transaction> => {
+  const approvalProgram =
+    typeof params.approvalProgram === 'string'
+      ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
+      : params.approvalProgram
+  const clearStateProgram =
+    typeof params.clearStateProgram === 'string'
+      ? (await appManager.compileTeal(params.clearStateProgram)).compiledBase64ToBytes
+      : params.clearStateProgram
+  const accountReferences = params.accountReferences?.map((a) => a.toString())
+  const common = buildMethodCallCommon(
+    {
+      appId: 0n,
+      method: params.method,
+      args: params.args ?? [],
+      accountReferences: accountReferences,
+      appReferences: params.appReferences,
+      assetReferences: params.assetReferences,
+      // TODO: PD - access list references
+    },
+    header,
+  )
+  return {
+    ...header,
+    type: TransactionType.appl,
+    applicationCall: {
+      appId: params.appId,
+      onComplete: OnApplicationComplete.UpdateApplication,
+      approvalProgram: approvalProgram,
+      clearStateProgram: clearStateProgram,
+      args: common.args,
+      accounts: common.accountReferences,
+      foreignApps: common.appReferences,
+      foreignAssets: common.assetReferences,
+      boxes: params.boxReferences?.map(AppManager.getBoxReference),
+    },
+  }
+}
+
+export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall, header: TransactionHeader): Promise<Transaction> => {
+  const accountReferences = params.accountReferences?.map((a) => a.toString())
+  const common = buildMethodCallCommon(
+    {
+      appId: 0n,
+      method: params.method,
+      args: params.args ?? [],
+      accountReferences: accountReferences,
+      appReferences: params.appReferences,
+      assetReferences: params.assetReferences,
+      // TODO: PD - access list references
+    },
+    header,
+  )
+  return {
+    ...header,
+    type: TransactionType.appl,
+    applicationCall: {
+      appId: params.appId,
+      onComplete: OnApplicationComplete.UpdateApplication,
+      args: common.args,
+      accounts: common.accountReferences,
+      foreignApps: common.appReferences,
+      foreignAssets: common.assetReferences,
+      boxes: params.boxReferences?.map(AppManager.getBoxReference),
     },
   }
 }
