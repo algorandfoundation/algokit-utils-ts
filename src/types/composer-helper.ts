@@ -1,5 +1,12 @@
-import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
+import {
+  ApplicationLocalReference,
+  AssetHoldingReference,
+  PendingTransactionResponse,
+  SimulateUnnamedResourcesAccessed,
+  TransactionParams,
+} from '@algorandfoundation/algokit-algod-client'
+import { MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, getAppAddress } from '@algorandfoundation/algokit-common'
+import { BoxReference, OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
 import {
   ABIMethod,
   ABIReferenceType,
@@ -37,7 +44,9 @@ import {
   ProcessedAppCallMethodCall,
   ProcessedAppCreateMethodCall,
   ProcessedAppUpdateMethodCall,
+  Txn,
 } from './composer'
+import { FeeDelta } from './fee-coverage'
 
 type AppMethodCallArgs = AppMethodCall<unknown>['args']
 type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
@@ -808,4 +817,436 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
       boxes: params.boxReferences?.map(AppManager.getBoxReference),
     },
   }
+}
+
+/** Get the logical maximum fee based on staticFee and maxFee */
+export function getLogicalMaxFee(ctxn: Txn): bigint | undefined {
+  if (ctxn.type === 'txnWithSigner') {
+    return undefined
+  }
+
+  const maxFee = ctxn.maxFee
+  const staticFee = ctxn.staticFee
+
+  if (maxFee !== undefined && (staticFee === undefined || maxFee.microAlgos > staticFee.microAlgos)) {
+    return maxFee.microAlgos
+  }
+  return staticFee?.microAlgos
+}
+
+/**
+ * Populate transaction-level resources for app call transactions
+ */
+export function populateTransactionResources(
+  transaction: Transaction, // NOTE: transaction is mutated in place
+  resourcesAccessed: SimulateUnnamedResourcesAccessed,
+  groupIndex: number,
+): void {
+  if (transaction.type !== TransactionType.appl || transaction.applicationCall === undefined) {
+    return
+  }
+
+  // Check for unexpected resources at transaction level
+  if (resourcesAccessed.boxes || resourcesAccessed.extraBoxRefs) {
+    throw new Error('Unexpected boxes at the transaction level')
+  }
+  if (resourcesAccessed.appLocals) {
+    throw new Error('Unexpected app locals at the transaction level')
+  }
+  if (resourcesAccessed.assetHoldings) {
+    throw new Error('Unexpected asset holdings at the transaction level')
+  }
+
+  let accountsCount = 0
+  let appsCount = 0
+  let assetsCount = 0
+  const boxesCount = transaction.applicationCall.boxes?.length ?? 0
+
+  // Populate accounts
+  if (resourcesAccessed.accounts) {
+    transaction.applicationCall.accounts = transaction.applicationCall.accounts ?? []
+    for (const account of resourcesAccessed.accounts) {
+      if (!transaction.applicationCall.accounts.includes(account)) {
+        transaction.applicationCall.accounts.push(account)
+      }
+    }
+    accountsCount = transaction.applicationCall.accounts.length
+  }
+
+  // Populate apps
+  if (resourcesAccessed.apps) {
+    transaction.applicationCall.foreignApps = transaction.applicationCall.foreignApps ?? []
+    for (const appId of resourcesAccessed.apps) {
+      if (!transaction.applicationCall.foreignApps.includes(appId)) {
+        transaction.applicationCall.foreignApps.push(appId)
+      }
+    }
+    appsCount = transaction.applicationCall.foreignApps.length
+  }
+
+  // Populate assets
+  if (resourcesAccessed.assets) {
+    transaction.applicationCall.foreignAssets = transaction.applicationCall.foreignAssets ?? []
+    for (const assetId of resourcesAccessed.assets) {
+      if (!transaction.applicationCall.foreignAssets.includes(assetId)) {
+        transaction.applicationCall.foreignAssets.push(assetId)
+      }
+    }
+    assetsCount = transaction.applicationCall.foreignAssets.length
+  }
+
+  // Validate reference limits
+  if (accountsCount > MAX_ACCOUNT_REFERENCES) {
+    throw new Error(`Account reference limit of ${MAX_ACCOUNT_REFERENCES} exceeded in transaction ${groupIndex}`)
+  }
+
+  if (accountsCount + assetsCount + appsCount + boxesCount > MAX_OVERALL_REFERENCES) {
+    throw new Error(`Resource reference limit of ${MAX_OVERALL_REFERENCES} exceeded in transaction ${groupIndex}`)
+  }
+}
+
+enum GroupResourceType {
+  Account,
+  App,
+  Asset,
+  Box,
+  ExtraBoxRef,
+  AssetHolding,
+  AppLocal,
+}
+
+/**
+ * Populate group-level resources for app call transactions
+ */
+export function populateGroupResources(
+  transactions: Transaction[], // NOTE: transactions are mutated in place
+  groupResources: SimulateUnnamedResourcesAccessed,
+): void {
+  let remainingAccounts = [...(groupResources.accounts ?? [])]
+  let remainingApps = [...(groupResources.apps ?? [])]
+  let remainingAssets = [...(groupResources.assets ?? [])]
+  const remainingBoxes = [...(groupResources.boxes ?? [])]
+
+  // Process cross-reference resources first (app locals and asset holdings) as they are most restrictive
+  if (groupResources.appLocals) {
+    groupResources.appLocals.forEach((appLocal) => {
+      populateGroupResource(transactions, { type: GroupResourceType.AppLocal, data: appLocal })
+      // Remove resources from remaining if we're adding them here
+      remainingAccounts = remainingAccounts.filter((acc) => acc !== appLocal.account)
+      remainingApps = remainingApps.filter((app) => app !== appLocal.app)
+    })
+  }
+
+  if (groupResources.assetHoldings) {
+    groupResources.assetHoldings.forEach((assetHolding) => {
+      populateGroupResource(transactions, { type: GroupResourceType.AssetHolding, data: assetHolding })
+      // Remove resources from remaining if we're adding them here
+      remainingAccounts = remainingAccounts.filter((acc) => acc !== assetHolding.account)
+      remainingAssets = remainingAssets.filter((asset) => asset !== assetHolding.asset)
+    })
+  }
+
+  // Process accounts next because account limit is 4
+  remainingAccounts.forEach((account) => {
+    populateGroupResource(transactions, { type: GroupResourceType.Account, data: account })
+  })
+
+  // Process boxes
+  remainingBoxes.forEach((boxRef) => {
+    populateGroupResource(transactions, {
+      type: GroupResourceType.Box,
+      data: {
+        appIndex: boxRef.app,
+        name: boxRef.name,
+      },
+    })
+    // Remove apps as resource if we're adding it here
+    remainingApps = remainingApps.filter((app) => app !== boxRef.app)
+  })
+
+  // Process assets
+  remainingAssets.forEach((asset) => {
+    populateGroupResource(transactions, { type: GroupResourceType.Asset, data: asset })
+  })
+
+  // Process remaining apps
+  remainingApps.forEach((app) => {
+    populateGroupResource(transactions, { type: GroupResourceType.App, data: app })
+  })
+
+  // Handle extra box refs
+  if (groupResources.extraBoxRefs) {
+    for (let i = 0; i < groupResources.extraBoxRefs; i++) {
+      populateGroupResource(transactions, { type: GroupResourceType.ExtraBoxRef })
+    }
+  }
+}
+
+/**
+ * Helper function to check if an app call transaction is below resource limit
+ */
+function isAppCallBelowResourceLimit(txn: Transaction): boolean {
+  if (txn.type !== TransactionType.appl) {
+    return false
+  }
+
+  const accountsCount = txn.applicationCall?.accounts?.length || 0
+  const assetsCount = txn.applicationCall?.foreignAssets?.length || 0
+  const appsCount = txn.applicationCall?.foreignApps?.length || 0
+  const boxesCount = txn.applicationCall?.boxes?.length || 0
+
+  return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES
+}
+
+type GroupResourceToPopulate =
+  | { type: GroupResourceType.Account; data: string }
+  | { type: GroupResourceType.App; data: bigint }
+  | { type: GroupResourceType.Asset; data: bigint }
+  | { type: GroupResourceType.Box; data: BoxReference }
+  | { type: GroupResourceType.ExtraBoxRef }
+  | { type: GroupResourceType.AssetHolding; data: AssetHoldingReference }
+  | { type: GroupResourceType.AppLocal; data: ApplicationLocalReference }
+
+/**
+ * Helper function to populate a specific resource into a transaction group
+ */
+function populateGroupResource(
+  transactions: Transaction[], // NOTE: transactions are mutated in place
+  resource: GroupResourceToPopulate,
+): void {
+  // For asset holdings and app locals, first try to find a transaction that already has the account available
+  if (resource.type === GroupResourceType.AssetHolding || resource.type === GroupResourceType.AppLocal) {
+    const account = resource.data.account
+
+    // Try to find a transaction that already has the account available
+    const groupIndex1 = transactions.findIndex((txn) => {
+      if (!isAppCallBelowResourceLimit(txn)) {
+        return false
+      }
+
+      const appCall = txn.applicationCall!
+
+      // Check if account is in foreign accounts array
+      if (appCall.accounts?.includes(account)) {
+        return true
+      }
+
+      // Check if account is available as an app account
+      if (appCall.foreignApps) {
+        for (const appId of appCall.foreignApps) {
+          if (account === getAppAddress(appId)) {
+            return true
+          }
+        }
+      }
+
+      // Check if account appears in any app call transaction fields
+      if (txn.sender === account) {
+        return true
+      }
+
+      return false
+    })
+
+    if (groupIndex1 !== -1) {
+      const appCall = transactions[groupIndex1].applicationCall!
+      if (resource.type === GroupResourceType.AssetHolding) {
+        appCall.foreignAssets = appCall.foreignAssets ?? []
+        if (!appCall.foreignAssets.includes(resource.data.asset)) {
+          appCall.foreignAssets.push(resource.data.asset)
+        }
+      } else {
+        appCall.foreignApps = appCall.foreignApps ?? []
+        if (!appCall.foreignApps.includes(resource.data.app)) {
+          appCall.foreignApps.push(resource.data.app)
+        }
+      }
+      return
+    }
+
+    // Try to find a transaction that has the asset/app available and space for account
+    const groupIndex2 = transactions.findIndex((txn) => {
+      if (!isAppCallBelowResourceLimit(txn)) {
+        return false
+      }
+
+      const appCall = txn.applicationCall!
+      if ((appCall.accounts?.length ?? 0) >= MAX_ACCOUNT_REFERENCES) {
+        return false
+      }
+
+      if (resource.type === GroupResourceType.AssetHolding) {
+        return appCall.foreignAssets?.includes(resource.data.asset) || false
+      } else {
+        return appCall.foreignApps?.includes(resource.data.app) || appCall.appId === resource.data.app
+      }
+    })
+
+    if (groupIndex2 !== -1) {
+      const appCall = transactions[groupIndex2].applicationCall!
+      appCall.accounts = appCall.accounts ?? []
+      if (!appCall.accounts.includes(account)) {
+        appCall.accounts.push(account)
+      }
+      return
+    }
+  }
+
+  // For boxes, first try to find a transaction that already has the app available
+  if (resource.type === GroupResourceType.Box) {
+    const groupIndex = transactions.findIndex((txn) => {
+      if (!isAppCallBelowResourceLimit(txn)) {
+        return false
+      }
+
+      const appCall = txn.applicationCall!
+      return appCall.foreignApps?.includes(resource.data.appIndex) || appCall.appId === resource.data.appIndex
+    })
+
+    if (groupIndex !== -1) {
+      const appCall = transactions[groupIndex].applicationCall!
+      appCall.boxes = appCall.boxes ?? []
+      const exists = appCall.boxes.some(
+        (b) =>
+          b.appIndex === resource.data.appIndex &&
+          b.name.length === resource.data.name.length &&
+          b.name.every((byte, i) => byte === resource.data.name[i]),
+      )
+      if (!exists) {
+        appCall.boxes.push({ appIndex: resource.data.appIndex, name: resource.data.name })
+      }
+      return
+    }
+  }
+
+  // Find the first transaction that can accommodate the resource
+  const groupIndex = transactions.findIndex((txn) => {
+    if (txn.type !== TransactionType.appl) {
+      return false
+    }
+
+    const appCall = txn.applicationCall!
+    const accountsCount = appCall.accounts?.length ?? 0
+    const assetsCount = appCall.foreignAssets?.length ?? 0
+    const appsCount = appCall.foreignApps?.length ?? 0
+    const boxesCount = appCall.boxes?.length ?? 0
+
+    switch (resource.type) {
+      case GroupResourceType.Account:
+        return accountsCount < MAX_ACCOUNT_REFERENCES
+      case GroupResourceType.AssetHolding:
+      case GroupResourceType.AppLocal:
+        return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES - 1 && accountsCount < MAX_ACCOUNT_REFERENCES
+      case GroupResourceType.Box:
+        if (resource.data.appIndex !== 0n) {
+          return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES - 1
+        } else {
+          return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES
+        }
+      default:
+        return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES
+    }
+  })
+
+  if (groupIndex === -1) {
+    throw new Error('No more transactions below reference limit. Add another app call to the group.')
+  }
+
+  const appCall = transactions[groupIndex].applicationCall!
+
+  switch (resource.type) {
+    case GroupResourceType.Account:
+      appCall.accounts = appCall.accounts ?? []
+      if (!appCall.accounts.includes(resource.data)) {
+        appCall.accounts.push(resource.data)
+      }
+      break
+    case GroupResourceType.App:
+      appCall.foreignApps = appCall.foreignApps ?? []
+      if (!appCall.foreignApps.includes(resource.data)) {
+        appCall.foreignApps.push(resource.data)
+      }
+      break
+    case GroupResourceType.Box: {
+      appCall.boxes = appCall.boxes ?? []
+      const exists = appCall.boxes.some(
+        (b) =>
+          b.appIndex === resource.data.appIndex &&
+          b.name.length === resource.data.name.length &&
+          b.name.every((byte, i) => byte === resource.data.name[i]),
+      )
+      if (!exists) {
+        appCall.boxes.push({ appIndex: resource.data.appIndex, name: resource.data.name })
+      }
+      if (resource.data.appIndex !== 0n) {
+        appCall.foreignApps = appCall.foreignApps ?? []
+        if (!appCall.foreignApps.includes(resource.data.appIndex)) {
+          appCall.foreignApps.push(resource.data.appIndex)
+        }
+      }
+      break
+    }
+    case GroupResourceType.ExtraBoxRef:
+      appCall.boxes = appCall.boxes ?? []
+      appCall.boxes.push({ appIndex: 0n, name: new Uint8Array(0) })
+      break
+    case GroupResourceType.AssetHolding:
+      appCall.foreignAssets = appCall.foreignAssets ?? []
+      if (!appCall.foreignAssets.includes(resource.data.asset)) {
+        appCall.foreignAssets.push(resource.data.asset)
+      }
+      appCall.accounts = appCall.accounts ?? []
+      if (!appCall.accounts.includes(resource.data.account)) {
+        appCall.accounts.push(resource.data.account)
+      }
+      break
+    case GroupResourceType.AppLocal:
+      appCall.foreignApps = appCall.foreignApps ?? []
+      if (!appCall.foreignApps.includes(resource.data.app)) {
+        appCall.foreignApps.push(resource.data.app)
+      }
+      appCall.accounts = appCall.accounts ?? []
+      if (!appCall.accounts.includes(resource.data.account)) {
+        appCall.accounts.push(resource.data.account)
+      }
+      break
+    case GroupResourceType.Asset:
+      appCall.foreignAssets = appCall.foreignAssets ?? []
+      if (!appCall.foreignAssets.includes(resource.data)) {
+        appCall.foreignAssets.push(resource.data)
+      }
+      break
+  }
+}
+
+export function calculateInnerFeeDelta(
+  innerTransactions?: PendingTransactionResponse[],
+  minTransactionFee: bigint = 1000n,
+  acc?: FeeDelta,
+): FeeDelta | undefined {
+  if (!innerTransactions) {
+    return acc
+  }
+
+  // Surplus inner transaction fees do not pool up to the parent transaction.
+  // Additionally surplus inner transaction fees only pool from sibling transactions
+  // that are sent prior to a given inner transaction, hence why we iterate in reverse order.
+  return innerTransactions.reduceRight((acc, innerTxn) => {
+    const recursiveDelta = calculateInnerFeeDelta(innerTxn.innerTxns, minTransactionFee, acc)
+
+    // Inner transactions don't require per byte fees
+    const txnFeeDelta = FeeDelta.fromBigInt(minTransactionFee - (innerTxn.txn.txn.fee ?? 0n))
+
+    const currentFeeDelta = FeeDelta.fromBigInt(
+      (recursiveDelta ? FeeDelta.toBigInt(recursiveDelta) : 0n) + (txnFeeDelta ? FeeDelta.toBigInt(txnFeeDelta) : 0n),
+    )
+
+    // If after the recursive inner fee calculations we have a surplus,
+    // return undefined to avoid pooling up surplus fees, which is not allowed.
+    if (currentFeeDelta && FeeDelta.isSurplus(currentFeeDelta)) {
+      return undefined
+    }
+
+    return currentFeeDelta
+  }, acc)
 }

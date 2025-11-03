@@ -5,7 +5,17 @@ import {
   SimulateUnnamedResourcesAccessed,
   TransactionParams,
 } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
+import {
+  OnApplicationComplete,
+  SignedTransaction,
+  Transaction,
+  TransactionType,
+  assignFee,
+  calculateFee,
+  getTransactionId,
+  groupTransactions,
+} from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
@@ -39,11 +49,15 @@ import {
   buildKeyReg,
   buildPayment,
   buildTransactionHeader,
+  calculateInnerFeeDelta,
   extractComposerTransactionsFromAppMethodCallParams,
+  getLogicalMaxFee,
+  populateGroupResources,
+  populateTransactionResources,
   processAppMethodCallArgs,
 } from './composer-helper'
 import { Expand } from './expand'
-import { FeeDelta } from './fee-coverage'
+import { FeeDelta, FeePriority } from './fee-coverage'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
 import {
@@ -2211,7 +2225,7 @@ export class TransactionComposer {
         }
 
         // Calculate priority and add to transaction info
-        const ctxn = this.transactions[groupIndex]
+        const ctxn = this.txns[groupIndex]
         const txn = transactions[groupIndex]
         const logicalMaxFee = getLogicalMaxFee(ctxn)
         const isImmutableFee = logicalMaxFee !== undefined && logicalMaxFee === (txn.fee || 0n)
@@ -2219,7 +2233,7 @@ export class TransactionComposer {
         let priority = FeePriority.Covered
         if (txnAnalysis.requiredFeeDelta && FeeDelta.isDeficit(txnAnalysis.requiredFeeDelta)) {
           const deficitAmount = FeeDelta.amount(txnAnalysis.requiredFeeDelta)
-          if (isImmutableFee || txn.transactionType !== TransactionType.AppCall) {
+          if (isImmutableFee || txn.type !== TransactionType.appl) {
             // High priority: transactions that can't be modified
             priority = FeePriority.ImmutableDeficit(deficitAmount)
           } else {
@@ -2261,11 +2275,11 @@ export class TransactionComposer {
           if (additionalFeeDelta && FeeDelta.isDeficit(additionalFeeDelta)) {
             const additionalDeficitAmount = FeeDelta.amount(additionalFeeDelta)
 
-            if (transactions[groupIndex].transactionType === TransactionType.AppCall) {
+            if (transactions[groupIndex].type === TransactionType.appl) {
               const currentFee = transactions[groupIndex].fee || 0n
               const transactionFee = currentFee + additionalDeficitAmount
 
-              const logicalMaxFee = getLogicalMaxFee(this.transactions[groupIndex])
+              const logicalMaxFee = getLogicalMaxFee(this.txns[groupIndex])
               if (!logicalMaxFee || transactionFee > logicalMaxFee) {
                 throw new Error(
                   `Calculated transaction fee ${transactionFee} µALGO is greater than max of ${logicalMaxFee ?? 0n} for transaction ${groupIndex}`,
@@ -2282,7 +2296,7 @@ export class TransactionComposer {
         }
 
         // Apply transaction-level resource population
-        if (unnamedResourcesAccessed && transactions[groupIndex].transactionType === TransactionType.AppCall) {
+        if (unnamedResourcesAccessed && transactions[groupIndex].type === TransactionType.appl) {
           populateTransactionResources(transactions[groupIndex], unnamedResourcesAccessed, groupIndex)
         }
       }
@@ -2310,10 +2324,10 @@ export class TransactionComposer {
     const builtTransactions = await this.buildTransactions(suggestedParams, defaultValidityWindow)
 
     let transactionsToSimulate = builtTransactions.map((txn, groupIndex) => {
-      const ctxn = this.transactions[groupIndex]
+      const ctxn = this.txns[groupIndex]
       const txnToSimulate = { ...txn }
       txnToSimulate.group = undefined
-      if (analysisParams.coverAppCallInnerTransactionFees && txn.transactionType === TransactionType.AppCall) {
+      if (analysisParams.coverAppCallInnerTransactionFees && txn.type === TransactionType.appl) {
         const logicalMaxFee = getLogicalMaxFee(ctxn)
         if (logicalMaxFee !== undefined) {
           txnToSimulate.fee = logicalMaxFee
@@ -2340,7 +2354,7 @@ export class TransactionComposer {
     const signedTransactions = transactionsToSimulate.map(
       (txn) =>
         ({
-          transaction: txn,
+          txn: txn,
           signature: EMPTY_SIGNATURE,
         }) satisfies SignedTransaction,
     )
@@ -2356,7 +2370,7 @@ export class TransactionComposer {
       fixSigners: true,
     }
 
-    const response: SimulateTransaction = await this.algodClient.simulateTransaction({ body: simulateRequest })
+    const response: SimulateTransaction = await this.algod.simulateTransaction({ body: simulateRequest })
     const groupResponse = response.txnGroups[0]
 
     // Handle any simulation failures
@@ -2385,7 +2399,7 @@ export class TransactionComposer {
         const txnFee = btxn.fee ?? 0n
         const txnFeeDelta = FeeDelta.fromBigInt(minTxnFee - txnFee)
 
-        if (btxn.transactionType === TransactionType.AppCall) {
+        if (btxn.type === TransactionType.appl) {
           // Calculate inner transaction fee delta
           const innerTxnsFeeDelta = calculateInnerFeeDelta(simulateTxnResult.txnResult.innerTxns, suggestedParams.minFee)
           requiredFeeDelta = FeeDelta.fromBigInt(
