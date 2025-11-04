@@ -17,6 +17,7 @@ import {
   ABIUintType,
   ABIValue,
   Address,
+  TransactionSigner,
   TransactionWithSigner,
   abiTypeIsReference,
   abiTypeIsTransaction,
@@ -25,11 +26,15 @@ import { encodeLease } from '../transaction'
 import { calculateExtraProgramPages } from '../util'
 import { AppManager, getAccessReference } from './app-manager'
 import {
+  AppCallMethodCall,
   AppCallParams,
+  AppCreateMethodCall,
   AppCreateParams,
+  AppDeleteMethodCall,
   AppDeleteParams,
   AppMethodCall,
   AppMethodCallParams,
+  AppUpdateMethodCall,
   AppUpdateParams,
   AssetConfigParams,
   AssetCreateParams,
@@ -38,6 +43,7 @@ import {
   AssetOptInParams,
   AssetOptOutParams,
   AssetTransferParams,
+  AsyncTransactionWithSigner,
   CommonTransactionParams,
   OfflineKeyRegistrationParams,
   OnlineKeyRegistrationParams,
@@ -55,14 +61,21 @@ type AppMethodCallArg = NonNullable<AppMethodCallArgs>[number]
 // TODO: PD - match this with the type from composer
 type ExtractedMethodCallTransactionArg =
   | { data: TransactionWithSigner; type: 'txnWithSigner' }
-  | { data: Promise<Transaction>; type: 'asyncTxn' }
+  | { data: AsyncTransactionWithSigner; type: 'asyncTxn' }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
 
 const ARGS_TUPLE_PACKING_THRESHOLD = 14 // 14+ args trigger tuple packing, excluding the method selector
 
-export function extractComposerTransactionsFromAppMethodCallParams(methodCallArgs: AppMethodCallArgs): ExtractedMethodCallTransactionArg[] {
+export function extractComposerTransactionsFromAppMethodCallParams(
+  params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall | AppDeleteMethodCall,
+  parentSigner?: TransactionSigner,
+): ExtractedMethodCallTransactionArg[] {
   const composerTransactions = new Array<ExtractedMethodCallTransactionArg>()
+  const methodCallArgs = params.args
   if (!methodCallArgs) return []
+
+  // Extract signer from params, falling back to parentSigner
+  const currentSigner = params.signer ? ('signer' in params.signer ? params.signer.signer : params.signer) : parentSigner
 
   for (let i = 0; i < methodCallArgs.length; i++) {
     const arg = methodCallArgs[i]
@@ -88,11 +101,13 @@ export function extractComposerTransactionsFromAppMethodCallParams(methodCallArg
       continue
     }
     if (isAppCallMethodCallArg(arg)) {
-      const nestedComposerTransactions = extractComposerTransactionsFromAppMethodCallParams(arg.args)
+      // Recursively extract nested method call transactions, passing the nested call itself and current signer as parent
+      const nestedComposerTransactions = extractComposerTransactionsFromAppMethodCallParams(arg, currentSigner)
       composerTransactions.push(...nestedComposerTransactions)
       composerTransactions.push({
         data: {
           ...arg,
+          signer: arg.signer ?? currentSigner,
           args: processAppMethodCallArgs(arg.args),
         },
         type: 'methodCall',
@@ -102,14 +117,20 @@ export function extractComposerTransactionsFromAppMethodCallParams(methodCallArg
     }
     if (arg instanceof Promise) {
       composerTransactions.push({
-        data: arg,
+        data: {
+          txn: arg,
+          signer: currentSigner,
+        },
         type: 'asyncTxn',
       })
       continue
     }
 
     composerTransactions.push({
-      data: Promise.resolve(arg),
+      data: {
+        txn: Promise.resolve(arg),
+        signer: currentSigner,
+      },
       type: 'asyncTxn',
     })
   }

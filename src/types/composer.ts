@@ -519,6 +519,14 @@ export type AppMethodCall<T> = Expand<Omit<T, 'args'>> & {
   )[]
 }
 
+/** A transaction (promise) with an associated signer for signing the transaction */
+export type AsyncTransactionWithSigner = {
+  /** The transaction (promise) to be signed */
+  txn: Promise<Transaction>
+  /** The signer to use for signing the transaction */
+  signer?: algosdk.TransactionSigner
+}
+
 type Txn =
   | { data: PaymentParams; type: 'pay' }
   | { data: AssetCreateParams; type: 'assetCreate' }
@@ -531,7 +539,7 @@ type Txn =
   | { data: AppCallParams | AppCreateParams | AppUpdateParams; type: 'appCall' }
   | { data: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams; type: 'keyReg' }
   | { data: algosdk.TransactionWithSigner; type: 'txnWithSigner' }
-  | { data: Promise<Transaction>; type: 'asyncTxn' }
+  | { data: AsyncTransactionWithSigner; type: 'asyncTxn' }
   | { data: ProcessedAppCallMethodCall | ProcessedAppCreateMethodCall | ProcessedAppUpdateMethodCall; type: 'methodCall' }
 
 /**
@@ -1262,7 +1270,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCreateMethodCall(params: AppCreateMethodCall) {
-    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
     this.txns.push(...txnArgs)
 
     this.txns.push({
@@ -1321,7 +1329,7 @@ export class TransactionComposer {
    * ```
    */
   addAppUpdateMethodCall(params: AppUpdateMethodCall) {
-    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
     this.txns.push(...txnArgs)
 
     this.txns.push({
@@ -1378,7 +1386,7 @@ export class TransactionComposer {
    * ```
    */
   addAppDeleteMethodCall(params: AppDeleteMethodCall) {
-    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
     this.txns.push(...txnArgs)
 
     this.txns.push({
@@ -1435,7 +1443,7 @@ export class TransactionComposer {
    * ```
    */
   addAppCallMethodCall(params: AppCallMethodCall) {
-    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params.args)
+    const txnArgs = extractComposerTransactionsFromAppMethodCallParams(params)
     this.txns.push(...txnArgs)
 
     this.txns.push({ data: { ...params, args: processAppMethodCallArgs(params.args) }, type: 'methodCall' })
@@ -1586,7 +1594,11 @@ export class TransactionComposer {
         transactions.push(ctxn.data.txn)
         signers.set(i, ctxn.data.signer)
       } else if (ctxn.type === 'asyncTxn') {
-        transactions.push(await ctxn.data)
+        transactions.push(await ctxn.data.txn)
+        // Use the signer that was set when the asyncTxn was added
+        if (ctxn.data.signer) {
+          signers.set(i, ctxn.data.signer)
+        }
       } else {
         let transaction: Transaction
         const header = buildTransactionHeader(ctxn.data, suggestedParams, defaultValidityWindow)

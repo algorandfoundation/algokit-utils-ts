@@ -30,3 +30,4 @@ A collection of random notes pop up during the migration process.
 - Consider align assetId and appId in PendingTransactionResponse with sdk?
 - can't add atc into the composer anymore
 - SendAtomicTransactionComposerResults.group is string | undefined
+- buildTransactions will include the signer for nested txn now
