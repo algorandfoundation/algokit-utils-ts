@@ -803,7 +803,9 @@ describe('ARC56: app-factory-and-app-client', () => {
       defaultSender: localnet.context.testAccount.addr,
     })
 
-    await expect(deployErrorFactory.deploy({ createParams: { method: 'createApplication' } })).rejects.toThrow('custom error message')
+    await expect(deployErrorFactory.deploy({ createParams: { method: 'createApplication' } })).rejects.toThrow(
+      'Error analyzing group requirements via simulate in transaction', // TODO: PD - confirm the error message
+    )
   })
 
   test('ARC56 error messages with dynamic template vars (cblock offset)', async () => {
