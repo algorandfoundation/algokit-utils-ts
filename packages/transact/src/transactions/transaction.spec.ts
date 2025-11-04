@@ -18,7 +18,7 @@ describe('Transaction Validation', () => {
   describe('Core transaction validation', () => {
     test('should throw error when sender is missing', () => {
       const transaction: Transaction = {
-        type: TransactionType.pay,
+        type: TransactionType.Payment,
         sender: '',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -33,7 +33,7 @@ describe('Transaction Validation', () => {
 
     test('should throw error when no transaction type specific field is set', () => {
       const transaction: Transaction = {
-        type: TransactionType.pay,
+        type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
         lastValid: 2000n,
@@ -44,7 +44,7 @@ describe('Transaction Validation', () => {
 
     test('should throw error when multiple transaction type specific fields are set', () => {
       const transaction: Transaction = {
-        type: TransactionType.pay,
+        type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
         lastValid: 2000n,
@@ -64,7 +64,7 @@ describe('Transaction Validation', () => {
 
     test('should validate valid payment transaction', () => {
       const transaction: Transaction = {
-        type: TransactionType.pay,
+        type: TransactionType.Payment,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
         lastValid: 2000n,
@@ -86,7 +86,7 @@ describe('Transaction Validation', () => {
       ['encodeSignedTransaction', (transaction: Transaction) => encodeSignedTransaction({ txn: transaction, signature: EMPTY_SIGNATURE })],
     ])('should validate when calling %s', (_, sut) => {
       const transaction: Transaction = {
-        type: TransactionType.axfer,
+        type: TransactionType.AssetTransfer,
         sender: VALID_ADDRESS_1,
         firstValid: 1000n,
         lastValid: 2000n,

@@ -116,7 +116,7 @@ export async function legacySendAppTransactionBridge<
     accountReferences: appArgs?.accounts?.map((a) => (typeof a === 'string' ? a : algosdk.encodeAddress(a.publicKey))),
     appReferences: appArgs?.apps?.map((a) => BigInt(a)),
     assetReferences: appArgs?.assets?.map((a) => BigInt(a)),
-    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appIndex), name: r.name }) satisfies BoxReference),
+    boxReferences: appArgs?.boxes?.map(_getBoxReference)?.map((r) => ({ appId: BigInt(r.appId), name: r.name }) satisfies BoxReference),
     lease: appArgs?.lease,
     rekeyTo: appArgs?.rekeyTo ? getSenderAddress(appArgs?.rekeyTo) : undefined,
     args: appArgs
@@ -178,18 +178,20 @@ function _getAccountAddress(account: string | algosdk.Address) {
 export function _getBoxReference(box: LegacyBoxIdentifier | LegacyBoxReference | TransactBoxReference): TransactBoxReference {
   const encoder = new TextEncoder()
 
-  if (typeof box === 'object' && 'appIndex' in box) {
-    return box
+  const toBytes = (boxIdentifier: string | Uint8Array | SendTransactionFrom): Uint8Array => {
+    return typeof boxIdentifier === 'string'
+      ? encoder.encode(boxIdentifier)
+      : 'length' in boxIdentifier
+        ? boxIdentifier
+        : algosdk.decodeAddress(getSenderAddress(boxIdentifier)).publicKey
   }
 
-  const ref = typeof box === 'object' && 'appId' in box ? box : { appId: 0, name: box }
-  return {
-    appIndex: ref.appId,
-    name:
-      typeof ref.name === 'string'
-        ? encoder.encode(ref.name)
-        : 'length' in ref.name
-          ? ref.name
-          : algosdk.decodeAddress(getSenderAddress(ref.name)).publicKey,
-  } as TransactBoxReference
+  if (typeof box === 'object' && 'appId' in box) {
+    return {
+      appId: BigInt(box.appId),
+      name: toBytes(box.name),
+    }
+  }
+
+  return { appId: 0n, name: toBytes(box) }
 }

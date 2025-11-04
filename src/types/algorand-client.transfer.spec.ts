@@ -33,7 +33,7 @@ describe('Transfer capability', () => {
 
     const accountInfo = await algorand.account.getInformation(secondAccount)
 
-    expect(result.transaction.type).toBe(TransactionType.pay)
+    expect(result.transaction.type).toBe(TransactionType.Payment)
     expect(result.confirmation.txn.txn.type).toBe('pay')
 
     expect(result.transaction.payment?.amount).toBe(5_000_000n)

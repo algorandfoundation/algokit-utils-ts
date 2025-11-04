@@ -182,7 +182,7 @@ export type BoxReference = {
    * App ID that owns the box.
    * A value of 0 indicates the current app.
    */
-  appIndex: bigint
+  appId: bigint
 
   /**
    * Name of the box.
@@ -442,7 +442,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
       data: {
-        field: 'Account references',
+        field: 'Accounts',
         actual: appCall.accounts.length,
         max: MAX_ACCOUNT_REFERENCES,
         unit: 'refs',
@@ -454,7 +454,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
       data: {
-        field: 'App references',
+        field: 'Foreign apps',
         actual: appCall.foreignApps.length,
         max: MAX_APP_REFERENCES,
         unit: 'refs',
@@ -466,7 +466,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     errors.push({
       type: TransactionValidationErrorType.FieldTooLong,
       data: {
-        field: 'Asset references',
+        field: 'Foreign assets',
         actual: appCall.foreignAssets.length,
         max: MAX_ASSET_REFERENCES,
         unit: 'refs',
@@ -480,7 +480,7 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
       errors.push({
         type: TransactionValidationErrorType.FieldTooLong,
         data: {
-          field: 'Box references',
+          field: 'Boxes',
           actual: appCall.boxes.length,
           max: MAX_BOX_REFERENCES,
           unit: 'refs',
@@ -491,10 +491,10 @@ function validateAppCommonFields(appCall: AppCallTransactionFields): Transaction
     // Validate that box reference app IDs are in app references
     const appRefs = appCall.foreignApps || []
     for (const boxRef of appCall.boxes) {
-      if (boxRef.appIndex !== 0n && boxRef.appIndex !== appCall.appId && !appRefs.includes(boxRef.appIndex)) {
+      if (boxRef.appId !== 0n && boxRef.appId !== appCall.appId && !appRefs.includes(boxRef.appId)) {
         errors.push({
           type: TransactionValidationErrorType.ArbitraryConstraint,
-          data: `Box reference for app ID ${boxRef.appIndex} must be in app references`,
+          data: `Box reference for app ID ${boxRef.appId} must be in app references`,
         })
       }
     }

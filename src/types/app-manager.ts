@@ -388,7 +388,7 @@ export class AppManager {
   public static getBoxReference(boxId: BoxIdentifier | BoxReference): TransactionBoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
     return {
-      appIndex: ref.appId,
+      appId: ref.appId,
       name: typeof ref.name === 'string' ? new TextEncoder().encode(ref.name) : 'length' in ref.name ? ref.name : ref.name.addr.publicKey,
     } as TransactionBoxReference
   }

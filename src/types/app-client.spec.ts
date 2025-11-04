@@ -116,7 +116,7 @@ describe('application-client', () => {
       },
     })
 
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.OptIn)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.OptIn)
     expect(app.appId).toBeGreaterThan(0)
     expect(app.appAddress).toBe(getApplicationAddress(app.appId).toString())
     expect(app.confirmation?.appId).toBe(BigInt(app.appId))
@@ -281,7 +281,7 @@ describe('application-client', () => {
     expect(app.createdRound).toBe(createdApp.createdRound)
     expect(app.updatedRound).not.toBe(app.createdRound)
     expect(app.updatedRound).toBe(Number(app.confirmation.confirmedRound))
-    expect(app.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
+    expect(app.transaction.appCall?.onComplete).toBe(OnApplicationComplete.UpdateApplication)
     expect(app.return?.returnValue).toBe('arg_io')
   })
 
@@ -318,8 +318,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
   })
 
   test('Deploy app - replace (abi)', async () => {
@@ -365,8 +365,8 @@ describe('application-client', () => {
     invariant(app.confirmation)
     invariant(app.deleteResult)
     invariant(app.deleteResult.confirmation)
-    expect(app.deleteResult.transaction.applicationCall?.appId).toBe(BigInt(createdApp.appId))
-    expect(app.deleteResult.transaction.applicationCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
+    expect(app.deleteResult.transaction.appCall?.appId).toBe(BigInt(createdApp.appId))
+    expect(app.deleteResult.transaction.appCall?.onComplete).toBe(OnApplicationComplete.DeleteApplication)
     expect(app.return?.returnValue).toBe('arg_io')
     expect(app.deleteReturn?.returnValue).toBe('arg2_io')
   })
@@ -534,7 +534,7 @@ describe('application-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transaction.applicationCall?.boxes).toEqual([{ appIndex: 0n, name: encoder.encode('1') }])
+    expect(call.transaction.appCall?.boxes).toEqual([{ appId: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {
@@ -731,7 +731,7 @@ describe('application-client', () => {
     })
 
     expect(result.transaction.payment?.amount).toBe(fundAmount.microAlgo)
-    expect(result.transaction.type).toBe(TransactionType.pay)
+    expect(result.transaction.type).toBe(TransactionType.Payment)
     expect(result.transaction.payment?.receiver?.toString()).toBe(app.appAddress)
     expect(result.transaction.sender.toString()).toBe(testAccount.toString())
     invariant(result.confirmation)

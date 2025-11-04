@@ -520,7 +520,7 @@ export class AppDeployer {
         const appTransactions = await indexer.searchTransactions(this._indexer!, (s) =>
           s
             .minRound(createdApp.createdAtRound)
-            .txType(TransactionType.appl)
+            .txType(TransactionType.AppCall)
             .applicationID(Number(createdApp.id))
             .address(creatorAddress)
             .addressRole('sender')

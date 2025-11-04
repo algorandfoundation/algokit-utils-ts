@@ -1610,8 +1610,8 @@ export class AppClient {
       }
 
       if (
-        !programsDefinedAndEqual(txn?.applicationCall?.clearStateProgram, this._lastCompiled.clear) ||
-        !programsDefinedAndEqual(txn?.applicationCall?.approvalProgram, this._lastCompiled?.approval)
+        !programsDefinedAndEqual(txn?.appCall?.clearStateProgram, this._lastCompiled.clear) ||
+        !programsDefinedAndEqual(txn?.appCall?.approvalProgram, this._lastCompiled?.approval)
       ) {
         return e
       }
