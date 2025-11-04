@@ -110,7 +110,7 @@ export type AppCallTransactionFields = {
   /**
    * Resources accessed by the application
    */
-  access?: ResourceReference[]
+  accessReferences?: ResourceReference[]
 }
 
 /**

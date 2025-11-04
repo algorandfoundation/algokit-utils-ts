@@ -628,7 +628,6 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
     txDto.apas = bigIntArrayCodec.encode(transaction.appCall.assetReferences ?? [])
     // Encode box references
     if (transaction.appCall.boxReferences && transaction.appCall.boxReferences.length > 0) {
-      // TODO: PD same fix for account, app
       txDto.apbx = transaction.appCall.boxReferences.map((box) => {
         const isCurrentApp = box.appId === 0n || box.appId === transaction.appCall?.appId
         const foreignAppsIndex = (transaction.appCall?.appReferences ?? []).indexOf(box.appId) + 1
@@ -643,7 +642,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       })
     }
     // Encode access references
-    if (transaction.appCall.access && transaction.appCall.access.length > 0) {
+    if (transaction.appCall.accessReferences && transaction.appCall.accessReferences.length > 0) {
       const accessList: ResourceReferenceDto[] = []
       const appId = transaction.appCall.appId
 
@@ -685,7 +684,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         return accessList.length // length is 1-based position of new element
       }
 
-      for (const resourceReference of transaction.appCall.access) {
+      for (const resourceReference of transaction.appCall.accessReferences) {
         if (resourceReference.address || resourceReference.assetId || resourceReference.appId) {
           ensure(resourceReference)
           continue
@@ -920,7 +919,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
             name: bytesCodec.decode(box.n),
           }
         }),
-        access: transactionDto.al
+        accessReferences: transactionDto.al
           ? (() => {
               const accessList = transactionDto.al!
               const result: ResourceReference[] = []

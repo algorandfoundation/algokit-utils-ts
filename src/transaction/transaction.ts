@@ -503,7 +503,7 @@ export async function prepareGroupForSending(
     : [0n, new Map<number, bigint>()]
 
   const appCallHasAccessReferences = (txn: Transaction) => {
-    return txn.type === TransactionType.AppCall && txn.appCall?.access && txn.appCall?.access.length > 0
+    return txn.type === TransactionType.AppCall && txn.appCall?.accessReferences && txn.appCall?.accessReferences.length > 0
   }
 
   const indexesWithAccessReferences: number[] = []

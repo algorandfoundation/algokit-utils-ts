@@ -523,7 +523,7 @@ export function makeApplicationCallTxnFromObject({
       assetReferences: access2 ? undefined : assetReferences,
       appReferences: access2 ? undefined : appReferences,
       boxReferences: access2 ? undefined : boxReferences,
-      access: access2,
+      accessReferences: access2,
     },
   }
 
