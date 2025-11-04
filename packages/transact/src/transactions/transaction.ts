@@ -623,15 +623,15 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       })
     }
     txDto.apaa = bytesArrayCodec.encode(transaction.appCall.args ?? [])
-    txDto.apat = addressArrayCodec.encode(transaction.appCall.accounts ?? [])
-    txDto.apfa = bigIntArrayCodec.encode(transaction.appCall.foreignApps ?? [])
-    txDto.apas = bigIntArrayCodec.encode(transaction.appCall.foreignAssets ?? [])
+    txDto.apat = addressArrayCodec.encode(transaction.appCall.accountReferences ?? [])
+    txDto.apfa = bigIntArrayCodec.encode(transaction.appCall.appReferences ?? [])
+    txDto.apas = bigIntArrayCodec.encode(transaction.appCall.assetReferences ?? [])
     // Encode box references
-    if (transaction.appCall.boxes && transaction.appCall.boxes.length > 0) {
+    if (transaction.appCall.boxReferences && transaction.appCall.boxReferences.length > 0) {
       // TODO: PD same fix for account, app
-      txDto.apbx = transaction.appCall.boxes.map((box) => {
+      txDto.apbx = transaction.appCall.boxReferences.map((box) => {
         const isCurrentApp = box.appId === 0n || box.appId === transaction.appCall?.appId
-        const foreignAppsIndex = (transaction.appCall?.foreignApps ?? []).indexOf(box.appId) + 1
+        const foreignAppsIndex = (transaction.appCall?.appReferences ?? []).indexOf(box.appId) + 1
         if (foreignAppsIndex === 0 && !isCurrentApp) {
           throw new Error(`Box ref with appId ${box.appId} not in foreign-apps`)
         }
@@ -898,10 +898,10 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
         approvalProgram: bytesCodec.decodeOptional(transactionDto.apap),
         clearStateProgram: bytesCodec.decodeOptional(transactionDto.apsu),
         args: transactionDto.apaa?.map((arg) => bytesCodec.decode(arg)),
-        accounts: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
-        foreignApps: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
-        foreignAssets: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
-        boxes: transactionDto.apbx?.map((box) => {
+        accountReferences: transactionDto.apat?.map((addr) => addressCodec.decode(addr)),
+        appReferences: transactionDto.apfa?.map((id) => bigIntCodec.decode(id)),
+        assetReferences: transactionDto.apas?.map((id) => bigIntCodec.decode(id)),
+        boxReferences: transactionDto.apbx?.map((box) => {
           const index = typeof box.i === 'bigint' ? Number(box.i) : (box.i ?? 0)
           let appId: bigint
           if (index === 0) {

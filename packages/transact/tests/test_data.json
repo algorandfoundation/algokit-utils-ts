@@ -76,7 +76,7 @@
     ],
     "transaction": {
       "appCall": {
-        "accounts": [
+        "accountReferences": [
           "KVAGZI3WJI36TTTKJUI36ECGP3NHGR5VBJNIXG3DROHPGH2XFC36D4HENE",
           "KVAGZI3WJI36TTTKJUI36ECGP3NHGR5VBJNIXG3DROHPGH2XFC36D4HENE"
         ],
@@ -91,7 +91,7 @@
             46, 106, 115, 111, 110
           ]
         ],
-        "foreignAssets": [84366776],
+        "assetReferences": [84366776],
         "onComplete": "NoOp"
       },
       "fee": 5000,
@@ -463,13 +463,13 @@
     ],
     "transaction": {
       "appCall": {
-        "accounts": [
+        "accountReferences": [
           "MDIVKI64M2HEKCWKH7SOTUXEEW6KNOYSAOBTDTS32KUQOGUT75D43MSP5M",
           "H3OQEQIIC35RZTJNU5A75LT4PCTUCF3VKVEQTSXAJMUGNTRUKEKI4QSRW4",
           "MDIVKI64M2HEKCWKH7SOTUXEEW6KNOYSAOBTDTS32KUQOGUT75D43MSP5M"
         ],
         "appId": 1898586902,
-        "foreignAssets": [850924184],
+        "assetReferences": [850924184],
         "onComplete": "DeleteApplication"
       },
       "fee": 1000,

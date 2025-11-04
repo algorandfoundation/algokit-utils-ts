@@ -417,7 +417,7 @@ describe('ARC32: app-factory-and-app-client', () => {
     })
 
     const encoder = new TextEncoder()
-    expect(call.transactions[0].appCall?.boxes).toEqual([{ appId: 0n, name: encoder.encode('1') }])
+    expect(call.transactions[0].appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
 
     const call2 = await client.createTransaction.call({
       method: 'call_abi',
@@ -425,7 +425,7 @@ describe('ARC32: app-factory-and-app-client', () => {
       boxReferences: ['1'],
     })
 
-    expect(call2.transactions[0].appCall?.boxes).toEqual([{ appId: 0n, name: encoder.encode('1') }])
+    expect(call2.transactions[0].appCall?.boxReferences).toEqual([{ appId: 0n, name: encoder.encode('1') }])
   })
 
   test('Construct transaction with abi encoding including transaction', async () => {

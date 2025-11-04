@@ -34,7 +34,7 @@ const onApplicationCompleteTypes = Object.fromEntries(Object.entries(OnApplicati
 const defaultReviver = (key: string, value: unknown) => {
   if (Array.isArray(value) && value.every((n) => typeof n === 'number')) {
     // keys that should be arrays of BigInts
-    if (key === 'foreignAssets' || key === 'foreignApps' || key === 'positionsToReveal') {
+    if (key === 'assetReferences' || key === 'appReferences' || key === 'positionsToReveal') {
       return value.map((n) => BigInt(n))
     }
 

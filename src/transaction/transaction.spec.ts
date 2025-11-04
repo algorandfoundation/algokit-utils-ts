@@ -972,8 +972,8 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
         .send({ populateAppCallResources: true })
 
-      const v8CallAccts = transactions[0].appCall?.accounts ?? []
-      const v9CallAccts = transactions[1].appCall?.accounts ?? []
+      const v8CallAccts = transactions[0].appCall?.accountReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
     })
@@ -996,8 +996,8 @@ describe('Resource population: Mixed', () => {
         )
         .send({ populateAppCallResources: true })
 
-      const v8CallApps = transactions[0].appCall?.foreignApps ?? []
-      const v9CallAccts = transactions[1].appCall?.accounts ?? []
+      const v8CallApps = transactions[0].appCall?.appReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
     })
@@ -1106,7 +1106,7 @@ describe('Resource population: meta', () => {
     })
     const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
-    expect(res.transaction.appCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('rekeyed account', async () => {
@@ -1127,7 +1127,7 @@ describe('Resource population: meta', () => {
       method: 'senderAssetBalance',
     })
 
-    expect(res.transaction.appCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('create box in new app', async () => {
@@ -1141,7 +1141,7 @@ describe('Resource population: meta', () => {
       staticFee: (4_000).microAlgo(),
     })
 
-    const boxRef = result.transaction.appCall?.boxes?.[0]
+    const boxRef = result.transaction.appCall?.boxReferences?.[0]
     expect(boxRef).toBeDefined()
     expect(boxRef?.appId).toBe(0n)
   })
@@ -1198,19 +1198,19 @@ describe('Resource population: meta', () => {
       for (const txnWithSigner of populatedAtc.buildGroup()) {
         const txn = txnWithSigner.txn
 
-        for (const acct of txn.appCall?.accounts ?? []) {
+        for (const acct of txn.appCall?.accountReferences ?? []) {
           resources.push(acct.toString())
         }
 
-        for (const asset of txn.appCall?.foreignAssets ?? []) {
+        for (const asset of txn.appCall?.assetReferences ?? []) {
           resources.push(asset.toString())
         }
 
-        for (const app of txn.appCall?.foreignApps ?? []) {
+        for (const app of txn.appCall?.appReferences ?? []) {
           resources.push(app.toString())
         }
 
-        for (const box of txn.appCall?.boxes ?? []) {
+        for (const box of txn.appCall?.boxReferences ?? []) {
           resources.push(`${box.appId}-${box.name.toString()}`)
         }
       }
@@ -1382,7 +1382,7 @@ describe('access references', () => {
         populateAppCallResources: false,
         accountReferences: [alice, ...(await getTestAccounts(8))],
       }),
-    ).rejects.toThrow(/Accounts cannot exceed 8 refs, got 9/)
+    ).rejects.toThrow(/Account references cannot exceed 8 refs, got 9/)
   })
 
   test('up to 16 access addresses can be used', async () => {

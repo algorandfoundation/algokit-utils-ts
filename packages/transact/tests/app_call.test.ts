@@ -408,9 +408,9 @@ describe('App Call', () => {
             appId: 123n, // Existing app
             onComplete: OnApplicationComplete.NoOp,
             args: [new Uint8Array([1, 2, 3]), new Uint8Array([4, 5, 6])],
-            accounts: ['ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK'],
-            foreignApps: [456n, 789n],
-            foreignAssets: [101112n, 131415n],
+            accountReferences: ['ADSFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFKJSDFK'],
+            appReferences: [456n, 789n],
+            assetReferences: [101112n, 131415n],
           },
         }
 
@@ -523,12 +523,11 @@ describe('App Call', () => {
           appCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
-            accounts: manyAccounts,
+            accountReferences: manyAccounts,
           },
         }
 
-        expect(() => validateTransaction(transaction)).toThrow(`App call validation failed: Accounts cannot exceed 8 refs, got 9
-Total references cannot exceed 8 refs, got 9`)
+        expect(() => validateTransaction(transaction)).toThrow('Account references cannot exceed 8 refs')
       })
 
       test('should throw error when too many app references are provided', () => {
@@ -541,12 +540,11 @@ Total references cannot exceed 8 refs, got 9`)
           appCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
-            foreignApps: manyApps,
+            appReferences: manyApps,
           },
         }
 
-        expect(() => validateTransaction(transaction)).toThrow(`App call validation failed: Foreign apps cannot exceed 8 refs, got 9
-Total references cannot exceed 8 refs, got 9`)
+        expect(() => validateTransaction(transaction)).toThrow('App references cannot exceed 8 refs')
       })
 
       test('should throw error when too many asset references are provided', () => {
@@ -559,12 +557,11 @@ Total references cannot exceed 8 refs, got 9`)
           appCall: {
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
-            foreignAssets: manyAssets,
+            assetReferences: manyAssets,
           },
         }
 
-        expect(() => validateTransaction(transaction)).toThrow(`App call validation failed: Foreign assets cannot exceed 8 refs, got 9
-Total references cannot exceed 8 refs, got 9`)
+        expect(() => validateTransaction(transaction)).toThrow('Asset references cannot exceed 8 refs')
       })
 
       test('should validate app call with maximum allowed references', () => {
@@ -583,9 +580,9 @@ Total references cannot exceed 8 refs, got 9`)
             appId: 123n,
             onComplete: OnApplicationComplete.NoOp,
             args: maxArgs,
-            accounts: maxAccounts,
-            foreignApps: maxApps,
-            foreignAssets: maxAssets,
+            accountReferences: maxAccounts,
+            appReferences: maxApps,
+            assetReferences: maxAssets,
           },
         }
 
