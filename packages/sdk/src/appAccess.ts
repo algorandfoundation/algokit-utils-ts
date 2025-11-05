@@ -1,5 +1,5 @@
 import { ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
-import { BoxReference, HoldingReference, LocalsReference, ResourceReference } from '@algorandfoundation/algokit-transact'
+import { AccessReference, BoxReference, HoldingReference, LocalsReference } from '@algorandfoundation/algokit-transact'
 import { Address } from './encoding/address.js'
 
 /**
@@ -29,8 +29,8 @@ export function foreignArraysToResourceReferences({
   holdings?: ReadonlyArray<HoldingReference>
   locals?: ReadonlyArray<LocalsReference>
   boxes?: ReadonlyArray<BoxReference>
-}): Array<ResourceReference> {
-  const accessList: Array<ResourceReference> = []
+}): Array<AccessReference> {
+  const accessList: Array<AccessReference> = []
   function ensureAddress(addr: string) {
     if (!addr || addr === ZERO_ADDRESS) {
       return
@@ -75,8 +75,8 @@ export function foreignArraysToResourceReferences({
     accessList.push({ locals: local })
   }
   for (const box of boxes ?? []) {
-    if (box.appIndex && BigInt(box.appIndex) !== appIndex) {
-      ensureApp(box.appIndex)
+    if (box.appId && BigInt(box.appId) !== appIndex) {
+      ensureApp(box.appId)
     }
     accessList.push({ box })
   }

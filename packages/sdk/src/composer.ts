@@ -4,7 +4,7 @@ import type {
   SimulateRequest,
   SimulateTransaction,
 } from '@algorandfoundation/algokit-algod-client'
-import type { BoxReference, ResourceReference, SignedTransaction } from '@algorandfoundation/algokit-transact'
+import type { AccessReference, BoxReference, SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { OnApplicationComplete, decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import {
   ABIAddressType,
@@ -240,7 +240,7 @@ export class AtomicTransactionComposer {
     /** The box references for this application call */
     boxes?: BoxReference[]
     /** The resource references for this application call */
-    access?: ResourceReference[]
+    access?: AccessReference[]
     /** The note value for this application call */
     note?: Uint8Array
     /** The lease value for this application call */

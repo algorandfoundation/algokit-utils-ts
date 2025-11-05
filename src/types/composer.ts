@@ -8,6 +8,7 @@ import {
 } from '@algorandfoundation/algokit-algod-client'
 import { EMPTY_SIGNATURE, concatArrays } from '@algorandfoundation/algokit-common'
 import {
+  AccessReference,
   OnApplicationComplete,
   SignedTransaction,
   Transaction,
@@ -26,7 +27,7 @@ import { asJson } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
-import { AccessReference, AppManager, BoxIdentifier, BoxReference } from './app-manager'
+import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import {
   buildAppCall,
   buildAppCallMethodCall,
@@ -1699,7 +1700,7 @@ export class TransactionComposer {
         let priority = FeePriority.Covered
         if (txnAnalysis.requiredFeeDelta && FeeDelta.isDeficit(txnAnalysis.requiredFeeDelta)) {
           const deficitAmount = FeeDelta.amount(txnAnalysis.requiredFeeDelta)
-          if (isImmutableFee || txn.type !== TransactionType.appl) {
+          if (isImmutableFee || txn.type !== TransactionType.AppCall) {
             // High priority: transactions that can't be modified
             priority = FeePriority.ImmutableDeficit(deficitAmount)
           } else {
@@ -1741,7 +1742,7 @@ export class TransactionComposer {
           if (additionalFeeDelta && FeeDelta.isDeficit(additionalFeeDelta)) {
             const additionalDeficitAmount = FeeDelta.amount(additionalFeeDelta)
 
-            if (transactions[groupIndex].type === TransactionType.appl) {
+            if (transactions[groupIndex].type === TransactionType.AppCall) {
               const currentFee = transactions[groupIndex].fee || 0n
               const transactionFee = currentFee + additionalDeficitAmount
 
@@ -1762,7 +1763,7 @@ export class TransactionComposer {
         }
 
         // Apply transaction-level resource population
-        if (unnamedResourcesAccessed && transactions[groupIndex].type === TransactionType.appl) {
+        if (unnamedResourcesAccessed && transactions[groupIndex].type === TransactionType.AppCall) {
           populateTransactionResources(transactions[groupIndex], unnamedResourcesAccessed, groupIndex)
         }
       }
@@ -1806,7 +1807,7 @@ export class TransactionComposer {
       const ctxn = this.txns[groupIndex]
       const txnToSimulate = { ...txn }
       txnToSimulate.group = undefined
-      if (analysisParams.coverAppCallInnerTransactionFees && txn.type === TransactionType.appl) {
+      if (analysisParams.coverAppCallInnerTransactionFees && txn.type === TransactionType.AppCall) {
         const logicalMaxFee = getLogicalMaxFee(ctxn)
         if (logicalMaxFee !== undefined) {
           txnToSimulate.fee = logicalMaxFee
@@ -1878,7 +1879,7 @@ export class TransactionComposer {
         const txnFee = btxn.fee ?? 0n
         const txnFeeDelta = FeeDelta.fromBigInt(minTxnFee - txnFee)
 
-        if (btxn.type === TransactionType.appl) {
+        if (btxn.type === TransactionType.AppCall) {
           // Calculate inner transaction fee delta
           const innerTxnsFeeDelta = calculateInnerFeeDelta(simulateTxnResult.txnResult.innerTxns, suggestedParams.minFee)
           requiredFeeDelta = FeeDelta.fromBigInt(
@@ -2176,7 +2177,9 @@ export class TransactionComposer {
 
 function isAppCall(ctxn: Txn): boolean {
   return (
-    ctxn.type === 'appCall' || ctxn.type === 'methodCall' || (ctxn.type === 'txnWithSigner' && ctxn.data.txn.type === TransactionType.appl)
+    ctxn.type === 'appCall' ||
+    ctxn.type === 'methodCall' ||
+    (ctxn.type === 'txnWithSigner' && ctxn.data.txn.type === TransactionType.AppCall)
   )
 }
 

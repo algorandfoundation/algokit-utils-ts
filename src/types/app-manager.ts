@@ -1,12 +1,5 @@
-import {
-  AlgodClient,
-  ApplicationLocalReference,
-  AssetHoldingReference,
-  EvalDelta,
-  PendingTransactionResponse,
-  TealValue,
-} from '@algorandfoundation/algokit-algod-client'
-import { ResourceReference, BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
+import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
+import { BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { getABIReturnValue } from '../transaction/transaction'
@@ -101,24 +94,6 @@ export interface BoxValuesRequestParams {
   boxNames: BoxIdentifier[]
   /** The ABI type to decode the value using */
   type: algosdk.ABIType
-}
-
-/**
- * Names a single resource reference. Only one of the fields should be set.
- */
-export interface AccessReference {
-  /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
-  address?: string | Address
-  /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
-  appId?: bigint
-  /** Asset ID whose AssetParams may be read by the executing ApprovalProgram or ClearStateProgram. */
-  assetId?: bigint
-  /** Defines a holding by referring to an Address and Asset it belongs to. */
-  holding?: AssetHoldingReference
-  /** Defines a local state by referring to an Address and App it belongs to. */
-  locals?: ApplicationLocalReference
-  /** Defines a box by its name and the application ID it belongs to. */
-  box?: BoxReference
 }
 
 /** Allows management of application information. */
@@ -227,7 +202,7 @@ export class AppManager {
    * @returns The app information
    */
   public async getById(appId: bigint): Promise<AppInformation> {
-    const app = await this._algod.getApplicationById(Number(appId))
+    const app = await this._algod.getApplicationById(appId)
     // Convert global state from new format (key: string) to old format (key: Uint8Array)
     const convertedGlobalState = (app.params.globalState ?? []).map((kv) => ({
       key: new Uint8Array(Buffer.from(kv.key, 'base64')),
@@ -275,8 +250,7 @@ export class AppManager {
    * ```
    */
   public async getLocalState(appId: bigint, address: Address | string) {
-    const addressStr = typeof address === 'string' ? address : address.toString()
-    const appInfo = await this._algod.accountApplicationInformation(addressStr, Number(appId))
+    const appInfo = await this._algod.accountApplicationInformation(address.toString(), Number(appId))
 
     if (!appInfo.appLocalState) {
       throw new Error("Couldn't find local state")
@@ -305,7 +279,7 @@ export class AppManager {
    * ```
    */
   public async getBoxNames(appId: bigint): Promise<BoxName[]> {
-    const boxResult = await this._algod.getApplicationBoxes(Number(appId))
+    const boxResult = await this._algod.getApplicationBoxes(appId)
     return boxResult.boxes.map((b: { name: Uint8Array }) => {
       return {
         nameRaw: b.name,
@@ -388,7 +362,7 @@ export class AppManager {
   public static getBoxReference(boxId: BoxIdentifier | BoxReference): TransactionBoxReference {
     const ref = typeof boxId === 'object' && 'appId' in boxId ? boxId : { appId: 0n, name: boxId }
     return {
-      appIndex: ref.appId,
+      appId: ref.appId,
       name: typeof ref.name === 'string' ? new TextEncoder().encode(ref.name) : 'length' in ref.name ? ref.name : ref.name.addr.publicKey,
     } as TransactionBoxReference
   }
@@ -578,40 +552,6 @@ export class AppManager {
       .map((line) => stripCommentFromLine(line))
       .join('\n')
   }
-}
-
-/**
- * Returns an `algosdk.TransactionResourceReference` given a `AccessReference`.
- */
-export function getAccessReference(accessReference: AccessReference): ResourceReference {
-  const result: ResourceReference = {}
-
-  if (accessReference.address !== undefined) {
-    result.address = accessReference.address.toString()
-  }
-  if (accessReference.appId !== undefined) {
-    result.appId = accessReference.appId
-  }
-  if (accessReference.assetId !== undefined) {
-    result.assetId = accessReference.assetId
-  }
-  if (accessReference.holding !== undefined) {
-    result.holding = {
-      address: accessReference.holding.account,
-      assetId: accessReference.holding.asset,
-    }
-  }
-  if (accessReference.locals !== undefined) {
-    result.locals = {
-      address: accessReference.locals.account,
-      appId: accessReference.locals.app,
-    }
-  }
-  if (accessReference.box !== undefined) {
-    result.box = AppManager.getBoxReference(accessReference.box)
-  }
-
-  return result
 }
 
 /**

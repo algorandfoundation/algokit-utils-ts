@@ -65,7 +65,7 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
   rekeyTo,
 }: PaymentTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    type: TransactionType.pay,
+    type: TransactionType.Payment,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -104,7 +104,7 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
   rekeyTo,
 }: KeyRegistrationTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    type: TransactionType.keyreg,
+    type: TransactionType.KeyRegistration,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -152,7 +152,7 @@ export function makeBaseAssetConfigTxn({
   suggestedParams,
 }: AssetConfigurationTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    type: TransactionType.acfg,
+    type: TransactionType.AssetConfig,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -359,7 +359,7 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
   rekeyTo,
 }: AssetFreezeTransactionParams & CommonTransactionParams): Transaction {
   const txn: Transaction = {
-    type: TransactionType.afrz,
+    type: TransactionType.AssetFreeze,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -402,7 +402,7 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
   }
 
   const txn: Transaction = {
-    type: TransactionType.axfer,
+    type: TransactionType.AssetTransfer,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -483,12 +483,12 @@ export function makeApplicationCallTxnFromObject({
   const boxReferences = access2
     ? undefined
     : boxes?.map((box) => ({
-        appIndex: ensureBigInt(box.appIndex) || BigInt(0),
+        appId: ensureBigInt(box.appId) || BigInt(0),
         name: box.name,
       }))
 
   const txn: Transaction = {
-    type: TransactionType.appl,
+    type: TransactionType.AppCall,
     sender: addressToString(sender)!,
     firstValid: BigInt(suggestedParams.firstRound),
     lastValid: BigInt(suggestedParams.lastRound),
@@ -497,7 +497,7 @@ export function makeApplicationCallTxnFromObject({
     note,
     lease,
     rekeyTo: addressToString(rekeyTo),
-    applicationCall: {
+    appCall: {
       appId: ensureBigInt(appIndex) || BigInt(0),
       onComplete,
       approvalProgram,
@@ -519,11 +519,11 @@ export function makeApplicationCallTxnFromObject({
       extraProgramPages: extraPages !== undefined ? Number(extraPages) : undefined,
       args: appArgs,
       // Only pass legacy foreign arrays if access is not provided
-      accounts: access2 ? undefined : accountReferences,
-      foreignAssets: access2 ? undefined : assetReferences,
-      foreignApps: access2 ? undefined : appReferences,
-      boxes: access2 ? undefined : boxReferences,
-      access: access2,
+      accountReferences: access2 ? undefined : accountReferences,
+      assetReferences: access2 ? undefined : assetReferences,
+      appReferences: access2 ? undefined : appReferences,
+      boxReferences: access2 ? undefined : boxReferences,
+      accessReferences: access2,
     },
   }
 

@@ -1,4 +1,4 @@
-import { OnApplicationComplete, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
@@ -134,9 +134,9 @@ describe('transaction', () => {
     const { algorand, algod } = localnet.context
     const txn = await algorand.createTransaction.payment(getTestTransaction())
     try {
-      await waitForConfirmation(getTransactionId(txn), 5, algod)
+      await waitForConfirmation(txn.txID(), 5, algod)
     } catch (e: unknown) {
-      expect((e as Error).message).toEqual(`Transaction ${getTransactionId(txn)} not confirmed after 5 rounds`)
+      expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
     }
   })
 
@@ -144,18 +144,13 @@ describe('transaction', () => {
     const { algorand, testAccount } = localnet.context
     const txn1 = await algorand.createTransaction.payment(getTestTransaction((1).microAlgo()))
     // This will fail due to fee being too high
-    const txn2 = await algorand.createTransaction.payment(getTestTransaction((2).microAlgo()))
-
-    const composer = algorand.newGroup()
+    const txn2 = await algorand.createTransaction.payment(getTestTransaction((9999999999999).microAlgo()))
     try {
-      composer.addTransaction(txn1).addTransaction(txn2).send()
+      await algorand.newGroup().addTransaction(txn1).addTransaction(txn2).send()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      const { transactions } = await composer.build()
-      const failedTransaction = transactions[-1].txn
-
       const messageRegex = new RegExp(
-        `transaction ${getTransactionId(failedTransaction)}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
+        `transaction ${txn2.txID()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
       )
       expect(e.traces[0].message).toMatch(messageRegex)
     }
@@ -471,7 +466,7 @@ describe('transaction', () => {
       await Promise.all(
         result.transactions.map(async (txn) => {
           expect(Buffer.from(txn.group!).toString('base64')).toBe(result.groupId)
-          await localnet.context.waitForIndexerTransaction(getTransactionId(txn))
+          await localnet.context.waitForIndexerTransaction(txn.txID())
         }),
       )
     })
@@ -972,8 +967,8 @@ describe('Resource population: Mixed', () => {
         .addAppCallMethodCall(await v9Client.params.call({ method: 'addressBalance', args: [acct.addr.toString()], sender: testAccount }))
         .send({ populateAppCallResources: true })
 
-      const v8CallAccts = transactions[0].applicationCall?.accounts ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallAccts = transactions[0].appCall?.accountReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallAccts.length + v9CallAccts.length).toBe(1)
     })
@@ -996,8 +991,8 @@ describe('Resource population: Mixed', () => {
         )
         .send({ populateAppCallResources: true })
 
-      const v8CallApps = transactions[0].applicationCall?.foreignApps ?? []
-      const v9CallAccts = transactions[1].applicationCall?.accounts ?? []
+      const v8CallApps = transactions[0].appCall?.appReferences ?? []
+      const v9CallAccts = transactions[1].appCall?.accountReferences ?? []
 
       expect(v8CallApps!.length + v9CallAccts!.length).toBe(1)
     })
@@ -1106,7 +1101,7 @@ describe('Resource population: meta', () => {
     })
     const res = await externalClient.send.call({ method: 'senderAssetBalance' })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('rekeyed account', async () => {
@@ -1127,7 +1122,7 @@ describe('Resource population: meta', () => {
       method: 'senderAssetBalance',
     })
 
-    expect(res.transaction.applicationCall?.accounts?.length || 0).toBe(0)
+    expect(res.transaction.appCall?.accountReferences?.length || 0).toBe(0)
   })
 
   test('create box in new app', async () => {
@@ -1141,9 +1136,9 @@ describe('Resource population: meta', () => {
       staticFee: (4_000).microAlgo(),
     })
 
-    const boxRef = result.transaction.applicationCall?.boxes?.[0]
+    const boxRef = result.transaction.appCall?.boxReferences?.[0]
     expect(boxRef).toBeDefined()
-    expect(boxRef?.appIndex).toBe(0n)
+    expect(boxRef?.appId).toBe(0n)
   })
 
   // TODO: PD - review this test
@@ -1199,22 +1194,22 @@ describe('Resource population: meta', () => {
   //     for (const txnWithSigner of populatedAtc.buildGroup()) {
   //       const txn = txnWithSigner.txn
 
-  //       for (const acct of txn.applicationCall?.accounts ?? []) {
-  //         resources.push(acct.toString())
-  //       }
+  //   for (const acct of txn.appCall?.accountReferences ?? []) {
+  //     resources.push(acct.toString())
+  //   }
 
-  //       for (const asset of txn.applicationCall?.foreignAssets ?? []) {
-  //         resources.push(asset.toString())
-  //       }
+  //   for (const asset of txn.appCall?.assetReferences ?? []) {
+  //     resources.push(asset.toString())
+  //   }
 
-  //       for (const app of txn.applicationCall?.foreignApps ?? []) {
-  //         resources.push(app.toString())
-  //       }
+  //   for (const app of txn.appCall?.appReferences ?? []) {
+  //     resources.push(app.toString())
+  //   }
 
-  //       for (const box of txn.applicationCall?.boxes ?? []) {
-  //         resources.push(`${box.appIndex}-${box.name.toString()}`)
-  //       }
-  //     }
+  //   for (const box of txn.appCall?.boxReferences ?? []) {
+  //     resources.push(`${box.appId}-${box.name.toString()}`)
+  //   }
+  // }
 
   //     return resources
   //   }
@@ -1362,7 +1357,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice }],
+      accessReferences: [{ address: alice.toString() }],
     })
   })
 
@@ -1383,7 +1378,7 @@ describe('access references', () => {
         populateAppCallResources: false,
         accountReferences: [alice, ...(await getTestAccounts(8))],
       }),
-    ).rejects.toThrow(/Account references cannot exceed 8 refs/)
+    ).rejects.toThrow(/Account references cannot exceed 8 refs, got 9/)
   })
 
   test('up to 16 access addresses can be used', async () => {
@@ -1391,7 +1386,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
+      accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(15)).map((a) => ({ address: a.toString() }))],
     })
   })
 
@@ -1401,7 +1396,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
+        accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(16)).map((a) => ({ address: a.toString() }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
   })
@@ -1442,7 +1437,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { account: alice.toString(), asset: assetId } }],
+      accessReferences: [{ holding: { address: alice.toString(), assetId: assetId } }],
     })
   })
 
@@ -1455,7 +1450,7 @@ describe('access references', () => {
       method: 'externalLocal',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ locals: { account: alice.toString(), app: externalClient.appId } }],
+      accessReferences: [{ locals: { address: alice.toString(), appId: externalClient.appId } }],
     })
   })
 })

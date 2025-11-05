@@ -1,5 +1,18 @@
 import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
-import { SignedTransaction, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import {
+  AppCallTransactionFields,
+  AssetConfigTransactionFields,
+  AssetFreezeTransactionFields,
+  AssetTransferTransactionFields,
+  KeyRegistrationTransactionFields,
+  PaymentTransactionFields,
+  SignedTransaction,
+  Transaction,
+  TransactionType,
+  getTransactionId,
+} from '@algorandfoundation/algokit-transact'
+import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
+import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
 import * as algosdk from '@algorandfoundation/sdk'
 import { AtomicTransactionComposer, LogicSigAccount, type Account } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
@@ -171,46 +184,48 @@ export interface AtomicTransactionComposerToSend extends SendParams {
  *
  * All Transaction properties are accessible directly on instances of this class.
  */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class TransactionWrapper {
-  private _transaction: Transaction
+
+export class TransactionWrapper implements Transaction {
+  type: TransactionType
+  sender: string
+  fee?: bigint | undefined
+  firstValid: bigint
+  lastValid: bigint
+  genesisHash?: Uint8Array | undefined
+  genesisId?: string | undefined
+  note?: Uint8Array | undefined
+  rekeyTo?: string | undefined
+  lease?: Uint8Array | undefined
+  group?: Uint8Array | undefined
+  payment?: PaymentTransactionFields | undefined
+  assetTransfer?: AssetTransferTransactionFields | undefined
+  assetConfig?: AssetConfigTransactionFields | undefined
+  appCall?: AppCallTransactionFields | undefined
+  keyRegistration?: KeyRegistrationTransactionFields | undefined
+  assetFreeze?: AssetFreezeTransactionFields | undefined
+  heartbeat?: HeartbeatTransactionFields | undefined
+  stateProof?: StateProofTransactionFields | undefined
 
   constructor(transaction: Transaction) {
-    this._transaction = transaction
-
-    // Create a proxy to forward all property accesses to the underlying transaction
-    // The proxy makes all Transaction properties available on this instance
-    return new Proxy(this, {
-      get(target, prop) {
-        // Only intercept the txID method
-        if (prop === 'txID') {
-          return target.txID.bind(target)
-        }
-        // Forward everything else to the underlying transaction
-        const value = Reflect.get(target._transaction, prop)
-        // If it's a function, bind it to the transaction
-        if (typeof value === 'function') {
-          return value.bind(target._transaction)
-        }
-        return value
-      },
-      set(target, prop, value) {
-        // Set on the underlying transaction
-        return Reflect.set(target._transaction, prop, value)
-      },
-      has(target, prop) {
-        return prop === 'txID' || prop in target._transaction
-      },
-      ownKeys(target) {
-        return ['txID', ...Reflect.ownKeys(target._transaction)]
-      },
-      getOwnPropertyDescriptor(target, prop) {
-        if (prop === 'txID') {
-          return { configurable: true, enumerable: true, writable: true }
-        }
-        return Reflect.getOwnPropertyDescriptor(target._transaction, prop)
-      },
-    }) as unknown as TransactionWrapper & Transaction
+    this.type = transaction.type
+    this.sender = transaction.sender
+    this.fee = transaction.fee
+    this.firstValid = transaction.firstValid
+    this.lastValid = transaction.lastValid
+    this.genesisHash = transaction.genesisHash
+    this.genesisId = transaction.genesisId
+    this.note = transaction.note
+    this.rekeyTo = transaction.rekeyTo
+    this.lease = transaction.lease
+    this.group = transaction.group
+    this.payment = transaction.payment
+    this.assetTransfer = transaction.assetTransfer
+    this.assetConfig = transaction.assetConfig
+    this.appCall = transaction.appCall
+    this.keyRegistration = transaction.keyRegistration
+    this.assetFreeze = transaction.assetFreeze
+    this.heartbeat = transaction.heartbeat
+    this.stateProof = transaction.stateProof
   }
 
   /**
@@ -218,12 +233,9 @@ export class TransactionWrapper {
    * @returns The transaction ID as a base64-encoded string
    */
   txID(): string {
-    return getTransactionId(this._transaction)
+    return getTransactionId(this)
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unsafe-declaration-merging
-export interface TransactionWrapper extends Transaction {}
 
 // TODO: PD - review the names of these wrapper
 export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {

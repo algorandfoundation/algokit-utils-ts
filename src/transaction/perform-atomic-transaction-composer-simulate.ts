@@ -4,6 +4,7 @@ import {
   SimulateRequestTransactionGroup,
   SimulateTraceConfig,
 } from '@algorandfoundation/algokit-algod-client'
+import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
 import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
 
 /**
@@ -37,7 +38,7 @@ export async function performAtomicTransactionComposerSimulate(
       {
         txns: transactionsWithSigners.map((txn) => ({
           txn: txn.txn,
-          signature: new Uint8Array(64), // TODO: PD - make an empty signer to do this
+          signature: EMPTY_SIGNATURE,
         })),
       } satisfies SimulateRequestTransactionGroup,
     ],
