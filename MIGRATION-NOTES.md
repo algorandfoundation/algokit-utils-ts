@@ -7,7 +7,6 @@ A collection of random notes pop up during the migration process.
 - explain the type differences between transact and algod
 - remove waitForIndexer
   - DO NOT remove it
-- BIG CHANGE: transaction Id can be changed after sending with composer because the group Id can be added
 - ATC was removed as a transaction type in the composer
 - Fee calc inside the txn constructor
 - error messages changed, for example, asset tests
@@ -24,10 +23,8 @@ A collection of random notes pop up during the migration process.
 - For integration with lora to work:
   - need to update subscriber to use the new utils and remove algosdk
 - TODO: go ahead with resource/fee on build. Need to have backward compatibility, when resource population is set in send, do it but make sure that it only happens once.
-- TODO: convert transaction to class
 - Should we consolidate the duplicated types between SDK and Utils, for example `AccessReference` in `app-manager`
 - `encodeUnsignedSimulateTransaction` was removed from sdk
-- Consider align assetId and appId in PendingTransactionResponse with sdk?
 - Discuss the inconsistency of transaction and txn, txIds, txID
 - Disucss the foreignApps vs appReferences + access references
 - Discuss appCall vs applicationCall
