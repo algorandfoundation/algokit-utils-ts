@@ -827,7 +827,6 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
   return txDto
 }
 
-// TODO: PD - fix bug https://github.com/algorand/js-algorand-sdk/issues/1013
 export function fromTransactionDto(transactionDto: TransactionDto): Transaction {
   const transactionType = fromTransactionTypeDto(transactionDto.type)
 
@@ -945,13 +944,13 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                     throw new Error(`Holding missing asset index: ${JSON.stringify(ref.h)}`)
                   }
 
-                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : result[addrIdx - 1].address!
-                  const holdingAssetId = result[assetIdx - 1].assetId!
+                  const holdingAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
+                  const holdingAssetId = accessList[assetIdx - 1].s!
 
                   result.push({
                     holding: {
-                      address: holdingAddress,
-                      assetId: holdingAssetId,
+                      address: typeof holdingAddress === 'string' ? holdingAddress : addressCodec.decode(holdingAddress),
+                      assetId: bigIntCodec.decode(holdingAssetId),
                     },
                   })
                   continue
@@ -961,13 +960,13 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                   const addrIdx = ref.l.d ?? 0
                   const appIdx = ref.l.p ?? 0
 
-                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : result[addrIdx - 1].address!
-                  const localsAppId = appIdx === 0 ? BigInt(0) : result[appIdx - 1].appId!
+                  const localsAddress = addrIdx === 0 ? ZERO_ADDRESS : accessList[addrIdx - 1].d!
+                  const localsAppId = appIdx === 0 ? BigInt(0) : accessList[appIdx - 1].p!
 
                   result.push({
                     locals: {
-                      address: localsAddress,
-                      appId: localsAppId,
+                      address: typeof localsAddress === 'string' ? localsAddress : addressCodec.decode(localsAddress),
+                      appId: bigIntCodec.decode(localsAppId),
                     },
                   })
                   continue
@@ -980,11 +979,11 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
                     throw new Error(`Box missing name: ${JSON.stringify(ref.b)}`)
                   }
 
-                  const boxAppId = boxAppIdx === 0 ? BigInt(0) : result[boxAppIdx - 1].appId!
+                  const boxAppId = boxAppIdx === 0 ? BigInt(0) : accessList[boxAppIdx - 1].p!
 
                   result.push({
                     box: {
-                      appId: boxAppId,
+                      appId: bigIntCodec.decode(boxAppId),
                       name: bytesCodec.decode(name),
                     },
                   })

@@ -1,6 +1,7 @@
-import { describe, expect, test } from 'vitest'
+import { ResourceReferenceDto } from '@algorandfoundation/algokit-transact/encoding/transaction-dto'
+import { assert, describe, expect, test } from 'vitest'
 import { OnApplicationComplete } from '../src/transactions/app-call'
-import { Transaction, TransactionType, validateTransaction } from '../src/transactions/transaction'
+import { Transaction, TransactionType, fromTransactionDto, toTransactionDto, validateTransaction } from '../src/transactions/transaction'
 import { testData } from './common'
 import {
   assertAssignFee,
@@ -588,6 +589,53 @@ describe('App Call', () => {
 
         expect(() => validateTransaction(transaction)).not.toThrow()
       })
+    })
+  })
+
+  describe('Encoding / decoding tests', () => {
+    test('should decode access list', () => {
+      const addr1 = 'FDMKB5D72THLYSJEBHBDHUE7XFRDOM5IHO44SOJ7AWPD6EZMWOQ2WKN7HQ'
+      const txn: Transaction = {
+        sender: 'BH55E5RMBD4GYWXGX5W5PJ5JAHPGM5OXKDQH5DC4O2MGI7NW4H6VOE4CP4',
+        firstValid: 322575n,
+        lastValid: 322575n,
+        fee: 1000n,
+        genesisId: 'testnet-v1.0',
+        genesisHash: new Uint8Array(Buffer.from('SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=', 'base64')),
+        type: TransactionType.AppCall,
+        appCall: {
+          appId: 111n,
+          onComplete: OnApplicationComplete.NoOp,
+          accessReferences: [
+            {
+              holding: {
+                assetId: 123n,
+                address: addr1,
+              },
+            },
+            { address: addr1 },
+            { assetId: 123n },
+          ],
+        },
+      }
+
+      // This code is here to demonstrate the problem.
+      // When encoding, the cross product references are added first,
+      // so modify the access list encoding data to simulate how it may be encoded on chain.
+      const txnDto = toTransactionDto(txn)
+      const accessList = txnDto.al
+      // Index 2 is actually the holding reference.
+      // Manually adjust the indexes, because we'll be re-ording the list.
+      accessList[2].h.d = 2
+      accessList[2].h.s = 3
+      const updateAccessList: ResourceReferenceDto[] = []
+      updateAccessList.push(accessList[2])
+      updateAccessList.push(accessList[0])
+      updateAccessList.push(accessList[1])
+      txnDto.al = updateAccessList
+
+      const decodedTxn = fromTransactionDto(txnDto)
+      assert.deepStrictEqual(decodedTxn?.appCall.accessReferences, txn?.appCall.accessReferences)
     })
   })
 })
