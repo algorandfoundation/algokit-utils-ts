@@ -318,7 +318,7 @@ export class AppDeployer {
       )
 
       const appMetadata: AppMetadata = {
-        appId: BigInt(confirmation.appId!),
+        appId: confirmation.appId!,
         appAddress: algosdk.getApplicationAddress(confirmation.appId!),
         ...metadata,
         createdMetadata: metadata,
