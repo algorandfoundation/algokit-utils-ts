@@ -623,11 +623,11 @@ describe('App Call', () => {
       // When encoding, the cross product references are added first,
       // so modify the access list encoding data to simulate how it may be encoded on chain.
       const txnDto = toTransactionDto(txn)
-      const accessList = txnDto.al
+      const accessList = txnDto.al!
       // Index 2 is actually the holding reference.
       // Manually adjust the indexes, because we'll be re-ording the list.
-      accessList[2].h.d = 2
-      accessList[2].h.s = 3
+      accessList[2]!.h!.d = 2
+      accessList[2]!.h!.s = 3
       const updateAccessList: ResourceReferenceDto[] = []
       updateAccessList.push(accessList[2])
       updateAccessList.push(accessList[0])
@@ -635,7 +635,7 @@ describe('App Call', () => {
       txnDto.al = updateAccessList
 
       const decodedTxn = fromTransactionDto(txnDto)
-      assert.deepStrictEqual(decodedTxn?.appCall.accessReferences, txn?.appCall.accessReferences)
+      assert.deepStrictEqual(decodedTxn?.appCall!.accessReferences, txn?.appCall!.accessReferences)
     })
   })
 })

@@ -1,25 +1,23 @@
-import type { Transaction } from '@algorandfoundation/algokit-transact';
-import { groupTransactions as groupTxns, getTransactionIdRaw } from '@algorandfoundation/algokit-transact';
-import * as nacl from './nacl/naclWrappers.js';
-import { msgpackRawEncode } from './encoding/encoding.js';
-import * as utils from './utils/utils.js';
+import type { Transaction } from '@algorandfoundation/algokit-transact'
+import { getTransactionIdRaw, groupTransactions as groupTxns } from '@algorandfoundation/algokit-transact'
+import { msgpackRawEncode } from './encoding/encoding.js'
+import * as nacl from './nacl/naclWrappers.js'
+import * as utils from './utils/utils.js'
 
-const ALGORAND_MAX_TX_GROUP_SIZE = 16;
-const TX_GROUP_TAG = new TextEncoder().encode('TG');
+const ALGORAND_MAX_TX_GROUP_SIZE = 16
+const TX_GROUP_TAG = new TextEncoder().encode('TG')
 
 function txGroupPreimage(txnHashes: Uint8Array[]): Uint8Array {
   if (txnHashes.length > ALGORAND_MAX_TX_GROUP_SIZE) {
-    throw new Error(
-      `${txnHashes.length} transactions grouped together but max group size is ${ALGORAND_MAX_TX_GROUP_SIZE}`
-    );
+    throw new Error(`${txnHashes.length} transactions grouped together but max group size is ${ALGORAND_MAX_TX_GROUP_SIZE}`)
   }
   if (txnHashes.length === 0) {
-    throw new Error('Cannot compute group ID of zero transactions');
+    throw new Error('Cannot compute group ID of zero transactions')
   }
   const bytes = msgpackRawEncode({
     txlist: txnHashes,
-  });
-  return utils.concatArrays(TX_GROUP_TAG, bytes);
+  })
+  return utils.concatArrays(TX_GROUP_TAG, bytes)
 }
 
 /**
@@ -28,14 +26,14 @@ function txGroupPreimage(txnHashes: Uint8Array[]): Uint8Array {
  * @returns Uint8Array
  */
 export function computeGroupID(txns: ReadonlyArray<Transaction>): Uint8Array {
-  const hashes: Uint8Array[] = [];
+  const hashes: Uint8Array[] = []
   for (const txn of txns) {
-    hashes.push(getTransactionIdRaw(txn));
+    hashes.push(getTransactionIdRaw(txn))
   }
 
-  const toBeHashed = txGroupPreimage(hashes);
-  const gid = nacl.genericHash(toBeHashed);
-  return Uint8Array.from(gid);
+  const toBeHashed = txGroupPreimage(hashes)
+  const gid = nacl.genericHash(toBeHashed)
+  return Uint8Array.from(gid)
 }
 
 /**
@@ -44,6 +42,10 @@ export function computeGroupID(txns: ReadonlyArray<Transaction>): Uint8Array {
  * @returns Transaction[] - New array of transactions with group IDs assigned
  */
 export function assignGroupID(txns: Transaction[]): Transaction[] {
-  // Use the algokit_transact groupTransactions function which returns new transaction objects
-  return groupTxns(txns);
+  // Mutate the transaction to keep the existing algosdk behaviour
+  const groupedTxn = groupTxns(txns)
+  txns.forEach((txn, i) => {
+    txn.group = groupedTxn[i].group
+  })
+  return txns
 }
