@@ -1,3 +1,4 @@
+import { ZERO_ADDRESS } from '@algorandfoundation/algokit-common'
 import { ResourceReferenceDto } from '@algorandfoundation/algokit-transact/encoding/transaction-dto'
 import { assert, describe, expect, test } from 'vitest'
 import { OnApplicationComplete } from '../src/transactions/app-call'
@@ -636,6 +637,37 @@ describe('App Call', () => {
 
       const decodedTxn = fromTransactionDto(txnDto)
       assert.deepStrictEqual(decodedTxn?.appCall!.accessReferences, txn?.appCall!.accessReferences)
+    })
+
+    test('should skip empty access local item', () => {
+      const sender = 'BH55E5RMBD4GYWXGX5W5PJ5JAHPGM5OXKDQH5DC4O2MGI7NW4H6VOE4CP4'
+
+      const txn: Transaction = {
+        sender: sender,
+        firstValid: 322575n,
+        lastValid: 322575n,
+        fee: 1000n,
+        genesisId: 'testnet-v1.0',
+        genesisHash: new Uint8Array(Buffer.from('SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=', 'base64')),
+        type: TransactionType.AppCall,
+        appCall: {
+          appId: 111n,
+          onComplete: OnApplicationComplete.NoOp,
+          accessReferences: [
+            {
+              // When the appId is the current app and the address is ZERO_ADDRESS
+              // They are converted to zero values and should be skipped from the msgpack encode
+              locals: {
+                appId: 111n,
+                address: ZERO_ADDRESS,
+              },
+            },
+          ],
+        },
+      }
+
+      const txnDto = toTransactionDto(txn)
+      assert.isEmpty(txnDto.al!)
     })
   })
 })

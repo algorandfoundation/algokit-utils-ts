@@ -716,13 +716,14 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           if (locals.appId && locals.appId !== appId) {
             appIndex = ensure({ appId: locals.appId })
           }
-          // TODO: PD - confirm what happens if both are 0
-          accessList.push({
-            l: {
-              d: numberCodec.encode(addressIndex),
-              p: numberCodec.encode(appIndex),
-            },
-          })
+          if (addressIndex !== 0 || appIndex !== 0) {
+            accessList.push({
+              l: {
+                d: numberCodec.encode(addressIndex),
+                p: numberCodec.encode(appIndex),
+              },
+            })
+          }
           continue
         }
 
