@@ -1,4 +1,4 @@
-import { OnApplicationComplete, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, ABIType, Account, Address } from '@algorandfoundation/sdk'
 import invariant from 'tiny-invariant'
@@ -134,9 +134,9 @@ describe('transaction', () => {
     const { algorand, algod } = localnet.context
     const txn = await algorand.createTransaction.payment(getTestTransaction())
     try {
-      await waitForConfirmation(getTransactionId(txn), 5, algod)
+      await waitForConfirmation(txn.txID(), 5, algod)
     } catch (e: unknown) {
-      expect((e as Error).message).toEqual(`Transaction ${getTransactionId(txn)} not confirmed after 5 rounds`)
+      expect((e as Error).message).toEqual(`Transaction ${txn.txID()} not confirmed after 5 rounds`)
     }
   })
 
@@ -144,18 +144,13 @@ describe('transaction', () => {
     const { algorand, testAccount } = localnet.context
     const txn1 = await algorand.createTransaction.payment(getTestTransaction((1).microAlgo()))
     // This will fail due to fee being too high
-    const txn2 = await algorand.createTransaction.payment(getTestTransaction((2).microAlgo()))
-
-    const composer = algorand.newGroup()
+    const txn2 = await algorand.createTransaction.payment(getTestTransaction((9999999999999).microAlgo()))
     try {
-      composer.addTransaction(txn1).addTransaction(txn2).send()
+      await algorand.newGroup().addTransaction(txn1).addTransaction(txn2).send()
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      const { transactions } = await composer.build()
-      const failedTransaction = transactions[-1].txn
-
       const messageRegex = new RegExp(
-        `transaction ${getTransactionId(failedTransaction)}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
+        `transaction ${txn2.txID()}: overspend \\(account ${testAccount}, data \\{.*\\}, tried to spend \\{9999999999999\\}\\)`,
       )
       expect(e.traces[0].message).toMatch(messageRegex)
     }
@@ -471,7 +466,7 @@ describe('transaction', () => {
       await Promise.all(
         result.transactions.map(async (txn) => {
           expect(Buffer.from(txn.group!).toString('base64')).toBe(result.groupId)
-          await localnet.context.waitForIndexerTransaction(getTransactionId(txn))
+          await localnet.context.waitForIndexerTransaction(txn.txID())
         }),
       )
     })
@@ -1361,7 +1356,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice }],
+      accessReferences: [{ address: alice.toString() }],
     })
   })
 
@@ -1390,7 +1385,7 @@ describe('access references', () => {
       method: 'addressBalance',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ address: alice }, ...(await getTestAccounts(15)).map((a) => ({ address: a }))],
+      accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(15)).map((a) => ({ address: a.toString() }))],
     })
   })
 
@@ -1400,7 +1395,7 @@ describe('access references', () => {
         method: 'addressBalance',
         args: [alice],
         populateAppCallResources: false,
-        accessReferences: [{ address: alice }, ...(await getTestAccounts(16)).map((a) => ({ address: a }))],
+        accessReferences: [{ address: alice.toString() }, ...(await getTestAccounts(16)).map((a) => ({ address: a.toString() }))],
       }),
     ).rejects.toThrow(/max number of references is 16/)
   })
@@ -1441,7 +1436,7 @@ describe('access references', () => {
       method: 'hasAsset',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ holding: { account: alice.toString(), asset: assetId } }],
+      accessReferences: [{ holding: { address: alice.toString(), assetId: assetId } }],
     })
   })
 
@@ -1454,7 +1449,7 @@ describe('access references', () => {
       method: 'externalLocal',
       args: [alice],
       populateAppCallResources: false,
-      accessReferences: [{ locals: { account: alice.toString(), app: externalClient.appId } }],
+      accessReferences: [{ locals: { address: alice.toString(), appId: externalClient.appId } }],
     })
   })
 })

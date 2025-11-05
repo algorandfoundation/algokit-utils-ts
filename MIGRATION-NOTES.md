@@ -26,5 +26,7 @@ A collection of random notes pop up during the migration process.
 - Should we consolidate the duplicated types between SDK and Utils, for example `AccessReference` in `app-manager`
 - `encodeUnsignedSimulateTransaction` was removed from sdk
 - Discuss the inconsistency of transaction and txn, txIds, txID
-- Disucss the foreignApps vs appReferences + access references
+- Disucss the naming of foreignApps vs appReferences + access references
 - Discuss appCall vs applicationCall
+- SourceMap was renamed to ProgramSourceMap
+- OnApplicationComplete.UpdateApplicationOC was renamed to OnApplicationComplete.UpdateApplication

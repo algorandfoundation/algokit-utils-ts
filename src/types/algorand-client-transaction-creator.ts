@@ -1,6 +1,6 @@
-import { Transaction } from '@algorandfoundation/algokit-transact'
 import { BuiltTransactions, TransactionComposer } from './composer'
 import { Expand } from './expand'
+import { TransactionWrapper } from './transaction'
 
 /** Orchestrates creating transactions for `AlgorandClient`. */
 export class AlgorandClientTransactionCreator {
@@ -18,11 +18,11 @@ export class AlgorandClientTransactionCreator {
     this._newGroup = newGroup
   }
 
-  private _transaction<T>(c: (c: TransactionComposer) => (params: T) => TransactionComposer): (params: T) => Promise<Transaction> {
+  private _transaction<T>(c: (c: TransactionComposer) => (params: T) => TransactionComposer): (params: T) => Promise<TransactionWrapper> {
     return async (params: T) => {
       const composer = this._newGroup()
       const result = await c(composer).apply(composer, [params]).buildTransactions()
-      return result.transactions.at(-1)!
+      return new TransactionWrapper(result.transactions.at(-1)!)
     }
   }
 

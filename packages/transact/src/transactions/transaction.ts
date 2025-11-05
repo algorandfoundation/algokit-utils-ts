@@ -32,7 +32,7 @@ import {
   StateSchemaDto,
   TransactionDto,
 } from '../encoding/transaction-dto'
-import { AppCallTransactionFields, OnApplicationComplete, ResourceReference, StateSchema, validateAppCallTransaction } from './app-call'
+import { AccessReference, AppCallTransactionFields, OnApplicationComplete, StateSchema, validateAppCallTransaction } from './app-call'
 import { AssetConfigTransactionFields, validateAssetConfigTransaction } from './asset-config'
 import { AssetFreezeTransactionFields, validateAssetFreezeTransaction } from './asset-freeze'
 import { AssetTransferTransactionFields, validateAssetTransferTransaction } from './asset-transfer'
@@ -661,7 +661,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
       }
 
       // Helper function to ensure a reference exists and return its 1-based index
-      function ensure(target: ResourceReference): number {
+      function ensure(target: AccessReference): number {
         for (let idx = 0; idx < accessList.length; idx++) {
           const a = accessList[idx]
           if (
@@ -921,7 +921,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
         accessReferences: transactionDto.al
           ? (() => {
               const accessList = transactionDto.al!
-              const result: ResourceReference[] = []
+              const result: AccessReference[] = []
 
               for (const ref of accessList) {
                 if (ref.d) {

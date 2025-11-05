@@ -1,5 +1,5 @@
 import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { AccessReference, OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
@@ -15,7 +15,7 @@ import { encodeLease, getABIReturnValue, sendAtomicTransactionComposer } from '.
 import { asJson, calculateExtraProgramPages } from '../util'
 import { TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
-import { AccessReference, AppManager, BoxIdentifier, BoxReference, getAccessReference } from './app-manager'
+import { AppManager, BoxIdentifier, BoxReference } from './app-manager'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
 import { genesisIdIsLocalNet } from './network-client'
@@ -1640,7 +1640,7 @@ export class TransactionComposer {
       suggestedParams,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       ...(hasAccessReferences
-        ? { access: params.accessReferences?.map(getAccessReference) }
+        ? { access: params.accessReferences }
         : {
             appAccounts: params.accountReferences,
             appForeignApps: params.appReferences?.map((x) => Number(x)),
@@ -1810,7 +1810,7 @@ export class TransactionComposer {
       appArgs: params.args,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       ...(hasAccessReferences
-        ? { access: params.accessReferences?.map(getAccessReference) }
+        ? { access: params.accessReferences }
         : {
             accounts: params.accountReferences,
             foreignApps: params.appReferences?.map((x) => Number(x)),
@@ -2056,7 +2056,7 @@ export class TransactionComposer {
 
     if (waitRounds === undefined) {
       const lastRound = group.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
-      const { lastRound: firstRound } = suggestedParams! // TODO: document suggested params doesn't have first round anymore
+      const { lastRound: firstRound } = suggestedParams!
       waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
     }
 

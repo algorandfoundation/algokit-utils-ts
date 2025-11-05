@@ -1,5 +1,5 @@
 import { AlgodClient, TransactionParams } from '@algorandfoundation/algokit-algod-client'
-import { OnApplicationComplete, Transaction, getTransactionId } from '@algorandfoundation/algokit-transact'
+import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
@@ -98,7 +98,7 @@ import {
 } from './transaction'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
-const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
+const MAX_SIMULATE_OPCODE_BUDGET = BigInt(20_000 * 16)
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
@@ -1449,7 +1449,7 @@ export class AppClient {
                 // Simulate calls for a readonly method shouldn't invoke signing
                 skipSignatures: true,
                 // Simulate calls for a readonly method can use the max opcode budget
-                extraOpcodeBudget: BigInt(MAX_SIMULATE_OPCODE_BUDGET),
+                extraOpcodeBudget: MAX_SIMULATE_OPCODE_BUDGET,
               })
             return this.processMethodCallReturn(
               {
@@ -1588,7 +1588,7 @@ export class AppClient {
   }
 
   /** Make the given call and catch any errors, augmenting with debugging information before re-throwing. */
-  private handleCallErrors = async (e: Error & { sentTransactions?: Transaction[] }) => {
+  private handleCallErrors = async (e: Error & { sentTransactions?: TransactionWrapper[] }) => {
     // We can't use the app ID in an error to identify new apps, so instead we check the programs
     // to identify if this is the correct app
     if (this.appId === 0n) {
@@ -1596,7 +1596,7 @@ export class AppClient {
 
       const txns = e.sentTransactions
 
-      const txn = txns.find((t) => e.message.includes(getTransactionId(t)))
+      const txn = txns.find((t) => e.message.includes(t.txID()))
 
       const programsDefinedAndEqual = (a: Uint8Array | undefined, b: Uint8Array | undefined) => {
         if (a === undefined || b === undefined) return false

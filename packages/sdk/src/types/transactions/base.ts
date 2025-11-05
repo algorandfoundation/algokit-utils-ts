@@ -1,16 +1,15 @@
 import {
+  AccessReference,
   BoxReference,
   HoldingReference,
   LocalsReference,
   OnApplicationComplete,
-  ResourceReference,
   TransactionType,
 } from '@algorandfoundation/algokit-transact'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
 import { SdkTransactionParams } from '../../makeTxn.js'
 import { StateProof, StateProofMessage } from '../../stateproof.js'
-
 
 /**
  * Parameters for resource references in application transactions
@@ -305,7 +304,7 @@ export interface ApplicationCallTransactionParams {
   /**
    * Resources accessed by the application
    */
-  access?: ResourceReference[]
+  access?: AccessReference[]
 
   /**
    * The lowest application version for which this transaction should immediately fail.
