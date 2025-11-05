@@ -5,5 +5,5 @@ exports[`application-client > Errors > Display nice error messages when there is
 INFO: App TestingApp not found in apps created by ACCOUNT_1; deploying app with version 1.0.
 VERBOSE: Sent transaction ID TXID_1 appl from ACCOUNT_1
 DEBUG: App created by ACCOUNT_1 with ID APP_1 via transaction TXID_1
-ERROR: Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information | [{"cause":{},"traces":[]}]"
+ERROR: Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information | [{"cause":{},"name":"Error","traces":[]}]"
 `;

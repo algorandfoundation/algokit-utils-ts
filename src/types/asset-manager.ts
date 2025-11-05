@@ -166,7 +166,7 @@ export class AssetManager {
    * @returns The asset information
    */
   public async getById(assetId: bigint): Promise<AssetInformation> {
-    const asset = await this._algod.getAssetById(Number(assetId))
+    const asset = await this._algod.getAssetById(assetId)
 
     return {
       assetId: BigInt(asset.index),
@@ -204,7 +204,7 @@ export class AssetManager {
    * @returns The account asset holding information
    */
   public async getAccountInformation(sender: string | Address, assetId: bigint): Promise<AccountAssetInformation> {
-    const info = await this._algod.accountAssetInformation(sender.toString(), Number(assetId))
+    const info = await this._algod.accountAssetInformation(sender.toString(), assetId)
 
     return {
       assetId: BigInt(assetId),

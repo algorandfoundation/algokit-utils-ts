@@ -632,7 +632,7 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         const isCurrentApp = box.appId === 0n || box.appId === transaction.appCall?.appId
         const foreignAppsIndex = (transaction.appCall?.appReferences ?? []).indexOf(box.appId) + 1
         if (foreignAppsIndex === 0 && !isCurrentApp) {
-          throw new Error(`Box ref with appId ${box.appId} not in foreign-apps`)
+          throw new Error(`Box ref with appId ${box.appId} not in appReferences`)
         }
 
         return {
@@ -684,14 +684,14 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
         return accessList.length // length is 1-based position of new element
       }
 
-      for (const resourceReference of transaction.appCall.accessReferences) {
-        if (resourceReference.address || resourceReference.assetId || resourceReference.appId) {
-          ensure(resourceReference)
+      for (const accessReferences of transaction.appCall.accessReferences) {
+        if (accessReferences.address || accessReferences.assetId || accessReferences.appId) {
+          ensure(accessReferences)
           continue
         }
 
-        if (resourceReference.holding) {
-          const holding = resourceReference.holding
+        if (accessReferences.holding) {
+          const holding = accessReferences.holding
           let addressIndex = 0
           if (holding.address && holding.address !== ZERO_ADDRESS) {
             addressIndex = ensure({ address: holding.address })
@@ -706,8 +706,8 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           continue
         }
 
-        if (resourceReference.locals) {
-          const locals = resourceReference.locals
+        if (accessReferences.locals) {
+          const locals = accessReferences.locals
           let addressIndex = 0
           if (locals.address && locals.address !== ZERO_ADDRESS) {
             addressIndex = ensure({ address: locals.address })
@@ -727,8 +727,8 @@ export function toTransactionDto(transaction: Transaction): TransactionDto {
           continue
         }
 
-        if (resourceReference.box) {
-          const b = resourceReference.box
+        if (accessReferences.box) {
+          const b = accessReferences.box
           let appIdx = 0
           if (b.appId && b.appId !== appId) {
             appIdx = ensure({ appId: b.appId })
@@ -910,7 +910,7 @@ export function fromTransactionDto(transactionDto: TransactionDto): Transaction 
             // 1-based index into foreignApps array
             const foreignAppId = transactionDto.apfa?.[index - 1]
             if (foreignAppId === undefined) {
-              throw new Error(`Failed to find the foreign app at index ${index - 1}`)
+              throw new Error(`Failed to find the app reference at index ${index - 1}`)
             }
             appId = bigIntCodec.decode(foreignAppId)
           }

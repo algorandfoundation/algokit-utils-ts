@@ -23,10 +23,10 @@ A collection of random notes pop up during the migration process.
 - For integration with lora to work:
   - need to update subscriber to use the new utils and remove algosdk
 - TODO: go ahead with resource/fee on build. Need to have backward compatibility, when resource population is set in send, do it but make sure that it only happens once.
-- Should we consolidate the duplicated types between SDK and Utils, for example `AccessReference` in `app-manager`
 - `encodeUnsignedSimulateTransaction` was removed from sdk
 - Discuss the inconsistency of transaction and txn, txIds, txID
 - Disucss the naming of foreignApps vs appReferences + access references
 - Discuss appCall vs applicationCall
 - SourceMap was renamed to ProgramSourceMap
 - OnApplicationComplete.UpdateApplicationOC was renamed to OnApplicationComplete.UpdateApplication
+- ResourceReference (algod) vs AccessReference (utils)
