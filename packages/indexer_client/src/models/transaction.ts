@@ -60,12 +60,12 @@ export type Transaction = {
   /**
    * Specifies an application index (ID) if an application was created with this transaction.
    */
-  createdApplicationIndex?: bigint
+  createdAppId?: bigint
 
   /**
    * Specifies an asset index (ID) if an asset was created with this transaction.
    */
-  createdAssetIndex?: bigint
+  createdAssetId?: bigint
 
   /**
    * \[fee\] Transaction fee.
@@ -252,14 +252,14 @@ export const TransactionMeta: ModelMetadata = {
       type: { kind: 'scalar', isBigint: true },
     },
     {
-      name: 'createdApplicationIndex',
+      name: 'createdAppId',
       wireKey: 'created-application-index',
       optional: true,
       nullable: false,
       type: { kind: 'scalar', isBigint: true },
     },
     {
-      name: 'createdAssetIndex',
+      name: 'createdAssetId',
       wireKey: 'created-asset-index',
       optional: true,
       nullable: false,

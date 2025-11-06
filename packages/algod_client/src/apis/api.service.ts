@@ -3,24 +3,19 @@ import { AlgorandSerializer } from '../core/model-runtime'
 import type { BodyFormat } from '../core/model-runtime'
 import { concatArrays } from '@algorandfoundation/algokit-common'
 import type {
-  AbortCatchup,
   Account,
   AccountApplicationInformation,
   AccountAssetInformation,
-  AccountAssetsInformation,
-  AddParticipationKey,
   Application,
   Asset,
   Box,
-  DebugSettingsProf,
   DryrunRequest,
   Genesis,
   GetApplicationBoxes,
   GetBlock,
   GetBlockHash,
-  GetBlockLogs,
   GetBlockTimeStampOffset,
-  GetBlockTxids,
+  GetBlockTxIds,
   GetPendingTransactions,
   GetPendingTransactionsByAddress,
   GetStatus,
@@ -29,14 +24,12 @@ import type {
   GetTransactionGroupLedgerStateDeltasForRound,
   LedgerStateDelta,
   LightBlockHeaderProof,
-  ParticipationKey,
   PendingTransactionResponse,
   RawTransaction,
-  ShutdownNode,
   SimulateRequest,
   SimulateTransaction,
-  StartCatchup,
   StateProof,
+  SuggestedParams,
   TealCompile,
   TealDisassemble,
   TealDryrun,
@@ -46,24 +39,19 @@ import type {
   WaitForBlock,
 } from '../models/index'
 import {
-  AbortCatchupMeta,
   AccountMeta,
   AccountApplicationInformationMeta,
   AccountAssetInformationMeta,
-  AccountAssetsInformationMeta,
-  AddParticipationKeyMeta,
   ApplicationMeta,
   AssetMeta,
   BoxMeta,
-  DebugSettingsProfMeta,
   DryrunRequestMeta,
   GenesisMeta,
   GetApplicationBoxesMeta,
   GetBlockMeta,
   GetBlockHashMeta,
-  GetBlockLogsMeta,
   GetBlockTimeStampOffsetMeta,
-  GetBlockTxidsMeta,
+  GetBlockTxIdsMeta,
   GetPendingTransactionsMeta,
   GetPendingTransactionsByAddressMeta,
   GetStatusMeta,
@@ -72,14 +60,12 @@ import {
   GetTransactionGroupLedgerStateDeltasForRoundMeta,
   LedgerStateDeltaMeta,
   LightBlockHeaderProofMeta,
-  ParticipationKeyMeta,
   PendingTransactionResponseMeta,
   RawTransactionMeta,
-  ShutdownNodeMeta,
   SimulateRequestMeta,
   SimulateTransactionMeta,
-  StartCatchupMeta,
   StateProofMeta,
+  SuggestedParamsMeta,
   TealCompileMeta,
   TealDisassembleMeta,
   TealDryrunMeta,
@@ -98,31 +84,6 @@ export class AlgodApi {
 
   private static mediaFor(format: BodyFormat): string {
     return format === 'json' ? 'application/json' : 'application/msgpack'
-  }
-
-  /**
-   * Given a catchpoint, it aborts catching up to this catchpoint
-   */
-  async abortCatchup(catchpoint: string): Promise<AbortCatchup> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'DELETE',
-      url: '/v2/catchup/{catchpoint}',
-      path: { catchpoint: catchpoint },
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = AbortCatchupMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as AbortCatchup
   }
 
   /**
@@ -180,31 +141,6 @@ export class AlgodApi {
   }
 
   /**
-   * Lookup an account's asset holdings.
-   */
-  async accountAssetsInformation(address: string, params?: { limit?: number; next?: string }): Promise<AccountAssetsInformation> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/v2/accounts/{address}/assets',
-      path: { address: address },
-      query: { limit: params?.limit, next: params?.next },
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = AccountAssetsInformationMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as AccountAssetsInformation
-  }
-
-  /**
    * Given a specific account public key, this call returns the account's status, balance and spendable amounts
    */
   async accountInformation(address: string, params?: { exclude?: 'all' | 'none' }): Promise<Account> {
@@ -229,143 +165,10 @@ export class AlgodApi {
     return payload as Account
   }
 
-  async addParticipationKey(body: string): Promise<AddParticipationKey> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const bodyMeta = undefined
-    const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
-    if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'POST',
-      url: '/v2/participation',
-      path: {},
-      query: {},
-      headers,
-      body: serializedBody,
-      mediaType: mediaType,
-    })
-
-    const responseMeta = AddParticipationKeyMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as AddParticipationKey
-  }
-
-  /**
-   * Given a participation ID, append state proof keys to a particular set of participation keys
-   */
-  async appendKeys(participationId: string, body: string): Promise<ParticipationKey> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const bodyMeta = undefined
-    const mediaType = bodyMeta ? AlgodApi.mediaFor(responseFormat) : undefined
-    if (mediaType) headers['Content-Type'] = mediaType
-    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'POST',
-      url: '/v2/participation/{participation-id}',
-      path: { 'participation-id': participationId },
-      query: {},
-      headers,
-      body: serializedBody,
-      mediaType: mediaType,
-    })
-
-    const responseMeta = ParticipationKeyMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as ParticipationKey
-  }
-
-  /**
-   * Delete a given participation key by ID
-   */
-  async deleteParticipationKeyById(participationId: string): Promise<void> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'DELETE',
-      url: '/v2/participation/{participation-id}',
-      path: { 'participation-id': participationId },
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as void
-  }
-
-  async experimentalCheck(): Promise<void> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/v2/experimental',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as void
-  }
-
-  async generateParticipationKeys(
-    address: string,
-    params?: { dilution?: number | bigint; first: number | bigint; last: number | bigint },
-  ): Promise<string> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'POST',
-      url: '/v2/participation/generate/{address}',
-      path: { address: address },
-      query: {
-        dilution: typeof params?.dilution === 'bigint' ? (params!.dilution as bigint).toString() : params?.dilution,
-        first: typeof params?.first === 'bigint' ? (params!.first as bigint).toString() : params?.first,
-        last: typeof params?.last === 'bigint' ? (params!.last as bigint).toString() : params?.last,
-      },
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as string
-  }
-
   /**
    * Given an application ID and box name, it returns the round, box name, and value (each base64 encoded). Box names must be in the goal app call arg encoding form 'encoding:value'. For ints, use the form 'int:1234'. For raw bytes, use the form 'b64:A=='. For printable strings, use the form 'str:hello'. For addresses, use the form 'addr:XYZ...'.
    */
-  async getApplicationBoxByName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
+  private async _getApplicationBoxByName(applicationId: number | bigint, params?: { name: string }): Promise<Box> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -507,31 +310,6 @@ export class AlgodApi {
   }
 
   /**
-   * Get all of the logs from outer and inner app calls in the given round
-   */
-  async getBlockLogs(round: number | bigint): Promise<GetBlockLogs> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/v2/blocks/{round}/logs',
-      path: { round: typeof round === 'bigint' ? round.toString() : round },
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = GetBlockLogsMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as GetBlockLogs
-  }
-
-  /**
    * Gets the current timestamp offset.
    */
   async getBlockTimeStampOffset(): Promise<GetBlockTimeStampOffset> {
@@ -556,7 +334,7 @@ export class AlgodApi {
     return payload as GetBlockTimeStampOffset
   }
 
-  async getBlockTxids(round: number | bigint): Promise<GetBlockTxids> {
+  async getBlockTxIds(round: number | bigint): Promise<GetBlockTxIds> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -571,61 +349,11 @@ export class AlgodApi {
       mediaType: undefined,
     })
 
-    const responseMeta = GetBlockTxidsMeta
+    const responseMeta = GetBlockTxIdsMeta
     if (responseMeta) {
       return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
     }
-    return payload as GetBlockTxids
-  }
-
-  /**
-   * Returns the merged (defaults + overrides) config file in json.
-   */
-  async getConfig(): Promise<string> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/debug/settings/config',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as string
-  }
-
-  /**
-   * Retrieves the current settings for blocking and mutex profiles
-   */
-  async getDebugSettingsProf(): Promise<DebugSettingsProf> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/debug/settings/pprof',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = DebugSettingsProfMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as DebugSettingsProf
+    return payload as GetBlockTxIds
   }
 
   /**
@@ -723,60 +451,6 @@ export class AlgodApi {
       return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
     }
     return payload as LightBlockHeaderProof
-  }
-
-  /**
-   * Given a participation ID, return information about that participation key
-   */
-  async getParticipationKeyById(participationId: string): Promise<ParticipationKey> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/v2/participation/{participation-id}',
-      path: { 'participation-id': participationId },
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = ParticipationKeyMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as ParticipationKey
-  }
-
-  /**
-   * Return a list of participation keys
-   */
-  async getParticipationKeys(): Promise<ParticipationKey[]> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/v2/participation',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = {
-      name: 'ParticipationKey[]',
-      kind: 'array',
-      arrayItems: { kind: 'model', meta: () => ParticipationKeyMeta } as const,
-    } as const
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as ParticipationKey[]
   }
 
   /**
@@ -1040,28 +714,6 @@ export class AlgodApi {
     return payload as void
   }
 
-  async metrics(): Promise<void> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/metrics',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as void
-  }
-
   /**
    * Given a transaction ID of a recently submitted transaction, it returns information about it.  There are several cases when this might succeed:
    * - transaction committed (committed round > 0)
@@ -1091,32 +743,7 @@ export class AlgodApi {
     return payload as PendingTransactionResponse
   }
 
-  /**
-   * Enables blocking and mutex profiles, and returns the old settings
-   */
-  async putDebugSettingsProf(): Promise<DebugSettingsProf> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'PUT',
-      url: '/debug/settings/pprof',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = DebugSettingsProfMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as DebugSettingsProf
-  }
-
-  private async rawTransaction(body: Uint8Array): Promise<RawTransaction> {
+  private async _rawTransaction(body: Uint8Array): Promise<RawTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1192,31 +819,6 @@ export class AlgodApi {
     return payload as void
   }
 
-  /**
-   * Special management endpoint to shutdown the node. Optionally provide a timeout parameter to indicate that the node should begin shutting down after a number of seconds.
-   */
-  async shutdownNode(params?: { timeout?: number }): Promise<ShutdownNode> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'POST',
-      url: '/v2/shutdown',
-      path: {},
-      query: { timeout: params?.timeout },
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = ShutdownNodeMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as ShutdownNode
-  }
-
   async simulateTransaction(body: SimulateRequest): Promise<SimulateTransaction> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'msgpack'
@@ -1242,56 +844,6 @@ export class AlgodApi {
       return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
     }
     return payload as SimulateTransaction
-  }
-
-  /**
-   * Given a catchpoint, it starts catching up to this catchpoint
-   */
-  async startCatchup(catchpoint: string, params?: { min?: number | bigint }): Promise<StartCatchup> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'POST',
-      url: '/v2/catchup/{catchpoint}',
-      path: { catchpoint: catchpoint },
-      query: { min: typeof params?.min === 'bigint' ? (params!.min as bigint).toString() : params?.min },
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = StartCatchupMeta
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as StartCatchup
-  }
-
-  /**
-   * Returns the entire swagger spec in json.
-   */
-  async swaggerJson(): Promise<string> {
-    const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'json'
-    headers['Accept'] = AlgodApi.acceptFor(responseFormat)
-
-    const payload = await this.httpRequest.request<unknown>({
-      method: 'GET',
-      url: '/swagger.json',
-      path: {},
-      query: {},
-      headers,
-      body: undefined,
-      mediaType: undefined,
-    })
-
-    const responseMeta = undefined
-    if (responseMeta) {
-      return AlgorandSerializer.decode(payload, responseMeta, responseFormat)
-    }
-    return payload as string
   }
 
   /**
@@ -1383,7 +935,7 @@ export class AlgodApi {
     return payload as TealDryrun
   }
 
-  async transactionParams(): Promise<TransactionParams> {
+  private async _transactionParams(): Promise<TransactionParams> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
@@ -1468,6 +1020,39 @@ export class AlgodApi {
     } else if (!(rawTransactions instanceof Uint8Array)) {
       throw new Error('Argument must be byte array')
     }
-    return this.rawTransaction(rawTransactions)
+    return this._rawTransaction(rawTransactions)
+  }
+
+  /**
+   * Given an application ID and box name, it returns the round, box name, and value.
+   */
+  async getApplicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
+    const name = `b64:${Buffer.from(boxName).toString('base64')}`
+    return this._getApplicationBoxByName(applicationId, { name })
+  }
+
+  /**
+   * Returns the common needed parameters for a new transaction.
+   */
+  async suggestedParams(): Promise<SuggestedParams> {
+    const txnParams = await this._transactionParams()
+
+    return {
+      flatFee: false,
+      fee: txnParams.fee,
+      firstValid: txnParams.lastRound,
+      lastValid: txnParams.lastRound + 1000n,
+      genesisHash: txnParams.genesisHash,
+      genesisId: txnParams.genesisId,
+      minFee: txnParams.minFee,
+      consensusVersion: txnParams.consensusVersion,
+    }
+  }
+
+  /**
+   * Returns the common needed parameters for a new transaction.
+   */
+  async getTransactionParams(): Promise<SuggestedParams> {
+    return await this.suggestedParams()
   }
 }

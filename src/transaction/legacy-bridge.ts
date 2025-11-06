@@ -1,4 +1,4 @@
-import { AlgodClient, TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod } from '@algorandfoundation/sdk'
@@ -41,14 +41,14 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
-  suggestedParams?: TransactionParams,
+  suggestedParams?: SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: TransactionWrapper[] }> {
   const appManager = new AppManager(algod)
   const newGroup = () =>
     new TransactionComposer({
       algod,
       getSigner: () => getSenderTransactionSigner(from),
-      getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.transactionParams()),
+      getSuggestedParams: async () => (suggestedParams ? { ...suggestedParams } : await algod.suggestedParams()),
       appManager,
     })
   const transactionSender = new AlgorandClientTransactionSender(newGroup, new AssetManager(algod, newGroup), appManager)
@@ -107,7 +107,7 @@ export async function legacySendAppTransactionBridge<
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<Transaction>)
     | ((c: AlgorandClientTransactionCreator) => (params: T) => Promise<BuiltTransactions>),
   send: (c: AlgorandClientTransactionSender) => (params: T & SendParams) => Promise<TResult>,
-  suggestedParams?: TransactionParams,
+  suggestedParams?: SuggestedParams,
 ): Promise<(SendTransactionResult | TResult) & { transactions: TransactionWrapper[] }> {
   const encoder = new TextEncoder()
 

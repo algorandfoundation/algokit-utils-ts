@@ -51,13 +51,13 @@ export type Account = {
   /**
    * The count of all applications that have been opted in, equivalent to the count of application local data (AppLocalState objects) stored in this account.
    */
-  totalAppsOptedIn: bigint
+  totalAppsOptedIn: number
   appsTotalSchema?: ApplicationStateSchema
 
   /**
    * \[teap\] the sum of all extra application program pages for this account.
    */
-  appsTotalExtraPages?: bigint
+  appsTotalExtraPages?: number
 
   /**
    * \[asset\] assets held by this account.
@@ -69,7 +69,7 @@ export type Account = {
   /**
    * The count of all assets that have been opted in, equivalent to the count of AssetHolding objects held by this account.
    */
-  totalAssetsOptedIn: bigint
+  totalAssetsOptedIn: number
 
   /**
    * \[appp\] parameters of applications created by this account including app global data.
@@ -81,7 +81,7 @@ export type Account = {
   /**
    * The count of all apps (AppParams objects) created by this account.
    */
-  totalCreatedApps: bigint
+  totalCreatedApps: number
 
   /**
    * \[apar\] parameters of assets created by this account.
@@ -93,17 +93,17 @@ export type Account = {
   /**
    * The count of all assets (AssetParams objects) created by this account.
    */
-  totalCreatedAssets: bigint
+  totalCreatedAssets: number
 
   /**
    * \[tbx\] The number of existing boxes created by this account's app.
    */
-  totalBoxes?: bigint
+  totalBoxes?: number
 
   /**
    * \[tbxb\] The total number of bytes used by this account's app's box keys and values.
    */
-  totalBoxBytes?: bigint
+  totalBoxBytes?: number
   participation?: AccountParticipation
 
   /**
@@ -207,7 +207,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'total-apps-opted-in',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'appsTotalSchema',
@@ -221,7 +221,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'apps-total-extra-pages',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'assets',
@@ -235,7 +235,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'total-assets-opted-in',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'createdApps',
@@ -249,7 +249,7 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'total-created-apps',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'createdAssets',
@@ -263,21 +263,21 @@ export const AccountMeta: ModelMetadata = {
       wireKey: 'total-created-assets',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'totalBoxes',
       wireKey: 'total-boxes',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'totalBoxBytes',
       wireKey: 'total-box-bytes',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'participation',

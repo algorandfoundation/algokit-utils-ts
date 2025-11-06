@@ -9,8 +9,8 @@ export type DryrunSource = {
    */
   fieldName: string
   source: string
-  txnIndex: bigint
-  appIndex: bigint
+  txnIndex: number
+  appId: bigint
 }
 
 export const DryrunSourceMeta: ModelMetadata = {
@@ -36,10 +36,10 @@ export const DryrunSourceMeta: ModelMetadata = {
       wireKey: 'txn-index',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
-      name: 'appIndex',
+      name: 'appId',
       wireKey: 'app-index',
       optional: false,
       nullable: false,

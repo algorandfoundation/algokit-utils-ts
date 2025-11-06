@@ -3,7 +3,9 @@ import { AlgorandSerializer } from '../core/model-runtime'
 import type { BodyFormat } from '../core/model-runtime'
 import type {
   CreateWalletRequest,
+  DeleteKeyRequest,
   DeleteKeyResponse,
+  DeleteMultisigRequest,
   DeleteMultisigResponse,
   ExportKeyRequest,
   ExportMasterKeyRequest,
@@ -45,7 +47,9 @@ import type {
 } from '../models/index'
 import {
   CreateWalletRequestMeta,
+  DeleteKeyRequestMeta,
   DeleteKeyResponseMeta,
+  DeleteMultisigRequestMeta,
   DeleteMultisigResponseMeta,
   ExportKeyRequestMeta,
   ExportMasterKeyRequestMeta,
@@ -130,10 +134,15 @@ export class KmdApi {
   /**
    * Deletes the key with the passed public key from the wallet.
    */
-  async deleteKey(): Promise<DeleteKeyResponse> {
+  async deleteKey(body: DeleteKeyRequest): Promise<DeleteKeyResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
+
+    const bodyMeta = DeleteKeyRequestMeta
+    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    if (mediaType) headers['Content-Type'] = mediaType
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'DELETE',
@@ -141,8 +150,8 @@ export class KmdApi {
       path: {},
       query: {},
       headers,
-      body: undefined,
-      mediaType: undefined,
+      body: serializedBody,
+      mediaType: mediaType,
     })
 
     const responseMeta = DeleteKeyResponseMeta
@@ -155,10 +164,15 @@ export class KmdApi {
   /**
    * Deletes multisig preimage information for the passed address from the wallet.
    */
-  async deleteMultisig(): Promise<DeleteMultisigResponse> {
+  async deleteMultisig(body: DeleteMultisigRequest): Promise<DeleteMultisigResponse> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
     headers['Accept'] = KmdApi.acceptFor(responseFormat)
+
+    const bodyMeta = DeleteMultisigRequestMeta
+    const mediaType = bodyMeta ? KmdApi.mediaFor(responseFormat) : undefined
+    if (mediaType) headers['Content-Type'] = mediaType
+    const serializedBody = bodyMeta && body !== undefined ? AlgorandSerializer.encode(body, bodyMeta, responseFormat) : body
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'DELETE',
@@ -166,8 +180,8 @@ export class KmdApi {
       path: {},
       query: {},
       headers,
-      body: undefined,
-      mediaType: undefined,
+      body: serializedBody,
+      mediaType: mediaType,
     })
 
     const responseMeta = DeleteMultisigResponseMeta

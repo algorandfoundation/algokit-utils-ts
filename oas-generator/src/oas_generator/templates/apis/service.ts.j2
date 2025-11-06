@@ -89,11 +89,11 @@ export class {{ service_class_name }} {
 {% for op in operations %}
   {% set is_raw_bytes_body = op.requestBody and op.requestBody.tsType == 'Uint8Array' %}
   {{ op.description | ts_doc_comment }}
-  {% if op.isPrivate %}private {% endif %}async {{ op.operationId | ts_camel_case }}(
+  {% if op.isPrivate %}private async _{% else %}async {% endif %}{{ op.operationId | ts_camel_case }}(
 {%- for p in op.pathParameters %}
     {{ p.varName }}: {{ p.tsType }},
 {%- endfor %}
-{%- if op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE'] %}
+{%- if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
     body{% if not op.requestBody.required %}?{% endif %}: {{ op.requestBody.tsType }},
 {%- endif %}
 {%- if op.otherParameters|length > 0 %}
@@ -109,7 +109,7 @@ export class {{ service_class_name }} {
     const responseFormat: BodyFormat = {% if supports_msgpack %}{% if op.hasFormatParam and op.formatVarName %}(params?.{{ op.formatVarName }} as BodyFormat | undefined) ?? 'msgpack'{% else %}'msgpack'{% endif %}{% else %}'json'{% endif %};
     headers['Accept'] = {{ service_class_name }}.acceptFor(responseFormat);
 
-    {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE'] %}
+    {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
       {% if is_raw_bytes_body %}
     const serializedBody = body ?? undefined;
     const mediaType = 'application/msgpack';
@@ -149,7 +149,7 @@ export class {{ service_class_name }} {
 {%- endif %}
       },
       headers,
-      {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD', 'DELETE'] %}
+      {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}
       body: serializedBody,
       mediaType: mediaType,
       {% else %}

@@ -1,4 +1,4 @@
-import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
+import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
   AppCallTransactionFields,
   AssetConfigTransactionFields,
@@ -13,7 +13,6 @@ import {
 } from '@algorandfoundation/algokit-transact'
 import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
 import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
-import * as algosdk from '@algorandfoundation/sdk'
 import { AtomicTransactionComposer, LogicSigAccount, type Account } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -159,7 +158,7 @@ export interface AdditionalAtomicTransactionComposerContext {
   maxFees: Map<number, AlgoAmount>
 
   /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
-  suggestedParams: Pick<algosdk.SdkTransactionParams, 'fee' | 'minFee'>
+  suggestedParams: Pick<SuggestedParams, 'fee' | 'minFee'>
 }
 
 /** An `AtomicTransactionComposer` with transactions to send. */

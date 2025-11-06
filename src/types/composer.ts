@@ -1,11 +1,10 @@
-import { AlgodClient, SimulateRequest, SimulateTransaction, TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { AlgodClient, SimulateRequest, SimulateTransaction, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { AccessReference, OnApplicationComplete, Transaction, assignFee, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
   ABIMethod,
   Address,
   AtomicTransactionComposer,
-  SdkTransactionParams,
   TransactionSigner,
   TransactionWithSigner,
   isTransactionWithSigner,
@@ -507,7 +506,7 @@ export type TransactionComposerParams = {
   /** The function used to get the TransactionSigner for a given address */
   getSigner: (address: string | Address) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
-  getSuggestedParams?: () => Promise<TransactionParams>
+  getSuggestedParams?: () => Promise<SuggestedParams>
   /** How many rounds a transaction should be valid for by default; if not specified
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
@@ -568,7 +567,7 @@ export class TransactionComposer {
   private algod: AlgodClient
 
   /** An async function that will return suggested params for the transaction. */
-  private getSuggestedParams: () => Promise<TransactionParams>
+  private getSuggestedParams: () => Promise<SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
   private getSigner: (address: string | Address) => algosdk.TransactionSigner
@@ -612,7 +611,7 @@ export class TransactionComposer {
    */
   constructor(params: TransactionComposerParams) {
     this.algod = params.algod
-    const defaultGetSuggestedParams = () => params.algod.transactionParams()
+    const defaultGetSuggestedParams = () => params.algod.suggestedParams()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
@@ -1469,11 +1468,11 @@ export class TransactionComposer {
       txnParams.note = (typeof params.note === 'string' ? encoder.encode(params.note) : params.note) satisfies Transaction['note']
 
     if (params.firstValidRound) {
-      txnParams.suggestedParams.firstRound = params.firstValidRound
+      txnParams.suggestedParams.firstValid = params.firstValidRound
     }
 
     if (params.lastValidRound) {
-      txnParams.suggestedParams.lastRound = params.lastValidRound
+      txnParams.suggestedParams.lastValid = params.lastValidRound
     } else {
       // If the validity window isn't set in this transaction or by default and we are pointing at
       //  LocalNet set a bigger window to avoid dead transactions
@@ -1482,7 +1481,7 @@ export class TransactionComposer {
         : !this.defaultValidityWindowIsExplicit && genesisIdIsLocalNet(txnParams.suggestedParams.genesisId ?? 'unknown')
           ? 1000n
           : this.defaultValidityWindow
-      txnParams.suggestedParams.lastRound = BigInt(txnParams.suggestedParams.firstRound) + window
+      txnParams.suggestedParams.lastValid = BigInt(txnParams.suggestedParams.firstValid) + window
     }
 
     if (params.staticFee !== undefined && params.extraFee !== undefined) {
@@ -1515,7 +1514,7 @@ export class TransactionComposer {
    */
   private async buildMethodCall(
     params: AppCallMethodCall | AppCreateMethodCall | AppUpdateMethodCall,
-    suggestedParams: SdkTransactionParams,
+    suggestedParams: SuggestedParams,
     includeSigner: boolean,
   ): Promise<TransactionWithSignerAndContext[]> {
     const methodArgs: (algosdk.ABIArgument | TransactionWithSignerAndContext)[] = []
@@ -1715,7 +1714,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildPayment(params: PaymentParams, suggestedParams: SdkTransactionParams) {
+  private buildPayment(params: PaymentParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makePaymentTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
@@ -1725,7 +1724,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetCreate(params: AssetCreateParams, suggestedParams: SdkTransactionParams) {
+  private buildAssetCreate(params: AssetCreateParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       total: params.total,
@@ -1743,7 +1742,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetConfig(params: AssetConfigParams, suggestedParams: SdkTransactionParams) {
+  private buildAssetConfig(params: AssetConfigParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1756,7 +1755,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: SdkTransactionParams) {
+  private buildAssetDestroy(params: AssetDestroyParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetDestroyTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1764,7 +1763,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: SdkTransactionParams) {
+  private buildAssetFreeze(params: AssetFreezeParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetFreezeTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       assetIndex: params.assetId,
@@ -1774,7 +1773,7 @@ export class TransactionComposer {
     })
   }
 
-  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: SdkTransactionParams) {
+  private buildAssetTransfer(params: AssetTransferParams, suggestedParams: SuggestedParams) {
     return this.commonTxnBuildStep(algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject, params, {
       sender: params.sender,
       receiver: params.receiver,
@@ -1786,7 +1785,7 @@ export class TransactionComposer {
     })
   }
 
-  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: SdkTransactionParams) {
+  private async buildAppCall(params: AppCallParams | AppUpdateParams | AppCreateParams, suggestedParams: SuggestedParams) {
     const appId = 'appId' in params ? params.appId : 0n
     const approvalProgram =
       'approvalProgram' in params
@@ -1844,7 +1843,7 @@ export class TransactionComposer {
     }
   }
 
-  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: SdkTransactionParams) {
+  private buildKeyReg(params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, suggestedParams: SuggestedParams) {
     if ('voteKey' in params) {
       return this.commonTxnBuildStep(algosdk.makeKeyRegistrationTxnWithSuggestedParamsFromObject, params, {
         sender: params.sender,
@@ -1867,7 +1866,7 @@ export class TransactionComposer {
   }
 
   /** Builds all transaction types apart from `txnWithSigner`, `atc` and `methodCall` since those ones can have custom signers that need to be retrieved. */
-  private async buildTxn(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithContext[]> {
+  private async buildTxn(txn: Txn, suggestedParams: SuggestedParams): Promise<TransactionWithContext[]> {
     switch (txn.type) {
       case 'pay':
         return [this.buildPayment(txn, suggestedParams)]
@@ -1894,7 +1893,7 @@ export class TransactionComposer {
     }
   }
 
-  private async buildTxnWithSigner(txn: Txn, suggestedParams: SdkTransactionParams): Promise<TransactionWithSignerAndContext[]> {
+  private async buildTxnWithSigner(txn: Txn, suggestedParams: SuggestedParams): Promise<TransactionWithSignerAndContext[]> {
     if (txn.type === 'txnWithSigner') {
       return [
         {
@@ -1928,11 +1927,6 @@ export class TransactionComposer {
    */
   async buildTransactions(): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
-    const sdkTransactionParams: SdkTransactionParams = {
-      ...suggestedParams,
-      firstRound: suggestedParams.lastRound,
-      lastRound: suggestedParams.lastRound + 1000n,
-    }
 
     const transactions: Transaction[] = []
     const methodCalls = new Map<number, algosdk.ABIMethod>()
@@ -1940,7 +1934,7 @@ export class TransactionComposer {
 
     for (const txn of this.txns) {
       if (!['txnWithSigner', 'atc', 'methodCall'].includes(txn.type)) {
-        transactions.push(...(await this.buildTxn(txn, sdkTransactionParams)).map((txn) => txn.txn))
+        transactions.push(...(await this.buildTxn(txn, suggestedParams)).map((txn) => txn.txn))
       } else {
         const transactionsWithSigner =
           txn.type === 'txnWithSigner'
@@ -1948,7 +1942,7 @@ export class TransactionComposer {
             : txn.type === 'atc'
               ? this.buildAtc(txn.atc)
               : txn.type === 'methodCall'
-                ? await this.buildMethodCall(txn, sdkTransactionParams, false)
+                ? await this.buildMethodCall(txn, suggestedParams, false)
                 : []
 
         transactionsWithSigner.forEach((ts) => {
@@ -1992,15 +1986,10 @@ export class TransactionComposer {
   async build() {
     if (this.atc.getStatus() === algosdk.AtomicTransactionComposerStatus.BUILDING) {
       const suggestedParams = await this.getSuggestedParams()
-      const sdkTransactionParams: SdkTransactionParams = {
-        ...suggestedParams,
-        firstRound: suggestedParams.lastRound,
-        lastRound: suggestedParams.lastRound + 1000n,
-      }
       // Build all of the transactions
       const txnWithSigners: TransactionWithSignerAndContext[] = []
       for (const txn of this.txns) {
-        txnWithSigners.push(...(await this.buildTxnWithSigner(txn, sdkTransactionParams)))
+        txnWithSigners.push(...(await this.buildTxnWithSigner(txn, suggestedParams)))
       }
 
       // Add all of the transactions to the underlying ATC
@@ -2056,7 +2045,7 @@ export class TransactionComposer {
 
     if (waitRounds === undefined) {
       const lastRound = group.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
-      const { lastRound: firstRound } = suggestedParams!
+      const { firstValid: firstRound } = suggestedParams!
       waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
     }
 

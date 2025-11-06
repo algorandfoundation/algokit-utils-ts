@@ -3,6 +3,7 @@ import type {
   PendingTransactionResponse,
   SimulateRequest,
   SimulateTransaction,
+  SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import type { AccessReference, BoxReference, SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { OnApplicationComplete, decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
@@ -20,7 +21,7 @@ import {
 } from './abi/index.js'
 import { Address } from './encoding/address.js'
 import { assignGroupID } from './group.js'
-import { SdkTransactionParams, makeApplicationCallTxnFromObject } from './makeTxn.js'
+import { makeApplicationCallTxnFromObject } from './makeTxn.js'
 import { TransactionSigner, TransactionWithSigner, isTransactionWithSigner } from './signer.js'
 import { arrayEqual, ensureUint64, stringifyJSON } from './utils/utils.js'
 import { waitForConfirmation } from './wait.js'
@@ -214,7 +215,7 @@ export class AtomicTransactionComposer {
     /** The address of the sender of this application call */
     sender: string | Address
     /** Transactions params to use for this application call */
-    suggestedParams: SdkTransactionParams
+    suggestedParams: SuggestedParams
     /** The OnComplete action to take for this application call. If omitted, OnApplicationComplete.NoOp will be used. */
     onComplete?: OnApplicationComplete
     /** The approval program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplication */

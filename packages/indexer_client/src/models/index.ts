@@ -1,5 +1,3 @@
-export type { Hashtype } from './hashtype'
-export { HashtypeMeta } from './hashtype'
 export type { Account } from './account'
 export { AccountMeta } from './account'
 export type { AccountParticipation } from './account-participation'

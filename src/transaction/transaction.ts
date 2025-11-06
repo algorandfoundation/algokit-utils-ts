@@ -7,6 +7,7 @@ import {
   PendingTransactionResponse,
   SimulateRequest,
   SimulationTransactionExecTraceMeta,
+  SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
 import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
@@ -1109,7 +1110,7 @@ export const waitForConfirmation = async function (
  * @param transaction The transaction to cap or suggested params object about to be used to create a transaction
  * @param maxAcceptableFee The maximum acceptable fee to pay
  */
-export function capTransactionFee(transaction: Transaction | algosdk.SdkTransactionParams, maxAcceptableFee: AlgoAmount) {
+export function capTransactionFee(transaction: Transaction | SuggestedParams, maxAcceptableFee: AlgoAmount) {
   // If a flat fee hasn't already been defined
   if (!('flatFee' in transaction) || !transaction.flatFee) {
     // Once a transaction has been constructed by algosdk, transaction.fee indicates what the total transaction fee
@@ -1136,7 +1137,7 @@ export function capTransactionFee(transaction: Transaction | algosdk.SdkTransact
  * @param transaction The transaction or suggested params
  * @param feeControl The fee control parameters
  */
-export function controlFees<T extends algosdk.SdkTransactionParams | Transaction>(
+export function controlFees<T extends SuggestedParams | Transaction>(
   transaction: T,
   feeControl: { fee?: AlgoAmount; maxFee?: AlgoAmount },
 ) {
@@ -1163,23 +1164,11 @@ export function controlFees<T extends algosdk.SdkTransactionParams | Transaction
  * @param algod Algod algod
  * @returns The suggested transaction parameters
  */
-export async function getTransactionParams(
-  params: algosdk.SdkTransactionParams | undefined,
-  algod: AlgodClient,
-): Promise<algosdk.SdkTransactionParams> {
+export async function getTransactionParams(params: SuggestedParams | undefined, algod: AlgodClient): Promise<SuggestedParams> {
   if (params) {
     return { ...params }
   }
-  const p = await algod.transactionParams()
-  return {
-    fee: p.fee,
-    firstRound: p.lastRound,
-    lastRound: p.lastRound + 1000n,
-    genesisId: p.genesisId,
-    genesisHash: p.genesisHash,
-    minFee: p.minFee,
-    consensusVersion: p.consensusVersion,
-  }
+  return await algod.suggestedParams()
 }
 
 /**

@@ -235,6 +235,74 @@ class SchemaProcessor:
 
         return ModelDescriptor(model_name=model_name, fields=fields, is_object=is_object)
 
+    def _extract_types_from_schema(self, schema: Schema, all_schemas: Schemas) -> set[str]:
+        """Extract all type names referenced in a schema."""
+        referenced_types = set()
+
+        # Handle $ref directly
+        if isinstance(schema, dict) and "$ref" in schema:
+            ref = schema["$ref"].split("/")[-1]
+            referenced_types.add(ts_pascal_case(ref))
+
+        # Handle arrays
+        if isinstance(schema, dict) and schema.get("type") == "array":
+            items = schema.get("items", {})
+            if isinstance(items, dict):
+                referenced_types.update(self._extract_types_from_schema(items, all_schemas))
+
+        # Handle object properties
+        if isinstance(schema, dict) and "properties" in schema:
+            for prop_schema in schema["properties"].values():
+                if isinstance(prop_schema, dict):
+                    referenced_types.update(self._extract_types_from_schema(prop_schema, all_schemas))
+
+        # Handle allOf, oneOf, anyOf
+        for key in ["allOf", "oneOf", "anyOf"]:
+            if isinstance(schema, dict) and key in schema:
+                items = schema[key]
+                if isinstance(items, list):
+                    for item in items:
+                        if isinstance(item, dict):
+                            referenced_types.update(self._extract_types_from_schema(item, all_schemas))
+
+        # Convert to TypeScript type and extract model names using the same logic as in operations
+        if isinstance(schema, dict):
+            ts_type_str = ts_type(schema, all_schemas)
+            tokens = set(_TYPE_TOKEN_RE.findall(ts_type_str))
+            model_names = {ts_pascal_case(name) for name in all_schemas.keys()}
+            referenced_types.update(tok for tok in tokens if tok in model_names)
+
+        return referenced_types
+
+    def collect_transitive_dependencies(self, used_types: set[str], all_schemas: Schemas) -> set[str]:
+        """Collect all types transitively referenced by the given used_types."""
+        all_used_types = set(used_types)
+        to_process = set(used_types)
+
+        while to_process:
+            current_type = to_process.pop()
+
+            # Convert from TypeScript type name back to schema name
+            schema_name = None
+            for name in all_schemas.keys():
+                if ts_pascal_case(name) == current_type:
+                    schema_name = name
+                    break
+
+            if schema_name and schema_name in all_schemas:
+                schema = all_schemas[schema_name]
+                referenced_types = self._extract_types_from_schema(schema, all_schemas)
+
+                # Add any new types to the processing queue
+                for ref_type in referenced_types:
+                    if ref_type not in all_used_types:
+                        all_used_types.add(ref_type)
+                        to_process.add(ref_type)
+
+        return all_used_types
+
+
+
 
 class OperationProcessor:
     """Processes OpenAPI operations and generates API services."""
@@ -274,7 +342,7 @@ class OperationProcessor:
         operations_by_tag: dict[str, list[OperationContext]],
         tags: set[str],
         service_class_name: str,
-    ) -> FileMap:
+    ) -> tuple[FileMap, set[str]]:
         """Generate API service files."""
         apis_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.APIS
         files: FileMap = {}
@@ -282,16 +350,13 @@ class OperationProcessor:
         # Collect unique operations
         all_operations = self._collect_unique_operations(operations_by_tag, tags)
 
-        # Get private and skipped methods configurations for this service
+        # Get private method configurations for this service
         private_methods = self._get_private_methods(service_class_name)
-        skipped_methods = self._get_skipped_methods(service_class_name)
 
         # Mark operations as private or skipped, where required
         for operation in all_operations:
             if operation.operation_id in private_methods:
                 operation.is_private = True
-            if operation.operation_id in skipped_methods:
-                operation.skip_generation = True
 
         # Filter out operations marked for skipping
         all_operations = [op for op in all_operations if not op.skip_generation]
@@ -302,6 +367,10 @@ class OperationProcessor:
 
         # Get custom imports and methods for this service
         custom_imports, custom_methods = self._get_custom_service_extensions(service_class_name)
+
+        # Add custom model imports for AlgodApi
+        if service_class_name == "AlgodApi":
+            import_types.add("SuggestedParams")
 
         # Generate service file
         files[apis_dir / constants.API_SERVICE_FILE] = self.renderer.render(
@@ -321,7 +390,7 @@ class OperationProcessor:
             constants.APIS_INDEX_TEMPLATE, {"service_class_name": service_class_name}
         )
 
-        return files
+        return files, import_types
 
     def _get_custom_service_extensions(self, service_class_name: str) -> tuple[list[str], list[str]]:
         """Get custom imports and methods for specific service classes."""
@@ -345,10 +414,40 @@ class OperationProcessor:
     } else if (!(rawTransactions instanceof Uint8Array)) {
       throw new Error('Argument must be byte array');
     }
-    return this.rawTransaction(rawTransactions);
+    return this._rawTransaction(rawTransactions);
   }'''
+            get_application_box_by_name_method = '''/**
+   * Given an application ID and box name, it returns the round, box name, and value.
+   */
+  async getApplicationBoxByName(applicationId: number | bigint, boxName: Uint8Array): Promise<Box> {
+    const name = `b64:${Buffer.from(boxName).toString('base64')}`;
+    return this._getApplicationBoxByName(applicationId, { name });
+  }
+'''
+            suggested_params_method = '''/**
+   * Returns the common needed parameters for a new transaction.
+   */
+  async suggestedParams(): Promise<SuggestedParams> {
+    const txnParams = await this._transactionParams();
 
-            custom_methods = [send_raw_transaction_method]
+    return {
+      flatFee: false,
+      fee: txnParams.fee,
+      firstValid: txnParams.lastRound,
+      lastValid: txnParams.lastRound + 1000n,
+      genesisHash: txnParams.genesisHash,
+      genesisId: txnParams.genesisId,
+      minFee: txnParams.minFee,
+      consensusVersion: txnParams.consensusVersion,
+    };
+  }'''
+            get_transaction_params_method = '''/**
+   * Returns the common needed parameters for a new transaction.
+   */
+  async getTransactionParams(): Promise<SuggestedParams> {
+    return await this.suggestedParams();
+  }'''
+            custom_methods = [send_raw_transaction_method, get_application_box_by_name_method, suggested_params_method, get_transaction_params_method]
 
         return custom_imports, custom_methods
 
@@ -357,26 +456,15 @@ class OperationProcessor:
         # Default configuration for private methods by service class
         private_method_config = {
             "AlgodApi": {
-                "RawTransaction"  # This is the raw transaction endpoint we're wrapping with sendRawTransaction
+                "RawTransaction",  # Wrapped by custom method
+                "GetApplicationBoxByName", # Wrapped by custom method
+                "TransactionParams" # Wrapped by custom method
             },
             "IndexerApi": set(),  # No private methods by default
             "KmdApi": set(),  # No private methods by default
         }
 
         return private_method_config.get(service_class_name, set())
-
-    def _get_skipped_methods(self, service_class_name: str) -> set[str]:
-        """Get set of operation IDs that should be skipped during generation for specific service classes."""
-        # Default configuration for methods to skip generation by service class
-        skip_generation_config = {
-            "AlgodApi": {
-                "RawTransactionAsync", # Not exposed via algosdk
-            },
-            "IndexerApi": set(),
-            "KmdApi": set(),
-        }
-
-        return skip_generation_config.get(service_class_name, set())
 
     def _initialize_model_names(self, spec: Schema) -> None:
         """Initialize set of model names from spec."""
@@ -413,6 +501,13 @@ class OperationProcessor:
             context = self._create_operation_context(op_input)
 
             context.tags = operation.get(constants.OperationKey.TAGS, [constants.DEFAULT_TAG])
+
+            # Skip generation for operations tagged with "private" or "experimental"
+            # or with specific operation IDs
+            if (any(tag in context.tags for tag in ("private", "experimental")) or
+                context.operation_id in ("Metrics", "SwaggerJSON", "GetBlockLogs")):
+                context.skip_generation = True
+
             operations.append(context)
 
         return operations
@@ -618,15 +713,13 @@ class OperationProcessor:
             tokens = set(_TYPE_TOKEN_RE.findall(type_str))
             types: set[str] = {tok for tok in tokens if tok in self._model_names and tok not in builtin_types}
             # Include synthetic models that aren't part of _model_names
-            if "AlgokitSignedTransaction" in tokens:
-                types.add("AlgokitSignedTransaction")
             return types
 
         # Collect from all type references
         context.import_types = extract_types(context.response_type)
 
         # Only include request body types if the method actually uses a body
-        if context.request_body and context.method.upper() not in ["GET", "HEAD", "DELETE"]:
+        if context.request_body and context.method.upper() not in ["GET", "HEAD"]:
             context.import_types |= extract_types(context.request_body.ts_type)
 
         for param in context.parameters:
@@ -757,18 +850,36 @@ class CodeGenerator:
         # Process operations and schemas
         ops_by_tag, tags, synthetic_models = self.operation_processor.process_spec(spec)
 
+        # Generate service first to get the used types
+        service_files, used_types = self.operation_processor.generate_service(output_dir, ops_by_tag, tags, service_class)
+        files.update(service_files)
+
         # Merge schemas
         components = spec.get(constants.SchemaKey.COMPONENTS, {})
         base_schemas = components.get(constants.SchemaKey.COMPONENTS_SCHEMAS, {})
         all_schemas = {**base_schemas, **synthetic_models}
 
-        # Generate components
-        files.update(self.schema_processor.generate_models(output_dir, all_schemas))
+        # Collect all transitive dependencies of used types
+        all_used_types = self.schema_processor.collect_transitive_dependencies(used_types, all_schemas)
 
-        # Inject custom Algod models if this spec targets Algod
-        client_type = self._detect_client_type(spec)
-        if client_type == "Algod":
+        # Filter schemas to only include those used by non-skipped operations
+        used_schemas = {name: schema for name, schema in all_schemas.items()
+                       if ts_pascal_case(name) in all_used_types}
+
+
+
+        # Generate components (only used schemas)
+        files.update(self.schema_processor.generate_models(output_dir, used_schemas))
+
+        if service_class == "AlgodApi":
             models_dir = output_dir / constants.DirectoryName.SRC / constants.DirectoryName.MODELS
+
+            # Add SuggestedParams custom model
+            files[models_dir / "suggested-params.ts"] = self.renderer.render(
+                "models/transaction-params/suggested-params.ts.j2",
+                {"spec": spec},
+            )
+
             # Custom typed block models
             # Block-specific models (prefixed to avoid shape collisions)
             files[models_dir / "block-eval-delta.ts"] = self.renderer.render(
@@ -811,9 +922,10 @@ class CodeGenerator:
 
             # Ensure index exports include the custom models
             index_path = models_dir / constants.INDEX_FILE
-            base_index = self.renderer.render(constants.MODELS_INDEX_TEMPLATE, {"schemas": all_schemas})
+            base_index = self.renderer.render(constants.MODELS_INDEX_TEMPLATE, {"schemas": used_schemas})
             extras = (
                 "\n"
+                "export type { SuggestedParams, SuggestedParamsMeta } from './suggested-params';\n"
                 "export type { BlockEvalDelta } from './block-eval-delta';\n"
                 "export { BlockEvalDeltaMeta } from './block-eval-delta';\n"
                 "export type { BlockStateDelta } from './block-state-delta';\n"
@@ -832,28 +944,9 @@ class CodeGenerator:
                 "export { SignedTxnInBlockMeta } from './signed-txn-in-block';\n"
             )
             files[index_path] = base_index + extras
-        files.update(self.operation_processor.generate_service(output_dir, ops_by_tag, tags, service_class))
         files.update(self._generate_client_files(output_dir, client_class, service_class))
 
         return files
-
-    @staticmethod
-    def _detect_client_type(spec: Schema) -> str:
-        """Detect client type from the OpenAPI spec title."""
-        try:
-            title = (spec.get("info", {}) or {}).get("title", "")
-            if not isinstance(title, str):
-                return "Api"
-            tl = title.lower()
-            if "algod" in tl:
-                return "Algod"
-            if "indexer" in tl:
-                return "Indexer"
-            if "kmd" in tl:
-                return "Kmd"
-            return (title.split()[0] or "Api").title()
-        except Exception:
-            return "Api"
 
     def _generate_runtime(
         self,

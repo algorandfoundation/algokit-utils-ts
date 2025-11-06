@@ -1,4 +1,4 @@
-import { AlgodClient, TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Indexer, Kmd } from '@algorandfoundation/sdk'
 import { AlgoHttpClientWithRetry } from './algo-http-client-with-retry'
@@ -121,7 +121,7 @@ export class ClientManager {
     return this._kmd
   }
 
-  private _getNetworkPromise: Promise<TransactionParams> | undefined
+  private _getNetworkPromise: Promise<SuggestedParams> | undefined
   /**
    * Get details about the current network.
    * @example Getting genesis ID
@@ -133,7 +133,7 @@ export class ClientManager {
    */
   public async network(): Promise<NetworkDetails> {
     if (!this._getNetworkPromise) {
-      this._getNetworkPromise = this._algod.transactionParams()
+      this._getNetworkPromise = this._algod.suggestedParams()
     }
 
     const params = await this._getNetworkPromise

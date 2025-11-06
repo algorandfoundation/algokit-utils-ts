@@ -1,3 +1,4 @@
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
   AccessReference,
   BoxReference,
@@ -8,7 +9,6 @@ import {
 } from '@algorandfoundation/algokit-transact'
 import { Address } from '../../encoding/address.js'
 import { HeartbeatProof } from '../../heartbeat.js'
-import { SdkTransactionParams } from '../../makeTxn.js'
 import { StateProof, StateProofMessage } from '../../stateproof.js'
 
 /**
@@ -401,7 +401,7 @@ export interface TransactionParams {
   /**
    * Suggested parameters relevant to the network that will accept this transaction
    */
-  suggestedParams: SdkTransactionParams
+  suggestedParams: SuggestedParams
 
   /**
    * Payment transaction parameters. Only set if type is TransactionType.pay

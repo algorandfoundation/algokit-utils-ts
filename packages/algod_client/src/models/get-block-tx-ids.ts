@@ -1,18 +1,18 @@
 import type { ModelMetadata } from '../core/model-runtime'
 
-export type GetBlockTxids = {
+export type GetBlockTxIds = {
   /**
    * Block transaction IDs.
    */
-  blockTxids: string[]
+  blockTxIds: string[]
 }
 
-export const GetBlockTxidsMeta: ModelMetadata = {
-  name: 'GetBlockTxids',
+export const GetBlockTxIdsMeta: ModelMetadata = {
+  name: 'GetBlockTxIds',
   kind: 'object',
   fields: [
     {
-      name: 'blockTxids',
+      name: 'blockTxIds',
       wireKey: 'blockTxids',
       optional: false,
       nullable: false,

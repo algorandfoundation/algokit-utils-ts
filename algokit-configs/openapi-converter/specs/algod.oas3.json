@@ -958,7 +958,7 @@
           "nonparticipating"
         ],
         "summary": "Get the top level transaction IDs for the block on the given round.",
-        "operationId": "GetBlockTxids",
+        "operationId": "GetBlockTxIds",
         "parameters": [
           {
             "name": "round",
@@ -991,7 +991,8 @@
                       "description": "Block transaction IDs.",
                       "items": {
                         "type": "string"
-                      }
+                      },
+                      "x-algokit-field-rename": "block_tx_ids"
                     }
                   }
                 }
@@ -4804,18 +4805,14 @@
           },
           "total-apps-opted-in": {
             "type": "integer",
-            "description": "The count of all applications that have been opted in, equivalent to the count of application local data (AppLocalState objects) stored in this account.",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "The count of all applications that have been opted in, equivalent to the count of application local data (AppLocalState objects) stored in this account."
           },
           "apps-total-schema": {
             "$ref": "#/components/schemas/ApplicationStateSchema"
           },
           "apps-total-extra-pages": {
             "type": "integer",
-            "description": "\\[teap\\] the sum of all extra application program pages for this account.",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "\\[teap\\] the sum of all extra application program pages for this account."
           },
           "assets": {
             "type": "array",
@@ -4826,9 +4823,7 @@
           },
           "total-assets-opted-in": {
             "type": "integer",
-            "description": "The count of all assets that have been opted in, equivalent to the count of AssetHolding objects held by this account.",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "The count of all assets that have been opted in, equivalent to the count of AssetHolding objects held by this account."
           },
           "created-apps": {
             "type": "array",
@@ -4839,9 +4834,7 @@
           },
           "total-created-apps": {
             "type": "integer",
-            "description": "The count of all apps (AppParams objects) created by this account.",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "The count of all apps (AppParams objects) created by this account."
           },
           "created-assets": {
             "type": "array",
@@ -4852,21 +4845,15 @@
           },
           "total-created-assets": {
             "type": "integer",
-            "description": "The count of all assets (AssetParams objects) created by this account.",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "The count of all assets (AssetParams objects) created by this account."
           },
           "total-boxes": {
             "type": "integer",
-            "description": "\\[tbx\\] The number of existing boxes created by this account's app.",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "\\[tbx\\] The number of existing boxes created by this account's app."
           },
           "total-box-bytes": {
             "type": "integer",
-            "description": "\\[tbxb\\] The total number of bytes used by this account's app's box keys and values.",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "\\[tbxb\\] The total number of bytes used by this account's app's box keys and values."
           },
           "participation": {
             "$ref": "#/components/schemas/AccountParticipation"
@@ -5063,9 +5050,7 @@
             "maximum": 19,
             "minimum": 0,
             "type": "integer",
-            "description": "\\[dc\\] The number of digits to use after the decimal point when displaying this asset. If 0, the asset is not divisible. If 1, the base unit of the asset is in tenths. If 2, the base unit of the asset is in hundredths, and so on. This value must be between 0 and 19 (inclusive).",
-            "format": "uint64",
-            "x-algokit-bigint": true
+            "description": "\\[dc\\] The number of digits to use after the decimal point when displaying this asset. If 0, the asset is not divisible. If 1, the base unit of the asset is in tenths. If 2, the base unit of the asset is in hundredths, and so on. This value must be between 0 and 19 (inclusive)."
           },
           "default-frozen": {
             "type": "boolean",
@@ -5282,7 +5267,9 @@
         "type": "object",
         "properties": {
           "key": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "format": "byte"
           },
           "value": {
             "$ref": "#/components/schemas/TealValue"
@@ -5389,7 +5376,9 @@
         "type": "object",
         "properties": {
           "key": {
-            "type": "string"
+            "type": "string",
+            "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "format": "byte"
           },
           "value": {
             "$ref": "#/components/schemas/EvalDelta"
@@ -5687,12 +5676,12 @@
             "type": "string"
           },
           "txn-index": {
-            "type": "integer",
-            "x-algokit-bigint": true
+            "type": "integer"
           },
           "app-index": {
             "type": "integer",
             "x-go-type": "basics.AppIndex",
+            "x-algokit-field-rename": "app_id",
             "x-algokit-bigint": true
           }
         },
@@ -6804,7 +6793,8 @@
                   "description": "Block transaction IDs.",
                   "items": {
                     "type": "string"
-                  }
+                  },
+                  "x-algokit-field-rename": "block_tx_ids"
                 }
               }
             }
