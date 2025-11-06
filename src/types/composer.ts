@@ -1675,6 +1675,7 @@ export class TransactionComposer {
       }
     }
 
+    // TODO: PD - account for access list
     if (groupAnalysis) {
       // Process fee adjustments
       let surplusGroupFees = 0n

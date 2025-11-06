@@ -679,7 +679,6 @@ function buildMethodCallCommon(
     accountReferences?: string[]
     appReferences?: bigint[]
     assetReferences?: bigint[]
-    // TODO: PD - access list references
   },
   header: TransactionHeader,
 ): { args: Uint8Array[]; accountReferences: string[]; appReferences: bigint[]; assetReferences: bigint[] } {
@@ -749,10 +748,13 @@ export const buildAppCreateMethodCall = async (
       accountReferences: accountReferences,
       appReferences: params.appReferences,
       assetReferences: params.assetReferences,
-      // TODO: PD - access list references
     },
     header,
   )
+
+  // If accessReferences is provided, we should not pass legacy foreign arrays
+  const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
   return {
     ...header,
     type: TransactionType.AppCall,
@@ -765,10 +767,14 @@ export const buildAppCreateMethodCall = async (
       localStateSchema: localStateSchema,
       extraProgramPages: extraProgramPages,
       args: common.args,
-      accountReferences: common.accountReferences,
-      appReferences: common.appReferences,
-      assetReferences: common.assetReferences,
-      boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+      ...(hasAccessReferences
+        ? { access: params.accessReferences }
+        : {
+            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            appReferences: params.appReferences,
+            assetReferences: params.assetReferences,
+            boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
       rejectVersion: params.rejectVersion,
     },
   }
@@ -796,10 +802,13 @@ export const buildAppUpdateMethodCall = async (
       accountReferences: accountReferences,
       appReferences: params.appReferences,
       assetReferences: params.assetReferences,
-      // TODO: PD - access list references
     },
     header,
   )
+
+  // If accessReferences is provided, we should not pass legacy foreign arrays
+  const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
   return {
     ...header,
     type: TransactionType.AppCall,
@@ -809,10 +818,14 @@ export const buildAppUpdateMethodCall = async (
       approvalProgram: approvalProgram,
       clearStateProgram: clearStateProgram,
       args: common.args,
-      accountReferences: common.accountReferences,
-      appReferences: common.appReferences,
-      assetReferences: common.assetReferences,
-      boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+      ...(hasAccessReferences
+        ? { access: params.accessReferences }
+        : {
+            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            appReferences: params.appReferences,
+            assetReferences: params.assetReferences,
+            boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
       rejectVersion: params.rejectVersion,
     },
   }
@@ -828,10 +841,13 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
       accountReferences: accountReferences,
       appReferences: params.appReferences,
       assetReferences: params.assetReferences,
-      // TODO: PD - access list references
     },
     header,
   )
+
+  // If accessReferences is provided, we should not pass legacy foreign arrays
+  const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
+
   return {
     ...header,
     type: TransactionType.AppCall,
@@ -839,10 +855,14 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
       appId: params.appId,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       args: common.args,
-      accountReferences: common.accountReferences,
-      appReferences: common.appReferences,
-      assetReferences: common.assetReferences,
-      boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+      ...(hasAccessReferences
+        ? { access: params.accessReferences }
+        : {
+            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            appReferences: params.appReferences,
+            assetReferences: params.assetReferences,
+            boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+          }),
       rejectVersion: params.rejectVersion,
     },
   }
