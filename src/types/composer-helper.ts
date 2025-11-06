@@ -331,8 +331,6 @@ export const buildAssetOptOut = (params: AssetOptOutParams, header: TransactionH
 }
 
 export const buildAppCreate = async (params: AppCreateParams, appManager: AppManager, header: TransactionHeader): Promise<Transaction> => {
-  // TODO: PD - find out about rejectVersion
-
   const approvalProgram =
     typeof params.approvalProgram === 'string'
       ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
@@ -381,13 +379,12 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
+      rejectVersion: params.rejectVersion,
     },
   }
 }
 
 export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppManager, header: TransactionHeader): Promise<Transaction> => {
-  // TODO: PD - find out about rejectVersion
-
   const approvalProgram =
     typeof params.approvalProgram === 'string'
       ? (await appManager.compileTeal(params.approvalProgram)).compiledBase64ToBytes
@@ -417,13 +414,12 @@ export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppMan
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
+      rejectVersion: params.rejectVersion,
     },
   }
 }
 
 export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: TransactionHeader): Transaction => {
-  // TODO: PD - find out about rejectVersion
-
   // If accessReferences is provided, we should not pass legacy foreign arrays
   const hasAccessReferences = params.accessReferences && params.accessReferences.length > 0
 
@@ -442,6 +438,7 @@ export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: Tr
             assetReferences: params.assetReferences,
             boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
+      rejectVersion: params.rejectVersion,
     },
   }
 }
@@ -772,6 +769,7 @@ export const buildAppCreateMethodCall = async (
       appReferences: common.appReferences,
       assetReferences: common.assetReferences,
       boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+      rejectVersion: params.rejectVersion,
     },
   }
 }
@@ -815,6 +813,7 @@ export const buildAppUpdateMethodCall = async (
       appReferences: common.appReferences,
       assetReferences: common.assetReferences,
       boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+      rejectVersion: params.rejectVersion,
     },
   }
 }
@@ -844,6 +843,7 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
       appReferences: common.appReferences,
       assetReferences: common.assetReferences,
       boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
+      rejectVersion: params.rejectVersion,
     },
   }
 }
