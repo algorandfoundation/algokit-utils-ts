@@ -178,33 +178,26 @@ export interface AtomicTransactionComposerToSend extends SendParams {
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext
 }
 
-/**
- * A wrapper class for Transaction that adds a txID() method while maintaining
- * transparent access to all underlying Transaction properties through a Proxy.
- *
- * All Transaction properties are accessible directly on instances of this class.
- */
-
 export class TransactionWrapper implements Transaction {
   type: TransactionType
   sender: string
-  fee?: bigint | undefined
+  fee?: bigint
   firstValid: bigint
   lastValid: bigint
-  genesisHash?: Uint8Array | undefined
-  genesisId?: string | undefined
-  note?: Uint8Array | undefined
-  rekeyTo?: string | undefined
-  lease?: Uint8Array | undefined
-  group?: Uint8Array | undefined
-  payment?: PaymentTransactionFields | undefined
-  assetTransfer?: AssetTransferTransactionFields | undefined
-  assetConfig?: AssetConfigTransactionFields | undefined
-  appCall?: AppCallTransactionFields | undefined
-  keyRegistration?: KeyRegistrationTransactionFields | undefined
-  assetFreeze?: AssetFreezeTransactionFields | undefined
-  heartbeat?: HeartbeatTransactionFields | undefined
-  stateProof?: StateProofTransactionFields | undefined
+  genesisHash?: Uint8Array
+  genesisId?: string
+  note?: Uint8Array
+  rekeyTo?: string
+  lease?: Uint8Array
+  group?: Uint8Array
+  payment?: PaymentTransactionFields
+  assetTransfer?: AssetTransferTransactionFields
+  assetConfig?: AssetConfigTransactionFields
+  appCall?: AppCallTransactionFields
+  keyRegistration?: KeyRegistrationTransactionFields
+  assetFreeze?: AssetFreezeTransactionFields
+  heartbeat?: HeartbeatTransactionFields
+  stateProof?: StateProofTransactionFields
 
   constructor(transaction: Transaction) {
     this.type = transaction.type

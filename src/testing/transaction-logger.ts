@@ -94,12 +94,12 @@ class TransactionLoggingAlgodClientProxyHandler implements ProxyHandler<AlgodCli
 
         let forPosting = stxOrStxs
         if (Array.isArray(stxOrStxs)) {
-          if (!stxOrStxs.every(isByteArray)) {
+          if (!stxOrStxs.every((a) => a instanceof Uint8Array)) {
             throw new TypeError('Array elements must be byte arrays')
           }
           // Flatten into a single Uint8Array
           forPosting = algosdk.concatArrays(...stxOrStxs)
-        } else if (!isByteArray(forPosting)) {
+        } else if (!(forPosting instanceof Uint8Array)) {
           throw new TypeError('Argument must be byte array')
         }
 
@@ -109,9 +109,4 @@ class TransactionLoggingAlgodClientProxyHandler implements ProxyHandler<AlgodCli
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (target as any)[property]
   }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isByteArray(array: any): array is Uint8Array {
-  return array && array.byteLength !== undefined
 }

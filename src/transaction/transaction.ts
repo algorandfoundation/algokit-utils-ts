@@ -518,6 +518,7 @@ export async function prepareGroupForSending(
       }
 
       if (r && !hasAccessReferences) {
+        if (r.boxes || r.extraBoxRefs) throw Error('Unexpected boxes at the transaction level')
         if (r.appLocals) throw Error('Unexpected app local at the transaction level')
         if (r.assetHoldings)
           throw Error('Unexpected asset holding at the transaction level')
@@ -527,10 +528,7 @@ export async function prepareGroupForSending(
           accountReferences: [...(group[i].txn?.appCall?.accountReferences ?? []), ...(r.accounts ?? [])],
           appReferences: [...(group[i].txn?.appCall?.appReferences ?? []), ...(r.apps ?? [])],
           assetReferences: [...(group[i].txn?.appCall?.assetReferences ?? []), ...(r.assets ?? [])],
-          boxReferences: [
-            ...(group[i].txn?.appCall?.boxReferences ?? []),
-            ...(r.boxes?.map((b) => ({ appId: b.app, name: b.name })) ?? []),
-          ],
+          boxReferences: [...(group[i].txn?.appCall?.boxReferences ?? [])],
         } satisfies Partial<ApplicationTransactionFields>
 
         const accounts = group[i].txn.appCall?.accountReferences?.length ?? 0
@@ -926,6 +924,9 @@ export const sendAtomicTransactionComposer = async function (atcSend: AtomicTran
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const err = new Error(errorMessage) as any
     err.cause = e
+    if (typeof e === 'object') {
+      err.name = e.name
+    }
 
     if (Config.debug && typeof e === 'object') {
       err.traces = []
