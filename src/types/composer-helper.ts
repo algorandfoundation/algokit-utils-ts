@@ -24,7 +24,7 @@ import {
 } from '@algorandfoundation/sdk'
 import { encodeLease } from '../transaction'
 import { calculateExtraProgramPages } from '../util'
-import { AppManager, getAccessReference } from './app-manager'
+import { AppManager } from './app-manager'
 import {
   AppCallMethodCall,
   AppCallParams,
@@ -226,7 +226,7 @@ export type TransactionHeader = {
 export const buildPayment = (params: PaymentParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.pay,
+    type: TransactionType.Payment,
     payment: {
       receiver: params.receiver.toString(),
       amount: params.amount.microAlgos,
@@ -237,7 +237,7 @@ export const buildPayment = (params: PaymentParams, header: TransactionHeader): 
 export const buildAssetCreate = (params: AssetCreateParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.acfg,
+    type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: 0n, // Asset creation always uses ID 0
       total: params.total,
@@ -258,7 +258,7 @@ export const buildAssetCreate = (params: AssetCreateParams, header: TransactionH
 export const buildAssetConfig = (params: AssetConfigParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.acfg,
+    type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: params.assetId,
       manager: params.manager?.toString(),
@@ -272,7 +272,7 @@ export const buildAssetConfig = (params: AssetConfigParams, header: TransactionH
 export const buildAssetFreeze = (params: AssetFreezeParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.afrz,
+    type: TransactionType.AssetFreeze,
     assetFreeze: {
       assetId: params.assetId,
       freezeTarget: params.account.toString(),
@@ -284,7 +284,7 @@ export const buildAssetFreeze = (params: AssetFreezeParams, header: TransactionH
 export const buildAssetDestroy = (params: AssetDestroyParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.acfg,
+    type: TransactionType.AssetConfig,
     assetConfig: {
       assetId: params.assetId,
     },
@@ -294,7 +294,7 @@ export const buildAssetDestroy = (params: AssetDestroyParams, header: Transactio
 export const buildAssetTransfer = (params: AssetTransferParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.axfer,
+    type: TransactionType.AssetTransfer,
     assetTransfer: {
       assetId: params.assetId,
       amount: params.amount,
@@ -308,7 +308,7 @@ export const buildAssetTransfer = (params: AssetTransferParams, header: Transact
 export const buildAssetOptIn = (params: AssetOptInParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.axfer,
+    type: TransactionType.AssetTransfer,
     assetTransfer: {
       assetId: params.assetId,
       amount: 0n,
@@ -320,7 +320,7 @@ export const buildAssetOptIn = (params: AssetOptInParams, header: TransactionHea
 export const buildAssetOptOut = (params: AssetOptOutParams, header: TransactionHeader): Transaction => {
   return {
     ...header,
-    type: TransactionType.axfer,
+    type: TransactionType.AssetTransfer,
     assetTransfer: {
       assetId: params.assetId,
       amount: 0n,
@@ -363,8 +363,8 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
 
   return {
     ...header,
-    type: TransactionType.appl,
-    applicationCall: {
+    type: TransactionType.AppCall,
+    appCall: {
       appId: 0n, // App creation always uses ID 0
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       approvalProgram: approvalProgram,
@@ -374,12 +374,12 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
       extraProgramPages: extraProgramPages,
       args: params.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences?.map(getAccessReference) }
+        ? { access: params.accessReferences }
         : {
-            accounts: params.accountReferences?.map((a) => a.toString()),
-            foreignApps: params.appReferences,
-            foreignAssets: params.assetReferences,
-            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            appReferences: params.appReferences,
+            assetReferences: params.assetReferences,
+            boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
     },
   }
@@ -402,20 +402,20 @@ export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppMan
 
   return {
     ...header,
-    type: TransactionType.appl,
-    applicationCall: {
+    type: TransactionType.AppCall,
+    appCall: {
       appId: params.appId,
       onComplete: OnApplicationComplete.UpdateApplication,
       approvalProgram: approvalProgram,
       clearStateProgram: clearStateProgram,
       args: params.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences?.map(getAccessReference) }
+        ? { access: params.accessReferences }
         : {
-            accounts: params.accountReferences?.map((a) => a.toString()),
-            foreignApps: params.appReferences,
-            foreignAssets: params.assetReferences,
-            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            appReferences: params.appReferences,
+            assetReferences: params.assetReferences,
+            boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
     },
   }
@@ -429,18 +429,18 @@ export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: Tr
 
   return {
     ...header,
-    type: TransactionType.appl,
-    applicationCall: {
+    type: TransactionType.AppCall,
+    appCall: {
       appId: params.appId,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       args: params.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences?.map(getAccessReference) }
+        ? { access: params.accessReferences }
         : {
-            accounts: params.accountReferences?.map((a) => a.toString()),
-            foreignApps: params.appReferences,
-            foreignAssets: params.assetReferences,
-            boxes: params.boxReferences?.map(AppManager.getBoxReference),
+            accountReferences: params.accountReferences?.map((a) => a.toString()),
+            appReferences: params.appReferences,
+            assetReferences: params.assetReferences,
+            boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
           }),
     },
   }
@@ -450,7 +450,7 @@ export const buildKeyReg = (params: OnlineKeyRegistrationParams | OfflineKeyRegi
   if ('voteKey' in params) {
     return {
       ...header,
-      type: TransactionType.keyreg,
+      type: TransactionType.KeyRegistration,
       keyRegistration: {
         voteKey: params.voteKey,
         selectionKey: params.selectionKey,
@@ -464,7 +464,7 @@ export const buildKeyReg = (params: OnlineKeyRegistrationParams | OfflineKeyRegi
   } else {
     return {
       ...header,
-      type: TransactionType.keyreg,
+      type: TransactionType.KeyRegistration,
       keyRegistration: {
         nonParticipation: params.preventAccountFromEverParticipatingAgain,
       },
@@ -758,8 +758,8 @@ export const buildAppCreateMethodCall = async (
   )
   return {
     ...header,
-    type: TransactionType.appl,
-    applicationCall: {
+    type: TransactionType.AppCall,
+    appCall: {
       appId: 0n,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       approvalProgram: approvalProgram,
@@ -768,10 +768,10 @@ export const buildAppCreateMethodCall = async (
       localStateSchema: localStateSchema,
       extraProgramPages: extraProgramPages,
       args: common.args,
-      accounts: common.accountReferences,
-      foreignApps: common.appReferences,
-      foreignAssets: common.assetReferences,
-      boxes: params.boxReferences?.map(AppManager.getBoxReference),
+      accountReferences: common.accountReferences,
+      appReferences: common.appReferences,
+      assetReferences: common.assetReferences,
+      boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
     },
   }
 }
@@ -804,17 +804,17 @@ export const buildAppUpdateMethodCall = async (
   )
   return {
     ...header,
-    type: TransactionType.appl,
-    applicationCall: {
+    type: TransactionType.AppCall,
+    appCall: {
       appId: params.appId,
       onComplete: OnApplicationComplete.UpdateApplication,
       approvalProgram: approvalProgram,
       clearStateProgram: clearStateProgram,
       args: common.args,
-      accounts: common.accountReferences,
-      foreignApps: common.appReferences,
-      foreignAssets: common.assetReferences,
-      boxes: params.boxReferences?.map(AppManager.getBoxReference),
+      accountReferences: common.accountReferences,
+      appReferences: common.appReferences,
+      assetReferences: common.assetReferences,
+      boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
     },
   }
 }
@@ -835,15 +835,15 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
   )
   return {
     ...header,
-    type: TransactionType.appl,
-    applicationCall: {
+    type: TransactionType.AppCall,
+    appCall: {
       appId: params.appId,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       args: common.args,
-      accounts: common.accountReferences,
-      foreignApps: common.appReferences,
-      foreignAssets: common.assetReferences,
-      boxes: params.boxReferences?.map(AppManager.getBoxReference),
+      accountReferences: common.accountReferences,
+      appReferences: common.appReferences,
+      assetReferences: common.assetReferences,
+      boxReferences: params.boxReferences?.map(AppManager.getBoxReference),
     },
   }
 }
@@ -856,7 +856,7 @@ export function populateTransactionResources(
   resourcesAccessed: SimulateUnnamedResourcesAccessed,
   groupIndex: number,
 ): void {
-  if (transaction.type !== TransactionType.appl || transaction.applicationCall === undefined) {
+  if (transaction.type !== TransactionType.AppCall || transaction.appCall === undefined) {
     return
   }
 
@@ -874,39 +874,39 @@ export function populateTransactionResources(
   let accountsCount = 0
   let appsCount = 0
   let assetsCount = 0
-  const boxesCount = transaction.applicationCall.boxes?.length ?? 0
+  const boxesCount = transaction.appCall.boxReferences?.length ?? 0
 
   // Populate accounts
   if (resourcesAccessed.accounts) {
-    transaction.applicationCall.accounts = transaction.applicationCall.accounts ?? []
+    transaction.appCall.accountReferences = transaction.appCall.accountReferences ?? []
     for (const account of resourcesAccessed.accounts) {
-      if (!transaction.applicationCall.accounts.includes(account)) {
-        transaction.applicationCall.accounts.push(account)
+      if (!transaction.appCall.accountReferences.includes(account)) {
+        transaction.appCall.accountReferences.push(account)
       }
     }
-    accountsCount = transaction.applicationCall.accounts.length
+    accountsCount = transaction.appCall.accountReferences.length
   }
 
   // Populate apps
   if (resourcesAccessed.apps) {
-    transaction.applicationCall.foreignApps = transaction.applicationCall.foreignApps ?? []
+    transaction.appCall.appReferences = transaction.appCall.appReferences ?? []
     for (const appId of resourcesAccessed.apps) {
-      if (!transaction.applicationCall.foreignApps.includes(appId)) {
-        transaction.applicationCall.foreignApps.push(appId)
+      if (!transaction.appCall.appReferences.includes(appId)) {
+        transaction.appCall.appReferences.push(appId)
       }
     }
-    appsCount = transaction.applicationCall.foreignApps.length
+    appsCount = transaction.appCall.appReferences.length
   }
 
   // Populate assets
   if (resourcesAccessed.assets) {
-    transaction.applicationCall.foreignAssets = transaction.applicationCall.foreignAssets ?? []
+    transaction.appCall.assetReferences = transaction.appCall.assetReferences ?? []
     for (const assetId of resourcesAccessed.assets) {
-      if (!transaction.applicationCall.foreignAssets.includes(assetId)) {
-        transaction.applicationCall.foreignAssets.push(assetId)
+      if (!transaction.appCall.assetReferences.includes(assetId)) {
+        transaction.appCall.assetReferences.push(assetId)
       }
     }
-    assetsCount = transaction.applicationCall.foreignAssets.length
+    assetsCount = transaction.appCall.assetReferences.length
   }
 
   // Validate reference limits
@@ -970,7 +970,7 @@ export function populateGroupResources(
     populateGroupResource(transactions, {
       type: GroupResourceType.Box,
       data: {
-        appIndex: boxRef.app,
+        appId: boxRef.app,
         name: boxRef.name,
       },
     })
@@ -1000,14 +1000,14 @@ export function populateGroupResources(
  * Helper function to check if an app call transaction is below resource limit
  */
 function isAppCallBelowResourceLimit(txn: Transaction): boolean {
-  if (txn.type !== TransactionType.appl) {
+  if (txn.type !== TransactionType.AppCall) {
     return false
   }
 
-  const accountsCount = txn.applicationCall?.accounts?.length || 0
-  const assetsCount = txn.applicationCall?.foreignAssets?.length || 0
-  const appsCount = txn.applicationCall?.foreignApps?.length || 0
-  const boxesCount = txn.applicationCall?.boxes?.length || 0
+  const accountsCount = txn.appCall?.accountReferences?.length || 0
+  const assetsCount = txn.appCall?.assetReferences?.length || 0
+  const appsCount = txn.appCall?.appReferences?.length || 0
+  const boxesCount = txn.appCall?.boxReferences?.length || 0
 
   return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES
 }
@@ -1038,16 +1038,16 @@ function populateGroupResource(
         return false
       }
 
-      const appCall = txn.applicationCall!
+      const appCall = txn.appCall!
 
       // Check if account is in foreign accounts array
-      if (appCall.accounts?.includes(account)) {
+      if (appCall.accountReferences?.includes(account)) {
         return true
       }
 
       // Check if account is available as an app account
-      if (appCall.foreignApps) {
-        for (const appId of appCall.foreignApps) {
+      if (appCall.appReferences) {
+        for (const appId of appCall.appReferences) {
           if (account === getAppAddress(appId)) {
             return true
           }
@@ -1063,16 +1063,16 @@ function populateGroupResource(
     })
 
     if (groupIndex1 !== -1) {
-      const appCall = transactions[groupIndex1].applicationCall!
+      const appCall = transactions[groupIndex1].appCall!
       if (resource.type === GroupResourceType.AssetHolding) {
-        appCall.foreignAssets = appCall.foreignAssets ?? []
-        if (!appCall.foreignAssets.includes(resource.data.asset)) {
-          appCall.foreignAssets.push(resource.data.asset)
+        appCall.assetReferences = appCall.assetReferences ?? []
+        if (!appCall.assetReferences.includes(resource.data.asset)) {
+          appCall.assetReferences.push(resource.data.asset)
         }
       } else {
-        appCall.foreignApps = appCall.foreignApps ?? []
-        if (!appCall.foreignApps.includes(resource.data.app)) {
-          appCall.foreignApps.push(resource.data.app)
+        appCall.appReferences = appCall.appReferences ?? []
+        if (!appCall.appReferences.includes(resource.data.app)) {
+          appCall.appReferences.push(resource.data.app)
         }
       }
       return
@@ -1084,23 +1084,23 @@ function populateGroupResource(
         return false
       }
 
-      const appCall = txn.applicationCall!
-      if ((appCall.accounts?.length ?? 0) >= MAX_ACCOUNT_REFERENCES) {
+      const appCall = txn.appCall!
+      if ((appCall.accountReferences?.length ?? 0) >= MAX_ACCOUNT_REFERENCES) {
         return false
       }
 
       if (resource.type === GroupResourceType.AssetHolding) {
-        return appCall.foreignAssets?.includes(resource.data.asset) || false
+        return appCall.assetReferences?.includes(resource.data.asset) || false
       } else {
-        return appCall.foreignApps?.includes(resource.data.app) || appCall.appId === resource.data.app
+        return appCall.appReferences?.includes(resource.data.app) || appCall.appId === resource.data.app
       }
     })
 
     if (groupIndex2 !== -1) {
-      const appCall = transactions[groupIndex2].applicationCall!
-      appCall.accounts = appCall.accounts ?? []
-      if (!appCall.accounts.includes(account)) {
-        appCall.accounts.push(account)
+      const appCall = transactions[groupIndex2].appCall!
+      appCall.accountReferences = appCall.accountReferences ?? []
+      if (!appCall.accountReferences.includes(account)) {
+        appCall.accountReferences.push(account)
       }
       return
     }
@@ -1113,21 +1113,21 @@ function populateGroupResource(
         return false
       }
 
-      const appCall = txn.applicationCall!
-      return appCall.foreignApps?.includes(resource.data.appIndex) || appCall.appId === resource.data.appIndex
+      const appCall = txn.appCall!
+      return appCall.appReferences?.includes(resource.data.appId) || appCall.appId === resource.data.appId
     })
 
     if (groupIndex !== -1) {
-      const appCall = transactions[groupIndex].applicationCall!
-      appCall.boxes = appCall.boxes ?? []
-      const exists = appCall.boxes.some(
+      const appCall = transactions[groupIndex].appCall!
+      appCall.boxReferences = appCall.boxReferences ?? []
+      const exists = appCall.boxReferences.some(
         (b) =>
-          b.appIndex === resource.data.appIndex &&
+          b.appId === resource.data.appId &&
           b.name.length === resource.data.name.length &&
           b.name.every((byte, i) => byte === resource.data.name[i]),
       )
       if (!exists) {
-        appCall.boxes.push({ appIndex: resource.data.appIndex, name: resource.data.name })
+        appCall.boxReferences.push({ appId: resource.data.appId, name: resource.data.name })
       }
       return
     }
@@ -1135,15 +1135,15 @@ function populateGroupResource(
 
   // Find the first transaction that can accommodate the resource
   const groupIndex = transactions.findIndex((txn) => {
-    if (txn.type !== TransactionType.appl) {
+    if (txn.type !== TransactionType.AppCall) {
       return false
     }
 
-    const appCall = txn.applicationCall!
-    const accountsCount = appCall.accounts?.length ?? 0
-    const assetsCount = appCall.foreignAssets?.length ?? 0
-    const appsCount = appCall.foreignApps?.length ?? 0
-    const boxesCount = appCall.boxes?.length ?? 0
+    const appCall = txn.appCall!
+    const accountsCount = appCall.accountReferences?.length ?? 0
+    const assetsCount = appCall.assetReferences?.length ?? 0
+    const appsCount = appCall.appReferences?.length ?? 0
+    const boxesCount = appCall.boxReferences?.length ?? 0
 
     switch (resource.type) {
       case GroupResourceType.Account:
@@ -1152,7 +1152,7 @@ function populateGroupResource(
       case GroupResourceType.AppLocal:
         return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES - 1 && accountsCount < MAX_ACCOUNT_REFERENCES
       case GroupResourceType.Box:
-        if (resource.data.appIndex !== 0n) {
+        if (resource.data.appId !== 0n) {
           return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES - 1
         } else {
           return accountsCount + assetsCount + appsCount + boxesCount < MAX_OVERALL_REFERENCES
@@ -1166,68 +1166,68 @@ function populateGroupResource(
     throw new Error('No more transactions below reference limit. Add another app call to the group.')
   }
 
-  const appCall = transactions[groupIndex].applicationCall!
+  const appCall = transactions[groupIndex].appCall!
 
   switch (resource.type) {
     case GroupResourceType.Account:
-      appCall.accounts = appCall.accounts ?? []
-      if (!appCall.accounts.includes(resource.data)) {
-        appCall.accounts.push(resource.data)
+      appCall.accountReferences = appCall.accountReferences ?? []
+      if (!appCall.accountReferences.includes(resource.data)) {
+        appCall.accountReferences.push(resource.data)
       }
       break
     case GroupResourceType.App:
-      appCall.foreignApps = appCall.foreignApps ?? []
-      if (!appCall.foreignApps.includes(resource.data)) {
-        appCall.foreignApps.push(resource.data)
+      appCall.appReferences = appCall.appReferences ?? []
+      if (!appCall.appReferences.includes(resource.data)) {
+        appCall.appReferences.push(resource.data)
       }
       break
     case GroupResourceType.Box: {
-      appCall.boxes = appCall.boxes ?? []
-      const exists = appCall.boxes.some(
+      appCall.boxReferences = appCall.boxReferences ?? []
+      const exists = appCall.boxReferences.some(
         (b) =>
-          b.appIndex === resource.data.appIndex &&
+          b.appId === resource.data.appId &&
           b.name.length === resource.data.name.length &&
           b.name.every((byte, i) => byte === resource.data.name[i]),
       )
       if (!exists) {
-        appCall.boxes.push({ appIndex: resource.data.appIndex, name: resource.data.name })
+        appCall.boxReferences.push({ appId: resource.data.appId, name: resource.data.name })
       }
-      if (resource.data.appIndex !== 0n) {
-        appCall.foreignApps = appCall.foreignApps ?? []
-        if (!appCall.foreignApps.includes(resource.data.appIndex)) {
-          appCall.foreignApps.push(resource.data.appIndex)
+      if (resource.data.appId !== 0n) {
+        appCall.appReferences = appCall.appReferences ?? []
+        if (!appCall.appReferences.includes(resource.data.appId)) {
+          appCall.appReferences.push(resource.data.appId)
         }
       }
       break
     }
     case GroupResourceType.ExtraBoxRef:
-      appCall.boxes = appCall.boxes ?? []
-      appCall.boxes.push({ appIndex: 0n, name: new Uint8Array(0) })
+      appCall.boxReferences = appCall.boxReferences ?? []
+      appCall.boxReferences.push({ appId: 0n, name: new Uint8Array(0) })
       break
     case GroupResourceType.AssetHolding:
-      appCall.foreignAssets = appCall.foreignAssets ?? []
-      if (!appCall.foreignAssets.includes(resource.data.asset)) {
-        appCall.foreignAssets.push(resource.data.asset)
+      appCall.assetReferences = appCall.assetReferences ?? []
+      if (!appCall.assetReferences.includes(resource.data.asset)) {
+        appCall.assetReferences.push(resource.data.asset)
       }
-      appCall.accounts = appCall.accounts ?? []
-      if (!appCall.accounts.includes(resource.data.account)) {
-        appCall.accounts.push(resource.data.account)
+      appCall.accountReferences = appCall.accountReferences ?? []
+      if (!appCall.accountReferences.includes(resource.data.account)) {
+        appCall.accountReferences.push(resource.data.account)
       }
       break
     case GroupResourceType.AppLocal:
-      appCall.foreignApps = appCall.foreignApps ?? []
-      if (!appCall.foreignApps.includes(resource.data.app)) {
-        appCall.foreignApps.push(resource.data.app)
+      appCall.appReferences = appCall.appReferences ?? []
+      if (!appCall.appReferences.includes(resource.data.app)) {
+        appCall.appReferences.push(resource.data.app)
       }
-      appCall.accounts = appCall.accounts ?? []
-      if (!appCall.accounts.includes(resource.data.account)) {
-        appCall.accounts.push(resource.data.account)
+      appCall.accountReferences = appCall.accountReferences ?? []
+      if (!appCall.accountReferences.includes(resource.data.account)) {
+        appCall.accountReferences.push(resource.data.account)
       }
       break
     case GroupResourceType.Asset:
-      appCall.foreignAssets = appCall.foreignAssets ?? []
-      if (!appCall.foreignAssets.includes(resource.data)) {
-        appCall.foreignAssets.push(resource.data)
+      appCall.assetReferences = appCall.assetReferences ?? []
+      if (!appCall.assetReferences.includes(resource.data)) {
+        appCall.assetReferences.push(resource.data)
       }
       break
   }
