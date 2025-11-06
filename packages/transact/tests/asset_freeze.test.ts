@@ -66,7 +66,7 @@ describe('Asset Freeze', () => {
   describe('Asset Freeze Validation', () => {
     test('should throw error when asset ID is zero', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        type: TransactionType.AssetFreeze,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -82,7 +82,7 @@ describe('Asset Freeze', () => {
 
     test('should validate valid asset freeze transaction', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        type: TransactionType.AssetFreeze,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -98,7 +98,7 @@ describe('Asset Freeze', () => {
 
     test('should validate asset unfreeze transaction', () => {
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        type: TransactionType.AssetFreeze,
         sender: 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA',
         firstValid: 1000n,
         lastValid: 2000n,
@@ -115,7 +115,7 @@ describe('Asset Freeze', () => {
     test('should validate freezing the sender themselves', () => {
       const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        type: TransactionType.AssetFreeze,
         sender: senderAddress,
         firstValid: 1000n,
         lastValid: 2000n,
@@ -132,7 +132,7 @@ describe('Asset Freeze', () => {
     test('should validate unfreezing the sender themselves', () => {
       const senderAddress = 'XBYLS2E6YI6XXL5BWCAMOA4GTWHXWENZMX5UHXMRNWWUQ7BXCY5WC5TEPA'
       const transaction: Transaction = {
-        transactionType: TransactionType.AssetFreeze,
+        type: TransactionType.AssetFreeze,
         sender: senderAddress,
         firstValid: 1000n,
         lastValid: 2000n,

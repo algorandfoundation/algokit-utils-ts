@@ -1,13 +1,24 @@
-import algosdk from 'algosdk'
+import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
+import {
+  AppCallTransactionFields,
+  AssetConfigTransactionFields,
+  AssetFreezeTransactionFields,
+  AssetTransferTransactionFields,
+  KeyRegistrationTransactionFields,
+  PaymentTransactionFields,
+  SignedTransaction,
+  Transaction,
+  TransactionType,
+  getTransactionId,
+} from '@algorandfoundation/algokit-transact'
+import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
+import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
+import * as algosdk from '@algorandfoundation/sdk'
+import { AtomicTransactionComposer, LogicSigAccount, type Account } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
 import { Expand } from './expand'
-import Account = algosdk.Account
-import AtomicTransactionComposer = algosdk.AtomicTransactionComposer
-import LogicSigAccount = algosdk.LogicSigAccount
-import Transaction = algosdk.Transaction
-import modelsv2 = algosdk.modelsv2
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,23 +63,23 @@ export type SendSingleTransactionResult = Expand<SendAtomicTransactionComposerRe
 /** The result of sending a transaction */
 export interface SendTransactionResult {
   /** The transaction */
-  transaction: Transaction
+  transaction: TransactionWrapper
   /** The response if the transaction was sent and waited for */
-  confirmation?: modelsv2.PendingTransactionResponse
+  confirmation?: PendingTransactionResponseWrapper
 }
 
 /** The result of preparing and/or sending multiple transactions */
 export interface SendTransactionResults {
   /** The transactions that have been prepared and/or sent */
-  transactions: Transaction[]
+  transactions: TransactionWrapper[]
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations?: modelsv2.PendingTransactionResponse[]
+  confirmations?: PendingTransactionResponseWrapper[]
 }
 
 /** The result of preparing and/or sending multiple transactions using an `AtomicTransactionComposer` */
-export interface SendAtomicTransactionComposerResults extends SendTransactionResults {
+export interface SendAtomicTransactionComposerResults extends Omit<SendTransactionResults, 'confirmations'> {
   /** base64 encoded representation of the group ID of the atomic group */
   groupId: string
   /** The transaction IDs that have been prepared and/or sent */
@@ -78,21 +89,21 @@ export interface SendAtomicTransactionComposerResults extends SendTransactionRes
   /** The responses if the transactions were sent and waited for,
    * the index of the confirmation will match the index of the underlying transaction
    */
-  confirmations: modelsv2.PendingTransactionResponse[]
+  confirmations: PendingTransactionResponseWrapper[]
 }
 
 /** The result of sending and confirming a transaction */
 export interface ConfirmedTransactionResult extends SendTransactionResult {
   /** The response from sending and waiting for the transaction */
-  confirmation: modelsv2.PendingTransactionResponse
+  confirmation: PendingTransactionResponseWrapper
 }
 
 /** The result of sending and confirming one or more transactions, but where there is a primary transaction of interest */
 export interface ConfirmedTransactionResults extends SendTransactionResult, SendTransactionResults {
   /** The response from sending and waiting for the primary transaction */
-  confirmation: modelsv2.PendingTransactionResponse
+  confirmation: PendingTransactionResponseWrapper
   /** The response from sending and waiting for the transactions */
-  confirmations: modelsv2.PendingTransactionResponse[]
+  confirmations: PendingTransactionResponseWrapper[]
 }
 
 /** Core account abstraction when signing/sending transactions
@@ -148,7 +159,7 @@ export interface AdditionalAtomicTransactionComposerContext {
   maxFees: Map<number, AlgoAmount>
 
   /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
-  suggestedParams: Pick<algosdk.SuggestedParams, 'fee' | 'minFee'>
+  suggestedParams: Pick<algosdk.SdkTransactionParams, 'fee' | 'minFee'>
 }
 
 /** An `AtomicTransactionComposer` with transactions to send. */
@@ -165,4 +176,89 @@ export interface AtomicTransactionComposerToSend extends SendParams {
    * This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
    **/
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext
+}
+
+export class TransactionWrapper implements Transaction {
+  type: TransactionType
+  sender: string
+  fee?: bigint
+  firstValid: bigint
+  lastValid: bigint
+  genesisHash?: Uint8Array
+  genesisId?: string
+  note?: Uint8Array
+  rekeyTo?: string
+  lease?: Uint8Array
+  group?: Uint8Array
+  payment?: PaymentTransactionFields
+  assetTransfer?: AssetTransferTransactionFields
+  assetConfig?: AssetConfigTransactionFields
+  appCall?: AppCallTransactionFields
+  keyRegistration?: KeyRegistrationTransactionFields
+  assetFreeze?: AssetFreezeTransactionFields
+  heartbeat?: HeartbeatTransactionFields
+  stateProof?: StateProofTransactionFields
+
+  constructor(transaction: Transaction) {
+    this.type = transaction.type
+    this.sender = transaction.sender
+    this.fee = transaction.fee
+    this.firstValid = transaction.firstValid
+    this.lastValid = transaction.lastValid
+    this.genesisHash = transaction.genesisHash
+    this.genesisId = transaction.genesisId
+    this.note = transaction.note
+    this.rekeyTo = transaction.rekeyTo
+    this.lease = transaction.lease
+    this.group = transaction.group
+    this.payment = transaction.payment
+    this.assetTransfer = transaction.assetTransfer
+    this.assetConfig = transaction.assetConfig
+    this.appCall = transaction.appCall
+    this.keyRegistration = transaction.keyRegistration
+    this.assetFreeze = transaction.assetFreeze
+    this.heartbeat = transaction.heartbeat
+    this.stateProof = transaction.stateProof
+  }
+
+  /**
+   * Get the transaction ID
+   * @returns The transaction ID as a base64-encoded string
+   */
+  txID(): string {
+    return getTransactionId(this)
+  }
+}
+
+// TODO: PD - review the names of these wrapper
+export type SignedTransactionWrapper = Omit<SignedTransaction, 'txn'> & {
+  txn: TransactionWrapper
+}
+
+export type PendingTransactionResponseWrapper = Omit<PendingTransactionResponse, 'txn' | 'innerTxns'> & {
+  txn: SignedTransactionWrapper
+  innerTxns?: PendingTransactionResponseWrapper[]
+}
+
+function wrapSignedTransaction(signedTransaction: SignedTransaction): SignedTransactionWrapper {
+  return {
+    ...signedTransaction,
+    txn: new TransactionWrapper(signedTransaction.txn),
+  }
+}
+
+export function wrapPendingTransactionResponse(response: PendingTransactionResponse): PendingTransactionResponseWrapper {
+  return {
+    ...response,
+    txn: wrapSignedTransaction(response.txn),
+    innerTxns: response.innerTxns?.map(wrapPendingTransactionResponse),
+  }
+}
+
+export function wrapPendingTransactionResponseOptional(
+  response?: PendingTransactionResponse,
+): PendingTransactionResponseWrapper | undefined {
+  if (!response) return undefined
+
+  return wrapPendingTransactionResponse(response)
 }

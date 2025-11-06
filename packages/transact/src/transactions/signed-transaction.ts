@@ -10,7 +10,7 @@ export type SignedTransaction = {
   /**
    * The transaction that has been signed.
    */
-  transaction: Transaction
+  txn: Transaction
 
   /**
    * Optional Ed25519 signature authorizing the transaction.
@@ -150,7 +150,7 @@ export function decodeSignedTransactions(encodedSignedTransactions: Uint8Array[]
  * Validate a signed transaction structure
  */
 function validateSignedTransaction(signedTransaction: SignedTransaction): void {
-  validateTransaction(signedTransaction.transaction)
+  validateTransaction(signedTransaction.txn)
 
   // Validate that only one signature type is set
   const sigTypes = [signedTransaction.signature, signedTransaction.multiSignature, signedTransaction.logicSignature]
@@ -186,7 +186,7 @@ function toMultisigSignatureDto(multisigSignature: MultisigSignature): MultisigS
 
 function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTransactionDto {
   const stx_dto: SignedTransactionDto = {
-    txn: toTransactionDto(signedTransaction.transaction),
+    txn: toTransactionDto(signedTransaction.txn),
   }
 
   if (signedTransaction.signature) {
@@ -231,7 +231,7 @@ function fromMultisigSignatureDto(msigDto: MultisigSignatureDto): MultisigSignat
 
 function fromSignedTransactionDto(signedTransactionDto: SignedTransactionDto): SignedTransaction {
   const stx: SignedTransaction = {
-    transaction: fromTransactionDto(signedTransactionDto.txn),
+    txn: fromTransactionDto(signedTransactionDto.txn),
   }
 
   if (signedTransactionDto.sig) {

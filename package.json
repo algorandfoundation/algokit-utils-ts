@@ -40,7 +40,7 @@
   "scripts": {
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist coverage",
-    "build:1-compile": "rolldown -c",
+    "build:2-compile": "rolldown -c",
     "build:3-copy-pkg-json": "tstk copy-package-json -c",
     "build:4-copy-readme": "cpy README.md LICENSE dist",
     "build:5-fix-readme-links": "replace-in-files --string '(./' --replacement '(https://github.com/algorandfoundation/algokit-utils-ts/blob/main/' dist/README.md",
@@ -48,7 +48,7 @@
     "test:watch": "vitest watch --coverage --passWithNoTests",
     "lint": "eslint ./src/ && npm run lint --workspaces --if-present",
     "lint:fix": "eslint ./src/ --fix && npm run lint --workspaces --if-present",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc --project tsconfig.typecheck.json --noEmit",
     "audit": "better-npm-audit audit",
     "format": "prettier --write . && npm run format --workspaces --if-present",
     "commit-lint": "commitlint --edit -o",
@@ -60,18 +60,15 @@
     "esbuild": "0.25.0"
   },
   "dependencies": {
-    "buffer": "^6.0.3"
-  },
-  "peerDependencies": {
-    "algosdk": "^3.5.2"
+    "algorand-msgpack": "^1.1.0",
+    "buffer": "^6.0.3",
+    "hi-base32": "^0.5.1",
+    "js-sha512": "^0.8.0",
+    "json-bigint": "^1.0.0",
+    "tweetnacl": "^1.0.3",
+    "vlq": "^2.0.4"
   },
   "devDependencies": {
-    "@algorandfoundation/algokit-algod-client": "*",
-    "@algorandfoundation/algokit-abi": "*",
-    "@algorandfoundation/algokit-common": "*",
-    "@algorandfoundation/algokit-transact": "*",
-    "@algorandfoundation/algokit-indexer-client": "*",
-    "@algorandfoundation/algokit-kmd-client": "*",
     "@algorandfoundation/tealscript": "^0.106.3",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
@@ -79,10 +76,10 @@
     "@makerx/prettier-config": "^2.0.0",
     "@makerx/ts-toolkit": "4.0.0-beta.24",
     "@tsconfig/node20": "^20.1.4",
+    "@types/json-bigint": "^1.0.4",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@vitest/coverage-v8": "^4.0.5",
-    "algosdk": "^3.5.2",
     "better-npm-audit": "^3.11.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "cpy-cli": "^5.0.0",
@@ -96,7 +93,7 @@
     "replace-in-files-cli": "^3.0.0",
     "rimraf": "^6.0.1",
     "rolldown": "^1.0.0-beta.45",
-    "rolldown-plugin-dts": "^0.17.2",
+    "rolldown-plugin-dts": "^0.17.3",
     "semantic-release": "^24.1.2",
     "tiny-invariant": "^1.3.1",
     "ts-node": "^10.9.1",

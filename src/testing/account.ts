@@ -1,10 +1,10 @@
-import algosdk, { Address } from 'algosdk'
+import { AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import type { Account } from '@algorandfoundation/sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, Kmd } from '@algorandfoundation/sdk'
 import { AlgorandClient, Config } from '../'
 import { TransactionSignerAccount } from '../types/account'
 import { GetTestAccountParams } from '../types/testing'
-import Account = algosdk.Account
-import Algodv2 = algosdk.Algodv2
-import Kmd = algosdk.Kmd
 
 /**
  * @deprecated Use `getTestAccount(params, algorandClient)` instead. The `algorandClient` object can be created using `AlgorandClient.fromClients({ algod, kmd })`.
@@ -20,7 +20,7 @@ import Kmd = algosdk.Kmd
  */
 export async function getTestAccount(
   params: GetTestAccountParams,
-  algod: Algodv2,
+  algod: AlgodClient,
   kmd?: Kmd,
 ): Promise<Address & Account & TransactionSignerAccount>
 /**
@@ -38,7 +38,7 @@ export async function getTestAccount(
 ): Promise<Address & Account & TransactionSignerAccount>
 export async function getTestAccount(
   { suppressLog, initialFunds, accountGetter }: GetTestAccountParams,
-  algodOrAlgorandClient: Algodv2 | AlgorandClient,
+  algodOrAlgorandClient: AlgodClient | AlgorandClient,
   kmd?: Kmd,
 ): Promise<Address & Account & TransactionSignerAccount> {
   const algorand =

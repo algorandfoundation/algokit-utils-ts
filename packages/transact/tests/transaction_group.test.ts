@@ -68,7 +68,7 @@ describe('Transaction Group', () => {
 
       const signedGroupedTxs = groupedTxs.map((tx, i) => {
         return {
-          transaction: tx,
+          txn: tx,
           signature: txSignatures[i],
         } as SignedTransaction
       })
@@ -79,7 +79,7 @@ describe('Transaction Group', () => {
       for (let i = 0; i < encodedSignedGroupedTxs.length; i++) {
         expect(encodedSignedGroupedTxs[i]).toEqual(
           encodeSignedTransaction({
-            transaction: groupedTxs[i],
+            txn: groupedTxs[i],
             signature: txSignatures[i],
           }),
         )

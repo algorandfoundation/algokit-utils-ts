@@ -10,16 +10,25 @@
     "declaration": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@algorandfoundation/algokit-common": ["./packages/common/src"],
+      "@algorandfoundation/algokit-common/*": ["./packages/common/src/*"],
+      "@algorandfoundation/algokit-transact": ["./packages/transact/src"],
+      "@algorandfoundation/algokit-transact/*": ["./packages/transact/src/*"],
+      "@algorandfoundation/algokit-abi": ["./packages/abi/src"],
+      "@algorandfoundation/algokit-abi/*": ["./packages/abi/src/*"],
+      "@algorandfoundation/algokit-algod-client": ["./packages/algod_client/src"],
+      "@algorandfoundation/algokit-algod-client/*": ["./packages/algod_client/src/*"],
+      "@algorandfoundation/algokit-indexer-client": ["./packages/indexer_client/src"],
+      "@algorandfoundation/algokit-indexer-client/*": ["./packages/indexer_client/src/*"],
+      "@algorandfoundation/algokit-kmd-client": ["./packages/kmd_client/src"],
+      "@algorandfoundation/algokit-kmd-client/*": ["./packages/kmd_client/src/*"],
+      "@algorandfoundation/sdk": ["./packages/sdk/src"],
+      "@algorandfoundation/sdk/*": ["./packages/sdk/src/*"]
+    }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"],
-  "exclude": ["**/*.algo.ts"],
-  "references": [
-    { "path": "./packages/common" },
-    { "path": "./packages/abi" },
-    { "path": "./packages/transact" },
-    { "path": "./packages/algod_client" },
-    { "path": "./packages/kmd_client" },
-    { "path": "./packages/indexer_client" }
-  ]
+  "exclude": ["**/*.algo.ts"]
 }

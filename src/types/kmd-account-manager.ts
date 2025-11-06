@@ -1,5 +1,6 @@
-import algosdk, { Address } from 'algosdk'
 import { Config } from '../config'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address } from '@algorandfoundation/sdk'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
@@ -84,7 +85,7 @@ export class KmdAccountManager {
     if (predicate) {
       for (i = 0; i < addresses.length; i++) {
         const address = addresses[i]
-        const account = await this._clientManager.algod.accountInformation(address).do()
+        const account = await this._clientManager.algod.accountInformation(address)
         if (predicate(account)) {
           break
         }
@@ -163,7 +164,7 @@ export class KmdAccountManager {
     await new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: () => dispenser.signer,
-      getSuggestedParams: () => this._clientManager.algod.getTransactionParams().do(),
+      getSuggestedParams: () => this._clientManager.algod.transactionParams(),
     })
       .addPayment({
         amount: fundWith ?? AlgoAmount.Algo(1000),

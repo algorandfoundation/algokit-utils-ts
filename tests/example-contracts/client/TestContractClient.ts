@@ -4,8 +4,10 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
-import type { ABIResult, TransactionWithSigner } from 'algosdk'
-import { Algodv2, AtomicTransactionComposer, OnApplicationComplete, Transaction, modelsv2 } from 'algosdk'
+import { AlgodClient, SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algokit-algod-client'
+import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
+import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
+import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
 import * as algokit from '../../../src/index'
 import type {
   ABIAppCallArg,
@@ -210,23 +212,23 @@ export const APP_SPEC: AppSpec = {
 /**
  * Defines an onCompletionAction of 'no_op'
  */
-export type OnCompleteNoOp = { onCompleteAction?: 'no_op' | OnApplicationComplete.NoOpOC }
+export type OnCompleteNoOp = { onCompleteAction?: 'no_op' | OnApplicationComplete.NoOp }
 /**
  * Defines an onCompletionAction of 'opt_in'
  */
-export type OnCompleteOptIn = { onCompleteAction: 'opt_in' | OnApplicationComplete.OptInOC }
+export type OnCompleteOptIn = { onCompleteAction: 'opt_in' | OnApplicationComplete.OptIn }
 /**
  * Defines an onCompletionAction of 'close_out'
  */
-export type OnCompleteCloseOut = { onCompleteAction: 'close_out' | OnApplicationComplete.CloseOutOC }
+export type OnCompleteCloseOut = { onCompleteAction: 'close_out' | OnApplicationComplete.CloseOut }
 /**
  * Defines an onCompletionAction of 'delete_application'
  */
-export type OnCompleteDelApp = { onCompleteAction: 'delete_application' | OnApplicationComplete.DeleteApplicationOC }
+export type OnCompleteDelApp = { onCompleteAction: 'delete_application' | OnApplicationComplete.DeleteApplication }
 /**
  * Defines an onCompletionAction of 'update_application'
  */
-export type OnCompleteUpdApp = { onCompleteAction: 'update_application' | OnApplicationComplete.UpdateApplicationOC }
+export type OnCompleteUpdApp = { onCompleteAction: 'update_application' | OnApplicationComplete.UpdateApplication }
 /**
  * A state record containing a single unsigned integer
  */
@@ -551,7 +553,7 @@ export class TestContractClient {
    */
   constructor(
     appDetails: AppDetails,
-    private algod: Algodv2,
+    private algod: AlgodClient,
   ) {
     this.sender = appDetails.sender
     this.appClient = algokit.getAppClient(
@@ -789,7 +791,7 @@ export class TestContractClient {
       },
       async simulate(options?: SimulateOptions) {
         await promiseChain
-        const result = await atc.simulate(client.algod, new modelsv2.SimulateRequest({ txnGroups: [], ...options }))
+        const result = await atc.simulate(client.algod, { txnGroups: [], ...options })
         return {
           ...result,
           returns: result.methodResults?.map((val, i) =>
@@ -914,11 +916,11 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    */
   execute(sendParams?: AppClientComposeExecuteParams): Promise<TestContractComposerResults<TReturns>>
 }
-export type SimulateOptions = Omit<ConstructorParameters<typeof modelsv2.SimulateRequest>[0], 'txnGroups'>
+export type SimulateOptions = Omit<SimulateTransactionResult, 'txnGroups'>
 export type TestContractComposerSimulateResult<TReturns extends [...any[]]> = {
   returns: TReturns
   methodResults: ABIResult[]
-  simulateResponse: modelsv2.SimulateResponse
+  simulateResponse: SimulateTransactionGroupResult
 }
 export type TestContractComposerResults<TReturns extends [...any[]]> = {
   returns: TReturns

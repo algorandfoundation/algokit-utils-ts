@@ -1,4 +1,7 @@
-import algosdk, { Address } from 'algosdk'
+import { Account as AccountInformation, AlgodClient } from '@algorandfoundation/algokit-algod-client'
+import type { Account } from '@algorandfoundation/sdk'
+import * as algosdk from '@algorandfoundation/sdk'
+import { Address, Kmd, MultisigMetadata, TransactionSigner } from '@algorandfoundation/sdk'
 import { getSenderAddress } from '../transaction/transaction'
 import { AccountAssetInformation, MultisigAccount, SigningAccount, TransactionSignerAccount } from '../types/account'
 import { AccountManager } from '../types/account-manager'
@@ -6,12 +9,6 @@ import { AlgorandClient } from '../types/algorand-client'
 import { AlgoAmount } from '../types/amount'
 import { ClientManager } from '../types/client-manager'
 import { SendTransactionFrom } from '../types/transaction'
-import Account = algosdk.Account
-import Algodv2 = algosdk.Algodv2
-import Kmd = algosdk.Kmd
-import MultisigMetadata = algosdk.MultisigMetadata
-import TransactionSigner = algosdk.TransactionSigner
-import AccountInformationModel = algosdk.modelsv2.Account
 
 /**
  * @deprecated Use `algorand.account.multisig(multisigParams, signingAccounts)` or `new MultisigAccount(multisigParams, signingAccounts)` instead.
@@ -96,7 +93,7 @@ export function randomAccount(): Account {
  */
 export async function mnemonicAccountFromEnvironment(
   account: string | { name: string; fundWith?: AlgoAmount },
-  algod: Algodv2,
+  algod: AlgodClient,
   kmdClient?: Kmd,
 ): Promise<Account | SigningAccount> {
   return (
@@ -129,14 +126,6 @@ export function getAccountAddressAsString(addressEncodedInB64: string): string {
   return algosdk.encodeAddress(Buffer.from(addressEncodedInB64, 'base64'))
 }
 
-export type NumberConverter<T extends AccountInformationModel> = { [key in keyof T]: ToNumberIfExtends<T[key], number | bigint> }
-type ToNumberIfExtends<K, E> = K extends E ? number : K
-/** @deprecated Account information at a given round. */
-export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 'getEncodingSchema' | 'toEncodingData' | 'authAddr'> & {
-  /** (spend) the address against which signing should be checked. If empty, the address of the current account is used. This field can be updated in any transaction by setting the RekeyTo field. */
-  authAddr?: string
-}
-
 /**
  * @deprecated Use `algorand.account.getInformation(sender)` or `new AccountManager(clientManager).getInformation(sender)` instead.
  *
@@ -153,31 +142,8 @@ export type AccountInformation = Omit<NumberConverter<AccountInformationModel>, 
  * @param algod The algod instance
  * @returns The account information
  */
-export async function getAccountInformation(sender: string | SendTransactionFrom, algod: Algodv2): Promise<AccountInformation> {
-  const account = await algod.accountInformation(getSenderAddress(sender)).do()
-
-  return {
-    ...account,
-    address: account.address.toString(),
-    authAddr: account.authAddr ? account.authAddr.toString() : undefined,
-    // None of these can practically overflow 2^53
-    amount: Number(account.amount),
-    amountWithoutPendingRewards: Number(account.amountWithoutPendingRewards),
-    minBalance: Number(account.minBalance),
-    pendingRewards: Number(account.pendingRewards),
-    rewards: Number(account.rewards),
-    round: Number(account.round),
-    totalAppsOptedIn: Number(account.totalAppsOptedIn),
-    totalAssetsOptedIn: Number(account.totalAssetsOptedIn),
-    totalCreatedApps: Number(account.totalCreatedApps),
-    totalCreatedAssets: Number(account.totalCreatedAssets),
-    appsTotalExtraPages: account.appsTotalExtraPages !== undefined ? Number(account.appsTotalExtraPages) : undefined,
-    rewardBase: account.rewardBase !== undefined ? Number(account.rewardBase) : undefined,
-    totalBoxBytes: account.totalBoxBytes !== undefined ? Number(account.totalBoxBytes) : undefined,
-    totalBoxes: account.totalBoxes !== undefined ? Number(account.totalBoxes) : undefined,
-    lastHeartbeat: account.lastHeartbeat !== undefined ? Number(account.lastHeartbeat) : undefined,
-    lastProposed: account.lastProposed !== undefined ? Number(account.lastProposed) : undefined,
-  }
+export async function getAccountInformation(sender: string | SendTransactionFrom, algod: AlgodClient): Promise<AccountInformation> {
+  return await algod.accountInformation(getSenderAddress(sender))
 }
 
 /**
@@ -201,7 +167,7 @@ export async function getAccountInformation(sender: string | SendTransactionFrom
 export async function getAccountAssetInformation(
   sender: string | SendTransactionFrom,
   assetId: number | bigint,
-  algod: Algodv2,
+  algod: AlgodClient,
 ): Promise<AccountAssetInformation> {
   return AlgorandClient.fromClients({ algod }).asset.getAccountInformation(getSenderAddress(sender), BigInt(assetId))
 }

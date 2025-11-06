@@ -110,7 +110,7 @@ export type AppCallTransactionFields = {
   /**
    * Resources accessed by the application
    */
-  access?: ResourceReference[]
+  accessReferences?: AccessReference[]
 }
 
 /**
@@ -193,7 +193,7 @@ export type BoxReference = {
 /**
  * Names a single resource reference. Only one of the fields should be set.
  */
-export interface ResourceReference {
+export interface AccessReference {
   /** Any account addresses whose balance record is accessible by the executing ApprovalProgram or ClearStateProgram. */
   address?: string
   /** Application ID whose GlobalState may be read by the executing ApprovalProgram or ClearStateProgram. */
