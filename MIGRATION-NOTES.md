@@ -33,3 +33,7 @@ A collection of random notes pop up during the migration process.
 - SourceMap was renamed to ProgramSourceMap
 - OnApplicationComplete.UpdateApplicationOC was renamed to OnApplicationComplete.UpdateApplication
 - ResourceReference (algod) vs AccessReference (utils)
+- check for buffer polyfill
+- transaction.ts
+  - sendTransaction takes composer
+  - getGroupExecutionInfo ..

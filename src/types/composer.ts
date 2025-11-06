@@ -581,7 +581,7 @@ type TransactionAnalysis = {
   unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
 }
 
-type GroupAnalysis = {
+export type GroupAnalysis = {
   /** Analysis of each transaction in the group */
   transactions: TransactionAnalysis[]
   /** Resources accessed by the group that qualify for group resource sharing */
@@ -651,7 +651,6 @@ export class TransactionComposer {
 
   private composerConfig: TransactionComposerConfig
 
-  // TODO: PD - review these names
   private builtGroup?: TransactionWithSigner[]
   private signedGroup?: SignedTransaction[]
 
@@ -1582,6 +1581,7 @@ export class TransactionComposer {
     }
   }
 
+  // TODO: PD - make this private
   public async buildTransactions(groupAnalysis?: GroupAnalysis): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
     const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
@@ -1898,9 +1898,36 @@ export class TransactionComposer {
       }
     })
 
+    // TODO: PD - confirm if this is done in python too
+    const sortedResources = groupResponse.unnamedResourcesAccessed
+
+    // NOTE: We explicitly want to avoid localeCompare as that can lead to different results in different environments
+    const compare = (a: string | bigint, b: string | bigint) => (a < b ? -1 : a > b ? 1 : 0)
+
+    if (sortedResources) {
+      sortedResources.accounts?.sort((a, b) => compare(a.toString(), b.toString()))
+      sortedResources.assets?.sort(compare)
+      sortedResources.apps?.sort(compare)
+      sortedResources.boxes?.sort((a, b) => {
+        const aStr = `${a.app}-${a.name}`
+        const bStr = `${b.app}-${b.name}`
+        return compare(aStr, bStr)
+      })
+      sortedResources.appLocals?.sort((a, b) => {
+        const aStr = `${a.app}-${a.account}`
+        const bStr = `${b.app}-${b.account}`
+        return compare(aStr, bStr)
+      })
+      sortedResources.assetHoldings?.sort((a, b) => {
+        const aStr = `${a.asset}-${a.account}`
+        const bStr = `${b.asset}-${b.account}`
+        return compare(aStr, bStr)
+      })
+    }
+
     return {
       transactions: txnAnalysisResults,
-      unnamedResourcesAccessed: analysisParams.populateAppCallResources?.enabled ? groupResponse.unnamedResourcesAccessed : undefined,
+      unnamedResourcesAccessed: analysisParams.populateAppCallResources?.enabled ? sortedResources : undefined,
     }
   }
 
@@ -1928,10 +1955,13 @@ export class TransactionComposer {
    * const result = await composer.send()
    * ```
    */
-  async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
+  async send(
+    params?: SendParams,
+    additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
+  ): Promise<SendAtomicTransactionComposerResults> {
     try {
       // TODO: PD - resource population + fee if not done already
-      await this.gatherSignatures()
+      await this.gatherSignatures(additionalAtcContext)
 
       if (!this.signedGroup || this.signedGroup.length === 0) {
         throw new Error('No transactions available')
@@ -2108,12 +2138,12 @@ export class TransactionComposer {
     return encoder.encode(arc2Payload)
   }
 
-  private async gatherSignatures(): Promise<SignedTransaction[]> {
+  private async gatherSignatures(additionalAtcContext?: AdditionalAtomicTransactionComposerContext): Promise<SignedTransaction[]> {
     if (this.signedGroup) {
       return this.signedGroup
     }
 
-    await this.build()
+    await this.build(additionalAtcContext)
 
     if (!this.builtGroup || this.builtGroup.length === 0) {
       throw new Error('No transactions available')

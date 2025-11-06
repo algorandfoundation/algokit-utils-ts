@@ -14,10 +14,11 @@ import {
 import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
 import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
 import * as algosdk from '@algorandfoundation/sdk'
-import { AtomicTransactionComposer, LogicSigAccount, type Account } from '@algorandfoundation/sdk'
+import { LogicSigAccount, type Account } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ABIReturn } from './app'
+import { TransactionComposer } from './composer'
 import { Expand } from './expand'
 
 export type TransactionNote = Uint8Array | TransactionNoteData | Arc2TransactionNote
@@ -43,8 +44,8 @@ export interface SendTransactionParams {
   skipSending?: boolean
   /** Whether to skip waiting for the submitted transaction (only relevant if `skipSending` is `false` or unset) */
   skipWaiting?: boolean
-  /** An optional `AtomicTransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true` */
-  atc?: AtomicTransactionComposer
+  /** An optional `TransactionComposer` to add the transaction to, if specified then `skipSending: undefined` has the same effect as `skipSending: true` */
+  transactionComposer?: TransactionComposer
   /** Whether to suppress log messages from transaction send, default: do not suppress */
   suppressLog?: boolean
   /** The flat fee you want to pay, useful for covering extra fees in a transaction group or app call */

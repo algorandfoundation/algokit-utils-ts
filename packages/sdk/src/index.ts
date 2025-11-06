@@ -88,7 +88,6 @@ export { decodeUint64, encodeUint64 } from './encoding/uint64'
 export { assignGroupID, computeGroupID } from './group'
 export * from './logic/sourcemap'
 export * from './logicsig'
-export * from './makeTxn'
 export {
   masterDerivationKeyToMnemonic,
   mnemonicFromSeed,

@@ -5,12 +5,14 @@ import {
   BoxReference,
   PendingTransactionResponse,
   SimulateRequest,
+  TransactionParams,
 } from '@algorandfoundation/algokit-algod-client'
 import type { AppCallTransactionFields } from '@algorandfoundation/algokit-transact'
 import { Transaction, TransactionType, encodeTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
-import { ABIMethod, ABIReturnType, Address, AtomicTransactionComposer, TransactionSigner, stringifyJSON } from '@algorandfoundation/sdk'
+import { ABIMethod, ABIReturnType, Address, TransactionSigner, stringifyJSON } from '@algorandfoundation/sdk'
 import { Buffer } from 'buffer'
+import { TransactionComposer } from 'src/types/composer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
@@ -227,12 +229,12 @@ export const sendTransaction = async function (
   algod: AlgodClient,
 ): Promise<SendTransactionResult> {
   const { transaction, from, sendParams } = send
-  const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, atc } = sendParams ?? {}
+  const { skipSending, skipWaiting, fee, maxFee, suppressLog, maxRoundsToWaitForConfirmation, transactionComposer } = sendParams ?? {}
 
   controlFees(transaction, { fee, maxFee })
 
-  if (atc) {
-    atc.addTransaction({ txn: transaction, signer: getSenderTransactionSigner(from) })
+  if (transactionComposer) {
+    transactionComposer.addTransaction(transaction, getSenderTransactionSigner(from))
     return { transaction: new TransactionWrapper(transaction) }
   }
 
@@ -240,33 +242,35 @@ export const sendTransaction = async function (
     return { transaction: new TransactionWrapper(transaction) }
   }
 
-  let txnToSend = transaction
+  const composer = new TransactionComposer({
+    composerConfig: {
+      populateAppCallResources: {
+        enabled: sendParams?.populateAppCallResources ?? Config.populateAppCallResources,
+        useAccessList: false,
+      },
+      coverAppCallInnerTransactionFees: false,
+    },
+    algod: algod,
+    getSigner: (address) => {
+      throw new Error(`Signer not found for address ${address.toString()}`)
+    },
+  })
+  composer.addTransaction(transaction, getSenderTransactionSigner(from))
 
-  const populateAppCallResources = sendParams?.populateAppCallResources ?? Config.populateAppCallResources
-
-  // Populate resources if the transaction is an appcall and populateAppCallResources wasn't explicitly set to false
-  if (txnToSend.type === TransactionType.AppCall && populateAppCallResources) {
-    const newAtc = new AtomicTransactionComposer()
-    newAtc.addTransaction({ txn: txnToSend, signer: getSenderTransactionSigner(from) })
-    const atc = await prepareGroupForSending(newAtc, algod, { ...sendParams, populateAppCallResources })
-    txnToSend = atc.buildGroup()[0].txn
-  }
-
-  const signedTransaction = await signTransaction(txnToSend, from)
-
-  await algod.rawTransaction({ body: signedTransaction })
+  const sendResult = await composer.send({
+    // if skipWaiting to true, do not wair
+    // if skipWaiting to set, wait for maxRoundsToWaitForConfirmation or 5 rounds
+    maxRoundsToWaitForConfirmation: skipWaiting ? 0 : (maxRoundsToWaitForConfirmation ?? 5),
+    suppressLog: suppressLog,
+  })
 
   Config.getLogger(suppressLog).verbose(
-    `Sent transaction ID ${getTransactionId(txnToSend)} ${txnToSend.type} from ${getSenderAddress(from)}`,
+    `Sent transaction ID ${getTransactionId(transaction)} ${transaction.type} from ${getSenderAddress(from)}`,
   )
 
-  let confirmation: PendingTransactionResponse | undefined = undefined
-  if (!skipWaiting) {
-    confirmation = await waitForConfirmation(getTransactionId(txnToSend), maxRoundsToWaitForConfirmation ?? 5, algod)
-  }
-
+  const confirmation = sendResult.confirmations[-1]
   return {
-    transaction: new TransactionWrapper(txnToSend),
+    transaction: new TransactionWrapper(transaction),
     confirmation: confirmation ? wrapPendingTransactionResponse(confirmation) : undefined,
   }
 }
@@ -278,14 +282,14 @@ export const sendTransaction = async function (
  * - The unnamed resources accessed by each transaction in the group
  * - The required fee delta for each transaction in the group. A positive value indicates a fee deficit, a negative value indicates a surplus.
  *
- * @param atc The ATC containing the txn group
+ * @param composer The TransactionComposer containing the txn group
  * @param algod The algod client to use for the simulation
  * @param sendParams The send params for the transaction group
  * @param additionalAtcContext Additional ATC context used to determine how best to alter transactions in the group
  * @returns The execution info for the group
  */
 async function getGroupExecutionInfo(
-  atc: algosdk.AtomicTransactionComposer,
+  composer: TransactionComposer,
   algod: AlgodClient,
   sendParams: SendParams,
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
@@ -427,7 +431,7 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
 }
 
 /**
- * Take an existing Atomic Transaction Composer and return a new one with changes applied to the transactions
+ * Take an existing  Transaction Composer and return a new one with changes applied to the transactions
  * based on the supplied sendParams to prepare it for sending.
  * Please note, that before calling `.execute()` on the returned ATC, you must call `.buildGroup()`.
  *
@@ -442,11 +446,13 @@ export async function populateAppCallResources(atc: algosdk.AtomicTransactionCom
  * - Simulate will return information on how to populate reference arrays, see https://github.com/algorand/go-algorand/pull/6015
  */
 export async function prepareGroupForSending(
-  atc: algosdk.AtomicTransactionComposer,
-  algod: AlgodClient,
+  composer: TransactionComposer,
   sendParams: SendParams,
+  // TODO: PD - confirm that this is actually not needed
+  //   - suggestedParams and maxFee are covered by the composer.analyzeGroupRequirements
   additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
 ) {
+  // TODO: PD - resume here, unpack the composer, apply the additionalAtcContext, pack the composer again
   const executionInfo = await getGroupExecutionInfo(atc, algod, sendParams, additionalAtcContext)
   const group = atc.buildGroup()
 
@@ -1055,6 +1061,7 @@ export const waitForConfirmation = async function (
   maxRoundsToWait: number | bigint,
   algod: AlgodClient,
 ): Promise<PendingTransactionResponse> {
+  // TODO: PD - replace the composer-helper version with this
   if (maxRoundsToWait < 0) {
     throw new Error(`Invalid timeout, received ${maxRoundsToWait}, expected > 0`)
   }
@@ -1135,7 +1142,7 @@ export function capTransactionFee(transaction: Transaction | algosdk.SdkTransact
  * @param transaction The transaction or suggested params
  * @param feeControl The fee control parameters
  */
-export function controlFees<T extends algosdk.SdkTransactionParams | Transaction>(
+export function controlFees<T extends TransactionParams | Transaction>(
   transaction: T,
   feeControl: { fee?: AlgoAmount; maxFee?: AlgoAmount },
 ) {
@@ -1162,18 +1169,15 @@ export function controlFees<T extends algosdk.SdkTransactionParams | Transaction
  * @param algod Algod algod
  * @returns The suggested transaction parameters
  */
-export async function getTransactionParams(
-  params: algosdk.SdkTransactionParams | undefined,
-  algod: AlgodClient,
-): Promise<algosdk.SdkTransactionParams> {
+export async function getTransactionParams(params: TransactionParams | undefined, algod: AlgodClient): Promise<TransactionParams> {
   if (params) {
     return { ...params }
   }
   const p = await algod.transactionParams()
   return {
     fee: p.fee,
-    firstRound: p.lastRound,
-    lastRound: p.lastRound + 1000n,
+    // TODO: PD - return first and last round once they are added to algod_client
+    lastRound: p.lastRound,
     genesisId: p.genesisId,
     genesisHash: p.genesisHash,
     minFee: p.minFee,

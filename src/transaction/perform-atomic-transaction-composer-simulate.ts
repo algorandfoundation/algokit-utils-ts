@@ -1,11 +1,4 @@
-import {
-  AlgodClient,
-  SimulateRequest,
-  SimulateRequestTransactionGroup,
-  SimulateTraceConfig,
-} from '@algorandfoundation/algokit-algod-client'
-import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
-import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
+import { RawSimulateOptions, TransactionComposer } from 'src/types/composer'
 
 /**
  * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
@@ -15,34 +8,19 @@ import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
  * @param algod An Algod client to perform the simulation.
  * @returns The simulation result, which includes various details about how the transactions would be processed.
  */
-export async function performAtomicTransactionComposerSimulate(
-  atc: AtomicTransactionComposer,
-  algod: AlgodClient,
-  options?: Omit<SimulateRequest, 'txnGroups'>,
-) {
-  const transactionsWithSigners = atc.buildGroup()
-
-  const simulateRequest = {
-    ...(options ?? {
-      allowEmptySignatures: true,
-      fixSigners: true,
-      allowMoreLogging: true,
-      execTraceConfig: {
-        enable: true,
-        scratchChange: true,
-        stackChange: true,
-        stateChange: true,
-      } satisfies SimulateTraceConfig,
-    }),
-    txnGroups: [
-      {
-        txns: transactionsWithSigners.map((txn) => ({
-          txn: txn.txn,
-          signature: EMPTY_SIGNATURE,
-        })),
-      } satisfies SimulateRequestTransactionGroup,
-    ],
-  } satisfies SimulateRequest
-  const simulateResult = await algod.simulateTransaction({ body: simulateRequest })
-  return simulateResult
+export async function performAtomicTransactionComposerSimulate(composer: TransactionComposer, options?: RawSimulateOptions) {
+  const simulateOptions = options ?? {
+    allowEmptySignatures: true,
+    fixSigners: true,
+    allowMoreLogging: true,
+    execTraceConfig: {
+      enable: true,
+      scratchChange: true,
+      stackChange: true,
+      stateChange: true,
+    },
+    skipSignatures: true,
+  }
+  const { simulateResponse } = await composer.simulate(simulateOptions)
+  return simulateResponse
 }
