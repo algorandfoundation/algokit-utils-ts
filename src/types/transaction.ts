@@ -243,3 +243,13 @@ export function wrapPendingTransactionResponseOptional(
 
   return wrapPendingTransactionResponse(response)
 }
+
+/** An `AtomicTransactionComposer` with transactions to send. */
+export interface AtomicTransactionComposerToSend extends SendParams {
+  /** The `AtomicTransactionComposer` with transactions loaded to send */
+  transactionComposer: TransactionComposer
+  /**
+   * @deprecated - set the parameters at the top level instead
+   * Any parameters to control the semantics of the send to the network */
+  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
+}

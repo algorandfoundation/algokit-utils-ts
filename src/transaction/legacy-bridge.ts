@@ -62,22 +62,17 @@ export async function legacySendTransactionBridge<T extends CommonTransactionPar
     params.maxFee = sendParams.maxFee
   }
 
-  if (sendParams.atc || sendParams.skipSending) {
+  if (sendParams.transactionComposer || sendParams.skipSending) {
     const transaction = await txn(transactionCreator)(params)
     const txns = 'transactions' in transaction ? transaction.transactions : [transaction]
-    if (sendParams.atc) {
-      const baseIndex = sendParams.atc.count()
+    if (sendParams.transactionComposer) {
       txns
         .map((txn, i) => ({
           txn,
           signer:
             'signers' in transaction ? (transaction.signers.get(i) ?? getSenderTransactionSigner(from)) : getSenderTransactionSigner(from),
         }))
-        .forEach((t) => sendParams.atc!.addTransaction(t))
-      // Populate ATC with method calls
-      if ('transactions' in transaction) {
-        transaction.methodCalls.forEach((m, i) => sendParams.atc!['methodCalls'].set(i + baseIndex, m))
-      }
+        .forEach((t) => sendParams.transactionComposer!.addTransaction(t.txn, t.signer))
     }
     return { transaction: new TransactionWrapper(txns.at(-1)!), transactions: txns.map((t) => new TransactionWrapper(t)) }
   }

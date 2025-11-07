@@ -8,6 +8,7 @@ import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'
 import {
   AdditionalAtomicTransactionComposerContext,
+  AtomicTransactionComposerToSend,
   SendAtomicTransactionComposerResults,
   SendParams,
   SendTransactionFrom,
@@ -377,15 +378,21 @@ export async function prepareGroupForSending(
   return newComposer
 }
 
-// TODO: PD - how do we migrate this?
 /**
  * Signs and sends transactions that have been collected by an `AtomicTransactionComposer`.
  * @param atcSend The parameters controlling the send, including `atc` The `AtomicTransactionComposer` and params to control send behaviour
  * @param algod An algod client
  * @returns An object with transaction IDs, transactions, group transaction ID (`groupTransactionId`) if more than 1 transaction sent, and (if `skipWaiting` is `false` or unset) confirmation (`confirmation`)
  */
-export const sendAtomicTransactionComposer = async function (composer: TransactionComposer): Promise<SendAtomicTransactionComposerResults> {
-  return composer.send()
+export const sendAtomicTransactionComposer = async function (
+  atcSend: AtomicTransactionComposerToSend,
+): Promise<SendAtomicTransactionComposerResults> {
+  const { transactionComposer: givenComposer, sendParams, ...executeParams } = atcSend
+
+  return atcSend.transactionComposer.send({
+    ...sendParams,
+    ...executeParams,
+  })
 }
 
 /**

@@ -4,9 +4,10 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^2
  */
-import { AlgodClient, SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algokit-algod-client'
+import { AlgodClient, SimulateRequest, SimulateTransactionGroupResult } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
 import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
+import { TransactionComposer } from 'src/types/composer'
 import * as algokit from '../../../src/index'
 import type {
   ABIAppCallArg,
@@ -721,41 +722,46 @@ export class TestContractClient {
 
   public compose(): TestContractComposer {
     const client = this
-    const atc = new AtomicTransactionComposer()
+    const transactionComposer = new TransactionComposer({
+      algod: this.algod,
+      getSigner: (address) => {
+        throw new Error(`No signer for address ${address}`) // TODO: PD - confirm that this is right for the SDK ATC
+      },
+    })
     let promiseChain: Promise<unknown> = Promise.resolve()
     const resultMappers: Array<undefined | ((x: any) => any)> = []
     return {
       doMath(args: MethodArgs<'doMath(uint64,uint64,string)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
         promiseChain = promiseChain.then(() =>
-          client.doMath(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+          client.doMath(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, transactionComposer } }),
         )
         resultMappers.push(undefined)
         return this
       },
       txnArg(args: MethodArgs<'txnArg(pay)address'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
         promiseChain = promiseChain.then(() =>
-          client.txnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+          client.txnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, transactionComposer } }),
         )
         resultMappers.push(undefined)
         return this
       },
       helloWorld(args: MethodArgs<'helloWorld()string'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
         promiseChain = promiseChain.then(() =>
-          client.helloWorld(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+          client.helloWorld(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, transactionComposer } }),
         )
         resultMappers.push(undefined)
         return this
       },
       methodArg(args: MethodArgs<'methodArg(appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
         promiseChain = promiseChain.then(() =>
-          client.methodArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+          client.methodArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, transactionComposer } }),
         )
         resultMappers.push(undefined)
         return this
       },
       nestedTxnArg(args: MethodArgs<'nestedTxnArg(pay,appl)uint64'>, params?: AppClientComposeCallCoreParams & CoreAppCallArgs) {
         promiseChain = promiseChain.then(() =>
-          client.nestedTxnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+          client.nestedTxnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, transactionComposer } }),
         )
         resultMappers.push(undefined)
         return this
@@ -765,13 +771,15 @@ export class TestContractClient {
         params?: AppClientComposeCallCoreParams & CoreAppCallArgs,
       ) {
         promiseChain = promiseChain.then(() =>
-          client.doubleNestedTxnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, atc } }),
+          client.doubleNestedTxnArg(args, { ...params, sendParams: { ...params?.sendParams, skipSending: true, transactionComposer } }),
         )
         resultMappers.push(undefined)
         return this
       },
       clearState(args?: BareCallArgs & AppClientComposeCallCoreParams & CoreAppCallArgs) {
-        promiseChain = promiseChain.then(() => client.clearState({ ...args, sendParams: { ...args?.sendParams, skipSending: true, atc } }))
+        promiseChain = promiseChain.then(() =>
+          client.clearState({ ...args, sendParams: { ...args?.sendParams, skipSending: true, transactionComposer } }),
+        )
         resultMappers.push(undefined)
         return this
       },
@@ -779,28 +787,27 @@ export class TestContractClient {
         txn: TransactionWithSigner | TransactionToSign | Transaction | Promise<SendTransactionResult>,
         defaultSender?: SendTransactionFrom,
       ) {
-        promiseChain = promiseChain.then(async () =>
-          atc.addTransaction(await algokit.getTransactionWithSigner(txn, defaultSender ?? client.sender)),
-        )
+        promiseChain = promiseChain.then(async () => {
+          const txnWithSigner = await algokit.getTransactionWithSigner(txn, defaultSender ?? client.sender)
+          transactionComposer.addTransaction(txnWithSigner.txn, txnWithSigner.signer)
+        })
         return this
       },
-      async atc() {
+      async transactionComposer() {
         await promiseChain
-        return atc
+        return transactionComposer
       },
       async simulate(options?: SimulateOptions) {
         await promiseChain
-        const result = await atc.simulate(client.algod, { txnGroups: [], ...options })
+        const result = options ? await transactionComposer.simulate(options) : await transactionComposer.simulate()
         return {
           ...result,
-          returns: result.methodResults?.map((val, i) =>
-            resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue,
-          ),
+          returns: result.returns?.map((val, i) => (resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)),
         }
       },
       async execute(sendParams?: AppClientComposeExecuteParams) {
         await promiseChain
-        const result = await algokit.sendAtomicTransactionComposer({ atc, sendParams }, client.algod)
+        const result = await algokit.sendAtomicTransactionComposer({ transactionComposer, sendParams })
         return {
           ...result,
           returns: result.returns?.map((val, i) => (resultMappers[i] !== undefined ? resultMappers[i]!(val.returnValue) : val.returnValue)),
@@ -903,9 +910,9 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
     defaultSender?: SendTransactionFrom,
   ): TestContractComposer<TReturns>
   /**
-   * Returns the underlying AtomicTransactionComposer instance
+   * Returns the underlying TransactionComposer instance
    */
-  atc(): Promise<AtomicTransactionComposer>
+  transactionComposer(): Promise<TransactionComposer>
   /**
    * Simulates the transaction group and returns the result
    */
@@ -915,7 +922,7 @@ export type TestContractComposer<TReturns extends [...any[]] = []> = {
    */
   execute(sendParams?: AppClientComposeExecuteParams): Promise<TestContractComposerResults<TReturns>>
 }
-export type SimulateOptions = Omit<SimulateTransactionResult, 'txnGroups'>
+export type SimulateOptions = Omit<SimulateRequest, 'txnGroups'>
 export type TestContractComposerSimulateResult<TReturns extends [...any[]]> = {
   returns: TReturns
   methodResults: ABIResult[]
