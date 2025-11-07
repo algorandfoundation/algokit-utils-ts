@@ -89,20 +89,16 @@ export class AlgodApi {
   /**
    * Given a specific account public key and application ID, this call returns the account's application local state and global state (AppLocalState and AppParams, if either exists). Global state will only be returned if the provided address is the application's creator.
    */
-  async accountApplicationInformation(
-    address: string,
-    applicationId: number | bigint,
-    params?: { format?: 'json' | 'msgpack' },
-  ): Promise<AccountApplicationInformation> {
+  async accountApplicationInformation(address: string, applicationId: number | bigint): Promise<AccountApplicationInformation> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = (params?.format as BodyFormat | undefined) ?? 'msgpack'
+    const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const payload = await this.httpRequest.request<unknown>({
       method: 'GET',
       url: '/v2/accounts/{address}/applications/{application-id}',
       path: { address: address, 'application-id': typeof applicationId === 'bigint' ? applicationId.toString() : applicationId },
-      query: { format: params?.format },
+      query: {},
       headers,
       body: undefined,
       mediaType: undefined,
@@ -644,7 +640,7 @@ export class AlgodApi {
   async getTransactionProof(
     round: number | bigint,
     txid: string,
-    params?: { hashtype?: 'sha512_256' | 'sha256'; format?: 'json' | 'msgpack' },
+    params?: { hashtype?: 'sha512_256' | 'sha256' },
   ): Promise<TransactionProof> {
     const headers: Record<string, string> = {}
     const responseFormat: BodyFormat = 'json'
@@ -654,7 +650,7 @@ export class AlgodApi {
       method: 'GET',
       url: '/v2/blocks/{round}/transactions/{txid}/proof',
       path: { round: typeof round === 'bigint' ? round.toString() : round, txid: txid },
-      query: { hashtype: params?.hashtype, format: params?.format },
+      query: { hashtype: params?.hashtype },
       headers,
       body: undefined,
       mediaType: undefined,
@@ -910,7 +906,7 @@ export class AlgodApi {
    */
   async tealDryrun(body?: DryrunRequest): Promise<TealDryrun> {
     const headers: Record<string, string> = {}
-    const responseFormat: BodyFormat = 'msgpack'
+    const responseFormat: BodyFormat = 'json'
     headers['Accept'] = AlgodApi.acceptFor(responseFormat)
 
     const bodyMeta = DryrunRequestMeta

@@ -98,7 +98,7 @@ import {
 } from './transaction'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
-const MAX_SIMULATE_OPCODE_BUDGET = BigInt(20_000 * 16)
+const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {

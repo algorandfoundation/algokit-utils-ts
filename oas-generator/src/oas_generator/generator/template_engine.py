@@ -541,7 +541,6 @@ class OperationProcessor:
         )
 
         # Compute additional properties
-        self._compute_format_param(context)
         self._compute_force_msgpack_query(context, op_input.operation, op_input.spec)
         self._compute_import_types(context)
 
@@ -560,14 +559,11 @@ class OperationProcessor:
 
             # Extract parameter details
             raw_name = str(param.get("name"))
-            # Skip `format` query param when it's constrained to a single format (json or msgpack)
+            # Always skip `format` query param - we default to JSON and don't expose format selection
             location_candidate = param.get(constants.OperationKey.IN, constants.ParamLocation.QUERY)
             if location_candidate == constants.ParamLocation.QUERY and raw_name == constants.FORMAT_PARAM_NAME:
-                schema_obj = param.get("schema", {}) or {}
-                enum_vals = schema_obj.get(constants.SchemaKey.ENUM)
-                if isinstance(enum_vals, list) and len(enum_vals) == 1 and enum_vals[0] in ("msgpack", "json"):
-                    # Endpoint only supports a single format; do not expose/append `format`
-                    continue
+                # Skip format parameter entirely - always default to JSON
+                continue
             var_name = self._sanitize_variable_name(ts_camel_case(raw_name), used_names)
             used_names.add(var_name)
 
@@ -676,14 +672,6 @@ class OperationProcessor:
             response_type = constants.TypeScriptType.VOID
 
         return response_type, returns_msgpack
-
-    def _compute_format_param(self, context: OperationContext) -> None:
-        """Detect and set format parameter for content negotiation."""
-        for param in context.parameters:
-            if param.location == constants.ParamLocation.QUERY and param.name == constants.FORMAT_PARAM_NAME:
-                context.has_format_param = True
-                context.format_var_name = param.var_name
-                break
 
     def _compute_force_msgpack_query(self, context: OperationContext, raw_operation: Schema, spec: Schema) -> None:
         """Detect if the raw spec constrains query format to only 'msgpack' and mark for implicit query injection."""

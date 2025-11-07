@@ -48,8 +48,6 @@ class OperationContext:
     import_types: set[str]
     tags: list[str] | None = None
     returns_msgpack: bool = False
-    has_format_param: bool = False
-    format_var_name: str | None = None
     # When the original spec had a query param `format` with enum ['msgpack'] only,
     # we don't expose it to callers but still need to set it implicitly on requests
     force_msgpack_query: bool = False
@@ -70,8 +68,6 @@ class OperationContext:
             "requestBody": self._request_body_to_dict(self.request_body) if self.request_body else None,
             "responseTsType": self.response_type,
             "returnsMsgpack": self.returns_msgpack,
-            "hasFormatParam": self.has_format_param,
-            "formatVarName": self.format_var_name,
             "forceMsgpackQuery": self.force_msgpack_query,
             "errorTypes": [self._error_to_dict(e) for e in (self.error_types or [])],
             "isPrivate": self.is_private,

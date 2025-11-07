@@ -106,7 +106,7 @@ export class {{ service_class_name }} {
   ): Promise<{{ op.responseTsType }}> {
     const headers: Record<string, string> = {};
     {% set supports_msgpack = op.returnsMsgpack or (op.requestBody and op.requestBody.supportsMsgpack) %}
-    const responseFormat: BodyFormat = {% if supports_msgpack %}{% if op.hasFormatParam and op.formatVarName %}(params?.{{ op.formatVarName }} as BodyFormat | undefined) ?? 'msgpack'{% else %}'msgpack'{% endif %}{% else %}'json'{% endif %};
+    const responseFormat: BodyFormat = {% if op.forceMsgpackQuery %}'msgpack'{% elif supports_msgpack %}'json'{% else %}'json'{% endif %};
     headers['Accept'] = {{ service_class_name }}.acceptFor(responseFormat);
 
     {% if op.requestBody and op.method.upper() not in ['GET', 'HEAD'] %}

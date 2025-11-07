@@ -236,7 +236,7 @@ export class AlgorandClient {
     return new TransactionComposer({
       algod: this.client.algod,
       getSigner: (addr: string | Address) => this.account.getSigner(addr),
-      getSuggestedParams: this.getSuggestedParams,
+      getSuggestedParams: () => this.getSuggestedParams(),
       defaultValidityWindow: this._defaultValidityWindow,
       appManager: this._appManager,
       errorTransformers: [...this._errorTransformers],

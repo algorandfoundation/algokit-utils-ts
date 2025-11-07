@@ -66,7 +66,7 @@ export class AccountManager {
     return new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: this.getSigner.bind(this),
-      getSuggestedParams: getSuggestedParams ?? this._clientManager.algod.suggestedParams,
+      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.suggestedParams()),
     })
   }
 
