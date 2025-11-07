@@ -34,7 +34,7 @@ export type ApplicationParams = {
   /**
    * \[v\] the number of updates to the application programs
    */
-  version?: bigint
+  version?: number
 }
 
 export const ApplicationParamsMeta: ModelMetadata = {
@@ -95,7 +95,7 @@ export const ApplicationParamsMeta: ModelMetadata = {
       wireKey: 'version',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
   ],
 }

@@ -22,7 +22,7 @@ export type AssetParams = {
   /**
    * \[dc\] The number of digits to use after the decimal point when displaying this asset. If 0, the asset is not divisible. If 1, the base unit of the asset is in tenths. If 2, the base unit of the asset is in hundredths, and so on. This value must be between 0 and 19 (inclusive).
    */
-  decimals: bigint
+  decimals: number
 
   /**
    * \[df\] Whether holdings of this asset are frozen by default.
@@ -108,7 +108,7 @@ export const AssetParamsMeta: ModelMetadata = {
       wireKey: 'decimals',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'defaultFrozen',

@@ -7,12 +7,12 @@ export type LightBlockHeaderProof = {
   /**
    * The index of the light block header in the vector commitment tree
    */
-  index: bigint
+  index: number
 
   /**
    * Represents the depth of the tree that is being proven, i.e. the number of edges from a leaf to the root.
    */
-  treedepth: bigint
+  treedepth: number
 
   /**
    * The encoded proof.
@@ -29,7 +29,7 @@ export const LightBlockHeaderProofMeta: ModelMetadata = {
       wireKey: 'index',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'treedepth',

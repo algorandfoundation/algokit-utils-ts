@@ -21,17 +21,17 @@ export type SimulateTransactionGroupResult = {
   /**
    * If present, indicates which transaction in this group caused the failure. This array represents the path to the failing transaction. Indexes are zero based, the first element indicates the top-level transaction, and successive elements indicate deeper inner transactions.
    */
-  failedAt?: bigint[]
+  failedAt?: number[]
 
   /**
    * Total budget added during execution of app calls in the transaction group.
    */
-  appBudgetAdded?: bigint
+  appBudgetAdded?: number
 
   /**
    * Total budget consumed during execution of app calls in the transaction group.
    */
-  appBudgetConsumed?: bigint
+  appBudgetConsumed?: number
   unnamedResourcesAccessed?: SimulateUnnamedResourcesAccessed
 }
 

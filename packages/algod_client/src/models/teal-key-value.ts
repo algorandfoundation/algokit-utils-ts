@@ -6,7 +6,7 @@ import { TealValueMeta } from './teal-value'
  * Represents a key-value pair in an application store.
  */
 export type TealKeyValue = {
-  key: string
+  key: Uint8Array
   value: TealValue
 }
 
@@ -19,7 +19,7 @@ export const TealKeyValueMeta: ModelMetadata = {
       wireKey: 'key',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBytes: true },
     },
     {
       name: 'value',

@@ -36,7 +36,7 @@ export const BlockUpgradeVoteMeta: ModelMetadata = {
       wireKey: 'upgrade-delay',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'upgradePropose',

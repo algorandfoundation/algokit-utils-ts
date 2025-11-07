@@ -1,4 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, LogicSigAccount, TransactionSigner } from '@algorandfoundation/sdk'
@@ -62,11 +62,11 @@ export class AccountManager {
     this._kmdAccountManager = new KmdAccountManager(clientManager)
   }
 
-  private _getComposer(getSuggestedParams?: () => Promise<TransactionParams>) {
+  private _getComposer(getSuggestedParams?: () => Promise<SuggestedParams>) {
     return new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: this.getSigner.bind(this),
-      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.transactionParams()),
+      getSuggestedParams: getSuggestedParams ?? (() => this._clientManager.algod.suggestedParams()),
     })
   }
 

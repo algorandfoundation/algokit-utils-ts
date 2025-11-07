@@ -57,42 +57,42 @@ export type GetStatus = {
   /**
    * The total number of accounts included in the current catchpoint
    */
-  catchpointTotalAccounts?: bigint
+  catchpointTotalAccounts?: number
 
   /**
    * The number of accounts from the current catchpoint that have been processed so far as part of the catchup
    */
-  catchpointProcessedAccounts?: bigint
+  catchpointProcessedAccounts?: number
 
   /**
    * The number of accounts from the current catchpoint that have been verified so far as part of the catchup
    */
-  catchpointVerifiedAccounts?: bigint
+  catchpointVerifiedAccounts?: number
 
   /**
    * The total number of key-values (KVs) included in the current catchpoint
    */
-  catchpointTotalKvs?: bigint
+  catchpointTotalKvs?: number
 
   /**
    * The number of key-values (KVs) from the current catchpoint that have been processed so far as part of the catchup
    */
-  catchpointProcessedKvs?: bigint
+  catchpointProcessedKvs?: number
 
   /**
    * The number of key-values (KVs) from the current catchpoint that have been verified so far as part of the catchup
    */
-  catchpointVerifiedKvs?: bigint
+  catchpointVerifiedKvs?: number
 
   /**
    * The total number of blocks that are required to complete the current catchpoint catchup
    */
-  catchpointTotalBlocks?: bigint
+  catchpointTotalBlocks?: number
 
   /**
    * The number of blocks that have already been obtained by the node as part of the catchup
    */
-  catchpointAcquiredBlocks?: bigint
+  catchpointAcquiredBlocks?: number
 
   /**
    * Upgrade delay
@@ -107,22 +107,22 @@ export type GetStatus = {
   /**
    * Yes votes required for consensus upgrade
    */
-  upgradeVotesRequired?: bigint
+  upgradeVotesRequired?: number
 
   /**
    * Total votes cast for consensus upgrade
    */
-  upgradeVotes?: bigint
+  upgradeVotes?: number
 
   /**
    * Yes votes cast for consensus upgrade
    */
-  upgradeYesVotes?: bigint
+  upgradeYesVotes?: number
 
   /**
    * No votes cast for consensus upgrade
    */
-  upgradeNoVotes?: bigint
+  upgradeNoVotes?: number
 
   /**
    * Next protocol round
@@ -132,7 +132,7 @@ export type GetStatus = {
   /**
    * Total voting rounds for current upgrade
    */
-  upgradeVoteRounds?: bigint
+  upgradeVoteRounds?: number
 }
 
 export const GetStatusMeta: ModelMetadata = {
@@ -172,7 +172,7 @@ export const GetStatusMeta: ModelMetadata = {
       wireKey: 'next-version-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'nextVersionSupported',
@@ -214,63 +214,63 @@ export const GetStatusMeta: ModelMetadata = {
       wireKey: 'catchpoint-total-accounts',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'catchpointProcessedAccounts',
       wireKey: 'catchpoint-processed-accounts',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'catchpointVerifiedAccounts',
       wireKey: 'catchpoint-verified-accounts',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'catchpointTotalKvs',
       wireKey: 'catchpoint-total-kvs',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'catchpointProcessedKvs',
       wireKey: 'catchpoint-processed-kvs',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'catchpointVerifiedKvs',
       wireKey: 'catchpoint-verified-kvs',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'catchpointTotalBlocks',
       wireKey: 'catchpoint-total-blocks',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'catchpointAcquiredBlocks',
       wireKey: 'catchpoint-acquired-blocks',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'upgradeDelay',
       wireKey: 'upgrade-delay',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'upgradeNodeVote',
@@ -312,7 +312,7 @@ export const GetStatusMeta: ModelMetadata = {
       wireKey: 'upgrade-next-protocol-vote-before',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'upgradeVoteRounds',

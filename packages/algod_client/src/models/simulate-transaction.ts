@@ -12,7 +12,7 @@ export type SimulateTransaction = {
   /**
    * The version of this response object.
    */
-  version: bigint
+  version: number
 
   /**
    * The round immediately preceding this simulation. State changes through this round were used to run this simulation.
@@ -37,7 +37,7 @@ export const SimulateTransactionMeta: ModelMetadata = {
       wireKey: 'version',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'lastRound',

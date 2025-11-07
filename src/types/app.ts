@@ -1,4 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
 import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
 import { Expand } from './expand'
@@ -129,7 +129,7 @@ interface CreateOrUpdateAppParams extends SendTransactionParams {
   /** The clear state program as raw teal (string) or compiled teal, base 64 encoded as a byte array (Uint8Array) */
   clearStateProgram: Uint8Array | string
   /** Optional transaction parameters */
-  transactionParams?: TransactionParams
+  transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** The arguments passed in to the app call */
@@ -181,7 +181,7 @@ export interface AppCallParams extends SendTransactionParams {
   /** The account to make the call from */
   from: SendTransactionFrom
   /** Optional transaction parameters */
-  transactionParams?: TransactionParams
+  transactionParams?: SuggestedParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** The arguments passed in to the app call */

@@ -1,6 +1,6 @@
 import type { ModelMetadata } from '../core/model-runtime'
 
-export type Ed25519Signature = bigint[]
+export type Ed25519Signature = number[]
 
 export const Ed25519SignatureMeta: ModelMetadata = {
   name: 'Ed25519Signature',

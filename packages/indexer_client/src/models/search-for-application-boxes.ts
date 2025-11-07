@@ -24,7 +24,7 @@ export const SearchForApplicationBoxesMeta: ModelMetadata = {
       wireKey: 'application-id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'boxes',

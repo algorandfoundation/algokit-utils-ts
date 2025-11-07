@@ -1,3 +1,4 @@
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import type { Transaction } from '@algorandfoundation/algokit-transact'
 import { OnApplicationComplete, TransactionType } from '@algorandfoundation/algokit-transact'
 import { foreignArraysToResourceReferences } from './appAccess.js'
@@ -24,18 +25,12 @@ function ensureBigInt(value: number | bigint | undefined): bigint | undefined {
   return typeof value === 'bigint' ? value : BigInt(value)
 }
 
-import { TransactionParams as AlgodTransactionParams } from '@algorandfoundation/algokit-algod-client'
-
-export type SdkTransactionParams = AlgodTransactionParams & {
-  firstRound: bigint
-}
-
 /** Contains parameters common to every transaction type */
 export interface CommonTransactionParams {
   /** Algorand address of sender */
   sender: string | Address
   /** Suggested parameters relevant to the network that will accept this transaction */
-  suggestedParams: SdkTransactionParams
+  suggestedParams: SuggestedParams
   /** Optional, arbitrary data to be stored in the transaction's note field */
   note?: Uint8Array
   /**
@@ -67,8 +62,8 @@ export function makePaymentTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     type: TransactionType.Payment,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstRound),
-    lastValid: BigInt(suggestedParams.lastRound),
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
@@ -106,8 +101,8 @@ export function makeKeyRegistrationTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     type: TransactionType.KeyRegistration,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstRound),
-    lastValid: BigInt(suggestedParams.lastRound),
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
@@ -154,8 +149,8 @@ export function makeBaseAssetConfigTxn({
   const txn: Transaction = {
     type: TransactionType.AssetConfig,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstRound),
-    lastValid: BigInt(suggestedParams.lastRound),
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
@@ -361,8 +356,8 @@ export function makeAssetFreezeTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     type: TransactionType.AssetFreeze,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstRound),
-    lastValid: BigInt(suggestedParams.lastRound),
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
@@ -404,8 +399,8 @@ export function makeAssetTransferTxnWithSuggestedParamsFromObject({
   const txn: Transaction = {
     type: TransactionType.AssetTransfer,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstRound),
-    lastValid: BigInt(suggestedParams.lastRound),
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,
@@ -490,8 +485,8 @@ export function makeApplicationCallTxnFromObject({
   const txn: Transaction = {
     type: TransactionType.AppCall,
     sender: addressToString(sender)!,
-    firstValid: BigInt(suggestedParams.firstRound),
-    lastValid: BigInt(suggestedParams.lastRound),
+    firstValid: BigInt(suggestedParams.firstValid),
+    lastValid: BigInt(suggestedParams.lastValid),
     genesisHash: suggestedParams.genesisHash,
     genesisId: suggestedParams.genesisId,
     note,

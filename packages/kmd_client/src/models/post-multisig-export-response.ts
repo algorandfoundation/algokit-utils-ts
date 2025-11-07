@@ -9,9 +9,9 @@ import { PublicKeyMeta } from './public-key'
 export type PostMultisigExportResponse = {
   error?: boolean
   message?: string
-  multisigVersion?: bigint
+  multisigVersion?: number
   pks?: PublicKey[]
-  threshold?: bigint
+  threshold?: number
 }
 
 export const PostMultisigExportResponseMeta: ModelMetadata = {

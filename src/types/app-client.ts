@@ -1,4 +1,4 @@
-import { AlgodClient, TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { AlgodClient, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import {
@@ -98,7 +98,7 @@ import {
 } from './transaction'
 
 /** The maximum opcode budget for a simulate call as per https://github.com/algorand/go-algorand/blob/807b29a91c371d225e12b9287c5d56e9b33c4e4c/ledger/simulation/trace.go#L104 */
-const MAX_SIMULATE_OPCODE_BUDGET = BigInt(20_000 * 16)
+const MAX_SIMULATE_OPCODE_BUDGET = 20_000 * 16
 
 /** Configuration to resolve app by creator and name `getCreatorAppsByName` */
 export type ResolveAppByCreatorAndNameBase = {
@@ -137,7 +137,7 @@ export type AppDetailsBase = {
   /** Default sender to use for transactions issued by this application client */
   sender?: SendTransactionFrom
   /** Default suggested params object to use */
-  params?: TransactionParams
+  params?: SuggestedParams
   /** Optionally provide any deploy-time parameters to replace in the TEAL code; if specified here will get
    * used in calls to `deploy`, `create` and `update` unless overridden in those calls
    */
@@ -1811,7 +1811,7 @@ export class ApplicationClient {
   private indexer?: algosdk.Indexer
   private appSpec: AppSpec
   private sender: SendTransactionFrom | undefined
-  private params: TransactionParams | undefined
+  private params: SuggestedParams | undefined
   private existingDeployments: LegacyAppLookup | undefined
   private deployTimeParams?: TealTemplateParams
 

@@ -24,7 +24,7 @@ export const BoxReferenceMeta: ModelMetadata = {
       wireKey: 'app',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'name',

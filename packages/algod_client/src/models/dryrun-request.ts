@@ -1,5 +1,5 @@
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { ModelMetadata } from '../core/model-runtime'
+import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { Account } from './account'
 import { AccountMeta } from './account'
 import type { Application } from './application'
@@ -28,7 +28,7 @@ export type DryrunRequest = {
   /**
    * LatestTimestamp is available to some TEAL scripts. Defaults to the latest confirmed timestamp this algod is attached to.
    */
-  latestTimestamp: bigint
+  latestTimestamp: number
   sources: DryrunSource[]
 }
 

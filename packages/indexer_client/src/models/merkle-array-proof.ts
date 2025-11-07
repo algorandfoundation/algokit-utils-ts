@@ -12,7 +12,7 @@ export type MerkleArrayProof = {
   /**
    * \[td\]
    */
-  treeDepth?: bigint
+  treeDepth?: number
 }
 
 export const MerkleArrayProofMeta: ModelMetadata = {

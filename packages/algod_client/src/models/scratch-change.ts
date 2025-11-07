@@ -9,7 +9,7 @@ export type ScratchChange = {
   /**
    * The scratch slot written.
    */
-  slot: bigint
+  slot: number
   newValue: AvmValue
 }
 

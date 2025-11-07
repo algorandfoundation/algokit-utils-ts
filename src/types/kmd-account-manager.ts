@@ -1,6 +1,6 @@
-import { Config } from '../config'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address } from '@algorandfoundation/sdk'
+import { Config } from '../config'
 import { SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
 import { ClientManager } from './client-manager'
@@ -164,7 +164,7 @@ export class KmdAccountManager {
     await new TransactionComposer({
       algod: this._clientManager.algod,
       getSigner: () => dispenser.signer,
-      getSuggestedParams: () => this._clientManager.algod.transactionParams(),
+      getSuggestedParams: () => this._clientManager.algod.suggestedParams(),
     })
       .addPayment({
         amount: fundWith ?? AlgoAmount.Algo(1000),

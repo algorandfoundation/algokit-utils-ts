@@ -2,11 +2,11 @@ import type { ModelMetadata } from '../core/model-runtime'
 
 export type BuildVersion = {
   branch: string
-  buildNumber: bigint
+  buildNumber: number
   channel: string
   commitHash: string
-  major: bigint
-  minor: bigint
+  major: number
+  minor: number
 }
 
 export const BuildVersionMeta: ModelMetadata = {

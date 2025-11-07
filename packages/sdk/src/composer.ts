@@ -3,6 +3,7 @@ import type {
   PendingTransactionResponse,
   SimulateRequest,
   SimulateTransaction,
+  SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import type { AccessReference, BoxReference, SignedTransaction } from '@algorandfoundation/algokit-transact'
 import { OnApplicationComplete, decodeSignedTransaction, getTransactionId } from '@algorandfoundation/algokit-transact'
@@ -20,7 +21,7 @@ import {
 } from './abi/index.js'
 import { Address } from './encoding/address.js'
 import { assignGroupID } from './group.js'
-import { SdkTransactionParams, makeApplicationCallTxnFromObject } from './makeTxn.js'
+import { makeApplicationCallTxnFromObject } from './makeTxn.js'
 import { TransactionSigner, TransactionWithSigner, isTransactionWithSigner } from './signer.js'
 import { arrayEqual, ensureUint64, stringifyJSON } from './utils/utils.js'
 import { waitForConfirmation } from './wait.js'
@@ -214,7 +215,7 @@ export class AtomicTransactionComposer {
     /** The address of the sender of this application call */
     sender: string | Address
     /** Transactions params to use for this application call */
-    suggestedParams: SdkTransactionParams
+    suggestedParams: SuggestedParams
     /** The OnComplete action to take for this application call. If omitted, OnApplicationComplete.NoOp will be used. */
     onComplete?: OnApplicationComplete
     /** The approval program for this application call. Only set this if this is an application creation call, or if onComplete is OnApplicationComplete.UpdateApplication */
@@ -567,15 +568,7 @@ export class AtomicTransactionComposer {
 
     const stxns = await this.gatherSignatures()
 
-    const totalLength = stxns.reduce((sum, stxn) => sum + stxn.length, 0)
-    const merged = new Uint8Array(totalLength)
-    let offset = 0
-    for (const stxn of stxns) {
-      merged.set(stxn, offset)
-      offset += stxn.length
-    }
-
-    await client.rawTransaction({ body: merged })
+    await client.sendRawTransaction(stxns)
 
     this.status = AtomicTransactionComposerStatus.SUBMITTED
 
@@ -620,7 +613,7 @@ export class AtomicTransactionComposer {
       },
     ]
 
-    const simulateResponse = await client.simulateTransaction({ body: currentRequest })
+    const simulateResponse = await client.simulateTransaction(currentRequest)
 
     // Parse method response
     const methodResults: ABIResult[] = []
