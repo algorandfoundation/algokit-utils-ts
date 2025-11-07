@@ -37,3 +37,5 @@ A collection of random notes pop up during the migration process.
 - transaction.ts
   - sendTransaction takes composer
   - getGroupExecutionInfo ..
+  - review docs on those methods
+  - getAtomicTransactionComposerTransactions becomes async

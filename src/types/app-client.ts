@@ -7,7 +7,6 @@ import {
   ABIType,
   ABIValue,
   Address,
-  AtomicTransactionComposer,
   Indexer,
   ProgramSourceMap,
   TransactionSigner,
@@ -83,6 +82,7 @@ import {
   AppUpdateParams,
   CommonAppCallParams,
   PaymentParams,
+  TransactionComposer,
 } from './composer'
 import { Expand } from './expand'
 import { EventType } from './lifecycle-events'
@@ -2162,24 +2162,29 @@ export class ApplicationClient {
       call?.method &&
       // We aren't skipping the send
       !call.sendParams?.skipSending &&
-      // There isn't an ATC passed in
-      !call.sendParams?.atc &&
+      // There isn't an composer passed in
+      !call.sendParams?.transactionComposer &&
       // The method is readonly
       this.appSpec.hints[this.getABIMethodSignature(this.getABIMethod(call.method)!)].read_only
     ) {
-      const atc = new AtomicTransactionComposer()
-      await this.callOfType({ ...call, sendParams: { ...call.sendParams, atc } }, 'no_op')
-      const result = await atc.simulate(this.algod)
+      const transactionComposer = new TransactionComposer({
+        algod: this.algod,
+        getSigner: (address) => {
+          throw new Error(`No signer for address ${address}`) // TODO: PD - confirm that this is right for the SDK ATC
+        },
+      })
+      await this.callOfType({ ...call, sendParams: { ...call.sendParams, transactionComposer } }, 'no_op')
+      const result = await transactionComposer.simulate()
       if (result.simulateResponse.txnGroups.some((group) => group.failureMessage)) {
         throw new Error(result.simulateResponse.txnGroups.find((x) => x.failureMessage)?.failureMessage)
       }
-      const txns = atc.buildGroup()
+      const txns = (await transactionComposer.build()).transactions
       return {
         transaction: new TransactionWrapper(txns[txns.length - 1].txn),
         confirmation: wrapPendingTransactionResponseOptional(result.simulateResponse.txnGroups[0].txnResults.at(-1)?.txnResult),
         confirmations: result.simulateResponse.txnGroups[0].txnResults.map((t) => wrapPendingTransactionResponse(t.txnResult)),
         transactions: txns.map((t) => new TransactionWrapper(t.txn)),
-        return: (result.methodResults?.length ?? 0 > 0) ? (result.methodResults[result.methodResults.length - 1] as ABIReturn) : undefined,
+        return: (result.returns?.length ?? 0 > 0) ? (result.returns![result.returns!.length - 1] as ABIReturn) : undefined,
       } satisfies AppCallTransactionResult
     }
 

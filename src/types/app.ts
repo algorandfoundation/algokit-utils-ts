@@ -1,6 +1,6 @@
 import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, BoxReference as TransactBoxReference, Transaction } from '@algorandfoundation/algokit-transact'
-import { ABIArgument, ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap } from '@algorandfoundation/sdk'
+import { ABIMethod, ABIMethodParams, ABIType, ABIValue, Address, ProgramSourceMap, TransactionWithSigner } from '@algorandfoundation/sdk'
 import { Expand } from './expand'
 import {
   SendSingleTransactionResult,
@@ -93,7 +93,8 @@ export interface RawAppCallArgs extends CoreAppCallArgs {
 
 /** An argument for an ABI method, either a primitive value, or a transaction with or without signer, or the unawaited async return value of an algokit method that returns a `SendTransactionResult` */
 export type ABIAppCallArg =
-  | ABIArgument
+  | ABIValue
+  | TransactionWithSigner
   | TransactionToSign
   | Transaction
   | Promise<SendTransactionResult>

@@ -1,4 +1,4 @@
-import { SdkTransactionParams } from '@algorandfoundation/sdk'
+import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
 import { AlgoAmount } from './amount'
 import { SendTransactionFrom, SendTransactionParams, TransactionNote } from './transaction'
 
@@ -58,7 +58,7 @@ export interface CreateAssetParams extends SendTransactionParams {
   frozenByDefault?: boolean
 
   /** Optional transaction parameters */
-  transactionParams?: SdkTransactionParams
+  transactionParams?: TransactionParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
@@ -72,7 +72,7 @@ export interface AssetOptInParams extends SendTransactionParams {
   /** The ID of the assets to opt in for / out of */
   assetId: number
   /** Optional transaction parameters */
-  transactionParams?: SdkTransactionParams
+  transactionParams?: TransactionParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** An (optional) [transaction lease](https://dev.algorand.co/concepts/transactions/leases) to apply */
@@ -96,7 +96,7 @@ export interface AssetBulkOptInOutParams {
   /** Whether or not to validate the opt-in/out is valid before issuing transactions; default = true */
   validateBalances?: boolean
   /** Optional transaction parameters */
-  transactionParams?: SdkTransactionParams
+  transactionParams?: TransactionParams
   /** The (optional) transaction note */
   note?: TransactionNote
   /** The maximum fee that you are happy to pay per transaction (default: unbounded) - if this is set it's possible the transaction could get rejected during network congestion */

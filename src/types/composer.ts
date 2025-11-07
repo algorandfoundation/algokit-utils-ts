@@ -715,6 +715,22 @@ export class TransactionComposer {
     }
   }
 
+  clone(composerConfig?: TransactionComposerConfig) {
+    return new TransactionComposer({
+      algod: this.algod,
+      getSuggestedParams: this.getSuggestedParams,
+      getSigner: this.getSigner,
+      defaultValidityWindow: this.defaultValidityWindow,
+      appManager: this.appManager,
+      errorTransformers: this.errorTransformers,
+      composerConfig: {
+        ...this.composerConfig,
+        ...composerConfig,
+      },
+    })
+    // TODO: PD - cross check with sdk ATC
+  }
+
   /**
    * Register a function that will be used to transform an error caught when simulating or executing
    *
@@ -1941,6 +1957,7 @@ export class TransactionComposer {
    * ```
    */
   async rebuild() {
+    this.builtGroup = undefined
     return await this.build()
   }
 
@@ -1955,13 +1972,10 @@ export class TransactionComposer {
    * const result = await composer.send()
    * ```
    */
-  async send(
-    params?: SendParams,
-    additionalAtcContext?: AdditionalAtomicTransactionComposerContext,
-  ): Promise<SendAtomicTransactionComposerResults> {
+  async send(params?: SendParams): Promise<SendAtomicTransactionComposerResults> {
     try {
       // TODO: PD - resource population + fee if not done already
-      await this.gatherSignatures(additionalAtcContext)
+      await this.gatherSignatures()
 
       if (!this.signedGroup || this.signedGroup.length === 0) {
         throw new Error('No transactions available')
@@ -2138,12 +2152,12 @@ export class TransactionComposer {
     return encoder.encode(arc2Payload)
   }
 
-  private async gatherSignatures(additionalAtcContext?: AdditionalAtomicTransactionComposerContext): Promise<SignedTransaction[]> {
+  private async gatherSignatures(): Promise<SignedTransaction[]> {
     if (this.signedGroup) {
       return this.signedGroup
     }
 
-    await this.build(additionalAtcContext)
+    await this.build()
 
     if (!this.builtGroup || this.builtGroup.length === 0) {
       throw new Error('No transactions available')

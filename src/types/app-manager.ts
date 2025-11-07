@@ -1,3 +1,4 @@
+import { ABI_RETURN_PREFIX } from '@algorandfoundation/algokit-abi'
 import { AlgodClient, EvalDelta, PendingTransactionResponse, TealValue } from '@algorandfoundation/algokit-algod-client'
 import { BoxReference as TransactionBoxReference } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
@@ -439,12 +440,42 @@ export class AppManager {
     }
 
     // The parseMethodResponse method mutates the second parameter :(
-    const resultDummy: algosdk.ABIResult = {
+    const abiResult: algosdk.ABIResult = {
       txID: '',
       method,
       rawReturnValue: new Uint8Array(),
     }
-    return getABIReturnValue(algosdk.AtomicTransactionComposer.parseMethodResponse(method, resultDummy, confirmation), method.returns.type)
+
+    try {
+      abiResult.txInfo = confirmation
+      const logs = confirmation.logs || []
+      if (logs.length === 0) {
+        throw new Error(`App call transaction did not log a return value`)
+      }
+      const lastLog = logs[logs.length - 1]
+      if (AppManager.hasAbiReturnPrefix(lastLog)) {
+        throw new Error(`App call transaction did not log a ABI return value`)
+      }
+
+      abiResult.rawReturnValue = new Uint8Array(lastLog.slice(4))
+      abiResult.returnValue = method.returns.type.decode(abiResult.rawReturnValue)
+    } catch (err) {
+      abiResult.decodeError = err as Error
+    }
+
+    return getABIReturnValue(abiResult, method.returns.type)
+  }
+
+  private static hasAbiReturnPrefix(log: Uint8Array): boolean {
+    if (log.length < ABI_RETURN_PREFIX.length) {
+      return false
+    }
+    for (let i = 0; i < ABI_RETURN_PREFIX.length; i++) {
+      if (log[i] !== ABI_RETURN_PREFIX[i]) {
+        return false
+      }
+    }
+    return true
   }
 
   /**

@@ -7,7 +7,6 @@
 import { AlgodClient, SimulateTransactionGroupResult, SimulateTransactionResult } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
 import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
-import { AtomicTransactionComposer } from '@algorandfoundation/sdk'
 import * as algokit from '../../../src/index'
 import type {
   ABIAppCallArg,

@@ -13,7 +13,6 @@ import {
 } from '@algorandfoundation/algokit-transact'
 import { HeartbeatTransactionFields } from '@algorandfoundation/algokit-transact/transactions/heartbeat'
 import { StateProofTransactionFields } from '@algorandfoundation/algokit-transact/transactions/state-proof'
-import * as algosdk from '@algorandfoundation/sdk'
 import { LogicSigAccount, type Account } from '@algorandfoundation/sdk'
 import { MultisigAccount, SigningAccount, TransactionSignerAccount } from './account'
 import { AlgoAmount } from './amount'
@@ -158,25 +157,6 @@ export interface SendParams {
 export interface AdditionalAtomicTransactionComposerContext {
   /** A map of transaction index in the `AtomicTransactionComposer` to the max fee that can be calculated for a transaction in the group */
   maxFees: Map<number, AlgoAmount>
-
-  /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
-  suggestedParams: Pick<algosdk.SdkTransactionParams, 'fee' | 'minFee'>
-}
-
-/** An `AtomicTransactionComposer` with transactions to send. */
-export interface AtomicTransactionComposerToSend extends SendParams {
-  /** The `AtomicTransactionComposer` with transactions loaded to send */
-  atc: AtomicTransactionComposer
-  /**
-   * @deprecated - set the parameters at the top level instead
-   * Any parameters to control the semantics of the send to the network */
-  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
-
-  /**
-   * Additional `AtomicTransactionComposer` context used when building the transaction group that is sent.
-   * This additional context is used and must be supplied when coverAppCallInnerTransactionFees is set to true.
-   **/
-  additionalAtcContext?: AdditionalAtomicTransactionComposerContext
 }
 
 export class TransactionWrapper implements Transaction {
