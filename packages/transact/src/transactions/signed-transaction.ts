@@ -94,9 +94,14 @@ export type LogicSignature = {
   signature?: Uint8Array
 
   /**
-   * Multisig for delegated logic sig
+   * Legacy multisig for delegated logic sig
    */
   multiSignature?: MultisigSignature
+
+  /**
+   * Multisig for delegated logic sig
+   */
+  logicMultiSignature?: MultisigSignature
 }
 
 /**
@@ -199,9 +204,12 @@ function toSignedTransactionDto(signedTransaction: SignedTransaction): SignedTra
       l: bytesCodec.encode(signedTransaction.logicSignature.logic),
       arg: signedTransaction.logicSignature.args?.map((arg) => bytesCodec.encode(arg) ?? bytesCodec.defaultValue()),
       sig: fixedBytes64Codec.encode(signedTransaction.logicSignature.signature),
-      ...(signedTransaction.logicSignature.multiSignature
-        ? { msig: toMultisigSignatureDto(signedTransaction.logicSignature.multiSignature) }
-        : undefined),
+      ...(signedTransaction.logicSignature.multiSignature && {
+        msig: toMultisigSignatureDto(signedTransaction.logicSignature.multiSignature),
+      }),
+      ...(signedTransaction.logicSignature.logicMultiSignature && {
+        lmsig: toMultisigSignatureDto(signedTransaction.logicSignature.logicMultiSignature),
+      }),
     })
   }
 
@@ -245,11 +253,14 @@ function fromSignedTransactionDto(signedTransactionDto: SignedTransactionDto): S
     const args = signedTransactionDto.lsig.arg?.map((arg) => bytesCodec.decode(arg))
     const signature = fixedBytes64Codec.decodeOptional(signedTransactionDto.lsig.sig)
     const multiSignature = signedTransactionDto.lsig.msig && fromMultisigSignatureDto(signedTransactionDto.lsig.msig)
+    const logicMultiSignature = signedTransactionDto.lsig.lmsig && fromMultisigSignatureDto(signedTransactionDto.lsig.lmsig)
+
     const logicSignature = logicSignatureCodec.decodeOptional({
       logic: bytesCodec.decode(signedTransactionDto.lsig.l),
       ...(args && { args }),
       ...(signature && { signature }),
       ...(multiSignature && { multiSignature }),
+      ...(logicMultiSignature && { logicMultiSignature }),
     })
     if (logicSignature) {
       stx.logicSignature = logicSignature
