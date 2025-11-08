@@ -5,7 +5,7 @@ import {
   AssetHoldingReference,
   PendingTransactionResponse,
   SimulateUnnamedResourcesAccessed,
-  TransactionParams,
+  SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import { MAX_ACCOUNT_REFERENCES, MAX_OVERALL_REFERENCES, getAppAddress } from '@algorandfoundation/algokit-common'
 import { BoxReference, OnApplicationComplete, Transaction, TransactionType } from '@algorandfoundation/algokit-transact'
@@ -185,10 +185,10 @@ const ensureString = (data?: string | Uint8Array) => {
 
 export const buildTransactionHeader = (
   commonParams: CommonTransactionParams,
-  transactionParams: TransactionParams,
+  suggestedParams: SuggestedParams,
   defaultValidityWindow: number,
 ) => {
-  const firstValid = commonParams.firstValidRound ?? transactionParams.lastRound
+  const firstValid = commonParams.firstValidRound ?? suggestedParams.firstValid
   const lease = commonParams.lease === undefined ? undefined : encodeLease(commonParams.lease)
   const note = ensureString(commonParams.note)
 
@@ -198,8 +198,8 @@ export const buildTransactionHeader = (
     note: note,
     lease: lease,
     fee: commonParams.staticFee?.microAlgos,
-    genesisId: transactionParams.genesisId,
-    genesisHash: transactionParams.genesisHash,
+    genesisId: suggestedParams.genesisId,
+    genesisHash: suggestedParams.genesisHash,
     firstValid,
     lastValid:
       commonParams.lastValidRound ??
