@@ -47,7 +47,7 @@ export const ResourceRefMeta: ModelMetadata = {
       wireKey: 'application-id',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'assetId',

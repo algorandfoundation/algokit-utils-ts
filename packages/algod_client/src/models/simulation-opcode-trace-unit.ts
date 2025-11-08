@@ -13,7 +13,7 @@ export type SimulationOpcodeTraceUnit = {
   /**
    * The program counter of the current opcode being evaluated.
    */
-  pc: bigint
+  pc: number
 
   /**
    * The writes into scratch slots.
@@ -28,12 +28,12 @@ export type SimulationOpcodeTraceUnit = {
   /**
    * The indexes of the traces for inner transactions spawned by this opcode, if any.
    */
-  spawnedInners?: bigint[]
+  spawnedInners?: number[]
 
   /**
    * The number of deleted stack values by this opcode.
    */
-  stackPopCount?: bigint
+  stackPopCount?: number
 
   /**
    * The values added by this opcode to the stack.

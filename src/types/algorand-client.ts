@@ -1,4 +1,4 @@
-import { TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import type { Account } from '@algorandfoundation/sdk'
 import * as algosdk from '@algorandfoundation/sdk'
 import { Address, LogicSigAccount } from '@algorandfoundation/sdk'
@@ -25,7 +25,7 @@ export class AlgorandClient {
   private _transactionSender: AlgorandClientTransactionSender
   private _transactionCreator: AlgorandClientTransactionCreator
 
-  private _cachedSuggestedParams?: TransactionParams
+  private _cachedSuggestedParams?: SuggestedParams
   private _cachedSuggestedParamsExpiry?: Date
   private _cachedSuggestedParamsTimeout: number = 3_000 // three seconds
 
@@ -123,7 +123,7 @@ export class AlgorandClient {
    * const algorand = AlgorandClient.mainNet().setSuggestedParamsCache(suggestedParams, new Date(+new Date() + 3_600_000))
    * ```
    */
-  public setSuggestedParamsCache(suggestedParams: TransactionParams, until?: Date) {
+  public setSuggestedParamsCache(suggestedParams: SuggestedParams, until?: Date) {
     this._cachedSuggestedParams = suggestedParams
     this._cachedSuggestedParamsExpiry = until ?? new Date(+new Date() + this._cachedSuggestedParamsTimeout)
     return this
@@ -149,14 +149,14 @@ export class AlgorandClient {
    * @example
    * const params = await AlgorandClient.mainNet().getSuggestedParams();
    */
-  public async getSuggestedParams(): Promise<TransactionParams> {
+  public async getSuggestedParams(): Promise<SuggestedParams> {
     if (this._cachedSuggestedParams && (!this._cachedSuggestedParamsExpiry || this._cachedSuggestedParamsExpiry > new Date())) {
       return {
         ...this._cachedSuggestedParams,
       }
     }
 
-    this._cachedSuggestedParams = await this._clientManager.algod.transactionParams()
+    this._cachedSuggestedParams = await this._clientManager.algod.suggestedParams()
     this._cachedSuggestedParamsExpiry = new Date(new Date().getTime() + this._cachedSuggestedParamsTimeout)
 
     return {

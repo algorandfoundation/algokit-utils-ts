@@ -11,7 +11,7 @@ export type Genesis = {
   network: string
   proto: string
   rwd: string
-  timestamp: bigint
+  timestamp: number
 }
 
 export const GenesisMeta: ModelMetadata = {

@@ -19,7 +19,6 @@ export async function performAtomicTransactionComposerSimulate(composer: Transac
       stackChange: true,
       stateChange: true,
     },
-    skipSignatures: true,
   }
   const { simulateResponse } = await composer.simulate(simulateOptions)
   return simulateResponse

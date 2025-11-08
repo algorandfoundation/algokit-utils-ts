@@ -535,7 +535,7 @@ describe('ARC32: app-factory-and-app-client', () => {
         invariant(false)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        expect(e.stack).toContain('assert failed')
+        expect(e.message).toContain('assert failed')
       }
 
       newClient.importSourceMaps(JSON.parse(JSON.stringify(oldSourceMaps)))

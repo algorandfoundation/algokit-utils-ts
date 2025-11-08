@@ -27,7 +27,7 @@ export const LookupAccountByIdMeta: ModelMetadata = {
       wireKey: 'current-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
   ],
 }

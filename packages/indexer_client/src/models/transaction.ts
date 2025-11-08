@@ -60,12 +60,12 @@ export type Transaction = {
   /**
    * Specifies an application index (ID) if an application was created with this transaction.
    */
-  createdApplicationIndex?: bigint
+  createdAppId?: bigint
 
   /**
    * Specifies an asset index (ID) if an asset was created with this transaction.
    */
-  createdAssetIndex?: bigint
+  createdAssetId?: bigint
 
   /**
    * \[fee\] Transaction fee.
@@ -100,7 +100,7 @@ export type Transaction = {
   /**
    * Offset into the round where this transaction was confirmed.
    */
-  intraRoundOffset?: bigint
+  intraRoundOffset?: number
   keyregTransaction?: TransactionKeyreg
 
   /**
@@ -132,7 +132,7 @@ export type Transaction = {
   /**
    * Time when the block this transaction is in was confirmed.
    */
-  roundTime?: bigint
+  roundTime?: number
 
   /**
    * \[snd\] Sender's address.
@@ -235,7 +235,7 @@ export const TransactionMeta: ModelMetadata = {
       wireKey: 'close-rewards',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'closingAmount',
@@ -252,14 +252,14 @@ export const TransactionMeta: ModelMetadata = {
       type: { kind: 'scalar', isBigint: true },
     },
     {
-      name: 'createdApplicationIndex',
+      name: 'createdAppId',
       wireKey: 'created-application-index',
       optional: true,
       nullable: false,
       type: { kind: 'scalar', isBigint: true },
     },
     {
-      name: 'createdAssetIndex',
+      name: 'createdAssetId',
       wireKey: 'created-asset-index',
       optional: true,
       nullable: false,
@@ -354,7 +354,7 @@ export const TransactionMeta: ModelMetadata = {
       wireKey: 'receiver-rewards',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'rekeyTo',
@@ -382,7 +382,7 @@ export const TransactionMeta: ModelMetadata = {
       wireKey: 'sender-rewards',
       optional: true,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'signature',

@@ -1,5 +1,5 @@
-import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 import type { ModelMetadata } from '../core/model-runtime'
+import type { SignedTransaction } from '@algorandfoundation/algokit-transact'
 
 /**
  * PendingTransactions is an array of signed transactions exactly as they were submitted.
@@ -13,7 +13,7 @@ export type GetPendingTransactionsByAddress = {
   /**
    * Total number of transactions in the pool.
    */
-  totalTransactions: bigint
+  totalTransactions: number
 }
 
 export const GetPendingTransactionsByAddressMeta: ModelMetadata = {

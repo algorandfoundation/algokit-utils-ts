@@ -1,4 +1,4 @@
-import { PendingTransactionResponse } from '@algorandfoundation/algokit-algod-client'
+import { PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import {
   AppCallTransactionFields,
   AssetConfigTransactionFields,
@@ -157,6 +157,19 @@ export interface SendParams {
 export interface AdditionalAtomicTransactionComposerContext {
   /** A map of transaction index in the `AtomicTransactionComposer` to the max fee that can be calculated for a transaction in the group */
   maxFees: Map<number, AlgoAmount>
+
+  /* The suggested params info relevant to transactions in the `AtomicTransactionComposer` */
+  suggestedParams: Pick<SuggestedParams, 'fee' | 'minFee'>
+}
+
+/** An `AtomicTransactionComposer` with transactions to send. */
+export interface AtomicTransactionComposerToSend extends SendParams {
+  /** The `AtomicTransactionComposer` with transactions loaded to send */
+  transactionComposer: TransactionComposer
+  /**
+   * @deprecated - set the parameters at the top level instead
+   * Any parameters to control the semantics of the send to the network */
+  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
 }
 
 export class TransactionWrapper implements Transaction {
@@ -242,14 +255,4 @@ export function wrapPendingTransactionResponseOptional(
   if (!response) return undefined
 
   return wrapPendingTransactionResponse(response)
-}
-
-/** An `AtomicTransactionComposer` with transactions to send. */
-export interface AtomicTransactionComposerToSend extends SendParams {
-  /** The `AtomicTransactionComposer` with transactions loaded to send */
-  transactionComposer: TransactionComposer
-  /**
-   * @deprecated - set the parameters at the top level instead
-   * Any parameters to control the semantics of the send to the network */
-  sendParams?: Omit<SendTransactionParams, 'fee' | 'maxFee' | 'skipSending' | 'atc'>
 }

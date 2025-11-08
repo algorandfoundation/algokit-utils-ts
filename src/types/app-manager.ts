@@ -130,7 +130,7 @@ export class AppManager {
       return this._compilationResults[tealCode]
     }
 
-    const compiled = await this._algod.tealCompile({ body: tealCode, sourcemap: true })
+    const compiled = await this._algod.tealCompile(tealCode, { sourcemap: true })
     const result = {
       teal: tealCode,
       compiled: compiled.result,
@@ -204,9 +204,8 @@ export class AppManager {
    */
   public async getById(appId: bigint): Promise<AppInformation> {
     const app = await this._algod.getApplicationById(appId)
-    // Convert global state from new format (key: string) to old format (key: Uint8Array)
     const convertedGlobalState = (app.params.globalState ?? []).map((kv) => ({
-      key: new Uint8Array(Buffer.from(kv.key, 'base64')),
+      key: kv.key,
       value: kv.value,
     }))
 
@@ -263,7 +262,7 @@ export class AppManager {
     }
 
     const convertedState = appInfo.appLocalState.keyValue.map((kv) => ({
-      key: new Uint8Array(Buffer.from(kv.key, 'base64')),
+      key: kv.key,
       value: kv.value,
     }))
 
@@ -302,9 +301,8 @@ export class AppManager {
    */
   public async getBoxValue(appId: bigint, boxName: BoxIdentifier | BoxName): Promise<Uint8Array> {
     const boxId = typeof boxName === 'object' && 'nameRaw' in boxName ? boxName.nameRaw : boxName
-    const nameBytes = AppManager.getBoxReference(boxId).name
-    const nameBase64 = Buffer.from(nameBytes).toString('base64')
-    const boxResult = await this._algod.getApplicationBoxByName(Number(appId), { name: `b64:${nameBase64}` })
+    const name = AppManager.getBoxReference(boxId).name
+    const boxResult = await this._algod.getApplicationBoxByName(Number(appId), name)
     return boxResult.value
   }
 

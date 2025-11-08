@@ -4,7 +4,7 @@ export type GetBlockTimeStampOffset = {
   /**
    * Timestamp offset in seconds.
    */
-  offset: bigint
+  offset: number
 }
 
 export const GetBlockTimeStampOffsetMeta: ModelMetadata = {
@@ -16,7 +16,7 @@ export const GetBlockTimeStampOffsetMeta: ModelMetadata = {
       wireKey: 'offset',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
   ],
 }

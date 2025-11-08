@@ -51,14 +51,14 @@ export const BlockRewardsMeta: ModelMetadata = {
       wireKey: 'rewards-calculation-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'rewardsLevel',
       wireKey: 'rewards-level',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'rewardsPool',
@@ -72,14 +72,14 @@ export const BlockRewardsMeta: ModelMetadata = {
       wireKey: 'rewards-rate',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'rewardsResidue',
       wireKey: 'rewards-residue',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
   ],
 }

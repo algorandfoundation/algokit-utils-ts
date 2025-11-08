@@ -4,7 +4,7 @@ import {
   SimulateRequest,
   SimulateTransaction,
   SimulateUnnamedResourcesAccessed,
-  TransactionParams,
+  SuggestedParams,
 } from '@algorandfoundation/algokit-algod-client'
 import { EMPTY_SIGNATURE, concatArrays } from '@algorandfoundation/algokit-common'
 import {
@@ -595,7 +595,7 @@ export type TransactionComposerParams = {
   /** The function used to get the TransactionSigner for a given address */
   getSigner: (address: string | Address) => algosdk.TransactionSigner
   /** The method used to get SuggestedParams for transactions in the group */
-  getSuggestedParams?: () => Promise<TransactionParams>
+  getSuggestedParams?: () => Promise<SuggestedParams>
   /** How many rounds a transaction should be valid for by default; if not specified
    * then will be 10 rounds (or 1000 rounds if issuing transactions to LocalNet).
    */
@@ -637,7 +637,7 @@ export class TransactionComposer {
   private algod: AlgodClient
 
   /** An async function that will return suggested params for the transaction. */
-  private getSuggestedParams: () => Promise<TransactionParams>
+  private getSuggestedParams: () => Promise<SuggestedParams>
 
   /** A function that takes in an address and return a signer function for that address. */
   private getSigner: (address: string | Address) => algosdk.TransactionSigner
@@ -703,7 +703,7 @@ export class TransactionComposer {
    */
   constructor(params: TransactionComposerParams) {
     this.algod = params.algod
-    const defaultGetSuggestedParams = () => params.algod.transactionParams()
+    const defaultGetSuggestedParams = () => params.algod.suggestedParams()
     this.getSuggestedParams = params.getSuggestedParams ?? defaultGetSuggestedParams
     this.getSigner = params.getSigner
     this.defaultValidityWindow = params.defaultValidityWindow ?? this.defaultValidityWindow
@@ -1868,7 +1868,7 @@ export class TransactionComposer {
       fixSigners: true,
     }
 
-    const response: SimulateTransaction = await this.algod.simulateTransaction({ body: simulateRequest })
+    const response: SimulateTransaction = await this.algod.simulateTransaction(simulateRequest)
     const groupResponse = response.txnGroups[0]
 
     // Handle any simulation failures
@@ -1987,7 +1987,7 @@ export class TransactionComposer {
 
       if (waitRounds === undefined) {
         const suggestedParams = await this.getSuggestedParams()
-        const firstRound = suggestedParams.lastRound
+        const firstRound = suggestedParams.firstValid
         const lastRound = this.signedGroup.reduce((max, txn) => (txn.txn.lastValid > max ? txn.txn.lastValid : BigInt(max)), 0n)
         waitRounds = Number(BigInt(lastRound) - BigInt(firstRound)) + 1
       }
@@ -1995,7 +1995,7 @@ export class TransactionComposer {
       const encodedTxns = encodeSignedTransactions(this.signedGroup)
       const encodedBytes = concatArrays(...encodedTxns)
 
-      await this.algod.rawTransaction({ body: encodedBytes })
+      await this.algod.sendRawTransaction(encodedBytes)
 
       const transactions = this.signedGroup.map((stxn) => stxn.txn)
       const transactionIds = transactions.map((txn) => getTransactionId(txn))
@@ -2108,7 +2108,7 @@ export class TransactionComposer {
         : undefined),
     } satisfies SimulateRequest
 
-    const simulateResponse = await this.algod.simulateTransaction({ body: simulateRequest })
+    const simulateResponse = await this.algod.simulateTransaction(simulateRequest)
     const simulateResult = simulateResponse.txnGroups[0]
 
     if (simulateResult?.failureMessage) {

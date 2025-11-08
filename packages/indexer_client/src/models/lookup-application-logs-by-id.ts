@@ -29,14 +29,14 @@ export const LookupApplicationLogsByIdMeta: ModelMetadata = {
       wireKey: 'application-id',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'currentRound',
       wireKey: 'current-round',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar' },
+      type: { kind: 'scalar', isBigint: true },
     },
     {
       name: 'nextToken',

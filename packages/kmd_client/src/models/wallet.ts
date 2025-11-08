@@ -7,7 +7,7 @@ import { TxTypeMeta } from './tx-type'
  */
 export type Wallet = {
   driverName?: string
-  driverVersion?: bigint
+  driverVersion?: number
   id?: string
   mnemonicUx?: boolean
   name?: string

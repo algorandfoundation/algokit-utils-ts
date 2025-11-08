@@ -10,7 +10,7 @@ import { AppCallMethodCall } from './composer'
 async function compileProgram(algorand: AlgorandClient, b64Teal: string) {
   // Decode the base64-encoded TEAL source code
   const tealSource = Buffer.from(b64Teal, 'base64').toString('utf-8')
-  const result = await algorand.client.algod.tealCompile({ body: tealSource })
+  const result = await algorand.client.algod.tealCompile(tealSource)
 
   return new Uint8Array(Buffer.from(result.result, 'base64'))
 }

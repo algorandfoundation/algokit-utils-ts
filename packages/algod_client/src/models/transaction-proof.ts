@@ -17,12 +17,12 @@ export type TransactionProof = {
   /**
    * Represents the depth of the tree that is being proven, i.e. the number of edges from a leaf to the root.
    */
-  treedepth: bigint
+  treedepth: number
 
   /**
    * Index of the transaction in the block's payset.
    */
-  idx: bigint
+  idx: number
 
   /**
    * The type of hash function used to create the proof, must be one of:
@@ -55,14 +55,14 @@ export const TransactionProofMeta: ModelMetadata = {
       wireKey: 'treedepth',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'idx',
       wireKey: 'idx',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'hashtype',

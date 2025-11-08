@@ -7,7 +7,7 @@ export type TealValue = {
   /**
    * \[tt\] value type. Value `1` refers to **bytes**, value `2` refers to **uint**
    */
-  type: bigint
+  type: number
 
   /**
    * \[tb\] bytes value.
@@ -29,7 +29,7 @@ export const TealValueMeta: ModelMetadata = {
       wireKey: 'type',
       optional: false,
       nullable: false,
-      type: { kind: 'scalar', isBigint: true },
+      type: { kind: 'scalar' },
     },
     {
       name: 'bytes',

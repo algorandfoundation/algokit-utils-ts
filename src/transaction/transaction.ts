@@ -1,4 +1,4 @@
-import { AlgodClient, PendingTransactionResponse, TransactionParams } from '@algorandfoundation/algokit-algod-client'
+import { AlgodClient, PendingTransactionResponse, SuggestedParams } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction, TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIReturnType, TransactionSigner } from '@algorandfoundation/sdk'
@@ -243,7 +243,7 @@ export const sendTransaction = async function (
   composer.addTransaction(transaction, getSenderTransactionSigner(from))
 
   const sendResult = await composer.send({
-    // if skipWaiting to true, do not wair
+    // if skipWaiting to true, do not wait
     // if skipWaiting to set, wait for maxRoundsToWaitForConfirmation or 5 rounds
     maxRoundsToWaitForConfirmation: skipWaiting ? 0 : (maxRoundsToWaitForConfirmation ?? 5),
     suppressLog: suppressLog,
@@ -545,7 +545,7 @@ export const waitForConfirmation = async function (
  * @param transaction The transaction to cap or suggested params object about to be used to create a transaction
  * @param maxAcceptableFee The maximum acceptable fee to pay
  */
-export function capTransactionFee(transaction: Transaction | TransactionParams, maxAcceptableFee: AlgoAmount) {
+export function capTransactionFee(transaction: Transaction | SuggestedParams, maxAcceptableFee: AlgoAmount) {
   // If a flat fee hasn't already been defined
   if (!('flatFee' in transaction) || !transaction.flatFee) {
     // Once a transaction has been constructed by algosdk, transaction.fee indicates what the total transaction fee
@@ -572,7 +572,7 @@ export function capTransactionFee(transaction: Transaction | TransactionParams, 
  * @param transaction The transaction or suggested params
  * @param feeControl The fee control parameters
  */
-export function controlFees<T extends TransactionParams | Transaction>(
+export function controlFees<T extends SuggestedParams | Transaction>(
   transaction: T,
   feeControl: { fee?: AlgoAmount; maxFee?: AlgoAmount },
 ) {
@@ -599,20 +599,11 @@ export function controlFees<T extends TransactionParams | Transaction>(
  * @param algod Algod algod
  * @returns The suggested transaction parameters
  */
-export async function getTransactionParams(params: TransactionParams | undefined, algod: AlgodClient): Promise<TransactionParams> {
+export async function getTransactionParams(params: SuggestedParams | undefined, algod: AlgodClient): Promise<SuggestedParams> {
   if (params) {
     return { ...params }
   }
-  const p = await algod.transactionParams()
-  return {
-    fee: p.fee,
-    // TODO: PD - return first and last round once they are added to algod_client
-    lastRound: p.lastRound,
-    genesisId: p.genesisId,
-    genesisHash: p.genesisHash,
-    minFee: p.minFee,
-    consensusVersion: p.consensusVersion,
-  }
+  return await algod.suggestedParams()
 }
 
 /**
