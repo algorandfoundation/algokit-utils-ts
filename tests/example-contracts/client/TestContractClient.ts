@@ -7,7 +7,6 @@
 import { AlgodClient, SimulateRequest, SimulateTransactionGroupResult } from '@algorandfoundation/algokit-algod-client'
 import { OnApplicationComplete, Transaction } from '@algorandfoundation/algokit-transact'
 import type { ABIResult, TransactionWithSigner } from '@algorandfoundation/sdk'
-import { TransactionComposer } from 'src/types/composer'
 import * as algokit from '../../../src/index'
 import type {
   ABIAppCallArg,
@@ -27,6 +26,7 @@ import type {
   ApplicationClient,
 } from '../../../src/types/app-client'
 import type { AppSpec } from '../../../src/types/app-spec'
+import { TransactionComposer } from '../../../src/types/composer'
 import type { SendTransactionFrom, SendTransactionParams, SendTransactionResult, TransactionToSign } from '../../../src/types/transaction'
 export const APP_SPEC: AppSpec = {
   hints: {

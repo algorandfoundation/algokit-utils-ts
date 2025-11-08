@@ -2,7 +2,7 @@ import { AlgodClient, PendingTransactionResponse, SuggestedParams } from '@algor
 import { OnApplicationComplete, Transaction, TransactionType, getTransactionId } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIReturnType, TransactionSigner } from '@algorandfoundation/sdk'
-import { AppCallParams, TransactionComposer } from 'src/types/composer'
+import { AppCallParams, TransactionComposer } from '../types/composer'
 import { Config } from '../config'
 import { AlgoAmount } from '../types/amount'
 import { ABIReturn } from '../types/app'

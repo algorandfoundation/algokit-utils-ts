@@ -1,4 +1,4 @@
-import { RawSimulateOptions, TransactionComposer } from 'src/types/composer'
+import { RawSimulateOptions, TransactionComposer } from '../types/composer'
 
 /**
  * Performs a simulation of the transactions loaded into the given AtomicTransactionComposer.
