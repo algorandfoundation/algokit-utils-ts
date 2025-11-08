@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "declarationMap": true,
+    "strict": true,
     "baseUrl": ".",
     "paths": {
       "@algorandfoundation/algokit-abi": ["packages/abi/src"],

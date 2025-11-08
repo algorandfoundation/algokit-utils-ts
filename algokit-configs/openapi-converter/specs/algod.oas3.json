@@ -4994,6 +4994,7 @@
             "type": "integer",
             "description": "unique asset identifier",
             "x-go-type": "basics.AssetIndex",
+            "x-algokit-field-rename": "id",
             "x-algokit-bigint": true
           },
           "params": {

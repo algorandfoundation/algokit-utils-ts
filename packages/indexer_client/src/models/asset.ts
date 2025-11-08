@@ -9,7 +9,7 @@ export type Asset = {
   /**
    * unique asset identifier
    */
-  index: bigint
+  id: bigint
 
   /**
    * Whether or not this asset is currently deleted.
@@ -33,7 +33,7 @@ export const AssetMeta: ModelMetadata = {
   kind: 'object',
   fields: [
     {
-      name: 'index',
+      name: 'id',
       wireKey: 'index',
       optional: false,
       nullable: false,
