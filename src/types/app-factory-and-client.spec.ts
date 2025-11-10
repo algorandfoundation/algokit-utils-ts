@@ -804,7 +804,7 @@ describe('ARC56: app-factory-and-app-client', () => {
     })
 
     await expect(deployErrorFactory.deploy({ createParams: { method: 'createApplication' } })).rejects.toThrow(
-      'Error analyzing group requirements via simulate in transaction', // TODO: PD - confirm the error message
+      'Error resolving execution info via simulate in transaction',
     )
   })
 

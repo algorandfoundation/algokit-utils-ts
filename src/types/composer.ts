@@ -1683,7 +1683,6 @@ export class TransactionComposer {
       }
     }
 
-    // TODO: PD - account for access list
     if (groupAnalysis) {
       // Process fee adjustments
       let surplusGroupFees = 0n
@@ -1730,8 +1729,10 @@ export class TransactionComposer {
       // Sort transactions by priority (highest first)
       transactionAnalysis.sort((a, b) => b.priority.compare(a.priority))
 
-      // Cover any additional fees required for the transactions
+      const indexesWithAccessReferences: number[] = []
+
       for (const { groupIndex, requiredFeeDelta, unnamedResourcesAccessed } of transactionAnalysis) {
+        // Cover any additional fees required for the transactions
         if (requiredFeeDelta && FeeDelta.isDeficit(requiredFeeDelta)) {
           const deficitAmount = FeeDelta.amount(requiredFeeDelta)
           let additionalFeeDelta: FeeDelta | undefined
@@ -1774,8 +1775,20 @@ export class TransactionComposer {
 
         // Apply transaction-level resource population
         if (unnamedResourcesAccessed && transactions[groupIndex].type === TransactionType.AppCall) {
-          populateTransactionResources(transactions[groupIndex], unnamedResourcesAccessed, groupIndex)
+          const hasAccessReferences =
+            transactions[groupIndex].appCall?.accessReferences && transactions[groupIndex].appCall?.accessReferences?.length
+          if (!hasAccessReferences) {
+            populateTransactionResources(transactions[groupIndex], unnamedResourcesAccessed, groupIndex)
+          } else {
+            indexesWithAccessReferences.push(groupIndex)
+          }
         }
+      }
+
+      if (indexesWithAccessReferences.length > 0) {
+        Config.logger.warn(
+          `Resource population will be skipped for transaction indexes ${indexesWithAccessReferences.join(', ')} as they use access references.`,
+        )
       }
 
       // Apply group-level resource population
@@ -1876,7 +1889,7 @@ export class TransactionComposer {
       }
 
       throw new Error(
-        `Error analyzing group requirements via simulate in transaction ${groupResponse.failedAt?.join(', ')}: ${groupResponse.failureMessage}`,
+        `Error resolving execution info via simulate in transaction ${groupResponse.failedAt?.join(', ')}: ${groupResponse.failureMessage}`,
       )
     }
 

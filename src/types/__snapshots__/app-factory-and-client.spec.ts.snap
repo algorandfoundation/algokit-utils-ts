@@ -6,7 +6,7 @@ INFO: App TestingApp not found in apps created by ACCOUNT_1; deploying app with 
 VERBOSE: Sent transaction ID TXID_1 appl from ACCOUNT_1
 DEBUG: App created by ACCOUNT_1 with ID APP_1 via transaction TXID_1
 ERROR: Received error executing Atomic Transaction Composer and debug flag enabled; attempting simulation to get more information | [{"cause":{},"name":"Error","traces":[]}]
-ERROR: assert failed pc=885. at:469. Error analyzing group requirements via simulate in transaction 0: transaction TXID_2: logic eval error: assert failed pc=885. Details: app=APP_1, pc=885, opcodes=proto 0 0; intc_0 // 0; assert
+ERROR: assert failed pc=885. at:469. Error resolving execution info via simulate in transaction 0: transaction TXID_2: logic eval error: assert failed pc=885. Details: app=APP_1, pc=885, opcodes=proto 0 0; intc_0 // 0; assert
 
 464: // error
 465: error_7:

@@ -372,7 +372,7 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
       extraProgramPages: extraProgramPages,
       args: params.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences }
+        ? { accessReferences: params.accessReferences }
         : {
             accountReferences: params.accountReferences?.map((a) => a.toString()),
             appReferences: params.appReferences,
@@ -381,7 +381,7 @@ export const buildAppCreate = async (params: AppCreateParams, appManager: AppMan
           }),
       rejectVersion: params.rejectVersion,
     },
-  }
+  } satisfies Transaction
 }
 
 export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppManager, header: TransactionHeader): Promise<Transaction> => {
@@ -407,7 +407,7 @@ export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppMan
       clearStateProgram: clearStateProgram,
       args: params.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences }
+        ? { accessReferences: params.accessReferences }
         : {
             accountReferences: params.accountReferences?.map((a) => a.toString()),
             appReferences: params.appReferences,
@@ -416,7 +416,7 @@ export const buildAppUpdate = async (params: AppUpdateParams, appManager: AppMan
           }),
       rejectVersion: params.rejectVersion,
     },
-  }
+  } satisfies Transaction
 }
 
 export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: TransactionHeader): Transaction => {
@@ -431,7 +431,7 @@ export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: Tr
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       args: params.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences }
+        ? { accessReferences: params.accessReferences }
         : {
             accountReferences: params.accountReferences?.map((a) => a.toString()),
             appReferences: params.appReferences,
@@ -440,7 +440,7 @@ export const buildAppCall = (params: AppCallParams | AppDeleteParams, header: Tr
           }),
       rejectVersion: params.rejectVersion,
     },
-  }
+  } satisfies Transaction
 }
 
 export const buildKeyReg = (params: OnlineKeyRegistrationParams | OfflineKeyRegistrationParams, header: TransactionHeader): Transaction => {
@@ -768,7 +768,7 @@ export const buildAppCreateMethodCall = async (
       extraProgramPages: extraProgramPages,
       args: common.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences }
+        ? { accessReferences: params.accessReferences }
         : {
             accountReferences: params.accountReferences?.map((a) => a.toString()),
             appReferences: params.appReferences,
@@ -777,7 +777,7 @@ export const buildAppCreateMethodCall = async (
           }),
       rejectVersion: params.rejectVersion,
     },
-  }
+  } satisfies Transaction
 }
 
 export const buildAppUpdateMethodCall = async (
@@ -856,7 +856,7 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
       onComplete: params.onComplete ?? OnApplicationComplete.NoOp,
       args: common.args,
       ...(hasAccessReferences
-        ? { access: params.accessReferences }
+        ? { accessReferences: params.accessReferences }
         : {
             accountReferences: params.accountReferences?.map((a) => a.toString()),
             appReferences: params.appReferences,
@@ -865,7 +865,7 @@ export const buildAppCallMethodCall = async (params: ProcessedAppCallMethodCall,
           }),
       rejectVersion: params.rejectVersion,
     },
-  }
+  } satisfies Transaction
 }
 
 /**
@@ -1023,6 +1023,9 @@ function isAppCallBelowResourceLimit(txn: Transaction): boolean {
   if (txn.type !== TransactionType.AppCall) {
     return false
   }
+  if (txn.appCall?.accessReferences?.length) {
+    return false
+  }
 
   const accountsCount = txn.appCall?.accountReferences?.length || 0
   const assetsCount = txn.appCall?.assetReferences?.length || 0
@@ -1156,6 +1159,10 @@ function populateGroupResource(
   // Find the first transaction that can accommodate the resource
   const groupIndex = transactions.findIndex((txn) => {
     if (txn.type !== TransactionType.AppCall) {
+      return false
+    }
+    // TODO: PD - make a function for this
+    if (txn.appCall?.accessReferences?.length) {
       return false
     }
 
