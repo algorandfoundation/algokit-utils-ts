@@ -1,3 +1,5 @@
+import { AlgodClient, SimulateRequest } from '@algorandfoundation/algokit-algod-client'
+import { EMPTY_SIGNATURE } from '@algorandfoundation/algokit-common'
 import { RawSimulateOptions, TransactionComposer } from '../types/composer'
 
 /**
@@ -8,23 +10,34 @@ import { RawSimulateOptions, TransactionComposer } from '../types/composer'
  * @param algod An Algod client to perform the simulation.
  * @returns The simulation result, which includes various details about how the transactions would be processed.
  */
-export async function performAtomicTransactionComposerSimulate(composer: TransactionComposer, options?: RawSimulateOptions) {
-  const rawOptions = options ?? {
-    allowEmptySignatures: true,
-    fixSigners: true,
-    allowMoreLogging: true,
-    execTraceConfig: {
-      enable: true,
-      scratchChange: true,
-      stackChange: true,
-      stateChange: true,
-    },
-  }
+export async function performAtomicTransactionComposerSimulate(
+  composer: TransactionComposer,
+  algod: AlgodClient,
+  options?: RawSimulateOptions,
+) {
+  const transactions = (await composer.buildTransactions()).transactions
 
-  const simulateOptions = {
-    ...rawOptions,
-    skipSignatures: true,
-  }
-  const { simulateResponse } = await composer.simulate(simulateOptions)
-  return simulateResponse
+  const simulateRequest = {
+    ...(options ?? {
+      allowEmptySignatures: true,
+      fixSigners: true,
+      allowMoreLogging: true,
+      execTraceConfig: {
+        enable: true,
+        scratchChange: true,
+        stackChange: true,
+        stateChange: true,
+      },
+    }),
+    txnGroups: [
+      {
+        txns: transactions.map((txn) => ({
+          txn: txn,
+          signature: EMPTY_SIGNATURE,
+        })),
+      },
+    ],
+  } satisfies SimulateRequest
+  const simulateResult = await algod.simulateTransaction(simulateRequest)
+  return simulateResult
 }

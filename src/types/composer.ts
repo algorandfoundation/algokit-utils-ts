@@ -25,6 +25,7 @@ import {
 } from '@algorandfoundation/algokit-transact'
 import * as algosdk from '@algorandfoundation/sdk'
 import { ABIMethod, Address, TransactionSigner, TransactionWithSigner } from '@algorandfoundation/sdk'
+import { performAtomicTransactionComposerSimulate } from 'src/transaction'
 import { Config } from '../config'
 import { asJson } from '../util'
 import { TransactionSignerAccount } from './account'
@@ -567,14 +568,9 @@ class ErrorTransformerError extends Error {
   }
 }
 
-export interface ResourcePopulation {
-  enabled: boolean
-  useAccessList: boolean
-}
-
 export type TransactionComposerConfig = {
   coverAppCallInnerTransactionFees: boolean
-  populateAppCallResources: ResourcePopulation
+  populateAppCallResources: boolean
 }
 
 type TransactionAnalysis = {
@@ -714,7 +710,7 @@ export class TransactionComposer {
     this.errorTransformers = params.errorTransformers ?? []
     this.composerConfig = params.composerConfig ?? {
       coverAppCallInnerTransactionFees: false,
-      populateAppCallResources: { enabled: true, useAccessList: false },
+      populateAppCallResources: true,
     }
   }
 
@@ -1577,13 +1573,13 @@ export class TransactionComposer {
     if (!this.builtGroup) {
       // TODO: PD - do we need to share the same suggested params between analyzeGroupRequirements and buildTransactions
       const groupAnalysis =
-        (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources.enabled) &&
+        (this.composerConfig.coverAppCallInnerTransactionFees || this.composerConfig.populateAppCallResources) &&
         this.txns.some((t) => isAppCall(t))
           ? await this.analyzeGroupRequirements(this.composerConfig)
           : undefined
 
-      const transactions = await this.buildTransactions(groupAnalysis)
-      const transactionsWithSigners = this.gatherSigners(transactions)
+      const builtTransactions = await this.buildTransactions(groupAnalysis)
+      const transactionsWithSigners = this.gatherSigners(builtTransactions)
 
       this.builtGroup = transactionsWithSigners
     }
@@ -1600,7 +1596,6 @@ export class TransactionComposer {
     }
   }
 
-  // TODO: PD - make this private
   public async buildTransactions(groupAnalysis?: GroupAnalysis): Promise<BuiltTransactions> {
     const suggestedParams = await this.getSuggestedParams()
     const defaultValidityWindow = getDefaultValidityWindow(suggestedParams.genesisId)
@@ -1913,7 +1908,7 @@ export class TransactionComposer {
 
       return {
         requiredFeeDelta,
-        unnamedResourcesAccessed: analysisParams.populateAppCallResources?.enabled ? simulateTxnResult.unnamedResourcesAccessed : undefined,
+        unnamedResourcesAccessed: analysisParams.populateAppCallResources ? simulateTxnResult.unnamedResourcesAccessed : undefined,
       }
     })
 
@@ -1946,7 +1941,7 @@ export class TransactionComposer {
 
     return {
       transactions: txnAnalysisResults,
-      unnamedResourcesAccessed: analysisParams.populateAppCallResources?.enabled ? sortedResources : undefined,
+      unnamedResourcesAccessed: analysisParams.populateAppCallResources ? sortedResources : undefined,
     }
   }
 
@@ -1985,7 +1980,7 @@ export class TransactionComposer {
       }
 
       if (Config.debug && Config.traceAll) {
-        const simulateResponse = await this.foo()
+        const simulateResponse = await performAtomicTransactionComposerSimulate(this, this.algod)
         await Config.events.emitAsync(EventType.TxnGroupSimulated, {
           simulateResponse,
         })
@@ -2053,7 +2048,7 @@ export class TransactionComposer {
           err,
         )
 
-        const simulateResponse = await this.foo()
+        const simulateResponse = await performAtomicTransactionComposerSimulate(this, this.algod)
         if (Config.debug && !Config.traceAll) {
           // Emit the event only if traceAll: false, as it should have already been emitted above
           await Config.events.emitAsync(EventType.TxnGroupSimulated, {
@@ -2203,32 +2198,6 @@ export class TransactionComposer {
     }
   }
 
-  // TODO: PD - name
-  async foo() {
-    const transactions = (await this.buildTransactions()).transactions
-    const simulateRequest = {
-      allowEmptySignatures: true,
-      fixSigners: true,
-      allowMoreLogging: true,
-      execTraceConfig: {
-        enable: true,
-        scratchChange: true,
-        stackChange: true,
-        stateChange: true,
-      },
-      txnGroups: [
-        {
-          txns: transactions.map((txn) => ({
-            txn: txn,
-            signature: EMPTY_SIGNATURE,
-          })),
-        },
-      ],
-    } satisfies SimulateRequest
-
-    const simulateResult = await this.algod.simulateTransaction(simulateRequest)
-    return simulateResult
-  }
   /**
    * Create an encoded transaction note that follows the ARC-2 spec.
    *
